@@ -800,6 +800,7 @@ export function StateIntroScreen({
   onContinue,
 }: { stateName?: string; onBack?: () => void; onContinue?: () => void } = {}) {
   const state = getState(stateName);
+  const goBack = useGoBack();
   const art = STATE_ART[state.name];
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
 
@@ -810,8 +811,12 @@ export function StateIntroScreen({
         <Cloud className="absolute top-14 right-2 w-16 opacity-70" />
         <button
           onClick={() => {
-            fxTap();
-            onBack?.();
+            if (onBack) {
+              fxTap();
+              onBack();
+            } else {
+              goBack();
+            }
           }}
           className="absolute top-3 left-4 h-10 w-10 rounded-full bg-white/25 backdrop-blur flex items-center justify-center text-white text-xl"
         >
@@ -900,6 +905,7 @@ export function LearningHubScreen({
   onCard?: (index: number) => void;
 } = {}) {
   const progress = useProgress();
+  const goBack = useGoBack();
   const state = getState(stateName);
   const live = statesWithProgress(progress).find((s) => s.name === state.name);
   const status = live?.status ?? state.status;
@@ -929,8 +935,12 @@ export function LearningHubScreen({
         <div className="flex items-center gap-3">
           <button
             onClick={() => {
-              fxTap();
-              onBack?.();
+              if (onBack) {
+                fxTap();
+                onBack();
+              } else {
+                goBack();
+              }
             }}
             className="h-10 w-10 rounded-full bg-white/25 flex items-center justify-center text-white text-xl"
           >
@@ -1194,7 +1204,11 @@ export function LearningCardScreen({
 }
 
 
-export function QuizScreen({ stateName }: { stateName?: string } = {}) {
+export function QuizScreen({
+  stateName,
+  onDone,
+  onClose,
+}: { stateName?: string; onDone?: () => void; onClose?: () => void } = {}) {
   const progress = useProgress();
   const states = statesWithProgress(progress);
   const activeName =
@@ -1229,10 +1243,15 @@ export function QuizScreen({ stateName }: { stateName?: string } = {}) {
       setResult("wrong");
     }
   };
+  const isLastQuestion = index === questions.length - 1;
   const onReset = () => {
     fxTap();
     if (result === "correct") {
-      setIndex((i) => (i + 1) % questions.length);
+      if (isLastQuestion) {
+        onDone?.();
+        return;
+      }
+      setIndex((i) => i + 1);
     }
     setResult(null);
     setSelected(null);
@@ -1241,7 +1260,14 @@ export function QuizScreen({ stateName }: { stateName?: string } = {}) {
   return (
     <div className="h-full w-full bg-explorer-soft flex flex-col">
       <div className="px-5 pt-3 pb-2 flex items-center gap-3">
-        <button className="h-10 w-10 rounded-full bg-white shadow-soft flex items-center justify-center text-xl">
+        <button
+          onClick={() => {
+            fxTap();
+            onClose?.();
+          }}
+          aria-label="Close"
+          className="h-10 w-10 rounded-full bg-white shadow-soft flex items-center justify-center text-xl"
+        >
           ✕
         </button>
         <div className="flex-1 flex items-center gap-1">
@@ -1335,7 +1361,13 @@ export function QuizScreen({ stateName }: { stateName?: string } = {}) {
               : "gradient-explorer"
           }`}
         >
-          {result === "correct" ? "Next Question →" : result === "wrong" ? "Try Again" : "Check Answer"}
+          {result === "correct"
+            ? isLastQuestion
+              ? "Finish Quiz 🎉"
+              : "Next Question →"
+            : result === "wrong"
+            ? "Try Again"
+            : "Check Answer"}
         </button>
       </div>
     </div>
@@ -1399,7 +1431,8 @@ export function CorrectAnswerScreen({ stateName }: { stateName?: string } = {}) 
 export function StateCompletedScreen({
   stateName,
   persist = true,
-}: { stateName?: string; persist?: boolean } = {}) {
+  onContinue,
+}: { stateName?: string; persist?: boolean; onContinue?: () => void } = {}) {
   const state = getState(stateName);
   const art = STATE_ART[state.name];
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
@@ -1492,7 +1525,13 @@ export function StateCompletedScreen({
       </div>
 
       <div className="mt-auto p-6 w-full">
-        <button className="w-full h-14 rounded-2xl bg-white text-[color:var(--gold)] text-display text-lg font-extrabold shadow-xl">
+        <button
+          onClick={() => {
+            fxTap();
+            onContinue?.();
+          }}
+          className="w-full h-14 rounded-2xl bg-white text-[color:var(--gold)] text-display text-lg font-extrabold shadow-xl"
+        >
           Continue Adventure →
         </button>
       </div>
@@ -1500,7 +1539,10 @@ export function StateCompletedScreen({
   );
 }
 
-export function StateUnlockScreen({ stateName }: { stateName?: string } = {}) {
+export function StateUnlockScreen({
+  stateName,
+  onContinue,
+}: { stateName?: string; onContinue?: () => void } = {}) {
   const state = stateName ? getState(stateName) : INDIA_STATES[1];
   const art = STATE_ART[state.name];
   return (
@@ -1542,8 +1584,14 @@ export function StateUnlockScreen({ stateName }: { stateName?: string } = {}) {
       </div>
 
       <div className="p-6 relative z-10">
-        <button className="w-full h-14 rounded-2xl bg-white text-explorer text-display text-lg font-extrabold shadow-xl">
-          Begin Exploring {state.short} ✈️
+        <button
+          onClick={() => {
+            fxTap();
+            onContinue?.();
+          }}
+          className="w-full h-14 rounded-2xl bg-white text-explorer text-display text-lg font-extrabold shadow-xl"
+        >
+          Continue Adventure ✈️
         </button>
       </div>
 
@@ -1775,12 +1823,21 @@ export function BadgesScreen() {
 export function ProfileScreen() {
   const p = useProgress();
   const { level } = levelInfo(p.xp);
+  const goBack = useGoBack();
+  const stampsCollected = Object.keys(p.stamps ?? {}).length;
+  const achievements = achievementsFor(p);
+  const unlockedAchievements = achievements.filter((a) => a.done).length;
+  const inProgressAchievements = achievements.filter((a) => !a.done && a.prog > 0).length;
   return (
     <div className="h-full w-full bg-[#F7F5F0] flex flex-col">
       <div className="relative gradient-explorer px-5 pt-4 pb-14 rounded-b-[36px]">
         <Cloud className="absolute top-2 right-2 w-16 opacity-40" />
         <div className="flex items-center justify-between">
-          <button className="h-10 w-10 rounded-full bg-white/20 text-white flex items-center justify-center">
+          <button
+            onClick={goBack}
+            aria-label="Go back"
+            className="h-10 w-10 rounded-full bg-white/20 text-white flex items-center justify-center"
+          >
             ‹
           </button>
           <div className="text-display font-extrabold text-white">Profile</div>
@@ -1823,10 +1880,34 @@ export function ProfileScreen() {
 
 
       <div className="px-5 mt-5 space-y-3 flex-1 overflow-auto pb-24">
-        <RowLink icon="📓" tone="orange" title="My Passport" sub="4 stamps collected" />
-        <RowLink icon="🏅" tone="gold" title="Achievements" sub="6 unlocked · 3 in progress" />
-        <RowLink icon="🎯" tone="green" title="Daily Goals" sub="🔥 7 day streak" />
-        <RowLink icon="👨‍👩‍👧" tone="blue" title="Parent Zone" sub="Progress reports & controls" />
+        <RowLink
+          icon="📓"
+          tone="orange"
+          title="My Passport"
+          sub={`${stampsCollected} ${stampsCollected === 1 ? "stamp" : "stamps"} collected`}
+          to="/passport"
+        />
+        <RowLink
+          icon="🏅"
+          tone="gold"
+          title="Achievements"
+          sub={`${unlockedAchievements} unlocked · ${inProgressAchievements} in progress`}
+          to="/achievements"
+        />
+        <RowLink
+          icon="🎯"
+          tone="green"
+          title="Daily Goals"
+          sub={`🔥 ${p.streak} day streak`}
+          to="/achievements"
+        />
+        <RowLink
+          icon="👨‍👩‍👧"
+          tone="blue"
+          title="Parent Zone"
+          sub="Progress reports & controls"
+          to="/parent"
+        />
       </div>
       <BottomNav active="profile" />
       <div className="h-20" />
@@ -1850,11 +1931,13 @@ function RowLink({
   tone,
   title,
   sub,
+  to,
 }: {
   icon: string;
   tone: "orange" | "blue" | "green" | "gold";
   title: string;
   sub: string;
+  to: "/passport" | "/achievements" | "/parent" | "/badges" | "/journey";
 }) {
   const bg = {
     orange: "gradient-saffron",
