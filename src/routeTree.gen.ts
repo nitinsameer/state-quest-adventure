@@ -10,33 +10,232 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AchievementsRouteImport } from './routes/achievements'
+import { Route as BadgesRouteImport } from './routes/badges'
+import { Route as CreateRouteImport } from './routes/create'
+import { Route as HomeRouteImport } from './routes/home'
+import { Route as JourneyRouteImport } from './routes/journey'
+import { Route as MeRouteImport } from './routes/me'
+import { Route as ParentRouteImport } from './routes/parent'
+import { Route as PassportRouteImport } from './routes/passport'
+import { Route as WelcomeRouteImport } from './routes/welcome'
+import { Route as StateSlugIndexRouteImport } from './routes/state.$slug.index'
+import { Route as StateSlugCompleteRouteImport } from './routes/state.$slug.complete'
+import { Route as StateSlugLearnRouteImport } from './routes/state.$slug.learn'
+import { Route as StateSlugQuizRouteImport } from './routes/state.$slug.quiz'
+import { Route as StateSlugUnlockRouteImport } from './routes/state.$slug.unlock'
+import { Route as StateSlugCardIndexRouteImport } from './routes/state.$slug.card.$index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AchievementsRoute = AchievementsRouteImport.update({
+  id: '/achievements',
+  path: '/achievements',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BadgesRoute = BadgesRouteImport.update({
+  id: '/badges',
+  path: '/badges',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreateRoute = CreateRouteImport.update({
+  id: '/create',
+  path: '/create',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HomeRoute = HomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JourneyRoute = JourneyRouteImport.update({
+  id: '/journey',
+  path: '/journey',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MeRoute = MeRouteImport.update({
+  id: '/me',
+  path: '/me',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ParentRoute = ParentRouteImport.update({
+  id: '/parent',
+  path: '/parent',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PassportRoute = PassportRouteImport.update({
+  id: '/passport',
+  path: '/passport',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WelcomeRoute = WelcomeRouteImport.update({
+  id: '/welcome',
+  path: '/welcome',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StateSlugIndexRoute = StateSlugIndexRouteImport.update({
+  id: '/state/$slug/',
+  path: '/state/$slug/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StateSlugCompleteRoute = StateSlugCompleteRouteImport.update({
+  id: '/state/$slug/complete',
+  path: '/state/$slug/complete',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StateSlugLearnRoute = StateSlugLearnRouteImport.update({
+  id: '/state/$slug/learn',
+  path: '/state/$slug/learn',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StateSlugQuizRoute = StateSlugQuizRouteImport.update({
+  id: '/state/$slug/quiz',
+  path: '/state/$slug/quiz',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StateSlugUnlockRoute = StateSlugUnlockRouteImport.update({
+  id: '/state/$slug/unlock',
+  path: '/state/$slug/unlock',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StateSlugCardIndexRoute = StateSlugCardIndexRouteImport.update({
+  id: '/state/$slug/card/$index',
+  path: '/state/$slug/card/$index',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/achievements': typeof AchievementsRoute
+  '/badges': typeof BadgesRoute
+  '/create': typeof CreateRoute
+  '/home': typeof HomeRoute
+  '/journey': typeof JourneyRoute
+  '/me': typeof MeRoute
+  '/parent': typeof ParentRoute
+  '/passport': typeof PassportRoute
+  '/welcome': typeof WelcomeRoute
+  '/state/$slug/complete': typeof StateSlugCompleteRoute
+  '/state/$slug/learn': typeof StateSlugLearnRoute
+  '/state/$slug/quiz': typeof StateSlugQuizRoute
+  '/state/$slug/unlock': typeof StateSlugUnlockRoute
+  '/state/$slug/': typeof StateSlugIndexRoute
+  '/state/$slug/card/$index': typeof StateSlugCardIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/achievements': typeof AchievementsRoute
+  '/badges': typeof BadgesRoute
+  '/create': typeof CreateRoute
+  '/home': typeof HomeRoute
+  '/journey': typeof JourneyRoute
+  '/me': typeof MeRoute
+  '/parent': typeof ParentRoute
+  '/passport': typeof PassportRoute
+  '/welcome': typeof WelcomeRoute
+  '/state/$slug/complete': typeof StateSlugCompleteRoute
+  '/state/$slug/learn': typeof StateSlugLearnRoute
+  '/state/$slug/quiz': typeof StateSlugQuizRoute
+  '/state/$slug/unlock': typeof StateSlugUnlockRoute
+  '/state/$slug': typeof StateSlugIndexRoute
+  '/state/$slug/card/$index': typeof StateSlugCardIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/achievements': typeof AchievementsRoute
+  '/badges': typeof BadgesRoute
+  '/create': typeof CreateRoute
+  '/home': typeof HomeRoute
+  '/journey': typeof JourneyRoute
+  '/me': typeof MeRoute
+  '/parent': typeof ParentRoute
+  '/passport': typeof PassportRoute
+  '/welcome': typeof WelcomeRoute
+  '/state/$slug/complete': typeof StateSlugCompleteRoute
+  '/state/$slug/learn': typeof StateSlugLearnRoute
+  '/state/$slug/quiz': typeof StateSlugQuizRoute
+  '/state/$slug/unlock': typeof StateSlugUnlockRoute
+  '/state/$slug/': typeof StateSlugIndexRoute
+  '/state/$slug/card/$index': typeof StateSlugCardIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/achievements'
+    | '/badges'
+    | '/create'
+    | '/home'
+    | '/journey'
+    | '/me'
+    | '/parent'
+    | '/passport'
+    | '/welcome'
+    | '/state/$slug/complete'
+    | '/state/$slug/learn'
+    | '/state/$slug/quiz'
+    | '/state/$slug/unlock'
+    | '/state/$slug/'
+    | '/state/$slug/card/$index'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/achievements'
+    | '/badges'
+    | '/create'
+    | '/home'
+    | '/journey'
+    | '/me'
+    | '/parent'
+    | '/passport'
+    | '/welcome'
+    | '/state/$slug/complete'
+    | '/state/$slug/learn'
+    | '/state/$slug/quiz'
+    | '/state/$slug/unlock'
+    | '/state/$slug'
+    | '/state/$slug/card/$index'
+  id:
+    | '__root__'
+    | '/'
+    | '/achievements'
+    | '/badges'
+    | '/create'
+    | '/home'
+    | '/journey'
+    | '/me'
+    | '/parent'
+    | '/passport'
+    | '/welcome'
+    | '/state/$slug/complete'
+    | '/state/$slug/learn'
+    | '/state/$slug/quiz'
+    | '/state/$slug/unlock'
+    | '/state/$slug/'
+    | '/state/$slug/card/$index'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AchievementsRoute: typeof AchievementsRoute
+  BadgesRoute: typeof BadgesRoute
+  CreateRoute: typeof CreateRoute
+  HomeRoute: typeof HomeRoute
+  JourneyRoute: typeof JourneyRoute
+  MeRoute: typeof MeRoute
+  ParentRoute: typeof ParentRoute
+  PassportRoute: typeof PassportRoute
+  WelcomeRoute: typeof WelcomeRoute
+  StateSlugCompleteRoute: typeof StateSlugCompleteRoute
+  StateSlugLearnRoute: typeof StateSlugLearnRoute
+  StateSlugQuizRoute: typeof StateSlugQuizRoute
+  StateSlugUnlockRoute: typeof StateSlugUnlockRoute
+  StateSlugIndexRoute: typeof StateSlugIndexRoute
+  StateSlugCardIndexRoute: typeof StateSlugCardIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +247,131 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/achievements': {
+      id: '/achievements'
+      path: '/achievements'
+      fullPath: '/achievements'
+      preLoaderRoute: typeof AchievementsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/badges': {
+      id: '/badges'
+      path: '/badges'
+      fullPath: '/badges'
+      preLoaderRoute: typeof BadgesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/create': {
+      id: '/create'
+      path: '/create'
+      fullPath: '/create'
+      preLoaderRoute: typeof CreateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/home': {
+      id: '/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof HomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/journey': {
+      id: '/journey'
+      path: '/journey'
+      fullPath: '/journey'
+      preLoaderRoute: typeof JourneyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/me': {
+      id: '/me'
+      path: '/me'
+      fullPath: '/me'
+      preLoaderRoute: typeof MeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/parent': {
+      id: '/parent'
+      path: '/parent'
+      fullPath: '/parent'
+      preLoaderRoute: typeof ParentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/passport': {
+      id: '/passport'
+      path: '/passport'
+      fullPath: '/passport'
+      preLoaderRoute: typeof PassportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/welcome': {
+      id: '/welcome'
+      path: '/welcome'
+      fullPath: '/welcome'
+      preLoaderRoute: typeof WelcomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/state/$slug/': {
+      id: '/state/$slug/'
+      path: '/state/$slug'
+      fullPath: '/state/$slug/'
+      preLoaderRoute: typeof StateSlugIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/state/$slug/complete': {
+      id: '/state/$slug/complete'
+      path: '/state/$slug/complete'
+      fullPath: '/state/$slug/complete'
+      preLoaderRoute: typeof StateSlugCompleteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/state/$slug/learn': {
+      id: '/state/$slug/learn'
+      path: '/state/$slug/learn'
+      fullPath: '/state/$slug/learn'
+      preLoaderRoute: typeof StateSlugLearnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/state/$slug/quiz': {
+      id: '/state/$slug/quiz'
+      path: '/state/$slug/quiz'
+      fullPath: '/state/$slug/quiz'
+      preLoaderRoute: typeof StateSlugQuizRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/state/$slug/unlock': {
+      id: '/state/$slug/unlock'
+      path: '/state/$slug/unlock'
+      fullPath: '/state/$slug/unlock'
+      preLoaderRoute: typeof StateSlugUnlockRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/state/$slug/card/$index': {
+      id: '/state/$slug/card/$index'
+      path: '/state/$slug/card/$index'
+      fullPath: '/state/$slug/card/$index'
+      preLoaderRoute: typeof StateSlugCardIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AchievementsRoute: AchievementsRoute,
+  BadgesRoute: BadgesRoute,
+  CreateRoute: CreateRoute,
+  HomeRoute: HomeRoute,
+  JourneyRoute: JourneyRoute,
+  MeRoute: MeRoute,
+  ParentRoute: ParentRoute,
+  PassportRoute: PassportRoute,
+  WelcomeRoute: WelcomeRoute,
+  StateSlugCompleteRoute: StateSlugCompleteRoute,
+  StateSlugLearnRoute: StateSlugLearnRoute,
+  StateSlugQuizRoute: StateSlugQuizRoute,
+  StateSlugUnlockRoute: StateSlugUnlockRoute,
+  StateSlugIndexRoute: StateSlugIndexRoute,
+  StateSlugCardIndexRoute: StateSlugCardIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
