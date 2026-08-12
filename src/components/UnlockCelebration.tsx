@@ -1,0 +1,184 @@
+import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
+import { useProgress, achievementsFor, STATE_BADGES, type BadgeId } from "@/lib/progress";
+import { fxConfetti } from "@/lib/fx";
+
+const BADGE_ICON: Record<BadgeId, string> = {
+  monument: "🏛️",
+  animal: "🐾",
+  explorer: "🧭",
+};
+
+function badgeKeys(badges: Record<string, BadgeId[]> | undefined) {
+  const keys: string[] = [];
+  for (const [state, list] of Object.entries(badges ?? {})) {
+    for (const id of list) keys.push(`${state}:${id}`);
+  }
+  return keys;
+}
+
+type Piece = {
+  id: number;
+  left: number;
+  delay: number;
+  duration: number;
+  color: string;
+  size: number;
+  rotate: number;
+};
+
+const CELEBRATED_KEY = "india-explorer:celebrated:v1";
+
+function loadCelebrated(): Set<string> {
+  if (typeof window === "undefined") return new Set();
+  try {
+    const raw = window.localStorage.getItem(CELEBRATED_KEY);
+    const list = raw ? (JSON.parse(raw) as unknown) : [];
+    return new Set(Array.isArray(list) ? list.filter((v): v is string => typeof v === "string") : []);
+  } catch {
+    return new Set();
+  }
+}
+
+function saveCelebrated(set: Set<string>) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(CELEBRATED_KEY, JSON.stringify([...set]));
+  } catch {
+    /* storage unavailable — celebrations simply replay next load */
+  }
+}
+
+const COLORS = ["#FF7A1A", "#2E7DFF", "#22C55E", "#F5B301", "#ffffff"];
+
+function makePieces(seed: number): Piece[] {
+  return Array.from({ length: 60 }).map((_, i) => ({
+    id: seed * 1000 + i,
+    left: (i * 37 + seed * 13) % 100,
+    delay: ((i * 17) % 10) / 10,
+    duration: 1.8 + ((i * 7) % 12) / 10,
+    color: COLORS[(i + seed) % COLORS.length],
+    size: 6 + (i % 4) * 3,
+    rotate: (i * 31) % 360,
+  }));
+}
+
+/**
+ * Global watcher: fires a celebratory toast + confetti burst whenever a new
+ * achievement or state badge is unlocked.
+ */
+export function UnlockCelebration() {
+  const progress = useProgress();
+  const [pieces, setPieces] = useState<Piece[] | null>(null);
+  const burstRef = useRef(0);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const prevAchievements = useRef<Set<string> | null>(null);
+  const prevBadges = useRef<Set<string> | null>(null);
+  /** every key ever celebrated — persisted so reloads never replay a burst */
+  const celebrated = useRef<Set<string>>(new Set());
+  const hydrated = useRef(false);
+  if (typeof window !== "undefined" && !hydrated.current) {
+    hydrated.current = true;
+    celebrated.current = loadCelebrated();
+  }
+
+  useEffect(() => () => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+  }, []);
+
+  useEffect(() => {
+    const achievements = achievementsFor(progress).filter((a) => a.done);
+    const achievementIds = new Set(achievements.map((a) => a.id));
+    const badges = new Set(badgeKeys(progress.badges));
+
+    // First run after hydration: record the baseline, celebrate nothing.
+    if (!prevAchievements.current || !prevBadges.current) {
+      prevAchievements.current = achievementIds;
+      prevBadges.current = badges;
+      for (const id of achievementIds) celebrated.current.add(`a:${id}`);
+      for (const k of badges) celebrated.current.add(`b:${k}`);
+      saveCelebrated(celebrated.current);
+      return;
+    }
+
+    const newAchievements = achievements.filter(
+      (a) => !prevAchievements.current!.has(a.id) && !celebrated.current.has(`a:${a.id}`),
+    );
+    const newBadges = [...badges].filter(
+      (k) => !prevBadges.current!.has(k) && !celebrated.current.has(`b:${k}`),
+    );
+
+    prevAchievements.current = achievementIds;
+    prevBadges.current = badges;
+
+    if (newAchievements.length === 0 && newBadges.length === 0) return;
+
+    for (const a of newAchievements) celebrated.current.add(`a:${a.id}`);
+    for (const k of newBadges) celebrated.current.add(`b:${k}`);
+    saveCelebrated(celebrated.current);
+
+    // Coalesce everything unlocked in this tick into ONE toast.
+    const lines: string[] = [];
+    for (const a of newAchievements) lines.push(`${a.icon} ${a.title}`);
+
+    if (newBadges.length > 0) {
+      const byState = new Map<string, BadgeId[]>();
+      for (const key of newBadges) {
+        const [state, id] = key.split(":") as [string, BadgeId];
+        byState.set(state, [...(byState.get(state) ?? []), id]);
+      }
+      for (const [state, ids] of byState) {
+        const names = ids
+          .map((id) => `${BADGE_ICON[id]} ${STATE_BADGES.find((b) => b.id === id)?.name ?? id}`)
+          .join(" · ");
+        lines.push(`🏅 ${state}: ${names}`);
+      }
+    }
+
+    const total = newAchievements.length + newBadges.length;
+    const title =
+      newAchievements.length > 0
+        ? total > 1
+          ? `🎉 ${total} new unlocks!`
+          : `${newAchievements[0].icon} Achievement unlocked!`
+        : `🏅 ${newBadges.length} new badge${newBadges.length > 1 ? "s" : ""}!`;
+
+    toast.success(title, {
+      id: `unlock-${[...newAchievements.map((a) => a.id), ...newBadges].sort().join("|")}`,
+      description: lines.join("\n"),
+    });
+
+    // One burst per tick, never stacked.
+    fxConfetti();
+    burstRef.current += 1;
+    if (timerRef.current) clearTimeout(timerRef.current);
+    setPieces(makePieces(burstRef.current));
+    timerRef.current = setTimeout(() => {
+      timerRef.current = null;
+      setPieces(null);
+    }, 3200);
+
+  }, [progress]);
+
+  if (!pieces) return null;
+
+  return (
+    <div className="pointer-events-none fixed inset-0 z-[100] overflow-hidden" aria-hidden>
+      {pieces.map((p) => (
+        <span
+          key={p.id}
+          className="absolute top-[-8%] rounded-[2px] confetti-fall"
+          style={{
+            left: `${p.left}%`,
+            width: p.size,
+            height: p.size * 2,
+            background: p.color,
+            animationDelay: `${p.delay}s`,
+            animationDuration: `${p.duration}s`,
+            ["--confetti-rotate" as string]: `${p.rotate}deg`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}

@@ -1,0 +1,115 @@
+export type StateTone = "orange" | "blue" | "green" | "gold";
+export type StateStatus = "done" | "current" | "locked";
+
+export type IndiaState = {
+  name: string;
+  short: string;
+  capital: string;
+  emoji: string;
+  animal: string;
+  animalName: string;
+  monument: string;
+  monumentName: string;
+  nickname: string;
+  language: string;
+  food: string;
+  population: string;
+  funFact: string;
+  tone: StateTone;
+  /** state (default) or union territory */
+  kind?: "state" | "ut";
+  status: StateStatus;
+  date?: string;
+};
+
+const tones: StateTone[] = ["orange", "gold", "green", "blue"];
+
+const raw: Omit<IndiaState, "tone">[] = [
+  { name: "Rajasthan", short: "Rajasthan", capital: "Jaipur", emoji: "🏰", animal: "🐪", animalName: "Camel", monument: "🏰", monumentName: "Hawa Mahal", nickname: "The Land of Kings", language: "Hindi", food: "Dal Baati", population: "7.9 Cr", funFact: "It has India's only desert — the Thar!", status: "done", date: "12 · MAR" },
+  { name: "Gujarat", short: "Gujarat", capital: "Gandhinagar", emoji: "🗿", animal: "🦁", animalName: "Asiatic Lion", monument: "🗿", monumentName: "Statue of Unity", nickname: "The Jewel of the West", language: "Gujarati", food: "Dhokla", population: "7.0 Cr", funFact: "The world's tallest statue stands here.", status: "done", date: "18 · MAR" },
+  { name: "Madhya Pradesh", short: "M. Pradesh", capital: "Bhopal", emoji: "🛕", animal: "🐅", animalName: "Barasingha", monument: "🛕", monumentName: "Sanchi Stupa", nickname: "The Heart of India", language: "Hindi", food: "Poha", population: "8.5 Cr", funFact: "It is home to the most tigers in India.", status: "done", date: "24 · MAR" },
+  { name: "Maharashtra", short: "Maharashtra", capital: "Mumbai", emoji: "🌊", animal: "🦌", animalName: "Giant Squirrel", monument: "🕌", monumentName: "Gateway of India", nickname: "The Gateway of India", language: "Marathi", food: "Vada Pav", population: "12.4 Cr", funFact: "Mumbai never sleeps — it's India's film capital.", status: "current" },
+  { name: "Goa", short: "Goa", capital: "Panaji", emoji: "🏖️", animal: "🐂", animalName: "Gaur", monument: "⛪", monumentName: "Basilica of Bom Jesus", nickname: "The Pearl of the East", language: "Konkani", food: "Fish Curry", population: "15 Lakh", funFact: "It is India's smallest state by area.", status: "locked" },
+  { name: "Karnataka", short: "Karnataka", capital: "Bengaluru", emoji: "🐘", animal: "🐘", animalName: "Elephant", monument: "🛕", monumentName: "Hampi Ruins", nickname: "One State, Many Worlds", language: "Kannada", food: "Bisi Bele Bath", population: "6.8 Cr", funFact: "Bengaluru is India's tech city.", status: "locked" },
+  { name: "Kerala", short: "Kerala", capital: "Thiruvananthapuram", emoji: "🛶", animal: "🐘", animalName: "Elephant", monument: "🏯", monumentName: "Padmanabhaswamy Temple", nickname: "God's Own Country", language: "Malayalam", food: "Appam & Stew", population: "3.5 Cr", funFact: "You can travel its backwaters by houseboat.", status: "locked" },
+  { name: "Tamil Nadu", short: "Tamil Nadu", capital: "Chennai", emoji: "🛕", animal: "🐐", animalName: "Nilgiri Tahr", monument: "🛕", monumentName: "Meenakshi Temple", nickname: "The Land of Temples", language: "Tamil", food: "Idli & Sambar", population: "7.7 Cr", funFact: "Tamil is one of the world's oldest living languages.", status: "locked" },
+  { name: "Andhra Pradesh", short: "A. Pradesh", capital: "Amaravati", emoji: "🌶️", animal: "🦌", animalName: "Blackbuck", monument: "🛕", monumentName: "Tirupati Temple", nickname: "The Rice Bowl of India", language: "Telugu", food: "Pulihora", population: "5.3 Cr", funFact: "Its spicy chillies travel all over the world.", status: "locked" },
+  { name: "Telangana", short: "Telangana", capital: "Hyderabad", emoji: "💎", animal: "🦌", animalName: "Spotted Deer", monument: "🕌", monumentName: "Charminar", nickname: "The Pearl City State", language: "Telugu", food: "Hyderabadi Biryani", population: "3.8 Cr", funFact: "The famous Kohinoor diamond was found here.", status: "locked" },
+  { name: "Odisha", short: "Odisha", capital: "Bhubaneswar", emoji: "🌅", animal: "🦌", animalName: "Sambar Deer", monument: "🛕", monumentName: "Konark Sun Temple", nickname: "The Soul of India", language: "Odia", food: "Dalma", population: "4.6 Cr", funFact: "Its Sun Temple is shaped like a giant chariot.", status: "locked" },
+  { name: "West Bengal", short: "W. Bengal", capital: "Kolkata", emoji: "🐯", animal: "🐯", animalName: "Royal Bengal Tiger", monument: "🏛️", monumentName: "Victoria Memorial", nickname: "The Land of Joy", language: "Bengali", food: "Rasgulla", population: "9.9 Cr", funFact: "Sundarbans is the largest mangrove forest on Earth.", status: "locked" },
+  { name: "Bihar", short: "Bihar", capital: "Patna", emoji: "🌳", animal: "🐂", animalName: "Gaur", monument: "🛕", monumentName: "Mahabodhi Temple", nickname: "The Land of Buddha", language: "Hindi", food: "Litti Chokha", population: "12.7 Cr", funFact: "The world's oldest university, Nalanda, was here.", status: "locked" },
+  { name: "Jharkhand", short: "Jharkhand", capital: "Ranchi", emoji: "⛏️", animal: "🐘", animalName: "Elephant", monument: "🛕", monumentName: "Baidyanath Temple", nickname: "The Land of Forests", language: "Hindi", food: "Thekua", population: "3.8 Cr", funFact: "Most of India's coal comes from here.", status: "locked" },
+  { name: "Chhattisgarh", short: "Chhattisgarh", capital: "Raipur", emoji: "💧", animal: "🐃", animalName: "Wild Buffalo", monument: "🛕", monumentName: "Bhoramdeo Temple", nickname: "The Rice Bowl of the East", language: "Chhattisgarhi", food: "Chila", population: "3.0 Cr", funFact: "Chitrakote is called the Niagara of India.", status: "locked" },
+  { name: "Uttar Pradesh", short: "U. Pradesh", capital: "Lucknow", emoji: "🕌", animal: "🦌", animalName: "Swamp Deer", monument: "🕌", monumentName: "Taj Mahal", nickname: "The Heartland State", language: "Hindi", food: "Tunday Kebab", population: "24 Cr", funFact: "The Taj Mahal is one of the world's seven wonders.", status: "locked" },
+  { name: "Uttarakhand", short: "Uttarakhand", capital: "Dehradun", emoji: "🏔️", animal: "🦌", animalName: "Musk Deer", monument: "🛕", monumentName: "Kedarnath Temple", nickname: "The Land of Gods", language: "Hindi", food: "Kafuli", population: "1.1 Cr", funFact: "The Ganga river begins its journey here.", status: "locked" },
+  { name: "Haryana", short: "Haryana", capital: "Chandigarh", emoji: "🌾", animal: "🐂", animalName: "Blackbuck", monument: "🏛️", monumentName: "Kurukshetra", nickname: "The Land of Rotis", language: "Haryanvi", food: "Kadhi Pakora", population: "2.9 Cr", funFact: "Many Olympic wrestlers train here.", status: "locked" },
+  { name: "Punjab", short: "Punjab", capital: "Chandigarh", emoji: "🪯", animal: "🦌", animalName: "Blackbuck", monument: "🪯", monumentName: "Golden Temple", nickname: "The Land of Five Rivers", language: "Punjabi", food: "Sarson da Saag", population: "3.0 Cr", funFact: "The Golden Temple serves free meals every day.", status: "locked" },
+  { name: "Himachal Pradesh", short: "H. Pradesh", capital: "Shimla", emoji: "🏔️", animal: "🐆", animalName: "Snow Leopard", monument: "🛕", monumentName: "Hidimba Temple", nickname: "The Land of Snow", language: "Hindi", food: "Siddu", population: "75 Lakh", funFact: "Its toy train climbs through 100 tunnels.", status: "locked" },
+  { name: "Assam", short: "Assam", capital: "Dispur", emoji: "🍃", animal: "🦏", animalName: "One-horned Rhino", monument: "🛕", monumentName: "Kamakhya Temple", nickname: "The Land of Tea", language: "Assamese", food: "Assam Laksa", population: "3.5 Cr", funFact: "Most of India's tea is grown here.", status: "locked" },
+  { name: "Arunachal Pradesh", short: "Ar. Pradesh", capital: "Itanagar", emoji: "🌄", animal: "🐂", animalName: "Mithun", monument: "🏯", monumentName: "Tawang Monastery", nickname: "Land of the Rising Sun", language: "English", food: "Thukpa", population: "15 Lakh", funFact: "India's first sunrise happens here.", status: "locked" },
+  { name: "Manipur", short: "Manipur", capital: "Imphal", emoji: "💃", animal: "🦌", animalName: "Sangai Deer", monument: "🏯", monumentName: "Kangla Fort", nickname: "The Jewelled Land", language: "Meitei", food: "Eromba", population: "31 Lakh", funFact: "It has the world's only floating national park.", status: "locked" },
+  { name: "Meghalaya", short: "Meghalaya", capital: "Shillong", emoji: "☔", animal: "🐆", animalName: "Clouded Leopard", monument: "🌉", monumentName: "Living Root Bridges", nickname: "The Abode of Clouds", language: "Khasi", food: "Jadoh", population: "33 Lakh", funFact: "Its bridges are grown from living tree roots.", status: "locked" },
+  { name: "Mizoram", short: "Mizoram", capital: "Aizawl", emoji: "⛰️", animal: "🐒", animalName: "Serow", monument: "🏯", monumentName: "Reiek Heritage Village", nickname: "The Songbird of India", language: "Mizo", food: "Bai", population: "12 Lakh", funFact: "Almost everyone here can read and write.", status: "locked" },
+  { name: "Nagaland", short: "Nagaland", capital: "Kohima", emoji: "🪘", animal: "🐂", animalName: "Mithun", monument: "🏯", monumentName: "Kisama Heritage Village", nickname: "The Land of Festivals", language: "English", food: "Smoked Pork", population: "22 Lakh", funFact: "The Hornbill Festival lasts ten whole days.", status: "locked" },
+  { name: "Sikkim", short: "Sikkim", capital: "Gangtok", emoji: "🏔️", animal: "🐼", animalName: "Red Panda", monument: "🛕", monumentName: "Rumtek Monastery", nickname: "The Land of Flowers", language: "Nepali", food: "Momos", population: "7 Lakh", funFact: "It was India's first fully organic state.", status: "locked" },
+  { name: "Tripura", short: "Tripura", capital: "Agartala", emoji: "🌴", animal: "🐒", animalName: "Spectacled Monkey", monument: "🏰", monumentName: "Ujjayanta Palace", nickname: "The Hill Tipperah", language: "Bengali", food: "Mui Borok", population: "41 Lakh", funFact: "Its palace has beautiful Mughal-style gardens.", status: "locked" },
+  { name: "Delhi", short: "Delhi", capital: "New Delhi", emoji: "🏛️", animal: "🐦", animalName: "House Sparrow", monument: "🕌", monumentName: "India Gate", nickname: "The Capital City", language: "Hindi", food: "Chole Bhature", population: "2.0 Cr", funFact: "It has been the capital of seven empires!", status: "locked", kind: "ut" },
+  { name: "Jammu & Kashmir", short: "J & K", capital: "Srinagar", emoji: "🏔️", animal: "🦌", animalName: "Hangul Deer", monument: "🌷", monumentName: "Mughal Gardens", nickname: "Paradise on Earth", language: "Kashmiri", food: "Rogan Josh", population: "1.4 Cr", funFact: "Dal Lake has floating houseboats and gardens.", status: "locked", kind: "ut" },
+  { name: "Ladakh", short: "Ladakh", capital: "Leh", emoji: "🏜️", animal: "🐐", animalName: "Snow Leopard", monument: "🏯", monumentName: "Thiksey Monastery", nickname: "The Land of High Passes", language: "Ladakhi", food: "Thukpa", population: "3 Lakh", funFact: "It is a cold desert high in the Himalayas.", status: "locked", kind: "ut" },
+  { name: "Puducherry", short: "Puducherry", capital: "Puducherry", emoji: "🏖️", animal: "🐿️", animalName: "Squirrel", monument: "⛪", monumentName: "French Quarter", nickname: "The French Riviera of the East", language: "Tamil", food: "Baguette Curry", population: "16 Lakh", funFact: "Street signs here are written in French!", status: "locked", kind: "ut" },
+  { name: "Chandigarh", short: "Chandigarh", capital: "Chandigarh", emoji: "🌹", animal: "🦜", animalName: "Indian Grey Hornbill", monument: "🪨", monumentName: "Rock Garden", nickname: "The City Beautiful", language: "Punjabi", food: "Chole Kulche", population: "12 Lakh", funFact: "Its Rock Garden is made from waste materials.", status: "locked", kind: "ut" },
+  { name: "Andaman & Nicobar Islands", short: "Andaman", capital: "Port Blair", emoji: "🏝️", animal: "🐢", animalName: "Dugong", monument: "🏛️", monumentName: "Cellular Jail", nickname: "The Emerald Islands", language: "Hindi", food: "Fish Curry", population: "4 Lakh", funFact: "It is made of more than 500 islands!", status: "locked", kind: "ut" },
+  { name: "Lakshadweep", short: "Lakshadweep", capital: "Kavaratti", emoji: "🐠", animal: "🦋", animalName: "Butterfly Fish", monument: "🕌", monumentName: "Ujra Mosque", nickname: "A Hundred Thousand Islands", language: "Malayalam", food: "Mas Huni", population: "70 Thousand", funFact: "It is India's smallest union territory.", status: "locked", kind: "ut" },
+  { name: "Dadra & Nagar Haveli and Daman & Diu", short: "DNH & DD", capital: "Daman", emoji: "⛱️", animal: "🦚", animalName: "Peacock", monument: "🏰", monumentName: "Fort of Moti Daman", nickname: "The Coastal Getaway", language: "Gujarati", food: "Seafood Thali", population: "6 Lakh", funFact: "It was ruled by Portugal for over 400 years.", status: "locked", kind: "ut" },
+];
+
+export const INDIA_STATES: IndiaState[] = raw.map((s, i) => ({
+  ...s,
+  tone: tones[i % tones.length],
+}));
+
+export const UNION_TERRITORIES = INDIA_STATES.filter((s) => s.kind === "ut");
+export const STATES_ONLY = INDIA_STATES.filter((s) => s.kind !== "ut");
+
+export const TOTAL_STATES = INDIA_STATES.length;
+export const COMPLETED_STATES = INDIA_STATES.filter((s) => s.status === "done").length;
+
+export function getState(name?: string): IndiaState {
+  return INDIA_STATES.find((s) => s.name === name) ?? INDIA_STATES[0];
+}
+
+export function stateIndex(name: string): number {
+  const i = INDIA_STATES.findIndex((s) => s.name === name);
+  return i < 0 ? 0 : i;
+}
+
+/* ---------- slugs & sequencing ---------- */
+
+export function slugify(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+export const STATE_SLUGS: Record<string, string> = Object.fromEntries(
+  INDIA_STATES.map((s) => [s.name, slugify(s.name)]),
+);
+
+export function stateSlug(name: string): string {
+  return STATE_SLUGS[name] ?? slugify(name);
+}
+
+export function getStateBySlug(slug?: string): IndiaState | undefined {
+  return INDIA_STATES.find((s) => stateSlug(s.name) === slug);
+}
+
+/** The state that comes after `name` in the journey order. */
+export function nextStateAfter(name: string): IndiaState | undefined {
+  const i = INDIA_STATES.findIndex((s) => s.name === name);
+  return i >= 0 ? INDIA_STATES[i + 1] : undefined;
+}
+
+export const TOTAL_UNION_TERRITORIES = UNION_TERRITORIES.length;
+export const TOTAL_STATES_ONLY = STATES_ONLY.length;
