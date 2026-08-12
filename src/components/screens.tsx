@@ -891,12 +891,20 @@ function IntroFact({
 export function LearningHubScreen({
   stateName,
   onBack,
-}: { stateName?: string; onBack?: () => void } = {}) {
+  onQuiz,
+  onCard,
+}: {
+  stateName?: string;
+  onBack?: () => void;
+  onQuiz?: () => void;
+  onCard?: (index: number) => void;
+} = {}) {
   const progress = useProgress();
   const state = getState(stateName);
   const live = statesWithProgress(progress).find((s) => s.name === state.name);
   const status = live?.status ?? state.status;
-  const completedCards = status === "done" ? 6 : status === "current" ? 3 : 0;
+  const read = cardsRead(progress, state.name);
+  const completedCards = cardsDone(progress, state.name);
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
 
   const cards = [
@@ -908,9 +916,11 @@ export function LearningHubScreen({
     { icon: "💡", title: "Fun Fact", sub: state.funFact, tone: "blue" as const },
   ].map((c, i) => ({
     ...c,
-    done: i < completedCards,
+    index: i,
+    done: read.includes(i) || completedCards >= CARDS_PER_STATE,
     active: i === completedCards && status !== "locked",
     locked: status === "locked",
+    onOpen: () => onCard?.(i),
   }));
 
   return (
@@ -933,7 +943,7 @@ export function LearningHubScreen({
             <div className="text-display text-xl font-extrabold">{state.name}</div>
           </div>
           <div className="flex items-center gap-1 text-white text-display font-extrabold">
-            <span>⭐</span> {completedCards * 40}
+            <span>⭐</span> {completedCards * XP_PER_CARD}
           </div>
         </div>
         <div className="mt-3 flex items-center gap-2 text-white">
@@ -953,7 +963,13 @@ export function LearningHubScreen({
         ))}
       </div>
       <div className="p-4">
-        <button className="w-full h-14 rounded-2xl gradient-success text-white text-display text-lg font-extrabold shadow-[var(--shadow-glow-green)]">
+        <button
+          onClick={() => {
+            fxTap();
+            onQuiz?.();
+          }}
+          className="w-full h-14 rounded-2xl gradient-success text-white text-display text-lg font-extrabold shadow-[var(--shadow-glow-green)]"
+        >
           Take the Quiz! 🎯
         </button>
       </div>
@@ -970,6 +986,7 @@ function HubCard({
   done,
   active,
   locked,
+  onOpen,
 }: {
   icon: string;
   title: string;
@@ -978,6 +995,8 @@ function HubCard({
   done?: boolean;
   active?: boolean;
   locked?: boolean;
+  index?: number;
+  onOpen?: () => void;
 }) {
   const bg = {
     orange: "bg-saffron-soft",
@@ -992,8 +1011,14 @@ function HubCard({
     gold: "border-[color:var(--gold)]",
   }[tone];
   return (
-    <div
-      className={`relative rounded-3xl p-4 shadow-soft border-2 ${
+    <button
+      type="button"
+      onClick={() => {
+        if (locked) return;
+        fxTap();
+        onOpen?.();
+      }}
+      className={`relative text-left rounded-3xl p-4 shadow-soft border-2 transition active:scale-[0.98] ${
         active ? ring : "border-transparent"
       } ${locked ? "bg-muted opacity-70" : `${bg}`}`}
     >
