@@ -21,6 +21,7 @@ import { Route as PassportRouteImport } from './routes/passport'
 import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as StateSlugIndexRouteImport } from './routes/state.$slug.index'
 import { Route as StateSlugLearnRouteImport } from './routes/state.$slug.learn'
+import { Route as StateSlugQuizRouteImport } from './routes/state.$slug.quiz'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -82,6 +83,11 @@ const StateSlugLearnRoute = StateSlugLearnRouteImport.update({
   path: '/state/$slug/learn',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StateSlugQuizRoute = StateSlugQuizRouteImport.update({
+  id: '/state/$slug/quiz',
+  path: '/state/$slug/quiz',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -95,6 +101,7 @@ export interface FileRoutesByFullPath {
   '/passport': typeof PassportRoute
   '/welcome': typeof WelcomeRoute
   '/state/$slug/learn': typeof StateSlugLearnRoute
+  '/state/$slug/quiz': typeof StateSlugQuizRoute
   '/state/$slug/': typeof StateSlugIndexRoute
 }
 export interface FileRoutesByTo {
@@ -109,6 +116,7 @@ export interface FileRoutesByTo {
   '/passport': typeof PassportRoute
   '/welcome': typeof WelcomeRoute
   '/state/$slug/learn': typeof StateSlugLearnRoute
+  '/state/$slug/quiz': typeof StateSlugQuizRoute
   '/state/$slug': typeof StateSlugIndexRoute
 }
 export interface FileRoutesById {
@@ -124,6 +132,7 @@ export interface FileRoutesById {
   '/passport': typeof PassportRoute
   '/welcome': typeof WelcomeRoute
   '/state/$slug/learn': typeof StateSlugLearnRoute
+  '/state/$slug/quiz': typeof StateSlugQuizRoute
   '/state/$slug/': typeof StateSlugIndexRoute
 }
 export interface FileRouteTypes {
@@ -140,6 +149,7 @@ export interface FileRouteTypes {
     | '/passport'
     | '/welcome'
     | '/state/$slug/learn'
+    | '/state/$slug/quiz'
     | '/state/$slug/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -154,6 +164,7 @@ export interface FileRouteTypes {
     | '/passport'
     | '/welcome'
     | '/state/$slug/learn'
+    | '/state/$slug/quiz'
     | '/state/$slug'
   id:
     | '__root__'
@@ -168,6 +179,7 @@ export interface FileRouteTypes {
     | '/passport'
     | '/welcome'
     | '/state/$slug/learn'
+    | '/state/$slug/quiz'
     | '/state/$slug/'
   fileRoutesById: FileRoutesById
 }
@@ -183,6 +195,7 @@ export interface RootRouteChildren {
   PassportRoute: typeof PassportRoute
   WelcomeRoute: typeof WelcomeRoute
   StateSlugLearnRoute: typeof StateSlugLearnRoute
+  StateSlugQuizRoute: typeof StateSlugQuizRoute
   StateSlugIndexRoute: typeof StateSlugIndexRoute
 }
 
@@ -272,6 +285,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StateSlugLearnRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/state/$slug/quiz': {
+      id: '/state/$slug/quiz'
+      path: '/state/$slug/quiz'
+      fullPath: '/state/$slug/quiz'
+      preLoaderRoute: typeof StateSlugQuizRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -287,6 +307,7 @@ const rootRouteChildren: RootRouteChildren = {
   PassportRoute: PassportRoute,
   WelcomeRoute: WelcomeRoute,
   StateSlugLearnRoute: StateSlugLearnRoute,
+  StateSlugQuizRoute: StateSlugQuizRoute,
   StateSlugIndexRoute: StateSlugIndexRoute,
 }
 export const routeTree = rootRouteImport
