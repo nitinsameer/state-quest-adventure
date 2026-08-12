@@ -1047,57 +1047,129 @@ function HubCard({
           🔒
         </div>
       )}
-    </div>
+    </button>
   );
 }
 
-export function LearningCardScreen({ stateName }: { stateName?: string } = {}) {
+export function learningCardsFor(stateName?: string) {
+  const state = getState(stateName);
+  return [
+    {
+      kicker: "Capital",
+      title: state.capital,
+      icon: "🏛️",
+      chip: "Capital City",
+      body: `${state.capital} is the capital city of ${state.name}. It is where the state's government works from.`,
+    },
+    {
+      kicker: "Language",
+      title: state.language,
+      icon: "🗣️",
+      chip: "Language",
+      body: `People in ${state.name} mostly speak ${state.language}. Try saying hello in it!`,
+    },
+    {
+      kicker: "Famous Food",
+      title: state.food,
+      icon: "🍛",
+      chip: "Food",
+      body: `${state.food} is a favourite dish of ${state.name}. Yum!`,
+    },
+    {
+      kicker: "Places",
+      title: state.monumentName,
+      icon: state.monument,
+      chip: "Monument",
+      body: `${state.monumentName} is a treasure of ${state.name}, ${state.nickname.toLowerCase()}.`,
+    },
+    {
+      kicker: "State Animal",
+      title: state.animalName,
+      icon: state.animal,
+      chip: "Animal",
+      body: `The ${state.animalName} is a special animal you can find in ${state.name}.`,
+    },
+    {
+      kicker: "Fun Fact",
+      title: "Did you know?",
+      icon: "💡",
+      chip: "Fun Fact",
+      body: state.funFact,
+    },
+  ];
+}
+
+export function LearningCardScreen({
+  stateName,
+  cardIndex = 0,
+  onNext,
+  onClose,
+}: {
+  stateName?: string;
+  cardIndex?: number;
+  onNext?: (nextIndex: number | null) => void;
+  onClose?: () => void;
+} = {}) {
   const state = getState(stateName);
   const art = STATE_ART[state.name];
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
+  const cards = learningCardsFor(state.name);
+  const i = Math.min(Math.max(cardIndex, 0), cards.length - 1);
+  const card = cards[i];
+  const isLast = i === cards.length - 1;
 
   return (
     <div className="h-full w-full bg-[#FDF7EF] flex flex-col">
       <div className="px-5 pt-3 pb-2 flex items-center gap-3">
-        <button className="h-10 w-10 rounded-full bg-white shadow-soft flex items-center justify-center text-xl">
+        <button
+          onClick={() => {
+            fxTap();
+            onClose?.();
+          }}
+          aria-label="Close"
+          className="h-10 w-10 rounded-full bg-white shadow-soft flex items-center justify-center text-xl"
+        >
           ✕
         </button>
         <div className="flex-1 h-3 rounded-full bg-white overflow-hidden shadow-inner">
-          <div className={`h-full w-2/3 ${grad}`} />
+          <div
+            className={`h-full ${grad} transition-all`}
+            style={{ width: `${((i + 1) / cards.length) * 100}%` }}
+          />
         </div>
-        <div className="text-display font-extrabold text-saffron">4/6</div>
+        <div className="text-display font-extrabold text-saffron">
+          {i + 1}/{cards.length}
+        </div>
       </div>
 
       <div className="px-5 mt-2">
         <div className="text-xs font-black uppercase tracking-wider text-saffron">
-          {state.name} · Places
+          {state.name} · {card.kicker}
         </div>
         <h2 className="text-display text-2xl font-extrabold leading-tight mt-1">
-          {state.monumentName}
+          {card.title}
         </h2>
       </div>
 
       <div className="mx-5 mt-4 rounded-3xl bg-white shadow-soft border border-black/5 p-4 flex-1 flex flex-col">
         <div className="flex-1 gradient-sky rounded-2xl flex items-center justify-center overflow-hidden">
-          {art ? (
+          {art && card.kicker === "Places" ? (
             <img src={art} alt="" className="h-full object-contain drop-shadow-xl" />
           ) : (
-            <div className="text-[92px] drop-shadow-xl">{state.monument}</div>
+            <div className="text-[92px] drop-shadow-xl">{card.icon}</div>
           )}
         </div>
         <div className="mt-3">
           <div className="flex items-center gap-2">
-            <Chip icon="🏛️" tone="orange">
-              Monument
+            <Chip icon={card.icon} tone="orange">
+              {card.chip}
             </Chip>
             <Chip icon="📍" tone="blue">
-              {state.capital}
+              {state.name}
             </Chip>
           </div>
           <p className="mt-2 font-semibold text-ink/85 text-[15px] leading-snug">
-            {state.monumentName} is a treasure of{" "}
-            <span className="text-saffron font-extrabold">{state.name}</span>, {state.nickname.toLowerCase()}.{" "}
-            {state.funFact}
+            {card.body}
           </p>
         </div>
       </div>
@@ -1107,9 +1179,14 @@ export function LearningCardScreen({ stateName }: { stateName?: string } = {}) {
           🔊
         </button>
         <button
+          onClick={() => {
+            fxTap();
+            markCard(state.name, i);
+            onNext?.(isLast ? null : i + 1);
+          }}
           className={`flex-1 h-14 rounded-2xl ${grad} text-white text-display text-lg font-extrabold shadow-[var(--shadow-glow-orange)]`}
         >
-          Got it! Next →
+          {isLast ? "Take the Quiz! 🎯" : "Got it! Next →"}
         </button>
       </div>
     </div>
