@@ -1,4 +1,4 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
 import { StateIntroScreen } from "@/components/screens";
 import { getStateBySlug } from "@/lib/states";
 import { NotFoundPlace, PlaceError } from "@/components/PlaceFallbacks";
@@ -36,5 +36,13 @@ export const Route = createFileRoute("/state/$slug/")({
 function Intro() {
   const { slug } = Route.useParams();
   const { name } = Route.useLoaderData();
-  return <StateIntroScreen key={slug} stateName={name} />;
+  const navigate = useNavigate();
+  return (
+    <StateIntroScreen
+      key={slug}
+      stateName={name}
+      onBack={() => navigate({ to: "/journey" })}
+      onContinue={() => navigate({ to: "/state/$slug/learn", params: { slug } })}
+    />
+  );
 }

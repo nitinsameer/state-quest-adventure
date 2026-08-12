@@ -1,4 +1,4 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
 import { LearningHubScreen } from "@/components/screens";
 import { getStateBySlug } from "@/lib/states";
 import { NotFoundPlace, PlaceError } from "@/components/PlaceFallbacks";
@@ -34,5 +34,16 @@ export const Route = createFileRoute("/state/$slug/learn")({
 function Hub() {
   const { slug } = Route.useParams();
   const { name } = Route.useLoaderData();
-  return <LearningHubScreen key={slug} stateName={name} />;
+  const navigate = useNavigate();
+  return (
+    <LearningHubScreen
+      key={slug}
+      stateName={name}
+      onBack={() => navigate({ to: "/state/$slug", params: { slug } })}
+      onQuiz={() => navigate({ to: "/state/$slug/quiz", params: { slug } })}
+      onCard={(index) =>
+        navigate({ to: "/state/$slug/card/$index", params: { slug, index: String(index) } })
+      }
+    />
+  );
 }
