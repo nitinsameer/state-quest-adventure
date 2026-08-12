@@ -20,6 +20,7 @@ import { Route as ParentRouteImport } from './routes/parent'
 import { Route as PassportRouteImport } from './routes/passport'
 import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as StateSlugIndexRouteImport } from './routes/state.$slug.index'
+import { Route as StateSlugCompleteRouteImport } from './routes/state.$slug.complete'
 import { Route as StateSlugLearnRouteImport } from './routes/state.$slug.learn'
 import { Route as StateSlugQuizRouteImport } from './routes/state.$slug.quiz'
 
@@ -78,6 +79,11 @@ const StateSlugIndexRoute = StateSlugIndexRouteImport.update({
   path: '/state/$slug/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StateSlugCompleteRoute = StateSlugCompleteRouteImport.update({
+  id: '/state/$slug/complete',
+  path: '/state/$slug/complete',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StateSlugLearnRoute = StateSlugLearnRouteImport.update({
   id: '/state/$slug/learn',
   path: '/state/$slug/learn',
@@ -100,6 +106,7 @@ export interface FileRoutesByFullPath {
   '/parent': typeof ParentRoute
   '/passport': typeof PassportRoute
   '/welcome': typeof WelcomeRoute
+  '/state/$slug/complete': typeof StateSlugCompleteRoute
   '/state/$slug/learn': typeof StateSlugLearnRoute
   '/state/$slug/quiz': typeof StateSlugQuizRoute
   '/state/$slug/': typeof StateSlugIndexRoute
@@ -115,6 +122,7 @@ export interface FileRoutesByTo {
   '/parent': typeof ParentRoute
   '/passport': typeof PassportRoute
   '/welcome': typeof WelcomeRoute
+  '/state/$slug/complete': typeof StateSlugCompleteRoute
   '/state/$slug/learn': typeof StateSlugLearnRoute
   '/state/$slug/quiz': typeof StateSlugQuizRoute
   '/state/$slug': typeof StateSlugIndexRoute
@@ -131,6 +139,7 @@ export interface FileRoutesById {
   '/parent': typeof ParentRoute
   '/passport': typeof PassportRoute
   '/welcome': typeof WelcomeRoute
+  '/state/$slug/complete': typeof StateSlugCompleteRoute
   '/state/$slug/learn': typeof StateSlugLearnRoute
   '/state/$slug/quiz': typeof StateSlugQuizRoute
   '/state/$slug/': typeof StateSlugIndexRoute
@@ -148,6 +157,7 @@ export interface FileRouteTypes {
     | '/parent'
     | '/passport'
     | '/welcome'
+    | '/state/$slug/complete'
     | '/state/$slug/learn'
     | '/state/$slug/quiz'
     | '/state/$slug/'
@@ -163,6 +173,7 @@ export interface FileRouteTypes {
     | '/parent'
     | '/passport'
     | '/welcome'
+    | '/state/$slug/complete'
     | '/state/$slug/learn'
     | '/state/$slug/quiz'
     | '/state/$slug'
@@ -178,6 +189,7 @@ export interface FileRouteTypes {
     | '/parent'
     | '/passport'
     | '/welcome'
+    | '/state/$slug/complete'
     | '/state/$slug/learn'
     | '/state/$slug/quiz'
     | '/state/$slug/'
@@ -194,6 +206,7 @@ export interface RootRouteChildren {
   ParentRoute: typeof ParentRoute
   PassportRoute: typeof PassportRoute
   WelcomeRoute: typeof WelcomeRoute
+  StateSlugCompleteRoute: typeof StateSlugCompleteRoute
   StateSlugLearnRoute: typeof StateSlugLearnRoute
   StateSlugQuizRoute: typeof StateSlugQuizRoute
   StateSlugIndexRoute: typeof StateSlugIndexRoute
@@ -278,6 +291,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StateSlugIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/state/$slug/complete': {
+      id: '/state/$slug/complete'
+      path: '/state/$slug/complete'
+      fullPath: '/state/$slug/complete'
+      preLoaderRoute: typeof StateSlugCompleteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/state/$slug/learn': {
       id: '/state/$slug/learn'
       path: '/state/$slug/learn'
@@ -306,6 +326,7 @@ const rootRouteChildren: RootRouteChildren = {
   ParentRoute: ParentRoute,
   PassportRoute: PassportRoute,
   WelcomeRoute: WelcomeRoute,
+  StateSlugCompleteRoute: StateSlugCompleteRoute,
   StateSlugLearnRoute: StateSlugLearnRoute,
   StateSlugQuizRoute: StateSlugQuizRoute,
   StateSlugIndexRoute: StateSlugIndexRoute,
