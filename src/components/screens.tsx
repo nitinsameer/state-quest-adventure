@@ -1946,7 +1946,11 @@ function RowLink({
     gold: "gradient-gold",
   }[tone];
   return (
-    <div className="rounded-2xl bg-white shadow-soft border border-black/5 p-3 flex items-center gap-3">
+    <Link
+      to={to}
+      onClick={() => fxTap()}
+      className="rounded-2xl bg-white shadow-soft border border-black/5 p-3 flex items-center gap-3 transition active:scale-[0.99]"
+    >
       <div className={`h-12 w-12 rounded-2xl ${bg} flex items-center justify-center text-2xl`}>
         {icon}
       </div>
@@ -1957,7 +1961,7 @@ function RowLink({
         <div className="text-[11px] font-bold text-muted-foreground">{sub}</div>
       </div>
       <div className="text-muted-foreground text-xl">›</div>
-    </div>
+    </Link>
   );
 }
 
