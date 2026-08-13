@@ -1,9 +1,7 @@
 import mascot from "@/assets/mascot.png";
 import airplane from "@/assets/airplane.png";
-import rajasthan from "@/assets/rajasthan.png";
-import gujarat from "@/assets/gujarat.png";
-import maharashtra from "@/assets/maharashtra.png";
-import mp from "@/assets/mp.png";
+import { STATE_ART, TONE_GRADIENT } from "@/lib/state-art";
+import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { fxCorrect, fxWrong, fxConfetti, fxStamp, fxTap, useSoundOn, setSoundOn } from "@/lib/fx";
@@ -780,19 +778,6 @@ export function JourneyMapScreen() {
 }
 
 
-const STATE_ART: Record<string, string> = {
-  Rajasthan: rajasthan,
-  Gujarat: gujarat,
-  "Madhya Pradesh": mp,
-  Maharashtra: maharashtra,
-};
-
-const TONE_GRADIENT: Record<string, string> = {
-  orange: "gradient-saffron",
-  blue: "gradient-explorer",
-  green: "gradient-success",
-  gold: "gradient-gold",
-};
 
 export function StateIntroScreen({
   stateName,
