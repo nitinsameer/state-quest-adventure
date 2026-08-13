@@ -17,7 +17,7 @@ import {
   stateSlug,
   nextStateAfter,
 } from "@/lib/states";
-import { questionsForStateName } from "@/lib/quiz";
+import { randomQuestionsForState } from "@/lib/quiz";
 
 import {
   useProgress,
@@ -1217,7 +1217,7 @@ export function QuizScreen({
     states.find((s) => s.status !== "done")?.name ??
     states[0].name;
 
-  const questions = useMemo(() => questionsForStateName(activeName), [activeName]);
+  const questions = useMemo(() => randomQuestionsForState(activeName, 3), [activeName]);
   const [index, setIndex] = useState(0);
   const question = questions[Math.min(index, questions.length - 1)];
 

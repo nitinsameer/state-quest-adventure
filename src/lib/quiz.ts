@@ -68,34 +68,29 @@ function build(
   return { id: `${state.name.toLowerCase().replace(/\s+/g, "-")}-${id}`, kicker, prompt, options, correct, xp };
 }
 
-/** Every question for a state, generated from that state's own data. */
+/** Every possible question for a state, generated from that state's own data. */
 export function questionsForState(state: IndiaState): QuizQuestion[] {
   return [
-    build(
-      state,
-      "capital",
-      "Capital City",
-      `What is the capital of ${state.name}?`,
-      state.capital,
-      (s) => s.capital,
-    ),
-    build(
-      state,
-      "state-of-capital",
-      "Find the State",
-      `${state.capital} is the capital of which state?`,
-      state.name,
-      (s) => s.name,
-    ),
-    build(
-      state,
-      "landmark",
-      "Landmark",
-      `Which symbol stands for ${state.name}?`,
-      state.emoji,
-      (s) => s.emoji,
-    ),
+    build(state, "capital", "Capital City", `What is the capital of ${state.name}?`, state.capital, (s) => s.capital),
+    build(state, "state-of-capital", "Find the State", `${state.capital} is the capital of which state?`, state.name, (s) => s.name),
+    build(state, "landmark", "Landmark", `Which symbol stands for ${state.name}?`, state.emoji, (s) => s.emoji),
+    build(state, "language", "Language", `Which language is mainly spoken in ${state.name}?`, state.language, (s) => s.language),
+    build(state, "food", "Famous Food", `Which tasty dish comes from ${state.name}?`, state.food, (s) => s.food),
+    build(state, "animal", "State Animal", `Which animal is the state animal of ${state.name}?`, state.animalName, (s) => s.animalName),
+    build(state, "monument", "Monument", `Which famous place can you visit in ${state.name}?`, state.monumentName, (s) => s.monumentName),
+    build(state, "nickname", "Nickname", `${state.name} is also known as...?`, state.nickname, (s) => s.nickname),
+    build(state, "population", "How Many People", `About how many people live in ${state.name}?`, state.population, (s) => s.population),
   ];
+}
+
+/** Pick `count` random questions for a state (fresh mix on every quiz start). */
+export function randomQuestionsForState(name: string, count = 3): QuizQuestion[] {
+  const pool = [...questionsForStateName(name)];
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  return pool.slice(0, Math.min(count, pool.length));
 }
 
 export function questionsForStateName(name: string): QuizQuestion[] {
