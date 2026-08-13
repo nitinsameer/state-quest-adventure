@@ -1274,7 +1274,12 @@ export function QuizScreen({
       </div>
 
       <div className="px-5 mt-3 flex items-center gap-3">
-        <img src={mascot} alt="" className="w-16 h-16 object-contain" />
+        <img
+          key={result === "correct" ? `cheer-${burst}` : "idle"}
+          src={mascot}
+          alt=""
+          className={`w-16 h-16 object-contain ${result === "correct" ? "mascot-cheer" : ""}`}
+        />
         <div className="relative bg-white rounded-2xl shadow-soft px-3 py-2 text-sm font-extrabold">
           {result === "correct"
             ? "Nailed it! 🎉"
@@ -1472,6 +1477,11 @@ export function StateCompletedScreen({
             <div className="text-[9px] font-bold opacity-90">EXPLORER · LVL 1</div>
           </div>
         </div>
+        <img
+          src={mascot}
+          alt=""
+          className="absolute -left-14 bottom-0 w-24 h-24 object-contain mascot-cheer drop-shadow"
+        />
       </div>
 
 
