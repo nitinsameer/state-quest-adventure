@@ -102,22 +102,34 @@ export function StatePostcardScreen({
     c.fillStyle = "rgba(255,255,255,0.92)";
     c.fillText(state.nickname, W / 2, 295);
 
-    // artwork
+    // artwork — fitted inside a fixed band, centred, never upscaled past 1:1
+    c.imageSmoothingEnabled = true;
+    c.imageSmoothingQuality = "high";
+    const BAND_X = 250;
+    const BAND_Y = 410;
+    const BAND_W = 480;
+    const BAND_H = 320;
     try {
       if (art) {
         const img = await loadImage(art);
-        const maxW = 420;
-        const scale = Math.min(maxW / img.width, 300 / img.height);
+        const scale = Math.min(BAND_W / img.width, BAND_H / img.height, 1.6);
+        const dw = img.width * scale;
+        const dh = img.height * scale;
+        c.save();
+        c.shadowColor = "rgba(15,23,42,0.22)";
+        c.shadowBlur = 26;
+        c.shadowOffsetY = 12;
         c.drawImage(
           img,
-          W / 2 - (img.width * scale) / 2,
-          420,
-          img.width * scale,
-          img.height * scale,
+          BAND_X + (BAND_W - dw) / 2,
+          BAND_Y + (BAND_H - dh) / 2,
+          dw,
+          dh,
         );
+        c.restore();
       } else {
         c.font = "200px system-ui, sans-serif";
-        c.fillText(state.emoji, W / 2, 620);
+        c.fillText(state.emoji, W / 2, BAND_Y + 230);
       }
     } catch {
       /* art optional */
@@ -125,11 +137,12 @@ export function StatePostcardScreen({
 
     try {
       const m = await loadImage(mascot);
-      const scale = Math.min(230 / m.width, 230 / m.height);
-      c.drawImage(m, 80, 560, m.width * scale, m.height * scale);
+      const scale = Math.min(220 / m.width, 220 / m.height);
+      c.drawImage(m, 95, 560, m.width * scale, m.height * scale);
     } catch {
       /* mascot optional */
     }
+
 
     // badge chip
     c.fillStyle = "#F6F3EC";
