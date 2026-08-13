@@ -22,6 +22,7 @@ import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as StateSlugIndexRouteImport } from './routes/state.$slug.index'
 import { Route as StateSlugCompleteRouteImport } from './routes/state.$slug.complete'
 import { Route as StateSlugLearnRouteImport } from './routes/state.$slug.learn'
+import { Route as StateSlugPostcardRouteImport } from './routes/state.$slug.postcard'
 import { Route as StateSlugQuizRouteImport } from './routes/state.$slug.quiz'
 import { Route as StateSlugUnlockRouteImport } from './routes/state.$slug.unlock'
 import { Route as StateSlugCardIndexRouteImport } from './routes/state.$slug.card.$index'
@@ -91,6 +92,11 @@ const StateSlugLearnRoute = StateSlugLearnRouteImport.update({
   path: '/state/$slug/learn',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StateSlugPostcardRoute = StateSlugPostcardRouteImport.update({
+  id: '/state/$slug/postcard',
+  path: '/state/$slug/postcard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StateSlugQuizRoute = StateSlugQuizRouteImport.update({
   id: '/state/$slug/quiz',
   path: '/state/$slug/quiz',
@@ -120,6 +126,7 @@ export interface FileRoutesByFullPath {
   '/welcome': typeof WelcomeRoute
   '/state/$slug/complete': typeof StateSlugCompleteRoute
   '/state/$slug/learn': typeof StateSlugLearnRoute
+  '/state/$slug/postcard': typeof StateSlugPostcardRoute
   '/state/$slug/quiz': typeof StateSlugQuizRoute
   '/state/$slug/unlock': typeof StateSlugUnlockRoute
   '/state/$slug/': typeof StateSlugIndexRoute
@@ -138,6 +145,7 @@ export interface FileRoutesByTo {
   '/welcome': typeof WelcomeRoute
   '/state/$slug/complete': typeof StateSlugCompleteRoute
   '/state/$slug/learn': typeof StateSlugLearnRoute
+  '/state/$slug/postcard': typeof StateSlugPostcardRoute
   '/state/$slug/quiz': typeof StateSlugQuizRoute
   '/state/$slug/unlock': typeof StateSlugUnlockRoute
   '/state/$slug': typeof StateSlugIndexRoute
@@ -157,6 +165,7 @@ export interface FileRoutesById {
   '/welcome': typeof WelcomeRoute
   '/state/$slug/complete': typeof StateSlugCompleteRoute
   '/state/$slug/learn': typeof StateSlugLearnRoute
+  '/state/$slug/postcard': typeof StateSlugPostcardRoute
   '/state/$slug/quiz': typeof StateSlugQuizRoute
   '/state/$slug/unlock': typeof StateSlugUnlockRoute
   '/state/$slug/': typeof StateSlugIndexRoute
@@ -177,6 +186,7 @@ export interface FileRouteTypes {
     | '/welcome'
     | '/state/$slug/complete'
     | '/state/$slug/learn'
+    | '/state/$slug/postcard'
     | '/state/$slug/quiz'
     | '/state/$slug/unlock'
     | '/state/$slug/'
@@ -195,6 +205,7 @@ export interface FileRouteTypes {
     | '/welcome'
     | '/state/$slug/complete'
     | '/state/$slug/learn'
+    | '/state/$slug/postcard'
     | '/state/$slug/quiz'
     | '/state/$slug/unlock'
     | '/state/$slug'
@@ -213,6 +224,7 @@ export interface FileRouteTypes {
     | '/welcome'
     | '/state/$slug/complete'
     | '/state/$slug/learn'
+    | '/state/$slug/postcard'
     | '/state/$slug/quiz'
     | '/state/$slug/unlock'
     | '/state/$slug/'
@@ -232,6 +244,7 @@ export interface RootRouteChildren {
   WelcomeRoute: typeof WelcomeRoute
   StateSlugCompleteRoute: typeof StateSlugCompleteRoute
   StateSlugLearnRoute: typeof StateSlugLearnRoute
+  StateSlugPostcardRoute: typeof StateSlugPostcardRoute
   StateSlugQuizRoute: typeof StateSlugQuizRoute
   StateSlugUnlockRoute: typeof StateSlugUnlockRoute
   StateSlugIndexRoute: typeof StateSlugIndexRoute
@@ -331,6 +344,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StateSlugLearnRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/state/$slug/postcard': {
+      id: '/state/$slug/postcard'
+      path: '/state/$slug/postcard'
+      fullPath: '/state/$slug/postcard'
+      preLoaderRoute: typeof StateSlugPostcardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/state/$slug/quiz': {
       id: '/state/$slug/quiz'
       path: '/state/$slug/quiz'
@@ -368,6 +388,7 @@ const rootRouteChildren: RootRouteChildren = {
   WelcomeRoute: WelcomeRoute,
   StateSlugCompleteRoute: StateSlugCompleteRoute,
   StateSlugLearnRoute: StateSlugLearnRoute,
+  StateSlugPostcardRoute: StateSlugPostcardRoute,
   StateSlugQuizRoute: StateSlugQuizRoute,
   StateSlugUnlockRoute: StateSlugUnlockRoute,
   StateSlugIndexRoute: StateSlugIndexRoute,

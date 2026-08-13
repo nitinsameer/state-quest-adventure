@@ -41,7 +41,7 @@ function Complete() {
   const { slug } = Route.useParams();
   const { name } = Route.useLoaderData();
   const navigate = useNavigate();
-  const goNext = () => navigate({ to: "/state/$slug/unlock", params: { slug } });
+  const goNext = () => navigate({ to: "/state/$slug/postcard", params: { slug } });
 
   useEffect(() => {
     const t = setTimeout(goNext, 3500);
