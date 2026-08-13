@@ -63,10 +63,16 @@ const raw: Omit<IndiaState, "tone">[] = [
   { name: "Dadra & Nagar Haveli and Daman & Diu", short: "DNH & DD", capital: "Daman", emoji: "⛱️", animal: "🦚", animalName: "Peacock", monument: "🏰", monumentName: "Fort of Moti Daman", nickname: "The Coastal Getaway", language: "Gujarati", food: "Seafood Thali", population: "6 Lakh", funFact: "It was ruled by Portugal for over 400 years.", status: "locked", kind: "ut" },
 ];
 
+/** Overrides where the cyclic tone clashes with that state's illustration palette. */
+const TONE_OVERRIDES: Record<string, StateTone> = {
+  Mizoram: "green",
+};
+
 export const INDIA_STATES: IndiaState[] = raw.map((s, i) => ({
   ...s,
-  tone: tones[i % tones.length],
+  tone: TONE_OVERRIDES[s.name] ?? tones[i % tones.length],
 }));
+
 
 export const UNION_TERRITORIES = INDIA_STATES.filter((s) => s.kind === "ut");
 export const STATES_ONLY = INDIA_STATES.filter((s) => s.kind !== "ut");
