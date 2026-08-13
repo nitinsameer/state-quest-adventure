@@ -1208,6 +1208,7 @@ export function QuizScreen({
 
   const [selected, setSelected] = useState<string | null>(null);
   const [result, setResult] = useState<"correct" | "wrong" | null>(null);
+  const [burst, setBurst] = useState(0);
 
   const answers = question.options;
   const correct = question.correct;
@@ -1223,6 +1224,7 @@ export function QuizScreen({
       fxCorrect();
       addXP(question.xp, question.id);
       setResult("correct");
+      setBurst((n) => n + 1);
     } else {
       fxWrong();
       setResult("wrong");
@@ -1243,7 +1245,8 @@ export function QuizScreen({
   };
 
   return (
-    <div className="h-full w-full bg-explorer-soft flex flex-col">
+    <div className="h-full w-full bg-explorer-soft flex flex-col relative">
+      <ConfettiBurst trigger={burst} size="small" />
       <div className="px-5 pt-3 pb-2 flex items-center gap-3">
         <button
           onClick={() => {
@@ -1427,6 +1430,7 @@ export function StateCompletedScreen({
   }, [state.name, persist]);
   return (
     <div className="h-full w-full gradient-gold relative overflow-hidden flex flex-col items-center">
+      <ConfettiBurst trigger={burstKey} size="big" />
       {Array.from({ length: 28 }).map((_, i) => (
         <div
           key={i}
