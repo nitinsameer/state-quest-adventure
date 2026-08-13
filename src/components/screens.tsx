@@ -6,7 +6,7 @@ import maharashtra from "@/assets/maharashtra.png";
 import mp from "@/assets/mp.png";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
-import { fxCorrect, fxWrong, fxConfetti, fxStamp, fxTap } from "@/lib/fx";
+import { fxCorrect, fxWrong, fxConfetti, fxStamp, fxTap, useSoundOn, setSoundOn } from "@/lib/fx";
 import {
   INDIA_STATES,
   TOTAL_STATES,
@@ -1880,6 +1880,7 @@ export function ProfileScreen() {
 
 
       <div className="px-5 mt-5 space-y-3 flex-1 overflow-auto pb-24">
+        <SoundToggleRow />
         <RowLink
           icon="📓"
           tone="orange"
@@ -1912,6 +1913,40 @@ export function ProfileScreen() {
       <BottomNav active="profile" />
       <div className="h-20" />
     </div>
+  );
+}
+
+function SoundToggleRow() {
+  const on = useSoundOn();
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={on}
+      aria-label="Sound and vibration"
+      onClick={() => {
+        setSoundOn(!on);
+        if (!on) fxTap();
+      }}
+      className="w-full rounded-2xl bg-white shadow-soft border border-black/5 p-3 flex items-center gap-3 transition active:scale-[0.99]"
+    >
+      <div className="h-12 w-12 rounded-2xl gradient-explorer flex items-center justify-center text-2xl">
+        {on ? "🔊" : "🔇"}
+      </div>
+      <div className="flex-1 text-left">
+        <div className="text-display font-extrabold text-[15px] leading-tight">Sound & Vibration</div>
+        <div className="text-[11px] font-bold text-muted-foreground">
+          {on ? "Sounds are on" : "Sounds are off"}
+        </div>
+      </div>
+      <span
+        className={`h-7 w-12 rounded-full flex items-center px-1 transition ${on ? "gradient-success" : "bg-muted"}`}
+      >
+        <span
+          className={`h-5 w-5 rounded-full bg-white shadow transition-transform ${on ? "translate-x-5" : "translate-x-0"}`}
+        />
+      </span>
+    </button>
   );
 }
 
