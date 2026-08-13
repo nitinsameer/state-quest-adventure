@@ -1,6 +1,6 @@
 import mascot from "@/assets/mascot.png";
 import airplane from "@/assets/airplane.png";
-import { STATE_ART, TONE_GRADIENT } from "@/lib/state-art";
+import { STATE_ART, TONE_GRADIENT, preloadStateArt } from "@/lib/state-art";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
@@ -789,6 +789,10 @@ export function StateIntroScreen({
   const art = STATE_ART[state.name];
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
 
+  useEffect(() => {
+    preloadStateArt(state.name, nextStateAfter(state.name)?.name);
+  }, [state.name]);
+
   return (
     <div className="h-full w-full flex flex-col bg-white">
       <div className={`relative h-[46%] ${grad} overflow-hidden`}>
@@ -814,6 +818,7 @@ export function StateIntroScreen({
           <img
             src={art}
             alt=""
+            decoding="async"
             className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[85%] object-contain drop-shadow-2xl"
           />
         ) : (
@@ -1110,6 +1115,9 @@ export function LearningCardScreen({
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
   const cards = learningCardsFor(state.name);
   const i = Math.min(Math.max(cardIndex, 0), cards.length - 1);
+  useEffect(() => {
+    preloadStateArt(state.name, nextStateAfter(state.name)?.name);
+  }, [state.name]);
   const card = cards[i];
   const isLast = i === cards.length - 1;
 
@@ -1149,7 +1157,7 @@ export function LearningCardScreen({
       <div className="mx-5 mt-4 rounded-3xl bg-white shadow-soft border border-black/5 p-4 flex-1 flex flex-col">
         <div className="flex-1 gradient-sky rounded-2xl flex items-center justify-center overflow-hidden">
           {art && card.kicker === "Places" ? (
-            <img src={art} alt="" className="h-full object-contain drop-shadow-xl" />
+            <img src={art} alt="" loading="lazy" decoding="async" className="h-full object-contain drop-shadow-xl" />
           ) : (
             <div className="text-[92px] drop-shadow-xl">{card.icon}</div>
           )}
@@ -1467,7 +1475,7 @@ export function StateCompletedScreen({
         <div className="relative h-48 w-48 rounded-full bg-white flex items-center justify-center shadow-2xl border-8 border-white">
           <div className={`h-full w-full rounded-full ${grad} flex flex-col items-center justify-center text-white px-2`}>
             {art ? (
-              <img src={art} alt="" className="h-20 object-contain drop-shadow" />
+              <img src={art} alt="" loading="lazy" decoding="async" className="h-20 object-contain drop-shadow" />
             ) : (
               <div className="text-[54px] leading-none drop-shadow">{state.emoji}</div>
             )}
@@ -1569,6 +1577,7 @@ export function StateUnlockScreen({
           <img
             src={art}
             alt=""
+            decoding="async"
             className="relative h-72 object-contain drop-shadow-2xl animate-fade-in"
           />
         ) : (
