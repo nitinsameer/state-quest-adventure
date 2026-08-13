@@ -1424,8 +1424,10 @@ export function StateCompletedScreen({
   const state = getState(stateName);
   const art = STATE_ART[state.name];
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
+  const [burstKey, setBurstKey] = useState(0);
   useEffect(() => {
     fxConfetti();
+    setBurstKey((n) => n + 1);
     if (persist) completeState(state.name);
   }, [state.name, persist]);
   return (
