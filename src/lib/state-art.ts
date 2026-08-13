@@ -89,3 +89,19 @@ export const TONE_HEX: Record<string, [string, string]> = {
   green: ["#6FE0A0", "#17A75C"],
   gold: ["#FFD86B", "#E0A21C"],
 };
+
+const preloaded = new Set<string>();
+
+/** Warm the browser cache for one or more state illustrations. */
+export function preloadStateArt(...names: (string | undefined)[]) {
+  if (typeof window === "undefined") return;
+  for (const name of names) {
+    if (!name) continue;
+    const src = STATE_ART[name];
+    if (!src || preloaded.has(src)) continue;
+    preloaded.add(src);
+    const img = new Image();
+    img.decoding = "async";
+    img.src = src;
+  }
+}
