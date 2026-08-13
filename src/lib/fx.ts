@@ -1,9 +1,66 @@
+import { useSyncExternalStore } from "react";
+
 // Sound + haptics FX using Web Audio API and navigator.vibrate.
 // Zero dependencies. Safe on SSR (guards window).
+
+/* ---------- sound preference (persisted) ---------- */
+
+const SOUND_KEY = "india-explorer:sound:v1";
+let soundOn = true;
+let soundHydrated = false;
+const soundListeners = new Set<() => void>();
+
+function hydrateSound() {
+  if (soundHydrated || typeof window === "undefined") return;
+  soundHydrated = true;
+  try {
+    const raw = localStorage.getItem(SOUND_KEY);
+    if (raw !== null) soundOn = raw === "1";
+  } catch {
+    /* storage unavailable */
+  }
+  for (const l of soundListeners) l();
+}
+
+function subscribeSound(listener: () => void) {
+  hydrateSound();
+  soundListeners.add(listener);
+  return () => soundListeners.delete(listener);
+}
+
+export function isSoundOn() {
+  hydrateSound();
+  return soundOn;
+}
+
+export function setSoundOn(next: boolean) {
+  soundOn = next;
+  soundHydrated = true;
+  try {
+    localStorage.setItem(SOUND_KEY, next ? "1" : "0");
+  } catch {
+    /* ignore */
+  }
+  for (const l of soundListeners) l();
+}
+
+export function toggleSound() {
+  setSoundOn(!isSoundOn());
+}
+
+/** React hook: current sound on/off preference. */
+export function useSoundOn(): boolean {
+  return useSyncExternalStore(
+    subscribeSound,
+    () => soundOn,
+    () => true,
+  );
+}
 
 let ctx: AudioContext | null = null;
 function ac(): AudioContext | null {
   if (typeof window === "undefined") return null;
+  if (!isSoundOn()) return null;
   if (!ctx) {
     const AC =
       (window as unknown as { AudioContext?: typeof AudioContext; webkitAudioContext?: typeof AudioContext }).AudioContext ??
@@ -59,6 +116,7 @@ function noise(dur = 0.25, gain = 0.15, delay = 0) {
 
 function vibrate(pattern: number | number[]) {
   if (typeof navigator === "undefined") return;
+  if (!isSoundOn()) return;
   const nav = navigator as Navigator & { vibrate?: (p: number | number[]) => boolean };
   if (typeof nav.vibrate === "function") {
     try { nav.vibrate(pattern); } catch { /* noop */ }
