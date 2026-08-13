@@ -1,9 +1,7 @@
 import mascot from "@/assets/mascot.png";
 import airplane from "@/assets/airplane.png";
-import rajasthan from "@/assets/rajasthan.png";
-import gujarat from "@/assets/gujarat.png";
-import maharashtra from "@/assets/maharashtra.png";
-import mp from "@/assets/mp.png";
+import { STATE_ART, TONE_GRADIENT } from "@/lib/state-art";
+import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { fxCorrect, fxWrong, fxConfetti, fxStamp, fxTap, useSoundOn, setSoundOn } from "@/lib/fx";
@@ -780,19 +778,6 @@ export function JourneyMapScreen() {
 }
 
 
-const STATE_ART: Record<string, string> = {
-  Rajasthan: rajasthan,
-  Gujarat: gujarat,
-  "Madhya Pradesh": mp,
-  Maharashtra: maharashtra,
-};
-
-const TONE_GRADIENT: Record<string, string> = {
-  orange: "gradient-saffron",
-  blue: "gradient-explorer",
-  green: "gradient-success",
-  gold: "gradient-gold",
-};
 
 export function StateIntroScreen({
   stateName,
@@ -1223,6 +1208,7 @@ export function QuizScreen({
 
   const [selected, setSelected] = useState<string | null>(null);
   const [result, setResult] = useState<"correct" | "wrong" | null>(null);
+  const [burst, setBurst] = useState(0);
 
   const answers = question.options;
   const correct = question.correct;
@@ -1238,6 +1224,7 @@ export function QuizScreen({
       fxCorrect();
       addXP(question.xp, question.id);
       setResult("correct");
+      setBurst((n) => n + 1);
     } else {
       fxWrong();
       setResult("wrong");
@@ -1258,7 +1245,8 @@ export function QuizScreen({
   };
 
   return (
-    <div className="h-full w-full bg-explorer-soft flex flex-col">
+    <div className="h-full w-full bg-explorer-soft flex flex-col relative">
+      <ConfettiBurst trigger={burst} size="small" />
       <div className="px-5 pt-3 pb-2 flex items-center gap-3">
         <button
           onClick={() => {
@@ -1286,7 +1274,12 @@ export function QuizScreen({
       </div>
 
       <div className="px-5 mt-3 flex items-center gap-3">
-        <img src={mascot} alt="" className="w-16 h-16 object-contain" />
+        <img
+          key={result === "correct" ? `cheer-${burst}` : "idle"}
+          src={mascot}
+          alt=""
+          className={`w-16 h-16 object-contain ${result === "correct" ? "mascot-cheer" : ""}`}
+        />
         <div className="relative bg-white rounded-2xl shadow-soft px-3 py-2 text-sm font-extrabold">
           {result === "correct"
             ? "Nailed it! 🎉"
@@ -1436,12 +1429,15 @@ export function StateCompletedScreen({
   const state = getState(stateName);
   const art = STATE_ART[state.name];
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
+  const [burstKey, setBurstKey] = useState(0);
   useEffect(() => {
     fxConfetti();
+    setBurstKey((n) => n + 1);
     if (persist) completeState(state.name);
   }, [state.name, persist]);
   return (
     <div className="h-full w-full gradient-gold relative overflow-hidden flex flex-col items-center">
+      <ConfettiBurst trigger={burstKey} size="big" />
       {Array.from({ length: 28 }).map((_, i) => (
         <div
           key={i}
@@ -1481,6 +1477,11 @@ export function StateCompletedScreen({
             <div className="text-[9px] font-bold opacity-90">EXPLORER · LVL 1</div>
           </div>
         </div>
+        <img
+          src={mascot}
+          alt=""
+          className="absolute -left-14 bottom-0 w-24 h-24 object-contain mascot-cheer drop-shadow"
+        />
       </div>
 
 
