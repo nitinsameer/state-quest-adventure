@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import mascot from "@/assets/mascot.png";
 import { getState } from "@/lib/states";
-import { STATE_ART, TONE_GRADIENT, TONE_HEX } from "@/lib/state-art";
+import { STATE_ART, TONE_GRADIENT, TONE_HEX, preloadStateArt } from "@/lib/state-art";
 import { useProgress, badgesFor, STATE_BADGES, type BadgeId } from "@/lib/progress";
 import { fxTap, fxStamp } from "@/lib/fx";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
@@ -57,6 +57,7 @@ export function StatePostcardScreen({
 
   useEffect(() => {
     setBurst((n) => n + 1);
+    preloadStateArt(state.name);
   }, [state.name]);
 
   async function makeBlob(): Promise<Blob | null> {
@@ -239,7 +240,12 @@ export function StatePostcardScreen({
 
           <div className="relative px-4 pt-3 pb-2 flex items-end justify-center bg-sky/60 min-h-[150px]">
             {art ? (
-              <img src={art} alt={`${state.name} illustration`} className="h-32 object-contain" />
+              <img
+                src={art}
+                alt={`${state.name} illustration`}
+                decoding="async"
+                className="h-32 object-contain drop-shadow-lg"
+              />
             ) : (
               <div className="text-[80px] leading-none">{state.emoji}</div>
             )}
