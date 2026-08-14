@@ -7,9 +7,35 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
+  // Disable Nitro server for SPA-only build (no SSR/server functions)
+  nitro: false,
   tanstackStart: {
-    // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
-    // nitro/vite builds from this
-    server: { entry: "server" },
+    // Enable TanStack Start SPA mode with prerendering
+    // This generates a _shell.html that the app boots from client-side
+    // See: https://tanstack.com/start/latest/docs/framework/react/guide/spa-mode
+    spa: {
+      enabled: true,
+      maskPath: '/',
+      prerender: {
+        enabled: true,
+        outputPath: '/_shell.html',
+        crawlLinks: false,
+        retryCount: 0,
+      },
+    },
+  },
+  vite: {
+    // Use relative paths for Capacitor WebView (doesn't support absolute /assets)
+    base: './',
+    build: {
+      // Ensure we only build client-side output
+      ssrManifest: false,
+      rollupOptions: {
+        output: {
+          manualChunks: undefined,
+        },
+      },
+    },
   },
 });
+

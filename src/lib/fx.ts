@@ -1,7 +1,10 @@
 import { useSyncExternalStore } from "react";
+import { Capacitor } from "@capacitor/core";
+import { Haptics, ImpactStyle } from "@capacitor/haptics";
 
-// Sound + haptics FX using Web Audio API and navigator.vibrate.
-// Zero dependencies. Safe on SSR (guards window).
+// Sound + haptics FX using Web Audio API, navigator.vibrate, and Capacitor Haptics.
+// On native (Android/iOS), uses Capacitor.Haptics for richer haptic feedback.
+// On web, falls back to navigator.vibrate. Safe on SSR (guards window).
 
 /* ---------- sound preference (persisted) ---------- */
 
@@ -117,6 +120,20 @@ function noise(dur = 0.25, gain = 0.15, delay = 0) {
 function vibrate(pattern: number | number[]) {
   if (typeof navigator === "undefined") return;
   if (!isSoundOn()) return;
+
+  // Use Capacitor Haptics on native platforms
+  if (Capacitor.isNativePlatform()) {
+    if (typeof pattern === "number") {
+      // Single duration: light impact
+      void Haptics.impact({ style: ImpactStyle.Light });
+    } else {
+      // Pattern: play heavy impact for longer patterns
+      void Haptics.impact({ style: ImpactStyle.Heavy });
+    }
+    return;
+  }
+
+  // Fallback to navigator.vibrate on web
   const nav = navigator as Navigator & { vibrate?: (p: number | number[]) => boolean };
   if (typeof nav.vibrate === "function") {
     try { nav.vibrate(pattern); } catch { /* noop */ }

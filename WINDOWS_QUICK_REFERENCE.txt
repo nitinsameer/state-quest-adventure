@@ -1,0 +1,67 @@
+================================================================================
+  INDIA EXPLORER - WINDOWS BUILD QUICK REFERENCE
+================================================================================
+
+SIMPLEST WAY (Windows Only):
+  1. Connect Android device via USB
+  2. Enable USB Debugging (Settings → Developer Options)
+  3. Double-click: BUILD_AND_INSTALL.bat
+  4. Wait 5-10 minutes
+  5. App appears on your device!
+
+ALTERNATIVE (Command Line):
+  1. Open PowerShell
+  2. cd d:\NishaanTech\state-quest-adventure\android
+  3. .\gradlew.bat clean assembleDebug installDebug
+  4. Wait 5-10 minutes
+  5. Done!
+
+VERIFY DEVICE CONNECTION:
+  adb devices
+  (Should show your device as "device", not "offline" or blank)
+
+TROUBLESHOOTING:
+  Device not detected?  → Enable USB Debugging, try different USB port
+  Build timeout?        → Check internet connection, try again
+  App won't launch?     → Check device logs: adb logcat
+  No haptics?           → Check device vibration setting is ON
+
+FILES PROVIDED:
+  BUILD_AND_INSTALL.bat     - Double-click this to build!
+  BUILD_AND_INSTALL.ps1     - PowerShell version (prettier)
+  WINDOWS_BUILD_GUIDE.md    - Full Windows guide
+  WINDOWS_QUICK_REFERENCE.txt - This file
+
+DOCUMENTATION:
+  00_START_HERE.md          - Overview
+  WINDOWS_BUILD_GUIDE.md    - Windows-specific guide
+  NEXT_STEPS.md             - Full instructions (all platforms)
+  BUILD_INSTRUCTIONS.md     - Detailed steps
+  QUICK_BUILD_GUIDE.md      - Troubleshooting
+
+WHAT YOU GET:
+  ✓ Full India Explorer app (28 states)
+  ✓ Quiz mode with haptic feedback
+  ✓ Passport stamps & badges
+  ✓ Offline playable
+  ✓ Local progress storage
+  ✓ ~12 MB APK
+
+BUILD TIME:
+  First build:       5-10 minutes (downloads Gradle & SDK)
+  Subsequent builds: 1-2 minutes (cached)
+
+REQUIREMENTS:
+  - Android device with USB debugging enabled
+  - USB cable
+  - Java 17+ (or Android Studio which includes it)
+  - Internet connection (for first build)
+
+NEXT STEP:
+  1. Plug in your Android device
+  2. Enable USB Debugging
+  3. Double-click BUILD_AND_INSTALL.bat
+  4. Wait for app to launch on your device
+
+Need more info? Read WINDOWS_BUILD_GUIDE.md
+================================================================================
