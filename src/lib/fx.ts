@@ -175,3 +175,67 @@ export function fxTap() {
   tone({ freq: 520, dur: 0.06, type: "triangle", gain: 0.14 });
   vibrate(10);
 }
+
+/** Whoosh / swipe effect for screen transitions. */
+export function fxWhoosh() {
+  tone({ freq: 400, dur: 0.18, type: "sine", gain: 0.12, slideTo: 200 });
+  noise(0.18, 0.08);
+}
+
+/* ---------- ambient background music ---------- */
+
+let ambientOscillator: OscillatorNode | null = null;
+let ambientGain: GainNode | null = null;
+let ambientRunning = false;
+
+function startAmbientMusic() {
+  const a = ac();
+  if (!a || ambientRunning) return;
+  ambientRunning = true;
+
+  // Subtle ambient pad: low frequency drone with slow LFO modulation
+  ambientOscillator = a.createOscillator();
+  ambientOscillator.type = "sine";
+  ambientOscillator.frequency.setValueAtTime(55, a.currentTime); // Low A note
+
+  ambientGain = a.createGain();
+  ambientGain.gain.setValueAtTime(0.04, a.currentTime); // Very quiet background
+
+  // Slow LFO modulation for warmth (0.5 Hz swell)
+  const lfo = a.createOscillator();
+  lfo.frequency.setValueAtTime(0.5, a.currentTime);
+  const lfoGain = a.createGain();
+  lfoGain.gain.setValueAtTime(0.008, a.currentTime); // Subtle modulation depth
+
+  lfo.connect(ambientGain.gain);
+  ambientOscillator.connect(ambientGain).connect(a.destination);
+
+  ambientOscillator.start();
+  lfo.start();
+}
+
+function stopAmbientMusic() {
+  if (!ambientOscillator || !ambientRunning) return;
+  ambientRunning = false;
+  const a = ac();
+  if (!a) return;
+  // Fade out over 0.5s
+  ambientGain?.gain.exponentialRampToValueAtTime(0.0001, a.currentTime + 0.5);
+  setTimeout(() => {
+    ambientOscillator?.stop();
+    ambientOscillator = null;
+    ambientGain = null;
+  }, 550);
+}
+
+/** Start ambient music if sound is on. Safe to call repeatedly. */
+export function startAmbient() {
+  if (isSoundOn()) {
+    startAmbientMusic();
+  }
+}
+
+/** Stop ambient music. */
+export function stopAmbient() {
+  stopAmbientMusic();
+}

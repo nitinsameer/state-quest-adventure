@@ -113,7 +113,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="pt-[env(safe-area-inset-top)]">
+      <div style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <Outlet />
       </div>
