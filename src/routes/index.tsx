@@ -2,6 +2,9 @@ import { useEffect } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { SplashScreen } from "@/components/screens";
 import { useProgress } from "@/lib/progress";
+import { appLogger } from "@/lib/logger";
+
+appLogger.info('route_index', 'Index route loaded');
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -29,9 +32,14 @@ function Splash() {
   const navigate = useNavigate();
   const p = useProgress();
 
+  appLogger.info('splash_screen', 'Splash component rendering', { onboarded: p.onboarded });
+
   useEffect(() => {
+    appLogger.info('splash_screen', 'Splash effect setup', { delay: 1600 });
     const t = setTimeout(() => {
-      navigate({ to: p.onboarded ? "/home" : "/welcome" });
+      const destination = p.onboarded ? "/home" : "/welcome";
+      appLogger.info('splash_screen', 'Navigating after splash', { destination });
+      navigate({ to: destination });
     }, 1600);
     return () => clearTimeout(t);
   }, [navigate, p.onboarded]);

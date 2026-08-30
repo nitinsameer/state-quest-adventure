@@ -13,6 +13,8 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { useAndroidBackButton } from "../hooks/useAndroidBackButton";
 import { Toaster } from "@/components/ui/sonner";
 import { UnlockCelebration } from "@/components/UnlockCelebration";
+import { DebugScreen } from "@/components/DebugScreen";
+import { appLogger } from "@/lib/logger";
 
 // React Error Boundary for catching runtime errors
 class RootErrorBoundary extends React.Component<
@@ -22,18 +24,23 @@ class RootErrorBoundary extends React.Component<
   constructor(props: { children: React.ReactNode }) {
     super(props);
     this.state = { hasError: false, error: null };
+    appLogger.info('root_error_boundary', 'RootErrorBoundary mounted');
   }
 
   static getDerivedStateFromError(error: Error) {
+    appLogger.error('root_error_boundary', 'getDerivedStateFromError called', { errorMessage: error.message }, error);
     return { hasError: true, error };
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    appLogger.error('root_error_boundary', 'componentDidCatch called', { errorInfo }, error);
     console.error("RootErrorBoundary caught error:", error, errorInfo);
     reportLovableError(error, { boundary: "root_error_boundary", errorInfo });
   }
 
   render() {
+    appLogger.debug('root_error_boundary', 'render called', { hasError: this.state.hasError });
+    
     if (this.state.hasError) {
       return (
         <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -166,6 +173,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   useAndroidBackButton();
+  
+  appLogger.info('root_component', 'RootComponent rendering');
 
   const innerComponent = (
     <QueryClientProvider client={queryClient}>
@@ -175,6 +184,7 @@ function RootComponent() {
       </div>
       <UnlockCelebration />
       <Toaster position="top-center" richColors />
+      <DebugScreen />
     </QueryClientProvider>
   );
 

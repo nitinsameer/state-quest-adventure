@@ -5,7 +5,13 @@ import path from 'path';
 const shellPath = 'dist/client/_shell.html';
 const indexPath = 'dist/client/index.html';
 
-const shell = fs.readFileSync(shellPath, 'utf-8');
+let shell = fs.readFileSync(shellPath, 'utf-8');
+
+// CRITICAL: Remove async attribute from embedded router manifest script
+// TanStack Start embeds async:!0 in the manifest which breaks hydration
+// Pattern: async:!0 should be removed from the router manifest script
+shell = shell.replace(/async:!0,/g, '');
+shell = shell.replace(/async:true,/g, '');
 
 // Find the CSS file
 const cssFiles = fs.readdirSync('dist/client/assets').filter(f => f.startsWith('styles-') && f.endsWith('.css'));
@@ -50,3 +56,4 @@ fs.writeFileSync(indexPath, html, 'utf-8');
 console.log(`✓ Wrapped shell HTML: ${indexPath}`);
 console.log(`  CSS: ${cssFile}`);
 console.log(`  JS:  ${jsFile}`);
+console.log(`  Note: Removed async attribute from embedded router manifest for proper hydration`);
