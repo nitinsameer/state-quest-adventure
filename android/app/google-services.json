@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "665180281201",
+    "project_id": "explore-india-bf72a",
+    "storage_bucket": "explore-india-bf72a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:665180281201:android:814f8bf85968c8ca5f3ed0",
+        "android_client_info": {
+          "package_name": "com.nishaantech.exploreindia"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzFN7ELYc8A5317KykGhTIuN43pWDGlJQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:665180281201:android:5a55c03450c6d8f75f3ed0",
+        "android_client_info": {
+          "package_name": "com.nishaantech.exploreindia.debug"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzFN7ELYc8A5317KykGhTIuN43pWDGlJQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

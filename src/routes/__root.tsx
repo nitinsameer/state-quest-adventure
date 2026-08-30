@@ -5,13 +5,69 @@ import {
   createRootRouteWithContext,
   useRouter,
 } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import React from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { useAndroidBackButton } from "../hooks/useAndroidBackButton";
 import { Toaster } from "@/components/ui/sonner";
 import { UnlockCelebration } from "@/components/UnlockCelebration";
+
+// React Error Boundary for catching runtime errors
+class RootErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean; error: Error | null }
+> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error("RootErrorBoundary caught error:", error, errorInfo);
+    reportLovableError(error, { boundary: "root_error_boundary", errorInfo });
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex min-h-screen items-center justify-center bg-background px-4">
+          <div className="max-w-md text-center">
+            <h1 className="text-xl font-semibold tracking-tight text-foreground">
+              App Error
+            </h1>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {this.state.error?.message || "An unexpected error occurred"}
+            </p>
+            <details className="mt-4 text-left">
+              <summary className="cursor-pointer text-xs text-muted-foreground">
+                Error details
+              </summary>
+              <pre className="mt-2 overflow-auto rounded bg-muted p-2 text-xs text-foreground">
+                {this.state.error?.stack}
+              </pre>
+            </details>
+            <div className="mt-6">
+              <button
+                onClick={() => window.location.reload()}
+                className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+              >
+                Reload App
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
 
 function NotFoundComponent() {
   return (
@@ -111,14 +167,20 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   useAndroidBackButton();
 
-  return (
+  const innerComponent = (
     <QueryClientProvider client={queryClient}>
-      <div style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+      <div className="pt-safe">
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <Outlet />
       </div>
       <UnlockCelebration />
       <Toaster position="top-center" richColors />
     </QueryClientProvider>
+  );
+
+  return (
+    <RootErrorBoundary>
+      {innerComponent}
+    </RootErrorBoundary>
   );
 }

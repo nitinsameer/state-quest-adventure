@@ -30,8 +30,10 @@ export default defineConfig({
     build: {
       // Ensure we only build client-side output
       ssrManifest: false,
+      // Disable code-splitting for single bundle output
       rollupOptions: {
         output: {
+          // Single bundle - no code-splitting
           manualChunks: undefined,
         },
       },

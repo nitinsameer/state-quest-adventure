@@ -42,7 +42,7 @@ const html = `<!DOCTYPE html>
 </head>
 <body>
 ${shell}
-  <script type="module" async src="./assets/${jsFile}"></script>
+  <script type="module" src="./assets/${jsFile}"></script>
 </body>
 </html>`;
 

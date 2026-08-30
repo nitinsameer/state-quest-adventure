@@ -1,7 +1,14 @@
 apply plugin: 'com.android.application'
 
+// Load keystore.properties
+def keystorePropertiesFile = rootProject.file('keystore.properties')
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 android {
-    namespace = "com.indiaexplorer.app"
+    namespace = "com.nishaantech.exploreindia"
     compileSdk = rootProject.ext.compileSdkVersion
     
     // Capacitor v6 supports Java 17
@@ -11,7 +18,7 @@ android {
     }
     
     defaultConfig {
-        applicationId "com.indiaexplorer.app"
+        applicationId "com.nishaantech.exploreindia"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -23,8 +30,18 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        release {
+            storeFile file('D:/NishaanTech/state-quest-adventure/word-wizard.jks')
+            storePassword 'N#I$G6881'
+            keyAlias 'word-wizard'
+            keyPassword 'N#I$G6881'
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

@@ -30,3 +30,81 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# ============================================================================
+# ANDROID BUILD & SENSITIVE FILES
+# ============================================================================
+
+# Android build outputs
+android/app/build/
+android/build/
+android/.gradle/
+android/captures/
+android/.idea/
+android/local.properties
+
+# Gradle files
+.gradle
+*.iml
+
+# Keystore files (sensitive - DO NOT COMMIT)
+*.keystore
+*.jks
+keystore.properties
+
+# Local properties (contains SDK paths and private settings)
+local.properties
+
+# Android Studio cache/metadata
+.android/
+.cxx/
+
+# Firebase service account keys (sensitive - DO NOT COMMIT)
+# google-services.json is OK to commit for this project (no real credentials)
+# but add to ignore if it contains real API keys in the future
+# google-services.json
+
+# ============================================================================
+# ENVIRONMENT & SECRETS
+# ============================================================================
+
+# Environment variables (contain API keys, tokens, etc.)
+.env
+.env.local
+.env.*.local
+.env.production.local
+
+# ============================================================================
+# OS & IDE ARTIFACTS
+# ============================================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Jetbrains IDEs (IntelliJ, Android Studio)
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# VS Code (specific files, extensions are tracked)
+.vscode/settings.json
+.vscode/launch.json
+.vscode/extensions.json
+
+# npm / yarn
+package-lock.json
+yarn.lock
+
+# Temporary files
+*.swp
+*.swo
+*~
+.#*

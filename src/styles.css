@@ -118,6 +118,10 @@
   letter-spacing: -0.01em;
 }
 
+@utility pt-safe {
+  padding-top: 20px;
+}
+
 @utility gradient-saffron {
   background-image: linear-gradient(135deg, oklch(0.82 0.16 55) 0%, oklch(0.68 0.21 35) 100%);
 }
