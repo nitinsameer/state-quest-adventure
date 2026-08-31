@@ -1,17 +1,26 @@
 import fs from 'fs';
 import path from 'path';
 
-// Read the prerendered shell
-const shellPath = 'dist/client/_shell.html';
 const indexPath = 'dist/client/index.html';
 
-let shell = fs.readFileSync(shellPath, 'utf-8');
-
-// CRITICAL: Remove async attribute from embedded router manifest script
-// TanStack Start embeds async:!0 in the manifest which breaks hydration
-// Pattern: async:!0 should be removed from the router manifest script
-shell = shell.replace(/async:!0,/g, '');
-shell = shell.replace(/async:true,/g, '');
+// Try to read the prerendered shell if it exists
+let shell = '';
+const shellPath = 'dist/client/_shell.html';
+if (fs.existsSync(shellPath)) {
+  shell = fs.readFileSync(shellPath, 'utf-8');
+  
+  // CRITICAL: Remove async attribute from embedded router manifest script
+  // TanStack Start embeds async:!0 in the manifest which breaks hydration
+  // Pattern: async:!0 should be removed from the router manifest script
+  shell = shell.replace(/async:!0,/g, '');
+  shell = shell.replace(/async:true,/g, '');
+  
+  console.log(`✓ Using prerendered shell: ${shellPath}`);
+} else {
+  // Fallback: generate shell from scratch if _shell.html doesn't exist
+  shell = '<div id="root"></div>';
+  console.log(`⚠ _shell.html not found, using minimal shell`);
+}
 
 // Find the CSS file
 const cssFiles = fs.readdirSync('dist/client/assets').filter(f => f.startsWith('styles-') && f.endsWith('.css'));
@@ -53,7 +62,6 @@ ${shell}
 </html>`;
 
 fs.writeFileSync(indexPath, html, 'utf-8');
-console.log(`✓ Wrapped shell HTML: ${indexPath}`);
+console.log(`✓ Generated index.html: ${indexPath}`);
 console.log(`  CSS: ${cssFile}`);
 console.log(`  JS:  ${jsFile}`);
-console.log(`  Note: Removed async attribute from embedded router manifest for proper hydration`);

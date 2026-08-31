@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.indiaexplorer.app',
+  appId: 'com.nishaantech.exploreindia',
   appName: 'India Explorer',
   webDir: 'dist/client'
 };
