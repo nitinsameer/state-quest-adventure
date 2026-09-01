@@ -105,6 +105,11 @@ function subscribe(listener: () => void) {
   };
 }
 
+/** Check if progress has been hydrated from localStorage. */
+export function isHydrated(): boolean {
+  return hydrated;
+}
+
 const serverSnapshot = defaultProgress();
 
 export function useProgress(): Progress {

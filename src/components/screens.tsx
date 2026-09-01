@@ -3,8 +3,9 @@ import airplane from "@/assets/airplane.png";
 import { STATE_ART, TONE_GRADIENT, preloadStateArt } from "@/lib/state-art";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { Link, useNavigate, useRouter } from "@tanstack/react-router";
+import { Link, useNavigate, useRouter, Navigate } from "@tanstack/react-router";
 import { fxCorrect, fxWrong, fxConfetti, fxStamp, fxTap, useSoundOn, setSoundOn } from "@/lib/fx";
+import { appLogger } from "@/lib/logger";
 import {
   INDIA_STATES,
   TOTAL_STATES,
@@ -107,7 +108,7 @@ export function BottomNav({
     { id: "profile", icon: "👤", label: "Me", to: "/me" },
   ] as const;
   return (
-    <div className="absolute bottom-0 inset-x-0 z-20">
+    <div className="fixed bottom-0 inset-x-0 z-20">
       <div className="mx-3 mb-3 rounded-3xl bg-white shadow-[0_8px_24px_-6px_rgba(15,23,42,0.18)] border border-black/5 px-2 py-2 flex items-center justify-between">
         {items.map((i) => {
           const on = i.id === active;
@@ -225,7 +226,7 @@ export function SplashScreen() {
 
 export function WelcomeScreen() {
   return (
-    <div className="h-full w-full gradient-sky relative flex flex-col">
+    <div className="w-full gradient-sky relative flex flex-col">
       <Cloud className="absolute top-14 -left-4 w-28 opacity-90" />
       <Cloud className="absolute top-24 right-2 w-20 opacity-90" />
       <div className="flex-1 flex items-center justify-center pt-6">
@@ -234,7 +235,7 @@ export function WelcomeScreen() {
           <img src={mascot} alt="" className="relative w-64 h-64 object-contain drop-shadow-xl" />
         </div>
       </div>
-      <div className="rounded-t-[36px] bg-white px-6 pt-8 pb-6 shadow-[0_-20px_40px_-20px_rgba(0,0,0,0.15)]">
+      <div className="rounded-t-[36px] bg-white px-6 pt-8 pb-safe shadow-[0_-20px_40px_-20px_rgba(0,0,0,0.15)]">
         <h1 className="text-display text-3xl font-extrabold leading-tight">
           Namaste, little<br />explorer! 👋
         </h1>
@@ -272,7 +273,7 @@ export function CreateProfileScreen() {
   const [saved, setSaved] = useState(false);
 
   return (
-    <div className="h-full w-full bg-white flex flex-col">
+    <div className="w-full bg-white flex flex-col">
       <HeaderBar title="Create Explorer" />
       <div className="px-5 flex-1 overflow-auto">
         <div className="rounded-3xl gradient-explorer p-5 text-white relative overflow-hidden">
@@ -350,7 +351,7 @@ export function CreateProfileScreen() {
           </div>
         </div>
       </div>
-      <div className="p-5">
+      <div className="p-5 pb-safe">
         <button
           onClick={() => {
             fxTap();
@@ -369,6 +370,13 @@ export function CreateProfileScreen() {
 
 export function HomeDashboardScreen() {
   const p = useProgress();
+  
+  // Route guard: redirect to welcome if not onboarded (defensive check)
+  if (!p.onboarded) {
+    appLogger.warn('home_dashboard', 'User attempted to access home without onboarding', {});
+    return <Navigate to="/welcome" replace />;
+  }
+  
   const { level, toNext, pct } = levelInfo(p.xp);
   const stamps = Object.keys(p.stamps).length;
   const journey = statesWithProgress(p);
@@ -381,7 +389,7 @@ export function HomeDashboardScreen() {
   }, []);
 
   return (
-    <div className="h-full w-full bg-[#F7F5F0] flex flex-col overflow-auto">
+    <div className="h-full w-full bg-[#F7F5F0]">
 
       {/* Header */}
       <div className="px-5 pt-3 pb-4 gradient-saffron rounded-b-[32px] relative overflow-hidden">
@@ -423,7 +431,7 @@ export function HomeDashboardScreen() {
       </div>
 
       {/* Stats */}
-      <div className="px-5 -mt-4 relative z-10 grid grid-cols-3 gap-2.5">
+      <div className="px-5 mt-4 relative z-10 grid grid-cols-3 gap-2.5">
         <StatCard tone="orange" icon="🗺️" value={String(p.completed.length)} label="States" />
         <StatCard tone="gold" icon="🏅" value={String(badgeCount(p))} label="Badges" />
         <StatCard tone="green" icon="📓" value={String(stamps)} label="Stamps" />
@@ -493,10 +501,6 @@ export function HomeDashboardScreen() {
           ))}
         </div>
       </div>
-
-      <div className="flex-1" />
-      <BottomNav active="home" />
-      <div className="h-24" />
     </div>
   );
 }
@@ -772,7 +776,6 @@ export function JourneyMapScreen() {
       </div>
 
       <BottomNav active="map" />
-      <div className="h-20" />
     </div>
   );
 }
@@ -1663,7 +1666,7 @@ export function PassportScreen() {
         </div>
       </div>
 
-      <div className="px-5 mt-4 flex-1 overflow-auto pb-24">
+      <div className="px-5 mt-4 flex-1 overflow-auto">
         <div className="text-display font-extrabold text-sm uppercase tracking-wider text-muted-foreground">
           Collected Stamps
         </div>
@@ -1673,8 +1676,6 @@ export function PassportScreen() {
           ))}
         </div>
       </div>
-      <BottomNav active="passport" />
-      <div className="h-20" />
     </div>
   );
 }
@@ -1789,7 +1790,7 @@ export function BadgesScreen() {
         </div>
       </div>
 
-      <div className="p-5 flex-1 overflow-auto space-y-4 pb-24">
+      <div className="p-5 flex-1 overflow-auto space-y-4">
         {rows.map((r) => (
           <div key={r.state}>
             <div className="text-display font-extrabold text-sm">{r.state}</div>
@@ -1824,14 +1825,19 @@ export function BadgesScreen() {
           </div>
         ))}
       </div>
-      <BottomNav active="badges" />
-      <div className="h-20" />
     </div>
   );
 }
 
 export function ProfileScreen() {
   const p = useProgress();
+  
+  // Route guard: redirect to welcome if not onboarded (defensive check)
+  if (!p.onboarded) {
+    appLogger.warn('profile_screen', 'User attempted to access profile without onboarding', {});
+    return <Navigate to="/welcome" replace />;
+  }
+  
   const { level } = levelInfo(p.xp);
   const goBack = useGoBack();
   const stampsCollected = Object.keys(p.stamps ?? {}).length;
@@ -1889,7 +1895,7 @@ export function ProfileScreen() {
       </div>
 
 
-      <div className="px-5 mt-5 space-y-3 flex-1 overflow-auto pb-24">
+      <div className="px-5 mt-5 space-y-3 flex-1 overflow-auto">
         <SoundToggleRow />
         <RowLink
           icon="📓"
@@ -1920,8 +1926,6 @@ export function ProfileScreen() {
           to="/parent"
         />
       </div>
-      <BottomNav active="profile" />
-      <div className="h-20" />
     </div>
   );
 }
@@ -2028,7 +2032,7 @@ export function AchievementsScreen() {
           </div>
         </div>
       </div>
-      <div className="px-5 flex-1 overflow-auto pb-6 space-y-3">
+      <div className="px-5 flex-1 overflow-auto space-y-3">
         {items.map((a) => (
 
           <div

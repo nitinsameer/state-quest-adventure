@@ -101,9 +101,7 @@
     color: var(--color-ink);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
-  }
-  body {
-    overflow-y: auto;
+    overflow: hidden;
   }
 
   h1, h2, h3, h4, h5 {
@@ -119,7 +117,16 @@
 }
 
 @utility pt-safe {
-  padding-top: 20px;
+  padding-top: max(20px, env(safe-area-inset-top));
+}
+
+@utility pb-safe {
+  padding-bottom: max(20px, env(safe-area-inset-bottom));
+}
+
+@utility px-safe {
+  padding-left: max(0px, env(safe-area-inset-left));
+  padding-right: max(0px, env(safe-area-inset-right));
 }
 
 @utility gradient-saffron {

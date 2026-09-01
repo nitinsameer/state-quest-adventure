@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useLocation,
 } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import React from "react";
@@ -14,6 +15,7 @@ import { useAndroidBackButton } from "../hooks/useAndroidBackButton";
 import { Toaster } from "@/components/ui/sonner";
 import { UnlockCelebration } from "@/components/UnlockCelebration";
 import { DebugScreen } from "@/components/DebugScreen";
+import { BottomNav } from "@/components/screens";
 import { appLogger } from "@/lib/logger";
 
 // React Error Boundary for catching runtime errors
@@ -172,16 +174,37 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const location = useLocation();
   useAndroidBackButton();
   
-  appLogger.info('root_component', 'RootComponent rendering');
+  appLogger.info('root_component', 'RootComponent rendering', { pathname: location.pathname });
+
+  // Pre-auth routes that should NOT show BottomNav
+  const preAuthRoutes = ['/', '/welcome', '/create'];
+  const shouldShowBottomNav = !preAuthRoutes.includes(location.pathname);
+  
+  // Pre-auth routes should use pb-safe only (no extra padding)
+  // Authenticated routes need pb-[120px] to ensure content scrolls above BottomNav
+  const isPreAuthRoute = preAuthRoutes.includes(location.pathname);
+  const scrollContainerPadding = isPreAuthRoute ? 'pb-safe' : 'pb-[120px]';
 
   const innerComponent = (
     <QueryClientProvider client={queryClient}>
-      <div className="pt-safe">
-        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <Outlet />
+      <div className="h-full w-full flex flex-col bg-[#F7F5F0] relative">
+        {/* Scrollable content area - conditional padding: pb-safe for pre-auth, pb-[120px] for authenticated */}
+        <div className={`flex-1 overflow-auto pt-safe px-safe ${scrollContainerPadding}`}>
+          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+          <Outlet />
+        </div>
       </div>
+      
+      {/* Global BottomNav - positioned fixed OUTSIDE flex container to prevent flex layout interference */}
+      {shouldShowBottomNav && (
+        <div className="fixed bottom-0 left-0 right-0 z-20 pb-safe">
+          <BottomNav active="home" />
+        </div>
+      )}
+      
       <UnlockCelebration />
       <Toaster position="top-center" richColors />
       <DebugScreen />

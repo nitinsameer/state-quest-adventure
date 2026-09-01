@@ -129,10 +129,6 @@ export function ParentZoneScreen() {
           )}
         </div>
       </div>
-
-      <div className="flex-1" />
-      <BottomNav active="profile" />
-      <div className="h-24" />
     </div>
   );
 }
