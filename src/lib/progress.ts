@@ -21,6 +21,8 @@ export type Progress = {
   badges: Record<string, BadgeId[]>;
   /** state name -> learning card indexes already read */
   cards: Record<string, number[]>;
+  /** state name -> { card index -> replay count } — tracks how many times user replayed each card */
+  replayCount?: Record<string, Record<number, number>>;
 };
 
 export type BadgeId = "monument" | "animal" | "explorer";
@@ -52,6 +54,7 @@ function defaultProgress(): Progress {
     answered: [],
     badges: {},
     cards: {},
+    replayCount: {},
   };
 }
 
@@ -76,11 +79,28 @@ function hydrate() {
   hydrated = true;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) current = { ...defaultProgress(), ...(JSON.parse(raw) as Partial<Progress>) };
+    if (raw) {
+      const loaded = JSON.parse(raw) as Partial<Progress>;
+      current = { ...defaultProgress(), ...migrateProgress(loaded) };
+    }
   } catch {
     /* corrupt payload — fall back to defaults */
   }
   emit();
+}
+
+/**
+ * Migration handler: ensures new fields exist on loaded Progress objects.
+ * Handles upgrades from older Progress versions gracefully.
+ * @param old Potentially incomplete/old Progress object
+ * @returns Migrated Progress object with all required fields
+ */
+function migrateProgress(old: any): Partial<Progress> {
+  return {
+    ...old,
+    // Ensure replayCount exists (new field)
+    replayCount: old.replayCount ?? {},
+  };
 }
 
 function set(update: (p: Progress) => Progress) {
@@ -137,16 +157,55 @@ export function touchStreak() {
   });
 }
 
-/** Marks one learning card of a state as read (awards XP the first time). */
-export function markCard(stateName: string, index: number) {
+/** 
+ * Marks one learning card as read or replayed.
+ * - First read: Awards 25 XP and records card index in cards[]
+ * - Replay: Tracks replay count but does NOT award XP
+ * 
+ * @param stateName Name of the state (e.g., "Rajasthan")
+ * @param index Card index (0-5)
+ * @param isReplay Whether user is replaying an already-read card
+ */
+export function markCard(stateName: string, index: number, isReplay: boolean = false) {
   set((p) => {
+    // Input validation: guard against invalid card data
+    if (!stateName || typeof index !== "number" || index < 0 || index >= CARDS_PER_STATE) {
+      console.warn("Invalid card mark attempt", { stateName, index });
+      return p;
+    }
+
     const read = p.cards?.[stateName] ?? [];
-    if (read.includes(index)) return p;
-    return {
-      ...p,
-      xp: p.xp + XP_PER_CARD,
-      cards: { ...p.cards, [stateName]: [...read, index] },
-    };
+    const isFirstRead = !read.includes(index);
+
+    // First time reading this card → award XP and record
+    if (isFirstRead) {
+      return {
+        ...p,
+        xp: p.xp + XP_PER_CARD,
+        cards: { ...p.cards, [stateName]: [...read, index] },
+      };
+    }
+
+    // User is replaying an already-read card → track but don't award XP
+    if (isReplay) {
+      const replays = p.replayCount ?? {};
+      const stateReplays = replays[stateName] ?? {};
+      const currentCount = stateReplays[index] ?? 0;
+      
+      return {
+        ...p,
+        replayCount: {
+          ...replays,
+          [stateName]: {
+            ...stateReplays,
+            [index]: currentCount + 1,
+          },
+        },
+      };
+    }
+
+    // Card already read, not explicitly a replay → no change
+    return p;
   });
 }
 
@@ -158,6 +217,22 @@ export function cardsDone(p: Progress, stateName: string): number {
   return p.completed.includes(stateName)
     ? CARDS_PER_STATE
     : cardsRead(p, stateName).length;
+}
+
+/**
+ * Check if a card is being replayed (already read before).
+ * @returns true if card has been read before, false if first time
+ */
+export function isCardReplaying(p: Progress, stateName: string, cardIndex: number): boolean {
+  return p.cards?.[stateName]?.includes(cardIndex) ?? false;
+}
+
+/**
+ * Get how many times a card has been replayed.
+ * @returns number of replays (0 if never replayed)
+ */
+export function getReplayCount(p: Progress, stateName: string, cardIndex: number): number {
+  return p.replayCount?.[stateName]?.[cardIndex] ?? 0;
 }
 
 export function addXP(amount: number, questionId?: string) {

@@ -1,6 +1,7 @@
 import mascot from "@/assets/mascot.png";
 import airplane from "@/assets/airplane.png";
 import { STATE_ART, TONE_GRADIENT, preloadStateArt } from "@/lib/state-art";
+import { getStateContent } from "@/lib/state-content";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouter, Navigate } from "@tanstack/react-router";
@@ -36,6 +37,8 @@ import {
   cardsRead,
   CARDS_PER_STATE,
   XP_PER_CARD,
+  isCardReplaying,
+  getReplayCount,
 } from "@/lib/progress";
 
 
@@ -1054,6 +1057,118 @@ function HubCard({
   );
 }
 
+/**
+ * Learn More Modal - Shows expanded details for a card
+ */
+function LearnMoreModal({
+  card,
+  onClose,
+}: {
+  card: any;
+  onClose: () => void;
+}) {
+  // Add slide-up animation
+  useEffect(() => {
+    const style = document.createElement("style");
+    style.textContent = `
+      @keyframes slideUp {
+        from {
+          transform: translateY(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      .animate-slide-up {
+        animation: slideUp 0.3s ease-out;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => document.head.removeChild(style);
+  }, []);
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-end z-50">
+      <div className="w-full bg-white rounded-t-3xl shadow-2xl max-h-[80vh] flex flex-col animate-slide-up">
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b border-gray-100 flex-shrink-0">
+          <h3 className="text-display text-lg font-extrabold">{card.title}</h3>
+          <button
+            onClick={() => {
+              fxTap();
+              onClose();
+            }}
+            className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center text-xl"
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-3">
+          {/* Cool Facts */}
+          {card.coolFacts && card.coolFacts.length > 0 && (
+            <div>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-amber-700 mb-2">
+                ⭐ More Amazing Facts
+              </h4>
+              <div className="space-y-2">
+                {card.coolFacts.map((fact: string, idx: number) => (
+                  <div
+                    key={idx}
+                    className="text-xs font-semibold text-gray-800 bg-amber-50 p-2 rounded-lg border-l-3 border-amber-400"
+                  >
+                    {fact}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Did You Know */}
+          {card.didYouKnow && (
+            <div>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-purple-700 mb-2">
+                🤔 Did You Know?
+              </h4>
+              <div className="text-xs font-bold text-purple-900 bg-purple-50 p-3 rounded-lg border-2 border-purple-300">
+                {card.didYouKnow}
+              </div>
+            </div>
+          )}
+
+          {/* Try This */}
+          {card.tryThis && (
+            <div>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-green-700 mb-2">
+                🎮 Try This Activity
+              </h4>
+              <div className="text-xs font-bold text-green-900 bg-green-50 p-3 rounded-lg border-2 border-green-300">
+                {card.tryThis}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Close Button */}
+        <div className="p-4 border-t border-gray-100 flex-shrink-0">
+          <button
+            onClick={() => {
+              fxTap();
+              onClose();
+            }}
+            className="w-full h-12 rounded-2xl bg-gradient-to-r from-purple-400 to-pink-400 text-white text-display font-extrabold"
+          >
+            Got it! ✨
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function learningCardsFor(stateName?: string) {
   const state = getState(stateName);
   return [
@@ -1113,16 +1228,26 @@ export function LearningCardScreen({
   onNext?: (nextIndex: number | null) => void;
   onClose?: () => void;
 } = {}) {
+  const progress = useProgress();
   const state = getState(stateName);
   const art = STATE_ART[state.name];
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
   const cards = learningCardsFor(state.name);
   const i = Math.min(Math.max(cardIndex, 0), cards.length - 1);
+  const isReplaying = progress.cards?.[state.name]?.includes(i) ?? false;
+  const replayCount = getReplayCount(progress, state.name, i);
+  const [showLearnMore, setShowLearnMore] = useState(false);
+  
   useEffect(() => {
     preloadStateArt(state.name, nextStateAfter(state.name)?.name);
   }, [state.name]);
   const card = cards[i];
   const isLast = i === cards.length - 1;
+
+  // Get enriched content if available
+  const enrichedContent = getStateContent(stateName);
+  const cardIds = ["capital", "language", "food", "places", "animal", "funFact"];
+  const enrichedCard = enrichedContent?.[cardIds[i] as keyof typeof enrichedContent];
 
   return (
     <div className="h-full w-full bg-[#FDF7EF] flex flex-col">
@@ -1157,7 +1282,23 @@ export function LearningCardScreen({
         </h2>
       </div>
 
-      <div className="mx-5 mt-4 rounded-3xl bg-white shadow-soft border border-black/5 p-4 flex-1 flex flex-col">
+      <div className="mx-5 mt-4 rounded-3xl bg-white shadow-soft border border-black/5 p-4 flex-1 flex flex-col relative">
+        {/* Audio Button - Overlay on top-right */}
+        <button className="absolute top-3 right-3 h-14 w-14 rounded-2xl bg-white shadow-soft flex items-center justify-center text-xl hover:shadow-md active:scale-95 transition z-10">
+          🔊
+        </button>
+
+        {/* Replay indicator - shown when user is replaying a card */}
+        {isReplaying && (
+          <div className="mb-3 p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-center gap-2">
+            <span className="text-lg">📖</span>
+            <div className="flex-1">
+              <p className="text-xs font-bold text-amber-900">Replaying this card</p>
+              <p className="text-xs text-amber-700 font-medium">No XP earned this time {replayCount > 0 && `• Replayed ${replayCount}x`}</p>
+            </div>
+          </div>
+        )}
+        
         <div className="flex-1 gradient-sky rounded-2xl flex items-center justify-center overflow-hidden">
           {art && card.kicker === "Places" ? (
             <img src={art} alt="" loading="lazy" decoding="async" className="h-full object-contain drop-shadow-xl" />
@@ -1180,21 +1321,41 @@ export function LearningCardScreen({
         </div>
       </div>
 
-      <div className="p-5 flex items-center gap-3">
-        <button className="h-14 w-14 rounded-2xl bg-white shadow-soft flex items-center justify-center text-xl">
-          🔊
-        </button>
+      <div className="p-5 flex flex-col gap-2">
+        {/* Learn More Button - shows only if enriched content available */}
+        {enrichedCard && (enrichedCard.coolFacts || enrichedCard.didYouKnow || enrichedCard.tryThis) && (
+          <button
+            onClick={() => {
+              fxTap();
+              setShowLearnMore(true);
+            }}
+            className="w-full h-12 rounded-2xl bg-gradient-to-r from-purple-400 to-pink-400 text-white text-display font-extrabold shadow-lg hover:shadow-xl active:scale-95 transition"
+          >
+            📚 Learn More Details
+          </button>
+        )}
+        
         <button
           onClick={() => {
             fxTap();
-            markCard(state.name, i);
+            // Check if user is replaying this card (already read before)
+            const isReplaying = progress.cards?.[state.name]?.includes(i) ?? false;
+            markCard(state.name, i, isReplaying);
             onNext?.(isLast ? null : i + 1);
           }}
-          className={`flex-1 h-14 rounded-2xl ${grad} text-white text-display text-lg font-extrabold shadow-[var(--shadow-glow-orange)]`}
+          className={`w-full h-14 rounded-2xl ${grad} text-white text-display text-lg font-extrabold shadow-[var(--shadow-glow-orange)]`}
         >
           {isLast ? "Take the Quiz! 🎯" : "Got it! Next →"}
         </button>
       </div>
+
+      {/* Learn More Modal */}
+      {showLearnMore && enrichedCard && (
+        <LearnMoreModal
+          card={enrichedCard}
+          onClose={() => setShowLearnMore(false)}
+        />
+      )}
     </div>
   );
 }

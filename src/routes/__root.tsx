@@ -8,6 +8,7 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import React from "react";
+import { App } from "@capacitor/app";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -15,8 +16,12 @@ import { useAndroidBackButton } from "../hooks/useAndroidBackButton";
 import { Toaster } from "@/components/ui/sonner";
 import { UnlockCelebration } from "@/components/UnlockCelebration";
 import { DebugScreen } from "@/components/DebugScreen";
+import { AudioPermissionDialog } from "@/components/AudioPermissionDialog";
 import { BottomNav } from "@/components/screens";
 import { appLogger } from "@/lib/logger";
+import { startAmbient, stopAmbient } from "@/lib/fx";
+import { pauseTts, resumeTts } from "@/lib/tts";
+import { Capacitor } from "@capacitor/core";
 
 // React Error Boundary for catching runtime errors
 class RootErrorBoundary extends React.Component<
@@ -188,6 +193,94 @@ function RootComponent() {
   const isPreAuthRoute = preAuthRoutes.includes(location.pathname);
   const scrollContainerPadding = isPreAuthRoute ? 'pb-safe' : 'pb-[120px]';
 
+  // Monitor localStorage for consent changes (from dialog)
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "india-explorer:audio-consent:v1") {
+        console.log("[RootComponent.storageListener] Consent changed in localStorage:", e.newValue);
+        const isAuthenticatedRoute = !preAuthRoutes.includes(location.pathname);
+        const hasConsent = e.newValue === "1";
+        
+        if (isAuthenticatedRoute && hasConsent) {
+          console.log("[RootComponent.storageListener] Starting ambient due to consent change");
+          startAmbient();
+        }
+      }
+    };
+    
+    if (typeof window !== "undefined") {
+      window.addEventListener("storage", handleStorageChange);
+      return () => window.removeEventListener("storage", handleStorageChange);
+    }
+  }, [location.pathname]);
+
+  // Start ambient music only on home/authenticated routes after user consents
+  // Do NOT start on splash/welcome/create screens
+  // Also set up app lifecycle listeners for pause/resume
+  useEffect(() => {
+    // Check if user has given audio consent
+    const hasAudioConsent = localStorage.getItem("india-explorer:audio-consent:v1") === "1";
+    
+    // Only start ambient on authenticated routes (home, state exploration, etc.)
+    // Pre-auth routes should remain silent
+    const isAuthenticatedRoute = !preAuthRoutes.includes(location.pathname);
+    
+    console.log("[RootComponent.effect] Route:", location.pathname, "isAuth:", isAuthenticatedRoute, "consent:", hasAudioConsent);
+    
+    if (isAuthenticatedRoute && hasAudioConsent) {
+      console.log("[RootComponent] Starting ambient - consent given + authenticated route:", location.pathname);
+      startAmbient();
+    } else {
+      console.log("[RootComponent] Stopping ambient - consent:", hasAudioConsent, "route:", location.pathname);
+      stopAmbient();
+    }
+    
+    // Only set up lifecycle listeners on native platforms
+    if (!Capacitor.isNativePlatform()) {
+      return () => {
+        if (isAuthenticatedRoute && hasAudioConsent) stopAmbient();
+      };
+    }
+
+    // Listen for app pause (minimized)
+    const pauseListener = App.addListener('pause', () => {
+      appLogger.info('app_lifecycle', 'App paused - stopping audio');
+      stopAmbient();
+      pauseTts();
+    });
+
+    // Listen for app resume (brought to foreground)
+    const resumeListener = App.addListener('resume', () => {
+      appLogger.info('app_lifecycle', 'App resumed - restarting audio');
+      const isAuth = !preAuthRoutes.includes(location.pathname);
+      const consent = localStorage.getItem("india-explorer:audio-consent:v1") === "1";
+      if (isAuth && consent) {
+        startAmbient();
+      }
+      resumeTts();
+    });
+
+    // Cleanup listeners on unmount or route change
+    return () => {
+      if (isAuthenticatedRoute && hasAudioConsent) stopAmbient();
+      pauseListener.remove();
+      resumeListener.remove();
+    };
+  }, [location.pathname]);
+
+  // Monitor consent changes and trigger audio start if needed
+  useEffect(() => {
+    const hasAudioConsent = localStorage.getItem("india-explorer:audio-consent:v1") === "1";
+    const isAuthenticatedRoute = !preAuthRoutes.includes(location.pathname);
+    
+    console.log("[RootComponent.consentEffect] Consent changed:", hasAudioConsent, "Route:", location.pathname);
+    
+    if (isAuthenticatedRoute && hasAudioConsent) {
+      console.log("[RootComponent] Consent detected, starting ambient");
+      startAmbient();
+    }
+  }, []);
+
   const innerComponent = (
     <QueryClientProvider client={queryClient}>
       <div className="h-full w-full flex flex-col bg-[#F7F5F0] relative">
@@ -203,6 +296,24 @@ function RootComponent() {
         <div className="fixed bottom-0 left-0 right-0 z-20 pb-safe">
           <BottomNav active="home" />
         </div>
+      )}
+      
+      {/* Audio Permission Dialog - COPPA Compliant - Only shows on authenticated routes */}
+      {!preAuthRoutes.includes(location.pathname) && (
+        <AudioPermissionDialog
+          onAccept={() => {
+            appLogger.info('audio_permission', 'User accepted audio permission');
+            console.log("[RootComponent] Audio permission accepted");
+            // Start music if on authenticated route
+            if (!preAuthRoutes.includes(location.pathname)) {
+              startAmbient();
+            }
+          }}
+          onReject={() => {
+            appLogger.info('audio_permission', 'User rejected audio permission');
+            console.log("[RootComponent] Audio permission rejected");
+          }}
+        />
       )}
       
       <UnlockCelebration />

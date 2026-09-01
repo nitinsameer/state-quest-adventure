@@ -20,6 +20,7 @@ import { Route as ParentRouteImport } from './routes/parent'
 import { Route as PassportRouteImport } from './routes/passport'
 import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as StateSlugIndexRouteImport } from './routes/state.$slug.index'
+import { Route as StateSlugCardsRouteImport } from './routes/state.$slug.cards'
 import { Route as StateSlugCompleteRouteImport } from './routes/state.$slug.complete'
 import { Route as StateSlugLearnRouteImport } from './routes/state.$slug.learn'
 import { Route as StateSlugPostcardRouteImport } from './routes/state.$slug.postcard'
@@ -82,6 +83,11 @@ const StateSlugIndexRoute = StateSlugIndexRouteImport.update({
   path: '/state/$slug/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StateSlugCardsRoute = StateSlugCardsRouteImport.update({
+  id: '/state/$slug/cards',
+  path: '/state/$slug/cards',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StateSlugCompleteRoute = StateSlugCompleteRouteImport.update({
   id: '/state/$slug/complete',
   path: '/state/$slug/complete',
@@ -124,6 +130,7 @@ export interface FileRoutesByFullPath {
   '/parent': typeof ParentRoute
   '/passport': typeof PassportRoute
   '/welcome': typeof WelcomeRoute
+  '/state/$slug/cards': typeof StateSlugCardsRoute
   '/state/$slug/complete': typeof StateSlugCompleteRoute
   '/state/$slug/learn': typeof StateSlugLearnRoute
   '/state/$slug/postcard': typeof StateSlugPostcardRoute
@@ -143,6 +150,7 @@ export interface FileRoutesByTo {
   '/parent': typeof ParentRoute
   '/passport': typeof PassportRoute
   '/welcome': typeof WelcomeRoute
+  '/state/$slug/cards': typeof StateSlugCardsRoute
   '/state/$slug/complete': typeof StateSlugCompleteRoute
   '/state/$slug/learn': typeof StateSlugLearnRoute
   '/state/$slug/postcard': typeof StateSlugPostcardRoute
@@ -163,6 +171,7 @@ export interface FileRoutesById {
   '/parent': typeof ParentRoute
   '/passport': typeof PassportRoute
   '/welcome': typeof WelcomeRoute
+  '/state/$slug/cards': typeof StateSlugCardsRoute
   '/state/$slug/complete': typeof StateSlugCompleteRoute
   '/state/$slug/learn': typeof StateSlugLearnRoute
   '/state/$slug/postcard': typeof StateSlugPostcardRoute
@@ -184,6 +193,7 @@ export interface FileRouteTypes {
     | '/parent'
     | '/passport'
     | '/welcome'
+    | '/state/$slug/cards'
     | '/state/$slug/complete'
     | '/state/$slug/learn'
     | '/state/$slug/postcard'
@@ -203,6 +213,7 @@ export interface FileRouteTypes {
     | '/parent'
     | '/passport'
     | '/welcome'
+    | '/state/$slug/cards'
     | '/state/$slug/complete'
     | '/state/$slug/learn'
     | '/state/$slug/postcard'
@@ -222,6 +233,7 @@ export interface FileRouteTypes {
     | '/parent'
     | '/passport'
     | '/welcome'
+    | '/state/$slug/cards'
     | '/state/$slug/complete'
     | '/state/$slug/learn'
     | '/state/$slug/postcard'
@@ -242,6 +254,7 @@ export interface RootRouteChildren {
   ParentRoute: typeof ParentRoute
   PassportRoute: typeof PassportRoute
   WelcomeRoute: typeof WelcomeRoute
+  StateSlugCardsRoute: typeof StateSlugCardsRoute
   StateSlugCompleteRoute: typeof StateSlugCompleteRoute
   StateSlugLearnRoute: typeof StateSlugLearnRoute
   StateSlugPostcardRoute: typeof StateSlugPostcardRoute
@@ -330,6 +343,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StateSlugIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/state/$slug/cards': {
+      id: '/state/$slug/cards'
+      path: '/state/$slug/cards'
+      fullPath: '/state/$slug/cards'
+      preLoaderRoute: typeof StateSlugCardsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/state/$slug/complete': {
       id: '/state/$slug/complete'
       path: '/state/$slug/complete'
@@ -386,6 +406,7 @@ const rootRouteChildren: RootRouteChildren = {
   ParentRoute: ParentRoute,
   PassportRoute: PassportRoute,
   WelcomeRoute: WelcomeRoute,
+  StateSlugCardsRoute: StateSlugCardsRoute,
   StateSlugCompleteRoute: StateSlugCompleteRoute,
   StateSlugLearnRoute: StateSlugLearnRoute,
   StateSlugPostcardRoute: StateSlugPostcardRoute,

@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from "react";
 import { Capacitor } from "@capacitor/core";
 import { Haptics, ImpactStyle } from "@capacitor/haptics";
+import { initAudioMixer, getEffectsGain, getAmbientGain } from "./audio-mixer";
 
 // Sound + haptics FX using Web Audio API, navigator.vibrate, and Capacitor Haptics.
 // On native (Android/iOS), uses Capacitor.Haptics for richer haptic feedback.
@@ -30,6 +31,23 @@ function subscribeSound(listener: () => void) {
   soundListeners.add(listener);
   return () => soundListeners.delete(listener);
 }
+
+// Auto-stop ambient music when sound is toggled off
+// Auto-start ambient music when sound is toggled ON
+soundListeners.add(() => {
+  const soundIsOn = isSoundOn();
+  
+  if (!soundIsOn && ambientRunning) {
+    console.log("[Audio] Sound toggled OFF - stopping ambient");
+    stopAmbientMusic();
+  } else if (soundIsOn && !ambientRunning) {
+    console.log("[Audio] Sound toggled ON - restarting ambient, ambientRunning:", ambientRunning);
+    // Try to restart - but first ensure old state is cleared
+    ambientAudioElement = null;
+    musicFileExists = true;
+    startAmbientMusic();
+  }
+});
 
 export function isSoundOn() {
   hydrateSound();
@@ -70,6 +88,8 @@ function ac(): AudioContext | null {
       (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
     if (!AC) return null;
     ctx = new AC();
+    // Initialize audio mixer on first AudioContext creation
+    initAudioMixer(ctx);
   }
   if (ctx.state === "suspended") void ctx.resume();
   return ctx;
@@ -96,7 +116,12 @@ function tone({ freq, dur = 0.18, type = "sine", gain = 0.18, slideTo, delay = 0
   g.gain.setValueAtTime(0, t0);
   g.gain.linearRampToValueAtTime(gain, t0 + 0.01);
   g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
-  osc.connect(g).connect(a.destination);
+  
+  // Always connect directly to destination for reliability
+  // The mixer is optional - effects must work even without it
+  osc.connect(g);
+  g.connect(a.destination);
+  
   osc.start(t0);
   osc.stop(t0 + dur + 0.02);
 }
@@ -113,7 +138,11 @@ function noise(dur = 0.25, gain = 0.15, delay = 0) {
   const g = a.createGain();
   g.gain.setValueAtTime(gain, t0);
   g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
-  src.connect(g).connect(a.destination);
+  
+  // Always connect directly to destination for reliability
+  src.connect(g);
+  g.connect(a.destination);
+  
   src.start(t0);
 }
 
@@ -184,48 +213,195 @@ export function fxWhoosh() {
 
 /* ---------- ambient background music ---------- */
 
+let ambientAudioElement: HTMLAudioElement | null = null;
 let ambientOscillator: OscillatorNode | null = null;
-let ambientGain: GainNode | null = null;
+let localAmbientGain: GainNode | null = null;
 let ambientRunning = false;
+let musicFileExists = true;
 
 function startAmbientMusic() {
-  const a = ac();
-  if (!a || ambientRunning) return;
+  if (ambientRunning) {
+    console.log("[Ambient] Already running, skipping");
+    return;
+  }
   ambientRunning = true;
 
-  // Subtle ambient pad: low frequency drone with slow LFO modulation
+  if (typeof window === "undefined") {
+    console.log("[Ambient] Window not defined, aborting");
+    return;
+  }
+
+  // Try to load music file first
+  if (musicFileExists && !ambientAudioElement) {
+    console.log("[Ambient] Creating audio element for file: ./ambient-music.mp3");
+    ambientAudioElement = new Audio();
+    
+    // Use /assets/ path for Capacitor (Capacitor serves from localhost://)
+    // or direct /ambient-music.mp3 for web
+    ambientAudioElement.src = "./ambient-music.mp3";
+    ambientAudioElement.loop = true;
+    ambientAudioElement.volume = 0;
+    ambientAudioElement.crossOrigin = "anonymous";
+
+    console.log("[Ambient] Audio element created, src:", ambientAudioElement.src);
+
+    ambientAudioElement.addEventListener(
+      "error",
+      (e) => {
+        console.error(
+          "[Ambient] Load error:",
+          e.type,
+          "Network state:",
+          ambientAudioElement?.networkState,
+          "Ready state:",
+          ambientAudioElement?.readyState
+        );
+        musicFileExists = false;
+        ambientAudioElement = null;
+        console.log("[Ambient] Falling back to generated tone");
+        startAmbientTone();
+      },
+      { once: true }
+    );
+
+    ambientAudioElement.addEventListener(
+      "canplay",
+      () => {
+        console.log("[Ambient] Audio ready to play, currentTime:", ambientAudioElement?.currentTime);
+        if (!ambientAudioElement || !ambientRunning) {
+          console.log("[Ambient] Audio element or ambientRunning is null, aborting play");
+          return;
+        }
+        
+        // Fade in to 0.15 volume over 1.5s
+        ambientAudioElement.volume = 0;
+        ambientAudioElement.play().catch((err) => {
+          console.error("[Ambient] Play error:", err.message);
+          musicFileExists = false;
+          ambientAudioElement = null;
+          startAmbientTone();
+        });
+
+        const startTime = Date.now();
+        const fadeInDuration = 1500;
+        const fadeInterval = setInterval(() => {
+          if (!ambientAudioElement || !ambientRunning) {
+            clearInterval(fadeInterval);
+            return;
+          }
+          const elapsed = Date.now() - startTime;
+          const progress = Math.min(elapsed / fadeInDuration, 1);
+          ambientAudioElement.volume = 0.15 * progress;
+          if (progress >= 1) {
+            clearInterval(fadeInterval);
+            console.log("[Ambient] Music playing at full volume, duration:", ambientAudioElement.duration);
+          }
+        }, 50);
+      },
+      { once: true }
+    );
+
+    console.log("[Ambient] Calling load()");
+    ambientAudioElement.load();
+
+    // Fallback timeout: if canplay doesn't fire in 3s, fallback to tone
+    setTimeout(() => {
+      if (musicFileExists && ambientAudioElement && ambientAudioElement.readyState < 2) {
+        console.warn("[Ambient] Timeout waiting for canplay, falling back to tone. ReadyState:", ambientAudioElement.readyState);
+        musicFileExists = false;
+        ambientAudioElement = null;
+        startAmbientTone();
+      }
+    }, 3000);
+  } else if (!musicFileExists) {
+    console.log("[Ambient] Music file marked as not existing, starting tone");
+    startAmbientTone();
+  }
+}
+
+function startAmbientTone() {
+  const a = ac();
+  if (!a) return;
+
+  // Fallback: Subtle ambient pad (low frequency drone with slow LFO modulation)
+  // This creates a gentle, loopable ambient sound
   ambientOscillator = a.createOscillator();
   ambientOscillator.type = "sine";
-  ambientOscillator.frequency.setValueAtTime(55, a.currentTime); // Low A note
+  ambientOscillator.frequency.setValueAtTime(55, a.currentTime); // Low A note (very warm)
 
-  ambientGain = a.createGain();
-  ambientGain.gain.setValueAtTime(0.04, a.currentTime); // Very quiet background
+  const filter = a.createBiquadFilter();
+  filter.type = "lowpass";
+  filter.frequency.setValueAtTime(80, a.currentTime); // Keep only low frequencies to reduce harshness
 
-  // Slow LFO modulation for warmth (0.5 Hz swell)
+  localAmbientGain = a.createGain();
+  localAmbientGain.gain.setValueAtTime(0.08, a.currentTime);
+
+  // Slow LFO modulation (0.5 Hz swell) for organic warmth
   const lfo = a.createOscillator();
+  lfo.type = "sine";
   lfo.frequency.setValueAtTime(0.5, a.currentTime);
   const lfoGain = a.createGain();
-  lfoGain.gain.setValueAtTime(0.008, a.currentTime); // Subtle modulation depth
+  lfoGain.gain.setValueAtTime(0.008, a.currentTime);
 
-  lfo.connect(ambientGain.gain);
-  ambientOscillator.connect(ambientGain).connect(a.destination);
+  lfo.connect(localAmbientGain.gain);
+
+  // Connect signal chain
+  ambientOscillator.connect(filter);
+  filter.connect(localAmbientGain);
+
+  // Route through mixer if available, else direct to destination
+  const ambientMixGain = getAmbientGain();
+  if (ambientMixGain) {
+    localAmbientGain.connect(ambientMixGain);
+  } else {
+    localAmbientGain.connect(a.destination);
+  }
 
   ambientOscillator.start();
   lfo.start();
+
+  console.log("[Ambient] Started fallback generated ambient tone");
 }
 
 function stopAmbientMusic() {
-  if (!ambientOscillator || !ambientRunning) return;
+  if (!ambientRunning) return;
   ambientRunning = false;
-  const a = ac();
-  if (!a) return;
-  // Fade out over 0.5s
-  ambientGain?.gain.exponentialRampToValueAtTime(0.0001, a.currentTime + 0.5);
-  setTimeout(() => {
-    ambientOscillator?.stop();
-    ambientOscillator = null;
-    ambientGain = null;
-  }, 550);
+
+  // Stop audio element if playing
+  if (ambientAudioElement) {
+    const startTime = Date.now();
+    const fadeOutDuration = 500;
+    const fadeInterval = setInterval(() => {
+      if (!ambientAudioElement) {
+        clearInterval(fadeInterval);
+        return;
+      }
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / fadeOutDuration, 1);
+      ambientAudioElement.volume = 0.15 * (1 - progress);
+      if (progress >= 1) {
+        clearInterval(fadeInterval);
+        ambientAudioElement.pause();
+        ambientAudioElement.currentTime = 0;
+      }
+    }, 50);
+  }
+
+  // Stop oscillator if playing
+  if (ambientOscillator && localAmbientGain) {
+    const a = ac();
+    if (a) {
+      localAmbientGain.gain.exponentialRampToValueAtTime(
+        0.0001,
+        a.currentTime + 0.5
+      );
+      setTimeout(() => {
+        ambientOscillator?.stop();
+        ambientOscillator = null;
+        localAmbientGain = null;
+      }, 550);
+    }
+  }
 }
 
 /** Start ambient music if sound is on. Safe to call repeatedly. */

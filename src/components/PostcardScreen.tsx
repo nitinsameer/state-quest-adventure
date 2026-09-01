@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import mascot from "@/assets/mascot.png";
 import { getState } from "@/lib/states";
 import { STATE_ART, TONE_GRADIENT, TONE_HEX, preloadStateArt } from "@/lib/state-art";
@@ -46,6 +47,7 @@ export function StatePostcardScreen({
 }: { stateName?: string; onContinue?: () => void } = {}) {
   const state = getState(stateName);
   const progress = useProgress();
+  const navigate = useNavigate();
   const art = STATE_ART[state.name];
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
   const earned = badgesFor(progress, state.name);
