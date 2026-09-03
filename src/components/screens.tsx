@@ -1160,127 +1160,31 @@ function HubCard({
   );
 }
 
-/**
- * Learn More Modal - Shows expanded details for a card
- */
-function LearnMoreModal({
-  card,
-  onClose,
-}: {
-  card: any;
-  onClose: () => void;
-}) {
-  // Add slide-up animation
-  useEffect(() => {
-    const style = document.createElement("style");
-    style.textContent = `
-      @keyframes slideUp {
-        from {
-          transform: translateY(100%);
-          opacity: 0;
-        }
-        to {
-          transform: translateY(0);
-          opacity: 1;
-        }
-      }
-      .animate-slide-up {
-        animation: slideUp 0.3s ease-out;
-      }
-    `;
-    document.head.appendChild(style);
-    return () => document.head.removeChild(style);
-  }, []);
+export type EnhancedCard = {
+  kicker: string;
+  title: string;
+  icon: string;
+  chip: string;
+  body: string;
+  type: "main" | "coolFact" | "didYouKnow" | "tryThis";
+  gradient: string;
+  chipTone: "orange" | "amber" | "purple" | "green";
+  mainCardIndex?: number; // Track which main card this belongs to (0-5)
+};
 
-  return (
-    <div className="fixed inset-0 bg-black/50 flex items-end z-50">
-      <div className="w-full bg-white rounded-t-3xl shadow-2xl max-h-[80vh] flex flex-col animate-slide-up">
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-100 flex-shrink-0">
-          <h3 className="text-display text-lg font-extrabold">{card.title}</h3>
-          <button
-            onClick={() => {
-              fxTap();
-              onClose();
-            }}
-            className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center text-xl"
-          >
-            ✕
-          </button>
-        </div>
-
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-3">
-          {/* Cool Facts */}
-          {card.coolFacts && card.coolFacts.length > 0 && (
-            <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-amber-700 mb-2">
-                ⭐ More Amazing Facts
-              </h4>
-              <div className="space-y-2">
-                {card.coolFacts.map((fact: string, idx: number) => (
-                  <div
-                    key={idx}
-                    className="text-xs font-semibold text-gray-800 bg-amber-50 p-2 rounded-lg border-l-3 border-amber-400"
-                  >
-                    {fact}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Did You Know */}
-          {card.didYouKnow && (
-            <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-purple-700 mb-2">
-                🤔 Did You Know?
-              </h4>
-              <div className="text-xs font-bold text-purple-900 bg-purple-50 p-3 rounded-lg border-2 border-purple-300">
-                {card.didYouKnow}
-              </div>
-            </div>
-          )}
-
-          {/* Try This */}
-          {card.tryThis && (
-            <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-green-700 mb-2">
-                🎮 Try This Activity
-              </h4>
-              <div className="text-xs font-bold text-green-900 bg-green-50 p-3 rounded-lg border-2 border-green-300">
-                {card.tryThis}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Close Button */}
-        <div className="p-4 border-t border-gray-100 flex-shrink-0">
-          <button
-            onClick={() => {
-              fxTap();
-              onClose();
-            }}
-            className="w-full h-12 rounded-2xl bg-gradient-to-r from-purple-400 to-pink-400 text-white text-display font-extrabold"
-          >
-            Got it! ✨
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export function learningCardsFor(stateName?: string) {
+function learningCardsFor(stateName?: string): EnhancedCard[] {
   const state = getState(stateName);
-  return [
+  const enrichedContent = getStateContent(stateName);
+  
+  // Map of main card definitions
+  const mainCardDefinitions = [
     {
       kicker: "Capital",
       title: state.capital,
       icon: "🏛️",
       chip: "Capital City",
       body: `${state.capital} is the capital city of ${state.name}. It is where the state's government works from.`,
+      enrichedKey: "capital" as const,
     },
     {
       kicker: "Language",
@@ -1288,6 +1192,7 @@ export function learningCardsFor(stateName?: string) {
       icon: "🗣️",
       chip: "Language",
       body: `People in ${state.name} mostly speak ${state.language}. Try saying hello in it!`,
+      enrichedKey: "language" as const,
     },
     {
       kicker: "Famous Food",
@@ -1295,6 +1200,7 @@ export function learningCardsFor(stateName?: string) {
       icon: "🍛",
       chip: "Food",
       body: `${state.food} is a favourite dish of ${state.name}. Yum!`,
+      enrichedKey: "food" as const,
     },
     {
       kicker: "Places",
@@ -1302,6 +1208,7 @@ export function learningCardsFor(stateName?: string) {
       icon: state.monument,
       chip: "Monument",
       body: `${state.monumentName} is a treasure of ${state.name}, ${state.nickname.toLowerCase()}.`,
+      enrichedKey: "places" as const,
     },
     {
       kicker: "State Animal",
@@ -1309,6 +1216,7 @@ export function learningCardsFor(stateName?: string) {
       icon: state.animal,
       chip: "Animal",
       body: `The ${state.animalName} is a special animal you can find in ${state.name}.`,
+      enrichedKey: "animal" as const,
     },
     {
       kicker: "Fun Fact",
@@ -1316,8 +1224,93 @@ export function learningCardsFor(stateName?: string) {
       icon: "💡",
       chip: "Fun Fact",
       body: state.funFact,
+      enrichedKey: "funFact" as const,
     },
   ];
+
+  // Build all cards with their enriched layers
+  const allCards: EnhancedCard[] = [];
+
+  mainCardDefinitions.forEach((def, mainIndex) => {
+    // Add main card
+    allCards.push({
+      kicker: def.kicker,
+      title: def.title,
+      icon: def.icon,
+      chip: def.chip,
+      body: def.body,
+      type: "main",
+      gradient: "gradient-sky",
+      chipTone: "orange",
+      mainCardIndex: mainIndex,
+    });
+
+    // Add enriched content layers if available
+    if (enrichedContent) {
+      const enrichedCard = enrichedContent[def.enrichedKey];
+      
+      if (enrichedCard) {
+        // Add Cool Facts
+        if (enrichedCard.coolFacts && enrichedCard.coolFacts.length > 0) {
+          enrichedCard.coolFacts.forEach((fact, idx) => {
+            allCards.push({
+              kicker: "Cool Fact",
+              title: `Cool Fact #${idx + 1}`,
+              icon: "⭐",
+              chip: "Cool Fact",
+              body: fact,
+              type: "coolFact",
+              gradient: "gradient-amber",
+              chipTone: "amber",
+              mainCardIndex: mainIndex,
+            });
+          });
+        }
+
+        // Add Did You Know
+        if (enrichedCard.didYouKnow) {
+          allCards.push({
+            kicker: "Trivia",
+            title: "Did You Know?",
+            icon: "🤔",
+            chip: "Did You Know?",
+            body: enrichedCard.didYouKnow,
+            type: "didYouKnow",
+            gradient: "gradient-purple",
+            chipTone: "purple",
+            mainCardIndex: mainIndex,
+          });
+        }
+
+        // Add Try This Activity
+        if (enrichedCard.tryThis) {
+          allCards.push({
+            kicker: "Activity",
+            title: "Try This Activity",
+            icon: "🎮",
+            chip: "Try This Activity",
+            body: enrichedCard.tryThis,
+            type: "tryThis",
+            gradient: "gradient-green",
+            chipTone: "green",
+            mainCardIndex: mainIndex,
+          });
+        }
+      }
+    }
+  });
+
+  return allCards;
+}
+
+// Helper function to get the starting index of a main card (0-5) in the flattened card array
+function getMainCardStartIndex(mainCardIndex: number, cards: EnhancedCard[]): number {
+  for (let i = 0; i < cards.length; i++) {
+    if (cards[i].mainCardIndex === mainCardIndex) {
+      return i;
+    }
+  }
+  return 0;
 }
 
 export function LearningCardScreen({
@@ -1336,26 +1329,96 @@ export function LearningCardScreen({
   const art = STATE_ART[state.name];
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
   const cards = learningCardsFor(state.name);
-  const i = Math.min(Math.max(cardIndex, 0), cards.length - 1);
+  // cardIndex is now a main card index (0-5), not a flattened index
+  // Convert it to the actual starting index in the flattened array
+  const startIndexForMainCard = getMainCardStartIndex(cardIndex, cards);
+  const i = Math.min(Math.max(startIndexForMainCard, 0), cards.length - 1);
   const isReplaying = progress.cards?.[state.name]?.includes(i) ?? false;
   const replayCount = getReplayCount(progress, state.name, i);
-  const [showLearnMore, setShowLearnMore] = useState(false);
+  const [currentCardIndex, setCurrentCardIndex] = useState(i);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
   
   useEffect(() => {
     preloadStateArt(state.name, nextStateAfter(state.name)?.name);
   }, [state.name]);
 
-  // Reset modal state when card index changes (for replay scenarios)
+  // Reset card index when cardIndex prop changes (for replay scenarios)
   useEffect(() => {
-    setShowLearnMore(false);
+    setCurrentCardIndex(i);
   }, [cardIndex, stateName]);
-  const card = cards[i];
-  const isLast = i === cards.length - 1;
 
-  // Get enriched content if available
-  const enrichedContent = getStateContent(stateName);
-  const cardIds = ["capital", "language", "food", "places", "animal", "funFact"];
-  const enrichedCard = enrichedContent?.[cardIds[i] as keyof typeof enrichedContent];
+  const card = cards[currentCardIndex];
+  const isLast = currentCardIndex === cards.length - 1;
+
+  // Find the main card index for the current card
+  const currentMainCardIndex = card.mainCardIndex;
+  
+  // Find where the current main card section ends
+  let mainCardSectionEnd = currentCardIndex;
+  while (mainCardSectionEnd < cards.length - 1 && cards[mainCardSectionEnd + 1].mainCardIndex === currentMainCardIndex) {
+    mainCardSectionEnd++;
+  }
+
+  const isLastInMainCardSection = currentCardIndex === mainCardSectionEnd;
+
+  // Swipe gesture detection
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    setTouchEnd(e.changedTouches[0].clientX);
+    if (touchStart !== null) {
+      const swipeThreshold = 50;
+      const diff = touchStart - e.changedTouches[0].clientX;
+      
+      // Swipe left (show next card)
+      if (diff > swipeThreshold && currentCardIndex < cards.length - 1) {
+        fxTap();
+        setCurrentCardIndex(currentCardIndex + 1);
+      }
+      // Swipe right (show previous card)
+      else if (diff < -swipeThreshold && currentCardIndex > 0) {
+        fxTap();
+        setCurrentCardIndex(currentCardIndex - 1);
+      }
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentCardIndex > 0) {
+      fxTap();
+      setCurrentCardIndex(currentCardIndex - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentCardIndex < cards.length - 1) {
+      fxTap();
+      setCurrentCardIndex(currentCardIndex + 1);
+    } else {
+      // Last card overall - mark as learned and proceed
+      fxTap();
+      const isReplaying = progress.cards?.[state.name]?.includes(i) ?? false;
+      markCard(state.name, i, isReplaying);
+      onNext?.(null);
+    }
+  };
+
+  const handleMainCardDone = () => {
+    fxTap();
+    // Mark the main card as learned
+    markCard(state.name, currentMainCardIndex, isReplaying);
+    
+    // If this is the last main card, go to quiz
+    if (currentMainCardIndex === 5) {
+      onNext?.(null);
+    } else {
+      // Go back to card selection screen (pass null to signal back to hub)
+      onClose?.();
+    }
+  };
 
   return (
     <div className="h-full w-full bg-[#FDF7EF] flex flex-col">
@@ -1373,11 +1436,11 @@ export function LearningCardScreen({
         <div className="flex-1 h-3 rounded-full bg-white overflow-hidden shadow-inner">
           <div
             className={`h-full ${grad} transition-all`}
-            style={{ width: `${((i + 1) / cards.length) * 100}%` }}
+            style={{ width: `${((currentCardIndex + 1) / cards.length) * 100}%` }}
           />
         </div>
         <div className="text-display font-extrabold text-saffron">
-          {i + 1}/{cards.length}
+          {currentCardIndex + 1}/{cards.length}
         </div>
       </div>
 
@@ -1390,33 +1453,37 @@ export function LearningCardScreen({
         </h2>
       </div>
 
-      <div className="mx-5 mt-4 rounded-3xl bg-white shadow-soft border border-black/5 p-4 flex-1 flex flex-col relative">
+      <div 
+        className={`mx-5 mt-4 rounded-3xl shadow-soft border border-black/5 p-4 flex-1 flex flex-col relative overflow-hidden ${card.gradient}`}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         {/* Audio Button - Overlay on top-right */}
         <button className="absolute top-3 right-3 h-14 w-14 rounded-2xl bg-white shadow-soft flex items-center justify-center text-xl hover:shadow-md active:scale-95 transition z-10">
           🔊
         </button>
 
         {/* Replay indicator - shown when user is replaying a card */}
-        {isReplaying && (
-          <div className="mb-3 p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-center gap-2">
+        {isReplaying && currentCardIndex === i && (
+          <div className="mb-3 p-3 bg-white rounded-xl flex items-center gap-2 shadow-sm">
             <span className="text-lg">📖</span>
             <div className="flex-1">
-              <p className="text-xs font-bold text-amber-900">Replaying this card</p>
-              <p className="text-xs text-amber-700 font-medium">No XP earned this time {replayCount > 0 && `• Replayed ${replayCount}x`}</p>
+              <p className="text-xs font-bold text-ink/70">Replaying this card</p>
+              <p className="text-xs text-ink/60 font-medium">No XP earned this time {replayCount > 0 && `• Replayed ${replayCount}x`}</p>
             </div>
           </div>
         )}
         
-        <div className="flex-1 gradient-sky rounded-2xl flex items-center justify-center overflow-hidden">
-          {art && card.kicker === "Places" ? (
+        <div className={`flex-1 rounded-2xl flex items-center justify-center overflow-hidden bg-white`}>
+          {art && card.type === "main" && card.kicker === "Places" ? (
             <img src={art} alt="" loading="lazy" decoding="async" className="h-full object-contain drop-shadow-xl" />
           ) : (
             <div className="text-[92px] drop-shadow-xl">{card.icon}</div>
           )}
         </div>
-        <div className="mt-3">
+        <div className="mt-3 bg-white/80 rounded-xl p-3">
           <div className="flex items-center gap-2">
-            <Chip icon={card.icon} tone="orange">
+            <Chip icon={card.icon} tone={card.chipTone}>
               {card.chip}
             </Chip>
             <Chip icon="📍" tone="blue">
@@ -1427,43 +1494,29 @@ export function LearningCardScreen({
             {card.body}
           </p>
         </div>
+
+        {/* Swipe hint for non-last cards */}
+        {!isLast && !isLastInMainCardSection && (
+          <div className="mt-3 text-center text-xs font-semibold text-ink/50">
+            ← Swipe or tap Next →
+          </div>
+        )}
       </div>
 
       <div className="p-5 flex flex-col gap-2">
-        {/* Learn More Button - shows only if enriched content available */}
-        {enrichedCard && (enrichedCard.coolFacts || enrichedCard.didYouKnow || enrichedCard.tryThis) && (
-          <button
-            onClick={() => {
-              fxTap();
-              setShowLearnMore(true);
-            }}
-            className="w-full h-12 rounded-2xl bg-gradient-to-r from-purple-400 to-pink-400 text-white text-display font-extrabold shadow-lg hover:shadow-xl active:scale-95 transition"
-          >
-            📚 Learn More Details
-          </button>
-        )}
-        
         <button
           onClick={() => {
-            fxTap();
-            // Check if user is replaying this card (already read before)
-            const isReplaying = progress.cards?.[state.name]?.includes(i) ?? false;
-            markCard(state.name, i, isReplaying);
-            onNext?.(isLast ? null : i + 1);
+            if (isLastInMainCardSection) {
+              handleMainCardDone();
+            } else {
+              handleNext();
+            }
           }}
           className={`w-full h-14 rounded-2xl ${grad} text-white text-display text-lg font-extrabold shadow-[var(--shadow-glow-orange)]`}
         >
-          {isLast ? "Take the Quiz! 🎯" : "Got it! Next →"}
+          {isLastInMainCardSection ? "Done! Back to Cards" : isLast ? "Take the Quiz! 🎯" : "Got it! Next →"}
         </button>
       </div>
-
-      {/* Learn More Modal */}
-      {showLearnMore && enrichedCard && (
-        <LearnMoreModal
-          card={enrichedCard}
-          onClose={() => setShowLearnMore(false)}
-        />
-      )}
     </div>
   );
 }
