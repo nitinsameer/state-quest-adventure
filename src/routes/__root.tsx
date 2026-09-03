@@ -17,6 +17,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { UnlockCelebration } from "@/components/UnlockCelebration";
 import { DebugScreen } from "@/components/DebugScreen";
 import { AudioPermissionDialog } from "@/components/AudioPermissionDialog";
+import { FilePermissionDialog } from "@/components/FilePermissionDialog";
 import { BottomNav } from "@/components/screens";
 import { appLogger } from "@/lib/logger";
 import { startAmbient, stopAmbient } from "@/lib/fx";
@@ -219,7 +220,10 @@ function RootComponent() {
   // Also set up app lifecycle listeners for pause/resume
   useEffect(() => {
     // Check if user has given audio consent
-    const hasAudioConsent = localStorage.getItem("india-explorer:audio-consent:v1") === "1";
+    // DEFAULT: true (play audio) unless user explicitly rejected (value === "0")
+    // This ensures audio plays on first launch while permission dialog is showing
+    const consentValue = localStorage.getItem("india-explorer:audio-consent:v1");
+    const hasAudioConsent = consentValue !== "0"; // true if null (first time) or "1"
     
     // Only start ambient on authenticated routes (home, state exploration, etc.)
     // Pre-auth routes should remain silent
@@ -283,9 +287,9 @@ function RootComponent() {
 
   const innerComponent = (
     <QueryClientProvider client={queryClient}>
-      <div className="h-full w-full flex flex-col bg-[#F7F5F0] relative">
+      <div className="h-full w-full flex flex-col bg-[#F7F5F0] relative" suppressHydrationWarning>
         {/* Scrollable content area - conditional padding: pb-safe for pre-auth, pb-[120px] for authenticated */}
-        <div className={`flex-1 overflow-auto pt-safe px-safe ${scrollContainerPadding}`}>
+        <div className={`flex-1 overflow-auto pt-safe px-safe ${scrollContainerPadding}`} suppressHydrationWarning>
           {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
           <Outlet />
         </div>
@@ -312,6 +316,23 @@ function RootComponent() {
           onReject={() => {
             appLogger.info('audio_permission', 'User rejected audio permission');
             console.log("[RootComponent] Audio permission rejected");
+          }}
+        />
+      )}
+      
+      {/* File Permission Dialog - Shows after audio permission */}
+      {!preAuthRoutes.includes(location.pathname) && (
+        <FilePermissionDialog
+          onAccept={() => {
+            appLogger.info('file_permission', 'User accepted file permission');
+            console.log("[RootComponent] File permission accepted");
+            // Store consent in localStorage for the permissions module to check
+            localStorage.setItem("india-explorer:file-permission-consent:v1", "1");
+          }}
+          onReject={() => {
+            appLogger.info('file_permission', 'User rejected file permission');
+            console.log("[RootComponent] File permission rejected");
+            localStorage.setItem("india-explorer:file-permission-consent:v1", "0");
           }}
         />
       )}

@@ -5,6 +5,7 @@ import { getState } from "@/lib/states";
 import { STATE_ART, TONE_GRADIENT, TONE_HEX, preloadStateArt } from "@/lib/state-art";
 import { useProgress, badgesFor, STATE_BADGES, type BadgeId } from "@/lib/progress";
 import { fxTap, fxStamp } from "@/lib/fx";
+import { requestStoragePermission, saveFileToDownloads } from "@/lib/permissions";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { toast } from "sonner";
 
@@ -184,32 +185,73 @@ export function StatePostcardScreen({
 
   async function onShare() {
     if (busy) return;
+    
+    // Check if user has granted file permission via dialog
+    const hasConsent = localStorage.getItem(
+      "india-explorer:file-permission-consent:v1"
+    ) === "1";
+    
+    if (!hasConsent) {
+      console.log('[PostcardScreen] User has not granted file permission yet');
+      toast.error("Please allow file access to save your postcard 📁");
+      return;
+    }
+    
     setBusy(true);
     fxStamp();
     try {
+      console.log('[PostcardScreen] Starting save/share flow...');
+      
+      // Request actual Android permissions
+      console.log('[PostcardScreen] Requesting storage permission...');
+      const permissionGranted = await requestStoragePermission();
+      console.log('[PostcardScreen] Permission request result:', permissionGranted);
+
+      console.log('[PostcardScreen] Generating postcard blob...');
       const blob = await makeBlob();
-      if (!blob) throw new Error("no blob");
-      const file = new File([blob], `${state.name}-postcard.png`, { type: "image/png" });
+      if (!blob) throw new Error("Could not generate postcard image");
+      console.log('[PostcardScreen] Blob generated, size:', blob.size);
+
+      const filename = `${state.name}-postcard.png`;
+      const file = new File([blob], filename, { type: "image/png" });
+
+      // Try native share first
       const nav = navigator as Navigator & {
         canShare?: (d: ShareData) => boolean;
         share?: (d: ShareData) => Promise<void>;
       };
+
       if (nav.share && nav.canShare?.({ files: [file] })) {
-        await nav.share({
-          files: [file],
-          title: `${state.name} postcard`,
-          text: `I just explored ${state.name} on India Explorer!`,
-        });
+        try {
+          console.log('[PostcardScreen] Attempting native share...');
+          await nav.share({
+            files: [file],
+            title: `${state.name} postcard`,
+            text: `I just explored ${state.name} on India Explorer!`,
+          });
+          toast.success("Postcard shared! 🎉");
+        } catch (shareErr) {
+          console.log('[PostcardScreen] Native share cancelled/failed, falling back to save:', shareErr);
+          // Share cancelled or failed, try saving instead
+          const saved = await saveFileToDownloads(blob, filename);
+          if (saved) {
+            toast.success("Postcard saved successfully! 📮");
+          } else {
+            toast.error("Could not save postcard");
+          }
+        }
       } else {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = file.name;
-        a.click();
-        URL.revokeObjectURL(url);
-        toast.success("Postcard saved to your downloads! 📮");
+        // No native share, save to downloads/cache
+        console.log('[PostcardScreen] No native share available, saving postcard...');
+        const saved = await saveFileToDownloads(blob, filename);
+        if (saved) {
+          toast.success("Postcard saved successfully! 📮");
+        } else {
+          toast.error("Could not save postcard");
+        }
       }
     } catch (err) {
+      console.error('[PostcardScreen] Share error:', err);
       if ((err as { name?: string })?.name !== "AbortError") {
         toast.error("Couldn't save the postcard — try again.");
       }
@@ -229,7 +271,16 @@ export function StatePostcardScreen({
       </div>
 
       <div className="flex-1 px-5 pt-3 pb-1 relative z-10 overflow-y-auto">
-        <div className="rounded-[28px] bg-white shadow-2xl border-4 border-white overflow-hidden animate-scale-in">
+        <button
+          type="button"
+          onClick={(e) => {
+            console.log('[PostcardScreen] Postcard card clicked');
+            fxTap();
+            onShare();
+          }}
+          disabled={busy}
+          className="w-full rounded-[28px] bg-white shadow-2xl border-4 border-white overflow-hidden animate-scale-in cursor-pointer hover:shadow-3xl active:scale-95 transition-all disabled:opacity-60 text-left"
+        >
           <div className={`${grad} px-4 pt-4 pb-3 text-center text-white`}>
             <div className="text-[10px] font-black uppercase tracking-[0.25em] opacity-90">
               Greetings from
@@ -279,7 +330,7 @@ export function StatePostcardScreen({
               <p className="text-sm font-bold text-ink mt-0.5">{state.funFact}</p>
             </div>
           </div>
-        </div>
+        </button>
       </div>
 
       <div className="p-5 pt-2 relative z-10 space-y-2">

@@ -7,7 +7,7 @@
  */
 
 import { useEffect, useState } from "react";
-import { useProgress } from "@/lib/progress";
+import { useProgress, isHydrated } from "@/lib/progress";
 
 export interface AudioPermissionDialogProps {
   onAccept?: () => void;
@@ -25,7 +25,13 @@ export function AudioPermissionDialog({
 
   // Auto-show on first launch, but ONLY on home screen
   // Don't show on splash/welcome/create screens
+  // IMPORTANT: Delay until after hydration to avoid hydration mismatch
   useEffect(() => {
+    // Don't show during hydration - wait until localStorage is ready
+    if (!isHydrated()) {
+      return;
+    }
+
     const hasSeenAudioPermission = localStorage.getItem(
       "india-explorer:audio-permission-shown:v1"
     ) === "1";
@@ -39,8 +45,10 @@ export function AudioPermissionDialog({
       setIsOpen(true);
       localStorage.setItem("india-explorer:audio-permission-shown:v1", "1");
     }
-  }, []);
+  }, [isHydrated(), isOpen]);
 
+  // ← CRITICAL: Don't render anything until hydration is complete to avoid SSR mismatch
+  if (!isHydrated()) return null;
   if (!isOpen) return null;
 
   const handleAccept = () => {

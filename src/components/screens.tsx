@@ -404,7 +404,7 @@ export function HomeDashboardScreen() {
           <div className="flex-1 text-white">
             <div className="text-xs font-bold opacity-90">Namaste,</div>
             <div className="text-display text-lg font-extrabold leading-tight">
-              {p.name.split(" ")[0]}! 👋
+              {(p?.name?.split(" ")[0] || "Explorer")}! 👋
             </div>
           </div>
           <div className="flex items-center gap-1.5 bg-white/25 rounded-full px-3 py-1.5 backdrop-blur">
@@ -571,15 +571,27 @@ function MiniStateCard({
 export function JourneyMapScreen() {
   const p = useProgress();
   const states = statesWithProgress(p);
-  const [view, setView] = useState<{ screen: "intro" | "hub"; name: string } | null>(null);
+  const [view, setView] = useState<{ screen: "intro" | "hub" | "card" | "quiz"; name: string; cardIndex?: number } | null>(null);
   const STEP = 118;
   const BANNER_GAP = 96;
+
+  useEffect(() => {
+    appLogger.info('journey_map_screen', 'view state changed', view);
+  }, [view]);
+
+  appLogger.info('journey_map_screen', 'Rendering with states.length=' + (states ? states.length : 'undefined') + ', states=' + (states ? JSON.stringify(states.slice(0, 2)) : 'null'));
 
   // Two collectible routes: the 28 states, then the 8 union territories.
   const routes = [
     { key: "states", label: "Route 1 · States", icon: "🗺️", items: states.filter((s) => s.kind !== "ut") },
     { key: "ut", label: "Route 2 · Union Territories", icon: "🏝️", items: states.filter((s) => s.kind === "ut") },
   ];
+
+  // Safety check: ensure we have states data
+  if (!states || states.length === 0) {
+    appLogger.info('journey_map_screen', 'No states data available (states=' + (states ? 'empty' : 'null') + '), showing loading state');
+    return <LoadingScreen />;
+  }
 
   type MapNode = {
     name: string;
@@ -615,20 +627,87 @@ export function JourneyMapScreen() {
   const height = y + 20;
   const currentIndex = nodes.findIndex((n) => n.status === "current");
 
+  // Validate banners were created
+  if (banners.length < 2) {
+    appLogger.info('journey_map_screen', 'Banners not properly initialized, count: ' + banners.length);
+    return <LoadingScreen />;
+  }
+
+  appLogger.info('journey_map_screen', 'nodes count: ' + nodes.length, nodes.map(n => ({ name: n.name, status: n.status })));
+
   if (view?.screen === "intro") {
+    appLogger.info('journey_map_screen', 'Rendering StateIntroScreen with: ' + view.name);
     return (
       <StateIntroScreen
         stateName={view.name}
-        onBack={() => setView(null)}
-        onContinue={() => setView({ screen: "hub", name: view.name })}
+        onBack={() => {
+          appLogger.info('journey_map_screen', 'StateIntroScreen onBack clicked');
+          setView(null);
+        }}
+        onContinue={() => {
+          appLogger.info('journey_map_screen', 'StateIntroScreen onContinue clicked');
+          setView({ screen: "hub", name: view.name });
+        }}
       />
     );
   }
   if (view?.screen === "hub") {
+    appLogger.info('journey_map_screen', 'Rendering LearningHubScreen with: ' + view.name);
     return (
       <LearningHubScreen
         stateName={view.name}
-        onBack={() => setView({ screen: "intro", name: view.name })}
+        onBack={() => {
+          appLogger.info('journey_map_screen', 'LearningHubScreen onBack clicked');
+          setView({ screen: "intro", name: view.name });
+        }}
+        onCard={(index) => {
+          appLogger.info('journey_map_screen', 'LearningHubScreen onCard clicked with index: ' + index);
+          setView({ screen: "card", name: view.name, cardIndex: index });
+        }}
+        onQuiz={() => {
+          appLogger.info('journey_map_screen', 'LearningHubScreen onQuiz clicked');
+          setView({ screen: "quiz", name: view.name });
+        }}
+        allowReplay={true}
+      />
+    );
+  }
+  if (view?.screen === "card") {
+    appLogger.info('journey_map_screen', 'Rendering LearningCardScreen with: ' + view.name + ', cardIndex: ' + view.cardIndex);
+    return (
+      <LearningCardScreen
+        stateName={view.name}
+        cardIndex={view.cardIndex}
+        onClose={() => {
+          appLogger.info('journey_map_screen', 'LearningCardScreen onClose clicked');
+          setView({ screen: "hub", name: view.name });
+        }}
+        onNext={(index) => {
+          appLogger.info('journey_map_screen', 'LearningCardScreen onNext clicked with index: ' + index);
+          if (index === null) {
+            // Move to quiz
+            setView({ screen: "quiz", name: view.name });
+          } else {
+            // Move to next card
+            setView({ screen: "card", name: view.name, cardIndex: index });
+          }
+        }}
+      />
+    );
+  }
+  if (view?.screen === "quiz") {
+    appLogger.info('journey_map_screen', 'Rendering QuizScreen with: ' + view.name);
+    return (
+      <QuizScreen
+        stateName={view.name}
+        onClose={() => {
+          appLogger.info('journey_map_screen', 'QuizScreen onClose clicked');
+          setView({ screen: "hub", name: view.name });
+        }}
+        onDone={() => {
+          appLogger.info('journey_map_screen', 'QuizScreen onDone clicked');
+          setView(null);
+        }}
       />
     );
   }
@@ -646,7 +725,10 @@ export function JourneyMapScreen() {
         <div className="flex-1">
           <div className="text-display font-extrabold text-ink">India Journey</div>
           <div className="text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground">
-            {banners[0].done}/{banners[0].total} states · {banners[1].done}/{banners[1].total} UTs
+            {banners.length >= 2 
+              ? `${banners[0].done}/${banners[0].total} states · ${banners[1].done}/${banners[1].total} UTs`
+              : 'Loading...'
+            }
           </div>
         </div>
 
@@ -664,7 +746,7 @@ export function JourneyMapScreen() {
       <div className="relative flex-1 mx-3 mt-2 rounded-[28px] overflow-y-auto overflow-x-hidden">
         <div className="relative w-full" style={{ height }}>
           <svg
-            className="absolute inset-0 w-full"
+            className="absolute inset-0 w-full pointer-events-none"
             style={{ height }}
             viewBox={`0 0 100 ${height}`}
             preserveAspectRatio="none"
@@ -722,17 +804,18 @@ export function JourneyMapScreen() {
           {nodes.map((n, i) => (
             <div
               key={n.name}
-              className="absolute -translate-x-1/2 -translate-y-1/2"
+              className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-auto z-10"
               style={{ left: `${n.x}%`, top: n.y }}
             >
               <button
                 type="button"
                 aria-label={`Open ${n.name}`}
-                onClick={() => {
+                onClick={(e) => {
+                  appLogger.info('journey_map_screen', 'CLICK EVENT on state: ' + n.name + ', status: ' + n.status);
                   fxTap();
                   setView({ screen: "intro", name: n.name });
                 }}
-                className={`flex flex-col items-center active:scale-95 transition-transform ${
+                className={`flex flex-col items-center active:scale-95 transition-transform cursor-pointer z-20 relative ${
                   n.status === "current" ? "animate-bounce" : ""
                 }`}
               >
@@ -790,12 +873,17 @@ export function StateIntroScreen({
   onBack,
   onContinue,
 }: { stateName?: string; onBack?: () => void; onContinue?: () => void } = {}) {
+  appLogger.info('state_intro_screen', 'Mounted with stateName: ' + stateName);
+  
   const state = getState(stateName);
   const goBack = useGoBack();
   const art = STATE_ART[state.name];
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
 
+  appLogger.info('state_intro_screen', 'Rendered with stateName: ' + stateName + ', state.name: ' + state?.name);
+
   useEffect(() => {
+    appLogger.info('state_intro_screen', 'useEffect - preloading art');
     preloadStateArt(state.name, nextStateAfter(state.name)?.name);
   }, [state.name]);
 
@@ -854,6 +942,7 @@ export function StateIntroScreen({
 
         <button
           onClick={() => {
+            appLogger.info('state_intro_screen', 'Start Exploring clicked, calling onContinue');
             fxTap();
             onContinue?.();
           }}
@@ -894,17 +983,28 @@ export function LearningHubScreen({
   onBack,
   onQuiz,
   onCard,
+  allowReplay,
 }: {
   stateName?: string;
   onBack?: () => void;
   onQuiz?: () => void;
   onCard?: (index: number) => void;
+  allowReplay?: boolean;
 } = {}) {
+  appLogger.info('learning_hub_screen', 'Mounted with stateName: ' + stateName + ', allowReplay: ' + allowReplay);
+  
   const progress = useProgress();
   const goBack = useGoBack();
   const state = getState(stateName);
   const live = statesWithProgress(progress).find((s) => s.name === state.name);
-  const status = live?.status ?? state.status;
+  let status = live?.status ?? state.status;
+  // If allowReplay is true, treat locked states as "current" so cards are playable
+  if (allowReplay && status === "locked") {
+    appLogger.info('learning_hub_screen', 'allowReplay is true and status was locked, changing to current');
+    status = "current";
+  }
+
+  appLogger.info('learning_hub_screen', 'Rendered with stateName: ' + stateName + ', allowReplay: ' + allowReplay + ', status: ' + status);
   const read = cardsRead(progress, state.name);
   const completedCards = cardsDone(progress, state.name);
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
@@ -922,6 +1022,7 @@ export function LearningHubScreen({
     done: read.includes(i) || completedCards >= CARDS_PER_STATE,
     active: i === completedCards && status !== "locked",
     locked: status === "locked",
+    canClick: status !== "locked", // Allow all unlocked cards to be clicked (replay anytime)
     onOpen: () => onCard?.(i),
   }));
 
@@ -992,6 +1093,7 @@ function HubCard({
   done,
   active,
   locked,
+  canClick,
   onOpen,
 }: {
   icon: string;
@@ -1001,6 +1103,7 @@ function HubCard({
   done?: boolean;
   active?: boolean;
   locked?: boolean;
+  canClick?: boolean;
   index?: number;
   onOpen?: () => void;
 }) {
@@ -1020,13 +1123,13 @@ function HubCard({
     <button
       type="button"
       onClick={() => {
-        if (locked) return;
+        if (locked || !canClick) return;
         fxTap();
         onOpen?.();
       }}
       className={`relative text-left rounded-3xl p-4 shadow-soft border-2 transition active:scale-[0.98] ${
         active ? ring : "border-transparent"
-      } ${locked ? "bg-muted opacity-70" : `${bg}`}`}
+      } ${locked ? "bg-muted opacity-70 pointer-events-none cursor-not-allowed" : `${bg}`}`}
     >
       <div className="text-3xl">{icon}</div>
       <div className="text-display text-base font-extrabold mt-1 leading-tight">
@@ -1241,6 +1344,11 @@ export function LearningCardScreen({
   useEffect(() => {
     preloadStateArt(state.name, nextStateAfter(state.name)?.name);
   }, [state.name]);
+
+  // Reset modal state when card index changes (for replay scenarios)
+  useEffect(() => {
+    setShowLearnMore(false);
+  }, [cardIndex, stateName]);
   const card = cards[i];
   const isLast = i === cards.length - 1;
 
@@ -1368,6 +1476,12 @@ export function QuizScreen({
 }: { stateName?: string; onDone?: () => void; onClose?: () => void } = {}) {
   const progress = useProgress();
   const states = statesWithProgress(progress);
+  
+  // Safety check: ensure states data is loaded
+  if (!states || states.length === 0) {
+    return <LoadingScreen />;
+  }
+  
   const activeName =
     stateName ??
     states.find((s) => s.status === "current")?.name ??
@@ -1716,7 +1830,7 @@ export function StateUnlockScreen({
   stateName,
   onContinue,
 }: { stateName?: string; onContinue?: () => void } = {}) {
-  const state = stateName ? getState(stateName) : INDIA_STATES[1];
+  const state = stateName ? getState(stateName) : (INDIA_STATES && INDIA_STATES.length > 1 ? INDIA_STATES[1] : INDIA_STATES[0] || { name: "India", emoji: "🇮🇳", nickname: "Incredible India" });
   const art = STATE_ART[state.name];
   return (
     <div className="h-full w-full gradient-explorer relative overflow-hidden flex flex-col">
@@ -1776,6 +1890,7 @@ export function StateUnlockScreen({
 export function PassportScreen() {
   const p = useProgress();
   const stamps = statesWithProgress(p).map((s) => ({
+    stateName: s.name,  // ← Add full state name
     name: s.short,
     date: s.date ?? "—",
     tone: s.tone,
@@ -1842,16 +1957,19 @@ export function PassportScreen() {
 }
 
 function Stamp({
+  stateName,
   name,
   date,
   tone,
   filled,
 }: {
+  stateName?: string;
   name: string;
   date: string;
   tone: "orange" | "blue" | "green" | "gold";
   filled?: boolean;
 }) {
+  const navigate = useNavigate();
   const color = {
     orange: "#FF7A1A",
     blue: "#2E7DFF",
@@ -1869,8 +1987,18 @@ function Stamp({
   return (
     <button
       type="button"
-      onClick={fxStamp}
-      className="relative aspect-square rounded-2xl bg-[#f5e6c8] flex flex-col items-center justify-center active:scale-95 transition-transform"
+      onClick={() => {
+        fxStamp();
+        // Navigate to learning hub for replay
+        if (stateName) {
+          appLogger.info('passport_stamp', 'Opening learning hub for replay: ' + stateName);
+          navigate({
+            to: "/state/$slug/learn",
+            params: { slug: stateSlug(stateName) },
+          });
+        }
+      }}
+      className="relative aspect-square rounded-2xl bg-[#f5e6c8] flex flex-col items-center justify-center active:scale-95 transition-transform cursor-pointer"
       style={{ boxShadow: "inset 0 0 0 1px rgba(0,0,0,0.06)" }}
     >
       <div
