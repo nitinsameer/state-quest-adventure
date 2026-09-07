@@ -56,6 +56,7 @@ export function StatePostcardScreen({
     STATE_BADGES.find((b) => b.id === earned[earned.length - 1]) ?? STATE_BADGES[0];
   const [burst, setBurst] = useState(0);
   const [busy, setBusy] = useState(false);
+  const [showPostcardChoice, setShowPostcardChoice] = useState(true);
   const cheer = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
@@ -183,7 +184,18 @@ export function StatePostcardScreen({
     );
   }
 
+  const [showShareConfirm, setShowShareConfirm] = useState(false);
+
   async function onShare() {
+    if (busy) return;
+    
+    // Show parent confirmation dialog for sharing
+    setShowShareConfirm(true);
+  }
+
+  async function confirmAndShare() {
+    setShowShareConfirm(false);
+    
     if (busy) return;
     
     // Check if user has granted file permission via dialog
@@ -264,93 +276,171 @@ export function StatePostcardScreen({
     <div className={`h-full w-full ${grad} relative overflow-hidden flex flex-col`}>
       <ConfettiBurst trigger={burst} size="big" />
 
-      <div className="pt-5 text-center px-6 relative z-10">
-        <div className="text-white/90 text-[11px] font-black uppercase tracking-[0.3em]">
-          Your Postcard
+      {/* Pre-confirmation: Want to save postcard? */}
+      {showPostcardChoice && (
+        <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl">
+            <div className="text-center mb-4">
+              <div className="text-5xl mb-3">📮</div>
+              <h2 className="text-display text-2xl font-extrabold text-ink">
+                Save Your Explorer Postcard?
+              </h2>
+            </div>
+            
+            <p className="text-sm font-semibold text-ink/80 text-center mb-6">
+              Show your friends you beat {state.name}! You can save it or skip right to the next adventure.
+            </p>
+
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => {
+                  fxTap();
+                  setShowPostcardChoice(false);
+                }}
+                className="w-full h-14 rounded-2xl bg-gradient-to-r from-blue-400 to-blue-500 text-white text-display text-lg font-extrabold shadow-lg"
+              >
+                ✨ Yes, Save It!
+              </button>
+              <button
+                onClick={() => {
+                  fxTap();
+                  onContinue?.();
+                }}
+                className="w-full h-14 rounded-2xl bg-gray-200 text-ink text-display text-lg font-extrabold"
+              >
+                Skip → Continue
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
 
-      <div className="flex-1 px-5 pt-3 pb-1 relative z-10 overflow-y-auto">
-        <button
-          type="button"
-          onClick={(e) => {
-            console.log('[PostcardScreen] Postcard card clicked');
-            fxTap();
-            onShare();
-          }}
-          disabled={busy}
-          className="w-full rounded-[28px] bg-white shadow-2xl border-4 border-white overflow-hidden animate-scale-in cursor-pointer hover:shadow-3xl active:scale-95 transition-all disabled:opacity-60 text-left"
-        >
-          <div className={`${grad} px-4 pt-4 pb-3 text-center text-white`}>
-            <div className="text-[10px] font-black uppercase tracking-[0.25em] opacity-90">
-              Greetings from
+      {/* Full postcard screen (only shown if user chose "Yes") */}
+      {!showPostcardChoice && (
+        <>
+          <div className="pt-5 text-center px-6 relative z-10">
+            <div className="text-white/90 text-[11px] font-black uppercase tracking-[0.3em]">
+              Your Explorer Postcard
             </div>
-            <div className="text-display text-3xl font-extrabold leading-tight">
-              {state.name}
+            <div className="text-white text-xs font-semibold mt-1">
+              Show your friends you beat {state.name}! 📮
             </div>
-            <div className="text-[11px] font-bold opacity-90">{state.nickname}</div>
           </div>
 
-          <div className="relative px-4 pt-3 pb-2 flex items-end justify-center bg-sky/60 min-h-[150px]">
-            {art ? (
-              <img
-                src={art}
-                alt={`${state.name} illustration`}
-                decoding="async"
-                className="h-32 object-contain drop-shadow-lg"
-              />
-            ) : (
-              <div className="text-[80px] leading-none">{state.emoji}</div>
-            )}
-            <img
-              ref={cheer}
-              src={mascot}
-              alt=""
-              className="absolute left-2 bottom-1 w-20 h-20 object-contain mascot-cheer"
-            />
-          </div>
-
-          <div className="px-4 py-3">
-            <div className="flex items-center gap-2 rounded-2xl bg-accent px-3 py-2">
-              <span className="text-2xl">{BADGE_EMOJI[badge.id]}</span>
-              <div>
-                <div className="text-[10px] font-black uppercase tracking-widest text-accent-foreground/70">
-                  Badge Earned
+          <div className="flex-1 px-5 pt-3 pb-1 relative z-10 overflow-y-auto">
+            <button
+              type="button"
+              onClick={(e) => {
+                console.log('[PostcardScreen] Postcard card clicked');
+                fxTap();
+                onShare();
+              }}
+              disabled={busy}
+              className="w-full rounded-[28px] bg-white shadow-2xl border-4 border-white overflow-hidden animate-scale-in cursor-pointer hover:shadow-3xl active:scale-95 transition-all disabled:opacity-60 text-left"
+            >
+              <div className={`${grad} px-4 pt-4 pb-3 text-center text-white`}>
+                <div className="text-[10px] font-black uppercase tracking-[0.25em] opacity-90">
+                  Greetings from
                 </div>
-                <div className="text-display font-extrabold text-sm text-ink">
-                  {badge.name}
+                <div className="text-display text-3xl font-extrabold leading-tight">
+                  {state.name}
+                </div>
+                <div className="text-[11px] font-bold opacity-90">{state.nickname}</div>
+              </div>
+
+              <div className="relative px-4 pt-3 pb-2 flex items-end justify-center bg-sky/60 min-h-[150px]">
+                {art ? (
+                  <img
+                    src={art}
+                    alt={`${state.name} illustration`}
+                    decoding="async"
+                    className="h-32 object-contain drop-shadow-lg"
+                  />
+                ) : (
+                  <div className="text-[80px] leading-none">{state.emoji}</div>
+                )}
+                <img
+                  ref={cheer}
+                  src={mascot}
+                  alt=""
+                  className="absolute left-2 bottom-1 w-20 h-20 object-contain mascot-cheer"
+                />
+              </div>
+
+              <div className="px-4 py-3">
+                <div className="flex items-center gap-2 rounded-2xl bg-accent px-3 py-2">
+                  <span className="text-2xl">{BADGE_EMOJI[badge.id]}</span>
+                  <div>
+                    <div className="text-[10px] font-black uppercase tracking-widest text-accent-foreground/70">
+                      Badge Earned
+                    </div>
+                    <div className="text-display font-extrabold text-sm text-ink">
+                      {badge.name}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-3 rounded-2xl border-2 border-dashed border-border p-3">
+                  <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                    Fun fact
+                  </div>
+                  <p className="text-sm font-bold text-ink mt-0.5">{state.funFact}</p>
                 </div>
               </div>
-            </div>
+            </button>
+          </div>
 
-            <div className="mt-3 rounded-2xl border-2 border-dashed border-border p-3">
-              <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                Fun fact
-              </div>
-              <p className="text-sm font-bold text-ink mt-0.5">{state.funFact}</p>
+          <div className="p-5 pt-2 relative z-10 space-y-2">
+            <button
+              onClick={onShare}
+              disabled={busy || showShareConfirm}
+              className="w-full h-14 rounded-2xl bg-white text-ink text-display text-lg font-extrabold shadow-xl disabled:opacity-60"
+            >
+              {busy ? "Making postcard…" : "📤 Save / Share Postcard"}
+            </button>
+            <button
+              onClick={() => {
+                fxTap();
+                onContinue?.();
+              }}
+              className="w-full h-12 rounded-2xl bg-white/25 backdrop-blur text-white text-display font-extrabold"
+            >
+              Skip → Continue
+            </button>
+          </div>
+        </>
+      )}
+
+      {/* Parent Gate Dialog for Sharing */}
+      {showShareConfirm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl">
+            <div className="text-center mb-4">
+              <div className="text-4xl mb-2">👨‍👩‍👧</div>
+              <h3 className="text-display text-lg font-extrabold text-ink">
+                Ask a Parent First!
+              </h3>
+            </div>
+            <p className="text-sm font-semibold text-ink/80 text-center mb-6">
+              Before sharing your postcard online, ask a parent or guardian for permission. They can help you share safely! 🛡️
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowShareConfirm(false)}
+                className="flex-1 h-12 rounded-xl bg-gray-200 text-ink text-display font-extrabold"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmAndShare}
+                className="flex-1 h-12 rounded-xl bg-gradient-to-r from-blue-400 to-blue-500 text-white text-display font-extrabold"
+              >
+                Continue
+              </button>
             </div>
           </div>
-        </button>
-      </div>
-
-      <div className="p-5 pt-2 relative z-10 space-y-2">
-        <button
-          onClick={onShare}
-          disabled={busy}
-          className="w-full h-14 rounded-2xl bg-white text-ink text-display text-lg font-extrabold shadow-xl disabled:opacity-60"
-        >
-          {busy ? "Making postcard…" : "📤 Save / Share Postcard"}
-        </button>
-        <button
-          onClick={() => {
-            fxTap();
-            onContinue?.();
-          }}
-          className="w-full h-12 rounded-2xl bg-white/25 backdrop-blur text-white text-display font-extrabold"
-        >
-          Continue Adventure →
-        </button>
-      </div>
+        </div>
+      )}
     </div>
   );
 }

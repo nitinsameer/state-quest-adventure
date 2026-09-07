@@ -103,3 +103,24 @@ export function questionsForStateName(name: string): QuizQuestion[] {
 export const QUIZ_BY_STATE: Record<string, QuizQuestion[]> = Object.fromEntries(
   INDIA_STATES.map((s) => [s.name, questionsForState(s)]),
 );
+
+/**
+ * Map age band to appropriate question count for kids app
+ * Reduces cognitive load for younger kids, more challenge for older
+ * @param ageBand User's age band (e.g., "3-5", "6-7", "8-9", "10-12")
+ * @returns Number of questions to show in quiz (3, 5, 7, or 10)
+ */
+export function questionCountForAgeBand(ageBand: string = "8-9"): number {
+  switch (ageBand) {
+    case "3-5":
+      return 3; // Very short, maintain attention
+    case "6-7":
+      return 5; // Medium, good balance
+    case "8-9":
+      return 7; // Extended, builds confidence
+    case "10-12":
+      return 10; // Full challenge, rewarding
+    default:
+      return 10; // Default to full quiz if ageBand unknown
+  }
+}

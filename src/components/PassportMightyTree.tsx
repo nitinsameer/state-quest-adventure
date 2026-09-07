@@ -1,0 +1,153 @@
+import { useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
+import { useProgress } from "@/lib/progress";
+import { getProgressPercentage, getMilestones, getXpToNextLevel } from "@/lib/passport-helpers";
+import { INDIA_STATES } from "@/lib/states";
+import { ConfettiBurst } from "@/components/ConfettiBurst";
+import { fxTap } from "@/lib/fx";
+
+/**
+ * Passport for Ages 10-12 (Mighty Tree)
+ * Full data: stats, goals, milestones, activity tracking
+ */
+export function PassportMightyTree() {
+  const progress = useProgress();
+  const navigate = useNavigate();
+  const [burst, setBurst] = useState(0);
+
+  const progressPct = getProgressPercentage(progress);
+  const level = Math.floor(progress.xp / 400);
+  const xpToNextLevel = getXpToNextLevel(progress.xp);
+  const streak = progress.streak || 0;
+  const milestones = getMilestones(progress);
+
+  const handleStateClick = (slug: string) => {
+    fxTap();
+    navigate({ to: "/state/$slug/learn", params: { slug } });
+  };
+
+  return (
+    <div className="w-full h-full bg-gradient-to-b from-blue-50 to-white flex flex-col overflow-hidden">
+      <ConfettiBurst trigger={burst} size="big" />
+
+      {/* Header */}
+      <div className="px-5 pt-4 pb-3 bg-gradient-to-r from-blue-400 to-purple-400 text-white rounded-b-3xl shadow-lg">
+        <div className="text-2xl font-extrabold">My Passport 📖</div>
+      </div>
+
+      {/* Profile & Detailed Stats */}
+      <div className="mx-5 mt-4 space-y-3 overflow-y-auto flex-1">
+        {/* Profile Card */}
+        <div className="p-4 rounded-3xl bg-gradient-to-br from-amber-700 to-amber-900 text-white shadow-lg sticky top-0">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="text-4xl">{progress.avatar}</div>
+            <div className="flex-1">
+              <div className="text-lg font-extrabold">{progress.name}</div>
+              <div className="text-xs opacity-75">Passport No: IN-2026-{String(Math.random() * 10000).padStart(4, "0")}</div>
+            </div>
+          </div>
+          <div className="space-y-1 text-sm opacity-90 mt-3">
+            <div>India Progress: {progress.completed.length} of 36 ({progressPct}%)</div>
+            <div>Level {level} · {progress.xp} XP ({xpToNextLevel} to next level)</div>
+            <div className="flex items-center gap-2 mt-2">
+              <span className="text-lg">🔥</span>
+              <span>{streak}-day streak</span>
+              <span className="text-xs">✓ Played today</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Milestones/Goals */}
+        <div className="space-y-2">
+          <div className="px-1 text-sm font-bold text-gray-700">🎯 Milestones</div>
+          {milestones.map((milestone) => (
+            <div key={milestone.id} className="p-3 rounded-2xl bg-white border-2 border-gray-200 shadow-sm">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-sm font-extrabold text-gray-800">{milestone.label}</span>
+                <span className="text-xs font-bold text-gray-600">
+                  {milestone.current}/{milestone.target}
+                </span>
+              </div>
+              <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-green-400 to-emerald-500 transition-all duration-300"
+                  style={{ width: `${milestone.percentage}%` }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Activity */}
+        <div className="space-y-2">
+          <div className="px-1 text-sm font-bold text-gray-700">📊 Activity</div>
+          <div className="p-3 rounded-2xl bg-white border-2 border-gray-200 shadow-sm space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-700">This week:</span>
+              <span className="font-extrabold">3 states</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-700">Last played:</span>
+              <span className="font-extrabold">Yesterday</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Recently Played */}
+        <div className="space-y-2">
+          <div className="px-1 text-sm font-bold text-gray-700">⏱️ Recently Played</div>
+          <div className="space-y-1">
+            {progress.completed.slice(0, 3).map((stateName) => {
+              const state = INDIA_STATES.find((s) => s.name === stateName);
+              if (!state) return null;
+              return (
+                <button
+                  key={stateName}
+                  onClick={() => handleStateClick(stateName.toLowerCase().replace(/\s+/g, "-"))}
+                  className="w-full p-2 rounded-xl bg-gradient-to-r from-blue-100 to-purple-100 text-gray-800 text-sm font-semibold hover:shadow-md active:scale-95 transition text-left"
+                >
+                  {state.emoji} {stateName} <span className="text-xs opacity-75">· 2d ago</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* States Grid */}
+        <div className="space-y-2 pb-2">
+          <div className="px-1 text-sm font-bold text-gray-700">📍 All 36 States</div>
+          <div className="grid grid-cols-4 gap-2">
+            {INDIA_STATES.map((state) => {
+              const isUnlocked = progress.completed.includes(state.name);
+              const slug = state.name.toLowerCase().replace(/\s+/g, "-");
+              return (
+                <button
+                  key={state.name}
+                  onClick={() => handleStateClick(slug)}
+                  className={`aspect-square rounded-xl flex flex-col items-center justify-center gap-0.5 transition transform text-xs font-bold ${
+                    isUnlocked
+                      ? "bg-gradient-to-br from-yellow-300 to-amber-400 text-amber-900 shadow-md hover:shadow-lg active:scale-95"
+                      : "bg-gray-300 text-gray-600 opacity-30 hover:opacity-50 active:scale-95"
+                  }`}
+                >
+                  <div className="text-lg">{state.emoji}</div>
+                  <div className="text-[8px] leading-tight text-center">{state.short}</div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Navigation */}
+      <div className="px-5 pb-4">
+        <button
+          onClick={() => navigate({ to: "/home" })}
+          className="w-full h-12 rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-white font-extrabold shadow-lg"
+        >
+          Back Home 🏠
+        </button>
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,144 @@
+import { useState, useEffect } from "react";
+import { useNavigate } from "@tanstack/react-router";
+import { useProgress } from "@/lib/progress";
+import { getSproutStates, getProgressPercentage } from "@/lib/passport-helpers";
+import { INDIA_STATES } from "@/lib/states";
+import { ConfettiBurst } from "@/components/ConfettiBurst";
+import { fxTap, fxConfetti } from "@/lib/fx";
+import mascot from "@/assets/mascot.png";
+
+/**
+ * Passport for Ages 3-5 (Sprout)
+ * Simplified, emoji-only, 4-6 states max per screen, visual progress bar
+ */
+export function PassportSprout() {
+  const progress = useProgress();
+  const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(0);
+  const [burst, setBurst] = useState(0);
+
+  const STATES_PER_PAGE = 6;
+  const sproutStates = getSproutStates(progress, 24); // Get up to 24 states (4 pages)
+  const statesThisPage = sproutStates.slice(
+    currentPage * STATES_PER_PAGE,
+    (currentPage + 1) * STATES_PER_PAGE
+  );
+  const hasNextPage = (currentPage + 1) * STATES_PER_PAGE < sproutStates.length;
+
+  const progressPct = getProgressPercentage(progress);
+  const progressSegments = 6;
+  const filledSegments = Math.ceil((progressPct / 100) * progressSegments);
+
+  const handleStateClick = (stateName: string) => {
+    fxTap();
+    if (progress.completed.includes(stateName)) {
+      navigate({ to: "/state/$slug/learn", params: { slug: stateName.toLowerCase().replace(/\s+/g, "-") } });
+    }
+  };
+
+  return (
+    <div className="w-full h-full bg-gradient-to-b from-blue-50 to-white flex flex-col overflow-hidden">
+      <ConfettiBurst trigger={burst} size="big" />
+
+      {/* Header */}
+      <div className="px-5 pt-4 pb-3 bg-gradient-to-r from-blue-400 to-purple-400 text-white rounded-b-3xl shadow-lg">
+        <div className="text-2xl font-extrabold">My Passport 📖</div>
+      </div>
+
+      {/* Profile Card */}
+      <div className="mx-5 mt-4 p-4 rounded-3xl bg-gradient-to-br from-amber-700 to-amber-900 text-white shadow-lg">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="text-5xl">{progress.avatar}</div>
+          <div>
+            <div className="text-lg font-extrabold">{progress.name}</div>
+            <div className="text-xs opacity-75">Explorer</div>
+          </div>
+        </div>
+
+        {/* Visual Progress Bar */}
+        <div className="mt-3">
+          <div className="text-xs opacity-90 mb-1">States I'm Visiting</div>
+          <div className="flex gap-1">
+            {Array.from({ length: progressSegments }).map((_, i) => (
+              <div
+                key={i}
+                className={`flex-1 h-3 rounded-full transition-all ${
+                  i < filledSegments ? "bg-green-400" : "bg-white/30"
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* States Grid */}
+      <div className="px-5 pt-4 pb-2 flex-1 overflow-auto">
+        <div className="text-sm font-bold text-gray-700 mb-3">🌍 Time to Explore!</div>
+
+        <div className="grid grid-cols-2 gap-3 mb-4">
+          {statesThisPage.map((state) => {
+            const isUnlocked = progress.completed.includes(state.name);
+            return (
+              <button
+                key={state.name}
+                onClick={() => handleStateClick(state.name)}
+                className={`aspect-square rounded-3xl flex flex-col items-center justify-center gap-2 transition transform ${
+                  isUnlocked
+                    ? "bg-gradient-to-br from-yellow-300 to-amber-400 shadow-lg hover:scale-105 active:scale-95"
+                    : "bg-gray-100 hover:bg-gray-200 active:scale-95"
+                }`}
+              >
+                <div className="text-4xl">{state.emoji}</div>
+                {isUnlocked && <div className="text-xs font-bold text-amber-900">Tap!</div>}
+                {!isUnlocked && <div className="text-lg">🔒</div>}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Locked State Encouragement */}
+        {statesThisPage.some((s) => !progress.completed.includes(s.name)) && (
+          <div className="bg-purple-50 border-2 border-purple-200 rounded-2xl p-3 text-center">
+            <div className="text-sm font-bold text-purple-700">
+              🌟 Complete quizzes to unlock more!
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Pagination */}
+      <div className="px-5 pb-4 flex gap-2">
+        {currentPage > 0 && (
+          <button
+            onClick={() => {
+              fxTap();
+              setCurrentPage(currentPage - 1);
+            }}
+            className="flex-1 h-12 rounded-2xl bg-white border-2 border-gray-300 text-gray-700 font-extrabold text-lg"
+          >
+            ← Previous
+          </button>
+        )}
+        {hasNextPage && (
+          <button
+            onClick={() => {
+              fxTap();
+              setCurrentPage(currentPage + 1);
+            }}
+            className="flex-1 h-12 rounded-2xl bg-gradient-to-r from-blue-400 to-purple-400 text-white font-extrabold text-lg shadow-lg"
+          >
+            Next States →
+          </button>
+        )}
+        {!hasNextPage && currentPage === 0 && (
+          <button
+            onClick={() => navigate({ to: "/home" })}
+            className="flex-1 h-12 rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-white font-extrabold text-lg shadow-lg"
+          >
+            Back Home 🏠
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}

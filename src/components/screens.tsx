@@ -2,9 +2,13 @@ import mascot from "@/assets/mascot.png";
 import airplane from "@/assets/airplane.png";
 import { STATE_ART, TONE_GRADIENT, preloadStateArt } from "@/lib/state-art";
 import { getStateContent } from "@/lib/state-content";
-import { CardNarrationPlayer } from "@/components/CardNarrationPlayer";
-import { stopTts } from "@/lib/tts";
+import { stopTts, playTts } from "@/lib/tts";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
+import { PassportSprout } from "@/components/PassportSprout";
+import { PassportSeedling } from "@/components/PassportSeedling";
+import { PassportSapling } from "@/components/PassportSapling";
+import { PassportMightyTree } from "@/components/PassportMightyTree";
+import { getPassportVariant } from "@/lib/passport-helpers";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouter, Navigate } from "@tanstack/react-router";
 import { fxCorrect, fxWrong, fxConfetti, fxStamp, fxTap, useSoundOn, setSoundOn } from "@/lib/fx";
@@ -19,7 +23,7 @@ import {
   stateSlug,
   nextStateAfter,
 } from "@/lib/states";
-import { randomQuestionsForState } from "@/lib/quiz";
+import { randomQuestionsForState, questionCountForAgeBand } from "@/lib/quiz";
 
 import {
   useProgress,
@@ -41,6 +45,7 @@ import {
   XP_PER_CARD,
   isCardReplaying,
   getReplayCount,
+  type Achievement,
 } from "@/lib/progress";
 
 
@@ -276,11 +281,30 @@ export function CreateProfileScreen() {
   const [name, setName] = useState(p.onboarded ? p.name : "");
   const [ageBand, setAgeBand] = useState(p.ageBand);
   const [saved, setSaved] = useState(false);
+  const [selectedAgeIndex, setSelectedAgeIndex] = useState(0);
+  const [burst, setBurst] = useState(0);
+
+  // Age bands with milestone emoji and vibrant gradient
+  const ageBands = [
+    { value: "3-5", emoji: "🌱", label: "Sprout", gradient: "from-pink-400 to-rose-500" },
+    { value: "6-7", emoji: "🌿", label: "Seedling", gradient: "from-violet-400 to-purple-500" },
+    { value: "8-9", emoji: "🌳", label: "Sapling", gradient: "from-emerald-400 to-teal-500" },
+    { value: "10-12", emoji: "🌲", label: "Mighty Tree", gradient: "from-amber-400 to-orange-500" },
+  ];
+
+  const handleAgeSelect = (value: string, index: number) => {
+    fxTap();
+    setAgeBand(value);
+    setSelectedAgeIndex(index);
+    setBurst((n) => n + 1);
+    setSaved(false);
+  };
 
   return (
-    <div className="w-full bg-white flex flex-col">
+    <div className="w-full bg-gradient-to-b from-blue-50 to-white flex flex-col">
       <HeaderBar title="Create Explorer" />
       <div className="px-5 flex-1 overflow-auto">
+        {/* Step 1: Avatar Selection */}
         <div className="rounded-3xl gradient-explorer p-5 text-white relative overflow-hidden">
           <Cloud className="absolute -top-3 right-2 w-16 opacity-40" />
           <div className="text-xs font-black uppercase tracking-widest opacity-80">
@@ -294,8 +318,8 @@ export function CreateProfileScreen() {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-3 mt-5">
-          {avatars.map((a) => (
+        <div className="grid grid-cols-3 gap-3 mt-6">
+          {avatars.map((a, idx) => (
             <button
               key={a}
               type="button"
@@ -304,10 +328,10 @@ export function CreateProfileScreen() {
                 setAvatar(a);
                 setSaved(false);
               }}
-              className={`aspect-square rounded-3xl flex items-center justify-center text-5xl border-4 transition ${
+              className={`aspect-square rounded-3xl flex items-center justify-center text-5xl border-4 transition transform ${
                 a === avatar
-                  ? "bg-saffron-soft border-saffron shadow-[var(--shadow-glow-orange)]"
-                  : "bg-muted border-transparent"
+                  ? "bg-saffron-soft border-saffron shadow-[var(--shadow-glow-orange)] scale-110 animate-bounce"
+                  : "bg-white border-gray-200 hover:scale-105"
               }`}
             >
               {a}
@@ -315,9 +339,18 @@ export function CreateProfileScreen() {
           ))}
         </div>
 
-        <div className="mt-6">
-          <label className="text-display text-sm font-extrabold text-muted-foreground uppercase tracking-wider">
-            Explorer name
+        {/* Selected Avatar Preview */}
+        {avatar && (
+          <div className="mt-6 rounded-2xl gradient-saffron p-4 text-center text-white animate-fade-in">
+            <div className="text-4xl mb-2">{avatar}</div>
+            <div className="text-sm font-bold opacity-90">Your explorer!</div>
+          </div>
+        )}
+
+        {/* Step 2: Name Input */}
+        <div className="mt-8">
+          <label className="text-display text-sm font-extrabold text-gray-700 uppercase tracking-wider">
+            📝 Explorer name
           </label>
           <input
             value={name}
@@ -326,47 +359,70 @@ export function CreateProfileScreen() {
               setSaved(false);
             }}
             placeholder="Your name"
-            className="mt-2 h-14 w-full rounded-2xl border-2 border-saffron bg-saffron-soft/40 px-4 text-display text-xl font-extrabold text-ink outline-none"
+            className="mt-2 h-14 w-full rounded-2xl border-2 border-blue-300 bg-blue-50 px-4 text-display text-xl font-extrabold text-ink outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
           />
+          {name && (
+            <div className="mt-2 text-center text-sm font-bold text-blue-600 animate-fade-in">
+              Let's go, <span className="text-blue-700">{name}</span>! ✨
+            </div>
+          )}
         </div>
 
-        <div className="mt-4">
-          <label className="text-display text-sm font-extrabold text-muted-foreground uppercase tracking-wider">
-            Age
+        {/* Step 3: Age Selection with Vibrant Colors & Emojis */}
+        <div className="mt-8 mb-6">
+          <label className="text-display text-sm font-extrabold text-gray-700 uppercase tracking-wider">
+            🎂 How old are you?
           </label>
-          <div className="mt-2 flex gap-2">
-            {["6-7", "8-9", "10-12"].map((a) => (
-              <button
-                key={a}
-                type="button"
-                onClick={() => {
-                  fxTap();
-                  setAgeBand(a);
-                  setSaved(false);
-                }}
-                className={`flex-1 h-12 rounded-2xl flex items-center justify-center text-display font-extrabold transition ${
-                  a === ageBand
-                    ? "gradient-explorer text-white shadow-[var(--shadow-glow-blue)]"
-                    : "bg-muted text-muted-foreground"
-                }`}
-              >
-                {a}
-              </button>
-            ))}
+          <div className="mt-3 space-y-2">
+            {ageBands.map((band, idx) => {
+              const isSelected = band.value === ageBand;
+              return (
+                <button
+                  key={band.value}
+                  type="button"
+                  onClick={() => handleAgeSelect(band.value, idx)}
+                  className={`w-full h-16 rounded-2xl flex items-center justify-between px-5 font-extrabold transition transform ${
+                    isSelected
+                      ? `bg-gradient-to-r ${band.gradient} text-white shadow-xl scale-105 border-4 border-white animate-pulse`
+                      : "bg-white border-2 border-gray-200 text-gray-700 hover:border-gray-300 hover:scale-102"
+                  }`}
+                >
+                  <span className="text-3xl">{band.emoji}</span>
+                  <div className="flex-1 text-center">
+                    <div className="text-lg">{band.value}</div>
+                    <div className={`text-xs font-bold ${isSelected ? "text-white/90" : "text-gray-500"}`}>
+                      {band.label}
+                    </div>
+                  </div>
+                  {isSelected && (
+                    <div className="text-2xl animate-bounce">⭐</div>
+                  )}
+                </button>
+              );
+            })}
           </div>
+
+          {/* Age Selection Feedback */}
+          {ageBand && (
+            <ConfettiBurst key={`age-${burst}`} trigger={burst} size="big" />
+          )}
         </div>
       </div>
-      <div className="p-5 pb-safe">
+
+      <div className="p-5 pb-safe bg-white border-t border-gray-100">
         <button
           onClick={() => {
             fxTap();
+            fxConfetti();
             saveProfile({ name: name.trim() || "Explorer", avatar, ageBand });
             setSaved(true);
-            navigate({ to: "/home" });
+            setTimeout(() => navigate({ to: "/home" }), 400);
           }}
-          className="w-full h-14 rounded-2xl gradient-saffron text-white text-display text-lg font-extrabold shadow-[var(--shadow-glow-orange)]"
+          className={`w-full h-14 rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-white text-display text-lg font-extrabold shadow-xl transition transform ${
+            saved ? "scale-95 opacity-80" : "hover:shadow-2xl active:scale-95"
+          }`}
         >
-          {saved ? "Saved ✓" : "Continue →"}
+          {saved ? "🎉 Saved ✓" : "Continue → Let's Explore!"}
         </button>
       </div>
     </div>
@@ -375,13 +431,17 @@ export function CreateProfileScreen() {
 
 export function HomeDashboardScreen() {
   const p = useProgress();
-  
+  const navigate = useNavigate();
+  const [statsVisible, setStatsVisible] = useState(false);
+  const [animateStats, setAnimateStats] = useState(false);
+  const [showLockedPreview, setShowLockedPreview] = useState<string | null>(null);
+
   // Route guard: redirect to welcome if not onboarded (defensive check)
   if (!p.onboarded) {
     appLogger.warn('home_dashboard', 'User attempted to access home without onboarding', {});
     return <Navigate to="/welcome" replace />;
   }
-  
+
   const { level, toNext, pct } = levelInfo(p.xp);
   const stamps = Object.keys(p.stamps).length;
   const journey = statesWithProgress(p);
@@ -391,13 +451,30 @@ export function HomeDashboardScreen() {
 
   useEffect(() => {
     touchStreak();
+    // Trigger animations on mount
+    setTimeout(() => setStatsVisible(true), 100);
+    setTimeout(() => setAnimateStats(true), 500);
   }, []);
 
-  return (
-    <div className="h-full w-full bg-[#F7F5F0]">
+  const handleLockedCardTap = (stateName: string) => {
+    fxTap();
+    setShowLockedPreview(stateName);
+  };
 
-      {/* Header */}
-      <div className="px-5 pt-3 pb-4 gradient-saffron rounded-b-[32px] relative overflow-hidden">
+  const getUnlockRequirement = (stateName: string): string => {
+    const completed = p.completed.length;
+    const stateIndex = journey.findIndex((s) => s.name === stateName);
+    const requiredStates = stateIndex + 1;
+    const needed = Math.max(0, requiredStates - completed);
+    if (needed === 0) return "Ready to play!";
+    return `Complete ${needed} more state${needed > 1 ? "s" : ""} to unlock`;
+  };
+
+  return (
+    <div className="h-full w-full bg-[#F7F5F0] flex flex-col overflow-hidden">
+
+      {/* Header with fade-in animation */}
+      <div className={`px-5 pt-3 pb-4 gradient-saffron rounded-b-[32px] relative overflow-hidden transition-opacity duration-500 ${statsVisible ? "opacity-100" : "opacity-0"}`}>
         <Cloud className="absolute top-2 right-4 w-14 opacity-40" />
         <div className="flex items-center gap-3 relative">
           <div className="h-14 w-14 rounded-2xl bg-white p-1 shadow-soft">
@@ -409,13 +486,14 @@ export function HomeDashboardScreen() {
               {(p?.name?.split(" ")[0] || "Explorer")}! 👋
             </div>
           </div>
-          <div className="flex items-center gap-1.5 bg-white/25 rounded-full px-3 py-1.5 backdrop-blur">
+          <div className={`flex items-center gap-1.5 bg-white/25 rounded-full px-3 py-1.5 backdrop-blur transition-transform duration-1000 ${p.streak > 0 ? "animate-bounce" : ""}`}>
             <span>🔥</span>
             <span className="text-white text-display font-extrabold">{p.streak}</span>
           </div>
         </div>
 
-        <div className="mt-4 rounded-2xl bg-white/15 backdrop-blur p-3 relative">
+        {/* XP Card with pulse animation */}
+        <div className={`mt-4 rounded-2xl bg-white/15 backdrop-blur p-3 relative transition-all duration-700 ${statsVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}>
           <div className="flex items-center justify-between text-white">
             <div>
               <div className="text-xs font-bold opacity-90">Level {level} · Explorer</div>
@@ -435,20 +513,38 @@ export function HomeDashboardScreen() {
         </div>
       </div>
 
-      {/* Stats */}
-      <div className="px-5 mt-4 relative z-10 grid grid-cols-3 gap-2.5">
-        <StatCard tone="orange" icon="🗺️" value={String(p.completed.length)} label="States" />
-        <StatCard tone="gold" icon="🏅" value={String(badgeCount(p))} label="Badges" />
-        <StatCard tone="green" icon="📓" value={String(stamps)} label="Stamps" />
+      {/* Stats with encouraging messages + count-up animation */}
+      <div className={`px-5 mt-4 relative z-10 grid grid-cols-3 gap-2.5 transition-all duration-700 ${animateStats ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}>
+        <StatCardEnhanced 
+          tone="orange" 
+          icon="🗺️" 
+          value={String(p.completed.length)} 
+          label="States"
+          encouragement={p.completed.length === 0 ? "Ready to go!" : "Keep exploring!"}
+        />
+        <StatCardEnhanced 
+          tone="gold" 
+          icon="🏅" 
+          value={String(badgeCount(p))} 
+          label="Badges"
+          encouragement={badgeCount(p) === 0 ? "Earn in quizzes!" : "Great job!"}
+        />
+        <StatCardEnhanced 
+          tone="green" 
+          icon="📓" 
+          value={String(stamps)} 
+          label="Stamps"
+          encouragement={stamps === 0 ? "Complete states!" : "Collecting!"}
+        />
       </div>
 
-      {/* Continue journey */}
-      <div className="px-5 mt-4">
+      {/* Continue journey - with pulse on play button */}
+      <div className="px-5 mt-4 flex-shrink-0">
         <div className="text-display font-extrabold text-sm uppercase tracking-wider text-muted-foreground">
           Continue your journey
         </div>
         <div className="mt-2 rounded-3xl bg-white p-4 shadow-soft border border-black/5 flex items-center gap-3">
-          <div className="h-16 w-16 rounded-2xl gradient-saffron p-2 flex items-center justify-center text-4xl">
+          <div className="h-16 w-16 rounded-2xl gradient-saffron p-2 flex items-center justify-center text-4xl animate-bounce">
             {current.emoji}
           </div>
           <div className="flex-1">
@@ -461,7 +557,7 @@ export function HomeDashboardScreen() {
             <div className="mt-1 flex items-center gap-1.5">
               <div className="h-1.5 flex-1 rounded-full bg-muted overflow-hidden">
                 <div
-                  className="h-full gradient-saffron"
+                  className="h-full gradient-saffron transition-all duration-500"
                   style={{ width: `${(currentDone / CARDS_PER_STATE) * 100}%` }}
                 />
               </div>
@@ -474,15 +570,15 @@ export function HomeDashboardScreen() {
             to="/state/$slug/learn"
             params={{ slug: stateSlug(current.name) }}
             onClick={() => fxTap()}
-            className="h-11 px-3 rounded-2xl gradient-saffron text-white text-display font-extrabold text-sm shadow-[var(--shadow-glow-orange)] flex items-center"
+            className="h-11 px-3 rounded-2xl gradient-saffron text-white text-display font-extrabold text-sm shadow-[var(--shadow-glow-orange)] flex items-center transition-all duration-300 hover:scale-105 active:scale-95 animate-pulse"
           >
             Play ▶
           </Link>
         </div>
       </div>
 
-      {/* Up next */}
-      <div className="px-5 mt-4">
+      {/* Up next - with interactive locked cards */}
+      <div className="px-5 mt-4 flex-shrink-0">
         <div className="flex items-center justify-between">
           <div className="text-display font-extrabold text-sm uppercase tracking-wider text-muted-foreground">
             Up next
@@ -492,20 +588,98 @@ export function HomeDashboardScreen() {
           </Link>
         </div>
         <div className="mt-2 grid grid-cols-2 gap-3">
-          {upNext.map((s) => (
-            <div
+          {upNext.map((s, idx) => (
+            <button
               key={s.name}
-              className="rounded-3xl bg-white p-3 shadow-soft border border-black/5 flex flex-col items-center gap-1 opacity-80"
+              onClick={() => handleLockedCardTap(s.name)}
+              className={`rounded-3xl bg-white p-3 shadow-soft border border-black/5 flex flex-col items-center gap-1 transition-all duration-300 transform hover:scale-105 active:scale-95 ${
+                animateStats ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+              }`}
+              style={{ transitionDelay: `${idx * 100}ms` }}
             >
               <div className="text-3xl">{s.emoji}</div>
               <div className="text-display font-extrabold text-sm text-center leading-tight">
                 {s.name}
               </div>
               <div className="text-[10px] font-extrabold text-muted-foreground">🔒 Locked</div>
-            </div>
+              <div className="text-[9px] font-semibold text-saffron mt-1">
+                Tap to see preview
+              </div>
+            </button>
           ))}
         </div>
       </div>
+
+      {/* Locked Card Preview Modal */}
+      {showLockedPreview && (
+        <div className="fixed inset-0 bg-black/50 flex items-end justify-center z-50 p-4 animate-fade-in">
+          <div className="w-full max-w-sm bg-white rounded-3xl shadow-2xl p-6 max-h-[80vh] overflow-y-auto animate-slide-up">
+            {(() => {
+              const state = journey.find((s) => s.name === showLockedPreview);
+              if (!state) return null;
+
+              return (
+                <div>
+                  {/* Close button */}
+                  <button
+                    onClick={() => setShowLockedPreview(null)}
+                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl"
+                  >
+                    ✕
+                  </button>
+
+                  {/* State preview */}
+                  <div className={`rounded-2xl gradient-saffron text-white p-4 text-center mb-4`}>
+                    <div className="text-5xl mb-2">{state.emoji}</div>
+                    <div className="text-display text-xl font-extrabold">{state.name}</div>
+                    <div className="text-sm opacity-90 mt-1">{state.nickname}</div>
+                  </div>
+
+                  {/* State facts */}
+                  <div className="space-y-3">
+                    <div className="p-3 rounded-2xl bg-orange-50 border-l-4 border-orange-400">
+                      <div className="text-xs font-bold text-orange-900 uppercase tracking-wider">Monument</div>
+                      <div className="text-sm font-semibold text-orange-800 mt-1">{state.monumentName}</div>
+                    </div>
+
+                    <div className="p-3 rounded-2xl bg-green-50 border-l-4 border-green-400">
+                      <div className="text-xs font-bold text-green-900 uppercase tracking-wider">Wildlife</div>
+                      <div className="text-sm font-semibold text-green-800 mt-1">{state.animalName}</div>
+                    </div>
+
+                    <div className="p-3 rounded-2xl bg-blue-50 border-l-4 border-blue-400">
+                      <div className="text-xs font-bold text-blue-900 uppercase tracking-wider">Fun Fact</div>
+                      <div className="text-sm font-semibold text-blue-800 mt-1">{state.funFact}</div>
+                    </div>
+
+                    <div className="p-3 rounded-2xl bg-purple-50 border-l-4 border-purple-400">
+                      <div className="text-xs font-bold text-purple-900 uppercase tracking-wider">Unlock Path</div>
+                      <div className="text-sm font-semibold text-purple-800 mt-1">{getUnlockRequirement(state.name)}</div>
+                    </div>
+                  </div>
+
+                  {/* Action buttons */}
+                  <div className="mt-4 space-y-2">
+                    <button
+                      onClick={() => setShowLockedPreview(null)}
+                      className="w-full h-12 rounded-2xl bg-gray-100 text-gray-800 font-extrabold"
+                    >
+                      Close
+                    </button>
+                    <Link
+                      to="/journey"
+                      className="w-full h-12 rounded-2xl gradient-saffron text-white font-extrabold flex items-center justify-center"
+                      onClick={() => fxTap()}
+                    >
+                      View Journey Map
+                    </Link>
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -534,6 +708,56 @@ function StatCard({
       </div>
       <div className="text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground">
         {label}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Enhanced stat card with encouraging messages for kids
+ * Shows encouragement text instead of bare numbers
+ */
+function StatCardEnhanced({
+  icon,
+  value,
+  label,
+  tone,
+  encouragement,
+}: {
+  icon: string;
+  value: string;
+  label: string;
+  tone: "orange" | "gold" | "green";
+  encouragement: string;
+}) {
+  const border = {
+    orange: "border-saffron/25",
+    gold: "border-[color:var(--gold)]/30",
+    green: "border-success/25",
+  }[tone];
+
+  const bgColor = {
+    orange: "bg-saffron/5",
+    gold: "bg-yellow/5",
+    green: "bg-success/5",
+  }[tone];
+
+  return (
+    <div className={`rounded-2xl bg-white border ${border} p-3 shadow-soft hover:shadow-md transition-shadow`}>
+      <div className="flex items-start justify-between">
+        <div>
+          <div className="text-lg">{icon}</div>
+          <div className="text-display text-xl font-extrabold leading-none mt-1">
+            {value}
+          </div>
+          <div className="text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground mt-0.5">
+            {label}
+          </div>
+        </div>
+      </div>
+      {/* Encouragement message */}
+      <div className={`mt-2 px-2 py-1 rounded-lg ${bgColor} text-[9px] font-bold text-center leading-tight`}>
+        {encouragement}
       </div>
     </div>
   );
@@ -570,10 +794,127 @@ function MiniStateCard({
   );
 }
 
+function StateDetailModal({
+  stateName,
+  states,
+  onClose,
+  onPlay,
+}: {
+  stateName: string;
+  states: Array<{
+    name: string;
+    short: string;
+    status: string;
+    isUT: boolean;
+  }>;
+  onClose: () => void;
+  onPlay: () => void;
+}) {
+  const state = states.find((s) => s.name === stateName);
+  if (!state) return null;
+
+  const isLocked = state.status === "locked";
+  const isDone = state.status === "done";
+
+  return (
+    <div
+      className="fixed inset-0 bg-black/50 z-50 flex items-end animate-fade-in"
+      onClick={onClose}
+    >
+      <div
+        className="w-full bg-white rounded-t-3xl p-6 flex flex-col gap-4 animate-slide-up"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200"
+        >
+          ✕
+        </button>
+
+        {/* State Display */}
+        <div className="flex flex-col items-center pt-2">
+          <div
+            className={`h-20 w-20 rounded-full flex items-center justify-center text-5xl mb-4 ${
+              isDone
+                ? "gradient-saffron shadow-lg"
+                : isLocked
+                ? "bg-gradient-to-br from-gray-200 to-gray-300 opacity-60"
+                : "gradient-saffron shadow-lg"
+            }`}
+          >
+            {isDone ? "⭐" : isLocked ? "🔒" : "▶"}
+          </div>
+
+          <h2 className="text-display text-2xl font-extrabold text-ink">
+            {stateName}
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            {state.isUT ? "Union Territory" : "State"}
+          </p>
+        </div>
+
+        {/* Status Information */}
+        {isLocked ? (
+          <div className="rounded-2xl bg-amber-50 border-2 border-amber-200 p-4">
+            <p className="text-display text-sm font-extrabold text-amber-900 mb-2">
+              🔐 Locked
+            </p>
+            <p className="text-sm font-semibold text-amber-800">
+              Complete the previous state to unlock this one!
+            </p>
+          </div>
+        ) : isDone ? (
+          <div className="rounded-2xl bg-green-50 border-2 border-green-200 p-4">
+            <p className="text-display text-sm font-extrabold text-green-900 mb-2">
+              ✓ Completed
+            </p>
+            <p className="text-sm font-semibold text-green-800">
+              You've earned all badges for this state!
+            </p>
+          </div>
+        ) : (
+          <div className="rounded-2xl bg-blue-50 border-2 border-blue-200 p-4">
+            <p className="text-display text-sm font-extrabold text-blue-900 mb-2">
+              ▶ In Progress
+            </p>
+            <p className="text-sm font-semibold text-blue-800">
+              Complete 3 cards and take the quiz to unlock the next state!
+            </p>
+          </div>
+        )}
+
+        {/* Action Buttons */}
+        <div className="flex gap-3">
+          <button
+            onClick={onClose}
+            className="flex-1 h-12 rounded-2xl bg-gray-100 text-display font-extrabold text-gray-700 hover:bg-gray-200 transition"
+          >
+            Close
+          </button>
+          {!isLocked && (
+            <button
+              onClick={() => {
+                fxTap();
+                onPlay();
+              }}
+              className="flex-1 h-12 rounded-2xl bg-gradient-to-r from-saffron-400 to-saffron-500 text-display font-extrabold text-white shadow-lg hover:shadow-xl transition"
+            >
+              {isDone ? "🎖️ Review" : "▶ Play"}
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function JourneyMapScreen() {
   const p = useProgress();
   const states = statesWithProgress(p);
   const [view, setView] = useState<{ screen: "intro" | "hub" | "card" | "quiz"; name: string; cardIndex?: number } | null>(null);
+  const [selectedState, setSelectedState] = useState<string | null>(null);
   const STEP = 118;
   const BANNER_GAP = 96;
 
@@ -608,7 +949,29 @@ export function JourneyMapScreen() {
 
   let y = 70;
   let idx = 0;
-  for (const route of routes) {
+  
+  // Age-optimized state filtering
+  const getFilteredRoutes = () => {
+    if (p.ageBand === "3-5") {
+      // Sprout: Show only 3 states
+      return routes.map(r => ({
+        ...r,
+        items: r.items.slice(0, r.key === "states" ? 3 : 0)
+      })).filter(r => r.items.length > 0);
+    } else if (p.ageBand === "6-7") {
+      // Seedling: Show 10 states
+      return routes.map(r => ({
+        ...r,
+        items: r.items.slice(0, r.key === "states" ? 10 : 0)
+      })).filter(r => r.items.length > 0);
+    }
+    // Sapling & Mighty Tree: Show all
+    return routes;
+  };
+
+  const filteredRoutes = getFilteredRoutes();
+
+  for (const route of filteredRoutes) {
     const done = route.items.filter((s) => s.status === "done").length;
     banners.push({ key: route.key, label: route.label, icon: route.icon, y, done, total: route.items.length });
     y += BANNER_GAP;
@@ -628,9 +991,11 @@ export function JourneyMapScreen() {
 
   const height = y + 20;
   const currentIndex = nodes.findIndex((n) => n.status === "current");
+  const totalStates = filteredRoutes.reduce((acc, r) => acc + r.items.length, 0);
+  const completedStates = nodes.filter((n) => n.status === "done").length;
 
   // Validate banners were created
-  if (banners.length < 2) {
+  if (banners.length < 1) {
     appLogger.info('journey_map_screen', 'Banners not properly initialized, count: ' + banners.length);
     return <LoadingScreen />;
   }
@@ -708,27 +1073,26 @@ export function JourneyMapScreen() {
         }}
         onDone={() => {
           appLogger.info('journey_map_screen', 'QuizScreen onDone clicked');
-          setView(null);
+          // Navigate to completion screen which will show postcard → unlock → passport
+          const slug = view.name.toLowerCase().replace(/\s+/g, "-");
+          navigate({ to: "/state/$slug/complete", params: { slug } });
         }}
       />
     );
   }
 
-
-
-
   return (
     <div className="h-full w-full gradient-sky relative overflow-hidden flex flex-col">
       {/* Top HUD */}
-      <div className="px-5 pt-3 flex items-center gap-3 relative z-10">
+      <div className="px-5 pt-3 flex items-center gap-3 relative z-10 animate-fade-in">
         <div className="h-11 w-11 rounded-2xl bg-white shadow-soft p-1">
           <img src={mascot} className="w-full h-full object-contain" alt="" />
         </div>
         <div className="flex-1">
           <div className="text-display font-extrabold text-ink">India Journey</div>
           <div className="text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground">
-            {banners.length >= 2 
-              ? `${banners[0].done}/${banners[0].total} states · ${banners[1].done}/${banners[1].total} UTs`
+            {banners.length >= 1 
+              ? `${completedStates}/${totalStates} states${banners.length >= 2 ? ` · ${banners[1].done}/${banners[1].total} UTs` : ''}`
               : 'Loading...'
             }
           </div>
@@ -740,12 +1104,26 @@ export function JourneyMapScreen() {
         </div>
       </div>
 
+      {/* Progress Bar */}
+      <div className="px-5 pt-2 pb-2 animate-fade-in" style={{ animationDelay: "50ms" }}>
+        <div className="flex items-center justify-between mb-1">
+          <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">Journey Progress</span>
+          <span className="text-[10px] font-extrabold text-ink">{Math.round((completedStates / totalStates) * 100)}%</span>
+        </div>
+        <div className="h-2 bg-white/50 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all duration-500"
+            style={{ width: `${(completedStates / totalStates) * 100}%` }}
+          />
+        </div>
+      </div>
+
       {/* Clouds */}
-      <Cloud className="absolute top-24 left-2 w-24 opacity-90 pointer-events-none" />
-      <Cloud className="absolute top-60 right-1 w-20 opacity-85 pointer-events-none" />
+      <Cloud className="absolute top-24 left-2 w-24 opacity-90 pointer-events-none animate-fade-in" style={{ animationDelay: "100ms" }} />
+      <Cloud className="absolute top-60 right-1 w-20 opacity-85 pointer-events-none animate-fade-in" style={{ animationDelay: "150ms" }} />
 
       {/* Map */}
-      <div className="relative flex-1 mx-3 mt-2 rounded-[28px] overflow-y-auto overflow-x-hidden">
+      <div className="relative flex-1 mx-3 mt-2 rounded-[28px] overflow-y-auto overflow-x-hidden animate-fade-in" style={{ animationDelay: "200ms" }}>
         <div className="relative w-full" style={{ height }}>
           <svg
             className="absolute inset-0 w-full pointer-events-none"
@@ -753,7 +1131,7 @@ export function JourneyMapScreen() {
             viewBox={`0 0 100 ${height}`}
             preserveAspectRatio="none"
           >
-            {routes.map((route) => {
+            {filteredRoutes.map((route) => {
               const rn = nodes.filter((n) => (route.key === "ut" ? n.isUT : !n.isUT));
               if (rn.length === 0) return null;
               return (
@@ -773,17 +1151,19 @@ export function JourneyMapScreen() {
                   strokeWidth="1.4"
                   strokeDasharray={route.key === "ut" ? "3 7" : "6 6"}
                   strokeLinecap="round"
+                  className="animate-shimmer-path"
+                  style={{ animationDelay: route.key === "ut" ? "300ms" : "250ms" }}
                 />
               );
             })}
           </svg>
 
           {/* Route banners */}
-          {banners.map((b) => (
+          {banners.map((b, idx) => (
             <div
               key={b.key}
-              className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-[86%]"
-              style={{ top: b.y }}
+              className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-[86%] animate-fade-in"
+              style={{ top: b.y, animationDelay: `${300 + idx * 50}ms` }}
             >
               <div className="rounded-2xl bg-white/90 backdrop-blur shadow-soft px-4 py-2.5 flex items-center gap-3">
                 <span className="text-xl">{b.icon}</span>
@@ -792,7 +1172,7 @@ export function JourneyMapScreen() {
                   <div className="mt-1 h-1.5 rounded-full bg-neutral-200 overflow-hidden">
                     <div
                       className={b.key === "ut" ? "h-full gradient-explorer" : "h-full gradient-gold"}
-                      style={{ width: `${(b.done / b.total) * 100}%` }}
+                      style={{ width: `${(b.done / b.total) * 100}%`, transition: "width 0.5s ease-out" }}
                     />
                   </div>
                 </div>
@@ -803,65 +1183,94 @@ export function JourneyMapScreen() {
             </div>
           ))}
 
-          {nodes.map((n, i) => (
-            <div
-              key={n.name}
-              className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-auto z-10"
-              style={{ left: `${n.x}%`, top: n.y }}
-            >
-              <button
-                type="button"
-                aria-label={`Open ${n.name}`}
-                onClick={(e) => {
-                  appLogger.info('journey_map_screen', 'CLICK EVENT on state: ' + n.name + ', status: ' + n.status);
-                  fxTap();
-                  setView({ screen: "intro", name: n.name });
-                }}
-                className={`flex flex-col items-center active:scale-95 transition-transform cursor-pointer z-20 relative ${
-                  n.status === "current" ? "animate-bounce" : ""
-                }`}
+          {nodes.map((n, i) => {
+            const isNext = i === currentIndex;
+            const isCompleted = n.status === "done";
+            
+            return (
+              <div
+                key={n.name}
+                className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-auto z-10 animate-fade-in"
+                style={{ left: `${n.x}%`, top: n.y, animationDelay: `${350 + i * 30}ms` }}
               >
-                <div
-                  className={`h-16 w-16 rounded-full border-4 flex items-center justify-center text-2xl shadow-lg ${
-                    n.status === "done"
-                      ? n.isUT
-                        ? "gradient-explorer border-white text-white"
-                        : "gradient-gold border-white text-white"
-                      : n.status === "current"
-                      ? "gradient-saffron border-white text-white"
-                      : `bg-white/70 border-white text-neutral-400 ${n.isUT ? "border-dashed" : ""}`
-                  }`}
+                <button
+                  type="button"
+                  aria-label={`Open ${n.name}`}
+                  onClick={(e) => {
+                    appLogger.info('journey_map_screen', 'CLICK EVENT on state: ' + n.name + ', status: ' + n.status);
+                    fxTap();
+                    setSelectedState(n.name);
+                    if (n.status !== "locked") {
+                      setView({ screen: "intro", name: n.name });
+                    }
+                  }}
+                  className={`flex flex-col items-center active:scale-95 transition-transform cursor-pointer z-20 relative ${
+                    isNext ? "animate-bounce-gentle" : ""
+                  } ${n.status === "locked" && !isNext ? "opacity-75 hover:opacity-100" : ""}`}
                 >
-                  {n.status === "done" ? "⭐" : n.status === "current" ? "▶" : n.isUT ? "🏝️" : "🔒"}
-                </div>
-                <div
-                  className={`mt-1 text-[11px] font-extrabold px-2 py-0.5 rounded-full whitespace-nowrap ${
-                    n.status === "locked"
-                      ? "bg-white/70 text-muted-foreground"
-                      : "bg-white text-ink shadow"
-                  }`}
-                >
-                  {n.short}
-                </div>
-                {n.isUT && (
-                  <div className="mt-1 text-[9px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-explorer/15 text-explorer">
-                    Union Territory
+                  <div
+                    className={`h-16 w-16 rounded-full border-4 flex items-center justify-center text-2xl shadow-lg transition ${
+                      isCompleted
+                        ? n.isUT
+                          ? "gradient-explorer border-white text-white"
+                          : "gradient-gold border-white text-white"
+                        : isNext
+                        ? "gradient-saffron border-white text-white animate-pulse"
+                        : `bg-white/70 border-white text-neutral-400 ${n.isUT ? "border-dashed" : ""} ${n.status === "locked" ? "animate-shimmer" : ""}`
+                    }`}
+                  >
+                    {isCompleted ? "⭐" : isNext ? "▶" : n.isUT ? "🏝️" : "🔒"}
                   </div>
+                  <div
+                    className={`mt-1 text-[11px] font-extrabold px-2 py-0.5 rounded-full whitespace-nowrap transition ${
+                      n.status === "locked"
+                        ? "bg-white/70 text-muted-foreground"
+                        : "bg-white text-ink shadow"
+                    }`}
+                  >
+                    {n.short}
+                  </div>
+                  
+                  {/* "Tap to start" label on current state */}
+                  {isNext && (
+                    <div className="mt-2 text-[9px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 text-white animate-pulse">
+                      🚀 Tap to start
+                    </div>
+                  )}
+                  
+                  {n.isUT && (
+                    <div className="mt-1 text-[9px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-explorer/15 text-explorer">
+                      Union Territory
+                    </div>
+                  )}
+                </button>
+                {isNext && (
+                  <img
+                    src={airplane}
+                    alt=""
+                    className="absolute -top-10 -right-8 w-14 h-14 object-contain drop-shadow-lg animate-bounce-gentle"
+                    style={{ transform: "rotate(20deg)" }}
+                  />
                 )}
-              </button>
-              {i === currentIndex && (
-                <img
-                  src={airplane}
-                  alt=""
-                  className="absolute -top-10 -right-8 w-14 h-14 object-contain drop-shadow-lg"
-                  style={{ transform: "rotate(20deg)" }}
-                />
-              )}
-            </div>
-          ))}
+              </div>
+            );
+          })}
 
         </div>
       </div>
+
+      {/* State Detail Modal */}
+      {selectedState && (
+        <StateDetailModal
+          stateName={selectedState}
+          states={nodes}
+          onClose={() => setSelectedState(null)}
+          onPlay={() => {
+            setSelectedState(null);
+            setView({ screen: "intro", name: selectedState });
+          }}
+        />
+      )}
 
       <BottomNav active="map" />
     </div>
@@ -1342,7 +1751,7 @@ export function LearningCardScreen({
   const [currentCardIndex, setCurrentCardIndex] = useState(i);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
-  const [showNarrationModal, setShowNarrationModal] = useState(false);
+  const [playingCardIndex, setPlayingCardIndex] = useState<number | null>(null);
   
   useEffect(() => {
     preloadStateArt(state.name, nextStateAfter(state.name)?.name);
@@ -1353,15 +1762,12 @@ export function LearningCardScreen({
     setCurrentCardIndex(i);
   }, [cardIndex, stateName]);
 
-  // Stop TTS when showing narration or on unmount
+  // Stop TTS on unmount
   useEffect(() => {
-    if (showNarrationModal) {
-      // Narration will play via CardNarrationPlayer
-    }
     return () => {
       stopTts();
     };
-  }, [showNarrationModal]);
+  }, []);
 
   const card = cards[currentCardIndex];
   const isLast = currentCardIndex === cards.length - 1;
@@ -1473,29 +1879,41 @@ export function LearningCardScreen({
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-        {/* Audio Button - Overlay on top-right */}
-        {state.name === "Rajasthan" && (
-          <button
-            onClick={(e) => {
-              console.log("[AUDIO-CLICK-HANDLER] START", {
-                timestamp: new Date().toISOString(),
-                eventType: e.type,
-                buttonClickable: true,
+        {/* Audio Button - Play current card content instantly */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            const isPlaying = playingCardIndex === currentCardIndex;
+            
+            if (isPlaying) {
+              // Stop playing
+              stopTts();
+              setPlayingCardIndex(null);
+            } else {
+              // Start playing current card content - strip emojis, read body only
+              const textToRead = card.body
+                .replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, "")
+                .replace(/\s+/g, " ")
+                .trim();
+              playTts(`card-${state.name}-${currentCardIndex}`, textToRead, {
+                speed: 0.85,
+                pitch: 1.05,
               });
-              e.stopPropagation();
-              console.log("[AUDIO-CLICK-HANDLER] Calling setShowNarrationModal(true)");
-              setShowNarrationModal(true);
-              console.log("[AUDIO-CLICK-HANDLER] COMPLETE - state setter invoked");
-            }}
-            onTouchEnd={(e) => {
-              e.stopPropagation();
-            }}
-            className="absolute top-3 right-3 h-14 w-14 rounded-2xl bg-white shadow-soft flex items-center justify-center text-xl hover:shadow-md active:scale-95 transition z-10"
-            title="Play narration"
-          >
-            🔊
-          </button>
-        )}
+              setPlayingCardIndex(currentCardIndex);
+            }
+          }}
+          onTouchEnd={(e) => {
+            e.stopPropagation();
+          }}
+          className={`absolute top-3 right-3 h-14 w-14 rounded-2xl shadow-soft flex items-center justify-center text-2xl transition-all active:scale-95 z-10 ${
+            playingCardIndex === currentCardIndex
+              ? "bg-gradient-to-br from-orange-400 to-red-500 text-white shadow-lg animate-pulse"
+              : "bg-white hover:shadow-md"
+          }`}
+          title="Play card content"
+        >
+          {playingCardIndex === currentCardIndex ? "⏸️" : "🔊"}
+        </button>
 
         {/* Replay indicator - shown when user is replaying a card */}
         {isReplaying && currentCardIndex === i && (
@@ -1551,35 +1969,6 @@ export function LearningCardScreen({
           {isLastInMainCardSection ? "Done! Back to Cards" : isLast ? "Take the Quiz! 🎯" : "Got it! Next →"}
         </button>
       </div>
-
-      {/* Narration Modal - Available for all states */}
-      {showNarrationModal && (
-        <div className="fixed inset-0 bg-black/40 flex items-end z-50">
-          <div className="w-full bg-white rounded-t-3xl shadow-2xl max-h-[80vh] overflow-y-auto">
-            <div className="px-5 pt-3 pb-5">
-              <button
-                onClick={() => setShowNarrationModal(false)}
-                className="mb-3 h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center text-xl"
-              >
-                ✕
-              </button>
-              
-              {enrichedContent ? (
-                <CardNarrationPlayer
-                  narrationId={`${state.name}-${card.mainCardIndex ?? 0}`}
-                  text={enrichedContent[["capital", "language", "food", "places", "animal", "funFact"][card.mainCardIndex ?? 0] as keyof typeof enrichedContent]?.narration || ""}
-                  title={card.title}
-                  emoji={card.icon}
-                />
-              ) : (
-                <div className="p-3 bg-red-100 text-red-800 rounded text-sm font-semibold">
-                  ❌ No enriched content found for {state.name}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
@@ -1604,13 +1993,17 @@ export function QuizScreen({
     states.find((s) => s.status !== "done")?.name ??
     states[0].name;
 
-  const questions = useMemo(() => randomQuestionsForState(activeName, 10), [activeName]);
+  const questions = useMemo(() => {
+    const qCount = questionCountForAgeBand(progress.ageBand);
+    return randomQuestionsForState(activeName, qCount);
+  }, [activeName, progress.ageBand]);
   const [index, setIndex] = useState(0);
   const question = questions[Math.min(index, questions.length - 1)];
 
   const [selected, setSelected] = useState<string | null>(null);
   const [result, setResult] = useState<"correct" | "wrong" | null>(null);
   const [burst, setBurst] = useState(0);
+  const [navigationStarted, setNavigationStarted] = useState(false); // Prevent double navigation
 
   const answers = question.options;
   const correct = question.correct;
@@ -1635,9 +2028,16 @@ export function QuizScreen({
   const isLastQuestion = index === questions.length - 1;
   const onReset = () => {
     fxTap();
+    // Prevent double navigation on last question
+    if (navigationStarted) return;
+
     // Always move to next question (or finish if last)
     if (isLastQuestion) {
-      onDone?.();
+      setNavigationStarted(true);
+      // Use setTimeout to ensure state is settled before navigation
+      setTimeout(() => {
+        onDone?.();
+      }, 50);
       return;
     }
     setIndex((i) => i + 1);
@@ -1888,43 +2288,41 @@ export function StateCompletedScreen({
       </div>
 
 
-      <div className="mt-5 w-full px-6">
-        <div className="text-white/90 text-[10px] font-black uppercase tracking-[0.2em] text-center">
-          Badges Earned
-        </div>
-        <div className="mt-2 grid grid-cols-3 gap-2">
-          {[
-            { icon: state.monument, name: "Monument" },
-            { icon: state.animal, name: "Animal" },
-            { icon: "🎖️", name: "Explorer" },
-          ].map((b) => (
-            <div
-              key={b.name}
-              className="rounded-2xl bg-white/25 backdrop-blur p-2 text-white flex flex-col items-center animate-fade-in"
-            >
-              <div className="h-11 w-11 rounded-full bg-white/35 flex items-center justify-center text-xl">
+      <div className="mt-6 w-full px-6">
+        {/* Combined Achievement Card - Less visual clutter */}
+        <div className="rounded-3xl bg-white/30 backdrop-blur-xl p-5 text-white text-center border border-white/40 shadow-lg">
+          <div className="text-[11px] font-black uppercase tracking-[0.2em] opacity-90 mb-3">
+            Achievements
+          </div>
+          
+          {/* Badges in compact row */}
+          <div className="flex justify-center gap-2 mb-4">
+            {[
+              { icon: state.monument, name: "Monument" },
+              { icon: state.animal, name: "Animal" },
+              { icon: "🎖️", name: "Explorer" },
+            ].map((b) => (
+              <div
+                key={b.name}
+                className="h-12 w-12 rounded-full bg-white/25 flex items-center justify-center text-lg animate-fade-in border border-white/30"
+                title={b.name}
+              >
                 {b.icon}
               </div>
-              <div className="mt-1 text-[10px] font-extrabold">{b.name}</div>
-            </div>
-          ))}
-        </div>
-      </div>
+            ))}
+          </div>
 
-      <div className="mt-4 grid grid-cols-2 gap-3 w-full px-6">
-        <div className="rounded-2xl bg-white/25 backdrop-blur p-3 text-white text-center">
-          <div className="text-2xl">⭐</div>
-          <div className="text-display text-xl font-extrabold leading-none">
-            +250 XP
+          {/* XP + Stamp in single row */}
+          <div className="grid grid-cols-2 gap-2">
+            <div className="bg-white/15 rounded-xl p-2">
+              <div className="text-lg">⭐</div>
+              <div className="text-display text-sm font-extrabold leading-tight">+250 XP</div>
+            </div>
+            <div className="bg-white/15 rounded-xl p-2">
+              <div className="text-lg">📜</div>
+              <div className="text-display text-sm font-extrabold leading-tight">Stamp</div>
+            </div>
           </div>
-          <div className="text-[10px] font-bold opacity-90">Earned</div>
-        </div>
-        <div className="rounded-2xl bg-white/25 backdrop-blur p-3 text-white text-center">
-          <div className="text-2xl">📜</div>
-          <div className="text-display text-xl font-extrabold leading-none">
-            Stamp
-          </div>
-          <div className="text-[10px] font-bold opacity-90">Unlocked</div>
         </div>
       </div>
 
@@ -2006,71 +2404,21 @@ export function StateUnlockScreen({
 
 export function PassportScreen() {
   const p = useProgress();
-  const stamps = statesWithProgress(p).map((s) => ({
-    stateName: s.name,  // ← Add full state name
-    name: s.short,
-    date: s.date ?? "—",
-    tone: s.tone,
-    filled: s.status === "done",
-  }));
-  const pct = Math.round((p.completed.length / TOTAL_STATES) * 100);
+  const ageVariant = getPassportVariant(p.ageBand);
 
-  return (
-    <div className="h-full w-full bg-[#F5EFE4] flex flex-col">
-      <HeaderBar title="My Passport" />
-      <div className="px-5">
-        <div className="rounded-3xl gradient-passport text-[#f5e6c8] p-5 shadow-soft relative overflow-hidden">
-          <div className="absolute -right-6 -top-6 h-32 w-32 rounded-full border-4 border-[#c9a34a]/30" />
-          <div className="text-[10px] font-black uppercase tracking-[0.3em] opacity-80">
-            Republic of Adventure
-          </div>
-          <div className="text-display text-2xl font-extrabold mt-1">
-            EXPLORER PASSPORT
-          </div>
-          <div className="mt-4 flex items-center gap-3">
-            <div className="h-14 w-14 rounded-xl bg-[#f5e6c8]/20 p-1">
-              <img src={mascot} className="w-full h-full object-contain" alt="" />
-            </div>
-            <div>
-              <div className="text-[10px] font-black uppercase opacity-70">
-                Name
-              </div>
-              <div className="text-display font-extrabold text-lg leading-none">
-                {p.name}
-              </div>
-              <div className="text-[10px] font-bold opacity-80 mt-0.5">
-                Passport No. IN-2026-0042
-              </div>
-            </div>
-          </div>
-          <div className="mt-4">
-            <div className="flex items-center justify-between text-[11px] font-bold opacity-90">
-              <span>India Progress</span>
-              <span className="text-[#f5b301]">{pct}%</span>
-            </div>
-            <div className="mt-1 h-2 rounded-full bg-white/15 overflow-hidden">
-              <div className="h-full bg-[#F5B301]" style={{ width: `${pct}%` }} />
-            </div>
-            <div className="text-[10px] font-bold opacity-70 mt-1">
-              {p.completed.length} of {TOTAL_STATES} states stamped
-            </div>
+  // Route to age-appropriate Passport variant
+  if (ageVariant === "sprout") {
+    return <PassportSprout />;
+  } else if (ageVariant === "seedling") {
+    return <PassportSeedling />;
+  } else if (ageVariant === "sapling") {
+    return <PassportSapling />;
+  } else if (ageVariant === "mighty-tree") {
+    return <PassportMightyTree />;
+  }
 
-          </div>
-        </div>
-      </div>
-
-      <div className="px-5 mt-4 flex-1 overflow-auto">
-        <div className="text-display font-extrabold text-sm uppercase tracking-wider text-muted-foreground">
-          Collected Stamps
-        </div>
-        <div className="mt-2 grid grid-cols-2 gap-3">
-          {stamps.map((s) => (
-            <Stamp key={s.name} {...s} />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+  // Fallback (should not reach here)
+  return <PassportSapling />;
 }
 
 function Stamp({
@@ -2140,6 +2488,124 @@ function Stamp({
   );
 }
 
+function BadgeDetailModal({
+  state,
+  badge,
+  onClose,
+}: {
+  state: string;
+  badge: {
+    icon: string;
+    name: string;
+    done: boolean;
+    index: number;
+  };
+  onClose: () => void;
+}) {
+  const unlockTexts: Record<string, Record<number, string>> = {
+    monument: {
+      0: "Complete the Monument card in this state",
+      1: "Unlock the Animal badge first",
+      2: "Earn both Monument and Animal badges",
+    },
+    animal: {
+      0: "Complete the Animal card in this state",
+      1: "Learn about local wildlife",
+      2: "Earn both Monument and Animal badges",
+    },
+    explorer: {
+      0: "Complete all cards in this state",
+      1: "Explore every attraction",
+      2: "Master this state!",
+    },
+  };
+
+  const badgeTypes = ["monument", "animal", "explorer"];
+  const badgeType = badgeTypes[badge.index];
+  const unlockText = unlockTexts[badgeType]?.[badge.index] || "Complete this state";
+
+  return (
+    <div
+      className="fixed inset-0 bg-black/50 z-50 flex items-end animate-fade-in"
+      onClick={onClose}
+    >
+      <div
+        className="w-full bg-white rounded-t-3xl p-6 flex flex-col gap-4 animate-slide-up"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200"
+        >
+          ✕
+        </button>
+
+        {/* Badge Display */}
+        <div className="flex flex-col items-center pt-2">
+          <div
+            className={`h-20 w-20 rounded-full flex items-center justify-center text-5xl mb-4 ${
+              badge.done
+                ? "gradient-saffron shadow-lg"
+                : "bg-gradient-to-br from-gray-200 to-gray-300 opacity-60"
+            }`}
+          >
+            {badge.done ? badge.icon : "🔒"}
+          </div>
+
+          <h2 className="text-display text-2xl font-extrabold text-ink">
+            {badge.name}
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1">{state}</p>
+        </div>
+
+        {/* Unlock Information */}
+        {!badge.done && (
+          <div className="rounded-2xl bg-amber-50 border-2 border-amber-200 p-4">
+            <p className="text-display text-sm font-extrabold text-amber-900 mb-2">
+              How to Unlock
+            </p>
+            <p className="text-sm font-semibold text-amber-800">{unlockText}</p>
+          </div>
+        )}
+
+        {/* Badge Info */}
+        <div className="rounded-2xl bg-blue-50 border border-blue-200 p-4">
+          <p className="text-display text-sm font-extrabold text-blue-900 mb-1">
+            Badge Type
+          </p>
+          <p className="text-sm font-semibold text-blue-800">
+            {badge.name === "Monument" && "🏛️ Learn about famous landmarks"}
+            {badge.name === "Animal" && "🦁 Discover local wildlife"}
+            {badge.name === "Explorer" && "🎖️ Master all cards in this state"}
+          </p>
+        </div>
+
+        {/* Status */}
+        <div className="flex gap-3">
+          <button
+            onClick={onClose}
+            className="flex-1 h-12 rounded-2xl bg-gray-100 text-display font-extrabold text-gray-700 hover:bg-gray-200 transition"
+          >
+            Close
+          </button>
+          {badge.done && (
+            <button
+              onClick={() => {
+                fxConfetti();
+                onClose();
+              }}
+              className="flex-1 h-12 rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-display font-extrabold text-white shadow-lg hover:shadow-xl transition"
+            >
+              🎉 Celebrate!
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function BadgesScreen() {
   const p = useProgress();
   const rows = statesWithProgress(p).map((s) => {
@@ -2165,6 +2631,81 @@ export function BadgesScreen() {
   );
   const totalCount = rows.length * 3;
 
+  // Get encouragement message based on earned badges
+  const getEncouragementMessage = (): string => {
+    if (earnedCount === 0) {
+      return "Complete states to unlock badges!";
+    } else if (earnedCount < 10) {
+      return `You're on your way! ${earnedCount} badges earned.`;
+    } else if (earnedCount < 50) {
+      return `Great collection! ${earnedCount} badges earned.`;
+    } else {
+      return `Amazing! You're a badge master with ${earnedCount}!`;
+    }
+  };
+
+  const [selectedBadge, setSelectedBadge] = useState<{
+    state: string;
+    badge: (typeof rows[0]["badges"][0]) & { index: number };
+  } | null>(null);
+  const [expandedRegion, setExpandedRegion] = useState<string | null>(null);
+
+  // Age-optimized layouts
+  const INDIAN_REGIONS = {
+    North: ["Jammu & Kashmir", "Himachal Pradesh", "Punjab", "Haryana", "Delhi", "Uttar Pradesh", "Uttarakhand"],
+    South: ["Andhra Pradesh", "Telangana", "Karnataka", "Kerala", "Tamil Nadu"],
+    East: ["Assam", "Meghalaya", "Manipur", "Mizoram", "Nagaland", "Tripura", "Arunachal Pradesh", "West Bengal", "Odisha", "Jharkhand"],
+    West: ["Rajasthan", "Gujarat", "Maharashtra", "Goa"],
+    Central: ["Madhya Pradesh", "Chhattisgarh"],
+  };
+
+  const REGION_EMOJIS: Record<string, string> = {
+    North: "🗻",
+    South: "🏖️",
+    East: "🌴",
+    West: "🏜️",
+    Central: "🏞️",
+  };
+
+  // Calculate region progress
+  const getRegionProgress = (regionName: string) => {
+    const states = INDIAN_REGIONS[regionName as keyof typeof INDIAN_REGIONS] || [];
+    const regionRows = rows.filter((r) => states.includes(r.state));
+    const earned = regionRows.reduce((acc, r) => acc + r.badges.filter((b) => b.done).length, 0);
+    const total = regionRows.length * 3;
+    return { earned, total, percentage: total === 0 ? 0 : Math.round((earned / total) * 100) };
+  };
+
+  // Find region with most badges earned (auto-expand)
+  const getInitialRegion = () => {
+    let maxRegion = "North";
+    let maxBadges = 0;
+    
+    Object.keys(INDIAN_REGIONS).forEach((region) => {
+      const progress = getRegionProgress(region);
+      if (progress.earned > maxBadges) {
+        maxBadges = progress.earned;
+        maxRegion = region;
+      }
+    });
+    
+    return maxBadges > 0 ? maxRegion : "North"; // Auto-expand progress region or default to North
+  };
+
+  // Initialize with expanded region containing most badges
+  const [initialRegion] = useState<string>(getInitialRegion());
+  const [actualExpandedRegion, setActualExpandedRegion] = useState<string | null>(initialRegion);
+
+  // Filter rows based on age
+  let displayRows = rows;
+  if (p.ageBand === "3-5") {
+    // Sprout: Show only first 3 states
+    displayRows = rows.slice(0, 3);
+  } else if (p.ageBand === "6-7") {
+    // Seedling: Show first 10 states (2 regions)
+    displayRows = rows.slice(0, 10);
+  }
+
   return (
     <div className="h-full w-full bg-[#F7F5F0] flex flex-col">
       <HeaderBar
@@ -2176,9 +2717,9 @@ export function BadgesScreen() {
         }
       />
 
-      <div className="px-5">
+      <div className="px-5 animate-fade-in">
         <div className="rounded-3xl gradient-gold p-4 text-white shadow-soft flex items-center gap-3">
-          <div className="h-14 w-14 rounded-2xl bg-white/25 flex items-center justify-center text-3xl">
+          <div className="h-14 w-14 rounded-2xl bg-white/25 flex items-center justify-center text-3xl animate-pulse">
             🏅
           </div>
           <div className="flex-1">
@@ -2186,57 +2727,202 @@ export function BadgesScreen() {
               Collection
             </div>
             <div className="text-display text-xl font-extrabold leading-none">
-              {earnedCount} badges earned
+              {earnedCount}/{totalCount} badges
             </div>
 
             <div className="text-[11px] font-bold opacity-90 mt-0.5">
-              You're in the top 10% of explorers!
+              {getEncouragementMessage()}
             </div>
           </div>
         </div>
       </div>
 
+      {/* Age-specific layouts */}
       <div className="p-5 flex-1 overflow-auto space-y-4">
-        {rows.map((r) => (
-          <div key={r.state}>
-            <div className="text-display font-extrabold text-sm">{r.state}</div>
-            <div className="mt-2 grid grid-cols-3 gap-3">
-              {r.badges.map((b) => (
-                <div
-                  key={b.name}
-                  className={`rounded-2xl p-3 flex flex-col items-center bg-white shadow-soft border ${
-                    b.done ? "border-black/5" : "border-dashed border-muted-foreground/30 opacity-60"
-                  }`}
-                >
-                  <div
-                    className={`h-14 w-14 rounded-full flex items-center justify-center text-2xl ${
-                      b.done
-                        ? r.tone === "orange"
-                          ? "gradient-saffron"
-                          : r.tone === "gold"
-                          ? "gradient-gold"
-                          : r.tone === "blue"
-                          ? "gradient-explorer"
-                          : "gradient-success"
+        {(p.ageBand === "6-7" || p.ageBand === "8-9" || p.ageBand === "10-12") && p.ageBand !== "3-5" ? (
+          // Region-based collapsible layout for Seedling and older
+          Object.entries(INDIAN_REGIONS).map((region, regionIdx) => {
+            const regionStates = displayRows.filter((r) =>
+              region[1].includes(r.state)
+            );
+            if (regionStates.length === 0) return null;
 
-                        : "bg-muted"
+            const isExpanded = expandedRegion === region[0];
+
+            return (
+              <div key={region[0]} className="animate-fade-in" style={{ animationDelay: `${100 + regionIdx * 50}ms` }}>
+                <button
+                  onClick={() => {
+                    fxTap();
+                    setActualExpandedRegion(isExpanded ? null : region[0]);
+                  }}
+                  className="w-full text-left py-3 px-4 rounded-2xl bg-white hover:bg-gray-50 active:bg-gray-100 transition-all border border-black/5 flex items-center justify-between group"
+                >
+                  <div className="flex-1">
+                    <div className="text-display font-extrabold text-sm flex items-center gap-2">
+                      <span className="text-xl">{REGION_EMOJIS[region[0]]}</span>
+                      {region[0]} Region
+                    </div>
+                    <div className="mt-2 flex items-center gap-2">
+                      <div className="flex-1 max-w-xs h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all duration-300"
+                          style={{ width: `${getRegionProgress(region[0]).percentage}%` }}
+                        />
+                      </div>
+                      <span className="text-[10px] font-bold text-muted-foreground whitespace-nowrap">
+                        {getRegionProgress(region[0]).earned}/{getRegionProgress(region[0]).total} ({getRegionProgress(region[0]).percentage}%)
+                      </span>
+                    </div>
+                  </div>
+                  <span
+                    className={`text-xl transition-transform duration-300 group-hover:scale-110 ${
+                      isExpanded ? "rotate-180" : ""
                     }`}
                   >
-                    {b.done ? b.icon : "🔒"}
+                    ▼
+                  </span>
+                </button>
+
+                {isExpanded && (
+                  <div className="mt-3 space-y-4 pl-1">
+                    {regionStates.map((r, stateIdx) => (
+                      <div key={r.state} className="animate-fade-in" style={{ animationDelay: `${50 + stateIdx * 30}ms` }}>
+                        <div className="text-display font-extrabold text-sm flex items-center justify-between">
+                          <span>{r.state}</span>
+                          <span className="text-[11px] font-bold text-muted-foreground">
+                            {r.badges.filter((b) => b.done).length}/{r.badges.length}
+                          </span>
+                        </div>
+
+                        {/* Progress Bar */}
+                        <div className="mt-1 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all duration-300"
+                            style={{ width: `${(r.badges.filter((b) => b.done).length / r.badges.length) * 100}%` }}
+                          />
+                        </div>
+
+                        <div className="mt-3 grid grid-cols-3 gap-3">
+                          {r.badges.map((b, badgeIdx) => (
+                            <button
+                              key={b.name}
+                              onClick={() => {
+                                fxTap();
+                                setSelectedBadge({ state: r.state, badge: { ...b, index: badgeIdx } });
+                              }}
+                              className={`rounded-2xl p-3 flex flex-col items-center bg-white shadow-soft border transition transform hover:scale-105 active:scale-95 ${
+                                b.done ? "border-black/5" : "border-dashed border-muted-foreground/30"
+                              }`}
+                            >
+                              <div
+                                className={`h-14 w-14 rounded-full flex items-center justify-center text-2xl transition ${
+                                  b.done
+                                    ? r.tone === "orange"
+                                      ? "gradient-saffron"
+                                      : r.tone === "gold"
+                                      ? "gradient-gold"
+                                      : r.tone === "blue"
+                                      ? "gradient-explorer"
+                                      : "gradient-success"
+                                    : "bg-muted animate-shimmer"
+                                }`}
+                              >
+                                {b.done ? b.icon : "🔒"}
+                              </div>
+                              <div className="mt-1 text-[11px] font-extrabold text-center">{b.name}</div>
+                              {!b.done && (
+                                <div className="mt-1 text-[8px] font-bold text-amber-600 text-center">
+                                  Unlock
+                                </div>
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                  <div className="mt-1 text-[11px] font-extrabold">{b.name}</div>
-                </div>
-              ))}
+                )}
+              </div>
+            );
+          })
+        ) : (
+          // Simple list for Sprout (ages 3-5)
+          displayRows.map((r, stateIdx) => (
+            <div key={r.state} className="animate-fade-in" style={{ animationDelay: `${100 + stateIdx * 50}ms` }}>
+              <div className="text-display font-extrabold text-sm flex items-center justify-between">
+                <span>{r.state}</span>
+                <span className="text-[11px] font-bold text-muted-foreground">
+                  {r.badges.filter((b) => b.done).length}/{r.badges.length}
+                </span>
+              </div>
+
+              {/* Progress Bar */}
+              <div className="mt-1 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all duration-300"
+                  style={{ width: `${(r.badges.filter((b) => b.done).length / r.badges.length) * 100}%` }}
+                />
+              </div>
+
+              <div className="mt-3 grid grid-cols-3 gap-3">
+                {r.badges.map((b, badgeIdx) => (
+                  <button
+                    key={b.name}
+                    onClick={() => {
+                      fxTap();
+                      setSelectedBadge({ state: r.state, badge: { ...b, index: badgeIdx } });
+                    }}
+                    className={`rounded-2xl p-3 flex flex-col items-center bg-white shadow-soft border transition transform hover:scale-105 active:scale-95 ${
+                      b.done ? "border-black/5" : "border-dashed border-muted-foreground/30"
+                    }`}
+                  >
+                    <div
+                      className={`h-14 w-14 rounded-full flex items-center justify-center text-2xl transition ${
+                        b.done
+                          ? r.tone === "orange"
+                            ? "gradient-saffron"
+                            : r.tone === "gold"
+                            ? "gradient-gold"
+                            : r.tone === "blue"
+                            ? "gradient-explorer"
+                            : "gradient-success"
+                          : "bg-muted animate-shimmer"
+                      }`}
+                    >
+                      {b.done ? b.icon : "🔒"}
+                    </div>
+                    <div className="mt-1 text-[11px] font-extrabold text-center">{b.name}</div>
+                    {!b.done && (
+                      <div className="mt-1 text-[8px] font-bold text-amber-600 text-center">
+                        Unlock
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
+
+      {/* Badge Detail Modal */}
+      {selectedBadge && (
+        <BadgeDetailModal
+          state={selectedBadge.state}
+          badge={selectedBadge.badge}
+          onClose={() => setSelectedBadge(null)}
+        />
+      )}
     </div>
   );
 }
 
 export function ProfileScreen() {
   const p = useProgress();
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempName, setTempName] = useState(p.name);
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
   
   // Route guard: redirect to welcome if not onboarded (defensive check)
   if (!p.onboarded) {
@@ -2250,9 +2936,38 @@ export function ProfileScreen() {
   const achievements = achievementsFor(p);
   const unlockedAchievements = achievements.filter((a) => a.done).length;
   const inProgressAchievements = achievements.filter((a) => !a.done && a.prog > 0).length;
+
+  const handleSaveName = () => {
+    const trimmedName = tempName.trim();
+    if (!trimmedName || trimmedName.length === 0) {
+      setTempName(p.name); // Reset to original
+      setIsEditing(false);
+      return;
+    }
+    
+    setSaveStatus("saving");
+    fxTap();
+    
+    // Save the profile with new name
+    saveProfile({ name: trimmedName, avatar: p.avatar, ageBand: p.ageBand });
+    
+    setSaveStatus("saved");
+    setTimeout(() => {
+      setIsEditing(false);
+      setSaveStatus("idle");
+    }, 500);
+  };
+
+  const handleCancelEdit = () => {
+    fxTap();
+    setTempName(p.name); // Reset to original
+    setIsEditing(false);
+    setSaveStatus("idle");
+  };
+
   return (
     <div className="h-full w-full bg-[#F7F5F0] flex flex-col">
-      <div className="relative gradient-explorer px-5 pt-4 pb-14 rounded-b-[36px]">
+      <div className="relative gradient-explorer px-5 pt-4 pb-14 rounded-b-[36px] animate-fade-in">
         <Cloud className="absolute top-2 right-2 w-16 opacity-40" />
         <div className="flex items-center justify-between">
           <button
@@ -2275,7 +2990,7 @@ export function ProfileScreen() {
           </button>
         </div>
         <div className="flex flex-col items-center mt-4">
-          <div className="relative">
+          <div className="relative animate-bounce" style={{ animationDelay: "0ms" }}>
             <div className="h-24 w-24 rounded-3xl bg-white p-2 shadow-xl flex items-center justify-center text-5xl">
               <span>{p.avatar}</span>
             </div>
@@ -2283,16 +2998,71 @@ export function ProfileScreen() {
               {level}
             </div>
           </div>
-          <div className="mt-3 text-display text-2xl font-extrabold text-white">
-            {p.name}
-          </div>
-          <div className="text-white/90 text-xs font-extrabold uppercase tracking-widest">
-            Junior Explorer · Age {p.ageBand}
-          </div>
+          
+          {/* Name Section - Edit Mode or Display Mode */}
+          {isEditing ? (
+            <div className="mt-4 w-full max-w-xs flex flex-col gap-2">
+              <input
+                autoFocus
+                value={tempName}
+                onChange={(e) => setTempName(e.target.value.slice(0, 20))}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleSaveName();
+                  if (e.key === "Escape") handleCancelEdit();
+                }}
+                placeholder="Enter name"
+                maxLength={20}
+                className="h-12 rounded-xl bg-white text-center text-display text-lg font-extrabold text-ink outline-none border-2 border-white"
+              />
+              <div className="flex gap-2">
+                <button
+                  onClick={handleSaveName}
+                  disabled={saveStatus === "saving"}
+                  className={`flex-1 h-10 rounded-lg text-display font-extrabold text-white text-sm transition ${
+                    saveStatus === "saved"
+                      ? "bg-green-400"
+                      : saveStatus === "saving"
+                        ? "bg-white/50"
+                        : "bg-white/80 hover:bg-white"
+                  }`}
+                >
+                  {saveStatus === "saved" ? "✓ Saved" : saveStatus === "saving" ? "Saving..." : "Save"}
+                </button>
+                <button
+                  onClick={handleCancelEdit}
+                  className="flex-1 h-10 rounded-lg text-display font-extrabold text-white text-sm bg-white/30 hover:bg-white/40 transition"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="mt-3 flex flex-col items-center gap-1 animate-fade-in" style={{ animationDelay: "100ms" }}>
+              <div className="flex items-center gap-2">
+                <div className="text-display text-2xl font-extrabold text-white">
+                  {p.name}
+                </div>
+                <button
+                  onClick={() => {
+                    fxTap();
+                    setTempName(p.name);
+                    setIsEditing(true);
+                  }}
+                  className="h-8 w-8 rounded-lg bg-white/20 hover:bg-white/30 text-white flex items-center justify-center text-sm transition"
+                  title="Edit name"
+                >
+                  ✏️
+                </button>
+              </div>
+              <div className="text-white/90 text-xs font-extrabold uppercase tracking-widest">
+                Junior Explorer · Age {p.ageBand}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
-      <div className="px-5 -mt-8 relative z-10">
+      <div className="px-5 -mt-8 relative z-10 animate-fade-in" style={{ animationDelay: "150ms" }}>
         <div className="rounded-3xl bg-white shadow-soft border border-black/5 p-4 grid grid-cols-3 divide-x divide-black/5">
           <ProfileStat value={p.xp.toLocaleString()} label="XP" />
           <ProfileStat value={String(p.completed.length)} label="States" />
@@ -2302,35 +3072,37 @@ export function ProfileScreen() {
 
 
       <div className="px-5 mt-5 space-y-3 flex-1 overflow-auto">
-        <SoundToggleRow />
-        <RowLink
-          icon="📓"
-          tone="orange"
-          title="My Passport"
-          sub={`${stampsCollected} ${stampsCollected === 1 ? "stamp" : "stamps"} collected`}
-          to="/passport"
-        />
-        <RowLink
-          icon="🏅"
-          tone="gold"
-          title="Achievements"
-          sub={`${unlockedAchievements} unlocked · ${inProgressAchievements} in progress`}
-          to="/achievements"
-        />
-        <RowLink
-          icon="🎯"
-          tone="green"
-          title="Daily Goals"
-          sub={`🔥 ${p.streak} day streak`}
-          to="/achievements"
-        />
-        <RowLink
-          icon="👨‍👩‍👧"
-          tone="blue"
-          title="Parent Zone"
-          sub="Progress reports & controls"
-          to="/parent"
-        />
+        <div className="animate-fade-in" style={{ animationDelay: "200ms" }}>
+          <SoundToggleRow />
+        </div>
+        <div className="animate-fade-in" style={{ animationDelay: "250ms" }}>
+          <RowLink
+            icon="📓"
+            tone="orange"
+            title="My Passport"
+            sub={`${stampsCollected} ${stampsCollected === 1 ? "stamp" : "stamps"} collected`}
+            to="/passport"
+          />
+        </div>
+        <div className="animate-fade-in" style={{ animationDelay: "300ms" }}>
+          {/* Achievements with Progress Bar */}
+          <AchievementsProgressRow 
+            unlockedCount={unlockedAchievements}
+            inProgressCount={inProgressAchievements}
+            achievements={achievements}
+          />
+        </div>
+        <div className="animate-fade-in" style={{ animationDelay: "350ms" }}>
+          {/* Daily Goals */}
+          <DailyGoalsRow 
+            streak={p.streak}
+            completedStates={p.completed.length}
+          />
+        </div>
+        <div className="animate-fade-in" style={{ animationDelay: "400ms" }}>
+          {/* Parent Zone - Placeholder */}
+          <ParentZonePlaceholder />
+        </div>
       </div>
     </div>
   );
@@ -2371,11 +3143,166 @@ function SoundToggleRow() {
 }
 
 function ProfileStat({ value, label }: { value: string; label: string }) {
+  // Add encouragement messages for "0" stats
+  const getEncouragement = (val: string, lbl: string): string => {
+    if (val === "0") {
+      switch (lbl) {
+        case "XP":
+          return "Ready to start!";
+        case "States":
+          return "Time to explore!";
+        case "Badges":
+          return "Earn in quizzes!";
+        default:
+          return "Keep going!";
+      }
+    }
+    return "";
+  };
+
+  const encouragement = getEncouragement(value, label);
+
   return (
     <div className="flex flex-col items-center py-1">
       <div className="text-display text-xl font-extrabold">{value}</div>
-      <div className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">
-        {label}
+      {encouragement ? (
+        <div className="text-[9px] font-bold uppercase tracking-wider text-amber-600 leading-tight mt-0.5">
+          {encouragement}
+        </div>
+      ) : (
+        <div className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">
+          {label}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function AchievementsProgressRow({
+  unlockedCount,
+  inProgressCount,
+  achievements,
+}: {
+  unlockedCount: number;
+  inProgressCount: number;
+  achievements: Achievement[];
+}) {
+  // Find the first in-progress achievement for progress display
+  const firstInProgress = achievements.find((a) => !a.done && a.prog > 0);
+
+  return (
+    <Link
+      to="/achievements"
+      onClick={() => fxTap()}
+      className="rounded-2xl bg-white shadow-soft border border-black/5 p-3 flex flex-col gap-3 transition active:scale-[0.99]"
+    >
+      {/* Header Row */}
+      <div className="flex items-center gap-3">
+        <div className="h-12 w-12 rounded-2xl gradient-gold flex items-center justify-center text-2xl">
+          🏅
+        </div>
+        <div className="flex-1">
+          <div className="text-display font-extrabold text-[15px] leading-tight">
+            Achievements
+          </div>
+          <div className="text-[11px] font-bold text-muted-foreground">
+            {unlockedCount} unlocked
+          </div>
+        </div>
+        <div className="text-muted-foreground text-xl">›</div>
+      </div>
+
+      {/* Progress Bar for First In-Progress Achievement */}
+      {firstInProgress && (
+        <div className="mt-1">
+          <div className="flex items-center justify-between mb-1">
+            <div className="text-[13px] font-extrabold text-ink">
+              {firstInProgress.emoji} {firstInProgress.name}
+            </div>
+            <div className="text-[10px] font-bold text-muted-foreground">
+              {firstInProgress.prog}/{firstInProgress.max}
+            </div>
+          </div>
+          <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all duration-300"
+              style={{ width: `${(firstInProgress.prog / firstInProgress.max) * 100}%` }}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Info Message */}
+      {!firstInProgress && inProgressCount > 0 && (
+        <div className="text-[11px] font-bold text-amber-600 mt-1">
+          {inProgressCount} achievement{inProgressCount > 1 ? "s" : ""} to unlock!
+        </div>
+      )}
+    </Link>
+  );
+}
+
+function DailyGoalsRow({
+  streak,
+  completedStates,
+}: {
+  streak: number;
+  completedStates: number;
+}) {
+  // Get random daily goal - complete next state or replay an old one
+  const dailyGoalText = completedStates === 0 
+    ? "Complete your first state" 
+    : "Explore a new state today";
+
+  // Calculate next milestone reward
+  const nextMilestone = Math.ceil((streak + 1) / 5) * 5;
+  const daysUntilNext = nextMilestone - streak;
+
+  return (
+    <div className="rounded-2xl bg-white shadow-soft border border-black/5 p-3 flex flex-col gap-2 transition">
+      {/* Header Row */}
+      <div className="flex items-center gap-3">
+        <div className="h-12 w-12 rounded-2xl gradient-success flex items-center justify-center text-2xl">
+          🎯
+        </div>
+        <div className="flex-1">
+          <div className="text-display font-extrabold text-[15px] leading-tight">
+            Daily Goals
+          </div>
+          <div className="text-[11px] font-bold text-muted-foreground">
+            🔥 {streak} day streak
+          </div>
+        </div>
+      </div>
+
+      {/* Daily Challenge */}
+      <div className="ml-15 text-[13px] font-extrabold text-ink">
+        📍 {dailyGoalText}
+      </div>
+
+      {/* Next Reward */}
+      <div className="ml-15 text-[11px] font-bold text-amber-600">
+        {daysUntilNext === 0 
+          ? "🎁 Claim your milestone reward!" 
+          : `🎁 ${daysUntilNext} day${daysUntilNext !== 1 ? 's' : ''} until {nextMilestone}-day bonus!`}
+      </div>
+    </div>
+  );
+}
+
+function ParentZonePlaceholder() {
+  return (
+    <div className="rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-dashed border-blue-300 p-3 flex items-center gap-3 transition opacity-75">
+      <div className="h-12 w-12 rounded-2xl bg-blue-200 flex items-center justify-center text-2xl">
+        👨‍👩‍👧
+      </div>
+      <div className="flex-1">
+        <div className="text-display font-extrabold text-[15px] leading-tight text-blue-900">
+          Parent Zone
+        </div>
+        <div className="text-[11px] font-bold text-blue-700">
+          Coming soon! 👀
+        </div>
       </div>
     </div>
   );

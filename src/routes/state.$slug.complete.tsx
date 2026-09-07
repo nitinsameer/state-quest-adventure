@@ -1,5 +1,4 @@
 import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
 import { StateCompletedScreen } from "@/components/screens";
 import { getStateBySlug } from "@/lib/states";
 import { NotFoundPlace, PlaceError } from "@/components/PlaceFallbacks";
@@ -43,11 +42,8 @@ function Complete() {
   const navigate = useNavigate();
   const goNext = () => navigate({ to: "/state/$slug/postcard", params: { slug } });
 
-  useEffect(() => {
-    const t = setTimeout(goNext, 3500);
-    return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slug]);
+  // Removed auto-advance timer - kids now have agency to continue when ready
+  // onContinue button is triggered manually by child/parent
 
   return <StateCompletedScreen key={slug} stateName={name} onContinue={goNext} />;
 }
