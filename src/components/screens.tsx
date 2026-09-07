@@ -2,6 +2,8 @@ import mascot from "@/assets/mascot.png";
 import airplane from "@/assets/airplane.png";
 import { STATE_ART, TONE_GRADIENT, preloadStateArt } from "@/lib/state-art";
 import { getStateContent } from "@/lib/state-content";
+import { CardNarrationPlayer } from "@/components/CardNarrationPlayer";
+import { stopTts } from "@/lib/tts";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouter, Navigate } from "@tanstack/react-router";
@@ -1329,6 +1331,8 @@ export function LearningCardScreen({
   const art = STATE_ART[state.name];
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
   const cards = learningCardsFor(state.name);
+  const enrichedContent = getStateContent(stateName);
+  
   // cardIndex is now a main card index (0-5), not a flattened index
   // Convert it to the actual starting index in the flattened array
   const startIndexForMainCard = getMainCardStartIndex(cardIndex, cards);
@@ -1338,6 +1342,7 @@ export function LearningCardScreen({
   const [currentCardIndex, setCurrentCardIndex] = useState(i);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [showNarrationModal, setShowNarrationModal] = useState(false);
   
   useEffect(() => {
     preloadStateArt(state.name, nextStateAfter(state.name)?.name);
@@ -1347,6 +1352,16 @@ export function LearningCardScreen({
   useEffect(() => {
     setCurrentCardIndex(i);
   }, [cardIndex, stateName]);
+
+  // Stop TTS when showing narration or on unmount
+  useEffect(() => {
+    if (showNarrationModal) {
+      // Narration will play via CardNarrationPlayer
+    }
+    return () => {
+      stopTts();
+    };
+  }, [showNarrationModal]);
 
   const card = cards[currentCardIndex];
   const isLast = currentCardIndex === cards.length - 1;
@@ -1459,9 +1474,28 @@ export function LearningCardScreen({
         onTouchEnd={handleTouchEnd}
       >
         {/* Audio Button - Overlay on top-right */}
-        <button className="absolute top-3 right-3 h-14 w-14 rounded-2xl bg-white shadow-soft flex items-center justify-center text-xl hover:shadow-md active:scale-95 transition z-10">
-          🔊
-        </button>
+        {state.name === "Rajasthan" && (
+          <button
+            onClick={(e) => {
+              console.log("[AUDIO-CLICK-HANDLER] START", {
+                timestamp: new Date().toISOString(),
+                eventType: e.type,
+                buttonClickable: true,
+              });
+              e.stopPropagation();
+              console.log("[AUDIO-CLICK-HANDLER] Calling setShowNarrationModal(true)");
+              setShowNarrationModal(true);
+              console.log("[AUDIO-CLICK-HANDLER] COMPLETE - state setter invoked");
+            }}
+            onTouchEnd={(e) => {
+              e.stopPropagation();
+            }}
+            className="absolute top-3 right-3 h-14 w-14 rounded-2xl bg-white shadow-soft flex items-center justify-center text-xl hover:shadow-md active:scale-95 transition z-10"
+            title="Play narration"
+          >
+            🔊
+          </button>
+        )}
 
         {/* Replay indicator - shown when user is replaying a card */}
         {isReplaying && currentCardIndex === i && (
@@ -1517,6 +1551,35 @@ export function LearningCardScreen({
           {isLastInMainCardSection ? "Done! Back to Cards" : isLast ? "Take the Quiz! 🎯" : "Got it! Next →"}
         </button>
       </div>
+
+      {/* Narration Modal - Available for all states */}
+      {showNarrationModal && (
+        <div className="fixed inset-0 bg-black/40 flex items-end z-50">
+          <div className="w-full bg-white rounded-t-3xl shadow-2xl max-h-[80vh] overflow-y-auto">
+            <div className="px-5 pt-3 pb-5">
+              <button
+                onClick={() => setShowNarrationModal(false)}
+                className="mb-3 h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center text-xl"
+              >
+                ✕
+              </button>
+              
+              {enrichedContent ? (
+                <CardNarrationPlayer
+                  narrationId={`${state.name}-${card.mainCardIndex ?? 0}`}
+                  text={enrichedContent[["capital", "language", "food", "places", "animal", "funFact"][card.mainCardIndex ?? 0] as keyof typeof enrichedContent]?.narration || ""}
+                  title={card.title}
+                  emoji={card.icon}
+                />
+              ) : (
+                <div className="p-3 bg-red-100 text-red-800 rounded text-sm font-semibold">
+                  ❌ No enriched content found for {state.name}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -1541,7 +1604,7 @@ export function QuizScreen({
     states.find((s) => s.status !== "done")?.name ??
     states[0].name;
 
-  const questions = useMemo(() => randomQuestionsForState(activeName, 3), [activeName]);
+  const questions = useMemo(() => randomQuestionsForState(activeName, 10), [activeName]);
   const [index, setIndex] = useState(0);
   const question = questions[Math.min(index, questions.length - 1)];
 
@@ -1572,13 +1635,12 @@ export function QuizScreen({
   const isLastQuestion = index === questions.length - 1;
   const onReset = () => {
     fxTap();
-    if (result === "correct") {
-      if (isLastQuestion) {
-        onDone?.();
-        return;
-      }
-      setIndex((i) => i + 1);
+    // Always move to next question (or finish if last)
+    if (isLastQuestion) {
+      onDone?.();
+      return;
     }
+    setIndex((i) => i + 1);
     setResult(null);
     setSelected(null);
   };
@@ -1623,7 +1685,7 @@ export function QuizScreen({
           {result === "correct"
             ? "Nailed it! 🎉"
             : result === "wrong"
-            ? "So close — try again!"
+            ? "Good try! Let's move on! 👉"
             : "You've got this! 💪"}
           <div className="absolute left-0 top-1/2 -translate-x-1 -translate-y-1/2 w-3 h-3 rotate-45 bg-white" />
         </div>
@@ -1698,7 +1760,9 @@ export function QuizScreen({
               ? "Finish Quiz 🎉"
               : "Next Question →"
             : result === "wrong"
-            ? "Try Again"
+            ? isLastQuestion
+              ? "Finish Quiz 🎉"
+              : "Next Question →"
             : "Check Answer"}
         </button>
       </div>

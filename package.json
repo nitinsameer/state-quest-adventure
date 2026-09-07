@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build && node wrap-html.mjs",
+    "build": "vite build && node wrap-html.mjs && node scripts/copy-assets-to-android.mjs",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
@@ -13,6 +13,7 @@
     "validate:android": "node scripts/validate-android-build.mjs"
   },
   "dependencies": {
+    "@capacitor-community/text-to-speech": "^5.1.0",
     "@capacitor/filesystem": "^6.0.4",
     "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-accordion": "^1.2.12",

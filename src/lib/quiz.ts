@@ -80,6 +80,7 @@ export function questionsForState(state: IndiaState): QuizQuestion[] {
     build(state, "monument", "Monument", `Which famous place can you visit in ${state.name}?`, state.monumentName, (s) => s.monumentName),
     build(state, "nickname", "Nickname", `${state.name} is also known as...?`, state.nickname, (s) => s.nickname),
     build(state, "population", "How Many People", `About how many people live in ${state.name}?`, state.population, (s) => s.population),
+    build(state, "fun-fact", "Cool Fact", `What's super cool about ${state.name}?`, state.funFact, (s) => s.funFact, 25),
   ];
 }
 
