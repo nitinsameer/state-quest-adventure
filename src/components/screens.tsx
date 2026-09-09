@@ -1,14 +1,16 @@
 import mascot from "@/assets/mascot.png";
 import airplane from "@/assets/airplane.png";
 import { STATE_ART, TONE_GRADIENT, preloadStateArt } from "@/lib/state-art";
-import { getStateContent } from "@/lib/state-content";
-import { stopTts, playTts } from "@/lib/tts";
+import { getStateContent, getCardContent, getCardContentByAge } from "@/lib/state-content";
+import { stopTts, playTts, playStateNarration } from "@/lib/tts";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { PassportSprout } from "@/components/PassportSprout";
 import { PassportSeedling } from "@/components/PassportSeedling";
 import { PassportSapling } from "@/components/PassportSapling";
 import { PassportMightyTree } from "@/components/PassportMightyTree";
 import { getPassportVariant } from "@/lib/passport-helpers";
+import { LanguageToggle, type LanguageCode } from "@/components/LanguageToggle";
+import { PostcardModal } from "@/components/PostcardModal";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouter, Navigate } from "@tanstack/react-router";
 import { fxCorrect, fxWrong, fxConfetti, fxStamp, fxTap, useSoundOn, setSoundOn } from "@/lib/fx";
@@ -46,6 +48,7 @@ import {
   isCardReplaying,
   getReplayCount,
   type Achievement,
+  type PostcardData,
 } from "@/lib/progress";
 
 
@@ -922,6 +925,12 @@ export function JourneyMapScreen() {
     appLogger.info('journey_map_screen', 'view state changed', view);
   }, [view]);
 
+  // Preload all state images for smooth rendering
+  useEffect(() => {
+    const stateNames = states.map((s) => s.name);
+    preloadStateArt(...stateNames);
+  }, [states]);
+
   appLogger.info('journey_map_screen', 'Rendering with states.length=' + (states ? states.length : 'undefined') + ', states=' + (states ? JSON.stringify(states.slice(0, 2)) : 'null'));
 
   // Two collectible routes: the 28 states, then the 8 union territories.
@@ -1208,18 +1217,40 @@ export function JourneyMapScreen() {
                     isNext ? "animate-bounce-gentle" : ""
                   } ${n.status === "locked" && !isNext ? "opacity-75 hover:opacity-100" : ""}`}
                 >
-                  <div
-                    className={`h-16 w-16 rounded-full border-4 flex items-center justify-center text-2xl shadow-lg transition ${
-                      isCompleted
-                        ? n.isUT
-                          ? "gradient-explorer border-white text-white"
-                          : "gradient-gold border-white text-white"
-                        : isNext
-                        ? "gradient-saffron border-white text-white animate-pulse"
-                        : `bg-white/70 border-white text-neutral-400 ${n.isUT ? "border-dashed" : ""} ${n.status === "locked" ? "animate-shimmer" : ""}`
-                    }`}
-                  >
-                    {isCompleted ? "⭐" : isNext ? "▶" : n.isUT ? "🏝️" : "🔒"}
+                  {/* State/UT Image with Status Badge */}
+                  <div className="relative">
+                    <div
+                      className={`h-20 w-20 rounded-full border-4 overflow-hidden shadow-lg transition flex items-center justify-center ${
+                        isCompleted
+                          ? n.isUT
+                            ? "gradient-explorer border-white"
+                            : "gradient-gold border-white"
+                          : isNext
+                          ? "gradient-saffron border-white animate-pulse"
+                          : `border-white ${n.isUT ? "border-dashed" : ""} ${n.status === "locked" ? "bg-white/70 animate-shimmer" : "bg-white/70"}`
+                      }`}
+                    >
+                      {STATE_ART[n.name] ? (
+                        <img
+                          src={STATE_ART[n.name]}
+                          alt={n.name}
+                          className={`w-full h-full object-cover transition-opacity ${
+                            n.status === "locked" ? "opacity-60" : "opacity-100"
+                          }`}
+                        />
+                      ) : (
+                        <span className="text-2xl">{n.isUT ? "🏝️" : "📍"}</span>
+                      )}
+                    </div>
+                    
+                    {/* Status Badge Overlay */}
+                    <div className="absolute -bottom-1 -right-1 h-7 w-7 rounded-full border-2 border-white flex items-center justify-center text-sm font-bold shadow-md transition"
+                      style={{
+                        backgroundColor: isCompleted ? "#22c55e" : isNext ? "#f59e0b" : "#e5e7eb",
+                      }}
+                    >
+                      {isCompleted ? "✓" : isNext ? "▶" : "🔒"}
+                    </div>
                   </div>
                   <div
                     className={`mt-1 text-[11px] font-extrabold px-2 py-0.5 rounded-full whitespace-nowrap transition ${
@@ -1272,7 +1303,7 @@ export function JourneyMapScreen() {
         />
       )}
 
-      <BottomNav active="map" />
+      {/* BottomNav moved to root layout for consistency */}
     </div>
   );
 }
@@ -1583,7 +1614,7 @@ export type EnhancedCard = {
   mainCardIndex?: number; // Track which main card this belongs to (0-5)
 };
 
-function learningCardsFor(stateName?: string): EnhancedCard[] {
+function learningCardsFor(stateName?: string, displayLanguage: string = "en", ageBand: string = "8-9"): EnhancedCard[] {
   const state = getState(stateName);
   const enrichedContent = getStateContent(stateName);
   
@@ -1643,13 +1674,24 @@ function learningCardsFor(stateName?: string): EnhancedCard[] {
   const allCards: EnhancedCard[] = [];
 
   mainCardDefinitions.forEach((def, mainIndex) => {
+    // Get the correct card content based on selected language AND age band
+    const enrichedCard = enrichedContent ? enrichedContent[def.enrichedKey] : undefined;
+    
+    // If enriched content exists and has language variants, get the language-specific version
+    // Also filter by age band for age-appropriate content
+    let cardContent = enrichedCard ? getCardContentByAge(stateName, def.enrichedKey, displayLanguage, ageBand) : null;
+    
+    // Use enriched content if available and in selected language, otherwise fall back to default
+    const body = cardContent?.mainText || def.body;
+    const title = cardContent?.title || def.title;
+
     // Add main card
     allCards.push({
       kicker: def.kicker,
-      title: def.title,
+      title: title,
       icon: def.icon,
       chip: def.chip,
-      body: def.body,
+      body: body,
       type: "main",
       gradient: "gradient-sky",
       chipTone: "orange",
@@ -1657,56 +1699,52 @@ function learningCardsFor(stateName?: string): EnhancedCard[] {
     });
 
     // Add enriched content layers if available
-    if (enrichedContent) {
-      const enrichedCard = enrichedContent[def.enrichedKey];
-      
-      if (enrichedCard) {
-        // Add Cool Facts
-        if (enrichedCard.coolFacts && enrichedCard.coolFacts.length > 0) {
-          enrichedCard.coolFacts.forEach((fact, idx) => {
-            allCards.push({
-              kicker: "Cool Fact",
-              title: `Cool Fact #${idx + 1}`,
-              icon: "⭐",
-              chip: "Cool Fact",
-              body: fact,
-              type: "coolFact",
-              gradient: "gradient-amber",
-              chipTone: "amber",
-              mainCardIndex: mainIndex,
-            });
-          });
-        }
-
-        // Add Did You Know
-        if (enrichedCard.didYouKnow) {
+    if (cardContent) {
+      // Add Cool Facts
+      if (cardContent.coolFacts && cardContent.coolFacts.length > 0) {
+        cardContent.coolFacts.forEach((fact, idx) => {
           allCards.push({
-            kicker: "Trivia",
-            title: "Did You Know?",
-            icon: "🤔",
-            chip: "Did You Know?",
-            body: enrichedCard.didYouKnow,
-            type: "didYouKnow",
-            gradient: "gradient-purple",
-            chipTone: "purple",
+            kicker: "Cool Fact",
+            title: `Cool Fact #${idx + 1}`,
+            icon: "⭐",
+            chip: "Cool Fact",
+            body: fact,
+            type: "coolFact",
+            gradient: "gradient-amber",
+            chipTone: "amber",
             mainCardIndex: mainIndex,
           });
-        }
+        });
+      }
 
-        // Add Try This Activity
-        if (enrichedCard.tryThis) {
-          allCards.push({
-            kicker: "Activity",
-            title: "Try This Activity",
-            icon: "🎮",
-            chip: "Try This Activity",
-            body: enrichedCard.tryThis,
-            type: "tryThis",
-            gradient: "gradient-green",
-            chipTone: "green",
-            mainCardIndex: mainIndex,
-          });
-        }
+      // Add Did You Know
+      if (cardContent.didYouKnow) {
+        allCards.push({
+          kicker: "Trivia",
+          title: "Did You Know?",
+          icon: "🤔",
+          chip: "Did You Know?",
+          body: cardContent.didYouKnow,
+          type: "didYouKnow",
+          gradient: "gradient-purple",
+          chipTone: "purple",
+          mainCardIndex: mainIndex,
+        });
+      }
+
+      // Add Try This Activity
+      if (cardContent.tryThis) {
+        allCards.push({
+          kicker: "Activity",
+          title: "Try This Activity",
+          icon: "🎮",
+          chip: "Try This Activity",
+          body: cardContent.tryThis,
+          type: "tryThis",
+          gradient: "gradient-green",
+          chipTone: "green",
+          mainCardIndex: mainIndex,
+        });
       }
     }
   });
@@ -1739,19 +1777,26 @@ export function LearningCardScreen({
   const state = getState(stateName);
   const art = STATE_ART[state.name];
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
-  const cards = learningCardsFor(state.name);
+  
+  // Declare ALL state hooks FIRST, before any computations
+  const [displayLanguage, setDisplayLanguage] = useState<LanguageCode>("en");
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [playingCardIndex, setPlayingCardIndex] = useState<number | null>(null);
+  
+  // Now compute cards using displayLanguage and ageBand (which are now declared)
+  const cards = useMemo(() => {
+    return learningCardsFor(state.name, displayLanguage, progress.ageBand);
+  }, [state.name, displayLanguage, progress.ageBand]);
+  
   const enrichedContent = getStateContent(stateName);
   
-  // cardIndex is now a main card index (0-5), not a flattened index
-  // Convert it to the actual starting index in the flattened array
+  // Now compute derived values from cards
   const startIndexForMainCard = getMainCardStartIndex(cardIndex, cards);
   const i = Math.min(Math.max(startIndexForMainCard, 0), cards.length - 1);
   const isReplaying = progress.cards?.[state.name]?.includes(i) ?? false;
   const replayCount = getReplayCount(progress, state.name, i);
-  const [currentCardIndex, setCurrentCardIndex] = useState(i);
-  const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = useState<number | null>(null);
-  const [playingCardIndex, setPlayingCardIndex] = useState<number | null>(null);
   
   useEffect(() => {
     preloadStateArt(state.name, nextStateAfter(state.name)?.name);
@@ -1759,8 +1804,10 @@ export function LearningCardScreen({
 
   // Reset card index when cardIndex prop changes (for replay scenarios)
   useEffect(() => {
-    setCurrentCardIndex(i);
-  }, [cardIndex, stateName]);
+    const startIndexForMainCard = getMainCardStartIndex(cardIndex, cards);
+    const newI = Math.min(Math.max(startIndexForMainCard, 0), cards.length - 1);
+    setCurrentCardIndex(newI);
+  }, [cardIndex, stateName]); // Don't include 'cards' - language changes shouldn't reset position
 
   // Stop TTS on unmount
   useEffect(() => {
@@ -1772,12 +1819,17 @@ export function LearningCardScreen({
   const card = cards[currentCardIndex];
   const isLast = currentCardIndex === cards.length - 1;
 
+  // Safety check: ensure card exists
+  if (!card) {
+    return <LoadingScreen />;
+  }
+
   // Find the main card index for the current card
-  const currentMainCardIndex = card.mainCardIndex;
+  const currentMainCardIndex = card?.mainCardIndex ?? -1;
   
   // Find where the current main card section ends
   let mainCardSectionEnd = currentCardIndex;
-  while (mainCardSectionEnd < cards.length - 1 && cards[mainCardSectionEnd + 1].mainCardIndex === currentMainCardIndex) {
+  while (mainCardSectionEnd < cards.length - 1 && cards[mainCardSectionEnd + 1]?.mainCardIndex === currentMainCardIndex) {
     mainCardSectionEnd++;
   }
 
@@ -1872,6 +1924,15 @@ export function LearningCardScreen({
         <h2 className="text-display text-2xl font-extrabold leading-tight mt-1">
           {card.title}
         </h2>
+        
+        {/* Language Toggle - only show for Andhra Pradesh */}
+        {stateName === "Andhra Pradesh" && (
+          <LanguageToggle
+            currentLanguage={displayLanguage as LanguageCode}
+            availableLanguages={["en", "te"] as LanguageCode[]}
+            onLanguageChange={(lang) => setDisplayLanguage(lang)}
+          />
+        )}
       </div>
 
       <div 
@@ -1895,10 +1956,10 @@ export function LearningCardScreen({
                 .replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, "")
                 .replace(/\s+/g, " ")
                 .trim();
-              playTts(`card-${state.name}-${currentCardIndex}`, textToRead, {
+              playStateNarration(`card-${state.name}-${currentCardIndex}`, state.name, textToRead, {
                 speed: 0.85,
                 pitch: 1.05,
-              });
+              }, displayLanguage);
               setPlayingCardIndex(currentCardIndex);
             }
           }}
@@ -1966,7 +2027,7 @@ export function LearningCardScreen({
           }}
           className={`w-full h-14 rounded-2xl ${grad} text-white text-display text-lg font-extrabold shadow-[var(--shadow-glow-orange)]`}
         >
-          {isLastInMainCardSection ? "Done! Back to Cards" : isLast ? "Take the Quiz! 🎯" : "Got it! Next →"}
+          {isLastInMainCardSection ? (currentMainCardIndex === 5 ? "Take the Quiz! 🎯" : "Done! Back to Cards") : "Got it! Next →"}
         </button>
       </div>
     </div>
@@ -2427,14 +2488,15 @@ function Stamp({
   date,
   tone,
   filled,
+  onSelect,
 }: {
   stateName?: string;
   name: string;
   date: string;
   tone: "orange" | "blue" | "green" | "gold";
   filled?: boolean;
+  onSelect?: (stateName: string) => void;
 }) {
-  const navigate = useNavigate();
   const color = {
     orange: "#FF7A1A",
     blue: "#2E7DFF",
@@ -2454,13 +2516,9 @@ function Stamp({
       type="button"
       onClick={() => {
         fxStamp();
-        // Navigate to learning hub for replay
-        if (stateName) {
-          appLogger.info('passport_stamp', 'Opening learning hub for replay: ' + stateName);
-          navigate({
-            to: "/state/$slug/learn",
-            params: { slug: stateSlug(stateName) },
-          });
+        if (stateName && onSelect) {
+          appLogger.info('passport_stamp', 'Viewing achievement: ' + stateName);
+          onSelect(stateName);
         }
       }}
       className="relative aspect-square rounded-2xl bg-[#f5e6c8] flex flex-col items-center justify-center active:scale-95 transition-transform cursor-pointer"
@@ -2648,7 +2706,6 @@ export function BadgesScreen() {
     state: string;
     badge: (typeof rows[0]["badges"][0]) & { index: number };
   } | null>(null);
-  const [expandedRegion, setExpandedRegion] = useState<string | null>(null);
 
   // Age-optimized layouts
   const INDIAN_REGIONS = {
@@ -2747,7 +2804,7 @@ export function BadgesScreen() {
             );
             if (regionStates.length === 0) return null;
 
-            const isExpanded = expandedRegion === region[0];
+            const isExpanded = actualExpandedRegion === region[0];
 
             return (
               <div key={region[0]} className="animate-fade-in" style={{ animationDelay: `${100 + regionIdx * 50}ms` }}>

@@ -59,17 +59,14 @@ export function ExpandableCard({
 
   return (
     <div className={`w-full ${backgroundColor} rounded-2xl border-2 ${borderColor} p-4 transition-all duration-300`}>
-      {/* Header */}
+      {/* Header with Main Text moved here */}
       <div className="flex items-start gap-3 mb-3">
         <div className="text-4xl flex-shrink-0">{emoji}</div>
         <div className="flex-1 min-w-0">
           <h3 className="text-display font-extrabold text-lg leading-snug text-gray-900">{title}</h3>
+          {/* Main Text positioned just above key facts to preserve space */}
+          <p className="text-xs font-semibold text-gray-700 leading-relaxed mt-1.5">{mainText}</p>
         </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="mb-3 px-1">
-        <p className="text-sm font-semibold text-gray-800 leading-relaxed">{mainText}</p>
       </div>
 
       {/* Key Facts Section */}
