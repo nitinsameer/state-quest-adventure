@@ -15,6 +15,7 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouter, Navigate } from "@tanstack/react-router";
 import { fxCorrect, fxWrong, fxConfetti, fxStamp, fxTap, useSoundOn, setSoundOn } from "@/lib/fx";
 import { appLogger } from "@/lib/logger";
+import { isBilingual, getAvailableLanguages } from "@/lib/bilingual-config";
 import {
   INDIA_STATES,
   TOTAL_STATES,
@@ -960,26 +961,9 @@ export function JourneyMapScreen() {
   let y = 70;
   let idx = 0;
   
-  // Age-optimized state filtering
-  const getFilteredRoutes = () => {
-    if (p.ageBand === "3-5") {
-      // Sprout: Show only 3 states
-      return routes.map(r => ({
-        ...r,
-        items: r.items.slice(0, r.key === "states" ? 3 : 0)
-      })).filter(r => r.items.length > 0);
-    } else if (p.ageBand === "6-7") {
-      // Seedling: Show 10 states
-      return routes.map(r => ({
-        ...r,
-        items: r.items.slice(0, r.key === "states" ? 10 : 0)
-      })).filter(r => r.items.length > 0);
-    }
-    // Sapling & Mighty Tree: Show all
-    return routes;
-  };
-
-  const filteredRoutes = getFilteredRoutes();
+  // Show all states for all age bands (removed age-based filtering)
+  // All states are available regardless of age band for equal access
+  const filteredRoutes = routes;
 
   for (const route of filteredRoutes) {
     const done = route.items.filter((s) => s.status === "done").length;
@@ -1916,32 +1900,15 @@ export function LearningCardScreen({
         <div className="text-display font-extrabold text-saffron">
           {currentCardIndex + 1}/{cards.length}
         </div>
-      </div>
 
-      <div className="px-5 mt-2">
-        <div className="text-xs font-black uppercase tracking-wider text-saffron">
-          {state.name} · {card.kicker}
-        </div>
-        <h2 className="text-display text-2xl font-extrabold leading-tight mt-1">
-          {card.title}
-        </h2>
-      </div>
-
-      <div 
-        className={`mx-5 mt-4 rounded-3xl shadow-soft border border-black/5 p-4 flex-1 flex flex-col relative overflow-hidden ${card.gradient}`}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-      >
-        {/* Language Toggle - on top-left for Andhra Pradesh */}
-        {stateName === "Andhra Pradesh" && (
-          <div className="absolute top-3 left-3 z-10">
-            <LanguageToggle
-              currentLanguage={displayLanguage as LanguageCode}
-              availableLanguages={["en", "te"] as LanguageCode[]}
-              onLanguageChange={(lang) => setDisplayLanguage(lang)}
-              variant="header"
-            />
-          </div>
+        {/* Language Toggle - Header variant */}
+        {isBilingual(stateName) && (
+          <LanguageToggle
+            currentLanguage={displayLanguage as LanguageCode}
+            availableLanguages={getAvailableLanguages(stateName)}
+            onLanguageChange={(lang) => setDisplayLanguage(lang)}
+            variant="header"
+          />
         )}
 
         {/* Audio Button - Play current card content instantly */}
@@ -1970,7 +1937,7 @@ export function LearningCardScreen({
           onTouchEnd={(e) => {
             e.stopPropagation();
           }}
-          className={`absolute top-3 right-3 h-14 w-14 rounded-2xl shadow-soft flex items-center justify-center text-2xl transition-all active:scale-95 z-10 ${
+          className={`h-10 w-10 rounded-full shadow-soft flex items-center justify-center text-lg transition-all active:scale-95 ${
             playingCardIndex === currentCardIndex
               ? "bg-gradient-to-br from-orange-400 to-red-500 text-white shadow-lg animate-pulse"
               : "bg-white hover:shadow-md"
@@ -1979,6 +1946,22 @@ export function LearningCardScreen({
         >
           {playingCardIndex === currentCardIndex ? "⏸️" : "🔊"}
         </button>
+      </div>
+
+      <div className="px-5 mt-2">
+        <div className="text-xs font-black uppercase tracking-wider text-saffron">
+          {state.name} · {card.kicker}
+        </div>
+        <h2 className="text-display text-2xl font-extrabold leading-tight mt-1">
+          {card.title}
+        </h2>
+      </div>
+
+      <div 
+        className={`mx-5 mt-4 rounded-3xl shadow-soft border border-black/5 p-4 flex-1 flex flex-col relative overflow-hidden ${card.gradient}`}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
 
         {/* Replay indicator - shown when user is replaying a card */}
         {isReplaying && currentCardIndex === i && (
