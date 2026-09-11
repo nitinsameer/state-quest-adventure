@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { useProgress } from "@/lib/progress";
+import { useProgress, type PostcardData } from "@/lib/progress";
 import { getProgressPercentage } from "@/lib/passport-helpers";
 import { INDIA_STATES } from "@/lib/states";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
+import { PostcardModal } from "@/components/PostcardModal";
 import { fxTap } from "@/lib/fx";
 
 /**
@@ -14,20 +15,39 @@ export function PassportSapling() {
   const progress = useProgress();
   const navigate = useNavigate();
   const [burst, setBurst] = useState(0);
+  const [selectedPostcard, setSelectedPostcard] = useState<PostcardData | null>(null);
 
   const progressPct = getProgressPercentage(progress);
   const level = Math.floor(progress.xp / 400);
   const xpToNextLevel = Math.max(0, (level + 1) * 400 - progress.xp);
   const streak = progress.streak || 0; // Placeholder: would come from tracking
 
-  const handleStateClick = (slug: string) => {
+  const handleStateClick = (slug: string, isUnlocked: boolean) => {
     fxTap();
+    // If state is completed, show postcard first (with celebration)
+    if (isUnlocked) {
+      const stateName = INDIA_STATES.find(s => s.name.toLowerCase().replace(/\s+/g, "-") === slug)?.name;
+      if (stateName && progress.postcards[stateName]) {
+        setSelectedPostcard(progress.postcards[stateName]);
+        setBurst(b => b + 1);
+        return;
+      }
+    }
+    // Otherwise navigate to learn screen
     navigate({ to: "/state/$slug/learn", params: { slug } });
   };
 
   return (
     <div className="w-full h-full bg-gradient-to-b from-blue-50 to-white flex flex-col overflow-hidden">
       <ConfettiBurst trigger={burst} size="big" />
+
+      {/* Postcard Modal - shown on same screen */}
+      {selectedPostcard && (
+        <PostcardModal
+          postcard={selectedPostcard}
+          onClose={() => setSelectedPostcard(null)}
+        />
+      )}
 
       {/* Header */}
       <div className="px-5 pt-4 pb-3 bg-gradient-to-r from-blue-400 to-purple-400 text-white rounded-b-3xl shadow-lg">
@@ -77,7 +97,7 @@ export function PassportSapling() {
             return (
               <button
                 key={state.name}
-                onClick={() => handleStateClick(slug)}
+                onClick={() => handleStateClick(slug, isUnlocked)}
                 className={`aspect-square rounded-2xl flex flex-col items-center justify-center gap-1 transition transform text-xs font-bold ${
                   isUnlocked
                     ? "bg-gradient-to-br from-yellow-300 to-amber-400 text-amber-900 shadow-md hover:shadow-lg active:scale-95"

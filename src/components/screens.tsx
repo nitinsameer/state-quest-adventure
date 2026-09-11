@@ -914,6 +914,7 @@ function StateDetailModal({
 }
 
 export function JourneyMapScreen() {
+  const navigate = useNavigate();
   const p = useProgress();
   const states = statesWithProgress(p);
   const [view, setView] = useState<{ screen: "intro" | "hub" | "card" | "quiz"; name: string; cardIndex?: number } | null>(null);
@@ -1924,15 +1925,6 @@ export function LearningCardScreen({
         <h2 className="text-display text-2xl font-extrabold leading-tight mt-1">
           {card.title}
         </h2>
-        
-        {/* Language Toggle - only show for Andhra Pradesh */}
-        {stateName === "Andhra Pradesh" && (
-          <LanguageToggle
-            currentLanguage={displayLanguage as LanguageCode}
-            availableLanguages={["en", "te"] as LanguageCode[]}
-            onLanguageChange={(lang) => setDisplayLanguage(lang)}
-          />
-        )}
       </div>
 
       <div 
@@ -1940,6 +1932,18 @@ export function LearningCardScreen({
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
+        {/* Language Toggle - on top-left for Andhra Pradesh */}
+        {stateName === "Andhra Pradesh" && (
+          <div className="absolute top-3 left-3 z-10">
+            <LanguageToggle
+              currentLanguage={displayLanguage as LanguageCode}
+              availableLanguages={["en", "te"] as LanguageCode[]}
+              onLanguageChange={(lang) => setDisplayLanguage(lang)}
+              variant="header"
+            />
+          </div>
+        )}
+
         {/* Audio Button - Play current card content instantly */}
         <button
           onClick={(e) => {

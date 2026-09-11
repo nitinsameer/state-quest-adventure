@@ -68,19 +68,37 @@ function build(
   return { id: `${state.name.toLowerCase().replace(/\s+/g, "-")}-${id}`, kicker, prompt, options, correct, xp };
 }
 
+/** Extract the English value from a state field that might be bilingual or simple string */
+function extractEnglishValue(value: any): string {
+  if (!value) return "";
+  if (typeof value === "string") return value;
+  if (typeof value === "object" && value.en) return value.en;
+  if (typeof value === "object" && typeof value.en === "object" && value.en.title) return value.en.title;
+  return JSON.stringify(value);
+}
+
 /** Every possible question for a state, generated from that state's own data. */
 export function questionsForState(state: IndiaState): QuizQuestion[] {
+  const capital = extractEnglishValue(state.capital);
+  const language = extractEnglishValue(state.language);
+  const food = extractEnglishValue(state.food);
+  const animalName = extractEnglishValue(state.animalName);
+  const monumentName = extractEnglishValue(state.monumentName);
+  const nickname = extractEnglishValue(state.nickname);
+  const population = extractEnglishValue(state.population);
+  const funFact = extractEnglishValue(state.funFact);
+
   return [
-    build(state, "capital", "Capital City", `What is the capital of ${state.name}?`, state.capital, (s) => s.capital),
-    build(state, "state-of-capital", "Find the State", `${state.capital} is the capital of which state?`, state.name, (s) => s.name),
+    build(state, "capital", "Capital City", `What is the capital of ${state.name}?`, capital, (s) => extractEnglishValue(s.capital)),
+    build(state, "state-of-capital", "Find the State", `${capital} is the capital of which state?`, state.name, (s) => s.name),
     build(state, "landmark", "Landmark", `Which symbol stands for ${state.name}?`, state.emoji, (s) => s.emoji),
-    build(state, "language", "Language", `Which language is mainly spoken in ${state.name}?`, state.language, (s) => s.language),
-    build(state, "food", "Famous Food", `Which tasty dish comes from ${state.name}?`, state.food, (s) => s.food),
-    build(state, "animal", "State Animal", `Which animal is the state animal of ${state.name}?`, state.animalName, (s) => s.animalName),
-    build(state, "monument", "Monument", `Which famous place can you visit in ${state.name}?`, state.monumentName, (s) => s.monumentName),
-    build(state, "nickname", "Nickname", `${state.name} is also known as...?`, state.nickname, (s) => s.nickname),
-    build(state, "population", "How Many People", `About how many people live in ${state.name}?`, state.population, (s) => s.population),
-    build(state, "fun-fact", "Cool Fact", `What's super cool about ${state.name}?`, state.funFact, (s) => s.funFact, 25),
+    build(state, "language", "Language", `Which language is mainly spoken in ${state.name}?`, language, (s) => extractEnglishValue(s.language)),
+    build(state, "food", "Famous Food", `Which tasty dish comes from ${state.name}?`, food, (s) => extractEnglishValue(s.food)),
+    build(state, "animal", "State Animal", `Which animal is the state animal of ${state.name}?`, animalName, (s) => extractEnglishValue(s.animalName)),
+    build(state, "monument", "Monument", `Which famous place can you visit in ${state.name}?`, monumentName, (s) => extractEnglishValue(s.monumentName)),
+    build(state, "nickname", "Nickname", `${state.name} is also known as...?`, nickname, (s) => extractEnglishValue(s.nickname)),
+    build(state, "population", "How Many People", `About how many people live in ${state.name}?`, population, (s) => extractEnglishValue(s.population)),
+    build(state, "fun-fact", "Cool Fact", `What's super cool about ${state.name}?`, funFact, (s) => extractEnglishValue(s.funFact), 25),
   ];
 }
 

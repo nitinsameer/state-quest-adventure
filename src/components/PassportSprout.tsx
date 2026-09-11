@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { useProgress } from "@/lib/progress";
+import { useProgress, type PostcardData } from "@/lib/progress";
 import { getSproutStates, getProgressPercentage } from "@/lib/passport-helpers";
 import { INDIA_STATES } from "@/lib/states";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
+import { PostcardModal } from "@/components/PostcardModal";
 import { fxTap, fxConfetti } from "@/lib/fx";
 import mascot from "@/assets/mascot.png";
 
@@ -16,6 +17,7 @@ export function PassportSprout() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
   const [burst, setBurst] = useState(0);
+  const [selectedPostcard, setSelectedPostcard] = useState<PostcardData | null>(null);
 
   const STATES_PER_PAGE = 6;
   const sproutStates = getSproutStates(progress, 24); // Get up to 24 states (4 pages)
@@ -32,13 +34,26 @@ export function PassportSprout() {
   const handleStateClick = (stateName: string) => {
     fxTap();
     if (progress.completed.includes(stateName)) {
-      navigate({ to: "/state/$slug/learn", params: { slug: stateName.toLowerCase().replace(/\s+/g, "-") } });
+      // Show postcard with celebration
+      if (progress.postcards[stateName]) {
+        setSelectedPostcard(progress.postcards[stateName]);
+        setBurst(b => b + 1);
+        return;
+      }
     }
   };
 
   return (
     <div className="w-full h-full bg-gradient-to-b from-blue-50 to-white flex flex-col overflow-hidden">
       <ConfettiBurst trigger={burst} size="big" />
+
+      {/* Postcard Modal - shown on same screen */}
+      {selectedPostcard && (
+        <PostcardModal
+          postcard={selectedPostcard}
+          onClose={() => setSelectedPostcard(null)}
+        />
+      )}
 
       {/* Header */}
       <div className="px-5 pt-4 pb-3 bg-gradient-to-r from-blue-400 to-purple-400 text-white rounded-b-3xl shadow-lg">

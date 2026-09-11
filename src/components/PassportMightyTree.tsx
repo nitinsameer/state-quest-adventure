@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { useProgress } from "@/lib/progress";
+import { useProgress, type PostcardData } from "@/lib/progress";
 import { getProgressPercentage, getMilestones, getXpToNextLevel } from "@/lib/passport-helpers";
 import { INDIA_STATES } from "@/lib/states";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
+import { PostcardModal } from "@/components/PostcardModal";
 import { fxTap } from "@/lib/fx";
 
 /**
@@ -14,6 +15,7 @@ export function PassportMightyTree() {
   const progress = useProgress();
   const navigate = useNavigate();
   const [burst, setBurst] = useState(0);
+  const [selectedPostcard, setSelectedPostcard] = useState<PostcardData | null>(null);
 
   const progressPct = getProgressPercentage(progress);
   const level = Math.floor(progress.xp / 400);
@@ -21,14 +23,32 @@ export function PassportMightyTree() {
   const streak = progress.streak || 0;
   const milestones = getMilestones(progress);
 
-  const handleStateClick = (slug: string) => {
+  const handleStateClick = (slug: string, isUnlocked: boolean) => {
     fxTap();
+    // If state is completed, show postcard first (with celebration)
+    if (isUnlocked) {
+      const stateName = INDIA_STATES.find(s => s.name.toLowerCase().replace(/\s+/g, "-") === slug)?.name;
+      if (stateName && progress.postcards[stateName]) {
+        setSelectedPostcard(progress.postcards[stateName]);
+        setBurst(b => b + 1);
+        return;
+      }
+    }
+    // Otherwise navigate to learn screen
     navigate({ to: "/state/$slug/learn", params: { slug } });
   };
 
   return (
     <div className="w-full h-full bg-gradient-to-b from-blue-50 to-white flex flex-col overflow-hidden">
       <ConfettiBurst trigger={burst} size="big" />
+
+      {/* Postcard Modal - shown on same screen */}
+      {selectedPostcard && (
+        <PostcardModal
+          postcard={selectedPostcard}
+          onClose={() => setSelectedPostcard(null)}
+        />
+      )}
 
       {/* Header */}
       <div className="px-5 pt-4 pb-3 bg-gradient-to-r from-blue-400 to-purple-400 text-white rounded-b-3xl shadow-lg">
@@ -103,7 +123,7 @@ export function PassportMightyTree() {
               return (
                 <button
                   key={stateName}
-                  onClick={() => handleStateClick(stateName.toLowerCase().replace(/\s+/g, "-"))}
+                  onClick={() => handleStateClick(stateName.toLowerCase().replace(/\s+/g, "-"), true)}
                   className="w-full p-2 rounded-xl bg-gradient-to-r from-blue-100 to-purple-100 text-gray-800 text-sm font-semibold hover:shadow-md active:scale-95 transition text-left"
                 >
                   {state.emoji} {stateName} <span className="text-xs opacity-75">· 2d ago</span>
@@ -123,7 +143,7 @@ export function PassportMightyTree() {
               return (
                 <button
                   key={state.name}
-                  onClick={() => handleStateClick(slug)}
+                  onClick={() => handleStateClick(slug, isUnlocked)}
                   className={`aspect-square rounded-xl flex flex-col items-center justify-center gap-0.5 transition transform text-xs font-bold ${
                     isUnlocked
                       ? "bg-gradient-to-br from-yellow-300 to-amber-400 text-amber-900 shadow-md hover:shadow-lg active:scale-95"

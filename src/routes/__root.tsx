@@ -188,6 +188,16 @@ function RootComponent() {
   // Pre-auth routes that should NOT show BottomNav
   const preAuthRoutes = ['/', '/welcome', '/create'];
   const shouldShowBottomNav = !preAuthRoutes.includes(location.pathname);
+
+  // Determine which tab is active based on current pathname
+  const getActiveTab = (): "home" | "map" | "passport" | "badges" | "profile" => {
+    const path = location.pathname;
+    if (path.startsWith("/journey")) return "map";
+    if (path.startsWith("/passport")) return "passport";
+    if (path.startsWith("/badges")) return "badges";
+    if (path.startsWith("/me")) return "profile";
+    return "home"; // Default for /home or root
+  };
   
   // Pre-auth routes should use pb-safe only (no extra padding)
   // Authenticated routes need pb-[120px] to ensure content scrolls above BottomNav
@@ -298,7 +308,7 @@ function RootComponent() {
       {/* Global BottomNav - positioned fixed OUTSIDE flex container to prevent flex layout interference */}
       {shouldShowBottomNav && (
         <div className="fixed bottom-0 left-0 right-0 z-20 pb-safe">
-          <BottomNav active="home" />
+          <BottomNav active={getActiveTab()} />
         </div>
       )}
       

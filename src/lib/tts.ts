@@ -8,9 +8,10 @@
 
 import { TextToSpeech } from '@capacitor-community/text-to-speech';
 import { isSoundOn } from "./fx";
+import { getStateLanguageCode } from "./state-content";
 import * as React from "react";
 
-export type TtsLanguage = "en-IN" | "hi-IN" | "en-US";
+export type TtsLanguage = "en-IN" | "hi-IN" | "en-US" | "te-IN" | "ta-IN" | "gu-IN" | "mr-IN" | "kn-IN" | "ml-IN" | "or-IN" | "bn-IN" | "pa-IN";
 
 export interface TtsConfig {
   language: TtsLanguage;
@@ -63,6 +64,42 @@ export function playTts(
   const langCode = finalConfig.language.split("-")[0];
 
   playTtsNative(narrationId, text, finalConfig, langCode);
+}
+
+/**
+ * Play TTS narration using the state's native language
+ * Automatically selects the appropriate language for the given state
+ * Falls back to English if language code is not available
+ * 
+ * @param narrationId - Unique identifier for this narration (e.g., "andhra_capital_2024")
+ * @param stateName - Name of the state (e.g., "Andhra Pradesh", "Rajasthan")
+ * @param text - Text to narrate in the state's native language
+ * @param config - Optional TTS configuration (speed, pitch, volume)
+ * @param overrideLanguage - Optional language override (e.g., "en", "te") - if provided, uses this instead of state's native language
+ */
+export function playStateNarration(
+  narrationId: string,
+  stateName: string,
+  text: string,
+  config: Partial<TtsConfig> = {},
+  overrideLanguage?: string
+): void {
+  // Use override language if provided, otherwise get the state's native language code
+  const languageCode = overrideLanguage ?? getStateLanguageCode(stateName);
+  
+  // Convert to full TTS language code (e.g., "te" → "te-IN")
+  const ttsLanguageCode = `${languageCode}-IN` as TtsLanguage;
+  
+  console.log("[TTS] Playing state narration:", {
+    stateName,
+    languageCode,
+    ttsLanguageCode,
+    narrationId,
+    overrideLanguage,
+  });
+  
+  // Play with the state-specific language
+  playTts(narrationId, text, { ...config, language: ttsLanguageCode });
 }
 
 /**

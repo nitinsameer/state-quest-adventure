@@ -1,6 +1,15 @@
 import { useSyncExternalStore } from "react";
 import { INDIA_STATES, type IndiaState, type StateStatus } from "./states";
 
+export type BadgeId = "monument" | "animal" | "explorer";
+
+export type PostcardData = {
+  generatedAt: string; // ISO timestamp
+  state: string;
+  badge: BadgeId;
+  stampDate: string; // Display date like "12 · MAR"
+};
+
 export type Progress = {
   name: string;
   avatar: string;
@@ -15,6 +24,8 @@ export type Progress = {
   completed: string[];
   /** state name -> stamp date label */
   stamps: Record<string, string>;
+  /** state name -> postcard data (auto-generated on completion) */
+  postcards: Record<string, PostcardData>;
   /** quiz question ids already rewarded */
   answered: string[];
   /** state name -> earned badge ids */
@@ -24,8 +35,6 @@ export type Progress = {
   /** state name -> { card index -> replay count } — tracks how many times user replayed each card */
   replayCount?: Record<string, Record<number, number>>;
 };
-
-export type BadgeId = "monument" | "animal" | "explorer";
 
 export const STATE_BADGES: { id: BadgeId; name: string; xp: number }[] = [
   { id: "monument", name: "Monument", xp: 30 },
@@ -40,6 +49,23 @@ export const XP_PER_LEVEL = 400;
 export const CARDS_PER_STATE = 6;
 export const XP_PER_CARD = 25;
 
+/** Generate postcard data for a completed state */
+function generatePostcardData(stateName: string, badgeIds: BadgeId[]): PostcardData {
+  // Get the highest badge earned (explorer > animal > monument)
+  const badgePriority: Record<BadgeId, number> = { explorer: 3, animal: 2, monument: 1 };
+  const badge = badgeIds.reduce((best, current) => 
+    (badgePriority[current] > badgePriority[best] ? current : best),
+    badgeIds[0] || "monument"
+  );
+
+  return {
+    generatedAt: new Date().toISOString(),
+    state: stateName,
+    badge,
+    stampDate: stampDate(),
+  };
+}
+
 function defaultProgress(): Progress {
   return {
     name: "Explorer",
@@ -51,6 +77,7 @@ function defaultProgress(): Progress {
     lastActive: "",
     completed: [],
     stamps: {},
+    postcards: {},
     answered: [],
     badges: {},
     cards: {},
@@ -256,12 +283,18 @@ function stampDate() {
 export function completeState(name: string, xpReward = 100) {
   set((p) => {
     if (p.completed.includes(name)) return p;
+    const newBadges = [...ALL_BADGE_IDS];
+    const stampDateStr = stampDate();
     return {
       ...p,
       xp: p.xp + xpReward,
       completed: [...p.completed, name],
-      stamps: { ...p.stamps, [name]: stampDate() },
-      badges: { ...p.badges, [name]: [...ALL_BADGE_IDS] },
+      stamps: { ...p.stamps, [name]: stampDateStr },
+      postcards: { 
+        ...p.postcards, 
+        [name]: generatePostcardData(name, newBadges) 
+      },
+      badges: { ...p.badges, [name]: newBadges },
     };
   });
 }

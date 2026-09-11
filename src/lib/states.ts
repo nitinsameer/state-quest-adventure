@@ -68,7 +68,12 @@ const TONE_OVERRIDES: Record<string, StateTone> = {
   Mizoram: "green",
 };
 
-export const INDIA_STATES: IndiaState[] = raw.map((s, i) => ({
+// Sort states alphabetically and then sort UTs alphabetically, keeping them separate
+const statesOnly = raw.filter((s) => s.kind !== "ut").sort((a, b) => a.name.localeCompare(b.name));
+const uts = raw.filter((s) => s.kind === "ut").sort((a, b) => a.name.localeCompare(b.name));
+const sortedWithUTsAtEnd = [...statesOnly, ...uts];
+
+export const INDIA_STATES: IndiaState[] = sortedWithUTsAtEnd.map((s, i) => ({
   ...s,
   tone: TONE_OVERRIDES[s.name] ?? tones[i % tones.length],
 }));
