@@ -323,8 +323,47 @@ export function levelInfo(xp: number) {
   };
 }
 
+export /**
+ * TESTING MODE FLAG
+ * ⚠️ IMPORTANT: Set to FALSE before production release!
+ * 
+ * When TRUE: All states are accessible for testing (bypass normal progression)
+ * When FALSE: Normal state progression - must complete states sequentially
+ * 
+ * Production Checklist:
+ * - [ ] Set TESTING_MODE_UNLOCK_ALL_STATES = false
+ * - [ ] Remove or comment out testing-related console logs
+ * - [ ] Verify state progression works correctly
+ * - [ ] Test that locked states show lock icon properly
+ */
+const TESTING_MODE_UNLOCK_ALL_STATES = true; // TODO: DISABLE BEFORE PRODUCTION!
+
 export function statesWithProgress(p: Progress): IndiaState[] {
   let currentUsed = false;
+  
+  // TESTING MODE: Make all states playable without progression requirements
+  if (TESTING_MODE_UNLOCK_ALL_STATES) {
+    console.log('🧪 TESTING MODE ACTIVE: All states unlocked for testing');
+    return INDIA_STATES.map((s, idx) => {
+      const done = p.completed.includes(s.name);
+      let status: StateStatus = "locked";
+      
+      if (done) {
+        status = "done";
+      } else if (idx === 0) {
+        // Make first state "current" for UI indication
+        status = "current";
+      } else {
+        // Make all other states playable (not actually locked in testing mode)
+        // But keep their visual as "current" so users can click any state
+        status = "locked"; // Visual shows locked, but click handler allows access
+      }
+      
+      return { ...s, status, date: p.stamps[s.name] ?? undefined };
+    });
+  }
+  
+  // PRODUCTION MODE: Normal progression - must complete states sequentially
   return INDIA_STATES.map((s) => {
     const done = p.completed.includes(s.name);
     let status: StateStatus = "locked";

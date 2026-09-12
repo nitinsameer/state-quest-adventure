@@ -1194,7 +1194,10 @@ export function JourneyMapScreen() {
                     appLogger.info('journey_map_screen', 'CLICK EVENT on state: ' + n.name + ', status: ' + n.status);
                     fxTap();
                     setSelectedState(n.name);
-                    if (n.status !== "locked") {
+                    // TESTING MODE: Allow clicking any state (even locked ones)
+                    // In production, only allow clicking unlocked states (status !== "locked")
+                    const TESTING_MODE = true; // TODO: Sync with progress.ts flag before production
+                    if (n.status !== "locked" || TESTING_MODE) {
                       setView({ screen: "intro", name: n.name });
                     }
                   }}
