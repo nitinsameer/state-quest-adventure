@@ -67,7 +67,7 @@ export function LanguageToggle({
     return (
       <button
         onClick={handleToggle}
-        className="h-10 w-10 rounded-full bg-white shadow-soft flex items-center justify-center text-lg transition-all active:scale-95 hover:shadow-md"
+        className="h-10 w-10 rounded-full bg-white shadow-soft flex items-center justify-center text-lg transition-all active:scale-95 hover:shadow-md border border-blue-200"
         title={`Switch to ${otherDisplayName}`}
       >
         {currentLanguage === "en" ? "📖" : "🌐"}
