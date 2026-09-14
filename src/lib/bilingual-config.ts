@@ -43,6 +43,7 @@ export interface BilingualStateConfig {
  * 3. Deploy (UI automatically shows language toggle)
  */
 export const BILINGUAL_STATES: BilingualStateConfig[] = [
+  // Existing 6 states
   {
     stateName: "Andhra Pradesh",
     languages: ["en", "te"],
@@ -78,6 +79,199 @@ export const BILINGUAL_STATES: BilingualStateConfig[] = [
     languages: ["en", "bn"],
     nativeLanguage: "bn",
     nativeLanguageName: "Bengali",
+  },
+
+  // New 30 states/UTs
+  // Group 1: Hindi-speaking states
+  {
+    stateName: "Rajasthan",
+    languages: ["en", "hi"],
+    nativeLanguage: "hi",
+    nativeLanguageName: "Hindi",
+  },
+  {
+    stateName: "Madhya Pradesh",
+    languages: ["en", "hi"],
+    nativeLanguage: "hi",
+    nativeLanguageName: "Hindi",
+  },
+  {
+    stateName: "Uttar Pradesh",
+    languages: ["en", "hi"],
+    nativeLanguage: "hi",
+    nativeLanguageName: "Hindi",
+  },
+  {
+    stateName: "Bihar",
+    languages: ["en", "hi"],
+    nativeLanguage: "hi",
+    nativeLanguageName: "Hindi",
+  },
+  {
+    stateName: "Jharkhand",
+    languages: ["en", "hi"],
+    nativeLanguage: "hi",
+    nativeLanguageName: "Hindi",
+  },
+  {
+    stateName: "Uttarakhand",
+    languages: ["en", "hi"],
+    nativeLanguage: "hi",
+    nativeLanguageName: "Hindi",
+  },
+  {
+    stateName: "Haryana",
+    languages: ["en", "hi"],
+    nativeLanguage: "hi",
+    nativeLanguageName: "Hindi",
+  },
+  {
+    stateName: "Delhi",
+    languages: ["en", "hi"],
+    nativeLanguage: "hi",
+    nativeLanguageName: "Hindi",
+  },
+  {
+    stateName: "Andaman & Nicobar Islands",
+    languages: ["en", "hi"],
+    nativeLanguage: "hi",
+    nativeLanguageName: "Hindi",
+  },
+
+  // Group 2: Odisha, Kerala, Telangana
+  {
+    stateName: "Odisha",
+    languages: ["en", "or"],
+    nativeLanguage: "or",
+    nativeLanguageName: "Odia",
+  },
+  {
+    stateName: "Kerala",
+    languages: ["en", "ml"],
+    nativeLanguage: "ml",
+    nativeLanguageName: "Malayalam",
+  },
+  {
+    stateName: "Telangana",
+    languages: ["en", "te"],
+    nativeLanguage: "te",
+    nativeLanguageName: "Telugu",
+  },
+
+  // Group 3: Western states
+  {
+    stateName: "Goa",
+    languages: ["en", "kok"],
+    nativeLanguage: "kok",
+    nativeLanguageName: "Konkani",
+  },
+  {
+    stateName: "Punjab",
+    languages: ["en", "pa"],
+    nativeLanguage: "pa",
+    nativeLanguageName: "Punjabi",
+  },
+
+  // Group 4: Himalayan & Northeast states
+  {
+    stateName: "Himachal Pradesh",
+    languages: ["en", "hi"],
+    nativeLanguage: "hi",
+    nativeLanguageName: "Hindi",
+  },
+  {
+    stateName: "Assam",
+    languages: ["en", "as"],
+    nativeLanguage: "as",
+    nativeLanguageName: "Assamese",
+  },
+  {
+    stateName: "Arunachal Pradesh",
+    languages: ["en"],
+    nativeLanguage: "en",
+    nativeLanguageName: "English",
+  },
+  {
+    stateName: "Manipur",
+    languages: ["en", "mni"],
+    nativeLanguage: "mni",
+    nativeLanguageName: "Meitei",
+  },
+  {
+    stateName: "Meghalaya",
+    languages: ["en", "kha"],
+    nativeLanguage: "kha",
+    nativeLanguageName: "Khasi",
+  },
+  {
+    stateName: "Mizoram",
+    languages: ["en", "miz"],
+    nativeLanguage: "miz",
+    nativeLanguageName: "Mizo",
+  },
+  {
+    stateName: "Nagaland",
+    languages: ["en"],
+    nativeLanguage: "en",
+    nativeLanguageName: "English",
+  },
+
+  // Group 5: Chhattisgarh
+  {
+    stateName: "Chhattisgarh",
+    languages: ["en", "hne"],
+    nativeLanguage: "hne",
+    nativeLanguageName: "Chhattisgarhi",
+  },
+
+  // Union Territories
+  {
+    stateName: "Jammu & Kashmir",
+    languages: ["en", "ks"],
+    nativeLanguage: "ks",
+    nativeLanguageName: "Kashmiri",
+  },
+  {
+    stateName: "Ladakh",
+    languages: ["en", "lbj"],
+    nativeLanguage: "lbj",
+    nativeLanguageName: "Ladakhi",
+  },
+  {
+    stateName: "Sikkim",
+    languages: ["en", "ne"],
+    nativeLanguage: "ne",
+    nativeLanguageName: "Nepali",
+  },
+  {
+    stateName: "Tripura",
+    languages: ["en", "bn"],
+    nativeLanguage: "bn",
+    nativeLanguageName: "Bengali",
+  },
+  {
+    stateName: "Puducherry",
+    languages: ["en", "ta"],
+    nativeLanguage: "ta",
+    nativeLanguageName: "Tamil",
+  },
+  {
+    stateName: "Chandigarh",
+    languages: ["en", "pa"],
+    nativeLanguage: "pa",
+    nativeLanguageName: "Punjabi",
+  },
+  {
+    stateName: "Lakshadweep",
+    languages: ["en", "ml"],
+    nativeLanguage: "ml",
+    nativeLanguageName: "Malayalam",
+  },
+  {
+    stateName: "Dadra & Nagar Haveli and Daman & Diu",
+    languages: ["en", "gu"],
+    nativeLanguage: "gu",
+    nativeLanguageName: "Gujarati",
   },
 ];
 

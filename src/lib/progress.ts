@@ -336,7 +336,7 @@ export /**
  * - [ ] Verify state progression works correctly
  * - [ ] Test that locked states show lock icon properly
  */
-const TESTING_MODE_UNLOCK_ALL_STATES = true; // TODO: DISABLE BEFORE PRODUCTION!
+const TESTING_MODE_UNLOCK_ALL_STATES = false; // ✅ PRODUCTION: Testing mode disabled
 
 export function statesWithProgress(p: Progress): IndiaState[] {
   let currentUsed = false;

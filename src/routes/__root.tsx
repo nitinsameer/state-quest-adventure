@@ -13,6 +13,7 @@ import { App } from "@capacitor/app";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { useAndroidBackButton } from "../hooks/useAndroidBackButton";
+import { getJourneyBackHandler } from "../lib/journeyBackHandler";
 import { Toaster } from "@/components/ui/sonner";
 import { UnlockCelebration } from "@/components/UnlockCelebration";
 import { DebugScreen } from "@/components/DebugScreen";
@@ -181,7 +182,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const location = useLocation();
-  useAndroidBackButton();
+  
+  // Get the journey back handler dynamically so it always calls the current one
+  const handleAndroidBack = () => {
+    const handler = getJourneyBackHandler();
+    if (handler) {
+      handler();
+    }
+  };
+
+  useAndroidBackButton(handleAndroidBack);
   
   appLogger.info('root_component', 'RootComponent rendering', { pathname: location.pathname });
 

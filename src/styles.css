@@ -47,6 +47,38 @@
   --color-ink: var(--ink);
   --color-sky: var(--sky);
 
+  /* Semantic Text Colors */
+  --color-text-primary: var(--ink);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-on-saffron: oklch(1 0 0);
+  --color-text-on-explorer: oklch(1 0 0);
+  --color-text-on-success: oklch(1 0 0);
+  --color-text-on-gold: oklch(0.22 0.05 260);
+
+  /* Surface/Background Tokens */
+  --color-surface-primary: oklch(1 0 0);
+  --color-surface-secondary: var(--sky);
+  --color-surface-elevated: oklch(0.99 0.005 260);
+  --color-surface-overlay: rgba(0, 0, 0, 0.5);
+
+  /* State Colors (Interactive) */
+  --color-state-active: var(--saffron);
+  --color-state-disabled: var(--muted);
+  --color-state-hover: oklch(0.78 0.16 45);
+  --color-state-focus: var(--ring);
+
+  /* Feedback Colors */
+  --color-feedback-success: var(--success);
+  --color-feedback-warning: oklch(0.65 0.24 70);
+  --color-feedback-error: var(--destructive);
+  --color-feedback-info: var(--explorer);
+
+  /* Progression Colors */
+  --color-reward-coin: var(--gold);
+  --color-reward-gem: oklch(0.62 0.24 290);
+  --color-reward-badge: var(--saffron);
+  --color-achievement-milestone: var(--success);
+
   --shadow-soft: 0 10px 30px -12px rgb(30 41 59 / 0.15), 0 4px 10px -4px rgb(30 41 59 / 0.08);
   --shadow-pop: 0 14px 0 0 rgb(0 0 0 / 0.08);
   --shadow-glow-orange: 0 12px 30px -8px oklch(0.72 0.19 45 / 0.5);
@@ -130,16 +162,16 @@
 }
 
 @utility gradient-saffron {
-  background-image: linear-gradient(135deg, oklch(0.82 0.16 55) 0%, oklch(0.68 0.21 35) 100%);
+  background-image: linear-gradient(135deg, oklch(0.82 0.16 50) 0%, oklch(0.68 0.21 40) 100%);
 }
 @utility gradient-explorer {
-  background-image: linear-gradient(135deg, oklch(0.72 0.16 235) 0%, oklch(0.55 0.22 260) 100%);
+  background-image: linear-gradient(135deg, oklch(0.72 0.16 240) 0%, oklch(0.55 0.22 255) 100%);
 }
 @utility gradient-success {
   background-image: linear-gradient(135deg, oklch(0.82 0.17 155) 0%, oklch(0.62 0.2 150) 100%);
 }
 @utility gradient-gold {
-  background-image: linear-gradient(135deg, oklch(0.9 0.15 95) 0%, oklch(0.72 0.18 75) 100%);
+  background-image: linear-gradient(135deg, oklch(0.9 0.15 90) 0%, oklch(0.72 0.18 80) 100%);
 }
 @utility gradient-sky {
   background-image: linear-gradient(180deg, #cfe6ff 0%, #eaf4ff 60%, #ffffff 100%);

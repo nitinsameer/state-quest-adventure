@@ -14,6 +14,8 @@ import { PostcardModal } from "@/components/PostcardModal";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouter, Navigate } from "@tanstack/react-router";
 import { fxCorrect, fxWrong, fxConfetti, fxStamp, fxTap, useSoundOn, setSoundOn } from "@/lib/fx";
+import { useAndroidBackButton } from "@/hooks/useAndroidBackButton";
+import { setJourneyBackHandler } from "@/lib/journeyBackHandler";
 import { appLogger } from "@/lib/logger";
 import { isBilingual, getAvailableLanguages } from "@/lib/bilingual-config";
 import {
@@ -188,7 +190,7 @@ function HeaderBar({
         <button
           onClick={goBack}
           aria-label="Go back"
-          className="h-10 w-10 rounded-full bg-white shadow-soft flex items-center justify-center text-xl"
+          className="h-12 w-12 rounded-full bg-white shadow-soft flex items-center justify-center text-xl"
         >
           ‹
         </button>
@@ -214,7 +216,7 @@ export function SplashScreen() {
 
       <img
         src={mascot}
-        alt=""
+        alt="India Explorer mascot"
         className="w-52 h-52 object-contain drop-shadow-2xl relative z-10"
       />
       <div className="mt-4 text-center relative z-10 px-8">
@@ -246,7 +248,7 @@ export function WelcomeScreen() {
       <div className="flex-1 flex items-center justify-center pt-6">
         <div className="relative">
           <div className="absolute inset-0 blur-3xl bg-saffron/30 rounded-full" />
-          <img src={mascot} alt="" className="relative w-64 h-64 object-contain drop-shadow-xl" />
+          <img src={mascot} alt="India Explorer mascot" className="relative w-64 h-64 object-contain drop-shadow-xl" />
         </div>
       </div>
       <div className="rounded-t-[36px] bg-white px-6 pt-8 pb-safe shadow-[0_-20px_40px_-20px_rgba(0,0,0,0.15)]">
@@ -482,7 +484,7 @@ export function HomeDashboardScreen() {
         <Cloud className="absolute top-2 right-4 w-14 opacity-40" />
         <div className="flex items-center gap-3 relative">
           <div className="h-14 w-14 rounded-2xl bg-white p-1 shadow-soft">
-            <img src={mascot} alt="" className="w-full h-full object-contain" />
+            <img src={mascot} alt="Explorer mascot badge" className="w-full h-full object-contain" />
           </div>
           <div className="flex-1 text-white">
             <div className="text-xs font-bold opacity-90">Namaste,</div>
@@ -490,7 +492,7 @@ export function HomeDashboardScreen() {
               {(p?.name?.split(" ")[0] || "Explorer")}! 👋
             </div>
           </div>
-          <div className={`flex items-center gap-1.5 bg-white/25 rounded-full px-3 py-1.5 backdrop-blur transition-transform duration-1000 ${p.streak > 0 ? "animate-bounce" : ""}`}>
+          <div className={`flex items-center gap-1.5 bg-white/60 rounded-full px-3 py-1.5 backdrop-blur transition-transform duration-1000 ${p.streak > 0 ? "animate-bounce" : ""}`}>
             <span>🔥</span>
             <span className="text-white text-display font-extrabold">{p.streak}</span>
           </div>
@@ -602,7 +604,7 @@ export function HomeDashboardScreen() {
               style={{ transitionDelay: `${idx * 100}ms` }}
             >
               <div className="text-3xl">{s.emoji}</div>
-              <div className="text-display font-extrabold text-sm text-center leading-tight">
+              <div className="text-display font-extrabold text-sm text-center leading-tight line-clamp-2">
                 {s.name}
               </div>
               <div className="text-[10px] font-extrabold text-muted-foreground">🔒 Locked</div>
@@ -923,6 +925,41 @@ export function JourneyMapScreen() {
   const STEP = 118;
   const BANNER_GAP = 96;
 
+  // Register the back handler for this screen with the global journey back handler
+  useEffect(() => {
+    const handleBack = () => {
+      appLogger.info('journey_map_screen', 'handleJourneyBack called, current view:', view?.screen);
+      
+      // Navigate back within internal views: card → hub → intro → map
+      if (view?.screen === "card" || view?.screen === "quiz") {
+        // From card or quiz, go back to hub
+        appLogger.info('journey_map_screen', 'Back from card/quiz to hub');
+        setView({ screen: "hub", name: view.name });
+        return;
+      } else if (view?.screen === "hub") {
+        // From hub, go back to intro
+        appLogger.info('journey_map_screen', 'Back from hub to intro');
+        setView({ screen: "intro", name: view.name });
+        return;
+      } else if (view?.screen === "intro") {
+        // From intro, go back to journey map
+        appLogger.info('journey_map_screen', 'Back from intro to map');
+        setView(null);
+        return;
+      }
+      // If already at journey map (view === null), don't handle - let default back behavior occur
+      appLogger.info('journey_map_screen', 'At journey map, allowing default back behavior');
+    };
+    
+    // Register this handler when component mounts or view changes
+    setJourneyBackHandler(handleBack);
+    
+    // Cleanup: remove handler when component unmounts
+    return () => {
+      setJourneyBackHandler(null);
+    };
+  }, [view]);
+
   useEffect(() => {
     appLogger.info('journey_map_screen', 'view state changed', view);
   }, [view]);
@@ -1080,7 +1117,7 @@ export function JourneyMapScreen() {
       {/* Top HUD */}
       <div className="px-5 pt-3 flex items-center gap-3 relative z-10 animate-fade-in">
         <div className="h-11 w-11 rounded-2xl bg-white shadow-soft p-1">
-          <img src={mascot} className="w-full h-full object-contain" alt="" />
+          <img src={mascot} className="w-full h-full object-contain" alt="Explorer mascot" />
         </div>
         <div className="flex-1">
           <div className="text-display font-extrabold text-ink">India Journey</div>
@@ -1266,8 +1303,7 @@ export function JourneyMapScreen() {
                 {isNext && (
                   <img
                     src={airplane}
-                    alt=""
-                    className="absolute -top-10 -right-8 w-14 h-14 object-contain drop-shadow-lg animate-bounce-gentle"
+                    alt="Airplane travel decoration"
                     style={{ transform: "rotate(20deg)" }}
                   />
                 )}
@@ -1319,7 +1355,7 @@ export function StateIntroScreen({
 
   return (
     <div className="h-full w-full flex flex-col bg-white">
-      <div className={`relative h-[46%] ${grad} overflow-hidden`}>
+      <div className={`relative py-12 ${grad} overflow-hidden`}>
         <Cloud className="absolute top-6 left-2 w-20 opacity-80" />
         <Cloud className="absolute top-14 right-2 w-16 opacity-70" />
         <button
@@ -1331,7 +1367,7 @@ export function StateIntroScreen({
               goBack();
             }
           }}
-          className="absolute top-3 left-4 h-10 w-10 rounded-full bg-white/25 backdrop-blur flex items-center justify-center text-white text-xl"
+          className="absolute top-3 left-4 h-12 w-12 rounded-full bg-white/25 backdrop-blur flex items-center justify-center text-white text-xl"
         >
           ‹
         </button>
@@ -1341,12 +1377,10 @@ export function StateIntroScreen({
         {art ? (
           <img
             src={art}
-            alt=""
-            decoding="async"
-            className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[85%] object-contain drop-shadow-2xl"
+            alt={`${stateName} state illustration`}
           />
         ) : (
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 h-[70%] aspect-square rounded-full bg-white/25 backdrop-blur flex items-center justify-center text-[68px] drop-shadow-2xl">
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 h-48 aspect-square rounded-full bg-white/25 backdrop-blur flex items-center justify-center text-[68px] drop-shadow-2xl">
             {state.emoji}
           </div>
         )}
@@ -1469,7 +1503,7 @@ export function LearningHubScreen({
                 goBack();
               }
             }}
-            className="h-10 w-10 rounded-full bg-white/25 flex items-center justify-center text-white text-xl"
+            className="h-12 w-12 rounded-full bg-white/25 flex items-center justify-center text-white text-xl"
           >
             ‹
           </button>
@@ -1883,38 +1917,45 @@ export function LearningCardScreen({
 
   return (
     <div className="h-full w-full bg-[#FDF7EF] flex flex-col">
-      <div className="px-5 pt-3 pb-2 flex items-center gap-3">
+      {/* Top Bar: Close + Progress + Language + Listen */}
+      <div className="px-5 pt-3 pb-3 flex items-center gap-2 bg-white/40 backdrop-blur-sm">
         <button
           onClick={() => {
             fxTap();
             onClose?.();
           }}
-          aria-label="Close"
-          className="h-10 w-10 rounded-full bg-white shadow-soft flex items-center justify-center text-xl"
+          aria-label="Close learning card"
+          className="h-12 w-12 rounded-full bg-white shadow-soft flex items-center justify-center text-lg font-bold"
         >
           ✕
         </button>
-        <div className="flex-1 h-3 rounded-full bg-white overflow-hidden shadow-inner">
-          <div
-            className={`h-full ${grad} transition-all`}
-            style={{ width: `${((currentCardIndex + 1) / cards.length) * 100}%` }}
-          />
-        </div>
-        <div className="text-display font-extrabold text-saffron">
-          {currentCardIndex + 1}/{cards.length}
+
+        {/* Card counter and progress bar */}
+        <div className="flex items-center gap-2 flex-1 min-w-0">
+          <div className="text-display font-extrabold text-saffron whitespace-nowrap">
+            {currentCardIndex + 1}/{cards.length}
+          </div>
+          <div className="h-2 rounded-full bg-white overflow-hidden shadow-inner flex-1">
+            <div
+              className={`h-full ${grad} transition-all`}
+              style={{ width: `${((currentCardIndex + 1) / cards.length) * 100}%` }}
+            />
+          </div>
         </div>
 
-        {/* Language Toggle - Header variant */}
+        {/* Language Dropdown */}
         {isBilingual(stateName) && (
-          <LanguageToggle
-            currentLanguage={displayLanguage as LanguageCode}
-            availableLanguages={getAvailableLanguages(stateName)}
-            onLanguageChange={(lang) => setDisplayLanguage(lang)}
-            variant="header"
-          />
+          <div className="flex items-center gap-2">
+            <LanguageToggle
+              currentLanguage={displayLanguage as LanguageCode}
+              availableLanguages={getAvailableLanguages(stateName)}
+              onLanguageChange={(lang) => setDisplayLanguage(lang)}
+              variant="header"
+            />
+          </div>
         )}
 
-        {/* Audio Button - Play current card content instantly */}
+        {/* Listen Button */}
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -1940,18 +1981,18 @@ export function LearningCardScreen({
           onTouchEnd={(e) => {
             e.stopPropagation();
           }}
-          className={`h-10 w-10 rounded-full shadow-soft flex items-center justify-center text-lg transition-all active:scale-95 ${
+          className={`h-9 px-3 rounded-full shadow-soft flex items-center justify-center gap-2 text-sm font-bold transition-all active:scale-95 whitespace-nowrap ${
             playingCardIndex === currentCardIndex
               ? "bg-gradient-to-br from-orange-400 to-red-500 text-white shadow-lg animate-pulse"
-              : "bg-white hover:shadow-md"
+              : "bg-blue-50 text-blue-600 hover:shadow-md border border-blue-200"
           }`}
           title="Play card content"
         >
-          {playingCardIndex === currentCardIndex ? "⏸️" : "🔊"}
+          {playingCardIndex === currentCardIndex ? "⏸" : "🔊"} Listen
         </button>
       </div>
 
-      <div className="px-5 mt-2">
+      <div className="px-5 mt-3">
         <div className="text-xs font-black uppercase tracking-wider text-saffron">
           {state.name} · {card.kicker}
         </div>
@@ -1979,7 +2020,7 @@ export function LearningCardScreen({
         
         <div className={`flex-1 rounded-2xl flex items-center justify-center overflow-hidden bg-white`}>
           {art && card.type === "main" && card.kicker === "Places" ? (
-            <img src={art} alt="" loading="lazy" decoding="async" className="h-full object-contain drop-shadow-xl" />
+            <img src={art} alt={`${state.name} learning card`} loading="lazy" decoding="async" className="h-full object-contain drop-shadow-xl" />
           ) : (
             <div className="text-[92px] drop-shadow-xl">{card.icon}</div>
           )}
@@ -2105,8 +2146,8 @@ export function QuizScreen({
             fxTap();
             onClose?.();
           }}
-          aria-label="Close"
-          className="h-10 w-10 rounded-full bg-white shadow-soft flex items-center justify-center text-xl"
+          aria-label="Close quiz"
+          className="h-12 w-12 rounded-full bg-white shadow-soft flex items-center justify-center text-xl"
         >
           ✕
         </button>
