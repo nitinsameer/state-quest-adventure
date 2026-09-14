@@ -127,33 +127,7 @@ export function PassportSeedling() {
         </div>
       </div>
 
-      {/* Navigation */}
-      <div className="px-5 pb-4 flex gap-2">
-        {REGION_KEYS.indexOf(selectedRegion) > 0 && (
-          <button
-            onClick={() => handleRegionChange(REGION_KEYS[REGION_KEYS.indexOf(selectedRegion) - 1])}
-            className="flex-1 h-12 rounded-2xl bg-white border-2 border-gray-300 text-gray-700 font-extrabold"
-          >
-            ← Previous Region
-          </button>
-        )}
-        {REGION_KEYS.indexOf(selectedRegion) < REGION_KEYS.length - 1 && (
-          <button
-            onClick={() => handleRegionChange(REGION_KEYS[REGION_KEYS.indexOf(selectedRegion) + 1])}
-            className="flex-1 h-12 rounded-2xl bg-gradient-to-r from-blue-400 to-purple-400 text-white font-extrabold shadow-lg"
-          >
-            Next Region →
-          </button>
-        )}
-        {REGION_KEYS.indexOf(selectedRegion) === REGION_KEYS.length - 1 && (
-          <button
-            onClick={() => navigate({ to: "/home" })}
-            className="flex-1 h-12 rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-white font-extrabold shadow-lg"
-          >
-            Back Home 🏠
-          </button>
-        )}
-      </div>
+      {/* Navigation - Removed: users navigate via region tabs and bottom nav */}
     </div>
   );
 }

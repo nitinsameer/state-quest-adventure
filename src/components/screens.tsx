@@ -2738,21 +2738,26 @@ export function BadgesScreen() {
     badge: (typeof rows[0]["badges"][0]) & { index: number };
   } | null>(null);
 
-  // Age-optimized layouts
+  // Age-optimized layouts - Unified geographic regions (6 states regions + 1 UT region)
+  // 6 geographic regions (28 states) + 1 Union Territories region (8 UTs) = 36 total
   const INDIAN_REGIONS = {
-    North: ["Jammu & Kashmir", "Himachal Pradesh", "Punjab", "Haryana", "Delhi", "Uttar Pradesh", "Uttarakhand"],
+    North: ["Punjab", "Haryana", "Himachal Pradesh", "Uttarakhand", "Uttar Pradesh", "Rajasthan"],
     South: ["Andhra Pradesh", "Telangana", "Karnataka", "Kerala", "Tamil Nadu"],
-    East: ["Assam", "Meghalaya", "Manipur", "Mizoram", "Nagaland", "Tripura", "Arunachal Pradesh", "West Bengal", "Odisha", "Jharkhand"],
-    West: ["Rajasthan", "Gujarat", "Maharashtra", "Goa"],
+    East: ["West Bengal", "Odisha", "Bihar", "Jharkhand"],
     Central: ["Madhya Pradesh", "Chhattisgarh"],
+    West: ["Gujarat", "Maharashtra", "Goa"],
+    Northeast: ["Assam", "Arunachal Pradesh", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Sikkim", "Tripura"],
+    "Union Territories": ["Delhi", "Jammu & Kashmir", "Ladakh", "Chandigarh", "Puducherry", "Andaman & Nicobar Islands", "Lakshadweep", "Dadra & Nagar Haveli and Daman & Diu"],
   };
 
   const REGION_EMOJIS: Record<string, string> = {
-    North: "🗻",
-    South: "🏖️",
-    East: "🌴",
-    West: "🏜️",
+    North: "🏔️",
+    South: "🌴",
+    East: "🌳",
     Central: "🏞️",
+    West: "🌊",
+    Northeast: "⛰️",
+    "Union Territories": "🏛️",
   };
 
   // Calculate region progress

@@ -25,55 +25,66 @@ export function getPassportVariant(ageBand: string = "8-9"): PassportVariant {
 
 /**
  * Get states grouped by region for Seedling (6-7) variant
+ * 6 geographic regions (28 states) + 1 Union Territories region (8 UTs) = 36 total
  */
 export const REGIONS: Record<
   string,
   { name: string; emoji: string; gradient: string; states: IndiaState[] }
 > = {
   north: {
-    name: "Northern States",
+    name: "Northern Region",
     emoji: "🏔️",
     gradient: "from-orange-400 to-red-500",
     states: INDIA_STATES.filter((s) =>
-      ["Rajasthan", "Gujarat", "Haryana", "Punjab", "Himachal Pradesh", "Uttarakhand", "Jammu & Kashmir", "Ladakh"].includes(s.name)
+      ["Punjab", "Haryana", "Himachal Pradesh", "Uttarakhand", "Uttar Pradesh", "Rajasthan"].includes(s.name)
     ),
   },
   south: {
-    name: "Southern States",
+    name: "Southern Region",
     emoji: "🌴",
     gradient: "from-teal-400 to-cyan-500",
     states: INDIA_STATES.filter((s) =>
-      ["Karnataka", "Kerala", "Tamil Nadu", "Andhra Pradesh", "Telangana"].includes(s.name)
+      ["Andhra Pradesh", "Telangana", "Karnataka", "Kerala", "Tamil Nadu"].includes(s.name)
     ),
   },
   east: {
-    name: "Eastern States",
+    name: "Eastern Region",
     emoji: "🌳",
     gradient: "from-green-400 to-emerald-500",
     states: INDIA_STATES.filter((s) =>
-      ["West Bengal", "Odisha", "Bihar", "Jharkhand", "Assam"].includes(s.name)
+      ["West Bengal", "Odisha", "Bihar", "Jharkhand"].includes(s.name)
+    ),
+  },
+  central: {
+    name: "Central Region",
+    emoji: "🏞️",
+    gradient: "from-amber-400 to-orange-500",
+    states: INDIA_STATES.filter((s) =>
+      ["Madhya Pradesh", "Chhattisgarh"].includes(s.name)
     ),
   },
   west: {
-    name: "Western States",
+    name: "Western Region",
     emoji: "🌊",
     gradient: "from-blue-400 to-purple-500",
-    states: INDIA_STATES.filter((s) => ["Goa", "Maharashtra"].includes(s.name)),
+    states: INDIA_STATES.filter((s) =>
+      ["Gujarat", "Maharashtra", "Goa"].includes(s.name)
+    ),
   },
   northeast: {
-    name: "Northeast States",
+    name: "Northeast Region",
     emoji: "⛰️",
     gradient: "from-pink-400 to-rose-500",
     states: INDIA_STATES.filter((s) =>
-      ["Arunachal Pradesh", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Sikkim", "Tripura", "Chhattisgarh"].includes(s.name)
+      ["Assam", "Arunachal Pradesh", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Sikkim", "Tripura"].includes(s.name)
     ),
   },
-  islands: {
-    name: "Island States",
-    emoji: "🏝️",
-    gradient: "from-cyan-400 to-blue-500",
+  unionTerritories: {
+    name: "Union Territories",
+    emoji: "🏛️",
+    gradient: "from-indigo-400 to-purple-500",
     states: INDIA_STATES.filter((s) =>
-      ["Andaman & Nicobar", "Lakshadweep", "Puducherry", "Daman & Diu", "Chandigarh"].includes(s.name)
+      ["Delhi", "Jammu & Kashmir", "Ladakh", "Chandigarh", "Puducherry", "Andaman & Nicobar Islands", "Lakshadweep", "Dadra & Nagar Haveli and Daman & Diu"].includes(s.name)
     ),
   },
 };

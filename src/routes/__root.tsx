@@ -212,7 +212,7 @@ function RootComponent() {
   // Pre-auth routes should use pb-safe only (no extra padding)
   // Authenticated routes need pb-[120px] to ensure content scrolls above BottomNav
   const isPreAuthRoute = preAuthRoutes.includes(location.pathname);
-  const scrollContainerPadding = isPreAuthRoute ? 'pb-safe' : 'pb-[120px]';
+  const scrollContainerPadding = isPreAuthRoute ? 'pb-safe' : 'pb-[80px]';
 
   // Monitor localStorage for consent changes (from dialog)
   useEffect(() => {
