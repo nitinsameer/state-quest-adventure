@@ -58,14 +58,14 @@ export function ExpandableCard({
   const hasExpandedDetails = coolFacts || didYouKnow || tryThis;
 
   return (
-    <div className={`w-full ${backgroundColor} rounded-2xl border-2 ${borderColor} p-4 transition-all duration-300`}>
+    <div className={`w-full ${backgroundColor} rounded-2xl border-2 ${borderColor} p-4 transition-all duration-300 shadow-soft`}>
       {/* Header with Main Text moved here */}
       <div className="flex items-start gap-3 mb-3">
-        <div className="text-4xl flex-shrink-0">{emoji}</div>
+        <div className="text-3xl flex-shrink-0">{emoji}</div>
         <div className="flex-1 min-w-0">
-          <h3 className="text-display font-extrabold text-lg leading-snug text-gray-900">{title}</h3>
+          <h3 className="text-display font-bold text-xl leading-snug text-gray-900">{title}</h3>
           {/* Main Text positioned just above key facts to preserve space */}
-          <p className="text-xs font-semibold text-gray-700 leading-relaxed mt-1.5">{mainText}</p>
+          <p className="text-sm font-semibold text-gray-700 leading-relaxed mt-1.5">{mainText}</p>
         </div>
       </div>
 
@@ -76,7 +76,7 @@ export function ExpandableCard({
             onClick={handleToggleExpand}
             className="w-full flex items-center justify-between mb-2 p-2 rounded-lg hover:bg-black/5 active:scale-95 transition"
           >
-            <span className="text-xs font-bold text-gray-700 uppercase tracking-wide">
+            <span className="text-xs font-bold text-gray-700">
               {isExpanded ? "📖 Hide Facts" : "✨ Cool Facts"}
             </span>
             <span className="text-lg transition-transform" style={{ transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)" }}>
@@ -118,7 +118,7 @@ export function ExpandableCard({
                 onClick={() => handleToggleDetail(0)}
                 className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-black/5 active:scale-95 transition bg-amber-50 border border-amber-200"
               >
-                <span className="text-xs font-bold text-amber-700 uppercase tracking-wide">
+                <span className="text-xs font-bold text-amber-700">
                   ⭐ More Amazing Facts
                 </span>
                 <span className="text-lg transition-transform" style={{ transform: expandedDetailIndex === 0 ? "rotate(180deg)" : "rotate(0deg)" }}>
@@ -148,7 +148,7 @@ export function ExpandableCard({
                 onClick={() => handleToggleDetail(1)}
                 className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-black/5 active:scale-95 transition bg-purple-50 border border-purple-200"
               >
-                <span className="text-xs font-bold text-purple-700 uppercase tracking-wide">
+                <span className="text-xs font-bold text-purple-700">
                   🤔 Did You Know?
                 </span>
                 <span className="text-lg transition-transform" style={{ transform: expandedDetailIndex === 1 ? "rotate(180deg)" : "rotate(0deg)" }}>
@@ -173,7 +173,7 @@ export function ExpandableCard({
                 onClick={() => handleToggleDetail(2)}
                 className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-black/5 active:scale-95 transition bg-green-50 border border-green-200"
               >
-                <span className="text-xs font-bold text-green-700 uppercase tracking-wide">
+                <span className="text-xs font-bold text-green-700">
                   🎮 Try This Activity
                 </span>
                 <span className="text-lg transition-transform" style={{ transform: expandedDetailIndex === 2 ? "rotate(180deg)" : "rotate(0deg)" }}>

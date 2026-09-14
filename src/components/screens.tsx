@@ -103,7 +103,7 @@ function Chip({
   } as const;
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold ${map[tone]}`}
+      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold ${map[tone]}`}
     >
       <span>{icon}</span>
       {children}
@@ -140,7 +140,7 @@ export function BottomNav({
             >
               <span className="text-lg leading-none">{i.icon}</span>
               <span
-                className={`text-[10px] font-extrabold ${
+                className={`text-xs font-bold ${
                   on ? "text-saffron" : "text-muted-foreground"
                 }`}
               >
@@ -220,7 +220,7 @@ export function SplashScreen() {
         className="w-52 h-52 object-contain drop-shadow-2xl relative z-10"
       />
       <div className="mt-4 text-center relative z-10 px-8">
-        <h1 className="text-display text-4xl font-extrabold text-white leading-none">
+        <h1 className="text-display text-4xl font-extrabold text-white leading-relaxed">
           India
           <br />
           Explorer
@@ -263,14 +263,14 @@ export function WelcomeScreen() {
         <Link
           to="/create"
           onClick={() => fxTap()}
-          className="mt-6 w-full h-14 rounded-2xl gradient-saffron text-white text-display text-lg font-extrabold shadow-[var(--shadow-glow-orange)] flex items-center justify-center"
+          className="mt-6 w-full h-14 rounded-2xl gradient-saffron text-white text-display text-lg font-bold shadow-[var(--shadow-glow-orange)] flex items-center justify-center"
         >
           Start My Adventure ✈️
         </Link>
         <Link
           to="/home"
           onClick={() => fxTap()}
-          className="mt-3 w-full h-12 rounded-2xl bg-explorer-soft text-explorer text-display font-extrabold flex items-center justify-center"
+          className="mt-3 w-full h-12 rounded-2xl bg-explorer-soft text-explorer text-display font-bold flex items-center justify-center active:scale-95 transition-transform"
         >
           I already have progress
         </Link>
@@ -313,10 +313,10 @@ export function CreateProfileScreen() {
         {/* Step 1: Avatar Selection */}
         <div className="rounded-3xl gradient-explorer p-5 text-white relative overflow-hidden">
           <Cloud className="absolute -top-3 right-2 w-16 opacity-40" />
-          <div className="text-xs font-black uppercase tracking-widest opacity-80">
+          <div className="text-xs font-bold tracking-wide opacity-80">
             Step 1 of 2
           </div>
-          <div className="text-display text-2xl font-extrabold mt-1">
+          <div className="text-display text-2xl font-bold mt-1">
             Pick your avatar
           </div>
           <div className="text-sm opacity-90 font-semibold">
@@ -355,7 +355,7 @@ export function CreateProfileScreen() {
 
         {/* Step 2: Name Input */}
         <div className="mt-8">
-          <label className="text-display text-sm font-extrabold text-gray-700 uppercase tracking-wider">
+          <label className="text-display text-sm font-bold text-gray-700">
             📝 Explorer name
           </label>
           <input
@@ -368,7 +368,7 @@ export function CreateProfileScreen() {
             className="mt-2 h-14 w-full rounded-2xl border-2 border-blue-300 bg-blue-50 px-4 text-display text-xl font-extrabold text-ink outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
           />
           {name && (
-            <div className="mt-2 text-center text-sm font-bold text-blue-600 animate-fade-in">
+            <div className="text-xs font-bold text-blue-600 animate-fade-in">
               Let's go, <span className="text-blue-700">{name}</span>! ✨
             </div>
           )}
@@ -376,7 +376,7 @@ export function CreateProfileScreen() {
 
         {/* Step 3: Age Selection with Vibrant Colors & Emojis */}
         <div className="mt-8 mb-6">
-          <label className="text-display text-sm font-extrabold text-gray-700 uppercase tracking-wider">
+          <label className="text-display text-sm font-bold text-gray-700">
             🎂 How old are you?
           </label>
           <div className="mt-3 space-y-2">
@@ -424,7 +424,7 @@ export function CreateProfileScreen() {
             setSaved(true);
             setTimeout(() => navigate({ to: "/home" }), 400);
           }}
-          className={`w-full h-14 rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-white text-display text-lg font-extrabold shadow-xl transition transform ${
+          className={`w-full h-14 rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-white text-display text-lg font-bold shadow-xl transition transform ${
             saved ? "scale-95 opacity-80" : "hover:shadow-2xl active:scale-95"
           }`}
         >
@@ -480,7 +480,7 @@ export function HomeDashboardScreen() {
     <div className="h-full w-full bg-[#F7F5F0] flex flex-col overflow-hidden">
 
       {/* Header with fade-in animation */}
-      <div className={`px-5 pt-3 pb-4 gradient-saffron rounded-b-[32px] relative overflow-hidden transition-opacity duration-500 ${statsVisible ? "opacity-100" : "opacity-0"}`}>
+      <div className={`px-5 pt-3 pb-3 gradient-saffron rounded-b-[32px] relative overflow-hidden transition-opacity duration-500 ${statsVisible ? "opacity-100" : "opacity-0"}`}>
         <Cloud className="absolute top-2 right-4 w-14 opacity-40" />
         <div className="flex items-center gap-3 relative">
           <div className="h-14 w-14 rounded-2xl bg-white p-1 shadow-soft">
@@ -488,7 +488,7 @@ export function HomeDashboardScreen() {
           </div>
           <div className="flex-1 text-white">
             <div className="text-xs font-bold opacity-90">Namaste,</div>
-            <div className="text-display text-lg font-extrabold leading-tight">
+            <div className="text-display text-lg font-bold leading-tight">
               {(p?.name?.split(" ")[0] || "Explorer")}! 👋
             </div>
           </div>
@@ -520,7 +520,7 @@ export function HomeDashboardScreen() {
       </div>
 
       {/* Stats with encouraging messages + count-up animation */}
-      <div className={`px-5 mt-4 relative z-10 grid grid-cols-3 gap-2.5 transition-all duration-700 ${animateStats ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}>
+      <div className={`px-5 mt-4 relative z-10 grid grid-cols-3 gap-3 transition-all duration-700 ${animateStats ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}>
         <StatCardEnhanced 
           tone="orange" 
           icon="🗺️" 
@@ -545,8 +545,8 @@ export function HomeDashboardScreen() {
       </div>
 
       {/* Continue journey - with pulse on play button */}
-      <div className="px-5 mt-4 flex-shrink-0">
-        <div className="text-display font-extrabold text-sm uppercase tracking-wider text-muted-foreground">
+      <div className="px-5 mt-4 mb-4 flex-shrink-0">
+        <div className="text-display font-bold text-sm text-muted-foreground">
           Continue your journey
         </div>
         <div className="mt-2 rounded-3xl bg-white p-4 shadow-soft border border-black/5 flex items-center gap-3">
@@ -554,20 +554,20 @@ export function HomeDashboardScreen() {
             {current.emoji}
           </div>
           <div className="flex-1">
-            <div className="text-[10px] font-black uppercase tracking-wider text-saffron">
-              {current.kind === "ut" ? "Union territory" : "Currently exploring"}
+            <div className="text-xs font-bold text-saffron">
+              {current.kind === "ut" ? "Union Territory" : "Currently Exploring"}
             </div>
-            <div className="text-display text-lg font-extrabold leading-tight">
+            <div className="text-display text-lg font-bold leading-tight">
               {current.name}
             </div>
             <div className="mt-1 flex items-center gap-1.5">
-              <div className="h-1.5 flex-1 rounded-full bg-muted overflow-hidden">
+              <div className="h-2.5 flex-1 rounded-full bg-muted overflow-hidden">
                 <div
                   className="h-full gradient-saffron transition-all duration-500"
                   style={{ width: `${(currentDone / CARDS_PER_STATE) * 100}%` }}
                 />
               </div>
-              <span className="text-[10px] font-extrabold text-muted-foreground">
+              <span className="text-xs font-bold text-muted-foreground">
                 {currentDone}/{CARDS_PER_STATE}
               </span>
             </div>
@@ -576,7 +576,7 @@ export function HomeDashboardScreen() {
             to="/state/$slug/learn"
             params={{ slug: stateSlug(current.name) }}
             onClick={() => fxTap()}
-            className="h-11 px-3 rounded-2xl gradient-saffron text-white text-display font-extrabold text-sm shadow-[var(--shadow-glow-orange)] flex items-center transition-all duration-300 hover:scale-105 active:scale-95 animate-pulse"
+            className="h-11 px-3 rounded-2xl gradient-saffron text-white text-display font-bold text-sm shadow-[var(--shadow-glow-orange)] flex items-center transition-all duration-300 hover:scale-105 active:scale-95 animate-pulse"
           >
             Play ▶
           </Link>
@@ -584,9 +584,9 @@ export function HomeDashboardScreen() {
       </div>
 
       {/* Up next - with interactive locked cards */}
-      <div className="px-5 mt-4 flex-shrink-0">
+      <div className="px-5 mt-4 mb-4 flex-shrink-0">
         <div className="flex items-center justify-between">
-          <div className="text-display font-extrabold text-sm uppercase tracking-wider text-muted-foreground">
+          <div className="text-display font-bold text-sm text-muted-foreground">
             Up next
           </div>
           <Link to="/journey" className="text-xs font-extrabold text-explorer">
@@ -604,10 +604,10 @@ export function HomeDashboardScreen() {
               style={{ transitionDelay: `${idx * 100}ms` }}
             >
               <div className="text-3xl">{s.emoji}</div>
-              <div className="text-display font-extrabold text-sm text-center leading-tight line-clamp-2">
+              <div className="text-display font-bold text-sm text-center leading-tight line-clamp-ellipsis-2">
                 {s.name}
               </div>
-              <div className="text-[10px] font-extrabold text-muted-foreground">🔒 Locked</div>
+              <div className="text-xs font-bold text-muted-foreground">🔒 Locked</div>
               <div className="text-[9px] font-semibold text-saffron mt-1">
                 Tap to see preview
               </div>
@@ -709,10 +709,10 @@ function StatCard({
   return (
     <div className={`rounded-2xl bg-white border ${border} p-3 shadow-soft`}>
       <div className="text-lg">{icon}</div>
-      <div className="text-display text-xl font-extrabold leading-none mt-1">
+      <div className="text-display text-xl font-extrabold leading-snug mt-1">
         {value}
       </div>
-      <div className="text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground">
+      <div className="text-xs font-bold text-muted-foreground">
         {label}
       </div>
     </div>
@@ -753,10 +753,10 @@ function StatCardEnhanced({
       <div className="flex items-start justify-between">
         <div>
           <div className="text-lg">{icon}</div>
-          <div className="text-display text-xl font-extrabold leading-none mt-1">
+          <div className="text-display text-xl font-extrabold leading-snug mt-1">
             {value}
           </div>
-          <div className="text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground mt-0.5">
+          <div className="text-xs font-bold text-muted-foreground mt-0.5">
             {label}
           </div>
         </div>
@@ -1121,7 +1121,7 @@ export function JourneyMapScreen() {
         </div>
         <div className="flex-1">
           <div className="text-display font-extrabold text-ink">India Journey</div>
-          <div className="text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground">
+          <div className="text-xs font-bold text-muted-foreground">
             {banners.length >= 1 
               ? `${completedStates}/${totalStates} states${banners.length >= 2 ? ` · ${banners[1].done}/${banners[1].total} UTs` : ''}`
               : 'Loading...'
@@ -1138,8 +1138,8 @@ export function JourneyMapScreen() {
       {/* Progress Bar */}
       <div className="px-5 pt-2 pb-2 animate-fade-in" style={{ animationDelay: "50ms" }}>
         <div className="flex items-center justify-between mb-1">
-          <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">Journey Progress</span>
-          <span className="text-[10px] font-extrabold text-ink">{Math.round((completedStates / totalStates) * 100)}%</span>
+          <span className="text-xs font-bold text-muted-foreground">Journey Progress</span>
+          <span className="text-xs font-bold text-ink">{Math.round((completedStates / totalStates) * 100)}%</span>
         </div>
         <div className="h-2 bg-white/50 rounded-full overflow-hidden">
           <div
@@ -1390,7 +1390,7 @@ export function StateIntroScreen({
         <div className="text-xs font-black uppercase tracking-widest text-saffron">
           Welcome to
         </div>
-        <h1 className="text-display text-4xl font-extrabold leading-none mt-1">
+        <h1 className="text-display text-4xl font-extrabold leading-snug mt-1">
           {state.name}
         </h1>
         <div className="text-sm font-bold text-muted-foreground mt-1">
@@ -1432,7 +1432,7 @@ function IntroFact({
   return (
     <div className="rounded-2xl bg-saffron-soft/60 p-3 border border-saffron/15">
       <div className="text-lg">{icon}</div>
-      <div className="text-[10px] font-black uppercase tracking-wider text-saffron mt-1">
+      <div className="text-xs font-bold text-saffron">
         {label}
       </div>
       <div className="text-display font-extrabold text-lg leading-tight">
@@ -1508,7 +1508,7 @@ export function LearningHubScreen({
             ‹
           </button>
           <div className="flex-1 text-white">
-            <div className="text-[10px] font-black uppercase tracking-widest opacity-90">
+            <div className="text-xs font-bold text-white/90">
               Learning Hub
             </div>
             <div className="text-display text-xl font-extrabold">{state.name}</div>
@@ -2056,7 +2056,7 @@ export function LearningCardScreen({
               handleNext();
             }
           }}
-          className={`w-full h-14 rounded-2xl ${grad} text-white text-display text-lg font-extrabold shadow-[var(--shadow-glow-orange)]`}
+          className={`w-full h-14 rounded-2xl ${grad} text-white text-display text-lg font-bold shadow-[var(--shadow-glow-orange)]`}
         >
           {isLastInMainCardSection ? (currentMainCardIndex === 5 ? "Take the Quiz! 🎯" : "Done! Back to Cards") : "Got it! Next →"}
         </button>
@@ -2191,7 +2191,7 @@ export function QuizScreen({
         <div className="text-[11px] font-black uppercase tracking-widest text-explorer">
           {question.kicker}
         </div>
-        <h2 className="text-display text-2xl font-extrabold leading-tight mt-1">
+        <h2 className="text-display text-2xl font-bold leading-tight mt-1">
           {question.prompt}
         </h2>
       </div>
@@ -2206,7 +2206,7 @@ export function QuizScreen({
             <button
               key={label}
               onClick={() => onSelect(label)}
-              className={`h-16 rounded-2xl px-5 flex items-center justify-between text-display text-lg font-extrabold shadow-soft border-2 transition-colors active:scale-[0.99] ${
+              className={`h-16 rounded-2xl px-5 flex items-center justify-between text-display text-lg font-bold shadow-soft border-2 transition-all active:scale-[0.99] hover:scale-[1.02] ${
                 isCorrectPick
                   ? "bg-success/10 border-success text-success"
                   : isWrongPick
@@ -2239,7 +2239,7 @@ export function QuizScreen({
         <button
           onClick={result ? onReset : onCheck}
           disabled={!selected}
-          className={`w-full h-14 rounded-2xl text-white text-display text-lg font-extrabold shadow-[var(--shadow-glow-blue)] disabled:opacity-50 ${
+          className={`w-full h-14 rounded-2xl text-white text-display text-lg font-bold shadow-[var(--shadow-glow-blue)] disabled:opacity-50 ${
             result === "correct"
               ? "bg-success"
               : result === "wrong"
@@ -2289,7 +2289,7 @@ export function CorrectAnswerScreen({ stateName }: { stateName?: string } = {}) 
             <div className="text-6xl">✅</div>
           </div>
         </div>
-        <h1 className="mt-6 text-display text-4xl font-extrabold text-white text-center leading-none">
+        <h1 className="mt-6 text-display text-4xl font-extrabold text-white text-center leading-relaxed">
           Awesome!
         </h1>
         <p className="mt-2 text-white/95 font-bold text-center">
@@ -2300,7 +2300,7 @@ export function CorrectAnswerScreen({ stateName }: { stateName?: string } = {}) 
           <span className="text-3xl">⭐</span>
           <div>
             <div className="text-xs font-bold opacity-90">You earned</div>
-            <div className="text-display text-2xl font-extrabold leading-none">
+            <div className="text-display text-2xl font-extrabold leading-snug">
               +20 XP
             </div>
           </div>
@@ -2308,7 +2308,7 @@ export function CorrectAnswerScreen({ stateName }: { stateName?: string } = {}) 
       </div>
 
       <div className="p-6 relative">
-        <button className="w-full h-14 rounded-2xl bg-white text-success text-display text-lg font-extrabold shadow-lg">
+        <button className="w-full h-14 rounded-2xl bg-white text-success text-display text-lg font-extrabold shadow-lg animate-pulse active:scale-95 transition-transform">
           Next Question →
         </button>
       </div>
@@ -2352,7 +2352,7 @@ export function StateCompletedScreen({
         <div className="text-white/90 text-xs font-black uppercase tracking-[0.3em]">
           State Complete
         </div>
-        <h1 className="text-display text-4xl font-extrabold text-white mt-1 drop-shadow leading-none">
+        <h1 className="text-display text-4xl font-extrabold text-white mt-1 drop-shadow leading-relaxed">
           {state.name} Cleared!
         </h1>
       </div>
@@ -2449,7 +2449,7 @@ export function StateUnlockScreen({
         <div className="text-white/90 text-xs font-black uppercase tracking-[0.3em]">
           New State Unlocked
         </div>
-        <h1 className="text-display text-4xl font-extrabold text-white mt-1 drop-shadow leading-none">
+        <h1 className="text-display text-4xl font-extrabold text-white mt-1 drop-shadow leading-relaxed">
           {state.name}!
         </h1>
         <p className="text-white/90 font-bold mt-1">{state.nickname}</p>
@@ -2568,7 +2568,7 @@ function Stamp({
         <div className="text-[8px] font-bold opacity-80">{date}</div>
       </div>
       <div
-        className="absolute -top-1 -right-1 text-[10px] font-black rotate-12 px-1.5 py-0.5 rounded"
+        className="absolute -top-1 -right-1 text-xs font-bold rotate-12 px-1.5 py-0.5 rounded"
         style={{ background: color, color: "white" }}
       >
         ✓
@@ -2811,10 +2811,10 @@ export function BadgesScreen() {
             🏅
           </div>
           <div className="flex-1">
-            <div className="text-[10px] font-black uppercase tracking-widest opacity-90">
+            <div className="text-xs font-bold text-white/90">
               Collection
             </div>
-            <div className="text-display text-xl font-extrabold leading-none">
+            <div className="text-display text-xl font-extrabold leading-snug">
               {earnedCount}/{totalCount} badges
             </div>
 
@@ -2900,7 +2900,7 @@ export function BadgesScreen() {
                                 setSelectedBadge({ state: r.state, badge: { ...b, index: badgeIdx } });
                               }}
                               className={`rounded-2xl p-3 flex flex-col items-center bg-white shadow-soft border transition transform hover:scale-105 active:scale-95 ${
-                                b.done ? "border-black/5" : "border-dashed border-muted-foreground/30"
+                                b.done ? "border-black/5" : "border-dashed border-muted-foreground/30 opacity-50"
                               }`}
                             >
                               <div
@@ -3258,7 +3258,7 @@ function ProfileStat({ value, label }: { value: string; label: string }) {
           {encouragement}
         </div>
       ) : (
-        <div className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">
+        <div className="text-xs font-bold text-muted-foreground">
           {label}
         </div>
       )}
@@ -3483,7 +3483,7 @@ export function AchievementsScreen() {
                   {a.title}
                 </div>
                 {a.done && (
-                  <span className="text-[10px] font-black uppercase tracking-wider bg-gold-soft text-[color:var(--gold)] px-1.5 py-0.5 rounded-full">
+                  <span className="text-xs font-bold tracking-wider bg-gold-soft text-[color:var(--gold)] px-1.5 py-0.5 rounded-full">
                     Unlocked
                   </span>
                 )}

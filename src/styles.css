@@ -176,6 +176,65 @@
 @utility gradient-sky {
   background-image: linear-gradient(180deg, #cfe6ff 0%, #eaf4ff 60%, #ffffff 100%);
 }
+
+@utility line-clamp-ellipsis-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@utility btn-primary {
+  height: 3.5rem;
+  border-radius: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  transition: all 0.3s;
+}
+
+@utility btn-secondary {
+  height: 3rem;
+  border-radius: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  transition: all 0.3s;
+}
+
+@utility btn-answer {
+  height: 4rem;
+  border-radius: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-display);
+  font-weight: 700;
+  transition: all 0.3s;
+}
+
+@utility gap-base {
+  gap: 0.75rem;
+}
+
+@utility gap-compact {
+  gap: 0.5rem;
+}
+
+@utility gap-loose {
+  gap: 1rem;
+}
+
+@utility section-spacing {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
 @utility gradient-passport {
   background-image: linear-gradient(140deg, #3b2e1e 0%, #5b4225 50%, #3b2e1e 100%);
 }

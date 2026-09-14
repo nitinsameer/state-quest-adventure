@@ -282,7 +282,7 @@ export function StatePostcardScreen({
           <div className="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl">
             <div className="text-center mb-4">
               <div className="text-5xl mb-3">📮</div>
-              <h2 className="text-display text-2xl font-extrabold text-ink">
+              <h2 className="text-display text-2xl font-bold text-ink">
                 Save Your Explorer Postcard?
               </h2>
             </div>
@@ -297,7 +297,7 @@ export function StatePostcardScreen({
                   fxTap();
                   setShowPostcardChoice(false);
                 }}
-                className="w-full h-14 rounded-2xl bg-gradient-to-r from-blue-400 to-blue-500 text-white text-display text-lg font-extrabold shadow-lg"
+                className="w-full h-14 rounded-2xl bg-gradient-to-r from-blue-400 to-blue-500 text-white text-display text-lg font-bold shadow-lg"
               >
                 ✨ Yes, Save It!
               </button>
@@ -306,7 +306,7 @@ export function StatePostcardScreen({
                   fxTap();
                   onContinue?.();
                 }}
-                className="w-full h-14 rounded-2xl bg-gray-200 text-ink text-display text-lg font-extrabold"
+                className="w-full h-14 rounded-2xl bg-gray-200 text-ink text-display text-lg font-bold"
               >
                 Skip → Continue
               </button>
@@ -319,7 +319,7 @@ export function StatePostcardScreen({
       {!showPostcardChoice && (
         <>
           <div className="pt-5 text-center px-6 relative z-10">
-            <div className="text-white/90 text-[11px] font-black uppercase tracking-[0.3em]">
+            <div className="text-white/90 text-xs font-bold tracking-wide">
               Your Explorer Postcard
             </div>
             <div className="text-white text-xs font-semibold mt-1">
@@ -339,7 +339,7 @@ export function StatePostcardScreen({
               className="w-full rounded-[28px] bg-white shadow-2xl border-4 border-white overflow-hidden animate-scale-in cursor-pointer hover:shadow-3xl active:scale-95 transition-all disabled:opacity-60 text-left"
             >
               <div className={`${grad} px-4 pt-4 pb-3 text-center text-white`}>
-                <div className="text-[10px] font-black uppercase tracking-[0.25em] opacity-90">
+                <div className="text-xs font-bold tracking-wide opacity-90">
                   Greetings from
                 </div>
                 <div className="text-display text-3xl font-extrabold leading-tight">
@@ -371,7 +371,7 @@ export function StatePostcardScreen({
                 <div className="flex items-center gap-2 rounded-2xl bg-accent px-3 py-2">
                   <span className="text-2xl">{BADGE_EMOJI[badge.id]}</span>
                   <div>
-                    <div className="text-[10px] font-black uppercase tracking-widest text-accent-foreground/70">
+                    <div className="text-xs font-bold text-accent-foreground/70">
                       Badge Earned
                     </div>
                     <div className="text-display font-extrabold text-sm text-ink">
@@ -381,7 +381,7 @@ export function StatePostcardScreen({
                 </div>
 
                 <div className="mt-3 rounded-2xl border-2 border-dashed border-border p-3">
-                  <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                  <div className="text-xs font-bold text-muted-foreground">
                     Fun fact
                   </div>
                   <p className="text-sm font-bold text-ink mt-0.5">{state.funFact}</p>
@@ -394,7 +394,7 @@ export function StatePostcardScreen({
             <button
               onClick={onShare}
               disabled={busy || showShareConfirm}
-              className="w-full h-14 rounded-2xl bg-white text-ink text-display text-lg font-extrabold shadow-xl disabled:opacity-60"
+              className="w-full h-14 rounded-2xl bg-white text-ink text-display text-lg font-bold shadow-xl disabled:opacity-60"
             >
               {busy ? "Making postcard…" : "📤 Save / Share Postcard"}
             </button>
