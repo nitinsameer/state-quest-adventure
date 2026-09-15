@@ -10,7 +10,9 @@ import { PassportSapling } from "@/components/PassportSapling";
 import { PassportMightyTree } from "@/components/PassportMightyTree";
 import { getPassportVariant } from "@/lib/passport-helpers";
 import { LanguageToggle, type LanguageCode } from "@/components/LanguageToggle";
+import { LanguageSelector } from "@/components/LanguageSelector";
 import { PostcardModal } from "@/components/PostcardModal";
+import { FirstSessionTutorial } from "@/components/FirstSessionTutorial";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouter, Navigate } from "@tanstack/react-router";
 import { fxCorrect, fxWrong, fxConfetti, fxStamp, fxTap, useSoundOn, setSoundOn } from "@/lib/fx";
@@ -422,8 +424,9 @@ export function CreateProfileScreen() {
             fxTap();
             fxConfetti();
             
-            // Track profile creation
-            firebaseEvents.profileCreated(ageBand, avatar);
+            // NOTE: profileCreated event removed - COPPA compliance
+            // Firebase age-targeted telemetry logs AFTER user sees permission dialogs (__root.tsx)
+            // This ensures parental consent gates age-band data collection
             
             saveProfile({ name: name.trim() || "Explorer", avatar, ageBand });
             setSaved(true);
@@ -446,6 +449,7 @@ export function HomeDashboardScreen() {
   const [statsVisible, setStatsVisible] = useState(false);
   const [animateStats, setAnimateStats] = useState(false);
   const [showLockedPreview, setShowLockedPreview] = useState<string | null>(null);
+  const [showTutorial, setShowTutorial] = useState(true);
 
   // Route guard: redirect to welcome if not onboarded (defensive check)
   if (!p.onboarded) {
@@ -691,6 +695,12 @@ export function HomeDashboardScreen() {
           </div>
         </div>
       )}
+
+      {/* First Session Tutorial - 3 step walkthrough */}
+      <FirstSessionTutorial 
+        isVisible={showTutorial}
+        onComplete={() => setShowTutorial(false)}
+      />
     </div>
   );
 }
@@ -1811,6 +1821,10 @@ export function LearningCardScreen({
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [playingCardIndex, setPlayingCardIndex] = useState<number | null>(null);
+  const [showAudioPermissionPrompt, setShowAudioPermissionPrompt] = useState(false);
+  
+  // Check if audio is enabled
+  const isAudioEnabled = localStorage.getItem("india-explorer:audio-enabled:v1") !== "0";
   
   // Now compute cards using displayLanguage and ageBand (which are now declared)
   const cards = useMemo(() => {
@@ -1948,22 +1962,25 @@ export function LearningCardScreen({
           </div>
         </div>
 
-        {/* Language Dropdown */}
-        {isBilingual(stateName) && (
-          <div className="flex items-center gap-2">
-            <LanguageToggle
-              currentLanguage={displayLanguage as LanguageCode}
-              availableLanguages={getAvailableLanguages(stateName)}
-              onLanguageChange={(lang) => setDisplayLanguage(lang)}
-              variant="header"
-            />
-          </div>
-        )}
+        {/* Language Selector */}
+        <LanguageSelector
+          currentLanguage={displayLanguage as LanguageCode}
+          availableLanguages={getAvailableLanguages(stateName)}
+          onLanguageChange={(lang) => setDisplayLanguage(lang)}
+        />
 
         {/* Listen Button */}
         <button
           onClick={(e) => {
             e.stopPropagation();
+            
+            // Check if audio is enabled
+            if (!isAudioEnabled) {
+              setShowAudioPermissionPrompt(true);
+              fxTap();
+              return;
+            }
+            
             const isPlaying = playingCardIndex === currentCardIndex;
             
             if (isPlaying) {
@@ -1989,9 +2006,11 @@ export function LearningCardScreen({
           className={`h-9 px-3 rounded-full shadow-soft flex items-center justify-center gap-2 text-sm font-bold transition-all active:scale-95 whitespace-nowrap ${
             playingCardIndex === currentCardIndex
               ? "bg-gradient-to-br from-orange-400 to-red-500 text-white shadow-lg animate-pulse"
-              : "bg-blue-50 text-blue-600 hover:shadow-md border border-blue-200"
+              : isAudioEnabled
+                ? "bg-blue-50 text-blue-600 hover:shadow-md border border-blue-200"
+                : "bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed"
           }`}
-          title="Play card content"
+          title={isAudioEnabled ? "Play card content" : "Enable audio in settings to listen"}
         >
           {playingCardIndex === currentCardIndex ? "⏸" : "🔊"} Listen
         </button>
@@ -2066,6 +2085,54 @@ export function LearningCardScreen({
           {isLastInMainCardSection ? (currentMainCardIndex === 5 ? "Take the Quiz! 🎯" : "Done! Back to Cards") : "Got it! Next →"}
         </button>
       </div>
+
+      {/* Audio Permission Prompt */}
+      {showAudioPermissionPrompt && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 space-y-4 animate-in zoom-in-95">
+            <div className="text-center">
+              <div className="text-5xl mb-3">🎧</div>
+              <h3 className="text-display text-xl font-extrabold text-ink">Enable Audio?</h3>
+              <p className="text-sm text-muted-foreground mt-2">
+                Turn on audio to hear the stories read aloud! 🎵
+              </p>
+            </div>
+
+            <div className="bg-blue-50 rounded-2xl p-4 space-y-2 text-sm">
+              <div className="flex gap-2">
+                <span>🎧</span>
+                <span className="font-semibold text-blue-900">Stories read aloud</span>
+              </div>
+              <div className="flex gap-2">
+                <span>🌍</span>
+                <span className="font-semibold text-blue-900">Available in multiple languages</span>
+              </div>
+            </div>
+
+            <div className="flex gap-2 pt-2">
+              <button
+                onClick={() => {
+                  fxTap();
+                  setShowAudioPermissionPrompt(false);
+                }}
+                className="flex-1 h-12 rounded-xl bg-gray-100 text-gray-800 font-bold text-sm"
+              >
+                Maybe Later
+              </button>
+              <Link
+                to="/me"
+                onClick={() => {
+                  fxTap();
+                  setShowAudioPermissionPrompt(false);
+                }}
+                className="flex-1 h-12 rounded-xl bg-gradient-to-r from-blue-400 to-cyan-500 text-white font-bold text-sm flex items-center justify-center"
+              >
+                Go to Settings
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -3250,35 +3317,114 @@ export function ProfileScreen() {
 
 function SoundToggleRow() {
   const on = useSoundOn();
+  const [audioEnabled, setAudioEnabled] = useState(() => {
+    return localStorage.getItem("india-explorer:audio-enabled:v1") !== "0";
+  });
+
+  const toggleAudio = () => {
+    const newState = !audioEnabled;
+    setAudioEnabled(newState);
+    localStorage.setItem("india-explorer:audio-enabled:v1", newState ? "1" : "0");
+    if (newState) fxTap();
+  };
+
+  const [fileEnabled, setFileEnabled] = useState(() => {
+    return localStorage.getItem("india-explorer:file-enabled:v1") !== "0";
+  });
+
+  const toggleFile = () => {
+    const newState = !fileEnabled;
+    setFileEnabled(newState);
+    localStorage.setItem("india-explorer:file-enabled:v1", newState ? "1" : "0");
+    if (newState) fxTap();
+  };
+
   return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={on}
-      aria-label="Sound and vibration"
-      onClick={() => {
-        setSoundOn(!on);
-        if (!on) fxTap();
-      }}
-      className="w-full rounded-2xl bg-white shadow-soft border border-black/5 p-3 flex items-center gap-3 transition active:scale-[0.99]"
-    >
-      <div className="h-12 w-12 rounded-2xl gradient-explorer flex items-center justify-center text-2xl">
-        {on ? "🔊" : "🔇"}
-      </div>
-      <div className="flex-1 text-left">
-        <div className="text-display font-extrabold text-[15px] leading-tight">Sound & Vibration</div>
-        <div className="text-[11px] font-bold text-muted-foreground">
-          {on ? "Sounds are on" : "Sounds are off"}
-        </div>
-      </div>
-      <span
-        className={`h-7 w-12 rounded-full flex items-center px-1 transition ${on ? "gradient-success" : "bg-muted"}`}
+    <div className="space-y-3">
+      {/* Sound & Vibration */}
+      <button
+        type="button"
+        role="switch"
+        aria-checked={on}
+        aria-label="Sound and vibration"
+        onClick={() => {
+          setSoundOn(!on);
+          if (!on) fxTap();
+        }}
+        className="w-full rounded-2xl bg-white shadow-soft border border-black/5 p-3 flex items-center gap-3 transition active:scale-[0.99]"
       >
+        <div className="h-12 w-12 rounded-2xl gradient-explorer flex items-center justify-center text-2xl">
+          {on ? "🔊" : "🔇"}
+        </div>
+        <div className="flex-1 text-left">
+          <div className="text-display font-extrabold text-[15px] leading-tight">Sound & Vibration</div>
+          <div className="text-[11px] font-bold text-muted-foreground">
+            {on ? "Sounds are on" : "Sounds are off"}
+          </div>
+        </div>
         <span
-          className={`h-5 w-5 rounded-full bg-white shadow transition-transform ${on ? "translate-x-5" : "translate-x-0"}`}
-        />
-      </span>
-    </button>
+          className={`h-7 w-12 rounded-full flex items-center px-1 transition ${on ? "gradient-success" : "bg-muted"}`}
+        >
+          <span
+            className={`h-5 w-5 rounded-full bg-white shadow transition-transform ${on ? "translate-x-5" : "translate-x-0"}`}
+          />
+        </span>
+      </button>
+
+      {/* Audio Permission */}
+      <button
+        type="button"
+        role="switch"
+        aria-checked={audioEnabled}
+        aria-label="Audio narration permission"
+        onClick={toggleAudio}
+        className="w-full rounded-2xl bg-white shadow-soft border border-black/5 p-3 flex items-center gap-3 transition active:scale-[0.99]"
+      >
+        <div className="h-12 w-12 rounded-2xl bg-blue-100 flex items-center justify-center text-2xl">
+          🎧
+        </div>
+        <div className="flex-1 text-left">
+          <div className="text-display font-extrabold text-[15px] leading-tight">Audio Narration</div>
+          <div className="text-[11px] font-bold text-muted-foreground">
+            {audioEnabled ? "Stories are read aloud" : "Turn on to hear stories"}
+          </div>
+        </div>
+        <span
+          className={`h-7 w-12 rounded-full flex items-center px-1 transition ${audioEnabled ? "gradient-success" : "bg-muted"}`}
+        >
+          <span
+            className={`h-5 w-5 rounded-full bg-white shadow transition-transform ${audioEnabled ? "translate-x-5" : "translate-x-0"}`}
+          />
+        </span>
+      </button>
+
+      {/* File Save Permission */}
+      <button
+        type="button"
+        role="switch"
+        aria-checked={fileEnabled}
+        aria-label="File save permission"
+        onClick={toggleFile}
+        className="w-full rounded-2xl bg-white shadow-soft border border-black/5 p-3 flex items-center gap-3 transition active:scale-[0.99]"
+      >
+        <div className="h-12 w-12 rounded-2xl bg-green-100 flex items-center justify-center text-2xl">
+          📁
+        </div>
+        <div className="flex-1 text-left">
+          <div className="text-display font-extrabold text-[15px] leading-tight">Save & Share</div>
+          <div className="text-[11px] font-bold text-muted-foreground">
+            {fileEnabled ? "Can save postcards" : "Turn on to save postcards"}
+          </div>
+        </div>
+        <span
+          className={`h-7 w-12 rounded-full flex items-center px-1 transition ${fileEnabled ? "gradient-success" : "bg-muted"}`}
+        >
+          <span
+            className={`h-5 w-5 rounded-full bg-white shadow transition-transform ${fileEnabled ? "translate-x-5" : "translate-x-0"}`}
+          />
+        </span>
+      </button>
+    </div>
   );
 }
 

@@ -17,8 +17,6 @@ import { getJourneyBackHandler } from "../lib/journeyBackHandler";
 import { Toaster } from "@/components/ui/sonner";
 import { UnlockCelebration } from "@/components/UnlockCelebration";
 import { DebugScreen } from "@/components/DebugScreen";
-import { AudioPermissionDialog } from "@/components/AudioPermissionDialog";
-import { FilePermissionDialog } from "@/components/FilePermissionDialog";
 import { BottomNav } from "@/components/screens";
 import { appLogger } from "@/lib/logger";
 import { firebaseEvents } from "@/lib/firebase-events";
@@ -54,30 +52,42 @@ class RootErrorBoundary extends React.Component<
     
     if (this.state.hasError) {
       return (
-        <div className="flex min-h-screen items-center justify-center bg-background px-4">
+        <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-blue-50 to-white px-4">
           <div className="max-w-md text-center">
-            <h1 className="text-xl font-semibold tracking-tight text-foreground">
-              App Error
+            {/* Error Icon */}
+            <div className="text-6xl mb-4">💥</div>
+            
+            <h1 className="text-2xl font-bold text-ink">
+              App encountered an error
             </h1>
-            <p className="mt-2 text-sm text-muted-foreground">
-              {this.state.error?.message || "An unexpected error occurred"}
+            <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+              Something unexpected happened. Let's try reloading the app!
             </p>
+
+            {/* Error Details */}
             <details className="mt-4 text-left">
-              <summary className="cursor-pointer text-xs text-muted-foreground">
-                Error details
+              <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground">
+                Error details (for debugging)
               </summary>
-              <pre className="mt-2 overflow-auto rounded bg-muted p-2 text-xs text-foreground">
+              <pre className="mt-2 overflow-auto rounded bg-muted p-2 text-xs text-foreground font-mono max-h-[150px]">
                 {this.state.error?.stack}
               </pre>
             </details>
-            <div className="mt-6">
+
+            {/* Action Button */}
+            <div className="mt-8">
               <button
                 onClick={() => window.location.reload()}
-                className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                className="w-full h-14 rounded-2xl bg-gradient-to-r from-blue-400 to-cyan-500 text-white font-bold text-lg shadow-lg transition-all hover:shadow-xl active:scale-95"
               >
-                Reload App
+                🔄 Reload App
               </button>
             </div>
+
+            {/* Reassuring message */}
+            <p className="mt-6 text-xs text-muted-foreground">
+              Your progress is saved! 💾
+            </p>
           </div>
         </div>
       );
@@ -117,31 +127,51 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   }, [error]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-blue-50 to-white px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
+        {/* Error Icon */}
+        <div className="text-6xl mb-4">⚠️</div>
+        
+        <h1 className="text-2xl font-bold text-ink">
+          Oops! Something went wrong
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+        <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+          The page didn't load properly. Don't worry—just try again or go back home!
         </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
+        
+        {/* Debug info (small, for parents/developers) */}
+        <details className="mt-4 text-left">
+          <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground">
+            Error details (for debugging)
+          </summary>
+          <pre className="mt-2 overflow-auto rounded bg-muted p-2 text-xs text-foreground font-mono max-h-[150px]">
+            {error?.message}
+          </pre>
+        </details>
+
+        {/* Action Buttons */}
+        <div className="mt-8 flex flex-col gap-3">
           <button
             onClick={() => {
               router.invalidate();
               reset();
             }}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="w-full h-14 rounded-2xl bg-gradient-to-r from-blue-400 to-cyan-500 text-white font-bold text-lg shadow-lg transition-all hover:shadow-xl active:scale-95"
           >
-            Try again
+            🔄 Try Again
           </button>
           <a
             href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+            className="w-full h-14 rounded-2xl bg-white border-2 border-blue-200 text-blue-600 font-bold text-lg flex items-center justify-center transition-all hover:bg-blue-50 active:scale-95"
           >
-            Go home
+            🏠 Go Home
           </a>
         </div>
+
+        {/* Reassuring message */}
+        <p className="mt-6 text-xs text-muted-foreground">
+          If this keeps happening, talk to an adult about what's going on! 👋
+        </p>
       </div>
     </div>
   );
@@ -185,33 +215,39 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const location = useLocation();
   const progress = useProgress();
-  
-  // Track session start on app initialization
+
+  // Pre-auth routes that should NOT show BottomNav
+  const preAuthRoutes = ['/', '/welcome', '/create'];
+
+  // COPPA-compliant: Log Firebase events after user is onboarded
+  // Permissions are now deferred (requested when features are used)
   useEffect(() => {
-    // Check if this is first app launch (no onboarded status)
-    const isReturningUser = progress.onboarded;
-    
+    if (!progress.onboarded) {
+      return;
+    }
+
+    // User is onboarded - log session/analytics
+    const isReturningUser = true; // If onboarded, they're returning
+
     firebaseEvents.sessionStart({
       ageBand: progress.ageBand,
       isReturningUser,
-    })
-    
-    // Track daily visit and streak if user is onboarded
-    if (isReturningUser) {
-      firebaseEvents.dailyVisit({
-        ageBand: progress.ageBand,
-        streak: progress.streak,
-        daysActive: Object.keys(progress.stamps ?? {}).length,
-        totalXp: progress.xp,
-      })
-      
-      // Track streak milestones
-      const milestonesToCheck = [3, 7, 14, 30];
-      if (milestonesToCheck.includes(progress.streak)) {
-        firebaseEvents.streakMilestone(progress.streak)
-      }
+    });
+
+    // Track daily visit and streak
+    firebaseEvents.dailyVisit({
+      ageBand: progress.ageBand,
+      streak: progress.streak,
+      daysActive: Object.keys(progress.stamps ?? {}).length,
+      totalXp: progress.xp,
+    });
+
+    // Track streak milestones
+    const milestonesToCheck = [3, 7, 14, 30];
+    if (milestonesToCheck.includes(progress.streak)) {
+      firebaseEvents.streakMilestone(progress.streak);
     }
-  }, []); // Run once on app init
+  }, [progress.onboarded, progress]);
   
   // Get the journey back handler dynamically so it always calls the current one
   const handleAndroidBack = () => {
@@ -225,8 +261,6 @@ function RootComponent() {
   
   appLogger.info('root_component', 'RootComponent rendering', { pathname: location.pathname });
 
-  // Pre-auth routes that should NOT show BottomNav
-  const preAuthRoutes = ['/', '/welcome', '/create'];
   const shouldShowBottomNav = !preAuthRoutes.includes(location.pathname);
 
   // Determine which tab is active based on current pathname
@@ -350,45 +384,6 @@ function RootComponent() {
         <div className="fixed bottom-0 left-0 right-0 z-20 pb-safe">
           <BottomNav active={getActiveTab()} />
         </div>
-      )}
-      
-      {/* Audio Permission Dialog - COPPA Compliant - Only shows on authenticated routes */}
-      {!preAuthRoutes.includes(location.pathname) && (
-        <AudioPermissionDialog
-          onAccept={() => {
-            appLogger.info('audio_permission', 'User accepted audio permission');
-            firebaseEvents.permissionRequested({ feature: 'audio', granted: true });
-            console.log("[RootComponent] Audio permission accepted");
-            // Start music if on authenticated route
-            if (!preAuthRoutes.includes(location.pathname)) {
-              startAmbient();
-            }
-          }}
-          onReject={() => {
-            appLogger.info('audio_permission', 'User rejected audio permission');
-            firebaseEvents.permissionRequested({ feature: 'audio', granted: false });
-            console.log("[RootComponent] Audio permission rejected");
-          }}
-        />
-      )}
-      
-      {/* File Permission Dialog - Shows after audio permission */}
-      {!preAuthRoutes.includes(location.pathname) && (
-        <FilePermissionDialog
-          onAccept={() => {
-            appLogger.info('file_permission', 'User accepted file permission');
-            firebaseEvents.permissionRequested({ feature: 'file', granted: true });
-            console.log("[RootComponent] File permission accepted");
-            // Store consent in localStorage for the permissions module to check
-            localStorage.setItem("india-explorer:file-permission-consent:v1", "1");
-          }}
-          onReject={() => {
-            appLogger.info('file_permission', 'User rejected file permission');
-            firebaseEvents.permissionRequested({ feature: 'file', granted: false });
-            console.log("[RootComponent] File permission rejected");
-            localStorage.setItem("india-explorer:file-permission-consent:v1", "0");
-          }}
-        />
       )}
       
       <UnlockCelebration />

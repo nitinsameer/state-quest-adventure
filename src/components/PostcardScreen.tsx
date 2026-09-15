@@ -57,6 +57,7 @@ export function StatePostcardScreen({
   const [burst, setBurst] = useState(0);
   const [busy, setBusy] = useState(false);
   const [showPostcardChoice, setShowPostcardChoice] = useState(true);
+  const [showFilePermissionPrompt, setShowFilePermissionPrompt] = useState(false);
   const cheer = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
@@ -198,14 +199,12 @@ export function StatePostcardScreen({
     
     if (busy) return;
     
-    // Check if user has granted file permission via dialog
-    const hasConsent = localStorage.getItem(
-      "india-explorer:file-permission-consent:v1"
-    ) === "1";
+    // Check if user has enabled file saving in settings
+    const fileEnabled = localStorage.getItem("india-explorer:file-enabled:v1") !== "0";
     
-    if (!hasConsent) {
-      console.log('[PostcardScreen] User has not granted file permission yet');
-      toast.error("Please allow file access to save your postcard 📁");
+    if (!fileEnabled) {
+      console.log('[PostcardScreen] File saving not enabled in settings');
+      toast.error("Enable 'Save & Share' in settings to save your postcard! 📁");
       return;
     }
     
@@ -295,6 +294,12 @@ export function StatePostcardScreen({
               <button
                 onClick={() => {
                   fxTap();
+                  // Check if file saving is enabled
+                  const fileEnabled = localStorage.getItem("india-explorer:file-enabled:v1") !== "0";
+                  if (!fileEnabled) {
+                    setShowFilePermissionPrompt(true);
+                    return;
+                  }
                   setShowPostcardChoice(false);
                 }}
                 className="w-full h-14 rounded-2xl bg-gradient-to-r from-blue-400 to-blue-500 text-white text-display text-lg font-bold shadow-lg"
@@ -437,6 +442,54 @@ export function StatePostcardScreen({
               >
                 Continue
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* File Save Permission Prompt */}
+      {showFilePermissionPrompt && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 space-y-4 animate-in zoom-in-95">
+            <div className="text-center">
+              <div className="text-5xl mb-3">📁</div>
+              <h3 className="text-display text-xl font-extrabold text-ink">Enable Save & Share?</h3>
+              <p className="text-sm text-muted-foreground mt-2">
+                Turn on save & share to keep your postcard memories! 📮
+              </p>
+            </div>
+
+            <div className="bg-green-50 rounded-2xl p-4 space-y-2 text-sm">
+              <div className="flex gap-2">
+                <span>📁</span>
+                <span className="font-semibold text-green-900">Save postcards to device</span>
+              </div>
+              <div className="flex gap-2">
+                <span>👥</span>
+                <span className="font-semibold text-green-900">Share with family & friends</span>
+              </div>
+            </div>
+
+            <div className="flex gap-2 pt-2">
+              <button
+                onClick={() => {
+                  fxTap();
+                  setShowFilePermissionPrompt(false);
+                }}
+                className="flex-1 h-12 rounded-xl bg-gray-100 text-gray-800 font-bold text-sm"
+              >
+                Maybe Later
+              </button>
+              <Link
+                to="/me"
+                onClick={() => {
+                  fxTap();
+                  setShowFilePermissionPrompt(false);
+                }}
+                className="flex-1 h-12 rounded-xl bg-gradient-to-r from-green-400 to-emerald-500 text-white font-bold text-sm flex items-center justify-center"
+              >
+                Go to Settings
+              </Link>
             </div>
           </div>
         </div>

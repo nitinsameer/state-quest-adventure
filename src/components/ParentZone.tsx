@@ -97,6 +97,12 @@ export function ParentZoneScreen() {
           <p className="text-sm font-semibold text-muted-foreground">
             All progress is stored only on this device. No account, no ads, and nothing is uploaded.
           </p>
+          <a
+            href="/privacy"
+            className="inline-block mt-2 text-xs font-bold text-explorer hover:underline"
+          >
+            Read our Privacy Policy →
+          </a>
           {confirm ? (
             <div className="mt-3 flex gap-2">
               <button
