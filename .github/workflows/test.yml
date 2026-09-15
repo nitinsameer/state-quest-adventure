@@ -1,0 +1,106 @@
+name: Test & Quality Checks
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run linter
+        run: npm run lint
+        continue-on-error: true
+      
+      - name: Run unit tests
+        run: npm run test
+      
+      - name: Generate coverage report
+        run: npm run test:coverage
+      
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage/coverage-final.json
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+        continue-on-error: true
+      
+      - name: Comment PR with test results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const coverage = JSON.parse(fs.readFileSync('./coverage/coverage-final.json', 'utf8'));
+            const stats = {
+              files: Object.keys(coverage).length,
+              statements: 0,
+              branches: 0,
+              functions: 0,
+              lines: 0
+            };
+            
+            let totalStats = { statements: 0, branches: 0, functions: 0, lines: 0 };
+            let countStats = 0;
+            
+            Object.values(coverage).forEach(file => {
+              if (file.s) totalStats.statements += Object.values(file.s).length;
+              if (file.b) totalStats.branches += Object.values(file.b).length;
+              if (file.f) totalStats.functions += Object.values(file.f).length;
+              if (file.l) totalStats.lines += Object.values(file.l).length;
+              countStats++;
+            });
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `✅ Tests Passed!\n\n📊 Coverage Summary:\n- **Files Tested:** ${stats.files}\n- **Test Command:** \`npm run test\`\n- **Coverage Report:** \`npm run test:coverage\`\n\n[View full coverage report](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})`
+            })
+
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build project
+        run: npm run build:dev
+      
+      - name: Verify build artifacts
+        run: |
+          if [ ! -f "dist/index.html" ]; then
+            echo "Build failed: dist/index.html not found"
+            exit 1
+          fi
+          echo "✅ Build successful - dist/index.html exists"

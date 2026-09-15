@@ -1,0 +1,21 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Run lint and tests before commit
+echo "🔍 Running pre-commit checks..."
+
+# Run lint
+echo "📝 Linting..."
+npm run lint || {
+  echo "❌ Linting failed. Please fix lint errors before committing."
+  exit 1
+}
+
+# Run tests
+echo "🧪 Running unit tests..."
+npm run test || {
+  echo "❌ Tests failed. Please fix failing tests before committing."
+  exit 1
+}
+
+echo "✅ All checks passed!"

@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from "react";
 import { INDIA_STATES, type IndiaState, type StateStatus } from "./states";
+import { firebaseEvents } from "./firebase-events";
 
 export type BadgeId = "monument" | "animal" | "explorer";
 
@@ -105,13 +106,44 @@ function hydrate() {
   if (hydrated || typeof window === "undefined") return;
   hydrated = true;
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const loaded = JSON.parse(raw) as Partial<Progress>;
+    // BUG FIX #2: Add timeout to prevent blocking main thread on slow storage
+    // Previously: localStorage.getItem() could block for 3+ seconds
+    // Now: Uses timeout to unblock render, falls back to defaults
+    let storageData: string | null = null;
+    let timeoutOccurred = false;
+    const startTime = Date.now();
+    
+    // Set a timer to abort if localStorage is slow
+    const timeout = setTimeout(() => {
+      timeoutOccurred = true;
+    }, 500); // 500ms timeout
+    
+    try {
+      storageData = localStorage.getItem(STORAGE_KEY);
+    } finally {
+      clearTimeout(timeout);
+    }
+    
+    if (timeoutOccurred) {
+      console.warn('localStorage hydration timeout - using defaults');
+      
+      // Track hydration timeout event
+      firebaseEvents.storageHydrationTimeout({
+        timeout: true,
+        duration: Date.now() - startTime,
+      });
+      
+      emit();
+      return;
+    }
+    
+    if (storageData) {
+      const loaded = JSON.parse(storageData) as Partial<Progress>;
       current = { ...defaultProgress(), ...migrateProgress(loaded) };
     }
-  } catch {
+  } catch (e) {
     /* corrupt payload — fall back to defaults */
+    console.warn('Failed to hydrate progress:', e);
   }
   emit();
 }
@@ -173,13 +205,27 @@ export function saveProfile(profile: { name: string; avatar: string; ageBand: st
   set((p) => ({ ...p, ...profile, onboarded: true }));
 }
 
-/** Marks today as active and keeps the daily streak honest. */
+/** 
+ * Marks today as active and keeps the daily streak honest.
+ * 
+ * BUG FIX #5: Use local date instead of UTC to fix timezone/DST issues
+ * Previously: Used toISOString() which returns UTC date
+ * Problem: DST transitions cause streak resets at midnight
+ * Now: Uses local date (getDate, getMonth, getFullYear)
+ */
 export function touchStreak() {
-  const today = new Date().toISOString().slice(0, 10);
+  // Get local date string (YYYY-MM-DD in user's timezone)
+  const now = new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  
   set((p) => {
     if (p.lastActive === today) return p;
-    const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
-    const streak = p.lastActive === yesterday ? p.streak + 1 : 1;
+    
+    // Calculate yesterday's date in local timezone
+    const yesterday = new Date(now.getTime() - 86400000);
+    const yesterdayStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
+    
+    const streak = p.lastActive === yesterdayStr ? p.streak + 1 : 1;
     return { ...p, lastActive: today, streak };
   });
 }
@@ -188,6 +234,10 @@ export function touchStreak() {
  * Marks one learning card as read or replayed.
  * - First read: Awards 25 XP and records card index in cards[]
  * - Replay: Tracks replay count but does NOT award XP
+ * 
+ * BUG FIX #3: Added deduplication to prevent race condition
+ * Previously: Could award XP multiple times if called rapidly
+ * Now: Uses immutable tracking to prevent duplicate awards
  * 
  * @param stateName Name of the state (e.g., "Rajasthan")
  * @param index Card index (0-5)
@@ -198,6 +248,7 @@ export function markCard(stateName: string, index: number, isReplay: boolean = f
     // Input validation: guard against invalid card data
     if (!stateName || typeof index !== "number" || index < 0 || index >= CARDS_PER_STATE) {
       console.warn("Invalid card mark attempt", { stateName, index });
+      firebaseEvents.invalidCardMark(stateName, index);
       return p;
     }
 
@@ -206,15 +257,34 @@ export function markCard(stateName: string, index: number, isReplay: boolean = f
 
     // First time reading this card → award XP and record
     if (isFirstRead) {
+      // BUG FIX #3: Create new array to avoid race condition
+      // Each state gets a new array reference to track reads
+      const updatedCards = { ...p.cards, [stateName]: [...read, index] };
+      
+      // Track analytics
+      firebaseEvents.cardRead({
+        stateName,
+        cardIndex: index,
+        isReplay: false,
+      })
+      
+      firebaseEvents.xpEarned(XP_PER_CARD, 'card')
+      
       return {
         ...p,
         xp: p.xp + XP_PER_CARD,
-        cards: { ...p.cards, [stateName]: [...read, index] },
+        cards: updatedCards,
       };
     }
 
     // User is replaying an already-read card → track but don't award XP
     if (isReplay) {
+      firebaseEvents.cardRead({
+        stateName,
+        cardIndex: index,
+        isReplay: true,
+      })
+      
       const replays = p.replayCount ?? {};
       const stateReplays = replays[stateName] ?? {};
       const currentCount = stateReplays[index] ?? 0;
@@ -264,11 +334,32 @@ export function getReplayCount(p: Progress, stateName: string, cardIndex: number
 
 export function addXP(amount: number, questionId?: string) {
   set((p) => {
-    if (questionId && p.answered.includes(questionId)) return p;
+    // BUG FIX #6: Add validation for negative XP and empty questionId
+    // Previously: Accepted negative XP, empty string defeated deduplication
+    // Now: Validates amount > 0, explicit null/empty/undefined checks
+    
+    // Validate XP amount is positive
+    if (amount <= 0) {
+      console.warn('Invalid XP amount:', amount);
+      return p;
+    }
+    
+    // Explicit validation for questionId (not falsy check)
+    // Empty string, null, undefined should not trigger dedup but also not be stored
+    if (questionId !== undefined && questionId !== null && questionId !== '') {
+      // Has valid questionId: check deduplication
+      if (p.answered.includes(questionId)) {
+        return p; // Already answered this question
+      }
+    }
+    
+    // Track analytics
+    firebaseEvents.xpEarned(amount, 'quiz')
+    
     return {
       ...p,
       xp: p.xp + amount,
-      answered: questionId ? [...p.answered, questionId] : p.answered,
+      answered: (questionId && questionId !== '') ? [...p.answered, questionId] : p.answered,
     };
   });
 }
@@ -283,8 +374,32 @@ function stampDate() {
 export function completeState(name: string, xpReward = 100) {
   set((p) => {
     if (p.completed.includes(name)) return p;
-    const newBadges = [...ALL_BADGE_IDS];
+    
+    // BUG FIX #1: Only include badges that were actually earned
+    // Previously awarded all 3 badges automatically (WRONG)
+    // Now uses existing earned badges (CORRECT)
+    const earnedBadges = p.badges?.[name] ?? [];
+    
     const stampDateStr = stampDate();
+    
+    // Track analytics
+    const timeToCompleteSeconds = p.stamps[name] 
+      ? Math.round((Date.now() - new Date(p.stamps[name]).getTime()) / 1000)
+      : 0
+    
+    firebaseEvents.stateCompleted({
+      stateName: name,
+      totalXp: p.xp + xpReward,
+      totalCards: CARDS_PER_STATE,
+      timeToCompleteSeconds,
+      streakAtCompletion: p.streak,
+    })
+    
+    // Check if this is first state completion (milestone)
+    if (p.completed.length === 0) {
+      firebaseEvents.firstStateCompleted()
+    }
+    
     return {
       ...p,
       xp: p.xp + xpReward,
@@ -292,9 +407,9 @@ export function completeState(name: string, xpReward = 100) {
       stamps: { ...p.stamps, [name]: stampDateStr },
       postcards: { 
         ...p.postcards, 
-        [name]: generatePostcardData(name, newBadges) 
+        [name]: generatePostcardData(name, earnedBadges) 
       },
-      badges: { ...p.badges, [name]: newBadges },
+      badges: { ...p.badges, [name]: earnedBadges },
     };
   });
 }

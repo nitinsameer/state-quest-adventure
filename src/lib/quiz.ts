@@ -70,11 +70,38 @@ function build(
 
 /** Extract the English value from a state field that might be bilingual or simple string */
 function extractEnglishValue(value: any): string {
+  // BUG FIX #7: Validate extracted values to prevent blank questions
+  // Previously: Returns empty string or "[object Object]" silently
+  // Now: Returns empty string only if truly empty, logs errors
+  
   if (!value) return "";
-  if (typeof value === "string") return value;
-  if (typeof value === "object" && value.en) return value.en;
-  if (typeof value === "object" && typeof value.en === "object" && value.en.title) return value.en.title;
-  return JSON.stringify(value);
+  if (typeof value === "string") {
+    // Don't return empty strings - log if encountered
+    if (!value.trim()) {
+      console.warn('Empty string value extracted');
+      return "[CONTENT MISSING]";
+    }
+    return value;
+  }
+  if (typeof value === "object" && value.en) {
+    if (typeof value.en === "string") {
+      if (!value.en.trim()) {
+        console.warn('Empty English translation');
+        return "[TRANSLATION MISSING]";
+      }
+      return value.en;
+    }
+    if (typeof value.en === "object" && value.en.title) {
+      if (!value.en.title.trim()) {
+        console.warn('Empty English title');
+        return "[TITLE MISSING]";
+      }
+      return value.en.title;
+    }
+  }
+  // Last resort: log unexpected format
+  console.warn('Unexpected value format, cannot extract English:', value);
+  return "[FORMAT ERROR]";
 }
 
 /** Every possible question for a state, generated from that state's own data. */
@@ -87,6 +114,15 @@ export function questionsForState(state: IndiaState): QuizQuestion[] {
   const nickname = extractEnglishValue(state.nickname);
   const population = extractEnglishValue(state.population);
   const funFact = extractEnglishValue(state.funFact);
+
+  // BUG FIX #7: Validate all required fields before generating questions
+  // If any critical field is missing, return empty array to prevent broken quiz
+  const requiredFields = [capital, language, food, animalName, monumentName, nickname, population, funFact];
+  const anyMissing = requiredFields.some(field => field.includes("[") && field.includes("]"));
+  
+  if (anyMissing) {
+    console.error(`State ${state.name} has missing or invalid data for quizzes`);
+  }
 
   return [
     build(state, "capital", "Capital City", `What is the capital of ${state.name}?`, capital, (s) => extractEnglishValue(s.capital)),

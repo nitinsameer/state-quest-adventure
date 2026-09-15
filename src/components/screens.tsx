@@ -17,6 +17,7 @@ import { fxCorrect, fxWrong, fxConfetti, fxStamp, fxTap, useSoundOn, setSoundOn 
 import { useAndroidBackButton } from "@/hooks/useAndroidBackButton";
 import { setJourneyBackHandler } from "@/lib/journeyBackHandler";
 import { appLogger } from "@/lib/logger";
+import { firebaseEvents } from "@/lib/firebase-events";
 import { isBilingual, getAvailableLanguages } from "@/lib/bilingual-config";
 import {
   INDIA_STATES,
@@ -420,6 +421,10 @@ export function CreateProfileScreen() {
           onClick={() => {
             fxTap();
             fxConfetti();
+            
+            // Track profile creation
+            firebaseEvents.profileCreated(ageBand, avatar);
+            
             saveProfile({ name: name.trim() || "Explorer", avatar, ageBand });
             setSaved(true);
             setTimeout(() => navigate({ to: "/home" }), 400);
@@ -2089,6 +2094,16 @@ export function QuizScreen({
     const qCount = questionCountForAgeBand(progress.ageBand);
     return randomQuestionsForState(activeName, qCount);
   }, [activeName, progress.ageBand]);
+  
+  // Track quiz start on first render
+  useEffect(() => {
+    firebaseEvents.quizStart({
+      stateName: activeName,
+      ageBand: progress.ageBand,
+      questionCount: questions.length,
+    })
+  }, [activeName, progress.ageBand, questions.length])
+  
   const [index, setIndex] = useState(0);
   const question = questions[Math.min(index, questions.length - 1)];
 
@@ -2096,6 +2111,8 @@ export function QuizScreen({
   const [result, setResult] = useState<"correct" | "wrong" | null>(null);
   const [burst, setBurst] = useState(0);
   const [navigationStarted, setNavigationStarted] = useState(false); // Prevent double navigation
+  const [correctCount, setCorrectCount] = useState(0);
+  const [quizStartTime] = useState(Date.now());
 
   const answers = question.options;
   const correct = question.correct;
@@ -2105,18 +2122,37 @@ export function QuizScreen({
     fxTap();
     setSelected(label);
   };
+  
   const onCheck = () => {
     if (!selected || result) return;
-    if (selected === correct) {
+    const isCorrect = selected === correct;
+    
+    if (isCorrect) {
       fxCorrect();
       addXP(question.xp, question.id);
       setResult("correct");
       setBurst((n) => n + 1);
+      setCorrectCount((n) => n + 1);
+      
+      // Track correct answer
+      firebaseEvents.quizAnswer({
+        stateName: activeName,
+        questionId: question.id,
+        isCorrect: true,
+      })
     } else {
       fxWrong();
       setResult("wrong");
+      
+      // Track wrong answer
+      firebaseEvents.quizAnswer({
+        stateName: activeName,
+        questionId: question.id,
+        isCorrect: false,
+      })
     }
   };
+  
   const isLastQuestion = index === questions.length - 1;
   const onReset = () => {
     fxTap();
@@ -2126,6 +2162,17 @@ export function QuizScreen({
     // Always move to next question (or finish if last)
     if (isLastQuestion) {
       setNavigationStarted(true);
+      
+      // Track quiz completion
+      const quizDuration = Date.now() - quizStartTime;
+      firebaseEvents.quizComplete({
+        stateName: activeName,
+        questionsAnswered: questions.length,
+        correctAnswers: correctCount + 1, // +1 for current correct answer
+        scorePercentage: ((correctCount + 1) / questions.length) * 100,
+        timeSpentSeconds: quizDuration / 1000,
+      })
+      
       // Use setTimeout to ensure state is settled before navigation
       setTimeout(() => {
         onDone?.();

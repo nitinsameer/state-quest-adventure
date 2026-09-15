@@ -21,6 +21,8 @@ import { AudioPermissionDialog } from "@/components/AudioPermissionDialog";
 import { FilePermissionDialog } from "@/components/FilePermissionDialog";
 import { BottomNav } from "@/components/screens";
 import { appLogger } from "@/lib/logger";
+import { firebaseEvents } from "@/lib/firebase-events";
+import { useProgress } from "@/lib/progress";
 import { startAmbient, stopAmbient } from "@/lib/fx";
 import { pauseTts, resumeTts } from "@/lib/tts";
 import { Capacitor } from "@capacitor/core";
@@ -182,6 +184,34 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const location = useLocation();
+  const progress = useProgress();
+  
+  // Track session start on app initialization
+  useEffect(() => {
+    // Check if this is first app launch (no onboarded status)
+    const isReturningUser = progress.onboarded;
+    
+    firebaseEvents.sessionStart({
+      ageBand: progress.ageBand,
+      isReturningUser,
+    })
+    
+    // Track daily visit and streak if user is onboarded
+    if (isReturningUser) {
+      firebaseEvents.dailyVisit({
+        ageBand: progress.ageBand,
+        streak: progress.streak,
+        daysActive: Object.keys(progress.stamps ?? {}).length,
+        totalXp: progress.xp,
+      })
+      
+      // Track streak milestones
+      const milestonesToCheck = [3, 7, 14, 30];
+      if (milestonesToCheck.includes(progress.streak)) {
+        firebaseEvents.streakMilestone(progress.streak)
+      }
+    }
+  }, []); // Run once on app init
   
   // Get the journey back handler dynamically so it always calls the current one
   const handleAndroidBack = () => {
@@ -327,6 +357,7 @@ function RootComponent() {
         <AudioPermissionDialog
           onAccept={() => {
             appLogger.info('audio_permission', 'User accepted audio permission');
+            firebaseEvents.permissionRequested({ feature: 'audio', granted: true });
             console.log("[RootComponent] Audio permission accepted");
             // Start music if on authenticated route
             if (!preAuthRoutes.includes(location.pathname)) {
@@ -335,6 +366,7 @@ function RootComponent() {
           }}
           onReject={() => {
             appLogger.info('audio_permission', 'User rejected audio permission');
+            firebaseEvents.permissionRequested({ feature: 'audio', granted: false });
             console.log("[RootComponent] Audio permission rejected");
           }}
         />
@@ -345,12 +377,14 @@ function RootComponent() {
         <FilePermissionDialog
           onAccept={() => {
             appLogger.info('file_permission', 'User accepted file permission');
+            firebaseEvents.permissionRequested({ feature: 'file', granted: true });
             console.log("[RootComponent] File permission accepted");
             // Store consent in localStorage for the permissions module to check
             localStorage.setItem("india-explorer:file-permission-consent:v1", "1");
           }}
           onReject={() => {
             appLogger.info('file_permission', 'User rejected file permission');
+            firebaseEvents.permissionRequested({ feature: 'file', granted: false });
             console.log("[RootComponent] File permission rejected");
             localStorage.setItem("india-explorer:file-permission-consent:v1", "0");
           }}

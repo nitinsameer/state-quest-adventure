@@ -111,21 +111,26 @@ export function getCardContent(
  * Convert age band string to numeric age for comparison
  * Used for age-based content filtering
  * 
+ * BUG FIX #4: Use lower bound of age range instead of midpoint
+ * Previously: Used midpoints (4, 6.5, 8.5, 11) which excluded edge cases
+ * Problem: Age 11 couldn't see "10-12" content (midpoint = 11, range = 10-12)
+ * Now: Uses lower bound for inclusive filtering
+ * 
  * @param ageBand - Age band string (e.g., "3-5", "6-7", "8-9", "10-12")
- * @returns Numeric age (middle of the range) for comparison
+ * @returns Numeric age (lower bound of range) for comparison
  */
 function getNumericAge(ageBand: string): number {
   switch (ageBand) {
     case "3-5":
-      return 4;    // Sprout: midpoint of 3-5
+      return 3;    // Lower bound of 3-5
     case "6-7":
-      return 6.5;  // Seedling: midpoint of 6-7
+      return 6;    // Lower bound of 6-7
     case "8-9":
-      return 8.5;  // Sapling: midpoint of 8-9
+      return 8;    // Lower bound of 8-9
     case "10-12":
-      return 11;   // Mighty Tree: midpoint of 10-12
+      return 10;   // Lower bound of 10-12
     default:
-      return 8.5;  // Default to Sapling (8-9) if unknown
+      return 8;    // Default to Sapling (8-9) if unknown
   }
 }
 

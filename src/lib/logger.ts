@@ -3,6 +3,9 @@
  * Captures logs to local storage and sends to console for inspection
  */
 
+import { firebaseEvents } from './firebase-events';
+import { useProgress } from './progress';
+
 export interface LogEntry {
   timestamp: number;
   level: 'debug' | 'info' | 'warn' | 'error';
@@ -32,6 +35,22 @@ class Logger {
           colno: event.colno,
           stack: event.error?.stack,
         });
+        
+        // Track crash event
+        try {
+          const ageBand = localStorage.getItem('india-explorer:profile')
+            ? JSON.parse(localStorage.getItem('india-explorer:profile') || '{}').ageBand
+            : 'unknown';
+          
+          firebaseEvents.crash({
+            errorType: 'uncaught_error',
+            errorMessage: event.message,
+            stackTrace: event.error?.stack,
+            ageBand,
+          });
+        } catch (e) {
+          // Silently fail if Firebase events not available
+        }
       });
 
       // Capture unhandled promise rejections
@@ -39,6 +58,22 @@ class Logger {
         this.error('unhandled_rejection', event.reason?.message || String(event.reason), {
           reason: event.reason,
         });
+        
+        // Track crash event
+        try {
+          const ageBand = localStorage.getItem('india-explorer:profile')
+            ? JSON.parse(localStorage.getItem('india-explorer:profile') || '{}').ageBand
+            : 'unknown';
+          
+          firebaseEvents.crash({
+            errorType: 'unhandled_rejection',
+            errorMessage: event.reason?.message || String(event.reason),
+            stackTrace: event.reason?.stack,
+            ageBand,
+          });
+        } catch (e) {
+          // Silently fail if Firebase events not available
+        }
       });
     }
   }
