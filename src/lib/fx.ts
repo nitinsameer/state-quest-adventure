@@ -32,22 +32,7 @@ function subscribeSound(listener: () => void) {
   return () => soundListeners.delete(listener);
 }
 
-// Auto-stop ambient music when sound is toggled off
-// Auto-start ambient music when sound is toggled ON
-soundListeners.add(() => {
-  const soundIsOn = isSoundOn();
-  
-  if (!soundIsOn && ambientRunning) {
-    console.log("[Audio] Sound toggled OFF - stopping ambient");
-    stopAmbientMusic();
-  } else if (soundIsOn && !ambientRunning) {
-    console.log("[Audio] Sound toggled ON - restarting ambient, ambientRunning:", ambientRunning);
-    // Try to restart - but first ensure old state is cleared
-    ambientAudioElement = null;
-    musicFileExists = true;
-    startAmbientMusic();
-  }
-});
+// Ambient audio auto-restart removed - background music disabled globally
 
 export function isSoundOn() {
   hydrateSound();
@@ -403,15 +388,4 @@ function stopAmbientMusic() {
     }
   }
 }
-
-/** Start ambient music if sound is on. Safe to call repeatedly. */
-export function startAmbient() {
-  if (isSoundOn()) {
-    startAmbientMusic();
-  }
-}
-
-/** Stop ambient music. */
-export function stopAmbient() {
-  stopAmbientMusic();
-}
+// startAmbient and stopAmbient removed - ambient music globally disabled
