@@ -3122,6 +3122,24 @@ export function ProfileScreen() {
   const [isEditing, setIsEditing] = useState(false);
   const [tempName, setTempName] = useState(p.name);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
+  const [isSelectingAvatar, setIsSelectingAvatar] = useState(false);
+  const [selectedAvatar, setSelectedAvatar] = useState<AvatarId>(p.avatar as AvatarId);
+  
+  // Avatar images list for ProfileScreen
+  const avatarImages = [
+    { id: "explorer-hat" as AvatarId, image: avatarExplorerHat },
+    { id: "explorer-pink" as AvatarId, image: avatarExplorerPink },
+    { id: "geek-glasses" as AvatarId, image: avatarGeekGlasses },
+    { id: "girl-peace" as AvatarId, image: avatarGirlPeace },
+    { id: "turban-red" as AvatarId, image: avatarTurbanRed },
+    { id: "girl-earring" as AvatarId, image: avatarGirlEarring },
+    { id: "boy-smile" as AvatarId, image: avatarBoySmi },
+    { id: "girl-tikka" as AvatarId, image: avatarGirlTikka },
+    { id: "ski-goggles" as AvatarId, image: avatarSkiGoggles },
+    { id: "farmer-hat" as AvatarId, image: avatarFarmerHat },
+    { id: "sports-cap" as AvatarId, image: avatarSportsCap },
+    { id: "girl-flower" as AvatarId, image: avatarGirlFlower },
+  ];
   
   // Route guard: redirect to welcome if not onboarded (defensive check)
   if (!p.onboarded) {
@@ -3159,6 +3177,15 @@ export function ProfileScreen() {
     setTempName(p.name); // Reset to original
     setIsEditing(false);
     setSaveStatus("idle");
+  };
+
+  const handleChangeAvatar = (avatarId: AvatarId) => {
+    fxTap();
+    setSelectedAvatar(avatarId);
+    // Automatically save the new avatar with its corresponding name
+    const newName = getAvatarName(avatarId);
+    saveProfile({ name: newName, avatar: avatarId, ageBand: p.ageBand });
+    setIsSelectingAvatar(false);
   };
 
   return (
@@ -3272,6 +3299,57 @@ export function ProfileScreen() {
 
 
       <div className="px-5 mt-5 space-y-3 flex-1 overflow-auto">
+        {/* Avatar Selector Section */}
+        <div className="animate-fade-in" style={{ animationDelay: "175ms" }}>
+          <button
+            onClick={() => {
+              fxTap();
+              setIsSelectingAvatar(!isSelectingAvatar);
+            }}
+            className="w-full rounded-2xl bg-white shadow-soft border border-black/5 p-3 flex items-center gap-3 transition active:scale-[0.99]"
+          >
+            <div className="h-12 w-12 rounded-2xl gradient-saffron flex items-center justify-center text-2xl">
+              🎭
+            </div>
+            <div className="flex-1 text-left">
+              <div className="text-display font-extrabold text-[15px] leading-tight">
+                Change Avatar
+              </div>
+              <div className="text-[11px] font-bold text-muted-foreground">
+                {getAvatarName(p.avatar)} · Tap to select
+              </div>
+            </div>
+            <div className="text-muted-foreground text-xl">{isSelectingAvatar ? '✕' : '›'}</div>
+          </button>
+
+          {/* Avatar Selection Grid */}
+          {isSelectingAvatar && (
+            <div className="mt-3 rounded-2xl bg-white shadow-soft border border-black/5 p-4 animate-fade-in">
+              <div className="grid grid-cols-4 gap-2">
+                {avatarImages.map((a) => (
+                  <button
+                    key={a.id}
+                    type="button"
+                    onClick={() => handleChangeAvatar(a.id)}
+                    className={`aspect-square rounded-2xl flex items-center justify-center border-4 transition transform overflow-hidden ${
+                      a.id === p.avatar
+                        ? "border-saffron shadow-[var(--shadow-glow-orange)] scale-110"
+                        : "border-gray-200 hover:scale-105"
+                    }`}
+                    title={getAvatarName(a.id)}
+                  >
+                    <img
+                      src={a.image}
+                      alt={getAvatarName(a.id)}
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
         <div className="animate-fade-in" style={{ animationDelay: "200ms" }}>
           <SoundToggleRow />
         </div>
