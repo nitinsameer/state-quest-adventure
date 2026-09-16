@@ -1183,46 +1183,51 @@ export function JourneyMapScreen() {
 
   return (
     <div className="h-full w-full gradient-sky relative overflow-hidden flex flex-col">
-      {/* Top HUD */}
-      <div className="px-5 pt-3 flex items-center gap-3 relative z-10 animate-fade-in">
-        <div className="h-11 w-11 rounded-2xl bg-white shadow-soft p-1 flex items-center justify-center overflow-hidden">
-          <img src={getAvatarImage(p.avatar)} alt={getAvatarName(p.avatar)} className="w-full h-full object-cover" />
-        </div>
-        <div className="flex-1">
-          <div className="text-display font-extrabold text-ink">India Journey</div>
-          <div className="text-xs font-bold text-muted-foreground">
-            {banners.length >= 2 
-              ? `${banners[0].done}/${banners[0].total} states · ${banners[1].done}/${banners[1].total} UTs`
-              : banners.length >= 1
-              ? `${banners[0].done}/${banners[0].total} states`
-              : 'Loading...'
-            }
+      {/* Header with orange gradient - matching Home screen */}
+      <div className="px-5 pt-3 pb-4 gradient-saffron rounded-b-[32px] relative overflow-hidden animate-fade-in">
+        <Cloud className="absolute top-2 right-4 w-14 opacity-40 pointer-events-none" />
+        
+        {/* Journey Info */}
+        <div className="flex items-center gap-3 relative z-10">
+          <div className="h-11 w-11 rounded-2xl bg-white shadow-soft p-1 flex items-center justify-center overflow-hidden">
+            <img src={getAvatarImage(p.avatar)} alt={getAvatarName(p.avatar)} className="w-full h-full object-cover" />
+          </div>
+          <div className="flex-1">
+            <div className="text-display font-extrabold text-white">India Journey</div>
+            <div className="text-xs font-bold text-white/90">
+              {banners.length >= 2 
+                ? `${banners[0].done}/${banners[0].total} states · ${banners[1].done}/${banners[1].total} UTs`
+                : banners.length >= 1
+                ? `${banners[0].done}/${banners[0].total} states`
+                : 'Loading...'
+              }
+            </div>
+          </div>
+
+          <div className="flex items-center gap-1.5 bg-white/60 rounded-full px-3 py-1.5 backdrop-blur">
+            <span>🪙</span>
+            <span className="text-display font-extrabold text-saffron">{p.xp.toLocaleString()}</span>
           </div>
         </div>
 
-        <div className="flex items-center gap-1.5 bg-white rounded-full px-3 py-1.5 shadow-soft">
-          <span>🪙</span>
-          <span className="text-display font-extrabold">{p.xp.toLocaleString()}</span>
+        {/* Progress Bar - inside header */}
+        <div className="mt-4 animate-fade-in" style={{ animationDelay: "50ms" }}>
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-xs font-bold text-white/90">Journey Progress</span>
+            <span className="text-xs font-bold text-white">{Math.round((completedStates / totalStates) * 100)}%</span>
+          </div>
+          <div className="h-2.5 bg-white/30 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-yellow-300 to-yellow-100 rounded-full transition-all duration-500"
+              style={{ width: `${(completedStates / totalStates) * 100}%` }}
+            />
+          </div>
         </div>
       </div>
 
-      {/* Progress Bar */}
-      <div className="px-5 pt-2 pb-2 animate-fade-in" style={{ animationDelay: "50ms" }}>
-        <div className="flex items-center justify-between mb-1">
-          <span className="text-xs font-bold text-muted-foreground">Journey Progress</span>
-          <span className="text-xs font-bold text-ink">{Math.round((completedStates / totalStates) * 100)}%</span>
-        </div>
-        <div className="h-2 bg-white/50 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all duration-500"
-            style={{ width: `${(completedStates / totalStates) * 100}%` }}
-          />
-        </div>
-      </div>
-
-      {/* Clouds */}
-      <Cloud className="absolute top-24 left-2 w-24 opacity-90 pointer-events-none animate-fade-in" style={{ animationDelay: "100ms" }} />
-      <Cloud className="absolute top-60 right-1 w-20 opacity-85 pointer-events-none animate-fade-in" style={{ animationDelay: "150ms" }} />
+      {/* Clouds decoration below header */}
+      <Cloud className="absolute top-40 left-2 w-24 opacity-90 pointer-events-none animate-fade-in" style={{ animationDelay: "100ms" }} />
+      <Cloud className="absolute top-80 right-1 w-20 opacity-85 pointer-events-none animate-fade-in" style={{ animationDelay: "150ms" }} />
 
       {/* Map */}
       <div className="relative flex-1 mx-3 mt-2 rounded-[28px] overflow-y-auto overflow-x-hidden animate-fade-in" style={{ animationDelay: "200ms" }}>
