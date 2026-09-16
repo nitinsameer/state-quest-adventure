@@ -510,7 +510,7 @@ export function HomeDashboardScreen() {
   }
 
   const { level, toNext, pct } = levelInfo(p.xp);
-  const stamps = Object.keys(p.stamps).length;
+  const postcards = Object.keys(p.postcards).length;
   const journey = statesWithProgress(p);
   const current = journey.find((s) => s.status === "current") ?? journey[journey.length - 1];
   const currentDone = cardsDone(p, current.name);
@@ -599,9 +599,9 @@ export function HomeDashboardScreen() {
         <StatCardEnhanced 
           tone="green" 
           icon="📓" 
-          value={String(stamps)} 
-          label="Stamps"
-          encouragement={stamps === 0 ? "Complete states!" : "Collecting!"}
+          value={String(postcards)} 
+          label="Postcards"
+          encouragement={postcards === 0 ? "Complete states!" : "Keep collecting!"}
         />
       </div>
 
