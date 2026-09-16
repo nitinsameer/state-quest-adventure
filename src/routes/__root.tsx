@@ -21,7 +21,7 @@ import { BottomNav } from "@/components/screens";
 import { appLogger } from "@/lib/logger";
 import { firebaseEvents } from "@/lib/firebase-events";
 import { useProgress } from "@/lib/progress";
-import { startAmbient, stopAmbient } from "@/lib/fx";
+// Ambient music removed - background audio disabled
 import { pauseTts, resumeTts } from "@/lib/tts";
 import { Capacitor } from "@capacitor/core";
 
@@ -290,8 +290,7 @@ function RootComponent() {
         const hasConsent = e.newValue === "1";
         
         if (isAuthenticatedRoute && hasConsent) {
-          console.log("[RootComponent.storageListener] Starting ambient due to consent change");
-          startAmbient();
+          console.log("[RootComponent.storageListener] Audio consent changed");
         }
       }
     };
@@ -318,58 +317,33 @@ function RootComponent() {
     
     console.log("[RootComponent.effect] Route:", location.pathname, "isAuth:", isAuthenticatedRoute, "consent:", hasAudioConsent);
     
-    if (isAuthenticatedRoute && hasAudioConsent) {
-      console.log("[RootComponent] Starting ambient - consent given + authenticated route:", location.pathname);
-      startAmbient();
-    } else {
-      console.log("[RootComponent] Stopping ambient - consent:", hasAudioConsent, "route:", location.pathname);
-      stopAmbient();
-    }
-    
-    // Only set up lifecycle listeners on native platforms
-    if (!Capacitor.isNativePlatform()) {
-      return () => {
-        if (isAuthenticatedRoute && hasAudioConsent) stopAmbient();
-      };
-    }
+    // Ambient audio disabled - background music removed
 
     // Listen for app pause (minimized)
     const pauseListener = App.addListener('pause', () => {
-      appLogger.info('app_lifecycle', 'App paused - stopping audio');
-      stopAmbient();
+      appLogger.info('app_lifecycle', 'App paused');
       pauseTts();
     });
 
     // Listen for app resume (brought to foreground)
     const resumeListener = App.addListener('resume', () => {
-      appLogger.info('app_lifecycle', 'App resumed - restarting audio');
-      const isAuth = !preAuthRoutes.includes(location.pathname);
-      const consent = localStorage.getItem("india-explorer:audio-consent:v1") === "1";
-      if (isAuth && consent) {
-        startAmbient();
-      }
+      appLogger.info('app_lifecycle', 'App resumed');
       resumeTts();
     });
 
     // Cleanup listeners on unmount or route change
     return () => {
-      if (isAuthenticatedRoute && hasAudioConsent) stopAmbient();
       pauseListener.remove();
       resumeListener.remove();
     };
   }, [location.pathname]);
 
-  // Monitor consent changes and trigger audio start if needed
+  // Monitor consent changes
   useEffect(() => {
     const hasAudioConsent = localStorage.getItem("india-explorer:audio-consent:v1") === "1";
     const isAuthenticatedRoute = !preAuthRoutes.includes(location.pathname);
     
     console.log("[RootComponent.consentEffect] Consent changed:", hasAudioConsent, "Route:", location.pathname);
-    
-    if (isAuthenticatedRoute && hasAudioConsent) {
-      console.log("[RootComponent] Consent detected, starting ambient");
-      startAmbient();
-    }
   }, []);
 
   const innerComponent = (

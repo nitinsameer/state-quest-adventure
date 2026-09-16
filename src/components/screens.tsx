@@ -3121,25 +3121,7 @@ export function ProfileScreen() {
   const p = useProgress();
   const [isEditing, setIsEditing] = useState(false);
   const [tempName, setTempName] = useState(p.name);
-  const [tempAvatar, setTempAvatar] = useState<AvatarId>(p.avatar as AvatarId);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
-  const [showAvatarModal, setShowAvatarModal] = useState(false);
-  
-  // Avatar list for selection
-  const avatarImages = [
-    { id: "explorer-hat" as AvatarId, image: avatarExplorerHat },
-    { id: "explorer-pink" as AvatarId, image: avatarExplorerPink },
-    { id: "geek-glasses" as AvatarId, image: avatarGeekGlasses },
-    { id: "girl-peace" as AvatarId, image: avatarGirlPeace },
-    { id: "turban-red" as AvatarId, image: avatarTurbanRed },
-    { id: "girl-earring" as AvatarId, image: avatarGirlEarring },
-    { id: "boy-smile" as AvatarId, image: avatarBoySmi },
-    { id: "girl-tikka" as AvatarId, image: avatarGirlTikka },
-    { id: "ski-goggles" as AvatarId, image: avatarSkiGoggles },
-    { id: "farmer-hat" as AvatarId, image: avatarFarmerHat },
-    { id: "sports-cap" as AvatarId, image: avatarSportsCap },
-    { id: "girl-flower" as AvatarId, image: avatarGirlFlower },
-  ];
   
   // Route guard: redirect to welcome if not onboarded (defensive check)
   if (!p.onboarded) {
@@ -3151,11 +3133,10 @@ export function ProfileScreen() {
   const goBack = useGoBack();
   const stampsCollected = Object.keys(p.stamps ?? {}).length;
 
-  const handleSaveProfile = () => {
+  const handleSaveName = () => {
     const trimmedName = tempName.trim();
     if (!trimmedName || trimmedName.length === 0) {
       setTempName(p.name); // Reset to original
-      setTempAvatar(p.avatar as AvatarId);
       setIsEditing(false);
       return;
     }
@@ -3163,14 +3144,12 @@ export function ProfileScreen() {
     setSaveStatus("saving");
     fxTap();
     
-    // Save the profile with new name and avatar
-    const newName = getAvatarName(tempAvatar);
-    saveProfile({ name: trimmedName, avatar: tempAvatar, ageBand: p.ageBand });
+    // Save the profile with new name
+    saveProfile({ name: trimmedName, avatar: p.avatar, ageBand: p.ageBand });
     
     setSaveStatus("saved");
     setTimeout(() => {
       setIsEditing(false);
-      setShowAvatarModal(false);
       setSaveStatus("idle");
     }, 500);
   };
@@ -3178,9 +3157,7 @@ export function ProfileScreen() {
   const handleCancelEdit = () => {
     fxTap();
     setTempName(p.name); // Reset to original
-    setTempAvatar(p.avatar as AvatarId);
     setIsEditing(false);
-    setShowAvatarModal(false);
     setSaveStatus("idle");
   };
 
@@ -3209,33 +3186,18 @@ export function ProfileScreen() {
           </button>
         </div>
         <div className="flex flex-col items-center mt-4">
-          <button
-            onClick={() => {
-              fxTap();
-              setIsEditing(true);
-              setShowAvatarModal(true);
-            }}
-            className="relative animate-bounce group cursor-pointer"
-            style={{ animationDelay: "0ms" }}
-            title="Change avatar"
-          >
-            <div className="h-24 w-24 rounded-3xl bg-white p-2 shadow-xl flex items-center justify-center text-5xl overflow-hidden group-hover:shadow-2xl transition">
+          <div className="relative animate-bounce" style={{ animationDelay: "0ms" }}>
+            <div className="h-24 w-24 rounded-3xl bg-white p-2 shadow-xl flex items-center justify-center text-5xl overflow-hidden">
               <img 
-                src={getAvatarImage(isEditing ? tempAvatar : p.avatar)} 
-                alt={getAvatarName(isEditing ? tempAvatar : p.avatar)}
+                src={getAvatarImage(p.avatar)} 
+                alt={getAvatarName(p.avatar)}
                 className="w-full h-full object-cover"
               />
             </div>
             <div className="absolute -bottom-2 -right-2 h-9 w-9 rounded-full gradient-gold text-white flex items-center justify-center text-display text-sm font-extrabold border-4 border-white">
               {level}
             </div>
-            {/* Edit indicator */}
-            {isEditing && (
-              <div className="absolute -top-1 -right-1 h-6 w-6 rounded-full bg-saffron text-white flex items-center justify-center text-xs font-bold border-2 border-white">
-                ✏️
-              </div>
-            )}
-          </button>
+          </div>
           
           {/* Name Section - Edit Mode or Display Mode */}
           {isEditing ? (
@@ -3245,7 +3207,7 @@ export function ProfileScreen() {
                 value={tempName}
                 onChange={(e) => setTempName(e.target.value.slice(0, 20))}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter") handleSaveProfile();
+                  if (e.key === "Enter") handleSaveName();
                   if (e.key === "Escape") handleCancelEdit();
                 }}
                 placeholder="Enter name"
@@ -3254,7 +3216,7 @@ export function ProfileScreen() {
               />
               <div className="flex gap-2">
                 <button
-                  onClick={handleSaveProfile}
+                  onClick={handleSaveName}
                   disabled={saveStatus === "saving"}
                   className={`flex-1 h-10 rounded-lg text-display font-extrabold text-white text-sm transition ${
                     saveStatus === "saved"
@@ -3284,11 +3246,10 @@ export function ProfileScreen() {
                   onClick={() => {
                     fxTap();
                     setTempName(p.name);
-                    setTempAvatar(p.avatar as AvatarId);
                     setIsEditing(true);
                   }}
                   className="h-8 w-8 rounded-lg bg-white/20 hover:bg-white/30 text-white flex items-center justify-center text-sm transition"
-                  title="Edit name and avatar"
+                  title="Edit name"
                 >
                   ✏️
                 </button>
@@ -3311,6 +3272,10 @@ export function ProfileScreen() {
 
 
       <div className="px-5 mt-5 space-y-3 flex-1 overflow-auto">
+        <div className="animate-fade-in" style={{ animationDelay: "200ms" }}>
+          <SoundToggleRow />
+        </div>
+
         {/* Achievements Section - Link to Badges */}
         <div className="animate-fade-in" style={{ animationDelay: "225ms" }}>
           <Link
@@ -3398,85 +3363,88 @@ export function ProfileScreen() {
           </Link>
         </div>
       </div>
+    </div>
+  );
+}
 
-      {/* Avatar Selection Modal */}
-      {showAvatarModal && isEditing && (
-        <div className="fixed inset-0 bg-black/50 flex items-end justify-center z-50 p-4 animate-fade-in">
-          <div className="w-full max-w-sm bg-white rounded-3xl shadow-2xl p-6 max-h-[80vh] overflow-y-auto animate-slide-up">
-            {/* Close button */}
-            <button
-              onClick={() => setShowAvatarModal(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl"
-            >
-              ✕
-            </button>
+function SoundToggleRow() {
+  const [audioEnabled, setAudioEnabled] = useState(() => {
+    return localStorage.getItem("india-explorer:audio-enabled:v1") === "1";
+  });
 
-            <div className="text-center mb-6">
-              <div className="text-display text-xl font-extrabold text-ink">Choose Your Avatar</div>
-              <div className="text-sm text-muted-foreground mt-1">Pick your explorer character</div>
-            </div>
+  const toggleAudio = () => {
+    const newState = !audioEnabled;
+    setAudioEnabled(newState);
+    localStorage.setItem("india-explorer:audio-enabled:v1", newState ? "1" : "0");
+    if (newState) fxTap();
+  };
 
-            {/* Avatar Grid */}
-            <div className="grid grid-cols-4 gap-3 mb-6">
-              {avatarImages.map((a) => (
-                <button
-                  key={a.id}
-                  onClick={() => {
-                    fxTap();
-                    setTempAvatar(a.id);
-                  }}
-                  className={`aspect-square rounded-2xl flex items-center justify-center border-4 transition transform overflow-hidden ${
-                    a.id === tempAvatar
-                      ? "border-saffron shadow-[var(--shadow-glow-orange)] scale-110"
-                      : "border-gray-200 hover:scale-105"
-                  }`}
-                >
-                  <img
-                    src={a.image}
-                    alt={getAvatarName(a.id)}
-                    className="w-full h-full object-cover"
-                  />
-                </button>
-              ))}
-            </div>
+  const [fileEnabled, setFileEnabled] = useState(() => {
+    return localStorage.getItem("india-explorer:file-enabled:v1") === "1";
+  });
 
-            {/* Selected Avatar Preview */}
-            {tempAvatar && (() => {
-              const selectedAvatar = avatarImages.find(a => a.id === tempAvatar);
-              const avatarName = getAvatarName(tempAvatar);
-              return selectedAvatar ? (
-                <div className="rounded-2xl gradient-saffron p-4 text-center text-white mb-6 animate-fade-in">
-                  <div className="text-2xl font-extrabold">{avatarName}</div>
-                  <div className="text-xs opacity-90 mt-1">Your new explorer!</div>
-                </div>
-              ) : null;
-            })()}
+  const toggleFile = () => {
+    const newState = !fileEnabled;
+    setFileEnabled(newState);
+    localStorage.setItem("india-explorer:file-enabled:v1", newState ? "1" : "0");
+    if (newState) fxTap();
+  };
 
-            {/* Action buttons */}
-            <div className="space-y-2">
-              <button
-                onClick={handleSaveProfile}
-                disabled={saveStatus === "saving"}
-                className={`w-full h-12 rounded-2xl text-white font-extrabold transition ${
-                  saveStatus === "saved"
-                    ? "gradient-success"
-                    : saveStatus === "saving"
-                      ? "bg-gray-400"
-                      : "gradient-saffron hover:shadow-lg active:scale-95"
-                }`}
-              >
-                {saveStatus === "saved" ? "✓ Saved!" : saveStatus === "saving" ? "Saving..." : "Save Changes"}
-              </button>
-              <button
-                onClick={handleCancelEdit}
-                className="w-full h-12 rounded-2xl bg-gray-100 text-gray-800 font-extrabold hover:bg-gray-200 transition active:scale-95"
-              >
-                Cancel
-              </button>
-            </div>
+  return (
+    <div className="space-y-3">
+      {/* Audio Permission */}
+      <button
+        type="button"
+        role="switch"
+        aria-checked={audioEnabled}
+        aria-label="Audio narration permission"
+        onClick={toggleAudio}
+        className="w-full rounded-2xl bg-white shadow-soft border border-black/5 p-3 flex items-center gap-3 transition active:scale-[0.99]"
+      >
+        <div className="h-12 w-12 rounded-2xl bg-blue-100 flex items-center justify-center text-2xl">
+          🎧
+        </div>
+        <div className="flex-1 text-left">
+          <div className="text-display font-extrabold text-[15px] leading-tight">Audio Narration</div>
+          <div className="text-[11px] font-bold text-muted-foreground">
+            {audioEnabled ? "Stories are read aloud" : "Turn on to hear stories"}
           </div>
         </div>
-      )}
+        <span
+          className={`h-7 w-12 rounded-full flex items-center px-1 transition ${audioEnabled ? "gradient-success" : "bg-muted"}`}
+        >
+          <span
+            className={`h-5 w-5 rounded-full bg-white shadow transition-transform ${audioEnabled ? "translate-x-5" : "translate-x-0"}`}
+          />
+        </span>
+      </button>
+
+      {/* File Save Permission */}
+      <button
+        type="button"
+        role="switch"
+        aria-checked={fileEnabled}
+        aria-label="File save permission"
+        onClick={toggleFile}
+        className="w-full rounded-2xl bg-white shadow-soft border border-black/5 p-3 flex items-center gap-3 transition active:scale-[0.99]"
+      >
+        <div className="h-12 w-12 rounded-2xl bg-green-100 flex items-center justify-center text-2xl">
+          📁
+        </div>
+        <div className="flex-1 text-left">
+          <div className="text-display font-extrabold text-[15px] leading-tight">Save & Share</div>
+          <div className="text-[11px] font-bold text-muted-foreground">
+            {fileEnabled ? "Can save postcards" : "Turn on to save postcards"}
+          </div>
+        </div>
+        <span
+          className={`h-7 w-12 rounded-full flex items-center px-1 transition ${fileEnabled ? "gradient-success" : "bg-muted"}`}
+        >
+          <span
+            className={`h-5 w-5 rounded-full bg-white shadow transition-transform ${fileEnabled ? "translate-x-5" : "translate-x-0"}`}
+          />
+        </span>
+      </button>
     </div>
   );
 }
