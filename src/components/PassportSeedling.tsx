@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useProgress, type PostcardData } from "@/lib/progress";
 import { REGIONS, REGION_KEYS, getProgressPercentage } from "@/lib/passport-helpers";
+import { getState } from "@/lib/states";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { PostcardModal } from "@/components/PostcardModal";
 import { fxTap } from "@/lib/fx";
@@ -105,14 +106,12 @@ export function PassportSeedling() {
         />
       )}
 
-      {/* Header */}
-      <div className="px-5 pt-4 pb-3 bg-gradient-to-r from-blue-400 to-purple-400 text-white rounded-b-3xl shadow-lg">
-        <div className="text-2xl font-extrabold">My Passport 📖</div>
-      </div>
+      {/* REMOVED HEADER - No "My Passport 📖" */}
 
-      {/* Profile Card */}
-      <div className="mx-5 mt-4 p-4 rounded-3xl bg-gradient-to-br from-amber-700 to-amber-900 text-white shadow-lg">
-        <div className="flex items-center gap-3 mb-2">
+      {/* Profile Card - EXPANDED to 140px */}
+      <div className="mx-5 mt-5 p-5 rounded-3xl bg-gradient-to-br from-amber-700 to-amber-900 text-white shadow-lg">
+        {/* ROW 1: Avatar + User Info */}
+        <div className="flex items-center gap-4 mb-4">
           <div className="h-16 w-16 rounded-2xl bg-white p-1 flex items-center justify-center overflow-hidden flex-shrink-0">
             <img 
               src={getAvatarImage(progress.avatar)} 
@@ -120,13 +119,53 @@ export function PassportSeedling() {
               className="w-full h-full object-cover"
             />
           </div>
-          <div>
+          <div className="flex-1">
             <div className="text-lg font-extrabold">{progress.name}</div>
             <div className="text-xs opacity-75">Passport No: IN-2026-{String(Math.random() * 10000).padStart(4, "0")}</div>
+            <div className="text-xs opacity-90 mt-1">Age Band: {progress.ageBand}</div>
           </div>
         </div>
-        <div className="text-sm opacity-90 mt-2">
-          India Progress: {progress.completed.length} of 36 states
+
+        {/* DIVIDER */}
+        <div className="border-t border-white/30 mb-4"></div>
+
+        {/* ROW 2: Stats Row */}
+        <div className="flex justify-between mb-4">
+          <div className="text-center">
+            <div className="text-2xl">🗺️</div>
+            <div className="text-sm font-extrabold mt-1">{progress.completed.filter(s => {
+              const state = getState(s);
+              return state.kind !== "ut";
+            }).length}/28</div>
+            <div className="text-xs opacity-90">States</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl">🏝️</div>
+            <div className="text-sm font-extrabold mt-1">{progress.completed.filter(s => {
+              const state = getState(s);
+              return state.kind === "ut";
+            }).length}/8</div>
+            <div className="text-xs opacity-90">UTs</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl">📊</div>
+            <div className="text-sm font-extrabold mt-1">{Math.round((progress.completed.length / 36) * 100)}%</div>
+            <div className="text-xs opacity-90">Complete</div>
+          </div>
+        </div>
+
+        {/* ROW 3: Progress Bar */}
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-bold opacity-90">Journey Progress</span>
+            <span className="text-xs font-bold opacity-90">{Math.round((progress.completed.length / 36) * 100)}%</span>
+          </div>
+          <div className="h-2.5 bg-white/30 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-amber-300 to-yellow-200 rounded-full transition-all duration-500"
+              style={{ width: `${Math.round((progress.completed.length / 36) * 100)}%` }}
+            />
+          </div>
         </div>
       </div>
 
