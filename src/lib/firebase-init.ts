@@ -22,12 +22,21 @@ const firebaseConfig = {
 // Check if Firebase is properly configured
 const isFirebaseConfigured = firebaseConfig.projectId && firebaseConfig.apiKey
 
-// Initialize Firebase only if configured
+// Initialize Firebase only if configured - but lazy, on-demand
 let app: ReturnType<typeof initializeApp> | null = null
 let analytics: ReturnType<typeof getAnalytics> | null = null
 let db: ReturnType<typeof getFirestore> | null = null
+let initialized = false
 
-if (isFirebaseConfigured) {
+function initializeFirebase() {
+  if (initialized) return
+  initialized = true
+  
+  if (!isFirebaseConfigured) {
+    console.warn('⚠️ Firebase not configured - analytics disabled. Set environment variables to enable.')
+    return
+  }
+
   try {
     app = initializeApp(firebaseConfig)
     analytics = getAnalytics(app)
@@ -42,8 +51,6 @@ if (isFirebaseConfigured) {
   } catch (error) {
     console.error('❌ Firebase initialization failed:', error)
   }
-} else {
-  console.warn('⚠️ Firebase not configured - analytics disabled. Set environment variables to enable.')
 }
 
-export { app, analytics, db, isFirebaseConfigured }
+export { app, analytics, db, isFirebaseConfigured, initializeFirebase }

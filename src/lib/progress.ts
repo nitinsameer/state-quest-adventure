@@ -4,6 +4,32 @@ import { firebaseEvents } from "./firebase-events";
 
 export type BadgeId = "monument" | "animal" | "explorer";
 
+/** Achievement-based badge system - 20 badges across 4 tiers */
+export type AchievementBadgeId = 
+  // Tier 1: Seedling
+  | "explorers-awakening" | "reader" | "quiz-starter" | "stamp-collector" | "fired-up"
+  // Tier 2: Growing
+  | "five-explorer" | "knowledge-keeper" | "quiz-master" | "artist" | "week-warrior" | "regional-champ"
+  // Tier 3: Mighty
+  | "ten-champion" | "master-reader" | "quiz-legend" | "unstoppable" | "postcard-master"
+  // Tier 4: Elite
+  | "india-conqueror" | "level-master" | "badge-collector" | "world-guardian";
+
+export type AchievementBadgeTier = "seedling" | "growing" | "mighty" | "elite";
+
+export type AchievementBadge = {
+  id: AchievementBadgeId;
+  tier: AchievementBadgeTier;
+  icon: string;
+  name: string;
+  description: string;
+  achievementId: string; // Links to ACHIEVEMENT_DEFS id
+  achievementMax: number; // Progress requirement
+  toneColor: "orange" | "green" | "blue" | "purple";
+  unlocked: boolean;
+  progress: number; // Current progress toward unlock
+};
+
 export type PostcardData = {
   generatedAt: string; // ISO timestamp
   state: string;
@@ -35,6 +61,8 @@ export type Progress = {
   cards: Record<string, number[]>;
   /** state name -> { card index -> replay count } — tracks how many times user replayed each card */
   replayCount?: Record<string, Record<number, number>>;
+  /** state name -> { card category -> array of visited card indexes } — tracks which cards user has opened */
+  cardVisits?: Record<string, Record<string, number[]>>;
 };
 
 export const STATE_BADGES: { id: BadgeId; name: string; xp: number }[] = [
@@ -83,6 +111,7 @@ function defaultProgress(): Progress {
     badges: {},
     cards: {},
     replayCount: {},
+    cardVisits: {},
   };
 }
 
@@ -116,7 +145,7 @@ function hydrate() {
     // Set a timer to abort if localStorage is slow
     const timeout = setTimeout(() => {
       timeoutOccurred = true;
-    }, 500); // 500ms timeout
+    }, 200); // 200ms timeout
     
     try {
       storageData = localStorage.getItem(STORAGE_KEY);
@@ -202,7 +231,11 @@ export function useProgress(): Progress {
 /* ---------- actions ---------- */
 
 export function saveProfile(profile: { name: string; avatar: string; ageBand: string }) {
-  set((p) => ({ ...p, ...profile, onboarded: true }));
+  set((p) => {
+    // Store avatar as ID string (e.g., "explorer-hat") not emoji
+    // Avatar ID is used throughout app for consistent image display
+    return { ...p, ...profile, onboarded: true };
+  });
 }
 
 /** 
@@ -314,6 +347,57 @@ export function cardsDone(p: Progress, stateName: string): number {
   return p.completed.includes(stateName)
     ? CARDS_PER_STATE
     : cardsRead(p, stateName).length;
+}
+
+/**
+ * Record that a card was visited by the user
+ * Used to track which specific cards in a category have been opened
+ * @param stateName The state name
+ * @param cardCategory The card category (e.g., "capital", "language", "food", "places", "animal", "fact")
+ * @param cardIndex The index of the card within that category
+ */
+export function markCardVisit(stateName: string, cardCategory: string, cardIndex: number) {
+  set((p) => {
+    const visits = p.cardVisits ?? {};
+    const stateVisits = visits[stateName] ?? {};
+    const categoryVisits = stateVisits[cardCategory] ?? [];
+    
+    // Only add if not already present (avoid duplicates)
+    if (!categoryVisits.includes(cardIndex)) {
+      categoryVisits.push(cardIndex);
+    }
+    
+    return {
+      ...p,
+      cardVisits: {
+        ...visits,
+        [stateName]: {
+          ...stateVisits,
+          [cardCategory]: categoryVisits,
+        },
+      },
+    };
+  });
+}
+
+/**
+ * Get the number of visited cards in a specific category
+ * @returns Number of cards the user has opened in this category
+ */
+export function getVisitedCardCount(p: Progress, stateName: string, cardCategory: string): number {
+  const visits = p.cardVisits?.[stateName]?.[cardCategory];
+  if (!visits) return 0;
+  return Array.isArray(visits) ? visits.length : 0;
+}
+
+/**
+ * Check if a card has been visited
+ * @returns true if user has opened this card before
+ */
+export function isCardVisited(p: Progress, stateName: string, cardCategory: string, cardIndex: number): boolean {
+  const visits = p.cardVisits?.[stateName]?.[cardCategory];
+  if (!visits) return false;
+  return Array.isArray(visits) ? visits.includes(cardIndex) : false;
 }
 
 /**
@@ -458,7 +542,6 @@ export function statesWithProgress(p: Progress): IndiaState[] {
   
   // TESTING MODE: Make all states playable without progression requirements
   if (TESTING_MODE_UNLOCK_ALL_STATES) {
-    console.log('🧪 TESTING MODE ACTIVE: All states unlocked for testing');
     return INDIA_STATES.map((s, idx) => {
       const done = p.completed.includes(s.name);
       let status: StateStatus = "locked";
@@ -504,6 +587,7 @@ export function badgeCount(p: Progress) {
 }
 
 export const TOTAL_BADGES_PER_STATE = ALL_BADGE_IDS.length;
+export { ALL_BADGE_IDS };
 
 /* ---------- achievements ---------- */
 
@@ -530,7 +614,34 @@ type AchievementDef = {
   value: (p: Progress) => number;
 };
 
+/** Helper: Count total cards read across all states */
+function totalCardsRead(p: Progress): number {
+  return Object.values(p.cards ?? {}).reduce((total, cards) => total + cards.length, 0);
+}
+
+/** Helper: Count total postcards created */
+function totalPostcardsCreated(p: Progress): number {
+  return Object.keys(p.postcards ?? {}).length;
+}
+
+/** Helper: Check if any region has all states completed */
+function anyRegionCompleted(p: Progress): number {
+  // India states are grouped by region. Count regions where all states are done.
+  // For simplicity, we'll check if we have completed states from different regions
+  // This is a basic implementation - can be refined based on region definitions
+  const completedSet = new Set(p.completed);
+  let regionsCompleted = 0;
+
+  // Group states by region (simplified - you may need to adjust based on actual region grouping)
+  // For now, we'll consider a region "complete" if we've completed 3+ adjacent states
+  // This is placeholder logic that can be refined
+  
+  // For this MVP, return 1 if any completion exists (simplification)
+  return p.completed.length > 0 ? Math.min(1, Math.floor(p.completed.length / 4)) : 0;
+}
+
 const ACHIEVEMENT_DEFS: AchievementDef[] = [
+  // Original 8 achievements
   {
     id: "first-state",
     icon: "🥇",
@@ -603,6 +714,157 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     max: INDIA_STATES.length,
     value: (p) => p.completed.length,
   },
+  
+  // New 16 achievements
+  {
+    id: "streak-starter",
+    icon: "🔥",
+    title: "Streak Starter",
+    sub: "Maintain a 1 day streak",
+    tone: "orange",
+    max: 1,
+    value: (p) => p.streak,
+  },
+  {
+    id: "streak-master",
+    icon: "🔥",
+    title: "Streak Master",
+    sub: "Maintain a 7 day streak",
+    tone: "orange",
+    max: 7,
+    value: (p) => p.streak,
+  },
+  {
+    id: "unstoppable",
+    icon: "🔥",
+    title: "Unstoppable",
+    sub: "Maintain a 30 day streak",
+    tone: "gold",
+    max: 30,
+    value: (p) => p.streak,
+  },
+  {
+    id: "card-reader",
+    icon: "📚",
+    title: "Card Reader",
+    sub: "Read 50 cards",
+    tone: "blue",
+    max: 50,
+    value: (p) => totalCardsRead(p),
+  },
+  {
+    id: "knowledge-seeker",
+    icon: "📚",
+    title: "Knowledge Seeker",
+    sub: "Read 100 cards",
+    tone: "blue",
+    max: 100,
+    value: (p) => totalCardsRead(p),
+  },
+  {
+    id: "card-master",
+    icon: "📚",
+    title: "Card Master",
+    sub: "Read 200 cards",
+    tone: "gold",
+    max: 200,
+    value: (p) => totalCardsRead(p),
+  },
+  {
+    id: "quiz-beginner",
+    icon: "🎯",
+    title: "Quiz Beginner",
+    sub: "Answer 10 questions",
+    tone: "blue",
+    max: 10,
+    value: (p) => p.answered.length,
+  },
+  {
+    id: "quiz-expert",
+    icon: "🎯",
+    title: "Quiz Expert",
+    sub: "Answer 50 questions",
+    tone: "orange",
+    max: 50,
+    value: (p) => p.answered.length,
+  },
+  {
+    id: "quiz-legend",
+    icon: "🎯",
+    title: "Quiz Legend",
+    sub: "Answer 100 questions",
+    tone: "gold",
+    max: 100,
+    value: (p) => p.answered.length,
+  },
+  {
+    id: "regional-expert",
+    icon: "🌍",
+    title: "Regional Expert",
+    sub: "Complete 1 full region",
+    tone: "green",
+    max: 1,
+    value: (p) => anyRegionCompleted(p),
+  },
+  {
+    id: "route-master",
+    icon: "🌍",
+    title: "Route Master",
+    sub: "Complete Route 1 (28 states)",
+    tone: "orange",
+    max: 28,
+    value: (p) => p.completed.length,
+  },
+  {
+    id: "world-explorer",
+    icon: "🌍",
+    title: "World Explorer",
+    sub: "Complete Route 2 (8 UTs)",
+    tone: "gold",
+    max: 8,
+    value: (p) => p.completed.length,
+  },
+  {
+    id: "postcard-creator",
+    icon: "🎨",
+    title: "Postcard Creator",
+    sub: "Create 1 postcard",
+    tone: "blue",
+    max: 1,
+    value: (p) => totalPostcardsCreated(p),
+  },
+  {
+    id: "postcard-collector",
+    icon: "🎨",
+    title: "Collector",
+    sub: "Create 5 postcards",
+    tone: "orange",
+    max: 5,
+    value: (p) => totalPostcardsCreated(p),
+  },
+  {
+    id: "postcard-master",
+    icon: "🎨",
+    title: "Postcard Master",
+    sub: "Create 20 postcards",
+    tone: "gold",
+    max: 20,
+    value: (p) => totalPostcardsCreated(p),
+  },
+  {
+    id: "speed-runner",
+    icon: "⚡",
+    title: "Speed Runner",
+    sub: "Complete state in 1 day",
+    tone: "blue",
+    max: 1,
+    value: (p) => {
+      // Check if any state was completed on the same day as onboarding
+      // For now, return 1 if completed.length > 0 (simplified)
+      // Full implementation would need timestamp tracking per completion
+      return p.completed.length > 0 ? 1 : 0;
+    },
+  },
 ];
 
 export function achievementsFor(p: Progress): Achievement[] {
@@ -614,4 +876,250 @@ export function achievementsFor(p: Progress): Achievement[] {
 
 export function unlockedCount(p: Progress) {
   return achievementsFor(p).filter((a) => a.done).length;
+}
+
+/* ---------- achievement badges (20 badges across 4 tiers) ---------- */
+
+type AchievementBadgeDef = {
+  id: AchievementBadgeId;
+  tier: AchievementBadgeTier;
+  icon: string;
+  name: string;
+  description: string;
+  achievementId: string; // Links to ACHIEVEMENT_DEFS
+  achievementMax: number;
+  toneColor: "orange" | "green" | "blue" | "purple";
+};
+
+const ACHIEVEMENT_BADGES: AchievementBadgeDef[] = [
+  // TIER 1: SEEDLING (Saffron)
+  {
+    id: "explorers-awakening",
+    tier: "seedling",
+    icon: "🎯",
+    name: "Explorer's Awakening",
+    description: "Your first state is complete! Adventure awaits beyond.",
+    achievementId: "first-state",
+    achievementMax: 1,
+    toneColor: "orange",
+  },
+  {
+    id: "reader",
+    tier: "seedling",
+    icon: "📚",
+    name: "Reader",
+    description: "Read 50 learning cards across all states.",
+    achievementId: "card-reader",
+    achievementMax: 50,
+    toneColor: "orange",
+  },
+  {
+    id: "quiz-starter",
+    tier: "seedling",
+    icon: "🧠",
+    name: "Quiz Starter",
+    description: "Answered 10 quiz questions correctly.",
+    achievementId: "quiz-beginner",
+    achievementMax: 10,
+    toneColor: "orange",
+  },
+  {
+    id: "stamp-collector",
+    tier: "seedling",
+    icon: "🗓️",
+    name: "Stamp Collector",
+    description: "Collected 10 passport stamps.",
+    achievementId: "stamp-book",
+    achievementMax: 10,
+    toneColor: "orange",
+  },
+  {
+    id: "fired-up",
+    tier: "seedling",
+    icon: "🔥",
+    name: "Fired Up",
+    description: "Maintained a 1 day play streak.",
+    achievementId: "streak-starter",
+    achievementMax: 1,
+    toneColor: "orange",
+  },
+
+  // TIER 2: GROWING (Green)
+  {
+    id: "five-explorer",
+    tier: "growing",
+    icon: "🏆",
+    name: "Five Explorer",
+    description: "Explored 5 different states.",
+    achievementId: "five-states",
+    achievementMax: 5,
+    toneColor: "green",
+  },
+  {
+    id: "knowledge-keeper",
+    tier: "growing",
+    icon: "📖",
+    name: "Knowledge Keeper",
+    description: "Read 100 learning cards.",
+    achievementId: "knowledge-seeker",
+    achievementMax: 100,
+    toneColor: "green",
+  },
+  {
+    id: "quiz-master",
+    tier: "growing",
+    icon: "🎯",
+    name: "Quiz Master",
+    description: "Answered 50 quiz questions.",
+    achievementId: "quiz-expert",
+    achievementMax: 50,
+    toneColor: "green",
+  },
+  {
+    id: "artist",
+    tier: "growing",
+    icon: "🎨",
+    name: "Artist",
+    description: "Created 5 postcards.",
+    achievementId: "postcard-collector",
+    achievementMax: 5,
+    toneColor: "green",
+  },
+  {
+    id: "week-warrior",
+    tier: "growing",
+    icon: "🔥",
+    name: "Week Warrior",
+    description: "Maintained a 7 day play streak.",
+    achievementId: "streak-master",
+    achievementMax: 7,
+    toneColor: "green",
+  },
+  {
+    id: "regional-champ",
+    tier: "growing",
+    icon: "🌍",
+    name: "Regional Champ",
+    description: "Completed 1 full region.",
+    achievementId: "regional-expert",
+    achievementMax: 1,
+    toneColor: "green",
+  },
+
+  // TIER 3: MIGHTY (Blue)
+  {
+    id: "ten-champion",
+    tier: "mighty",
+    icon: "👑",
+    name: "Ten Champion",
+    description: "Explored 10 states.",
+    achievementId: "ten-states",
+    achievementMax: 10,
+    toneColor: "blue",
+  },
+  {
+    id: "master-reader",
+    tier: "mighty",
+    icon: "📚",
+    name: "Master Reader",
+    description: "Read 200 learning cards.",
+    achievementId: "card-master",
+    achievementMax: 200,
+    toneColor: "blue",
+  },
+  {
+    id: "quiz-legend",
+    tier: "mighty",
+    icon: "🧠",
+    name: "Quiz Legend",
+    description: "Answered 100 quiz questions.",
+    achievementId: "quiz-legend",
+    achievementMax: 100,
+    toneColor: "blue",
+  },
+  {
+    id: "unstoppable",
+    tier: "mighty",
+    icon: "🔥",
+    name: "Unstoppable",
+    description: "Maintained a 30 day play streak.",
+    achievementId: "unstoppable",
+    achievementMax: 30,
+    toneColor: "blue",
+  },
+  {
+    id: "postcard-master",
+    tier: "mighty",
+    icon: "🎨",
+    name: "Postcard Master",
+    description: "Created 20 postcards.",
+    achievementId: "postcard-master",
+    achievementMax: 20,
+    toneColor: "blue",
+  },
+
+  // TIER 4: ELITE (Purple)
+  {
+    id: "india-conqueror",
+    tier: "elite",
+    icon: "👑",
+    name: "India Conqueror",
+    description: "Explored ALL 36 locations.",
+    achievementId: "india-master",
+    achievementMax: INDIA_STATES.length,
+    toneColor: "purple",
+  },
+  {
+    id: "level-master",
+    tier: "elite",
+    icon: "⭐",
+    name: "Level Master",
+    description: "Reached Level 5.",
+    achievementId: "level-five",
+    achievementMax: 5,
+    toneColor: "purple",
+  },
+  {
+    id: "badge-collector",
+    tier: "elite",
+    icon: "🏅",
+    name: "Badge Collector",
+    description: "Collected 15 state badges.",
+    achievementId: "badge-collector",
+    achievementMax: 15,
+    toneColor: "purple",
+  },
+  {
+    id: "world-guardian",
+    tier: "elite",
+    icon: "🌍",
+    name: "World Guardian",
+    description: "Explored all 8 Union Territories.",
+    achievementId: "world-explorer",
+    achievementMax: 8,
+    toneColor: "purple",
+  },
+];
+
+export function achievementBadgesFor(p: Progress): AchievementBadge[] {
+  return ACHIEVEMENT_BADGES.map((def) => {
+    // Find the achievement to get current progress
+    const achievement = achievementsFor(p).find((a) => a.id === def.achievementId);
+    const progress = achievement?.prog ?? 0;
+    const unlocked = progress >= def.achievementMax;
+
+    return {
+      ...def,
+      unlocked,
+      progress,
+    };
+  });
+}
+
+export function achievementBadgesForTier(p: Progress, tier: AchievementBadgeTier): AchievementBadge[] {
+  return achievementBadgesFor(p).filter((b) => b.tier === tier);
+}
+
+export function unlockedAchievementBadgeCount(p: Progress): number {
+  return achievementBadgesFor(p).filter((b) => b.unlocked).length;
 }

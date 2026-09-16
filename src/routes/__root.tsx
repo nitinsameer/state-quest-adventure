@@ -226,27 +226,30 @@ function RootComponent() {
       return;
     }
 
-    // User is onboarded - log session/analytics
+    // User is onboarded - log session/analytics (delay to not block initial render)
     const isReturningUser = true; // If onboarded, they're returning
 
-    firebaseEvents.sessionStart({
-      ageBand: progress.ageBand,
-      isReturningUser,
-    });
+    // Defer Firebase events until after initial render completes
+    setTimeout(() => {
+      firebaseEvents.sessionStart({
+        ageBand: progress.ageBand,
+        isReturningUser,
+      });
 
-    // Track daily visit and streak
-    firebaseEvents.dailyVisit({
-      ageBand: progress.ageBand,
-      streak: progress.streak,
-      daysActive: Object.keys(progress.stamps ?? {}).length,
-      totalXp: progress.xp,
-    });
+      // Track daily visit and streak
+      firebaseEvents.dailyVisit({
+        ageBand: progress.ageBand,
+        streak: progress.streak,
+        daysActive: Object.keys(progress.stamps ?? {}).length,
+        totalXp: progress.xp,
+      });
 
-    // Track streak milestones
-    const milestonesToCheck = [3, 7, 14, 30];
-    if (milestonesToCheck.includes(progress.streak)) {
-      firebaseEvents.streakMilestone(progress.streak);
-    }
+      // Track streak milestones
+      const milestonesToCheck = [3, 7, 14, 30];
+      if (milestonesToCheck.includes(progress.streak)) {
+        firebaseEvents.streakMilestone(progress.streak);
+      }
+    }, 500); // Defer by 500ms to avoid blocking initial render
   }, [progress.onboarded, progress]);
   
   // Get the journey back handler dynamically so it always calls the current one

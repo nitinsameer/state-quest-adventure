@@ -1,5 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { WelcomeScreen } from "@/components/screens";
+import { useProgress } from "@/lib/progress";
 
 export const Route = createFileRoute("/welcome")({
   head: () => ({
@@ -19,5 +21,19 @@ export const Route = createFileRoute("/welcome")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: WelcomeScreen,
+  component: WelcomeRoute,
 });
+
+function WelcomeRoute() {
+  const navigate = useNavigate();
+  const p = useProgress();
+
+  // Redirect returning customers to home
+  useEffect(() => {
+    if (p.onboarded) {
+      navigate({ to: "/home" });
+    }
+  }, [p.onboarded, navigate]);
+
+  return <WelcomeScreen />;
+}

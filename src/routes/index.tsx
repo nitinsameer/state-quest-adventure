@@ -72,12 +72,12 @@ function Splash() {
   useEffect(() => {
     if (!isReady) return;
 
-    appLogger.info('splash_screen', 'Splash effect setup', { delay: 1600 });
+    appLogger.info('splash_screen', 'Splash effect setup', { delay: 600 });
     const t = setTimeout(() => {
       const destination = p.onboarded ? "/home" : "/welcome";
       appLogger.info('splash_screen', 'Navigating after splash', { destination, onboarded: p.onboarded, isHydrated: isHydrated() });
       navigate({ to: destination });
-    }, 1600);
+    }, 600);
     return () => clearTimeout(t);
   }, [navigate, p.onboarded, isReady]);
 
