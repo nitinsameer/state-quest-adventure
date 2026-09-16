@@ -1,18 +1,28 @@
 import mascot from "@/assets/mascot.png";
 import airplane from "@/assets/airplane.png";
+import avatarExplorerHat from "@/assets/avatars/avatar-explorer-hat.png";
+import avatarExplorerPink from "@/assets/avatars/avatar-explorer-pink.png";
+import avatarGeekGlasses from "@/assets/avatars/avatar-geek-glasses.png";
+import avatarGirlPeace from "@/assets/avatars/avatar-girl-peace.png";
+import avatarTurbanRed from "@/assets/avatars/avatar-turban-red.png";
+import avatarGirlEarring from "@/assets/avatars/avatar-girl-earring.png";
+import avatarBoySmi from "@/assets/avatars/avatar-boy-smile.png";
+import avatarGirlTikka from "@/assets/avatars/avatar-girl-tikka.png";
+import avatarSkiGoggles from "@/assets/avatars/avatar-ski-goggles.png";
+import avatarFarmerHat from "@/assets/avatars/avatar-farmer-hat.png";
+import avatarSportsCap from "@/assets/avatars/avatar-sports-cap.png";
+import avatarGirlFlower from "@/assets/avatars/avatar-girl-flower.png";
 import { STATE_ART, TONE_GRADIENT, preloadStateArt } from "@/lib/state-art";
 import { getStateContent, getCardContent, getCardContentByAge } from "@/lib/state-content";
 import { stopTts, playTts, playStateNarration } from "@/lib/tts";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
-import { PassportSprout } from "@/components/PassportSprout";
 import { PassportSeedling } from "@/components/PassportSeedling";
-import { PassportSapling } from "@/components/PassportSapling";
-import { PassportMightyTree } from "@/components/PassportMightyTree";
-import { getPassportVariant } from "@/lib/passport-helpers";
 import { LanguageToggle, type LanguageCode } from "@/components/LanguageToggle";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { PostcardModal } from "@/components/PostcardModal";
+import { CardProgressBar } from "@/components/CardProgressBar";
 import { FirstSessionTutorial } from "@/components/FirstSessionTutorial";
+import { AVATAR_CONFIG, type AvatarId } from "@/lib/avatar-config";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouter, Navigate } from "@tanstack/react-router";
 import { fxCorrect, fxWrong, fxConfetti, fxStamp, fxTap, useSoundOn, setSoundOn } from "@/lib/fx";
@@ -46,12 +56,20 @@ import {
   STATE_BADGES,
   achievementsFor,
   markCard,
+  markCardVisit,
   touchStreak,
   cardsDone,
   cardsRead,
   CARDS_PER_STATE,
   XP_PER_CARD,
   isCardReplaying,
+  type BadgeId,
+  ALL_BADGE_IDS,
+  achievementBadgesFor,
+  achievementBadgesForTier,
+  unlockedAchievementBadgeCount,
+  type AchievementBadge,
+  type AchievementBadgeTier,
   getReplayCount,
   type Achievement,
   type PostcardData,
@@ -59,6 +77,43 @@ import {
 
 
 /* ---------- shared bits ---------- */
+
+/**
+ * Map avatar ID to imported image module
+ * Used throughout app to display consistent avatar images
+ */
+const AVATAR_IMAGE_MAP: Record<AvatarId, string> = {
+  "explorer-hat": avatarExplorerHat,
+  "explorer-pink": avatarExplorerPink,
+  "geek-glasses": avatarGeekGlasses,
+  "girl-peace": avatarGirlPeace,
+  "turban-red": avatarTurbanRed,
+  "girl-earring": avatarGirlEarring,
+  "boy-smile": avatarBoySmi,
+  "girl-tikka": avatarGirlTikka,
+  "ski-goggles": avatarSkiGoggles,
+  "farmer-hat": avatarFarmerHat,
+  "sports-cap": avatarSportsCap,
+  "girl-flower": avatarGirlFlower,
+};
+
+/**
+ * Get avatar image path for a given avatar ID
+ * Returns the imported image module or default
+ */
+function getAvatarImage(avatarId: string): string {
+  if (!avatarId) return avatarExplorerHat;
+  return AVATAR_IMAGE_MAP[avatarId as AvatarId] || avatarExplorerHat;
+}
+
+/**
+ * Get avatar name for a given avatar ID
+ * Returns the character name from config
+ */
+function getAvatarName(avatarId: string): string {
+  if (!avatarId) return "Explorer";
+  return AVATAR_CONFIG[avatarId as AvatarId]?.name || "Explorer";
+}
 
 function Cloud({ className = "" }: { className?: string }) {
   return (
@@ -270,24 +325,30 @@ export function WelcomeScreen() {
         >
           Start My Adventure ✈️
         </Link>
-        <Link
-          to="/home"
-          onClick={() => fxTap()}
-          className="mt-3 w-full h-12 rounded-2xl bg-explorer-soft text-explorer text-display font-bold flex items-center justify-center active:scale-95 transition-transform"
-        >
-          I already have progress
-        </Link>
       </div>
     </div>
   );
 }
 
 export function CreateProfileScreen() {
-  const avatars = ["🧒", "👧", "🧑‍🚀", "🧑‍🎤", "👦", "👩‍🦰"];
+  const avatarImages = [
+    { id: "explorer-hat" as AvatarId, image: avatarExplorerHat },
+    { id: "explorer-pink" as AvatarId, image: avatarExplorerPink },
+    { id: "geek-glasses" as AvatarId, image: avatarGeekGlasses },
+    { id: "girl-peace" as AvatarId, image: avatarGirlPeace },
+    { id: "turban-red" as AvatarId, image: avatarTurbanRed },
+    { id: "girl-earring" as AvatarId, image: avatarGirlEarring },
+    { id: "boy-smile" as AvatarId, image: avatarBoySmi },
+    { id: "girl-tikka" as AvatarId, image: avatarGirlTikka },
+    { id: "ski-goggles" as AvatarId, image: avatarSkiGoggles },
+    { id: "farmer-hat" as AvatarId, image: avatarFarmerHat },
+    { id: "sports-cap" as AvatarId, image: avatarSportsCap },
+    { id: "girl-flower" as AvatarId, image: avatarGirlFlower },
+  ];
+  
   const p = useProgress();
   const navigate = useNavigate();
-  const [avatar, setAvatar] = useState(p.avatar);
-  const [name, setName] = useState(p.onboarded ? p.name : "");
+  const [avatar, setAvatar] = useState<AvatarId>(p.avatar as AvatarId || avatarImages[0].id);
   const [ageBand, setAgeBand] = useState(p.ageBand);
   const [saved, setSaved] = useState(false);
   const [selectedAgeIndex, setSelectedAgeIndex] = useState(0);
@@ -327,57 +388,47 @@ export function CreateProfileScreen() {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-3 mt-6">
-          {avatars.map((a, idx) => (
+        <div className="grid grid-cols-4 gap-2 mt-6">
+          {avatarImages.map((a) => (
             <button
-              key={a}
+              key={a.id}
               type="button"
               onClick={() => {
                 fxTap();
-                setAvatar(a);
+                setAvatar(a.id);
                 setSaved(false);
               }}
-              className={`aspect-square rounded-3xl flex items-center justify-center text-5xl border-4 transition transform ${
-                a === avatar
-                  ? "bg-saffron-soft border-saffron shadow-[var(--shadow-glow-orange)] scale-110 animate-bounce"
-                  : "bg-white border-gray-200 hover:scale-105"
+              className={`aspect-square rounded-2xl flex items-center justify-center border-4 transition transform overflow-hidden ${
+                a.id === avatar
+                  ? "border-saffron shadow-[var(--shadow-glow-orange)] scale-110"
+                  : "border-gray-200 hover:scale-105"
               }`}
             >
-              {a}
+              <img
+                src={a.image}
+                alt={getAvatarName(a.id)}
+                className="w-full h-full object-cover"
+              />
             </button>
           ))}
         </div>
 
-        {/* Selected Avatar Preview */}
-        {avatar && (
-          <div className="mt-6 rounded-2xl gradient-saffron p-4 text-center text-white animate-fade-in">
-            <div className="text-4xl mb-2">{avatar}</div>
-            <div className="text-sm font-bold opacity-90">Your explorer!</div>
-          </div>
-        )}
-
-        {/* Step 2: Name Input */}
-        <div className="mt-8">
-          <label className="text-display text-sm font-bold text-gray-700">
-            📝 Explorer name
-          </label>
-          <input
-            value={name}
-            onChange={(e) => {
-              setName(e.target.value);
-              setSaved(false);
-            }}
-            placeholder="Your name"
-            className="mt-2 h-14 w-full rounded-2xl border-2 border-blue-300 bg-blue-50 px-4 text-display text-xl font-extrabold text-ink outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
-          />
-          {name && (
-            <div className="text-xs font-bold text-blue-600 animate-fade-in">
-              Let's go, <span className="text-blue-700">{name}</span>! ✨
+        {/* Selected Avatar Preview with Avatar Name */}
+        {avatar && (() => {
+          const selectedAvatar = avatarImages.find(a => a.id === avatar);
+          const avatarName = getAvatarName(avatar);
+          return selectedAvatar ? (
+            <div className="mt-6 rounded-2xl gradient-saffron p-4 text-center text-white animate-fade-in flex items-center justify-center gap-4">
+              <img src={selectedAvatar.image} alt={avatarName} className="w-20 h-20 rounded-full border-4 border-white shadow-lg" />
+              <div>
+                <div className="text-sm font-bold opacity-90">Your explorer!</div>
+                <div className="text-display text-lg font-extrabold">{avatarName}</div>
+              </div>
             </div>
-          )}
-        </div>
+          ) : null;
+        })()}
 
-        {/* Step 3: Age Selection with Vibrant Colors & Emojis */}
+        {/* Age Selection with Vibrant Colors & Emojis */}
         <div className="mt-8 mb-6">
           <label className="text-display text-sm font-bold text-gray-700">
             🎂 How old are you?
@@ -428,7 +479,8 @@ export function CreateProfileScreen() {
             // Firebase age-targeted telemetry logs AFTER user sees permission dialogs (__root.tsx)
             // This ensures parental consent gates age-band data collection
             
-            saveProfile({ name: name.trim() || "Explorer", avatar, ageBand });
+            const avatarName = getAvatarName(avatar);
+            saveProfile({ name: avatarName, avatar, ageBand });
             setSaved(true);
             setTimeout(() => navigate({ to: "/home" }), 400);
           }}
@@ -492,8 +544,8 @@ export function HomeDashboardScreen() {
       <div className={`px-5 pt-3 pb-3 gradient-saffron rounded-b-[32px] relative overflow-hidden transition-opacity duration-500 ${statsVisible ? "opacity-100" : "opacity-0"}`}>
         <Cloud className="absolute top-2 right-4 w-14 opacity-40" />
         <div className="flex items-center gap-3 relative">
-          <div className="h-14 w-14 rounded-2xl bg-white p-1 shadow-soft">
-            <img src={mascot} alt="Explorer mascot badge" className="w-full h-full object-contain" />
+          <div className="h-14 w-14 rounded-2xl bg-white p-1 shadow-soft flex items-center justify-center overflow-hidden">
+            <img src={getAvatarImage(p.avatar)} alt={getAvatarName(p.avatar)} className="w-full h-full object-cover" />
           </div>
           <div className="flex-1 text-white">
             <div className="text-xs font-bold opacity-90">Namaste,</div>
@@ -559,7 +611,7 @@ export function HomeDashboardScreen() {
           Continue your journey
         </div>
         <div className="mt-2 rounded-3xl bg-white p-4 shadow-soft border border-black/5 flex items-center gap-3">
-          <div className="h-16 w-16 rounded-2xl gradient-saffron p-2 flex items-center justify-center text-4xl animate-bounce">
+          <div className="h-16 w-16 rounded-2xl gradient-saffron p-2 flex items-center justify-center text-3xl animate-bounce">
             {current.emoji}
           </div>
           <div className="flex-1">
@@ -591,6 +643,8 @@ export function HomeDashboardScreen() {
           </Link>
         </div>
       </div>
+
+
 
       {/* Up next - with interactive locked cards */}
       <div className="px-5 mt-4 mb-4 flex-shrink-0">
@@ -938,7 +992,7 @@ export function JourneyMapScreen() {
   const [view, setView] = useState<{ screen: "intro" | "hub" | "card" | "quiz"; name: string; cardIndex?: number } | null>(null);
   const [selectedState, setSelectedState] = useState<string | null>(null);
   const STEP = 118;
-  const BANNER_GAP = 96;
+  const BANNER_GAP = 120;
 
   // Register the back handler for this screen with the global journey back handler
   useEffect(() => {
@@ -1010,7 +1064,7 @@ export function JourneyMapScreen() {
   const nodes: MapNode[] = [];
   const banners: { key: string; label: string; icon: string; y: number; done: number; total: number }[] = [];
 
-  let y = 70;
+  let y =50;
   let idx = 0;
   
   // Show all states for all age bands (removed age-based filtering)
@@ -1131,14 +1185,16 @@ export function JourneyMapScreen() {
     <div className="h-full w-full gradient-sky relative overflow-hidden flex flex-col">
       {/* Top HUD */}
       <div className="px-5 pt-3 flex items-center gap-3 relative z-10 animate-fade-in">
-        <div className="h-11 w-11 rounded-2xl bg-white shadow-soft p-1">
-          <img src={mascot} className="w-full h-full object-contain" alt="Explorer mascot" />
+        <div className="h-11 w-11 rounded-2xl bg-white shadow-soft p-1 flex items-center justify-center overflow-hidden">
+          <img src={getAvatarImage(p.avatar)} alt={getAvatarName(p.avatar)} className="w-full h-full object-cover" />
         </div>
         <div className="flex-1">
           <div className="text-display font-extrabold text-ink">India Journey</div>
           <div className="text-xs font-bold text-muted-foreground">
-            {banners.length >= 1 
-              ? `${completedStates}/${totalStates} states${banners.length >= 2 ? ` · ${banners[1].done}/${banners[1].total} UTs` : ''}`
+            {banners.length >= 2 
+              ? `${banners[0].done}/${banners[0].total} states · ${banners[1].done}/${banners[1].total} UTs`
+              : banners.length >= 1
+              ? `${banners[0].done}/${banners[0].total} states`
               : 'Loading...'
             }
           </div>
@@ -1246,10 +1302,8 @@ export function JourneyMapScreen() {
                     appLogger.info('journey_map_screen', 'CLICK EVENT on state: ' + n.name + ', status: ' + n.status);
                     fxTap();
                     setSelectedState(n.name);
-                    // TESTING MODE: Allow clicking any state (even locked ones)
-                    // In production, only allow clicking unlocked states (status !== "locked")
-                    const TESTING_MODE = true; // TODO: Sync with progress.ts flag before production
-                    if (n.status !== "locked" || TESTING_MODE) {
+                    // Production: Only allow accessing unlocked states
+                    if (n.status !== "locked") {
                       setView({ screen: "intro", name: n.name });
                     }
                   }}
@@ -1293,7 +1347,7 @@ export function JourneyMapScreen() {
                     </div>
                   </div>
                   <div
-                    className={`mt-1 text-[11px] font-extrabold px-2 py-0.5 rounded-full whitespace-nowrap transition ${
+                    className={`mt-1 text-[10px] font-extrabold px-2 py-0.5 rounded-full max-w-[65px] truncate transition ${
                       n.status === "locked"
                         ? "bg-white/70 text-muted-foreground"
                         : "bg-white text-ink shadow"
@@ -1319,6 +1373,7 @@ export function JourneyMapScreen() {
                   <img
                     src={airplane}
                     alt="Airplane travel decoration"
+                    className="w-14 h-14 object-contain drop-shadow-lg"
                     style={{ transform: "rotate(20deg)" }}
                   />
                 )}
@@ -1545,7 +1600,7 @@ export function LearningHubScreen({
 
       <div className="p-4 grid grid-cols-2 gap-3 flex-1 overflow-auto">
         {cards.map((c) => (
-          <HubCard key={c.title} {...c} />
+          <HubCard key={c.title} {...c} stateName={state.name} />
         ))}
       </div>
       <div className="p-4">
@@ -1573,6 +1628,7 @@ function HubCard({
   active,
   locked,
   canClick,
+  stateName,
   onOpen,
 }: {
   icon: string;
@@ -1584,6 +1640,7 @@ function HubCard({
   locked?: boolean;
   canClick?: boolean;
   index?: number;
+  stateName?: string;
   onOpen?: () => void;
 }) {
   const bg = {
@@ -1615,16 +1672,7 @@ function HubCard({
         {title}
       </div>
       <div className="text-xs font-bold text-muted-foreground">{sub}</div>
-      <div className="mt-3 flex items-center gap-1">
-        {[1, 2, 3].map((i) => (
-          <div
-            key={i}
-            className={`h-1.5 flex-1 rounded-full ${
-              done ? "bg-success" : active && i === 1 ? "bg-saffron" : "bg-black/10"
-            }`}
-          />
-        ))}
-      </div>
+      {stateName && <CardProgressBar stateName={stateName} cardCategory={title.toLowerCase().replace(/\s+/g, "-")} />}
       {done && (
         <div className="absolute top-2 right-2 h-7 w-7 rounded-full bg-success text-white flex items-center justify-center text-xs font-black">
           ✓
@@ -1824,7 +1872,7 @@ export function LearningCardScreen({
   const [showAudioPermissionPrompt, setShowAudioPermissionPrompt] = useState(false);
   
   // Check if audio is enabled
-  const isAudioEnabled = localStorage.getItem("india-explorer:audio-enabled:v1") !== "0";
+  const isAudioEnabled = localStorage.getItem("india-explorer:audio-enabled:v1") === "1";
   
   // Now compute cards using displayLanguage and ageBand (which are now declared)
   const cards = useMemo(() => {
@@ -1842,6 +1890,14 @@ export function LearningCardScreen({
   useEffect(() => {
     preloadStateArt(state.name, nextStateAfter(state.name)?.name);
   }, [state.name]);
+
+  // Track card visit when a new card is displayed
+  useEffect(() => {
+    if (card && state) {
+      const cardCategory = card.kicker.toLowerCase().replace(/\s+/g, "-");
+      markCardVisit(state.name, cardCategory, currentCardIndex);
+    }
+  }, [currentCardIndex, state?.name]);
 
   // Reset card index when cardIndex prop changes (for replay scenarios)
   useEffect(() => {
@@ -2610,21 +2666,8 @@ export function StateUnlockScreen({
 
 export function PassportScreen() {
   const p = useProgress();
-  const ageVariant = getPassportVariant(p.ageBand);
-
-  // Route to age-appropriate Passport variant
-  if (ageVariant === "sprout") {
-    return <PassportSprout />;
-  } else if (ageVariant === "seedling") {
-    return <PassportSeedling />;
-  } else if (ageVariant === "sapling") {
-    return <PassportSapling />;
-  } else if (ageVariant === "mighty-tree") {
-    return <PassportMightyTree />;
-  }
-
-  // Fallback (should not reach here)
-  return <PassportSapling />;
+  // All ages use Seedling design (region-based tabs)
+  return <PassportSeedling />;
 }
 
 function Stamp({
@@ -2810,316 +2853,265 @@ function BadgeDetailModal({
 }
 
 export function BadgesScreen() {
-  const p = useProgress();
-  const rows = statesWithProgress(p).map((s) => {
-    const earned = badgesFor(p, s.name);
-    const icons: Record<string, string> = {
-      monument: s.monument,
-      animal: s.animal,
-      explorer: "🎖️",
-    };
-    return {
-      state: s.name,
-      tone: s.tone,
-      badges: STATE_BADGES.map((b) => ({
-        icon: icons[b.id],
-        name: b.name,
-        done: earned.includes(b.id),
-      })),
-    };
-  });
-  const earnedCount = rows.reduce(
-    (acc, r) => acc + r.badges.filter((b) => b.done).length,
-    0
-  );
-  const totalCount = rows.length * 3;
+  const progress = useProgress();
+  const [selectedBadge, setSelectedBadge] = useState<AchievementBadge | null>(null);
+  const unlockedCount = unlockedAchievementBadgeCount(progress);
 
-  // Get encouragement message based on earned badges
-  const getEncouragementMessage = (): string => {
-    if (earnedCount === 0) {
-      return "Complete states to unlock badges!";
-    } else if (earnedCount < 10) {
-      return `You're on your way! ${earnedCount} badges earned.`;
-    } else if (earnedCount < 50) {
-      return `Great collection! ${earnedCount} badges earned.`;
-    } else {
-      return `Amazing! You're a badge master with ${earnedCount}!`;
-    }
+  const tierConfig = {
+    seedling: { 
+      icon: "🌱", 
+      label: "Seedling", 
+      gradient: "gradient-saffron",
+      bgTone: "saffron-soft",
+      borderTone: "border-saffron/30",
+    },
+    growing: { 
+      icon: "🌿", 
+      label: "Growing", 
+      gradient: "gradient-success",
+      bgTone: "success-soft",
+      borderTone: "border-success/30",
+    },
+    mighty: { 
+      icon: "🌳", 
+      label: "Mighty", 
+      gradient: "gradient-explorer",
+      bgTone: "explorer-soft",
+      borderTone: "border-explorer/30",
+    },
+    elite: { 
+      icon: "🌲", 
+      label: "Elite", 
+      gradient: "gradient-gold",
+      bgTone: "gold-soft",
+      borderTone: "border-gold/30",
+    },
   };
 
-  const [selectedBadge, setSelectedBadge] = useState<{
-    state: string;
-    badge: (typeof rows[0]["badges"][0]) & { index: number };
-  } | null>(null);
+  const tiers: AchievementBadgeTier[] = ["seedling", "growing", "mighty", "elite"];
 
-  // Age-optimized layouts - Unified geographic regions (6 states regions + 1 UT region)
-  // 6 geographic regions (28 states) + 1 Union Territories region (8 UTs) = 36 total
-  const INDIAN_REGIONS = {
-    North: ["Punjab", "Haryana", "Himachal Pradesh", "Uttarakhand", "Uttar Pradesh", "Rajasthan"],
-    South: ["Andhra Pradesh", "Telangana", "Karnataka", "Kerala", "Tamil Nadu"],
-    East: ["West Bengal", "Odisha", "Bihar", "Jharkhand"],
-    Central: ["Madhya Pradesh", "Chhattisgarh"],
-    West: ["Gujarat", "Maharashtra", "Goa"],
-    Northeast: ["Assam", "Arunachal Pradesh", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Sikkim", "Tripura"],
-    "Union Territories": ["Delhi", "Jammu & Kashmir", "Ladakh", "Chandigarh", "Puducherry", "Andaman & Nicobar Islands", "Lakshadweep", "Dadra & Nagar Haveli and Daman & Diu"],
+  const getTierConfig = (tier: AchievementBadgeTier) => {
+    return tierConfig[tier];
   };
 
-  const REGION_EMOJIS: Record<string, string> = {
-    North: "🏔️",
-    South: "🌴",
-    East: "🌳",
-    Central: "🏞️",
-    West: "🌊",
-    Northeast: "⛰️",
-    "Union Territories": "🏛️",
+  const getBadgeBackgroundColor = (tier: AchievementBadgeTier, unlocked: boolean) => {
+    if (!unlocked) return "bg-gray-50";
+    const config = getTierConfig(tier);
+    return `bg-${config.bgTone}`;
   };
-
-  // Calculate region progress
-  const getRegionProgress = (regionName: string) => {
-    const states = INDIAN_REGIONS[regionName as keyof typeof INDIAN_REGIONS] || [];
-    const regionRows = rows.filter((r) => states.includes(r.state));
-    const earned = regionRows.reduce((acc, r) => acc + r.badges.filter((b) => b.done).length, 0);
-    const total = regionRows.length * 3;
-    return { earned, total, percentage: total === 0 ? 0 : Math.round((earned / total) * 100) };
-  };
-
-  // Find region with most badges earned (auto-expand)
-  const getInitialRegion = () => {
-    let maxRegion = "North";
-    let maxBadges = 0;
-    
-    Object.keys(INDIAN_REGIONS).forEach((region) => {
-      const progress = getRegionProgress(region);
-      if (progress.earned > maxBadges) {
-        maxBadges = progress.earned;
-        maxRegion = region;
-      }
-    });
-    
-    return maxBadges > 0 ? maxRegion : "North"; // Auto-expand progress region or default to North
-  };
-
-  // Initialize with expanded region containing most badges
-  const [initialRegion] = useState<string>(getInitialRegion());
-  const [actualExpandedRegion, setActualExpandedRegion] = useState<string | null>(initialRegion);
-
-  // Filter rows based on age
-  let displayRows = rows;
-  if (p.ageBand === "3-5") {
-    // Sprout: Show only first 3 states
-    displayRows = rows.slice(0, 3);
-  } else if (p.ageBand === "6-7") {
-    // Seedling: Show first 10 states (2 regions)
-    displayRows = rows.slice(0, 10);
-  }
 
   return (
     <div className="h-full w-full bg-[#F7F5F0] flex flex-col">
-      <HeaderBar
-        title="Badges"
-        right={
-          <span className="text-display font-extrabold text-saffron">
-            {earnedCount}/{totalCount}
-          </span>
-        }
-      />
-
-      <div className="px-5 animate-fade-in">
-        <div className="rounded-3xl gradient-gold p-4 text-white shadow-soft flex items-center gap-3">
-          <div className="h-14 w-14 rounded-2xl bg-white/25 flex items-center justify-center text-3xl animate-pulse">
-            🏅
-          </div>
-          <div className="flex-1">
-            <div className="text-xs font-bold text-white/90">
-              Collection
-            </div>
-            <div className="text-display text-xl font-extrabold leading-snug">
-              {earnedCount}/{totalCount} badges
-            </div>
-
-            <div className="text-[11px] font-bold opacity-90 mt-0.5">
-              {getEncouragementMessage()}
-            </div>
-          </div>
+      {/* Premium Header */}
+      <div className="px-5 pt-3 pb-4 gradient-saffron rounded-b-[32px] relative overflow-hidden">
+        <Cloud className="absolute top-2 right-4 w-14 opacity-40 pointer-events-none" />
+        <div className="relative z-10">
+          <div className="text-xs font-bold text-white/90">Achievement Badges</div>
+          <div className="text-display text-xl font-extrabold text-white mt-1">{unlockedCount}/20 Unlocked</div>
         </div>
       </div>
 
-      {/* Age-specific layouts */}
-      <div className="p-5 flex-1 overflow-auto space-y-4">
-        {(p.ageBand === "6-7" || p.ageBand === "8-9" || p.ageBand === "10-12") && p.ageBand !== "3-5" ? (
-          // Region-based collapsible layout for Seedling and older
-          Object.entries(INDIAN_REGIONS).map((region, regionIdx) => {
-            const regionStates = displayRows.filter((r) =>
-              region[1].includes(r.state)
-            );
-            if (regionStates.length === 0) return null;
+      {/* Stats Card */}
+      <div className="px-5 pt-4 pb-3">
+        <div className="rounded-2xl bg-white shadow-soft border border-black/5 p-4 flex items-center justify-between">
+          <div>
+            <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Progress</div>
+            <div className="text-display text-3xl font-extrabold mt-1">{unlockedCount}/20</div>
+          </div>
+          <div className="flex-1 ml-6 flex flex-col gap-2">
+            <div className="h-2 rounded-full bg-gray-200 overflow-hidden">
+              <div
+                className="h-full gradient-saffron rounded-full transition-all duration-500"
+                style={{ width: `${(unlockedCount / 20) * 100}%` }}
+              />
+            </div>
+            <div className="text-xs font-bold text-muted-foreground text-right">{Math.round((unlockedCount / 20) * 100)}%</div>
+          </div>
+          <div className="text-5xl ml-4">🏆</div>
+        </div>
+      </div>
 
-            const isExpanded = actualExpandedRegion === region[0];
+      {/* Tiers */}
+      <div className="px-5 flex-1 overflow-auto space-y-4 pb-4">
+        {tiers.map((tier, tierIdx) => {
+          const badges = achievementBadgesForTier(progress, tier);
+          const config = getTierConfig(tier);
+          const tierUnlocked = badges.filter((b) => b.unlocked).length;
 
-            return (
-              <div key={region[0]} className="animate-fade-in" style={{ animationDelay: `${100 + regionIdx * 50}ms` }}>
-                <button
-                  onClick={() => {
-                    fxTap();
-                    setActualExpandedRegion(isExpanded ? null : region[0]);
-                  }}
-                  className="w-full text-left py-3 px-4 rounded-2xl bg-white hover:bg-gray-50 active:bg-gray-100 transition-all border border-black/5 flex items-center justify-between group"
-                >
-                  <div className="flex-1">
-                    <div className="text-display font-extrabold text-sm flex items-center gap-2">
-                      <span className="text-xl">{REGION_EMOJIS[region[0]]}</span>
-                      {region[0]} Region
-                    </div>
-                    <div className="mt-2 flex items-center gap-2">
-                      <div className="flex-1 max-w-xs h-1.5 bg-gray-200 rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all duration-300"
-                          style={{ width: `${getRegionProgress(region[0]).percentage}%` }}
-                        />
-                      </div>
-                      <span className="text-[10px] font-bold text-muted-foreground whitespace-nowrap">
-                        {getRegionProgress(region[0]).earned}/{getRegionProgress(region[0]).total} ({getRegionProgress(region[0]).percentage}%)
-                      </span>
+          return (
+            <div key={tier} className="animate-fade-in" style={{ animationDelay: `${tierIdx * 100}ms` }}>
+              {/* Tier Header */}
+              <div className={`rounded-2xl bg-${config.bgTone} border ${config.borderTone} p-4`}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="text-3xl">{config.icon}</div>
+                    <div>
+                      <div className="text-display font-extrabold text-base text-ink">{config.label}</div>
+                      <div className="text-xs font-bold text-muted-foreground">{tierUnlocked}/{badges.length} badges</div>
                     </div>
                   </div>
-                  <span
-                    className={`text-xl transition-transform duration-300 group-hover:scale-110 ${
-                      isExpanded ? "rotate-180" : ""
-                    }`}
-                  >
-                    ▼
-                  </span>
-                </button>
-
-                {isExpanded && (
-                  <div className="mt-3 space-y-4 pl-1">
-                    {regionStates.map((r, stateIdx) => (
-                      <div key={r.state} className="animate-fade-in" style={{ animationDelay: `${50 + stateIdx * 30}ms` }}>
-                        <div className="text-display font-extrabold text-sm flex items-center justify-between">
-                          <span>{r.state}</span>
-                          <span className="text-[11px] font-bold text-muted-foreground">
-                            {r.badges.filter((b) => b.done).length}/{r.badges.length}
-                          </span>
-                        </div>
-
-                        {/* Progress Bar */}
-                        <div className="mt-1 h-1.5 bg-gray-200 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all duration-300"
-                            style={{ width: `${(r.badges.filter((b) => b.done).length / r.badges.length) * 100}%` }}
-                          />
-                        </div>
-
-                        <div className="mt-3 grid grid-cols-3 gap-3">
-                          {r.badges.map((b, badgeIdx) => (
-                            <button
-                              key={b.name}
-                              onClick={() => {
-                                fxTap();
-                                setSelectedBadge({ state: r.state, badge: { ...b, index: badgeIdx } });
-                              }}
-                              className={`rounded-2xl p-3 flex flex-col items-center bg-white shadow-soft border transition transform hover:scale-105 active:scale-95 ${
-                                b.done ? "border-black/5" : "border-dashed border-muted-foreground/30 opacity-50"
-                              }`}
-                            >
-                              <div
-                                className={`h-14 w-14 rounded-full flex items-center justify-center text-2xl transition ${
-                                  b.done
-                                    ? r.tone === "orange"
-                                      ? "gradient-saffron"
-                                      : r.tone === "gold"
-                                      ? "gradient-gold"
-                                      : r.tone === "blue"
-                                      ? "gradient-explorer"
-                                      : "gradient-success"
-                                    : "bg-muted animate-shimmer"
-                                }`}
-                              >
-                                {b.done ? b.icon : "🔒"}
-                              </div>
-                              <div className="mt-1 text-[11px] font-extrabold text-center">{b.name}</div>
-                              {!b.done && (
-                                <div className="mt-1 text-[8px] font-bold text-amber-600 text-center">
-                                  Unlock
-                                </div>
-                              )}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
+                  <div className="flex gap-1.5">
+                    {badges.map((_, idx) => (
+                      <div
+                        key={idx}
+                        className={`h-1.5 w-1.5 rounded-full transition-all ${
+                          idx < tierUnlocked
+                            ? config.gradient.split("-")[1] === "saffron" ? "bg-saffron" 
+                            : config.gradient.split("-")[1] === "success" ? "bg-success"
+                            : config.gradient.split("-")[1] === "explorer" ? "bg-explorer"
+                            : "bg-gold"
+                            : "bg-gray-300"
+                        }`}
+                      />
                     ))}
                   </div>
-                )}
-              </div>
-            );
-          })
-        ) : (
-          // Simple list for Sprout (ages 3-5)
-          displayRows.map((r, stateIdx) => (
-            <div key={r.state} className="animate-fade-in" style={{ animationDelay: `${100 + stateIdx * 50}ms` }}>
-              <div className="text-display font-extrabold text-sm flex items-center justify-between">
-                <span>{r.state}</span>
-                <span className="text-[11px] font-bold text-muted-foreground">
-                  {r.badges.filter((b) => b.done).length}/{r.badges.length}
-                </span>
+                </div>
               </div>
 
-              {/* Progress Bar */}
-              <div className="mt-1 h-1.5 bg-gray-200 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all duration-300"
-                  style={{ width: `${(r.badges.filter((b) => b.done).length / r.badges.length) * 100}%` }}
-                />
-              </div>
-
-              <div className="mt-3 grid grid-cols-3 gap-3">
-                {r.badges.map((b, badgeIdx) => (
+              {/* Badge Grid */}
+              <div className="grid grid-cols-2 gap-3 mt-3">
+                {badges.map((badge, badgeIdx) => (
                   <button
-                    key={b.name}
+                    key={badge.id}
                     onClick={() => {
                       fxTap();
-                      setSelectedBadge({ state: r.state, badge: { ...b, index: badgeIdx } });
+                      setSelectedBadge(badge);
                     }}
-                    className={`rounded-2xl p-3 flex flex-col items-center bg-white shadow-soft border transition transform hover:scale-105 active:scale-95 ${
-                      b.done ? "border-black/5" : "border-dashed border-muted-foreground/30"
+                    className={`rounded-2xl p-3 flex flex-col items-center gap-2 border transition-transform active:scale-95 ${
+                      badge.unlocked
+                        ? `bg-white shadow-soft border-black/5`
+                        : "bg-gray-50 border-gray-200 shadow-sm"
                     }`}
+                    style={{ animationDelay: `${badgeIdx * 50}ms` }}
                   >
-                    <div
-                      className={`h-14 w-14 rounded-full flex items-center justify-center text-2xl transition ${
-                        b.done
-                          ? r.tone === "orange"
-                            ? "gradient-saffron"
-                            : r.tone === "gold"
-                            ? "gradient-gold"
-                            : r.tone === "blue"
-                            ? "gradient-explorer"
-                            : "gradient-success"
-                          : "bg-muted animate-shimmer"
-                      }`}
-                    >
-                      {b.done ? b.icon : "🔒"}
+                    {/* Badge Icon */}
+                    <div className={`text-4xl transition-transform ${
+                      badge.unlocked ? "" : "opacity-50"
+                    }`}>
+                      {badge.icon}
                     </div>
-                    <div className="mt-1 text-[11px] font-extrabold text-center">{b.name}</div>
-                    {!b.done && (
-                      <div className="mt-1 text-[8px] font-bold text-amber-600 text-center">
-                        Unlock
+
+                    {/* Badge Name */}
+                    <div className={`text-display text-xs font-extrabold text-center leading-tight max-w-[70px] ${
+                      badge.unlocked 
+                        ? "text-ink"
+                        : "text-muted-foreground"
+                    }`}>
+                      {badge.name}
+                    </div>
+
+                    {/* Progress or Unlocked */}
+                    {!badge.unlocked ? (
+                      <div className="text-[10px] font-bold text-muted-foreground mt-1">
+                        {badge.progress}/{badge.achievementMax}
+                      </div>
+                    ) : (
+                      <div className="text-[9px] font-extrabold text-success mt-1">
+                        ✓ Unlocked
                       </div>
                     )}
                   </button>
                 ))}
               </div>
             </div>
-          ))
-        )}
+          );
+        })}
       </div>
 
       {/* Badge Detail Modal */}
       {selectedBadge && (
-        <BadgeDetailModal
-          state={selectedBadge.state}
-          badge={selectedBadge.badge}
-          onClose={() => setSelectedBadge(null)}
-        />
+        <div
+          className="fixed inset-0 bg-black/50 z-50 flex items-end animate-fade-in"
+          onClick={() => setSelectedBadge(null)}
+        >
+          <div
+            className="w-full bg-white rounded-t-3xl p-6 flex flex-col gap-4 animate-slide-up shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setSelectedBadge(null)}
+              className="absolute top-4 right-4 h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition"
+            >
+              ✕
+            </button>
+
+            {/* Badge Display */}
+            <div className="flex flex-col items-center pt-4">
+              <div className={`h-24 w-24 rounded-full flex items-center justify-center text-5xl ${
+                selectedBadge.unlocked
+                  ? getTierConfig(selectedBadge.tier).gradient
+                  : "bg-gray-100"
+              } shadow-lg`}>
+                {selectedBadge.icon}
+              </div>
+
+              <h2 className="text-display text-3xl font-extrabold text-ink mt-4">
+                {selectedBadge.name}
+              </h2>
+              <p className="text-xs font-bold text-muted-foreground mt-1 uppercase tracking-wider">
+                {selectedBadge.tier} Tier Badge
+              </p>
+            </div>
+
+            {/* Description */}
+            <div className="rounded-2xl bg-blue-50 border border-blue-200 p-4">
+              <p className="text-sm font-semibold text-blue-900 leading-relaxed">
+                {selectedBadge.description}
+              </p>
+            </div>
+
+            {/* Progress or Success */}
+            {!selectedBadge.unlocked ? (
+              <div className="rounded-2xl bg-saffron-soft border border-saffron/30 p-4">
+                <div className="text-xs font-extrabold text-saffron uppercase tracking-wider mb-3">
+                  📈 Unlock Progress
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="flex-1 h-2.5 rounded-full bg-white border border-saffron/20 overflow-hidden">
+                    <div
+                      className="h-full gradient-saffron rounded-full transition-all duration-500"
+                      style={{ width: `${(selectedBadge.progress / selectedBadge.achievementMax) * 100}%` }}
+                    />
+                  </div>
+                  <span className="text-xs font-extrabold text-saffron whitespace-nowrap">
+                    {selectedBadge.progress}/{selectedBadge.achievementMax}
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <div className="rounded-2xl bg-success-soft border border-success/30 p-4">
+                <div className="text-xs font-extrabold text-success uppercase tracking-wider">
+                  ✨ Unlocked
+                </div>
+                <p className="text-sm font-bold text-success mt-2">
+                  🎉 Amazing achievement! Keep exploring!
+                </p>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex gap-3 mt-2">
+              <button
+                onClick={() => setSelectedBadge(null)}
+                className="flex-1 h-12 rounded-2xl bg-gray-100 text-display font-extrabold text-gray-800 active:scale-95 transition"
+              >
+                Close
+              </button>
+              {selectedBadge.unlocked && (
+                <button
+                  onClick={() => {
+                    fxConfetti();
+                    setSelectedBadge(null);
+                  }}
+                  className="flex-1 h-12 rounded-2xl gradient-gold text-display font-extrabold text-white shadow-lg active:scale-95 transition"
+                >
+                  🎉 Celebrate!
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
@@ -3140,9 +3132,6 @@ export function ProfileScreen() {
   const { level } = levelInfo(p.xp);
   const goBack = useGoBack();
   const stampsCollected = Object.keys(p.stamps ?? {}).length;
-  const achievements = achievementsFor(p);
-  const unlockedAchievements = achievements.filter((a) => a.done).length;
-  const inProgressAchievements = achievements.filter((a) => !a.done && a.prog > 0).length;
 
   const handleSaveName = () => {
     const trimmedName = tempName.trim();
@@ -3198,8 +3187,12 @@ export function ProfileScreen() {
         </div>
         <div className="flex flex-col items-center mt-4">
           <div className="relative animate-bounce" style={{ animationDelay: "0ms" }}>
-            <div className="h-24 w-24 rounded-3xl bg-white p-2 shadow-xl flex items-center justify-center text-5xl">
-              <span>{p.avatar}</span>
+            <div className="h-24 w-24 rounded-3xl bg-white p-2 shadow-xl flex items-center justify-center text-5xl overflow-hidden">
+              <img 
+                src={getAvatarImage(p.avatar)} 
+                alt={getAvatarName(p.avatar)}
+                className="w-full h-full object-cover"
+              />
             </div>
             <div className="absolute -bottom-2 -right-2 h-9 w-9 rounded-full gradient-gold text-white flex items-center justify-center text-display text-sm font-extrabold border-4 border-white">
               {level}
@@ -3282,33 +3275,92 @@ export function ProfileScreen() {
         <div className="animate-fade-in" style={{ animationDelay: "200ms" }}>
           <SoundToggleRow />
         </div>
-        <div className="animate-fade-in" style={{ animationDelay: "250ms" }}>
-          <RowLink
-            icon="📓"
-            tone="orange"
-            title="My Passport"
-            sub={`${stampsCollected} ${stampsCollected === 1 ? "stamp" : "stamps"} collected`}
-            to="/passport"
-          />
+
+        {/* Achievements Section - Link to Badges */}
+        <div className="animate-fade-in" style={{ animationDelay: "225ms" }}>
+          <Link
+            to="/badges"
+            onClick={() => fxTap()}
+            className="rounded-2xl bg-white shadow-soft border border-black/5 p-3 flex items-center gap-3 transition active:scale-[0.99]"
+          >
+            <div className="h-12 w-12 rounded-2xl gradient-gold flex items-center justify-center text-2xl">
+              🏆
+            </div>
+            <div className="flex-1">
+              <div className="text-display font-extrabold text-[15px] leading-tight">
+                Achievements
+              </div>
+              <div className="text-[11px] font-bold text-muted-foreground">
+                {unlockedAchievementBadgeCount(p)}/20 badges earned
+              </div>
+            </div>
+            <div className="text-muted-foreground text-xl">›</div>
+          </Link>
         </div>
+
+        {/* Daily Goals Section */}
+        <div className="animate-fade-in" style={{ animationDelay: "250ms" }}>
+          {(() => {
+            const dailyGoalText = p.completed.length === 0 
+              ? "Complete your first state" 
+              : "Explore a new state today";
+            const nextMilestone = Math.ceil((p.streak + 1) / 5) * 5;
+            const daysUntilNext = nextMilestone - p.streak;
+
+            return (
+              <div className="rounded-2xl bg-white shadow-soft border border-black/5 p-3 flex flex-col gap-2 transition">
+                {/* Header Row */}
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 rounded-2xl gradient-success flex items-center justify-center text-2xl">
+                    🎯
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-display font-extrabold text-[15px] leading-tight">
+                      Daily Goals
+                    </div>
+                    <div className="text-[11px] font-bold text-muted-foreground">
+                      🔥 {p.streak} day streak
+                    </div>
+                  </div>
+                </div>
+
+                {/* Daily Challenge */}
+                <div className="ml-15 text-[13px] font-extrabold text-ink">
+                  📍 {dailyGoalText}
+                </div>
+
+                {/* Next Reward */}
+                <div className="ml-15 text-[11px] font-bold text-amber-600">
+                  {daysUntilNext === 0 
+                    ? "🎁 Claim your milestone reward!" 
+                    : `🎁 ${daysUntilNext} day${daysUntilNext !== 1 ? 's' : ''} until ${nextMilestone}-day bonus!`}
+                </div>
+              </div>
+            );
+          })()}
+        </div>
+
         <div className="animate-fade-in" style={{ animationDelay: "300ms" }}>
-          {/* Achievements with Progress Bar */}
-          <AchievementsProgressRow 
-            unlockedCount={unlockedAchievements}
-            inProgressCount={inProgressAchievements}
-            achievements={achievements}
-          />
+          {/* Parent Zone */}
+          <ParentZonePlaceholder />
         </div>
         <div className="animate-fade-in" style={{ animationDelay: "350ms" }}>
-          {/* Daily Goals */}
-          <DailyGoalsRow 
-            streak={p.streak}
-            completedStates={p.completed.length}
-          />
-        </div>
-        <div className="animate-fade-in" style={{ animationDelay: "400ms" }}>
-          {/* Parent Zone - Placeholder */}
-          <ParentZonePlaceholder />
+          <Link
+            to="/privacy"
+            onClick={() => fxTap()}
+            className="rounded-2xl bg-white shadow-soft border border-black/5 p-3 flex items-center gap-3 transition active:scale-[0.99]"
+          >
+            <div className="h-12 w-12 rounded-2xl gradient-explorer flex items-center justify-center text-2xl">
+              🔒
+            </div>
+            <div className="flex-1">
+              <div className="text-display font-extrabold text-[15px] leading-tight">
+                Privacy Policy
+              </div>
+              <div className="text-[11px] font-bold text-muted-foreground">How we handle your data</div>
+            </div>
+            <div className="text-muted-foreground text-xl">›</div>
+          </Link>
         </div>
       </div>
     </div>
@@ -3318,7 +3370,7 @@ export function ProfileScreen() {
 function SoundToggleRow() {
   const on = useSoundOn();
   const [audioEnabled, setAudioEnabled] = useState(() => {
-    return localStorage.getItem("india-explorer:audio-enabled:v1") !== "0";
+    return localStorage.getItem("india-explorer:audio-enabled:v1") === "1";
   });
 
   const toggleAudio = () => {
@@ -3329,7 +3381,7 @@ function SoundToggleRow() {
   };
 
   const [fileEnabled, setFileEnabled] = useState(() => {
-    return localStorage.getItem("india-explorer:file-enabled:v1") !== "0";
+    return localStorage.getItem("india-explorer:file-enabled:v1") === "1";
   });
 
   const toggleFile = () => {
@@ -3460,118 +3512,6 @@ function ProfileStat({ value, label }: { value: string; label: string }) {
           {label}
         </div>
       )}
-    </div>
-  );
-}
-
-function AchievementsProgressRow({
-  unlockedCount,
-  inProgressCount,
-  achievements,
-}: {
-  unlockedCount: number;
-  inProgressCount: number;
-  achievements: Achievement[];
-}) {
-  // Find the first in-progress achievement for progress display
-  const firstInProgress = achievements.find((a) => !a.done && a.prog > 0);
-
-  return (
-    <Link
-      to="/achievements"
-      onClick={() => fxTap()}
-      className="rounded-2xl bg-white shadow-soft border border-black/5 p-3 flex flex-col gap-3 transition active:scale-[0.99]"
-    >
-      {/* Header Row */}
-      <div className="flex items-center gap-3">
-        <div className="h-12 w-12 rounded-2xl gradient-gold flex items-center justify-center text-2xl">
-          🏅
-        </div>
-        <div className="flex-1">
-          <div className="text-display font-extrabold text-[15px] leading-tight">
-            Achievements
-          </div>
-          <div className="text-[11px] font-bold text-muted-foreground">
-            {unlockedCount} unlocked
-          </div>
-        </div>
-        <div className="text-muted-foreground text-xl">›</div>
-      </div>
-
-      {/* Progress Bar for First In-Progress Achievement */}
-      {firstInProgress && (
-        <div className="mt-1">
-          <div className="flex items-center justify-between mb-1">
-            <div className="text-[13px] font-extrabold text-ink">
-              {firstInProgress.emoji} {firstInProgress.name}
-            </div>
-            <div className="text-[10px] font-bold text-muted-foreground">
-              {firstInProgress.prog}/{firstInProgress.max}
-            </div>
-          </div>
-          <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all duration-300"
-              style={{ width: `${(firstInProgress.prog / firstInProgress.max) * 100}%` }}
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Info Message */}
-      {!firstInProgress && inProgressCount > 0 && (
-        <div className="text-[11px] font-bold text-amber-600 mt-1">
-          {inProgressCount} achievement{inProgressCount > 1 ? "s" : ""} to unlock!
-        </div>
-      )}
-    </Link>
-  );
-}
-
-function DailyGoalsRow({
-  streak,
-  completedStates,
-}: {
-  streak: number;
-  completedStates: number;
-}) {
-  // Get random daily goal - complete next state or replay an old one
-  const dailyGoalText = completedStates === 0 
-    ? "Complete your first state" 
-    : "Explore a new state today";
-
-  // Calculate next milestone reward
-  const nextMilestone = Math.ceil((streak + 1) / 5) * 5;
-  const daysUntilNext = nextMilestone - streak;
-
-  return (
-    <div className="rounded-2xl bg-white shadow-soft border border-black/5 p-3 flex flex-col gap-2 transition">
-      {/* Header Row */}
-      <div className="flex items-center gap-3">
-        <div className="h-12 w-12 rounded-2xl gradient-success flex items-center justify-center text-2xl">
-          🎯
-        </div>
-        <div className="flex-1">
-          <div className="text-display font-extrabold text-[15px] leading-tight">
-            Daily Goals
-          </div>
-          <div className="text-[11px] font-bold text-muted-foreground">
-            🔥 {streak} day streak
-          </div>
-        </div>
-      </div>
-
-      {/* Daily Challenge */}
-      <div className="ml-15 text-[13px] font-extrabold text-ink">
-        📍 {dailyGoalText}
-      </div>
-
-      {/* Next Reward */}
-      <div className="ml-15 text-[11px] font-bold text-amber-600">
-        {daysUntilNext === 0 
-          ? "🎁 Claim your milestone reward!" 
-          : `🎁 ${daysUntilNext} day${daysUntilNext !== 1 ? 's' : ''} until {nextMilestone}-day bonus!`}
-      </div>
     </div>
   );
 }

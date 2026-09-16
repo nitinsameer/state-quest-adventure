@@ -5,6 +5,19 @@ import { REGIONS, REGION_KEYS, getProgressPercentage } from "@/lib/passport-help
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { PostcardModal } from "@/components/PostcardModal";
 import { fxTap } from "@/lib/fx";
+import avatarExplorerHat from "@/assets/avatars/avatar-explorer-hat.png";
+import avatarExplorerPink from "@/assets/avatars/avatar-explorer-pink.png";
+import avatarGeekGlasses from "@/assets/avatars/avatar-geek-glasses.png";
+import avatarGirlPeace from "@/assets/avatars/avatar-girl-peace.png";
+import avatarTurbanRed from "@/assets/avatars/avatar-turban-red.png";
+import avatarGirlEarring from "@/assets/avatars/avatar-girl-earring.png";
+import avatarBoySMile from "@/assets/avatars/avatar-boy-smile.png";
+import avatarGirlTikka from "@/assets/avatars/avatar-girl-tikka.png";
+import avatarSkiGoggles from "@/assets/avatars/avatar-ski-goggles.png";
+import avatarFarmerHat from "@/assets/avatars/avatar-farmer-hat.png";
+import avatarSportsCap from "@/assets/avatars/avatar-sports-cap.png";
+import avatarGirlFlower from "@/assets/avatars/avatar-girl-flower.png";
+import type { AvatarId } from "@/lib/avatar-config";
 
 /**
  * Passport for Ages 6-7 (Seedling)
@@ -16,6 +29,47 @@ export function PassportSeedling() {
   const [selectedRegion, setSelectedRegion] = useState<keyof typeof REGIONS>("north");
   const [burst, setBurst] = useState(0);
   const [selectedPostcard, setSelectedPostcard] = useState<PostcardData | null>(null);
+
+  // Map avatar IDs to image imports
+  const AVATAR_IMAGE_MAP: Record<AvatarId, string> = {
+    "explorer-hat": avatarExplorerHat,
+    "explorer-pink": avatarExplorerPink,
+    "geek-glasses": avatarGeekGlasses,
+    "girl-peace": avatarGirlPeace,
+    "turban-red": avatarTurbanRed,
+    "girl-earring": avatarGirlEarring,
+    "boy-smile": avatarBoySMile,
+    "girl-tikka": avatarGirlTikka,
+    "ski-goggles": avatarSkiGoggles,
+    "farmer-hat": avatarFarmerHat,
+    "sports-cap": avatarSportsCap,
+    "girl-flower": avatarGirlFlower,
+  };
+
+  // Get avatar image by ID
+  function getAvatarImage(avatarId: string): string {
+    if (!avatarId) return avatarExplorerHat;
+    return AVATAR_IMAGE_MAP[avatarId as AvatarId] || avatarExplorerHat;
+  }
+
+  // Get avatar display name
+  function getAvatarName(avatarId: string): string {
+    const names: Record<string, string> = {
+      "explorer-hat": "Mia",
+      "explorer-pink": "Alex",
+      "geek-glasses": "Rohan",
+      "girl-peace": "Priya",
+      "turban-red": "Ishaan",
+      "girl-earring": "Zara",
+      "boy-smile": "Aditya",
+      "girl-tikka": "Anaya",
+      "ski-goggles": "Karan",
+      "farmer-hat": "Vikram",
+      "sports-cap": "Nikhil",
+      "girl-flower": "Diya",
+    };
+    return names[avatarId] || "Explorer";
+  }
 
   const region = REGIONS[selectedRegion];
   const regionStates = region.states;
@@ -59,7 +113,13 @@ export function PassportSeedling() {
       {/* Profile Card */}
       <div className="mx-5 mt-4 p-4 rounded-3xl bg-gradient-to-br from-amber-700 to-amber-900 text-white shadow-lg">
         <div className="flex items-center gap-3 mb-2">
-          <div className="text-4xl">{progress.avatar}</div>
+          <div className="h-16 w-16 rounded-2xl bg-white p-1 flex items-center justify-center overflow-hidden flex-shrink-0">
+            <img 
+              src={getAvatarImage(progress.avatar)} 
+              alt={getAvatarName(progress.avatar)}
+              className="w-full h-full object-cover"
+            />
+          </div>
           <div>
             <div className="text-lg font-extrabold">{progress.name}</div>
             <div className="text-xs opacity-75">Passport No: IN-2026-{String(Math.random() * 10000).padStart(4, "0")}</div>
