@@ -310,7 +310,7 @@ export function WelcomeScreen() {
             <img src={mascot} alt="India Explorer mascot" className="relative w-80 h-[280px] object-contain drop-shadow-xl" />
           </div>
         </div>
-        <div className="rounded-t-[36px] bg-white px-6 pt-6 pb-0 shadow-[0_-20px_40px_-20px_rgba(0,0,0,0.15)]">
+        <div className="rounded-t-[36px] bg-white px-6 pt-6 pb-0 shadow-[0_-20px_40px_-20px_rgba(0,0,0,0.15)] mt-4">
           <h1 className="text-display text-3xl font-extrabold leading-tight">
             Namaste, little<br />explorer! 👋
           </h1>
