@@ -308,11 +308,11 @@ export function WelcomeScreen() {
   };
 
   return (
-    <div className="w-full h-screen flex flex-col overflow-hidden select-none relative cursor-pointer fixed inset-0" onClick={handleButtonClick}>
+    <div className="w-screen h-screen overflow-hidden select-none relative cursor-pointer fixed inset-0 bg-white" onClick={handleButtonClick}>
       <img 
         src={welcomeScreenImage} 
         alt="Welcome to India Explorer" 
-        className="w-full h-full object-contain bg-gradient-to-b from-blue-100 to-white"
+        className="w-full h-full object-cover"
         draggable="false"
       />
     </div>
