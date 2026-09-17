@@ -10,7 +10,7 @@ import { initAudioMixer, getEffectsGain, getAmbientGain } from "./audio-mixer";
 /* ---------- sound preference (persisted) ---------- */
 
 const SOUND_KEY = "india-explorer:sound:v1";
-let soundOn = true;
+let soundOn = false;  // Sound toggle (separate from audio narration permission)
 let soundHydrated = false;
 const soundListeners = new Set<() => void>();
 
@@ -18,11 +18,10 @@ function hydrateSound() {
   if (soundHydrated || typeof window === "undefined") return;
   soundHydrated = true;
   try {
-    // FIX #24: Default to false (opt-in) not true
-    // Only enable if explicitly set to "1"
+    // Sound toggle (separate from audio narration which is controlled by parental consent)
     const raw = localStorage.getItem(SOUND_KEY);
     if (raw !== null) soundOn = raw === "1";
-    else soundOn = false; // Default: sound disabled until user enables
+    else soundOn = false; // Default: sound effects disabled
   } catch {
     /* storage unavailable */
   }

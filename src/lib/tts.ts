@@ -10,7 +10,7 @@
  */
 
 import { TextToSpeech } from '@capacitor-community/text-to-speech';
-import { isSoundOn } from "./fx";
+import { hasFeatureConsent } from "./parental-consent";
 import { getStateLanguageCode } from "./state-content";
 import { debugLog, debugError } from "./debug";
 import { toast } from "sonner";
@@ -52,8 +52,8 @@ export function playTts(
   text: string,
   config: Partial<TtsConfig> = {}
 ): void {
-  // Check if sound is enabled
-  if (!isSoundOn()) {
+  // Check if audio narration permission is granted
+  if (!hasFeatureConsent('audio')) {
     return;
   }
 
