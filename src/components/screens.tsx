@@ -360,7 +360,7 @@ export function CreateProfileScreen() {
   };
 
   return (
-    <div className="w-full bg-gradient-to-b from-blue-50 to-white flex flex-col">
+    <div className="w-full bg-gradient-to-b from-blue-50 to-white flex flex-col select-none touch-none" style={{ touchAction: 'pan-y' }}>
       <div className="px-5 flex-1 overflow-auto">
         {/* Step 1: Avatar Selection */}
         <div className="rounded-3xl gradient-explorer p-5 text-white relative overflow-hidden">
@@ -414,7 +414,7 @@ export function CreateProfileScreen() {
         })()}
 
         {/* Age Selection with Vibrant Colors & Emojis */}
-        <div className="mt-8 mb-6">
+        <div className="mt-8 mb-2">
           <label className="text-display text-sm font-bold text-gray-700">
             🎂 How old are you?
           </label>
