@@ -14,6 +14,30 @@ let soundOn = false;  // Sound toggle (separate from audio narration permission)
 let soundHydrated = false;
 const soundListeners = new Set<() => void>();
 
+/**
+ * Ensure audio context is initialized for audio operations (TTS, effects, etc.)
+ * This initializes the Web Audio API and audio mixer regardless of sound toggle state
+ * Safe to call multiple times - only initializes once
+ */
+export function ensureAudioContext(): AudioContext | null {
+  if (typeof window === "undefined") return null;
+  
+  const AC =
+    (window as unknown as { AudioContext?: typeof AudioContext; webkitAudioContext?: typeof AudioContext }).AudioContext ??
+    (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+  
+  if (!AC) return null;
+  
+  let ctx = ac();
+  if (!ctx) {
+    ctx = new AC();
+    if (ctx.state === "suspended") void ctx.resume();
+    initAudioMixer(ctx);
+  }
+  
+  return ctx;
+}
+
 function hydrateSound() {
   if (soundHydrated || typeof window === "undefined") return;
   soundHydrated = true;

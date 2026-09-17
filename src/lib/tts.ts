@@ -11,6 +11,7 @@
 
 import { TextToSpeech } from '@capacitor-community/text-to-speech';
 import { hasFeatureConsent } from "./parental-consent";
+import { ensureAudioContext } from "./fx";
 import { getStateLanguageCode } from "./state-content";
 import { debugLog, debugError } from "./debug";
 import { toast } from "sonner";
@@ -60,6 +61,9 @@ export function playTts(
   if (!text || text.trim().length === 0) {
     return;
   }
+
+  // Ensure audio context is initialized (required for system audio routing)
+  ensureAudioContext();
 
   const finalConfig = { ...DEFAULT_TTS_CONFIG, ...config };
 
