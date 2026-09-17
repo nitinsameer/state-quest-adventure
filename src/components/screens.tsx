@@ -3448,9 +3448,18 @@ export function ProfileScreen() {
 }
 
 function SoundToggleRow() {
+  const soundOn = useSoundOn();
   const [audioEnabled, setAudioEnabled] = useState(() => {
     return localStorage.getItem("india-explorer:audio-enabled:v1") === "1";
   });
+
+  const toggleSound = () => {
+    setSoundOn(!soundOn);
+    // Play tap sound only if sound is being enabled
+    if (!soundOn) {
+      setTimeout(() => fxTap(), 100);
+    }
+  };
 
   const toggleAudio = () => {
     const newState = !audioEnabled;
@@ -3473,6 +3482,33 @@ function SoundToggleRow() {
 
   return (
     <div className="space-y-3">
+      {/* Sound Effects Toggle - Controls Web Audio API initialization */}
+      <button
+        type="button"
+        role="switch"
+        aria-checked={soundOn}
+        aria-label="Sound effects"
+        onClick={toggleSound}
+        className="w-full rounded-2xl bg-white shadow-soft border border-black/5 p-3 flex items-center gap-3 transition active:scale-[0.99]"
+      >
+        <div className="h-12 w-12 rounded-2xl bg-purple-100 flex items-center justify-center text-2xl">
+          🔊
+        </div>
+        <div className="flex-1 text-left">
+          <div className="text-display font-extrabold text-[15px] leading-tight">Sound Effects</div>
+          <div className="text-[11px] font-bold text-muted-foreground">
+            {soundOn ? "Sound & vibrations enabled" : "Turn on to hear sounds"}
+          </div>
+        </div>
+        <span
+          className={`h-7 w-12 rounded-full flex items-center px-1 transition ${soundOn ? "gradient-success" : "bg-muted"}`}
+        >
+          <span
+            className={`h-5 w-5 rounded-full bg-white shadow transition-transform ${soundOn ? "translate-x-5" : "translate-x-0"}`}
+          />
+        </span>
+      </button>
+
       {/* Audio Permission */}
       <button
         type="button"

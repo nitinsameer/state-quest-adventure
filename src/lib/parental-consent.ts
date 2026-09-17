@@ -23,6 +23,7 @@ export interface ConsentRecord {
 
 const CONSENT_STORAGE_KEY = 'india-explorer:parental-consent:v1'
 const CONSENT_VERSION = 1
+const consentListeners = new Set<(feature: 'audio' | 'file') => void>()
 
 /**
  * Request consent for a feature (audio or file access)
@@ -69,6 +70,9 @@ export function grantFeatureConsent(feature: 'audio' | 'file'): void {
     })
 
     localStorage.setItem(CONSENT_STORAGE_KEY, JSON.stringify(filtered))
+    
+    // Notify all listeners that consent changed
+    notifyConsentListeners(feature)
   } catch {
     // Storage error - fail silently but user won't have consent
   }
@@ -87,8 +91,35 @@ export function revokeFeatureConsent(feature: 'audio' | 'file'): void {
     const filtered = records.filter(r => r.feature !== feature)
 
     localStorage.setItem(CONSENT_STORAGE_KEY, JSON.stringify(filtered))
+    
+    // Notify all listeners that consent changed
+    notifyConsentListeners(feature)
   } catch {
     // Storage error - fail silently
+  }
+}
+
+/**
+ * Subscribe to consent changes for a feature
+ * Returns unsubscribe function
+ */
+export function subscribeConsentChanges(feature: 'audio' | 'file', listener: () => void): () => void {
+  const wrappedListener = (changedFeature: 'audio' | 'file') => {
+    if (changedFeature === feature) {
+      listener()
+    }
+  }
+  
+  consentListeners.add(wrappedListener)
+  return () => consentListeners.delete(wrappedListener)
+}
+
+/**
+ * Notify all listeners of consent change
+ */
+function notifyConsentListeners(feature: 'audio' | 'file'): void {
+  for (const listener of consentListeners) {
+    listener(feature)
   }
 }
 

@@ -6,7 +6,7 @@
 
 import { useEffect, useState } from "react";
 import { playTts, stopTts, isTtsPlaying, getCurrentNarrationId, useTtsState, isTtsAvailable } from "@/lib/tts";
-import { hasFeatureConsent } from "@/lib/parental-consent";
+import { hasFeatureConsent, subscribeConsentChanges } from "@/lib/parental-consent";
 
 export interface CardNarrationPlayerProps {
   narrationId: string;
@@ -16,10 +16,21 @@ export interface CardNarrationPlayerProps {
 }
 
 export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }: CardNarrationPlayerProps) {
-  const audioNarrationEnabled = hasFeatureConsent('audio');
+  const [audioNarrationEnabled, setAudioNarrationEnabled] = useState(() => hasFeatureConsent('audio'));
   const ttsState = useTtsState();
   const isCurrentPlaying = ttsState.narrationId === narrationId && ttsState.isPlaying;
   const [hasSupport] = useState(isTtsAvailable());
+
+  // Subscribe to consent changes and re-render when consent status changes
+  useEffect(() => {
+    setAudioNarrationEnabled(hasFeatureConsent('audio'));
+    
+    const unsubscribe = subscribeConsentChanges('audio', () => {
+      setAudioNarrationEnabled(hasFeatureConsent('audio'));
+    });
+
+    return unsubscribe;
+  }, []);
 
   const handlePlayClick = () => {
     if (isCurrentPlaying) {
