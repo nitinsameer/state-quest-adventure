@@ -12,7 +12,7 @@
 import { TextToSpeech } from '@capacitor-community/text-to-speech';
 import { Capacitor } from '@capacitor/core';
 import { hasFeatureConsent } from "./parental-consent";
-import { ensureAudioContext } from "./fx";
+import { ensureAudioContext, isSoundOn } from "./fx";
 import { getStateLanguageCode } from "./state-content";
 import { debugLog, debugError } from "./debug";
 import { toast } from "sonner";
@@ -83,6 +83,12 @@ export function playTts(
   // Check if running on native platform first
   if (!checkNativePlatform()) {
     debugLog("tts", "TTS not available on web platform. Running on native app to use TTS.");
+    return;
+  }
+
+  // Check if Sound toggle is enabled (controls audio system initialization)
+  if (!isSoundOn()) {
+    debugLog("tts", "Sound Effects toggle is disabled");
     return;
   }
 
