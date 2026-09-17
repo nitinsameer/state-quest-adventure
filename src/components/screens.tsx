@@ -1,4 +1,5 @@
 import mascot from "@/assets/mascot.png";
+import airplane from "@/assets/airplane.png";
 import welcomeScreenImage from "@/assets/welcome.png";
 import avatarExplorerHat from "@/assets/avatars/avatar-explorer-hat.png";
 import avatarExplorerPink from "@/assets/avatars/avatar-explorer-pink.png";
