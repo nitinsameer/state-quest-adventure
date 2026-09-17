@@ -303,28 +303,31 @@ export function WelcomeScreen() {
     <div className="w-full gradient-sky relative flex flex-col">
       <Cloud className="absolute top-14 -left-4 w-28 opacity-90" />
       <Cloud className="absolute top-24 right-2 w-20 opacity-90" />
-      <div className="flex-1 flex items-center justify-center pt-6">
-        <div className="relative">
-          <div className="absolute inset-0 blur-3xl bg-saffron/30 rounded-full" />
-          <img src={mascot} alt="India Explorer mascot" className="relative w-64 h-64 object-contain drop-shadow-xl" />
+      <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex items-center justify-center pt-6">
+          <div className="relative">
+            <div className="absolute inset-0 blur-3xl bg-saffron/30 rounded-full" />
+            <img src={mascot} alt="India Explorer mascot" className="relative w-64 h-64 object-contain drop-shadow-xl" />
+          </div>
         </div>
-      </div>
-      <div className="rounded-t-[36px] bg-white px-6 pt-8 pb-6 shadow-[0_-20px_40px_-20px_rgba(0,0,0,0.15)]">
-        <h1 className="text-display text-3xl font-extrabold leading-tight">
-          Namaste, little<br />explorer! 👋
-        </h1>
-        <p className="mt-3 text-muted-foreground font-semibold">
-          Get ready for an epic journey across all {TOTAL_STATES_ONLY} states and{" "}
-          {TOTAL_UNION_TERRITORIES} union territories of India. Collect stamps, earn
-          badges, and become the ultimate Explorer!
-        </p>
-        <Link
-          to="/create"
-          onClick={() => fxTap()}
-          className="mt-6 w-full h-14 rounded-2xl gradient-saffron text-white text-display text-lg font-bold shadow-[var(--shadow-glow-orange)] flex items-center justify-center"
-        >
-          Start My Adventure ✈️
-        </Link>
+        <div className="rounded-t-[36px] bg-white px-6 pt-8 pb-6 shadow-[0_-20px_40px_-20px_rgba(0,0,0,0.15)] flex flex-col">
+          <h1 className="text-display text-3xl font-extrabold leading-tight">
+            Namaste, little<br />explorer! 👋
+          </h1>
+          <p className="mt-3 text-muted-foreground font-semibold">
+            Get ready for an epic journey across all {TOTAL_STATES_ONLY} states and{" "}
+            {TOTAL_UNION_TERRITORIES} union territories of India. Collect stamps, earn
+            badges, and become the ultimate Explorer!
+          </p>
+          <Link
+            to="/create"
+            onClick={() => fxTap()}
+            className="mt-6 w-full h-14 rounded-2xl gradient-saffron text-white text-display text-lg font-bold shadow-[var(--shadow-glow-orange)] flex items-center justify-center"
+          >
+            Start My Adventure ✈️
+          </Link>
+          <div className="flex-1" />
+        </div>
       </div>
     </div>
   );
