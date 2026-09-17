@@ -307,7 +307,7 @@ export function WelcomeScreen() {
   };
 
   return (
-    <div className="w-full h-screen flex flex-col overflow-hidden select-none relative cursor-pointer" onClick={handleButtonClick}>
+    <div className="w-full h-screen flex flex-col overflow-hidden select-none relative cursor-pointer fixed inset-0" onClick={handleButtonClick}>
       <img 
         src={welcomeScreenImage} 
         alt="Welcome to India Explorer" 
