@@ -361,14 +361,10 @@ export function CreateProfileScreen() {
 
   return (
     <div className="w-full bg-gradient-to-b from-blue-50 to-white flex flex-col">
-      <HeaderBar title="Create Explorer" />
       <div className="px-5 flex-1 overflow-auto">
         {/* Step 1: Avatar Selection */}
         <div className="rounded-3xl gradient-explorer p-5 text-white relative overflow-hidden">
           <Cloud className="absolute -top-3 right-2 w-16 opacity-40" />
-          <div className="text-xs font-bold tracking-wide opacity-80">
-            Step 1 of 2
-          </div>
           <div className="text-display text-2xl font-bold mt-1">
             Pick your avatar
           </div>
