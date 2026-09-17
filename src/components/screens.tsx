@@ -299,11 +299,15 @@ export function SplashScreen() {
 }
 
 export function WelcomeScreen() {
+  const navigate = useNavigate();
+
+  const handleButtonClick = () => {
+    fxTap();
+    navigate({ to: "/create" });
+  };
+
   return (
-    <div className="w-full h-screen flex flex-col overflow-hidden select-none" onClick={() => {
-      // If the image has a button area, navigate on click in that region
-      // For now, just display the image
-    }}>
+    <div className="w-full h-screen flex flex-col overflow-hidden select-none relative cursor-pointer" onClick={handleButtonClick}>
       <img 
         src={welcomeScreenImage} 
         alt="Welcome to India Explorer" 
