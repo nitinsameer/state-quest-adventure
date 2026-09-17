@@ -1,5 +1,5 @@
 import mascot from "@/assets/mascot.png";
-import welcomeScreenImage from "@/assets/welcome-screen.png";
+import welcomeScreenImage from "@/assets/welcome.png";
 import avatarExplorerHat from "@/assets/avatars/avatar-explorer-hat.png";
 import avatarExplorerPink from "@/assets/avatars/avatar-explorer-pink.png";
 import avatarGeekGlasses from "@/assets/avatars/avatar-geek-glasses.png";
@@ -300,20 +300,16 @@ export function SplashScreen() {
 
 export function WelcomeScreen() {
   return (
-    <div className="w-full h-screen flex flex-col overflow-hidden select-none">
+    <div className="w-full h-screen flex flex-col overflow-hidden select-none" onClick={() => {
+      // If the image has a button area, navigate on click in that region
+      // For now, just display the image
+    }}>
       <img 
         src={welcomeScreenImage} 
         alt="Welcome to India Explorer" 
-        className="w-full h-full object-contain bg-gradient-to-b from-blue-100 to-white pointer-events-none"
+        className="w-full h-full object-contain bg-gradient-to-b from-blue-100 to-white"
         draggable="false"
       />
-      <Link
-        to="/create"
-        onClick={() => fxTap()}
-        className="absolute bottom-8 left-6 right-6 h-14 rounded-2xl gradient-saffron text-white text-display text-lg font-bold shadow-[var(--shadow-glow-orange)] flex items-center justify-center"
-      >
-        Start My Adventure ✈️
-      </Link>
     </div>
   );
 }
