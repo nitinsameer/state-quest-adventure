@@ -2907,37 +2907,49 @@ export function BadgesScreen() {
 
   return (
     <div className="h-full w-full bg-[#F7F5F0] flex flex-col">
-      {/* Premium Header */}
-      <div className="px-5 pt-3 pb-4 gradient-saffron rounded-b-[32px] relative overflow-hidden">
+      {/* Combined Header - Avatar + Name + Badge Stats (120px) */}
+      <div className="px-5 pt-3 pb-4 gradient-saffron rounded-b-[32px] relative overflow-hidden animate-fade-in">
         <Cloud className="absolute top-2 right-4 w-14 opacity-40 pointer-events-none" />
-        <div className="relative z-10">
-          <div className="text-xs font-bold text-white/90">Achievement Badges</div>
-          <div className="text-display text-xl font-extrabold text-white mt-1">{unlockedCount}/20 Unlocked</div>
-        </div>
-      </div>
-
-      {/* Stats Card */}
-      <div className="px-5 pt-4 pb-3">
-        <div className="rounded-2xl bg-white shadow-soft border border-black/5 p-4 flex items-center justify-between">
-          <div>
-            <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Progress</div>
-            <div className="text-display text-3xl font-extrabold mt-1">{unlockedCount}/20</div>
+        
+        {/* PART A: Avatar + Name (flex items-center gap-3) */}
+        <div className="flex items-center gap-3 relative z-10">
+          <div className="h-14 w-14 rounded-2xl bg-white shadow-soft p-1 flex items-center justify-center overflow-hidden flex-shrink-0">
+            <img src={getAvatarImage(progress.avatar)} alt={getAvatarName(progress.avatar)} className="w-full h-full object-cover" />
           </div>
-          <div className="flex-1 ml-6 flex flex-col gap-2">
-            <div className="h-2 rounded-full bg-gray-200 overflow-hidden">
-              <div
-                className="h-full gradient-saffron rounded-full transition-all duration-500"
-                style={{ width: `${(unlockedCount / 20) * 100}%` }}
-              />
+          <div className="flex-1 text-white">
+            <div className="text-display text-lg font-bold leading-tight">
+              {progress.name}
             </div>
-            <div className="text-xs font-bold text-muted-foreground text-right">{Math.round((unlockedCount / 20) * 100)}%</div>
           </div>
-          <div className="text-5xl ml-4">🏆</div>
+        </div>
+
+        {/* PART B: Badge Stats (mt-3, bg-white/15 backdrop-blur p-3) */}
+        <div className="mt-3 rounded-2xl bg-white/15 backdrop-blur p-3 relative transition-all duration-700 animate-fade-in" style={{ animationDelay: "100ms" }}>
+          <div className="flex items-center justify-between text-white">
+            <div>
+              <div className="text-xs font-bold opacity-90">Achievement Badges</div>
+              <div className="text-display text-lg font-extrabold mt-1">
+                {unlockedCount}/20 Unlocked
+              </div>
+            </div>
+            <div className="flex-1 ml-4 flex flex-col gap-1">
+              <div className="text-xs font-bold opacity-90">
+                {Math.round((unlockedCount / 20) * 100)}% Complete
+              </div>
+              <div className="h-2 bg-white/30 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-yellow-300 to-yellow-100 rounded-full transition-all duration-500"
+                  style={{ width: `${(unlockedCount / 20) * 100}%` }}
+                />
+              </div>
+            </div>
+            <div className="text-5xl ml-4">🏆</div>
+          </div>
         </div>
       </div>
 
       {/* Tiers */}
-      <div className="px-5 flex-1 overflow-auto space-y-4 pb-4">
+      <div className="px-5 flex-1 overflow-auto space-y-4 pb-4 pt-4">
         {tiers.map((tier, tierIdx) => {
           const badges = achievementBadgesForTier(progress, tier);
           const config = getTierConfig(tier);
