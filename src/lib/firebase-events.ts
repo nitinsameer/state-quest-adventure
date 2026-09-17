@@ -8,7 +8,35 @@
 import { analytics, isFirebaseConfigured } from './firebase-init'
 import { logEvent } from 'firebase/analytics'
 import { appLogger } from './logger'
+import { eventQueue } from './event-queue'
 import type { BadgeId } from './progress'
+
+// FIX #10: Rate limiting and deduplication for events
+const eventTimestamps = new Map<string, number>()
+const EVENT_RATE_LIMITS: Record<string, number> = {
+  'quiz_answer': 100, // Allow 100ms between quiz_answer events
+  'card_read': 200, // Allow 200ms between card_read events
+  'daily_visit': 3600000, // Only once per hour
+  'session_start': 3600000, // Only once per hour
+}
+
+/**
+ * Check if event should be rate limited
+ */
+function isRateLimited(eventName: string): boolean {
+  const limit = EVENT_RATE_LIMITS[eventName]
+  if (!limit) return false
+
+  const lastTimestamp = eventTimestamps.get(eventName) || 0
+  const now = Date.now()
+
+  if (now - lastTimestamp < limit) {
+    return true // Rate limited
+  }
+
+  eventTimestamps.set(eventName, now)
+  return false
+}
 
 // Type-safe event parameters
 interface QuizEventParams {
@@ -85,42 +113,86 @@ interface StorageHydrationParams {
 
 /**
  * Safe event logging - handles Firebase not being initialized
+ * FIX #2: Uses offline queue for persistence and retry
+ * FIX #10: Rate limiting to prevent quota overages
  */
 function safeLogEvent<T extends Record<string, any>>(
   eventName: string,
   params?: T
 ): void {
-  if (!analytics || !isFirebaseConfigured) {
+  // FIX #10: Skip if rate limited
+  if (isRateLimited(eventName)) {
+    return
+  }
+
+  if (!isFirebaseConfigured) {
+    // FIX #2: Queue event for later when offline or Firebase not configured
+    eventQueue.enqueue(eventName, params)
     return
   }
 
   try {
-    // Firebase Analytics has parameter size limits
-    // Stringify and truncate if needed
-    const sanitizedParams = params
-      ? Object.entries(params).reduce(
-          (acc, [key, value]) => {
-            let sanitizedValue = value
-            if (typeof value === 'string' && value.length > 100) {
-              sanitizedValue = value.substring(0, 100)
-            }
-            if (typeof value === 'number' && !Number.isFinite(value)) {
-              sanitizedValue = 0
-            }
-            acc[key] = sanitizedValue
-            return acc
-          },
-          {} as Record<string, any>
-        )
-      : undefined
+    // FIX #25: Validate event parameters for correct types
+    const sanitizedParams = validateAndSanitizeParams(params)
 
-    logEvent(analytics, eventName, sanitizedParams)
+    if (analytics) {
+      logEvent(analytics, eventName, sanitizedParams)
+    } else {
+      // Firebase not initialized yet - queue for retry
+      eventQueue.enqueue(eventName, params)
+    }
 
     // Also log locally for debugging
     appLogger.info('firebase_event', eventName, sanitizedParams)
   } catch (error) {
-    appLogger.error('firebase_event_failed', `Failed to log event: ${eventName}`, { error })
+    // FIX #2: Queue failed event for retry
+    eventQueue.enqueue(eventName, params)
   }
+}
+
+/**
+ * FIX #25: Validate and sanitize event parameters
+ * Ensures parameters are within acceptable ranges
+ */
+function validateAndSanitizeParams<T extends Record<string, any>>(
+  params?: T
+): T | undefined {
+  if (!params) return undefined
+
+  return Object.entries(params).reduce(
+    (acc, [key, value]) => {
+      let sanitizedValue = value
+
+      // Truncate long strings
+      if (typeof value === 'string' && value.length > 100) {
+        sanitizedValue = value.substring(0, 100)
+      }
+
+      // Validate numbers
+      if (typeof value === 'number') {
+        if (!Number.isFinite(value)) {
+          sanitizedValue = 0
+        }
+        // Bounds check for percentage values
+        if (key.includes('percentage') || key.includes('score')) {
+          sanitizedValue = Math.max(0, Math.min(100, value))
+        }
+        // Ensure non-negative for counts
+        if (key.includes('count') || key.includes('amount') || key.includes('total')) {
+          sanitizedValue = Math.max(0, value)
+        }
+      }
+
+      // Validate boolean values
+      if (typeof value === 'boolean') {
+        sanitizedValue = value
+      }
+
+      acc[key] = sanitizedValue
+      return acc
+    },
+    {} as Record<string, any>
+  ) as T
 }
 
 /**

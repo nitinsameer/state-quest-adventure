@@ -18,8 +18,11 @@ function hydrateSound() {
   if (soundHydrated || typeof window === "undefined") return;
   soundHydrated = true;
   try {
+    // FIX #24: Default to false (opt-in) not true
+    // Only enable if explicitly set to "1"
     const raw = localStorage.getItem(SOUND_KEY);
     if (raw !== null) soundOn = raw === "1";
+    else soundOn = false; // Default: sound disabled until user enables
   } catch {
     /* storage unavailable */
   }

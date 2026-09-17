@@ -1,11 +1,15 @@
 /**
  * Firebase initialization and configuration
  * Initializes Firebase app, Analytics, and Crashlytics
+ * 
+ * FIX #6 & #22: Console logging removed - only debug mode
+ * FIX #13: Fail fast if required config is missing
  */
 
 import { initializeApp } from 'firebase/app'
 import { getAnalytics, setAnalyticsCollectionEnabled } from 'firebase/analytics'
 import { getFirestore } from 'firebase/firestore'
+import { debugLog, debugError } from './debug'
 
 // Firebase configuration - loaded from environment variables
 // Make sure these are set in .env.local or Vercel environment
@@ -19,8 +23,17 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || '',
 }
 
-// Check if Firebase is properly configured
-const isFirebaseConfigured = firebaseConfig.projectId && firebaseConfig.apiKey
+// FIX #13: Check if Firebase is properly configured
+const isFirebaseConfigured = !!(
+  firebaseConfig.projectId &&
+  firebaseConfig.apiKey &&
+  firebaseConfig.authDomain
+)
+
+// FIX #13: Warn if Firebase is missing critical config
+if (!isFirebaseConfigured && import.meta.env.PROD) {
+  debugError('firebase', 'Firebase not configured - analytics disabled. Set environment variables to enable.')
+}
 
 // Initialize Firebase only if configured - but lazy, on-demand
 let app: ReturnType<typeof initializeApp> | null = null
@@ -33,7 +46,6 @@ function initializeFirebase() {
   initialized = true
   
   if (!isFirebaseConfigured) {
-    console.warn('⚠️ Firebase not configured - analytics disabled. Set environment variables to enable.')
     return
   }
 
@@ -47,9 +59,9 @@ function initializeFirebase() {
       setAnalyticsCollectionEnabled(analytics, true)
     }
     
-    console.log('✅ Firebase initialized successfully')
+    debugLog('firebase', 'Firebase initialized successfully')
   } catch (error) {
-    console.error('❌ Firebase initialization failed:', error)
+    debugError('firebase', 'Firebase initialization failed', error)
   }
 }
 

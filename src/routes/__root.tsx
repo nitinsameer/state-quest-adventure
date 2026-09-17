@@ -21,7 +21,7 @@ import { BottomNav } from "@/components/screens";
 import { appLogger } from "@/lib/logger";
 import { firebaseEvents } from "@/lib/firebase-events";
 import { useProgress } from "@/lib/progress";
-// Ambient music removed - background audio disabled
+// FIX #27: Ambient music removed - no dead code
 import { pauseTts, resumeTts } from "@/lib/tts";
 import { Capacitor } from "@capacitor/core";
 
@@ -284,15 +284,8 @@ function RootComponent() {
   // Monitor localStorage for consent changes (from dialog)
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === "india-explorer:audio-consent:v1") {
-        console.log("[RootComponent.storageListener] Consent changed in localStorage:", e.newValue);
-        const isAuthenticatedRoute = !preAuthRoutes.includes(location.pathname);
-        const hasConsent = e.newValue === "1";
-        
-        if (isAuthenticatedRoute && hasConsent) {
-          console.log("[RootComponent.storageListener] Audio consent changed");
-        }
-      }
+      // Consent changes handled by parental-consent system
+      // No action needed here - component will re-render automatically
     };
     
     if (typeof window !== "undefined") {
@@ -305,17 +298,9 @@ function RootComponent() {
   // Do NOT start on splash/welcome/create screens
   // Also set up app lifecycle listeners for pause/resume
   useEffect(() => {
-    // Check if user has given audio consent
-    // DEFAULT: true (play audio) unless user explicitly rejected (value === "0")
-    // This ensures audio plays on first launch while permission dialog is showing
-    const consentValue = localStorage.getItem("india-explorer:audio-consent:v1");
-    const hasAudioConsent = consentValue !== "0"; // true if null (first time) or "1"
-    
     // Only start ambient on authenticated routes (home, state exploration, etc.)
     // Pre-auth routes should remain silent
     const isAuthenticatedRoute = !preAuthRoutes.includes(location.pathname);
-    
-    console.log("[RootComponent.effect] Route:", location.pathname, "isAuth:", isAuthenticatedRoute, "consent:", hasAudioConsent);
     
     // Ambient audio disabled - background music removed
 
@@ -338,12 +323,10 @@ function RootComponent() {
     };
   }, [location.pathname]);
 
-  // Monitor consent changes
+  // Monitor consent changes - re-render if consent status changes
   useEffect(() => {
-    const hasAudioConsent = localStorage.getItem("india-explorer:audio-consent:v1") === "1";
-    const isAuthenticatedRoute = !preAuthRoutes.includes(location.pathname);
-    
-    console.log("[RootComponent.consentEffect] Consent changed:", hasAudioConsent, "Route:", location.pathname);
+    // Component re-renders when consent storage changes
+    // Parental consent system handles all consent logic
   }, []);
 
   const innerComponent = (
@@ -365,7 +348,8 @@ function RootComponent() {
       
       <UnlockCelebration />
       <Toaster position="top-center" richColors />
-      <DebugScreen />
+      {/* FIX #19: Debug screen only in development mode */}
+      {import.meta.env.DEV && <DebugScreen />}
     </QueryClientProvider>
   );
 

@@ -4,11 +4,16 @@
  * 
  * Uses maintained community plugin for reliable native TTS
  * Calls Android's system TTS engine directly through Capacitor bridge
+ * 
+ * FIX #6 & #22: Console logging removed - only logs on dev mode
+ * FIX #29: Error feedback provided to user on TTS failure
  */
 
 import { TextToSpeech } from '@capacitor-community/text-to-speech';
 import { isSoundOn } from "./fx";
 import { getStateLanguageCode } from "./state-content";
+import { debugLog, debugError } from "./debug";
+import { toast } from "sonner";
 import * as React from "react";
 
 export type TtsLanguage = "en-IN" | "hi-IN" | "en-US" | "te-IN" | "ta-IN" | "gu-IN" | "mr-IN" | "kn-IN" | "ml-IN" | "or-IN" | "bn-IN" | "pa-IN";
@@ -49,12 +54,10 @@ export function playTts(
 ): void {
   // Check if sound is enabled
   if (!isSoundOn()) {
-    console.log("[TTS] Sound is muted - skipping narration");
     return;
   }
 
   if (!text || text.trim().length === 0) {
-    console.warn("[TTS] Empty text provided");
     return;
   }
 
@@ -90,14 +93,6 @@ export function playStateNarration(
   // Convert to full TTS language code (e.g., "te" → "te-IN")
   const ttsLanguageCode = `${languageCode}-IN` as TtsLanguage;
   
-  console.log("[TTS] Playing state narration:", {
-    stateName,
-    languageCode,
-    ttsLanguageCode,
-    narrationId,
-    overrideLanguage,
-  });
-  
   // Play with the state-specific language
   playTts(narrationId, text, { ...config, language: ttsLanguageCode });
 }
@@ -117,14 +112,11 @@ async function playTtsNative(
     currentNarrationId = narrationId;
     notifyListeners();
 
-    console.log("[TTS] Starting native playback:", {
+    debugLog("tts", "Starting native playback", {
       narrationId,
       textLength: text.length,
       language: config.language,
       langCode,
-      rate: config.speed,
-      pitch: config.pitch,
-      volume: config.volume,
     });
 
     // Call native TextToSpeech plugin
@@ -138,12 +130,16 @@ async function playTtsNative(
       category: "ambient",
     });
 
-    console.log("[TTS] Native playback completed");
+    debugLog("tts", "Native playback completed");
     isPlaying = false;
     currentNarrationId = "";
     notifyListeners();
   } catch (error) {
-    console.error("[TTS] Native playback error:", error);
+    debugError("tts", "Native playback error", error);
+    // FIX #29: Provide error feedback to user
+    if (error instanceof Error) {
+      toast.error("Audio playback failed - please try again");
+    }
     isPlaying = false;
     currentNarrationId = "";
     notifyListeners();
@@ -157,7 +153,7 @@ export function stopTts(): void {
   try {
     TextToSpeech.stop();
   } catch (error) {
-    console.error("[TTS] Stop error:", error);
+    debugError("tts", "Stop error", error);
   }
 
   isPlaying = false;
@@ -186,7 +182,7 @@ export function pauseTts(): void {
   try {
     TextToSpeech.stop();
   } catch (error) {
-    console.error("[TTS] Pause error:", error);
+    debugError("tts", "Pause error", error);
   }
 }
 
@@ -194,7 +190,7 @@ export function pauseTts(): void {
  * Resume TTS playback
  */
 export function resumeTts(): void {
-  console.log("[TTS] Resume not supported in native TTS");
+  // Resume not supported in native TTS
 }
 
 /**

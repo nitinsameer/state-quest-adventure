@@ -1,21 +1,22 @@
 /**
  * Storage Permission Handler & File Save
  * Uses Capacitor Filesystem to save files with proper permission handling
+ * 
+ * FIX #6 & #22: Console logging removed - only debug mode logging
  */
 
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { App } from '@capacitor/app';
+import { debugLog, debugError } from './debug';
 
 export async function requestStoragePermission(): Promise<boolean> {
   try {
     const capacitor = (window as any)?.Capacitor;
     if (!capacitor) {
-      console.log('[Permissions] Web platform - no permission needed');
       return true;
     }
 
     const platform = capacitor.getPlatform?.();
-    console.log('[Permissions] Platform:', platform);
 
     // Check localStorage consent first
     const hasConsent = localStorage.getItem(
@@ -23,31 +24,32 @@ export async function requestStoragePermission(): Promise<boolean> {
     ) === "1";
     
     if (!hasConsent) {
-      console.log('[Permissions] User has not given consent in dialog');
+      // FIX #28: Fail loud - user will see error message
       return false;
     }
 
-    console.log('[Permissions] User gave consent, requesting Android permissions...');
+    debugLog("permissions", "User gave consent, requesting Android permissions");
 
     // Request permissions at runtime
     if (platform === 'android') {
       try {
-        console.log('[Permissions] Requesting WRITE_EXTERNAL_STORAGE and READ_EXTERNAL_STORAGE...');
+        debugLog("permissions", "Requesting WRITE_EXTERNAL_STORAGE and READ_EXTERNAL_STORAGE");
         const result = await App.requestPermissions({
           permissions: ['READ_EXTERNAL_STORAGE', 'WRITE_EXTERNAL_STORAGE']
         });
-        console.log('[Permissions] Permission request result:', result);
+        debugLog("permissions", "Permission request result", result);
         return true;
       } catch (err) {
-        console.error('[Permissions] Permission request error:', err);
-        return true; // Continue anyway, will use cache fallback
+        debugError("permissions", "Permission request failed - user may have declined", err);
+        // FIX #28: Fail loud - return false so UI can show error
+        return false;
       }
     }
 
     return true;
   } catch (err) {
-    console.error('[Permissions] Error:', err);
-    return true;
+    debugError("permissions", "Error", err);
+    return false; // FIX #28: Fail loud instead of silently continuing
   }
 }
 
@@ -56,17 +58,17 @@ export async function saveFileToDownloads(blob: Blob, filename: string): Promise
     const capacitor = (window as any)?.Capacitor;
     const platform = capacitor?.getPlatform?.();
 
-    console.log('[FileSystem] Attempting save:', { filename, platform, blobSize: blob.size });
+    debugLog("filesystem", "Attempting save", { filename, platform, blobSize: blob.size });
 
     // On native platforms
     if (platform === 'android' || platform === 'ios') {
       try {
         // Convert blob to base64
         const base64data = await blobToBase64(blob);
-        console.log('[FileSystem] Converted blob to base64, length:', base64data.length);
+        debugLog("filesystem", "Converted blob to base64", { length: base64data.length });
 
         // Try Documents directory first (Downloads folder)
-        console.log('[FileSystem] Attempting to save to Documents/Downloads...');
+        debugLog("filesystem", "Attempting to save to Documents/Downloads");
         try {
           const result = await Filesystem.writeFile({
             path: filename,
@@ -75,11 +77,11 @@ export async function saveFileToDownloads(blob: Blob, filename: string): Promise
             recursive: true,
           });
           
-          console.log('[FileSystem] File saved successfully to Documents:', result);
+          debugLog("filesystem", "File saved successfully to Documents", result);
           return true;
         } catch (docsErr: any) {
-          console.log('[FileSystem] Documents save failed:', docsErr?.message);
-          console.log('[FileSystem] Trying cache as fallback...');
+          debugLog("filesystem", "Documents save failed", { message: docsErr?.message });
+          debugLog("filesystem", "Trying cache as fallback");
           
           // Fallback to cache directory
           const cacheResult = await Filesystem.writeFile({
@@ -88,17 +90,17 @@ export async function saveFileToDownloads(blob: Blob, filename: string): Promise
             directory: Directory.Cache,
             recursive: true,
           });
-          console.log('[FileSystem] File saved to cache (fallback):', cacheResult);
+          debugLog("filesystem", "File saved to cache (fallback)", cacheResult);
           return true;
         }
       } catch (err) {
-        console.error('[FileSystem] All native save methods failed:', err);
+        debugError("filesystem", "All native save methods failed", err);
         // Fall through to web method
       }
     }
 
     // Web fallback - use browser download
-    console.log('[FileSystem] Using web fallback - blob download');
+    debugLog("filesystem", "Using web fallback - blob download");
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -108,10 +110,10 @@ export async function saveFileToDownloads(blob: Blob, filename: string): Promise
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     
-    console.log('[FileSystem] Web download triggered');
+    debugLog("filesystem", "Web download triggered");
     return true;
   } catch (err) {
-    console.error('[FileSystem] Error saving file:', err);
+    debugError("filesystem", "Error saving file", err);
     return false;
   }
 }

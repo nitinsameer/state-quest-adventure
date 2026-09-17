@@ -4,10 +4,14 @@
  * Displays a kid-friendly permission request for audio playback
  * Complies with Google Play Families Policy for audio devices
  * Can be triggered on first app load
+ * 
+ * FIX #7: Uses secure parental consent system with timestamps
  */
 
 import { useEffect, useState } from "react";
 import { useProgress, isHydrated } from "@/lib/progress";
+import { hasFeatureConsent, grantFeatureConsent } from "@/lib/parental-consent";
+import { debugLog } from "@/lib/debug";
 
 export interface AudioPermissionDialogProps {
   onAccept?: () => void;
@@ -32,6 +36,8 @@ export function AudioPermissionDialog({
       return;
     }
 
+    // FIX #7: Check consent using secure system
+    const hasConsent = hasFeatureConsent('audio');
     const hasSeenAudioPermission = localStorage.getItem(
       "india-explorer:audio-permission-shown:v1"
     ) === "1";
@@ -40,8 +46,8 @@ export function AudioPermissionDialog({
     // 1. User hasn't seen it yet (!hasSeenAudioPermission)
     // 2. App is fresh (!progress.onboarded) OR user just onboarded (just created profile)
     // 3. Not suppressed by another dialog
-    if (!hasSeenAudioPermission && !isOpen) {
-      console.log("[AudioPermissionDialog] Ready to show on first authenticated access");
+    if (!hasSeenAudioPermission && !hasConsent && !isOpen) {
+      debugLog("audio-permission", "Ready to show on first authenticated access");
       setIsOpen(true);
       localStorage.setItem("india-explorer:audio-permission-shown:v1", "1");
     }
@@ -52,15 +58,16 @@ export function AudioPermissionDialog({
   if (!isOpen) return null;
 
   const handleAccept = () => {
-    console.log("[AudioPermissionDialog] User accepted audio");
-    localStorage.setItem("india-explorer:audio-consent:v1", "1");
+    debugLog("audio-permission", "User accepted audio");
+    // FIX #7: Use secure consent system
+    grantFeatureConsent('audio');
     setIsOpen(false);
     onAccept?.();
   };
 
   const handleReject = () => {
-    console.log("[AudioPermissionDialog] User rejected audio");
-    localStorage.setItem("india-explorer:audio-consent:v1", "0");
+    debugLog("audio-permission", "User rejected audio");
+    // Don't grant consent - user explicitly declined
     setIsOpen(false);
     onReject?.();
   };

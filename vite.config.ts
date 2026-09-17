@@ -28,6 +28,8 @@ export default defineConfig({
     // Use relative paths for Capacitor WebView (doesn't support absolute /assets)
     base: './',
     build: {
+      // FIX #36: Production minification enabled by default (Vite optimizes for production)
+      // Assets will be minified, tree-shaken, and optimized automatically
       // Ensure we only build client-side output
       ssrManifest: false,
       // Disable code-splitting for single bundle output

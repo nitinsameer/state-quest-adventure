@@ -1,10 +1,12 @@
 /**
  * Comprehensive logging system for debugging white screen issues
  * Captures logs to local storage and sends to console for inspection
+ * 
+ * FIX #5: No PII exposure - sanitize profile data before logging
+ * FIX #11: No stack trace exposure - redact sensitive URLs and data
  */
 
 import { firebaseEvents } from './firebase-events';
-import { useProgress } from './progress';
 
 export interface LogEntry {
   timestamp: number;
@@ -13,6 +15,62 @@ export interface LogEntry {
   message: string;
   data?: any;
   stack?: string;
+}
+
+/**
+ * FIX #5: Redact sensitive data from logs
+ */
+function redactSensitiveData(data: any): any {
+  if (!data) return data
+  
+  if (typeof data === 'string') {
+    // Remove URLs, tokens, IDs
+    return data
+      .replace(/https?:\/\/[^\s]+/g, '[URL]')
+      .replace(/token[:\s=]+[^\s]+/gi, 'token: [REDACTED]')
+      .replace(/key[:\s=]+[^\s]+/gi, 'key: [REDACTED]')
+  }
+
+  if (typeof data !== 'object') return data
+
+  if (Array.isArray(data)) {
+    return data.map(item => redactSensitiveData(item))
+  }
+
+  const sanitized: any = {}
+  for (const [key, value] of Object.entries(data)) {
+    // Redact known sensitive fields
+    if (key.toLowerCase().includes('profile') || 
+        key.toLowerCase().includes('name') ||
+        key.toLowerCase().includes('email') ||
+        key.toLowerCase().includes('phone') ||
+        key.toLowerCase().includes('token') ||
+        key.toLowerCase().includes('key') ||
+        key.toLowerCase().includes('secret')) {
+      sanitized[key] = '[REDACTED]'
+    } else {
+      sanitized[key] = redactSensitiveData(value)
+    }
+  }
+  return sanitized
+}
+
+/**
+ * FIX #11: Redact stack traces - remove sensitive URLs and file paths
+ */
+function redactStackTrace(stack?: string): string | undefined {
+  if (!stack) return undefined
+  
+  return stack
+    .split('\n')
+    .map(line => {
+      // Remove query parameters and tokens
+      return line
+        .replace(/\?[^\s]+/g, '?[REDACTED]')
+        .replace(/token[=:][^\s]+/gi, 'token=[REDACTED]')
+        .replace(/key[=:][^\s]+/gi, 'key=[REDACTED]')
+    })
+    .join('\n')
 }
 
 class Logger {
@@ -29,24 +87,23 @@ class Logger {
     // Capture unhandled errors
     if (typeof window !== 'undefined') {
       window.addEventListener('error', (event) => {
+        // FIX #11: Redact stack traces before logging
+        const redactedStack = redactStackTrace(event.error?.stack)
+        
         this.error('global_error', `${event.message} at ${event.filename}:${event.lineno}`, {
           filename: event.filename,
           lineno: event.lineno,
           colno: event.colno,
-          stack: event.error?.stack,
-        });
+          // Don't include full stack in data - store redacted version separately
+        }, event.error);
         
-        // Track crash event
+        // Track crash event - only send error message, no stack
         try {
-          const ageBand = localStorage.getItem('india-explorer:profile')
-            ? JSON.parse(localStorage.getItem('india-explorer:profile') || '{}').ageBand
-            : 'unknown';
-          
           firebaseEvents.crash({
             errorType: 'uncaught_error',
             errorMessage: event.message,
-            stackTrace: event.error?.stack,
-            ageBand,
+            // FIX #5: Don't send stack traces to Firebase (contains sensitive data)
+            ageBand: 'unknown', // Don't read profile from localStorage - causes PII exposure
           });
         } catch (e) {
           // Silently fail if Firebase events not available
@@ -56,20 +113,15 @@ class Logger {
       // Capture unhandled promise rejections
       window.addEventListener('unhandledrejection', (event) => {
         this.error('unhandled_rejection', event.reason?.message || String(event.reason), {
-          reason: event.reason,
+          reason: typeof event.reason === 'object' ? '[Object]' : redactSensitiveData(event.reason),
         });
         
-        // Track crash event
+        // Track crash event - sanitized
         try {
-          const ageBand = localStorage.getItem('india-explorer:profile')
-            ? JSON.parse(localStorage.getItem('india-explorer:profile') || '{}').ageBand
-            : 'unknown';
-          
           firebaseEvents.crash({
             errorType: 'unhandled_rejection',
             errorMessage: event.reason?.message || String(event.reason),
-            stackTrace: event.reason?.stack,
-            ageBand,
+            ageBand: 'unknown', // Don't read from localStorage
           });
         } catch (e) {
           // Silently fail if Firebase events not available
@@ -79,7 +131,14 @@ class Logger {
   }
 
   private addLog(entry: LogEntry) {
-    this.logs.push(entry);
+    // FIX #5: Sanitize data before storing
+    const sanitizedEntry: LogEntry = {
+      ...entry,
+      data: entry.data ? redactSensitiveData(entry.data) : undefined,
+      stack: entry.stack ? redactStackTrace(entry.stack) : undefined,
+    }
+
+    this.logs.push(sanitizedEntry);
     
     // Keep only recent logs
     if (this.logs.length > this.MAX_LOGS) {
@@ -91,11 +150,10 @@ class Logger {
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.logs));
     } catch (e) {
       // localStorage might be full or unavailable
-      console.warn('Failed to save logs to localStorage', e);
     }
 
     // Log to console with styling
-    this.logToConsole(entry);
+    this.logToConsole(sanitizedEntry);
   }
 
   private logToConsole(entry: LogEntry) {

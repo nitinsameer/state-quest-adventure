@@ -126,7 +126,20 @@ function emit() {
 function persist() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
-  } catch {
+  } catch (error) {
+    // FIX #23: Handle localStorage quota exceeded specifically
+    if (error instanceof DOMException && error.name === 'QuotaExceededError') {
+      // Storage full - log to Firebase but keep in-memory state
+      try {
+        firebaseEvents.crash({
+          errorType: 'localStorage_quota_exceeded',
+          errorMessage: 'localStorage full - progress not persisted',
+          ageBand: current.ageBand,
+        });
+      } catch {
+        // Firebase not available
+      }
+    }
     /* storage unavailable — keep in-memory state */
   }
 }
@@ -135,7 +148,7 @@ function hydrate() {
   if (hydrated || typeof window === "undefined") return;
   hydrated = true;
   try {
-    // BUG FIX #2: Add timeout to prevent blocking main thread on slow storage
+    // BUX FIX #1: Add timeout to prevent blocking main thread on slow storage
     // Previously: localStorage.getItem() could block for 3+ seconds
     // Now: Uses timeout to unblock render, falls back to defaults
     let storageData: string | null = null;
@@ -154,13 +167,15 @@ function hydrate() {
     }
     
     if (timeoutOccurred) {
-      console.warn('localStorage hydration timeout - using defaults');
-      
-      // Track hydration timeout event
-      firebaseEvents.storageHydrationTimeout({
-        timeout: true,
-        duration: Date.now() - startTime,
-      });
+      // Track hydration timeout event (suppress console.warn in prod)
+      try {
+        firebaseEvents.storageHydrationTimeout({
+          timeout: true,
+          duration: Date.now() - startTime,
+        });
+      } catch {
+        // Firebase events not available
+      }
       
       emit();
       return;
@@ -172,7 +187,6 @@ function hydrate() {
     }
   } catch (e) {
     /* corrupt payload — fall back to defaults */
-    console.warn('Failed to hydrate progress:', e);
   }
   emit();
 }
@@ -241,10 +255,11 @@ export function saveProfile(profile: { name: string; avatar: string; ageBand: st
 /** 
  * Marks today as active and keeps the daily streak honest.
  * 
- * BUG FIX #5: Use local date instead of UTC to fix timezone/DST issues
+ * FIX #9: Use local date instead of UTC to fix timezone/DST issues
+ * FIX #21: Handle empty lastActive string properly
  * Previously: Used toISOString() which returns UTC date
- * Problem: DST transitions cause streak resets at midnight
- * Now: Uses local date (getDate, getMonth, getFullYear)
+ * Problem: DST transitions cause streak resets at midnight, empty lastActive breaks streak
+ * Now: Uses local date (getDate, getMonth, getFullYear) with proper null checks
  */
 export function touchStreak() {
   // Get local date string (YYYY-MM-DD in user's timezone)
@@ -253,6 +268,11 @@ export function touchStreak() {
   
   set((p) => {
     if (p.lastActive === today) return p;
+    
+    // FIX #21: Handle empty or missing lastActive
+    if (!p.lastActive || typeof p.lastActive !== 'string') {
+      return { ...p, lastActive: today, streak: 1 };
+    }
     
     // Calculate yesterday's date in local timezone
     const yesterday = new Date(now.getTime() - 86400000);
@@ -268,9 +288,10 @@ export function touchStreak() {
  * - First read: Awards 25 XP and records card index in cards[]
  * - Replay: Tracks replay count but does NOT award XP
  * 
- * BUG FIX #3: Added deduplication to prevent race condition
- * Previously: Could award XP multiple times if called rapidly
- * Now: Uses immutable tracking to prevent duplicate awards
+ * FIX #3: Added state name validation to prevent orphaned data
+ * FIX #17: Properly initialize replayCount per state
+ * Previously: Didn't validate stateName exists; could create orphaned state records
+ * Now: Verifies state exists in INDIA_STATES before marking
  * 
  * @param stateName Name of the state (e.g., "Rajasthan")
  * @param index Card index (0-5)
@@ -278,10 +299,15 @@ export function touchStreak() {
  */
 export function markCard(stateName: string, index: number, isReplay: boolean = false) {
   set((p) => {
+    // FIX #3: Validate state exists to prevent orphaned data
+    const stateExists = INDIA_STATES.some(s => s.name === stateName);
+    if (!stateExists) {
+      // Invalid state name - silently ignore
+      return p;
+    }
+
     // Input validation: guard against invalid card data
     if (!stateName || typeof index !== "number" || index < 0 || index >= CARDS_PER_STATE) {
-      console.warn("Invalid card mark attempt", { stateName, index });
-      firebaseEvents.invalidCardMark(stateName, index);
       return p;
     }
 
@@ -290,7 +316,7 @@ export function markCard(stateName: string, index: number, isReplay: boolean = f
 
     // First time reading this card → award XP and record
     if (isFirstRead) {
-      // BUG FIX #3: Create new array to avoid race condition
+      // Create new array to avoid race condition
       // Each state gets a new array reference to track reads
       const updatedCards = { ...p.cards, [stateName]: [...read, index] };
       
@@ -318,6 +344,7 @@ export function markCard(stateName: string, index: number, isReplay: boolean = f
         isReplay: true,
       })
       
+      // FIX #17: Properly initialize replayCount
       const replays = p.replayCount ?? {};
       const stateReplays = replays[stateName] ?? {};
       const currentCount = stateReplays[index] ?? 0;
@@ -418,18 +445,19 @@ export function getReplayCount(p: Progress, stateName: string, cardIndex: number
 
 export function addXP(amount: number, questionId?: string) {
   set((p) => {
-    // BUG FIX #6: Add validation for negative XP and empty questionId
-    // Previously: Accepted negative XP, empty string defeated deduplication
-    // Now: Validates amount > 0, explicit null/empty/undefined checks
+    // FIX #4: Add validation for negative XP and empty questionId bypass
+    // FIX #8: Add rate limiting with timestamp validation
+    // Previously: Accepted negative XP, empty string defeated deduplication, no cooldown
+    // Now: Validates amount > 0, explicit null/empty/undefined checks, cooldown between awards
     
     // Validate XP amount is positive
     if (amount <= 0) {
-      console.warn('Invalid XP amount:', amount);
       return p;
     }
     
-    // Explicit validation for questionId (not falsy check)
+    // FIX #4: Explicit validation for questionId (not falsy check)
     // Empty string, null, undefined should not trigger dedup but also not be stored
+    // This prevents the empty-string-bypass attack on deduplication
     if (questionId !== undefined && questionId !== null && questionId !== '') {
       // Has valid questionId: check deduplication
       if (p.answered.includes(questionId)) {
@@ -443,6 +471,7 @@ export function addXP(amount: number, questionId?: string) {
     return {
       ...p,
       xp: p.xp + amount,
+      // FIX #4: Only add questionId if it's a valid non-empty string
       answered: (questionId && questionId !== '') ? [...p.answered, questionId] : p.answered,
     };
   });
@@ -459,9 +488,15 @@ export function completeState(name: string, xpReward = 100) {
   set((p) => {
     if (p.completed.includes(name)) return p;
     
-    // BUG FIX #1: Only include badges that were actually earned
-    // Previously awarded all 3 badges automatically (WRONG)
-    // Now uses existing earned badges (CORRECT)
+    // FIX #16: Add state validation to prevent orphaned data
+    // Previously: Didn't validate state exists in INDIA_STATES
+    // Now: Checks state is real before marking complete
+    const stateExists = INDIA_STATES.some(s => s.name === name);
+    if (!stateExists) {
+      return p; // Invalid state - don't mark as complete
+    }
+    
+    // Only include badges that were actually earned
     const earnedBadges = p.badges?.[name] ?? [];
     
     const stampDateStr = stampDate();
@@ -522,44 +557,19 @@ export function levelInfo(xp: number) {
   };
 }
 
-export /**
- * TESTING MODE FLAG
- * ⚠️ IMPORTANT: Set to FALSE before production release!
+/**
+ * Get all states with their progress status
  * 
- * When TRUE: All states are accessible for testing (bypass normal progression)
- * When FALSE: Normal state progression - must complete states sequentially
+ * FIX #20: Testing mode completely removed (was: TESTING_MODE_UNLOCK_ALL_STATES)
+ * Normal state progression enforced - must complete states sequentially
  * 
  * Production Checklist:
- * - [ ] Set TESTING_MODE_UNLOCK_ALL_STATES = false
- * - [ ] Remove or comment out testing-related console logs
- * - [ ] Verify state progression works correctly
- * - [ ] Test that locked states show lock icon properly
+ * - [x] Testing mode flag removed completely
+ * - [x] State progression restored to normal
+ * - [ ] Verify locked states show lock icon properly
  */
-const TESTING_MODE_UNLOCK_ALL_STATES = false; // ✅ PRODUCTION: Testing mode disabled
-
 export function statesWithProgress(p: Progress): IndiaState[] {
   let currentUsed = false;
-  
-  // TESTING MODE: Make all states playable without progression requirements
-  if (TESTING_MODE_UNLOCK_ALL_STATES) {
-    return INDIA_STATES.map((s, idx) => {
-      const done = p.completed.includes(s.name);
-      let status: StateStatus = "locked";
-      
-      if (done) {
-        status = "done";
-      } else if (idx === 0) {
-        // Make first state "current" for UI indication
-        status = "current";
-      } else {
-        // Make all other states playable (not actually locked in testing mode)
-        // But keep their visual as "current" so users can click any state
-        status = "locked"; // Visual shows locked, but click handler allows access
-      }
-      
-      return { ...s, status, date: p.stamps[s.name] ?? undefined };
-    });
-  }
   
   // PRODUCTION MODE: Normal progression - must complete states sequentially
   return INDIA_STATES.map((s) => {

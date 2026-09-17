@@ -72,7 +72,10 @@ export function StatePostcardScreen({
     canvas.width = W;
     canvas.height = H;
     const c = canvas.getContext("2d");
-    if (!c) return null;
+    // FIX #14: Handle null context case
+    if (!c) {
+      return null;
+    }
 
     const [from, to] = TONE_HEX[state.tone] ?? TONE_HEX.orange;
     const g = c.createLinearGradient(0, 0, W, H);
@@ -199,11 +202,10 @@ export function StatePostcardScreen({
     
     if (busy) return;
     
-    // Check if user has enabled file saving in settings
-    const fileEnabled = localStorage.getItem("india-explorer:file-enabled:v1") !== "0";
+    // FIX #15: Default to false (opt-in) not true - require explicit acceptance
+    const fileEnabled = localStorage.getItem("india-explorer:file-enabled:v1") === "1";
     
     if (!fileEnabled) {
-      console.log('[PostcardScreen] File saving not enabled in settings');
       toast.error("Enable 'Save & Share' in settings to save your postcard! 📁");
       return;
     }
@@ -211,17 +213,22 @@ export function StatePostcardScreen({
     setBusy(true);
     fxStamp();
     try {
-      console.log('[PostcardScreen] Starting save/share flow...');
-      
       // Request actual Android permissions
-      console.log('[PostcardScreen] Requesting storage permission...');
       const permissionGranted = await requestStoragePermission();
-      console.log('[PostcardScreen] Permission request result:', permissionGranted);
 
-      console.log('[PostcardScreen] Generating postcard blob...');
+      // FIX #14: Handle null blob case safely
       const blob = await makeBlob();
-      if (!blob) throw new Error("Could not generate postcard image");
-      console.log('[PostcardScreen] Blob generated, size:', blob.size);
+      if (!blob) {
+        toast.error("Could not generate postcard image");
+        return;
+      }
+
+      // FIX #12: Validate blob size - reject if too large
+      const MAX_BLOB_SIZE = 50 * 1024 * 1024; // 50MB max
+      if (blob.size > MAX_BLOB_SIZE) {
+        toast.error("Postcard image is too large. Please try again.");
+        return;
+      }
 
       const filename = `${state.name}-postcard.png`;
       const file = new File([blob], filename, { type: "image/png" });
@@ -234,7 +241,6 @@ export function StatePostcardScreen({
 
       if (nav.share && nav.canShare?.({ files: [file] })) {
         try {
-          console.log('[PostcardScreen] Attempting native share...');
           await nav.share({
             files: [file],
             title: `${state.name} postcard`,
@@ -242,7 +248,6 @@ export function StatePostcardScreen({
           });
           toast.success("Postcard shared! 🎉");
         } catch (shareErr) {
-          console.log('[PostcardScreen] Native share cancelled/failed, falling back to save:', shareErr);
           // Share cancelled or failed, try saving instead
           const saved = await saveFileToDownloads(blob, filename);
           if (saved) {
@@ -253,7 +258,6 @@ export function StatePostcardScreen({
         }
       } else {
         // No native share, save to downloads/cache
-        console.log('[PostcardScreen] No native share available, saving postcard...');
         const saved = await saveFileToDownloads(blob, filename);
         if (saved) {
           toast.success("Postcard saved successfully! 📮");
@@ -262,7 +266,6 @@ export function StatePostcardScreen({
         }
       }
     } catch (err) {
-      console.error('[PostcardScreen] Share error:', err);
       if ((err as { name?: string })?.name !== "AbortError") {
         toast.error("Couldn't save the postcard — try again.");
       }
@@ -294,8 +297,8 @@ export function StatePostcardScreen({
               <button
                 onClick={() => {
                   fxTap();
-                  // Check if file saving is enabled
-                  const fileEnabled = localStorage.getItem("india-explorer:file-enabled:v1") !== "0";
+                  // FIX #15: Check if file saving is explicitly enabled (default off)
+                  const fileEnabled = localStorage.getItem("india-explorer:file-enabled:v1") === "1";
                   if (!fileEnabled) {
                     setShowFilePermissionPrompt(true);
                     return;
@@ -336,7 +339,6 @@ export function StatePostcardScreen({
             <button
               type="button"
               onClick={(e) => {
-                console.log('[PostcardScreen] Postcard card clicked');
                 fxTap();
                 onShare();
               }}
