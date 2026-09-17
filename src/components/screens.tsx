@@ -304,13 +304,13 @@ export function WelcomeScreen() {
       <Cloud className="absolute top-14 -left-4 w-28 opacity-90" />
       <Cloud className="absolute top-24 right-2 w-20 opacity-90" />
       <div className="flex-1 flex flex-col">
-        <div className="flex-1 flex items-center justify-center pt-6">
+        <div className="flex-1 flex items-center justify-center pt-2">
           <div className="relative">
             <div className="absolute inset-0 blur-3xl bg-saffron/30 rounded-full" />
-            <img src={mascot} alt="India Explorer mascot" className="relative w-64 h-64 object-contain drop-shadow-xl" />
+            <img src={mascot} alt="India Explorer mascot" className="relative w-56 h-56 object-contain drop-shadow-xl" />
           </div>
         </div>
-        <div className="rounded-t-[36px] bg-white px-6 pt-8 pb-0 shadow-[0_-20px_40px_-20px_rgba(0,0,0,0.15)]">
+        <div className="rounded-t-[36px] bg-white px-6 pt-6 pb-0 shadow-[0_-20px_40px_-20px_rgba(0,0,0,0.15)]">
           <h1 className="text-display text-3xl font-extrabold leading-tight">
             Namaste, little<br />explorer! 👋
           </h1>
