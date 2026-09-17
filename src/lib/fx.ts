@@ -2,6 +2,7 @@ import { useSyncExternalStore } from "react";
 import { Capacitor } from "@capacitor/core";
 import { Haptics, ImpactStyle } from "@capacitor/haptics";
 import { initAudioMixer, getEffectsGain, getAmbientGain } from "./audio-mixer";
+import { debugLog, debugError } from "./debug";
 
 // Sound + haptics FX using Web Audio API, navigator.vibrate, and Capacitor Haptics.
 // On native (Android/iOS), uses Capacitor.Haptics for richer haptic feedback.
@@ -18,23 +19,18 @@ const soundListeners = new Set<() => void>();
  * Ensure audio context is initialized for audio operations (TTS, effects, etc.)
  * This initializes the Web Audio API and audio mixer regardless of sound toggle state
  * Safe to call multiple times - only initializes once
+ * Returns the AudioContext or null if initialization failed
  */
 export function ensureAudioContext(): AudioContext | null {
-  if (typeof window === "undefined") return null;
-  
-  const AC =
-    (window as unknown as { AudioContext?: typeof AudioContext; webkitAudioContext?: typeof AudioContext }).AudioContext ??
-    (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-  
-  if (!AC) return null;
-  
-  let ctx = ac();
-  if (!ctx) {
-    ctx = new AC();
-    if (ctx.state === "suspended") void ctx.resume();
-    initAudioMixer(ctx);
+  const ctx = ac();
+  if (ctx) {
+    debugLog("fx", "AudioContext is ready for audio operations", {
+      state: ctx.state,
+      sampleRate: ctx.sampleRate,
+    });
+  } else {
+    debugError("fx", "Failed to ensure AudioContext - audio operations may fail");
   }
-  
   return ctx;
 }
 
@@ -44,10 +40,22 @@ function hydrateSound() {
   try {
     // Sound toggle (separate from audio narration which is controlled by parental consent)
     const raw = localStorage.getItem(SOUND_KEY);
-    if (raw !== null) soundOn = raw === "1";
-    else soundOn = false; // Default: sound effects disabled
-  } catch {
+    if (raw !== null) {
+      soundOn = raw === "1";
+    } else {
+      soundOn = false; // Default: sound effects disabled
+      // Initialize localStorage with default value
+      localStorage.setItem(SOUND_KEY, "0");
+    }
+    
+    debugLog("fx", "Sound toggle hydrated from storage", {
+      key: SOUND_KEY,
+      storedValue: raw,
+      hydrated: soundOn,
+    });
+  } catch (err) {
     /* storage unavailable */
+    debugError("fx", "Failed to hydrate Sound toggle from localStorage", err);
   }
   for (const l of soundListeners) l();
 }
@@ -90,20 +98,51 @@ export function useSoundOn(): boolean {
 }
 
 let ctx: AudioContext | null = null;
+
+/**
+ * Get or create the global AudioContext
+ * This is decoupled from the Sound toggle - audio context initializes regardless
+ * The Sound toggle only controls volume/output, not initialization
+ * @returns AudioContext if successfully created, null otherwise
+ */
 function ac(): AudioContext | null {
   if (typeof window === "undefined") return null;
-  if (!isSoundOn()) return null;
+  
   if (!ctx) {
     const AC =
       (window as unknown as { AudioContext?: typeof AudioContext; webkitAudioContext?: typeof AudioContext }).AudioContext ??
       (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
     if (!AC) return null;
-    ctx = new AC();
-    // Initialize audio mixer on first AudioContext creation
-    initAudioMixer(ctx);
+    
+    try {
+      ctx = new AC();
+      // Initialize audio mixer on first AudioContext creation
+      initAudioMixer(ctx);
+      debugLog("fx", "AudioContext created and mixer initialized", {
+        state: ctx.state,
+        sampleRate: ctx.sampleRate,
+      });
+    } catch (error) {
+      debugError("fx", "Failed to create AudioContext", error);
+      return null;
+    }
   }
-  if (ctx.state === "suspended") void ctx.resume();
+  
+  // Resume context if suspended (required for user interaction on web)
+  if (ctx && ctx.state === "suspended") {
+    void ctx.resume();
+  }
+  
   return ctx;
+}
+
+/**
+ * Determine if sound output should be played through speakers
+ * Checks both Sound toggle AND audio narration permission
+ * @returns true if sound should play
+ */
+function shouldPlaySound(): boolean {
+  return isSoundOn();
 }
 
 type ToneOpts = {
@@ -116,8 +155,13 @@ type ToneOpts = {
 };
 
 function tone({ freq, dur = 0.18, type = "sine", gain = 0.18, slideTo, delay = 0 }: ToneOpts) {
+  // Get or create audio context (decoupled from Sound toggle)
   const a = ac();
   if (!a) return;
+  
+  // Only output sound if Sound toggle is ON
+  if (!shouldPlaySound()) return;
+  
   const t0 = a.currentTime + delay;
   const osc = a.createOscillator();
   const g = a.createGain();
@@ -138,8 +182,13 @@ function tone({ freq, dur = 0.18, type = "sine", gain = 0.18, slideTo, delay = 0
 }
 
 function noise(dur = 0.25, gain = 0.15, delay = 0) {
+  // Get or create audio context (decoupled from Sound toggle)
   const a = ac();
   if (!a) return;
+  
+  // Only output sound if Sound toggle is ON
+  if (!shouldPlaySound()) return;
+  
   const t0 = a.currentTime + delay;
   const buf = a.createBuffer(1, Math.floor(a.sampleRate * dur), a.sampleRate);
   const data = buf.getChannelData(0);

@@ -219,6 +219,26 @@ function RootComponent() {
   // Pre-auth routes that should NOT show BottomNav
   const preAuthRoutes = ['/', '/welcome', '/create'];
 
+  // Initialize and verify Sound toggle state on app load
+  useEffect(() => {
+    const SOUND_KEY = "india-explorer:sound:v1";
+    const soundState = localStorage.getItem(SOUND_KEY);
+    const isSoundOn = soundState === "1";
+    
+    console.log("[App Init] Sound Toggle State", {
+      storageKey: SOUND_KEY,
+      storedValue: soundState,
+      isSoundOn,
+      timestamp: new Date().toISOString(),
+    });
+
+    // If not set, ensure default is initialized
+    if (soundState === null) {
+      localStorage.setItem(SOUND_KEY, "0");
+      console.log("[App Init] ⚠️ Sound toggle not found in localStorage, initializing to OFF (default)");
+    }
+  }, []);
+
   // COPPA-compliant: Log Firebase events after user is onboarded
   // Permissions are now deferred (requested when features are used)
   useEffect(() => {

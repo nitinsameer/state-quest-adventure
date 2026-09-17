@@ -3482,12 +3482,12 @@ function SoundToggleRow() {
 
   return (
     <div className="space-y-3">
-      {/* Sound Effects Toggle - Controls Web Audio API initialization */}
+      {/* Sound Effects Toggle - Controls volume/output, not initialization */}
       <button
         type="button"
         role="switch"
         aria-checked={soundOn}
-        aria-label="Sound effects"
+        aria-label="Sound effects volume"
         onClick={toggleSound}
         className="w-full rounded-2xl bg-white shadow-soft border border-black/5 p-3 flex items-center gap-3 transition active:scale-[0.99]"
       >
@@ -3497,7 +3497,7 @@ function SoundToggleRow() {
         <div className="flex-1 text-left">
           <div className="text-display font-extrabold text-[15px] leading-tight">Sound Effects</div>
           <div className="text-[11px] font-bold text-muted-foreground">
-            {soundOn ? "Sound & vibrations enabled" : "Turn on to hear sounds"}
+            {soundOn ? "Sound & vibrations enabled" : "Sound & vibrations muted"}
           </div>
         </div>
         <span

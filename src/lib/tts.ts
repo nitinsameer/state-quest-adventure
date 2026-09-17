@@ -12,7 +12,7 @@
 import { TextToSpeech } from '@capacitor-community/text-to-speech';
 import { Capacitor } from '@capacitor/core';
 import { hasFeatureConsent } from "./parental-consent";
-import { ensureAudioContext, isSoundOn } from "./fx";
+import { ensureAudioContext } from "./fx";
 import { getStateLanguageCode } from "./state-content";
 import { debugLog, debugError } from "./debug";
 import { toast } from "sonner";
@@ -86,12 +86,6 @@ export function playTts(
     return;
   }
 
-  // Check if Sound toggle is enabled (controls audio system initialization)
-  if (!isSoundOn()) {
-    debugLog("tts", "Sound Effects toggle is disabled");
-    return;
-  }
-
   // Check if audio narration permission is granted
   if (!hasFeatureConsent('audio')) {
     debugLog("tts", "Audio narration not consented");
@@ -103,7 +97,15 @@ export function playTts(
   }
 
   // Ensure audio context is initialized (required for system audio routing)
-  ensureAudioContext();
+  // This is now independent of Sound toggle - initializes regardless
+  const audioContext = ensureAudioContext();
+  if (!audioContext) {
+    debugError("tts", "Failed to initialize audio context for TTS", {
+      narrationId,
+      textLength: text.length,
+    });
+    return;
+  }
 
   const finalConfig = { ...DEFAULT_TTS_CONFIG, ...config };
 
@@ -156,7 +158,7 @@ async function playTtsNative(
     currentNarrationId = narrationId;
     notifyListeners();
 
-    debugLog("tts", "Starting native playback", {
+    debugLog("tts", "▶️ Starting native TTS playback", {
       narrationId,
       textLength: text.length,
       language: config.language,
@@ -175,29 +177,36 @@ async function playTtsNative(
       category: "ambient",
     });
 
-    debugLog("tts", "Native playback completed", { success: true, result });
+    debugLog("tts", "✓ Native TTS playback completed", { 
+      success: true, 
+      result,
+      narrationId,
+    });
     
     // Verify that result indicates success
     if (result && result.success === false) {
-      debugError("tts", "Plugin returned failure", result);
-      toast.error("TTS failed - device may not support this language");
+      debugError("tts", "✗ Plugin returned failure", result);
+      toast.error("🔊 Audio not available - device may not support this language");
     }
     
     isPlaying = false;
     currentNarrationId = "";
     notifyListeners();
   } catch (error) {
-    debugError("tts", "Native playback error", error);
-    // Provide error feedback to user
-    let errorMsg = "Audio playback failed";
+    debugError("tts", "✗ Native TTS playback failed", error);
+    
+    // Provide visible error feedback to user
+    let errorMsg = "🔊 Audio playback failed";
     if (error instanceof Error) {
-      errorMsg = `Audio error: ${error.message}`;
+      errorMsg = `🔊 Audio error: ${error.message}`;
       debugError("tts", "Error details", {
         message: error.message,
         stack: error.stack,
+        narrationId,
       });
     }
     toast.error(errorMsg);
+    
     isPlaying = false;
     currentNarrationId = "";
     notifyListeners();

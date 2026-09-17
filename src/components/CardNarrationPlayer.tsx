@@ -34,8 +34,15 @@ export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }
 
   const handlePlayClick = () => {
     if (isCurrentPlaying) {
+      console.log("[CardNarrationPlayer] ⏸ Stopping TTS", { narrationId });
       stopTts();
     } else {
+      console.log("[CardNarrationPlayer] ▶️ Starting TTS playback", { 
+        narrationId, 
+        titleLength: title.length,
+        textLength: text.length,
+        audioNarrationEnabled,
+      });
       playTts(narrationId, text, {
         speed: 0.85,
         pitch: 1.05,
@@ -44,6 +51,7 @@ export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }
   };
 
   if (!hasSupport) {
+    console.warn("[CardNarrationPlayer] TTS not supported on this platform");
     return null;
   }
 
@@ -79,7 +87,7 @@ export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }
                 {isCurrentPlaying ? "🎵 Playing... tap to stop" : "Tap play to hear! 👂"}
               </div>
             ) : (
-              <div className="text-xs text-red-600 font-semibold mt-1">🔇 Audio narration is disabled</div>
+              <div className="text-xs text-red-600 font-semibold mt-1">🔇 Audio narration is disabled in Profile</div>
             )}
           </div>
 

@@ -21,22 +21,33 @@ export function initAudioMixer(ctx: AudioContext): void {
 
   audioContext = ctx;
 
-  // Create separate gain nodes for each audio channel
-  masterGain = ctx.createGain();
-  ambientGain = ctx.createGain();
-  effectsGain = ctx.createGain();
+  try {
+    // Create separate gain nodes for each audio channel
+    masterGain = ctx.createGain();
+    ambientGain = ctx.createGain();
+    effectsGain = ctx.createGain();
 
-  // Set gain levels (prevent clipping and balance volume)
-  masterGain.gain.setValueAtTime(0.6, ctx.currentTime); // Master at 60%
-  ambientGain.gain.setValueAtTime(0.08, ctx.currentTime); // Ambient quiet background (8%)
-  effectsGain.gain.setValueAtTime(0.25, ctx.currentTime); // Effects normal level (25%)
+    // Set gain levels (prevent clipping and balance volume)
+    masterGain.gain.setValueAtTime(0.6, ctx.currentTime); // Master at 60%
+    ambientGain.gain.setValueAtTime(0.08, ctx.currentTime); // Ambient quiet background (8%)
+    effectsGain.gain.setValueAtTime(0.25, ctx.currentTime); // Effects normal level (25%)
 
-  // Connect channels: ambient & effects → master → destination
-  ambientGain.connect(masterGain);
-  effectsGain.connect(masterGain);
-  masterGain.connect(ctx.destination);
+    // Connect channels: ambient & effects → master → destination
+    ambientGain.connect(masterGain);
+    effectsGain.connect(masterGain);
+    masterGain.connect(ctx.destination);
 
-  console.log("[AudioMixer] Initialized with proper gain management");
+    console.log("[AudioMixer] ✓ Initialized with proper gain management", {
+      state: ctx.state,
+      sampleRate: ctx.sampleRate,
+      masterGain: masterGain.gain.value,
+      ambientGain: ambientGain.gain.value,
+      effectsGain: effectsGain.gain.value,
+    });
+  } catch (error) {
+    console.error("[AudioMixer] ✗ Failed to initialize mixer", error);
+    isInitialized = false;
+  }
 }
 
 /**
