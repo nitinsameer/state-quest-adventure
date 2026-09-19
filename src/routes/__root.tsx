@@ -21,6 +21,7 @@ import { BottomNav } from "@/components/screens";
 import { appLogger } from "@/lib/logger";
 import { firebaseEvents } from "@/lib/firebase-events";
 import { useProgress } from "@/lib/progress";
+import { ensureAudioConsentGranted } from "@/lib/parental-consent";
 // FIX #27: Ambient music removed - no dead code
 import { pauseTts, resumeTts } from "@/lib/tts";
 import { Capacitor } from "@capacitor/core";
@@ -237,6 +238,11 @@ function RootComponent() {
       localStorage.setItem(SOUND_KEY, "0");
       console.log("[App Init] ⚠️ Sound toggle not found in localStorage, initializing to OFF (default)");
     }
+  }, []);
+
+  // Ensure audio consent is granted at app startup (TTS Fix)
+  useEffect(() => {
+    ensureAudioConsentGranted();
   }, []);
 
   // COPPA-compliant: Log Firebase events after user is onboarded
