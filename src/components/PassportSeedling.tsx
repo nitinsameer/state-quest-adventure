@@ -106,7 +106,20 @@ export function PassportSeedling() {
         />
       )}
 
-      {/* REMOVED HEADER - No "My Passport 📖" */}
+      {/* Header with Postcard Library Link - Proposal C */}
+      <div className="px-5 pt-4 pb-2 flex items-center justify-between">
+        <h1 className="text-2xl font-extrabold text-ink">📖 My Passport</h1>
+        <button
+          onClick={() => {
+            fxTap();
+            navigate({ to: "/passport/postcard-library" });
+          }}
+          className="px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold text-sm shadow-lg hover:shadow-xl transition active:scale-95 flex items-center gap-2"
+          title="View all your postcards with granular consent controls"
+        >
+          📸 Library
+        </button>
+      </div>
 
       {/* Profile Card - EXPANDED to 140px */}
       <div className="mx-5 mt-5 p-5 rounded-3xl bg-gradient-to-br from-amber-700 to-amber-900 text-white shadow-lg">

@@ -500,6 +500,7 @@ export function completeState(name: string, xpReward = 100) {
     const earnedBadges = p.badges?.[name] ?? [];
     
     const stampDateStr = stampDate();
+    const generatedAtStr = new Date().toISOString();
     
     // Track analytics
     const timeToCompleteSeconds = p.stamps[name] 
@@ -518,6 +519,15 @@ export function completeState(name: string, xpReward = 100) {
     if (p.completed.length === 0) {
       firebaseEvents.firstStateCompleted()
     }
+    
+    // Proposal C: Sync new postcard to library (async, doesn't block state update)
+    // Import is deferred to avoid circular dependency
+    import("@/lib/postcard-integration").then(({ syncNewPostcardToLibrary }) => {
+      const badge = earnedBadges[earnedBadges.length - 1] || "explorer";
+      syncNewPostcardToLibrary(name, badge, stampDateStr, generatedAtStr);
+    }).catch((err) => {
+      console.error("[completeState] Failed to sync postcard to library", err);
+    });
     
     return {
       ...p,

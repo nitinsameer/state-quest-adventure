@@ -21,6 +21,7 @@ import { Route as ParentRouteImport } from './routes/parent'
 import { Route as PassportRouteImport } from './routes/passport'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as WelcomeRouteImport } from './routes/welcome'
+import { Route as PassportPostcardLibraryRouteImport } from './routes/passport.postcard-library'
 import { Route as StateSlugIndexRouteImport } from './routes/state.$slug.index'
 import { Route as StateSlugCardsRouteImport } from './routes/state.$slug.cards'
 import { Route as StateSlugCompleteRouteImport } from './routes/state.$slug.complete'
@@ -90,6 +91,11 @@ const WelcomeRoute = WelcomeRouteImport.update({
   path: '/welcome',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PassportPostcardLibraryRoute = PassportPostcardLibraryRouteImport.update({
+  id: '/postcard-library',
+  path: '/postcard-library',
+  getParentRoute: () => PassportRoute,
+} as any)
 const StateSlugIndexRoute = StateSlugIndexRouteImport.update({
   id: '/state/$slug/',
   path: '/state/$slug/',
@@ -141,9 +147,10 @@ export interface FileRoutesByFullPath {
   '/journey': typeof JourneyRoute
   '/me': typeof MeRoute
   '/parent': typeof ParentRoute
-  '/passport': typeof PassportRoute
+  '/passport': typeof PassportRouteWithChildren
   '/privacy': typeof PrivacyRoute
   '/welcome': typeof WelcomeRoute
+  '/passport/postcard-library': typeof PassportPostcardLibraryRoute
   '/state/$slug/cards': typeof StateSlugCardsRoute
   '/state/$slug/complete': typeof StateSlugCompleteRoute
   '/state/$slug/learn': typeof StateSlugLearnRoute
@@ -163,9 +170,10 @@ export interface FileRoutesByTo {
   '/journey': typeof JourneyRoute
   '/me': typeof MeRoute
   '/parent': typeof ParentRoute
-  '/passport': typeof PassportRoute
+  '/passport': typeof PassportRouteWithChildren
   '/privacy': typeof PrivacyRoute
   '/welcome': typeof WelcomeRoute
+  '/passport/postcard-library': typeof PassportPostcardLibraryRoute
   '/state/$slug/cards': typeof StateSlugCardsRoute
   '/state/$slug/complete': typeof StateSlugCompleteRoute
   '/state/$slug/learn': typeof StateSlugLearnRoute
@@ -186,9 +194,10 @@ export interface FileRoutesById {
   '/journey': typeof JourneyRoute
   '/me': typeof MeRoute
   '/parent': typeof ParentRoute
-  '/passport': typeof PassportRoute
+  '/passport': typeof PassportRouteWithChildren
   '/privacy': typeof PrivacyRoute
   '/welcome': typeof WelcomeRoute
+  '/passport/postcard-library': typeof PassportPostcardLibraryRoute
   '/state/$slug/cards': typeof StateSlugCardsRoute
   '/state/$slug/complete': typeof StateSlugCompleteRoute
   '/state/$slug/learn': typeof StateSlugLearnRoute
@@ -213,6 +222,7 @@ export interface FileRouteTypes {
     | '/passport'
     | '/privacy'
     | '/welcome'
+    | '/passport/postcard-library'
     | '/state/$slug/cards'
     | '/state/$slug/complete'
     | '/state/$slug/learn'
@@ -235,6 +245,7 @@ export interface FileRouteTypes {
     | '/passport'
     | '/privacy'
     | '/welcome'
+    | '/passport/postcard-library'
     | '/state/$slug/cards'
     | '/state/$slug/complete'
     | '/state/$slug/learn'
@@ -257,6 +268,7 @@ export interface FileRouteTypes {
     | '/passport'
     | '/privacy'
     | '/welcome'
+    | '/passport/postcard-library'
     | '/state/$slug/cards'
     | '/state/$slug/complete'
     | '/state/$slug/learn'
@@ -277,7 +289,7 @@ export interface RootRouteChildren {
   JourneyRoute: typeof JourneyRoute
   MeRoute: typeof MeRoute
   ParentRoute: typeof ParentRoute
-  PassportRoute: typeof PassportRoute
+  PassportRoute: typeof PassportRouteWithChildren
   PrivacyRoute: typeof PrivacyRoute
   WelcomeRoute: typeof WelcomeRoute
   StateSlugCardsRoute: typeof StateSlugCardsRoute
@@ -376,6 +388,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WelcomeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/passport/postcard-library': {
+      id: '/passport/postcard-library'
+      path: '/postcard-library'
+      fullPath: '/passport/postcard-library'
+      preLoaderRoute: typeof PassportPostcardLibraryRouteImport
+      parentRoute: typeof PassportRoute
+    }
     '/state/$slug/': {
       id: '/state/$slug/'
       path: '/state/$slug'
@@ -435,6 +454,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface PassportRouteChildren {
+  PassportPostcardLibraryRoute: typeof PassportPostcardLibraryRoute
+}
+
+const PassportRouteChildren: PassportRouteChildren = {
+  PassportPostcardLibraryRoute: PassportPostcardLibraryRoute,
+}
+
+const PassportRouteWithChildren = PassportRoute._addFileChildren(
+  PassportRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AchievementsRoute: AchievementsRoute,
@@ -445,7 +476,7 @@ const rootRouteChildren: RootRouteChildren = {
   JourneyRoute: JourneyRoute,
   MeRoute: MeRoute,
   ParentRoute: ParentRoute,
-  PassportRoute: PassportRoute,
+  PassportRoute: PassportRouteWithChildren,
   PrivacyRoute: PrivacyRoute,
   WelcomeRoute: WelcomeRoute,
   StateSlugCardsRoute: StateSlugCardsRoute,
