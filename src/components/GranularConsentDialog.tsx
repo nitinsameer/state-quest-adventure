@@ -51,8 +51,8 @@ export function GranularConsentDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden animate-scale-in flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm p-4 animate-in fade-in">
+      <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden animate-in zoom-in-95 flex flex-col max-h-[90vh]">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-6 text-white">
           <h2 className="text-2xl font-extrabold mb-2">🔒 Postcard Privacy</h2>

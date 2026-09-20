@@ -370,7 +370,7 @@ export function StatePostcardScreen({
                 onShare();
               }}
               disabled={busy}
-              className="w-full rounded-[28px] bg-white shadow-2xl border-4 border-white overflow-hidden animate-scale-in cursor-pointer hover:shadow-3xl active:scale-95 transition-all disabled:opacity-60 text-left"
+              className="w-full rounded-[28px] bg-white shadow-2xl border-4 border-white overflow-hidden animate-in zoom-in-95 cursor-pointer hover:shadow-3xl active:scale-95 transition-all disabled:opacity-60 text-left"
             >
               <div className={`${grad} px-4 pt-4 pb-3 text-center text-white`}>
                 <div className="text-xs font-bold tracking-wide opacity-90">

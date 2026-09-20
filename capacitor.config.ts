@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.nishaantech.exploroindia',
+  appId: 'com.nishaantech.exploreindia',
   appName: 'India Explorer',
   webDir: 'dist/client',
   android: {
@@ -18,6 +18,14 @@ const config: CapacitorConfig = {
     },
     StatusBar: {
       style: 'DARK'
+    },
+    TextToSpeech: {
+      rate: 1.0,
+      pitch: 1.0,
+      volume: 1.0,
+      category: 'Ambient',
+      categoryOptions: [],
+      language: 'en-US'
     }
   }
 };

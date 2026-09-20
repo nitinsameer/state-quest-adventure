@@ -22,8 +22,9 @@ import { DebugScreen } from "@/components/DebugScreen";
 import { BottomNav } from "@/components/screens";
 import { appLogger } from "@/lib/logger";
 import { firebaseEvents } from "@/lib/firebase-events";
-import { useProgress } from "@/lib/progress";
+import { useProgress, isHydrated } from "@/lib/progress";
 import { pauseTts, resumeTts } from "@/lib/tts";
+import { ensureAudioConsentGranted } from "@/lib/parental-consent";
 import { Capacitor } from "@capacitor/core";
 
 // React Error Boundary for catching runtime errors
@@ -240,7 +241,13 @@ function RootComponent() {
     }
   }, []);
 
-  // FIX: Removed ensureAudioConsentGranted() - consent should only come from explicit user action at profile creation
+  // Initialize audio consent on app startup
+  useEffect(() => {
+    if (!isHydrated()) return;
+    
+    console.log("[AUDIO INIT] Ensuring audio consent is granted on app startup");
+    ensureAudioConsentGranted();
+  }, []);
 
   // COPPA-compliant: Log Firebase events after user is onboarded
   // Permissions are now deferred (requested when features are used)

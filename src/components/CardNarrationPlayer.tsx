@@ -16,7 +16,11 @@ export interface CardNarrationPlayerProps {
 }
 
 export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }: CardNarrationPlayerProps) {
-  const [audioNarrationEnabled, setAudioNarrationEnabled] = useState(() => hasFeatureConsent('audio'));
+  const [audioNarrationEnabled, setAudioNarrationEnabled] = useState(() => {
+    const hasConsent = hasFeatureConsent('audio');
+    console.log("[CardNarrationPlayer] Initial render - checking consent:", { hasConsent });
+    return hasConsent;
+  });
   const [showPermissionPrompt, setShowPermissionPrompt] = useState(false);
   const ttsState = useTtsState();
   const isCurrentPlaying = ttsState.narrationId === narrationId && ttsState.isPlaying;
@@ -24,9 +28,12 @@ export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }
 
   // Subscribe to consent changes and re-render when consent status changes
   useEffect(() => {
-    setAudioNarrationEnabled(hasFeatureConsent('audio'));
+    const currentConsent = hasFeatureConsent('audio');
+    console.log("[CardNarrationPlayer] useEffect - checking consent:", { currentConsent });
+    setAudioNarrationEnabled(currentConsent);
     
     const unsubscribe = subscribeConsentChanges('audio', () => {
+      console.log("[CardNarrationPlayer] Consent changed via listener - updating state");
       setAudioNarrationEnabled(hasFeatureConsent('audio'));
     });
 

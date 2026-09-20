@@ -52,8 +52,8 @@ export function FilePermissionDialog({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 space-y-4 animate-scale-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm p-4 animate-in fade-in">
+      <div className="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 space-y-4 animate-in zoom-in-95">
         {/* Header - Kid-friendly and clear */}
         <div className="text-center">
           <div className="text-5xl mb-3">📸</div>

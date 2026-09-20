@@ -233,6 +233,19 @@ export function PostcardPreviewModal({
 
   const handlePermissionAccepted = async () => {
     try {
+      // Request actual Android storage permission first
+      console.log("[POSTCARD] Requesting storage permission before saving");
+      const permissionGranted = await requestStoragePermission();
+      console.log("[POSTCARD] Storage permission result:", { permissionGranted });
+      
+      if (!permissionGranted) {
+        toast.error("Storage permission needed", {
+          subtitle: "Please enable storage access in settings",
+        });
+        setIsSaving(false);
+        return;
+      }
+      
       // Generate full postcard blob
       const blob = await generatePostcardPreview(stateName);
       if (!blob) {
@@ -300,8 +313,8 @@ export function PostcardPreviewModal({
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm p-4">
-        <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden animate-scale-in flex flex-col max-h-[90vh]">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm p-4 animate-in fade-in">
+        <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden animate-in zoom-in-95 flex flex-col max-h-[90vh]">
           
           {/* Preview */}
           <div className="relative bg-gray-100 aspect-[3/4] overflow-hidden flex-shrink-0">

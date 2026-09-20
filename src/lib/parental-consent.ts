@@ -88,6 +88,7 @@ export function hasFeatureConsent(feature: 'audio' | 'file'): boolean {
  * Should only be called after explicit user acceptance
  */
 export function grantFeatureConsent(feature: 'audio' | 'file'): void {
+  console.log("[CONSENT] grantFeatureConsent() called for:", feature);
   try {
     const stored = localStorage.getItem(CONSENT_STORAGE_KEY)
     const records: ConsentRecord[] = stored ? JSON.parse(stored) : []
@@ -104,11 +105,15 @@ export function grantFeatureConsent(feature: 'audio' | 'file'): void {
     })
 
     localStorage.setItem(CONSENT_STORAGE_KEY, JSON.stringify(filtered))
+    console.log("[CONSENT] ✓ Consent granted and saved to localStorage:", { feature, records: filtered });
     
     // Notify all listeners that consent changed
+    console.log("[CONSENT] Notifying listeners about consent change for:", feature);
     notifyConsentListeners(feature)
-  } catch {
+    console.log("[CONSENT] ✓ Listeners notified");
+  } catch (err) {
     // Storage error - fail silently but user won't have consent
+    console.log("[CONSENT] ✗ Error granting consent:", err);
   }
 }
 
