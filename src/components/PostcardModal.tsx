@@ -5,6 +5,7 @@ import { type PostcardData } from "@/lib/progress";
 import { fxTap } from "@/lib/fx";
 import { requestStoragePermission, saveFileToDownloads } from "@/lib/permissions";
 import { useCelebration } from "@/hooks/useCelebration";
+import { useToast } from "@/hooks/useToast";
 
 const BADGE_EMOJI: Record<string, string> = {
   monument: "🏛️",
@@ -142,6 +143,7 @@ export function PostcardModal({
 }) {
   const state = getState(postcard.state);
   const celebration = useCelebration();
+  const toast = useToast();
   const [isSaving, setIsSaving] = useState(false);
 
   const handleShare = async () => {
@@ -150,9 +152,8 @@ export function PostcardModal({
       fxTap();
       const blob = await generatePostcardBlob(postcard);
       if (!blob) {
-        celebration.error("Couldn't generate postcard", {
+        toast.error("Couldn't generate postcard", {
           subtitle: "Please try again",
-          duration: 3500,
         });
         setIsSaving(false);
         return;
@@ -167,15 +168,13 @@ export function PostcardModal({
           duration: 3500,
         });
       } else {
-        celebration.error("Permission denied", {
+        toast.error("Permission denied", {
           subtitle: "Enable storage in settings",
-          duration: 3500,
         });
       }
     } catch (error) {
-      celebration.error("Couldn't save passport", {
+      toast.error("Couldn't save passport", {
         subtitle: "Please try again later",
-        duration: 3500,
       });
       console.error("Share failed:", error);
     } finally {

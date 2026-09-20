@@ -8,7 +8,6 @@
 import { useState } from "react";
 import { TextToSpeech } from "@capacitor-community/text-to-speech";
 import { Capacitor } from "@capacitor/core";
-import { useCelebration } from "@/hooks/useCelebration";
 import { 
   logAudioDiagnostics, 
   testWebSpeechAPI, 
@@ -19,7 +18,6 @@ import {
 export function AudioTestScreen() {
   const [testResults, setTestResults] = useState<string[]>([]);
   const [isRunning, setIsRunning] = useState(false);
-  const celebration = useCelebration();
 
   const log = (message: string) => {
     console.log("[AUDIO TEST]", message);
@@ -52,24 +50,11 @@ export function AudioTestScreen() {
       
       if (result?.success === false) {
         log("⚠️ Plugin reported success=false");
-        celebration.error("Native TTS failed", {
-          subtitle: "Check logcat for details",
-          duration: 4000,
-        });
       } else {
         log("✅ Native TTS test passed!");
-        celebration.success("Native TTS works!", {
-          subtitle: "Audio should be playing",
-          confetti: true,
-          duration: 4000,
-        });
       }
     } catch (error) {
       log(`❌ Exception: ${error instanceof Error ? error.message : String(error)}`);
-      celebration.error("Native TTS error", {
-        subtitle: error instanceof Error ? error.message : "Unknown error",
-        duration: 4000,
-      });
     }
   };
 
@@ -78,19 +63,6 @@ export function AudioTestScreen() {
 
     const result = await testWebSpeechAPI("Hello explorer");
     log(result.success ? `✅ ${result.message}` : `❌ ${result.message}`);
-    
-    if (result.success) {
-      celebration.success("Web Speech API works!", {
-        subtitle: result.message,
-        confetti: true,
-        duration: 4000,
-      });
-    } else {
-      celebration.error("Web Speech test failed", {
-        subtitle: result.message,
-        duration: 4000,
-      });
-    }
   };
 
   const showDiagnostics = () => {

@@ -88,11 +88,19 @@ export function UnlockCelebration() {
   }, []);
 
   useEffect(() => {
+    // GATE: Only show achievement popups AFTER user completes onboarding
+    // During onboarding, suppress celebrations to avoid UI noise
+    if (!progress.onboarded) {
+      console.log("[UnlockCelebration] Onboarding in progress - suppressing popups");
+      return;
+    }
+
     const achievements = achievementsFor(progress).filter((a) => a.done);
     const achievementIds = new Set(achievements.map((a) => a.id));
     const badges = new Set(badgeKeys(progress.badges));
 
     console.log("[UnlockCelebration] Checking for new unlocks:", {
+      onboarded: progress.onboarded,
       celebratedCount: celebrated.current.size,
       achievementCount: achievementIds.size,
       badgeCount: badges.size,

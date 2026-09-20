@@ -1,4 +1,5 @@
 import { useCelebrationStore } from "@/store/celebrationStore";
+import { playAchievementSound, playSuccessSound, areSoundsEnabled } from "@/lib/celebration-sounds";
 
 /**
  * Hook to trigger celebration popups throughout the app
@@ -13,7 +14,7 @@ export function useCelebration() {
 
   return {
     /**
-     * Show success celebration with optional confetti
+     * Show success celebration with sound
      */
     success: (title: string, options?: { subtitle?: string; confetti?: boolean; duration?: number; action?: { label: string; onClick: () => void } }) => {
       show({
@@ -25,6 +26,11 @@ export function useCelebration() {
         duration: options?.duration,
         action: options?.action,
       });
+      
+      // Play success sound if enabled
+      if (areSoundsEnabled()) {
+        playSuccessSound();
+      }
     },
 
     /**
@@ -58,7 +64,7 @@ export function useCelebration() {
     },
 
     /**
-     * Show achievement unlock with full celebration
+     * Show achievement unlock with full celebration and sound
      */
     achievement: (title: string, options?: { subtitle?: string; confetti?: boolean; duration?: number; action?: { label: string; onClick: () => void } }) => {
       show({
@@ -70,6 +76,11 @@ export function useCelebration() {
         duration: options?.duration ?? 4000,
         action: options?.action,
       });
+      
+      // Play achievement sound if enabled
+      if (areSoundsEnabled()) {
+        playAchievementSound();
+      }
     },
 
     /**

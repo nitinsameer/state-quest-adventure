@@ -10,6 +10,7 @@
  */
 import { TextToSpeech } from '@capacitor-community/text-to-speech';
 import { useCelebrationStore } from "@/store/celebrationStore";
+import { useToastStore } from "@/store/toastStore";
 import { hasFeatureConsent } from "./parental-consent";
 import { ensureAudioContext } from "./fx";
 import { getStateLanguageCode } from "./state-content";
@@ -139,15 +140,14 @@ async function playTtsNative(
     notifyListeners();
   } catch (error) {
     debugError("tts", "Native playback error", error);
-    // FIX #29: Provide error feedback to user via celebration popup
+    // FIX #29: Show error via bottom toast instead of modal
     if (error instanceof Error) {
-      const store = useCelebrationStore.getState();
-      store.show({
+      const toastStore = useToastStore.getState();
+      toastStore.show({
         type: "error",
-        title: "Audio playback failed",
+        message: "Audio playback failed",
         subtitle: "Please try again",
         icon: "🔊",
-        confetti: false,
         duration: 3500,
       });
     }

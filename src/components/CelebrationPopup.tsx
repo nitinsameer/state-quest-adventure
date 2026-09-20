@@ -36,7 +36,7 @@ function CelebrationModal({ config }: { config: CelebrationConfig }) {
     <>
       {/* Backdrop */}
       <div
-        className={`celebration-backdrop ${isExiting ? "celebration-backdrop-exit" : "celebration-backdrop-enter"} bg-black/30`}
+        className={`celebration-backdrop ${isExiting ? "celebration-backdrop-exit" : "celebration-backdrop-enter"}`}
         onClick={handleDismiss}
         role="presentation"
       />

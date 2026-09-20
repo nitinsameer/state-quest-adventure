@@ -8,6 +8,7 @@ import { fxTap, fxStamp } from "@/lib/fx";
 import { requestStoragePermission, saveFileToDownloads } from "@/lib/permissions";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { useCelebration } from "@/hooks/useCelebration";
+import { useToast } from "@/hooks/useToast";
 
 const BADGE_EMOJI: Record<BadgeId, string> = {
   monument: "🏛️",
@@ -50,6 +51,7 @@ export function StatePostcardScreen({
   const progress = useProgress();
   const navigate = useNavigate();
   const celebration = useCelebration();
+  const toast = useToast();
   const art = STATE_ART[state.name];
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
   const earned = badgesFor(progress, state.name);
@@ -207,9 +209,8 @@ export function StatePostcardScreen({
     const fileEnabled = localStorage.getItem("india-explorer:file-enabled:v1") === "1";
     
     if (!fileEnabled) {
-      celebration.error("Enable 'Save & Share'", {
+      toast.warning("Enable 'Save & Share'", {
         subtitle: "Turn on in settings to save your postcard",
-        duration: 3500,
       });
       return;
     }
@@ -223,9 +224,8 @@ export function StatePostcardScreen({
       // FIX #14: Handle null blob case safely
       const blob = await makeBlob();
       if (!blob) {
-        celebration.error("Couldn't generate postcard", {
+        toast.error("Couldn't generate postcard", {
           subtitle: "Please try again",
-          duration: 3500,
         });
         return;
       }
@@ -233,9 +233,8 @@ export function StatePostcardScreen({
       // FIX #12: Validate blob size - reject if too large
       const MAX_BLOB_SIZE = 50 * 1024 * 1024; // 50MB max
       if (blob.size > MAX_BLOB_SIZE) {
-        celebration.info("Postcard is too large", {
+        toast.warning("Postcard is too large", {
           subtitle: "Try a lower resolution",
-          duration: 3500,
         });
         return;
       }
@@ -271,9 +270,8 @@ export function StatePostcardScreen({
               duration: 3500,
             });
           } else {
-            celebration.error("Couldn't save postcard", {
+            toast.error("Couldn't save postcard", {
               subtitle: "Check your storage",
-              duration: 3500,
             });
           }
         }
@@ -287,17 +285,15 @@ export function StatePostcardScreen({
             duration: 3500,
           });
         } else {
-          celebration.error("Couldn't save postcard", {
+          toast.error("Couldn't save postcard", {
             subtitle: "Check your storage",
-            duration: 3500,
           });
         }
       }
     } catch (err) {
       if ((err as { name?: string })?.name !== "AbortError") {
-        celebration.error("Couldn't save postcard", {
+        toast.error("Couldn't save postcard", {
           subtitle: "Please try again later",
-          duration: 3500,
         });
       }
     } finally {

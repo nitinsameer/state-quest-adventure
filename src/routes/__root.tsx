@@ -17,6 +17,7 @@ import { getJourneyBackHandler } from "../lib/journeyBackHandler";
 import { Toaster } from "@/components/ui/sonner";
 import { UnlockCelebration } from "@/components/UnlockCelebration";
 import { CelebrationPopupProvider } from "@/components/CelebrationPopup";
+import { BottomToastProvider } from "@/components/BottomToast";
 import { DebugScreen } from "@/components/DebugScreen";
 import { BottomNav } from "@/components/screens";
 import { appLogger } from "@/lib/logger";
@@ -375,6 +376,7 @@ function RootComponent() {
       
       <UnlockCelebration />
       <CelebrationPopupProvider />
+      <BottomToastProvider />
       {/* FIX #19: Debug screen only in development mode */}
       {import.meta.env.DEV && <DebugScreen />}
     </QueryClientProvider>

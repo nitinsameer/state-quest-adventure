@@ -85,6 +85,13 @@
   }
 }
 
+/* Explicit backdrop styling for Android WebView compatibility */
+.celebration-backdrop {
+  background-color: rgba(0, 0, 0, 0.45);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
 /* Confetti animation (enhanced) */
 @keyframes celebration-confetti-fall {
   to {
