@@ -21,7 +21,12 @@ import { PassportSeedling } from "@/components/PassportSeedling";
 import { AudioSettingRow } from "@/components/AudioSettingToggle";
 import { AudioPermissionDialog } from "@/components/AudioPermissionDialog";
 import { FilePermissionDialog } from "@/components/FilePermissionDialog";
-import { grantFeatureConsent } from "@/lib/parental-consent";
+import { 
+  grantFeatureConsent, 
+  revokeFeatureConsent, 
+  hasFeatureConsent,
+  subscribeConsentChanges 
+} from "@/lib/parental-consent";
 import { LanguageToggle, type LanguageCode } from "@/components/LanguageToggle";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { PostcardModal } from "@/components/PostcardModal";
@@ -3555,8 +3560,16 @@ export function ProfileScreen() {
 function SoundToggleRow() {
   const soundOn = useSoundOn();
   const [audioEnabled, setAudioEnabled] = useState(() => {
-    return localStorage.getItem("india-explorer:audio-enabled:v1") === "1";
+    return hasFeatureConsent('audio');
   });
+
+  // Subscribe to consent changes
+  useEffect(() => {
+    const unsubscribe = subscribeConsentChanges('audio', () => {
+      setAudioEnabled(hasFeatureConsent('audio'));
+    });
+    return unsubscribe;
+  }, []);
 
   const toggleSound = () => {
     setSoundOn(!soundOn);
@@ -3568,9 +3581,14 @@ function SoundToggleRow() {
 
   const toggleAudio = () => {
     const newState = !audioEnabled;
-    setAudioEnabled(newState);
-    localStorage.setItem("india-explorer:audio-enabled:v1", newState ? "1" : "0");
-    if (newState) fxTap();
+    if (newState) {
+      grantFeatureConsent('audio');
+      setAudioEnabled(true);
+      setTimeout(() => fxTap(), 100);
+    } else {
+      revokeFeatureConsent('audio');
+      setAudioEnabled(false);
+    }
   };
 
   const [fileEnabled, setFileEnabled] = useState(() => {
