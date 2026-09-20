@@ -9,11 +9,11 @@
  * FIX #29: Error feedback provided to user on TTS failure
  */
 import { TextToSpeech } from '@capacitor-community/text-to-speech';
+import { useCelebrationStore } from "@/store/celebrationStore";
 import { hasFeatureConsent } from "./parental-consent";
 import { ensureAudioContext } from "./fx";
 import { getStateLanguageCode } from "./state-content";
 import { debugLog, debugError } from "./debug";
-import { toast } from "sonner";
 import * as React from "react";
 
 export type TtsLanguage = "en-IN" | "hi-IN" | "en-US" | "te-IN" | "ta-IN" | "gu-IN" | "mr-IN" | "kn-IN" | "ml-IN" | "or-IN" | "bn-IN" | "pa-IN";
@@ -139,9 +139,17 @@ async function playTtsNative(
     notifyListeners();
   } catch (error) {
     debugError("tts", "Native playback error", error);
-    // FIX #29: Provide error feedback to user
+    // FIX #29: Provide error feedback to user via celebration popup
     if (error instanceof Error) {
-      toast.error("Audio playback failed - please try again");
+      const store = useCelebrationStore.getState();
+      store.show({
+        type: "error",
+        title: "Audio playback failed",
+        subtitle: "Please try again",
+        icon: "🔊",
+        confetti: false,
+        duration: 3500,
+      });
     }
     isPlaying = false;
     currentNarrationId = "";

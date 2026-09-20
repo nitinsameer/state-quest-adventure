@@ -4,7 +4,7 @@ import { STATE_ART, TONE_GRADIENT, TONE_HEX } from "@/lib/state-art";
 import { type PostcardData } from "@/lib/progress";
 import { fxTap } from "@/lib/fx";
 import { requestStoragePermission, saveFileToDownloads } from "@/lib/permissions";
-import { toast } from "sonner";
+import { useCelebration } from "@/hooks/useCelebration";
 
 const BADGE_EMOJI: Record<string, string> = {
   monument: "🏛️",
@@ -141,6 +141,7 @@ export function PostcardModal({
   onClose: () => void;
 }) {
   const state = getState(postcard.state);
+  const celebration = useCelebration();
   const [isSaving, setIsSaving] = useState(false);
 
   const handleShare = async () => {
@@ -149,7 +150,10 @@ export function PostcardModal({
       fxTap();
       const blob = await generatePostcardBlob(postcard);
       if (!blob) {
-        toast.error("Could not generate postcard");
+        celebration.error("Couldn't generate postcard", {
+          subtitle: "Please try again",
+          duration: 3500,
+        });
         setIsSaving(false);
         return;
       }
@@ -157,12 +161,22 @@ export function PostcardModal({
       const hasPermission = await requestStoragePermission();
       if (hasPermission) {
         await saveFileToDownloads(blob, `${postcard.state}-explorer-passport.png`);
-        toast.success("Saved to Photos!");
+        celebration.success("Passport saved!", {
+          subtitle: "Check your photos",
+          confetti: true,
+          duration: 3500,
+        });
       } else {
-        toast.error("Permission denied");
+        celebration.error("Permission denied", {
+          subtitle: "Enable storage in settings",
+          duration: 3500,
+        });
       }
     } catch (error) {
-      toast.error("Failed to save postcard");
+      celebration.error("Couldn't save passport", {
+        subtitle: "Please try again later",
+        duration: 3500,
+      });
       console.error("Share failed:", error);
     } finally {
       setIsSaving(false);

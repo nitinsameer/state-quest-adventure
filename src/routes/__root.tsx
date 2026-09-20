@@ -16,6 +16,7 @@ import { useAndroidBackButton } from "../hooks/useAndroidBackButton";
 import { getJourneyBackHandler } from "../lib/journeyBackHandler";
 import { Toaster } from "@/components/ui/sonner";
 import { UnlockCelebration } from "@/components/UnlockCelebration";
+import { CelebrationPopupProvider } from "@/components/CelebrationPopup";
 import { DebugScreen } from "@/components/DebugScreen";
 import { BottomNav } from "@/components/screens";
 import { appLogger } from "@/lib/logger";
@@ -373,7 +374,7 @@ function RootComponent() {
       )}
       
       <UnlockCelebration />
-      <Toaster position="top-center" richColors />
+      <CelebrationPopupProvider />
       {/* FIX #19: Debug screen only in development mode */}
       {import.meta.env.DEV && <DebugScreen />}
     </QueryClientProvider>

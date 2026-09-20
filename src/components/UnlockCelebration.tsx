@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { toast } from "sonner";
+import { useCelebration } from "@/hooks/useCelebration";
 import { useProgress, achievementsFor, STATE_BADGES, type BadgeId } from "@/lib/progress";
 import { fxConfetti } from "@/lib/fx";
 
@@ -64,11 +64,12 @@ function makePieces(seed: number): Piece[] {
 }
 
 /**
- * Global watcher: fires a celebratory toast + confetti burst whenever a new
+ * Global watcher: fires a celebratory popup + confetti burst whenever a new
  * achievement or state badge is unlocked.
  */
 export function UnlockCelebration() {
   const progress = useProgress();
+  const celebration = useCelebration();
   const [pieces, setPieces] = useState<Piece[] | null>(null);
   const burstRef = useRef(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -117,7 +118,7 @@ export function UnlockCelebration() {
     for (const k of newBadges) celebrated.current.add(`b:${k}`);
     saveCelebrated(celebrated.current);
 
-    // Coalesce everything unlocked in this tick into ONE toast.
+    // Build celebration subtitle with all unlocked items
     const lines: string[] = [];
     for (const a of newAchievements) lines.push(`${a.icon} ${a.title}`);
 
@@ -143,9 +144,13 @@ export function UnlockCelebration() {
           : `${newAchievements[0].icon} Achievement unlocked!`
         : `🏅 ${newBadges.length} new badge${newBadges.length > 1 ? "s" : ""}!`;
 
-    toast.success(title, {
-      id: `unlock-${[...newAchievements.map((a) => a.id), ...newBadges].sort().join("|")}`,
-      description: lines.join("\n"),
+    const subtitle = lines.join("\n");
+
+    // Show celebration popup instead of toast
+    celebration.achievement(title, {
+      subtitle: subtitle || undefined,
+      confetti: true,
+      duration: 4500,
     });
 
     // One burst per tick, never stacked.

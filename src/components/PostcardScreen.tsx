@@ -7,7 +7,7 @@ import { useProgress, badgesFor, STATE_BADGES, type BadgeId } from "@/lib/progre
 import { fxTap, fxStamp } from "@/lib/fx";
 import { requestStoragePermission, saveFileToDownloads } from "@/lib/permissions";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
-import { toast } from "sonner";
+import { useCelebration } from "@/hooks/useCelebration";
 
 const BADGE_EMOJI: Record<BadgeId, string> = {
   monument: "🏛️",
@@ -49,6 +49,7 @@ export function StatePostcardScreen({
   const state = getState(stateName);
   const progress = useProgress();
   const navigate = useNavigate();
+  const celebration = useCelebration();
   const art = STATE_ART[state.name];
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
   const earned = badgesFor(progress, state.name);
@@ -206,7 +207,10 @@ export function StatePostcardScreen({
     const fileEnabled = localStorage.getItem("india-explorer:file-enabled:v1") === "1";
     
     if (!fileEnabled) {
-      toast.error("Enable 'Save & Share' in settings to save your postcard! 📁");
+      celebration.error("Enable 'Save & Share'", {
+        subtitle: "Turn on in settings to save your postcard",
+        duration: 3500,
+      });
       return;
     }
     
@@ -219,14 +223,20 @@ export function StatePostcardScreen({
       // FIX #14: Handle null blob case safely
       const blob = await makeBlob();
       if (!blob) {
-        toast.error("Could not generate postcard image");
+        celebration.error("Couldn't generate postcard", {
+          subtitle: "Please try again",
+          duration: 3500,
+        });
         return;
       }
 
       // FIX #12: Validate blob size - reject if too large
       const MAX_BLOB_SIZE = 50 * 1024 * 1024; // 50MB max
       if (blob.size > MAX_BLOB_SIZE) {
-        toast.error("Postcard image is too large. Please try again.");
+        celebration.info("Postcard is too large", {
+          subtitle: "Try a lower resolution",
+          duration: 3500,
+        });
         return;
       }
 
@@ -246,28 +256,49 @@ export function StatePostcardScreen({
             title: `${state.name} postcard`,
             text: `I just explored ${state.name} on India Explorer!`,
           });
-          toast.success("Postcard shared! 🎉");
+          celebration.success("Postcard shared!", {
+            subtitle: "Your friends will love it",
+            confetti: true,
+            duration: 3500,
+          });
         } catch (shareErr) {
           // Share cancelled or failed, try saving instead
           const saved = await saveFileToDownloads(blob, filename);
           if (saved) {
-            toast.success("Postcard saved successfully! 📮");
+            celebration.success("Postcard saved!", {
+              subtitle: "Check your photos",
+              confetti: true,
+              duration: 3500,
+            });
           } else {
-            toast.error("Could not save postcard");
+            celebration.error("Couldn't save postcard", {
+              subtitle: "Check your storage",
+              duration: 3500,
+            });
           }
         }
       } else {
         // No native share, save to downloads/cache
         const saved = await saveFileToDownloads(blob, filename);
         if (saved) {
-          toast.success("Postcard saved successfully! 📮");
+          celebration.success("Postcard saved!", {
+            subtitle: "Check your photos",
+            confetti: true,
+            duration: 3500,
+          });
         } else {
-          toast.error("Could not save postcard");
+          celebration.error("Couldn't save postcard", {
+            subtitle: "Check your storage",
+            duration: 3500,
+          });
         }
       }
     } catch (err) {
       if ((err as { name?: string })?.name !== "AbortError") {
-        toast.error("Couldn't save the postcard — try again.");
+        celebration.error("Couldn't save postcard", {
+          subtitle: "Please try again later",
+          duration: 3500,
+        });
       }
     } finally {
       setBusy(false);
