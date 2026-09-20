@@ -3,74 +3,86 @@
  * 
  * Displays a kid-friendly permission request for audio playback
  * Complies with Google Play Families Policy for audio devices
- * Can be triggered on first app load
+ * Can be triggered at profile creation OR on first app load
  * 
- * FIX #7: Uses secure parental consent system with timestamps
+ * Default: Audio is ENABLED (opt-out model)
+ * User can disable in profile settings anytime
  */
 
 import { useEffect, useState } from "react";
 import { useProgress, isHydrated } from "@/lib/progress";
 import { hasFeatureConsent, grantFeatureConsent } from "@/lib/parental-consent";
 import { debugLog } from "@/lib/debug";
+import { fxTap } from "@/lib/fx";
 
 export interface AudioPermissionDialogProps {
   onAccept?: () => void;
   onReject?: () => void;
   open?: boolean;
+  forceShow?: boolean; // Force show regardless of previous state
+  context?: "profile-creation" | "first-load"; // Where dialog is shown from
 }
 
 export function AudioPermissionDialog({
   onAccept,
   onReject,
   open = false,
+  forceShow = false,
+  context = "first-load",
 }: AudioPermissionDialogProps) {
   const [isOpen, setIsOpen] = useState(open);
   const progress = useProgress();
 
-  // Auto-show on first launch, but ONLY on home screen
-  // Don't show on splash/welcome/create screens
-  // IMPORTANT: Delay until after hydration to avoid hydration mismatch
+  // Auto-show on first launch (first-load context) OR when explicitly forced (profile-creation)
   useEffect(() => {
     // Don't show during hydration - wait until localStorage is ready
     if (!isHydrated()) {
       return;
     }
 
-    // FIX #7: Check consent using secure system
-    const hasConsent = hasFeatureConsent('audio');
+    // Check if we should show based on context and forceShow flag
     const hasSeenAudioPermission = localStorage.getItem(
       "india-explorer:audio-permission-shown:v1"
     ) === "1";
 
-    // Show if:
-    // 1. User hasn't seen it yet (!hasSeenAudioPermission)
-    // 2. App is fresh (!progress.onboarded) OR user just onboarded (just created profile)
-    // 3. Not suppressed by another dialog
-    if (!hasSeenAudioPermission && !hasConsent && !isOpen) {
-      debugLog("audio-permission", "Ready to show on first authenticated access");
+    const shouldShow = forceShow || (!hasSeenAudioPermission && context === "first-load");
+
+    if (shouldShow && !isOpen) {
+      debugLog("audio-permission", "Ready to show", { context, forceShow });
       setIsOpen(true);
-      localStorage.setItem("india-explorer:audio-permission-shown:v1", "1");
+      
+      // Mark as seen (unless in profile-creation context with forceShow)
+      if (context === "first-load" || !forceShow) {
+        localStorage.setItem("india-explorer:audio-permission-shown:v1", "1");
+      }
     }
-  }, [isHydrated(), isOpen]);
+  }, [isHydrated(), isOpen, forceShow, context]);
 
   // ← CRITICAL: Don't render anything until hydration is complete to avoid SSR mismatch
   if (!isHydrated()) return null;
   if (!isOpen) return null;
 
   const handleAccept = () => {
-    debugLog("audio-permission", "User accepted audio");
-    // FIX #7: Use secure consent system
-    grantFeatureConsent('audio');
+    debugLog("audio-permission", "User accepted audio", { context });
+    fxTap();
+    grantFeatureConsent("audio");
     setIsOpen(false);
     onAccept?.();
   };
 
   const handleReject = () => {
-    debugLog("audio-permission", "User rejected audio");
-    // Don't grant consent - user explicitly declined
+    debugLog("audio-permission", "User rejected audio", { context });
     setIsOpen(false);
     onReject?.();
   };
+
+  const isProfileCreation = context === "profile-creation";
+  const headerText = isProfileCreation 
+    ? "Let's add some fun to your adventure! 🎵" 
+    : "Can we play sounds?";
+  const descriptionText = isProfileCreation
+    ? "Your India Explorer adventure has fun sounds, music, and voice narration!"
+    : "Your India Explorer adventure has fun sounds and music! 🎵";
 
   return (
     <div className="fixed inset-0 z-50 bg-black/30 flex items-end sm:items-center justify-center">
@@ -80,13 +92,13 @@ export function AudioPermissionDialog({
         <div className="text-center mb-4">
           <div className="text-5xl mb-3">🔊</div>
           <h2 className="text-display text-2xl font-extrabold text-ink">
-            Can we play sounds?
+            {headerText}
           </h2>
         </div>
 
         {/* Description - Simple, Clear, No Dark Patterns */}
         <p className="text-center text-sm text-ink/70 leading-relaxed mb-6">
-          Your India Explorer adventure has fun sounds and music! 🎵
+          {descriptionText}
         </p>
 
         {/* Benefits list - Kid appropriate */}
@@ -111,20 +123,39 @@ export function AudioPermissionDialog({
         </p>
 
         {/* Buttons - Clear actions, no manipulation */}
-        <div className="flex gap-3">
-          <button
-            onClick={handleReject}
-            className="flex-1 h-12 rounded-2xl bg-gray-200 text-ink font-extrabold text-lg hover:bg-gray-300 transition-colors"
-          >
-            No thanks 🔇
-          </button>
-          <button
-            onClick={handleAccept}
-            className="flex-1 h-12 rounded-2xl bg-gradient-to-r from-blue-400 to-cyan-500 text-white font-extrabold text-lg shadow-md hover:shadow-lg transition-all"
-          >
-            Yes please! 🔊
-          </button>
-        </div>
+        {isProfileCreation ? (
+          // Profile creation: Default YES (on), can say No
+          <div className="flex gap-3">
+            <button
+              onClick={handleReject}
+              className="flex-1 h-12 rounded-2xl bg-gray-200 text-ink font-extrabold text-lg hover:bg-gray-300 transition-colors"
+            >
+              Not now 🔇
+            </button>
+            <button
+              onClick={handleAccept}
+              className="flex-1 h-12 rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-white font-extrabold text-lg shadow-md hover:shadow-lg transition-all"
+            >
+              Yes, enable! 🔊
+            </button>
+          </div>
+        ) : (
+          // First load: Equal options
+          <div className="flex gap-3">
+            <button
+              onClick={handleReject}
+              className="flex-1 h-12 rounded-2xl bg-gray-200 text-ink font-extrabold text-lg hover:bg-gray-300 transition-colors"
+            >
+              No thanks 🔇
+            </button>
+            <button
+              onClick={handleAccept}
+              className="flex-1 h-12 rounded-2xl bg-gradient-to-r from-blue-400 to-cyan-500 text-white font-extrabold text-lg shadow-md hover:shadow-lg transition-all"
+            >
+              Yes please! 🔊
+            </button>
+          </div>
+        )}
 
         {/* Privacy note */}
         <p className="text-xs text-muted-foreground text-center mt-4">

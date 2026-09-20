@@ -18,6 +18,9 @@ import { getStateContent, getCardContent, getCardContentByAge } from "@/lib/stat
 import { stopTts, playTts, playStateNarration } from "@/lib/tts";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { PassportSeedling } from "@/components/PassportSeedling";
+import { AudioSettingRow } from "@/components/AudioSettingToggle";
+import { AudioPermissionDialog } from "@/components/AudioPermissionDialog";
+import { grantFeatureConsent } from "@/lib/parental-consent";
 import { LanguageToggle, type LanguageCode } from "@/components/LanguageToggle";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { PostcardModal } from "@/components/PostcardModal";
@@ -343,6 +346,7 @@ export function CreateProfileScreen() {
   const [saved, setSaved] = useState(false);
   const [selectedAgeIndex, setSelectedAgeIndex] = useState(0);
   const [burst, setBurst] = useState(0);
+  const [showAudioPermission, setShowAudioPermission] = useState(false);
 
   // Age bands with milestone emoji and vibrant gradient
   const ageBands = [
@@ -358,6 +362,28 @@ export function CreateProfileScreen() {
     setSelectedAgeIndex(index);
     setBurst((n) => n + 1);
     setSaved(false);
+  };
+
+  const handleProfileSave = () => {
+    fxTap();
+    fxConfetti();
+    
+    const avatarName = getAvatarName(avatar);
+    saveProfile({ name: avatarName, avatar, ageBand });
+    
+    // Show audio permission dialog for profile creation
+    setShowAudioPermission(true);
+    setSaved(true);
+  };
+
+  const handleAudioPermissionAccept = () => {
+    // Audio consent already granted by AudioPermissionDialog
+    setTimeout(() => navigate({ to: "/home" }), 400);
+  };
+
+  const handleAudioPermissionReject = () => {
+    // User declined audio, but still proceed to home
+    setTimeout(() => navigate({ to: "/home" }), 400);
   };
 
   return (
@@ -457,19 +483,7 @@ export function CreateProfileScreen() {
 
       <div className="p-5 pb-safe bg-white border-t border-gray-100">
         <button
-          onClick={() => {
-            fxTap();
-            fxConfetti();
-            
-            // NOTE: profileCreated event removed - COPPA compliance
-            // Firebase age-targeted telemetry logs AFTER user sees permission dialogs (__root.tsx)
-            // This ensures parental consent gates age-band data collection
-            
-            const avatarName = getAvatarName(avatar);
-            saveProfile({ name: avatarName, avatar, ageBand });
-            setSaved(true);
-            setTimeout(() => navigate({ to: "/home" }), 400);
-          }}
+          onClick={handleProfileSave}
           className={`w-full h-14 rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-white text-display text-lg font-bold shadow-xl transition transform ${
             saved ? "scale-95 opacity-80" : "hover:shadow-2xl active:scale-95"
           }`}
@@ -477,6 +491,15 @@ export function CreateProfileScreen() {
           {saved ? "🎉 Saved ✓" : "Continue → Let's Explore!"}
         </button>
       </div>
+
+      {/* Audio Permission Dialog - shown after profile creation */}
+      <AudioPermissionDialog
+        open={showAudioPermission}
+        forceShow={true}
+        context="profile-creation"
+        onAccept={handleAudioPermissionAccept}
+        onReject={handleAudioPermissionReject}
+      />
     </div>
   );
 }
@@ -3376,7 +3399,7 @@ export function ProfileScreen() {
         </div>
 
         <div className="animate-fade-in" style={{ animationDelay: "200ms" }}>
-          <SoundToggleRow />
+          <AudioSettingRow />
         </div>
 
         {/* Achievements Section - Link to Badges */}

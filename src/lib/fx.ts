@@ -53,15 +53,16 @@ function hydrateSound() {
     if (raw !== null) {
       soundOn = raw === "1";
     } else {
-      soundOn = false; // Default: sound effects disabled
+      soundOn = true; // Default: sound effects ENABLED (Proposal: default-enabled audio)
       // Initialize localStorage with default value
-      localStorage.setItem(SOUND_KEY, "0");
+      localStorage.setItem(SOUND_KEY, "1");
     }
     
     debugLog("fx", "Sound toggle hydrated from storage", {
       key: SOUND_KEY,
       storedValue: raw,
       hydrated: soundOn,
+      default: true,
     });
   } catch (err) {
     /* storage unavailable */
@@ -91,6 +92,12 @@ export function setSoundOn(next: boolean) {
   } catch {
     /* ignore */
   }
+  
+  // If disabling audio, immediately stop all active sound effects
+  if (!next) {
+    stopAllActiveSounds();
+  }
+  
   for (const l of soundListeners) l();
 }
 
@@ -108,6 +115,34 @@ export function useSoundOn(): boolean {
 }
 
 let ctx: AudioContext | null = null;
+
+// Track active sound nodes for immediate cutoff when audio is disabled
+const activeSoundNodes = new Set<{ osc?: OscillatorNode; gain: GainNode }>();
+
+/**
+ * Stop all currently playing sound effects immediately
+ * Called when user disables audio toggle
+ */
+function stopAllActiveSounds() {
+  const a = ac();
+  if (!a) return;
+  
+  for (const node of activeSoundNodes) {
+    try {
+      if (node.osc) {
+        // Cancel scheduled frequency/gain changes and stop immediately
+        node.osc.frequency.cancelScheduledValues(a.currentTime);
+        node.osc.stop(a.currentTime);
+      }
+      // Fade out gain immediately to silence
+      node.gain.gain.cancelScheduledValues(a.currentTime);
+      node.gain.gain.setValueAtTime(0, a.currentTime);
+    } catch {
+      // Ignore errors if node already stopped
+    }
+  }
+  activeSoundNodes.clear();
+}
 
 /**
  * Get or create the global AudioContext
@@ -209,6 +244,10 @@ function tone({ freq, dur = 0.18, type = "sine", gain = 0.18, slideTo, delay = 0
   g.gain.linearRampToValueAtTime(gain, t0 + 0.01);
   g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
   
+  // Track this sound for immediate cutoff when audio is disabled
+  const soundNode = { osc, gain: g };
+  activeSoundNodes.add(soundNode);
+  
   // Always connect directly to destination for reliability
   // The mixer is optional - effects must work even without it
   osc.connect(g);
@@ -216,6 +255,11 @@ function tone({ freq, dur = 0.18, type = "sine", gain = 0.18, slideTo, delay = 0
   
   osc.start(t0);
   osc.stop(t0 + dur + 0.02);
+  
+  // Remove from active set after sound finishes
+  setTimeout(() => {
+    activeSoundNodes.delete(soundNode);
+  }, (dur + delay + 0.02) * 1000);
 }
 
 function noise(dur = 0.25, gain = 0.15, delay = 0) {
@@ -236,11 +280,20 @@ function noise(dur = 0.25, gain = 0.15, delay = 0) {
   g.gain.setValueAtTime(gain, t0);
   g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
   
+  // Track this sound for immediate cutoff when audio is disabled
+  const soundNode = { gain: g };
+  activeSoundNodes.add(soundNode);
+  
   // Always connect directly to destination for reliability
   src.connect(g);
   g.connect(a.destination);
   
   src.start(t0);
+  
+  // Remove from active set after sound finishes
+  setTimeout(() => {
+    activeSoundNodes.delete(soundNode);
+  }, (dur + delay) * 1000);
 }
 
 function vibrate(pattern: number | number[]) {
