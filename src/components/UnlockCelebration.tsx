@@ -92,8 +92,18 @@ export function UnlockCelebration() {
     const achievementIds = new Set(achievements.map((a) => a.id));
     const badges = new Set(badgeKeys(progress.badges));
 
+    console.log("[UnlockCelebration] Checking for new unlocks:", {
+      celebratedCount: celebrated.current.size,
+      achievementCount: achievementIds.size,
+      badgeCount: badges.size,
+      prevAchievementsNull: !prevAchievements.current,
+      prevBadgesNull: !prevBadges.current,
+      isFirstRun: !prevAchievements.current || !prevBadges.current,
+    });
+
     // First run after hydration: record the baseline, celebrate nothing.
     if (!prevAchievements.current || !prevBadges.current) {
+      console.log("[UnlockCelebration] First run - setting baseline, NOT celebrating");
       prevAchievements.current = achievementIds;
       prevBadges.current = badges;
       for (const id of achievementIds) celebrated.current.add(`a:${id}`);
@@ -108,6 +118,11 @@ export function UnlockCelebration() {
     const newBadges = [...badges].filter(
       (k) => !prevBadges.current!.has(k) && !celebrated.current.has(`b:${k}`),
     );
+
+    console.log("[UnlockCelebration] New unlocks found:", {
+      newAchievements: newAchievements.map(a => a.id),
+      newBadges,
+    });
 
     prevAchievements.current = achievementIds;
     prevBadges.current = badges;
@@ -145,6 +160,12 @@ export function UnlockCelebration() {
         : `🏅 ${newBadges.length} new badge${newBadges.length > 1 ? "s" : ""}!`;
 
     const subtitle = lines.join("\n");
+
+    console.log("[UnlockCelebration] FIRING celebration:", {
+      title,
+      itemCount: total,
+      timestamp: new Date().toISOString(),
+    });
 
     // Show celebration popup instead of toast
     celebration.achievement(title, {
