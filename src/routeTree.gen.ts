@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AchievementsRouteImport } from './routes/achievements'
+import { Route as AudioTestRouteImport } from './routes/audio-test'
 import { Route as BadgesRouteImport } from './routes/badges'
 import { Route as CreateRouteImport } from './routes/create'
 import { Route as HomeRouteImport } from './routes/home'
@@ -37,6 +38,11 @@ const IndexRoute = IndexRouteImport.update({
 const AchievementsRoute = AchievementsRouteImport.update({
   id: '/achievements',
   path: '/achievements',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AudioTestRoute = AudioTestRouteImport.update({
+  id: '/audio-test',
+  path: '/audio-test',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BadgesRoute = BadgesRouteImport.update({
@@ -128,6 +134,7 @@ const StateSlugCardIndexRoute = StateSlugCardIndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/achievements': typeof AchievementsRoute
+  '/audio-test': typeof AudioTestRoute
   '/badges': typeof BadgesRoute
   '/create': typeof CreateRoute
   '/home': typeof HomeRoute
@@ -149,6 +156,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/achievements': typeof AchievementsRoute
+  '/audio-test': typeof AudioTestRoute
   '/badges': typeof BadgesRoute
   '/create': typeof CreateRoute
   '/home': typeof HomeRoute
@@ -171,6 +179,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/achievements': typeof AchievementsRoute
+  '/audio-test': typeof AudioTestRoute
   '/badges': typeof BadgesRoute
   '/create': typeof CreateRoute
   '/home': typeof HomeRoute
@@ -194,6 +203,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/achievements'
+    | '/audio-test'
     | '/badges'
     | '/create'
     | '/home'
@@ -215,6 +225,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/achievements'
+    | '/audio-test'
     | '/badges'
     | '/create'
     | '/home'
@@ -236,6 +247,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/achievements'
+    | '/audio-test'
     | '/badges'
     | '/create'
     | '/home'
@@ -258,6 +270,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AchievementsRoute: typeof AchievementsRoute
+  AudioTestRoute: typeof AudioTestRoute
   BadgesRoute: typeof BadgesRoute
   CreateRoute: typeof CreateRoute
   HomeRoute: typeof HomeRoute
@@ -291,6 +304,13 @@ declare module '@tanstack/react-router' {
       path: '/achievements'
       fullPath: '/achievements'
       preLoaderRoute: typeof AchievementsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/audio-test': {
+      id: '/audio-test'
+      path: '/audio-test'
+      fullPath: '/audio-test'
+      preLoaderRoute: typeof AudioTestRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/badges': {
@@ -418,6 +438,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AchievementsRoute: AchievementsRoute,
+  AudioTestRoute: AudioTestRoute,
   BadgesRoute: BadgesRoute,
   CreateRoute: CreateRoute,
   HomeRoute: HomeRoute,

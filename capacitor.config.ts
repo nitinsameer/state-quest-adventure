@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.nishaantech.englishquest',
-  appName: 'English Quest',
+  appId: 'com.nishaantech.exploroindia',
+  appName: 'India Explorer',
   webDir: 'dist/client',
   android: {
     preferredStatusBarStyle: 'dark',

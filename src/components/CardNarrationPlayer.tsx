@@ -33,16 +33,21 @@ export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }
   }, []);
 
   const handlePlayClick = () => {
+    console.log("[AUDIO DEBUG] Play button clicked", { narrationId, title });
+    
     if (isCurrentPlaying) {
-      console.log("[CardNarrationPlayer] ⏸ Stopping TTS", { narrationId });
+      console.log("[AUDIO DEBUG] ⏸ Stopping TTS", { narrationId });
       stopTts();
     } else {
-      console.log("[CardNarrationPlayer] ▶️ Starting TTS playback", { 
+      console.log("[AUDIO DEBUG] ▶️ Starting TTS playback", { 
         narrationId, 
         titleLength: title.length,
         textLength: text.length,
         audioNarrationEnabled,
+        hasSupport,
+        isCurrentPlaying,
       });
+      console.log("[AUDIO DEBUG] Text:", text.substring(0, 100) + (text.length > 100 ? "..." : ""));
       playTts(narrationId, text, {
         speed: 0.85,
         pitch: 1.05,

@@ -8,9 +8,7 @@
  * FIX #6 & #22: Console logging removed - only logs on dev mode
  * FIX #29: Error feedback provided to user on TTS failure
  */
-
 import { TextToSpeech } from '@capacitor-community/text-to-speech';
-import { Capacitor } from '@capacitor/core';
 import { hasFeatureConsent } from "./parental-consent";
 import { ensureAudioContext } from "./fx";
 import { getStateLanguageCode } from "./state-content";
@@ -38,38 +36,12 @@ export const DEFAULT_TTS_CONFIG: TtsConfig = {
 let isPlaying = false;
 let currentNarrationId = "";
 let ttsListeners = new Set<() => void>();
-let isNativePlatform = false;
-let platformChecked = false;
-
-/**
- * Check if running on native platform (Android/iOS)
- * TextToSpeech plugin only works on native platforms
- */
-function checkNativePlatform(): boolean {
-  if (platformChecked) return isNativePlatform;
-  
-  platformChecked = true;
-  isNativePlatform = Capacitor.isNativePlatform();
-  
-  debugLog("tts", "Platform check", {
-    isNative: isNativePlatform,
-    platform: Capacitor.getPlatform(),
-  });
-  
-  if (!isNativePlatform) {
-    debugLog("tts", "Web platform detected - TTS not available. Use native app or device TTS.");
-  }
-  
-  return isNativePlatform;
-}
 
 /**
  * Check if TTS is available
- * Returns false on web platform (TTS only available on native Android/iOS)
- * Returns true on native platform if device supports TTS
  */
 export function isTtsAvailable(): boolean {
-  return checkNativePlatform();
+  return true;
 }
 
 /**
@@ -80,15 +52,8 @@ export function playTts(
   text: string,
   config: Partial<TtsConfig> = {}
 ): void {
-  // Check if running on native platform first
-  if (!checkNativePlatform()) {
-    debugLog("tts", "TTS not available on web platform. Running on native app to use TTS.");
-    return;
-  }
-
   // Check if audio narration permission is granted
   if (!hasFeatureConsent('audio')) {
-    debugLog("tts", "Audio narration not consented");
     return;
   }
 
@@ -97,15 +62,7 @@ export function playTts(
   }
 
   // Ensure audio context is initialized (required for system audio routing)
-  // This is now independent of Sound toggle - initializes regardless
-  const audioContext = ensureAudioContext();
-  if (!audioContext) {
-    debugError("tts", "Failed to initialize audio context for TTS", {
-      narrationId,
-      textLength: text.length,
-    });
-    return;
-  }
+  ensureAudioContext();
 
   const finalConfig = { ...DEFAULT_TTS_CONFIG, ...config };
 
@@ -158,17 +115,16 @@ async function playTtsNative(
     currentNarrationId = narrationId;
     notifyListeners();
 
-    debugLog("tts", "▶️ Starting native TTS playback", {
+    debugLog("tts", "Starting native playback", {
       narrationId,
       textLength: text.length,
       language: config.language,
       langCode,
-      platform: Capacitor.getPlatform(),
     });
 
     // Call native TextToSpeech plugin
     // Note: lang parameter uses ISO 639-1 codes (e.g., "en", "hi")
-    const result = await TextToSpeech.speak({
+    await TextToSpeech.speak({
       text: text,
       lang: langCode,
       rate: config.speed,
@@ -177,36 +133,16 @@ async function playTtsNative(
       category: "ambient",
     });
 
-    debugLog("tts", "✓ Native TTS playback completed", { 
-      success: true, 
-      result,
-      narrationId,
-    });
-    
-    // Verify that result indicates success
-    if (result && result.success === false) {
-      debugError("tts", "✗ Plugin returned failure", result);
-      toast.error("🔊 Audio not available - device may not support this language");
-    }
-    
+    debugLog("tts", "Native playback completed");
     isPlaying = false;
     currentNarrationId = "";
     notifyListeners();
   } catch (error) {
-    debugError("tts", "✗ Native TTS playback failed", error);
-    
-    // Provide visible error feedback to user
-    let errorMsg = "🔊 Audio playback failed";
+    debugError("tts", "Native playback error", error);
+    // FIX #29: Provide error feedback to user
     if (error instanceof Error) {
-      errorMsg = `🔊 Audio error: ${error.message}`;
-      debugError("tts", "Error details", {
-        message: error.message,
-        stack: error.stack,
-        narrationId,
-      });
+      toast.error("Audio playback failed - please try again");
     }
-    toast.error(errorMsg);
-    
     isPlaying = false;
     currentNarrationId = "";
     notifyListeners();
@@ -317,17 +253,7 @@ export function formatTime(seconds: number): string {
  * Initialize TTS
  */
 export function initTts(): void {
-  if (typeof window === "undefined") return;
-  
-  const isNative = checkNativePlatform();
-  
-  if (isNative) {
-    debugLog("tts", "Native TextToSpeech plugin available on platform", {
-      platform: Capacitor.getPlatform(),
-    });
-  } else {
-    debugLog("tts", "Running on web - TTS not available. Use native app to hear audio narration.");
-  }
+  console.log("[TTS] Native TextToSpeech plugin initialized");
 }
 
 // Initialize on import

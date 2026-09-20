@@ -22,13 +22,23 @@ const soundListeners = new Set<() => void>();
  * Returns the AudioContext or null if initialization failed
  */
 export function ensureAudioContext(): AudioContext | null {
+  console.log("[AUDIO DEBUG] ensureAudioContext() called");
+  
   const ctx = ac();
+  
   if (ctx) {
+    console.log("[AUDIO DEBUG] ✓ AudioContext available", {
+      state: ctx.state,
+      sampleRate: ctx.sampleRate,
+      baseLatency: (ctx as any).baseLatency,
+      outputLatency: (ctx as any).outputLatency,
+    });
     debugLog("fx", "AudioContext is ready for audio operations", {
       state: ctx.state,
       sampleRate: ctx.sampleRate,
     });
   } else {
+    console.log("[AUDIO DEBUG] ✗ AudioContext is NULL");
     debugError("fx", "Failed to ensure AudioContext - audio operations may fail");
   }
   return ctx;
@@ -106,31 +116,58 @@ let ctx: AudioContext | null = null;
  * @returns AudioContext if successfully created, null otherwise
  */
 function ac(): AudioContext | null {
-  if (typeof window === "undefined") return null;
+  console.log("[AUDIO DEBUG] ac() called");
   
-  if (!ctx) {
-    const AC =
-      (window as unknown as { AudioContext?: typeof AudioContext; webkitAudioContext?: typeof AudioContext }).AudioContext ??
-      (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-    if (!AC) return null;
+  if (typeof window === "undefined") {
+    console.log("[AUDIO DEBUG] ✗ window is undefined (SSR)");
+    return null;
+  }
+  
+  if (ctx) {
+    console.log("[AUDIO DEBUG] ✓ AudioContext already exists", { state: ctx.state });
+    return ctx;
+  }
+  
+  console.log("[AUDIO DEBUG] AudioContext does not exist yet - creating...");
+  
+  const AC =
+    (window as unknown as { AudioContext?: typeof AudioContext; webkitAudioContext?: typeof AudioContext }).AudioContext ??
+    (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+  
+  if (!AC) {
+    console.log("[AUDIO DEBUG] ✗ AudioContext constructor not available on window");
+    return null;
+  }
+  
+  console.log("[AUDIO DEBUG] AudioContext constructor available - creating new instance");
+  
+  try {
+    ctx = new AC();
+    console.log("[AUDIO DEBUG] ✓ AudioContext created successfully", { 
+      state: ctx.state,
+      sampleRate: ctx.sampleRate,
+    });
     
-    try {
-      ctx = new AC();
-      // Initialize audio mixer on first AudioContext creation
-      initAudioMixer(ctx);
-      debugLog("fx", "AudioContext created and mixer initialized", {
-        state: ctx.state,
-        sampleRate: ctx.sampleRate,
-      });
-    } catch (error) {
-      debugError("fx", "Failed to create AudioContext", error);
-      return null;
-    }
+    // Initialize audio mixer on first AudioContext creation
+    initAudioMixer(ctx);
+    console.log("[AUDIO DEBUG] ✓ Audio mixer initialized");
+    
+    debugLog("fx", "AudioContext created and mixer initialized", {
+      state: ctx.state,
+      sampleRate: ctx.sampleRate,
+    });
+  } catch (error) {
+    console.log("[AUDIO DEBUG] ✗ Exception creating AudioContext", error);
+    debugError("fx", "Failed to create AudioContext", error);
+    return null;
   }
   
   // Resume context if suspended (required for user interaction on web)
   if (ctx && ctx.state === "suspended") {
-    void ctx.resume();
+    console.log("[AUDIO DEBUG] AudioContext suspended - attempting resume...");
+    void ctx.resume()
+      .then(() => console.log("[AUDIO DEBUG] ✓ AudioContext resumed"))
+      .catch(err => console.log("[AUDIO DEBUG] ✗ AudioContext resume failed", err));
   }
   
   return ctx;
