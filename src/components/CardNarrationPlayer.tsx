@@ -74,13 +74,11 @@ export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }
     grantFeatureConsent('audio');
     setAudioNarrationEnabled(true);
     setShowPermissionPrompt(false);
-    // Auto-play the narration after enabling
-    setTimeout(() => {
-      playTts(narrationId, text, {
-        speed: 0.85,
-        pitch: 1.05,
-      });
-    }, 100);
+    // Auto-play the narration immediately after enabling
+    playTts(narrationId, text, {
+      speed: 0.85,
+      pitch: 1.05,
+    });
   };
 
   if (!hasSupport) {

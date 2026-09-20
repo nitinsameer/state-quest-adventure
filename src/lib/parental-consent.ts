@@ -195,14 +195,4 @@ export function clearAllConsents(): void {
  * Previous 6 fixes attempted to solve wrong problems
  * Root cause: hasFeatureConsent('audio') was returning false, blocking all TTS calls
  */
-export function ensureAudioConsentGranted(): void {
-  if (typeof window === 'undefined') return; // SSR safety
-  
-  if (!hasFeatureConsent('audio')) {
-    console.log("[AUDIO SETUP] Audio consent not granted, granting automatically...");
-    grantFeatureConsent('audio');
-    console.log("[AUDIO SETUP] ✅ Audio consent granted - TTS now enabled");
-  } else {
-    console.log("[AUDIO SETUP] ✅ Audio consent already granted");
-  }
-}
+

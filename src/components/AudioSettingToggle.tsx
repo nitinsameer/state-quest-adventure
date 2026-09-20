@@ -1,35 +1,52 @@
 /**
  * AudioSettingToggle - Profile Audio Settings Control
  * 
- * Allows users to enable/disable audio in profile settings
+ * Allows users to enable/disable AUDIO NARRATION in profile settings
+ * Uses parental-consent system (not sound effects toggle)
  * Changes take effect immediately (no app restart needed)
  * Affects:
- * - Sound effects (fx.ts): fxTap, fxCorrect, fxWrong, fxConfetti, fxStamp, fxWhoosh
- * - Celebration sounds: Achievement, success, error tones
- * - TTS narration: Respects audio permission (parental-consent.ts)
- * - Haptic vibrations: Still work when sound is OFF (separate concern)
+ * - TTS narration: Controlled by hasFeatureConsent('audio')
+ * - Celebration sounds: Respects audio consent
  */
 
 import { useState, useEffect } from "react";
-import { useSoundOn, setSoundOn, subscribeSound } from "@/lib/fx";
 import { fxTap } from "@/lib/fx";
 import { stopTts } from "@/lib/tts";
+import {
+  hasFeatureConsent,
+  grantFeatureConsent,
+  revokeFeatureConsent,
+  subscribeConsentChanges,
+} from "@/lib/parental-consent";
 
 export function AudioSettingToggle() {
-  const soundOn = useSoundOn();
+  const [audioEnabled, setAudioEnabled] = useState(() => {
+    return hasFeatureConsent('audio');
+  });
   const [isToggling, setIsToggling] = useState(false);
+
+  // Subscribe to consent changes
+  useEffect(() => {
+    const unsubscribe = subscribeConsentChanges('audio', () => {
+      setAudioEnabled(hasFeatureConsent('audio'));
+    });
+    return unsubscribe;
+  }, []);
 
   const handleToggle = () => {
     if (isToggling) return;
     setIsToggling(true);
     fxTap(); // Play feedback before changing
     
-    const newState = !soundOn;
-    setSoundOn(newState);
+    const newState = !audioEnabled;
     
-    // If disabling audio, stop any active TTS playback immediately
-    if (!newState) {
-      stopTts();
+    if (newState) {
+      grantFeatureConsent('audio');
+      setAudioEnabled(true);
+    } else {
+      revokeFeatureConsent('audio');
+      setAudioEnabled(false);
+      stopTts(); // Stop any active TTS immediately
     }
     
     setIsToggling(false);
@@ -39,11 +56,11 @@ export function AudioSettingToggle() {
     <div className="flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200">
       {/* Left: Label & Description */}
       <div className="flex-1">
-        <h3 className="font-bold text-ink text-base">🔊 Sounds & Music</h3>
+        <h3 className="font-bold text-ink text-base">🎧 Audio Narration</h3>
         <p className="text-xs text-muted-foreground mt-1">
-          {soundOn 
-            ? "✓ Sound effects, music, and voices are ON" 
-            : "✗ Sound effects, music, and voices are OFF"}
+          {audioEnabled 
+            ? "✓ Stories are read aloud" 
+            : "✗ Audio is disabled"}
         </p>
       </div>
 
@@ -52,7 +69,7 @@ export function AudioSettingToggle() {
         onClick={handleToggle}
         disabled={isToggling}
         className={`ml-4 relative inline-flex h-8 w-14 items-center rounded-full transition-all flex-shrink-0 ${
-          soundOn
+          audioEnabled
             ? "bg-gradient-to-r from-green-400 to-emerald-500 shadow-lg shadow-green-400/50"
             : "bg-gray-300 shadow-md"
         } ${isToggling ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:scale-105"}`}
@@ -60,13 +77,13 @@ export function AudioSettingToggle() {
         {/* Toggle Thumb */}
         <div
           className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-lg transition-transform ${
-            soundOn ? "translate-x-7" : "translate-x-1"
+            audioEnabled ? "translate-x-7" : "translate-x-1"
           } ${isToggling ? "scale-95" : "scale-100"}`}
         />
         
         {/* Status Indicator */}
         <span className="absolute inset-0 flex items-center justify-center text-xs font-bold">
-          {soundOn ? "✓" : "✗"}
+          {audioEnabled ? "✓" : "✗"}
         </span>
       </button>
     </div>
@@ -78,14 +95,27 @@ export function AudioSettingToggle() {
  * Shows just the toggle without extra description
  */
 export function AudioSettingToggleCompact() {
-  const soundOn = useSoundOn();
+  const [audioEnabled, setAudioEnabled] = useState(() => {
+    return hasFeatureConsent('audio');
+  });
+
+  useEffect(() => {
+    const unsubscribe = subscribeConsentChanges('audio', () => {
+      setAudioEnabled(hasFeatureConsent('audio'));
+    });
+    return unsubscribe;
+  }, []);
 
   const handleToggle = () => {
     fxTap();
-    setSoundOn(!soundOn);
+    const newState = !audioEnabled;
     
-    if (!soundOn) {
-      // If disabling, stop TTS immediately
+    if (newState) {
+      grantFeatureConsent('audio');
+      setAudioEnabled(true);
+    } else {
+      revokeFeatureConsent('audio');
+      setAudioEnabled(false);
       stopTts();
     }
   };
@@ -94,15 +124,15 @@ export function AudioSettingToggleCompact() {
     <button
       onClick={handleToggle}
       className={`relative inline-flex h-7 w-12 items-center rounded-full transition-all ${
-        soundOn
+        audioEnabled
           ? "bg-gradient-to-r from-green-400 to-emerald-500"
           : "bg-gray-300"
       } hover:scale-105 active:scale-95`}
-      title={soundOn ? "Disable sounds" : "Enable sounds"}
+      title={audioEnabled ? "Disable audio narration" : "Enable audio narration"}
     >
       <div
         className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${
-          soundOn ? "translate-x-6" : "translate-x-1"
+          audioEnabled ? "translate-x-6" : "translate-x-1"
         }`}
       />
     </button>
@@ -114,13 +144,27 @@ export function AudioSettingToggleCompact() {
  * Shows icon, label, and toggle in a list row format
  */
 export function AudioSettingRow() {
-  const soundOn = useSoundOn();
+  const [audioEnabled, setAudioEnabled] = useState(() => {
+    return hasFeatureConsent('audio');
+  });
+
+  useEffect(() => {
+    const unsubscribe = subscribeConsentChanges('audio', () => {
+      setAudioEnabled(hasFeatureConsent('audio'));
+    });
+    return unsubscribe;
+  }, []);
 
   const handleToggle = () => {
     fxTap();
-    setSoundOn(!soundOn);
+    const newState = !audioEnabled;
     
-    if (!soundOn) {
+    if (newState) {
+      grantFeatureConsent('audio');
+      setAudioEnabled(true);
+    } else {
+      revokeFeatureConsent('audio');
+      setAudioEnabled(false);
       stopTts();
     }
   };
@@ -132,11 +176,11 @@ export function AudioSettingRow() {
     >
       {/* Left: Icon & Labels */}
       <div className="flex items-start gap-3">
-        <div className="text-3xl flex-shrink-0">🔊</div>
+        <div className="text-3xl flex-shrink-0">🎧</div>
         <div className="text-left">
-          <div className="font-bold text-ink">Sounds & Music</div>
+          <div className="font-bold text-ink">Audio Narration</div>
           <div className="text-xs text-muted-foreground">
-            {soundOn ? "Enabled ✓" : "Disabled ✗"}
+            {audioEnabled ? "Enabled ✓" : "Disabled ✗"}
           </div>
         </div>
       </div>
@@ -144,14 +188,14 @@ export function AudioSettingRow() {
       {/* Right: Toggle */}
       <div
         className={`relative inline-flex h-8 w-14 items-center rounded-full transition-all flex-shrink-0 ml-4 ${
-          soundOn
+          audioEnabled
             ? "bg-gradient-to-r from-green-400 to-emerald-500"
             : "bg-gray-300"
         }`}
       >
         <div
           className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-md transition-transform ${
-            soundOn ? "translate-x-7" : "translate-x-1"
+            audioEnabled ? "translate-x-7" : "translate-x-1"
           }`}
         />
       </div>

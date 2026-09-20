@@ -11,7 +11,6 @@
 import { TextToSpeech } from '@capacitor-community/text-to-speech';
 import { useCelebrationStore } from "@/store/celebrationStore";
 import { useToastStore } from "@/store/toastStore";
-import { hasFeatureConsent } from "./parental-consent";
 import { ensureAudioContext } from "./fx";
 import { getStateLanguageCode } from "./state-content";
 import { debugLog, debugError } from "./debug";
@@ -53,11 +52,6 @@ export function playTts(
   text: string,
   config: Partial<TtsConfig> = {}
 ): void {
-  // Check if audio narration permission is granted
-  if (!hasFeatureConsent('audio')) {
-    return;
-  }
-
   if (!text || text.trim().length === 0) {
     return;
   }
