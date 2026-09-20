@@ -1,0 +1,407 @@
+/**
+ * PostcardPreviewModal - Proposal A Implementation
+ * 
+ * Auto-shows postcard preview after quiz completion with three CTAs:
+ * 1. "Save to Photos" - triggers FilePermissionDialog (kid-friendly), then saves
+ * 2. "Keep in App Only" - stores postcard data locally, no file export
+ * 3. "Later" - dismisses modal, user can access from Passport tab anytime
+ * 
+ * Kid-friendly UX: Clear preview of what's being saved, simple language
+ * 
+ * Integration: Uses FilePermissionDialog (Proposal B) for granular permission request
+ */
+
+import { useEffect, useRef, useState } from "react";
+import { getState } from "@/lib/states";
+import { STATE_ART, TONE_GRADIENT, TONE_HEX, preloadStateArt } from "@/lib/state-art";
+import { useProgress, badgesFor, STATE_BADGES, type BadgeId } from "@/lib/progress";
+import { fxTap } from "@/lib/fx";
+import { requestStoragePermission, saveFileToDownloads } from "@/lib/permissions";
+import { useToast } from "@/hooks/useToast";
+import { FilePermissionDialog } from "@/components/FilePermissionDialog";
+
+const BADGE_EMOJI: Record<BadgeId, string> = {
+  monument: "🏛️",
+  animal: "🐾",
+  explorer: "🎖️",
+};
+
+function loadImage(src: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+function roundRect(
+  c: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  r: number,
+) {
+  c.beginPath();
+  c.moveTo(x + r, y);
+  c.arcTo(x + w, y, x + w, y + h, r);
+  c.arcTo(x + w, y + h, x, y + h, r);
+  c.arcTo(x, y + h, x, y, r);
+  c.arcTo(x, y, x + w, y, r);
+  c.closePath();
+}
+
+async function generatePostcardPreview(stateName?: string): Promise<Blob | null> {
+  const state = getState(stateName);
+  const art = STATE_ART[state.name];
+  const W = 900;
+  const H = 1200;
+  const canvas = document.createElement("canvas");
+  canvas.width = W;
+  canvas.height = H;
+  const c = canvas.getContext("2d");
+  
+  if (!c) return null;
+
+  const [from, to] = TONE_HEX[state.tone] ?? TONE_HEX.orange;
+  const g = c.createLinearGradient(0, 0, W, H);
+  g.addColorStop(0, from);
+  g.addColorStop(1, to);
+  c.fillStyle = g;
+  c.fillRect(0, 0, W, H);
+
+  // inner card
+  c.fillStyle = "#ffffff";
+  roundRect(c, 50, 50, W - 100, H - 100, 48);
+  c.fill();
+
+  // header band
+  const g2 = c.createLinearGradient(50, 50, W - 50, 380);
+  g2.addColorStop(0, from);
+  g2.addColorStop(1, to);
+  c.save();
+  roundRect(c, 50, 50, W - 100, 330, 48);
+  c.clip();
+  c.fillStyle = g2;
+  c.fillRect(50, 50, W - 100, 330);
+  c.restore();
+
+  c.fillStyle = "rgba(255,255,255,0.92)";
+  c.font = "bold 30px system-ui, sans-serif";
+  c.textAlign = "center";
+  c.fillText("GREETINGS FROM", W / 2, 150);
+  c.fillStyle = "#ffffff";
+  c.font = "bold 74px system-ui, sans-serif";
+  c.fillText(state.name.toUpperCase(), W / 2, 235);
+  c.font = "bold 30px system-ui, sans-serif";
+  c.fillStyle = "rgba(255,255,255,0.92)";
+  c.fillText(state.nickname, W / 2, 295);
+
+  // artwork
+  c.imageSmoothingEnabled = true;
+  c.imageSmoothingQuality = "high";
+  const BAND_X = 250;
+  const BAND_Y = 410;
+  const BAND_W = 480;
+  const BAND_H = 320;
+  try {
+    if (art) {
+      const img = await loadImage(art);
+      const scale = Math.min(BAND_W / img.width, BAND_H / img.height, 1.6);
+      const dw = img.width * scale;
+      const dh = img.height * scale;
+      c.save();
+      c.shadowColor = "rgba(15,23,42,0.22)";
+      c.shadowBlur = 26;
+      c.shadowOffsetY = 12;
+      c.drawImage(
+        img,
+        BAND_X + (BAND_W - dw) / 2,
+        BAND_Y + (BAND_H - dh) / 2,
+        dw,
+        dh,
+      );
+      c.restore();
+    } else {
+      c.font = "200px system-ui, sans-serif";
+      c.fillText(state.emoji, W / 2, BAND_Y + 230);
+    }
+  } catch {
+    /* art optional */
+  }
+
+  // badge chip
+  const earned = badgesFor(
+    { stamps: {}, postcards: {}, achievements: {} } as any,
+    state.name,
+  );
+  const badge = STATE_BADGES.find((b) => b.id === earned[0]) ?? STATE_BADGES[0];
+  
+  c.fillStyle = "#F6F3EC";
+  roundRect(c, 120, 830, W - 240, 110, 40);
+  c.fill();
+  c.fillStyle = "#1E293B";
+  c.font = "bold 40px system-ui, sans-serif";
+  c.fillText(`${BADGE_EMOJI[badge.id]}  ${badge.name} Badge Earned`, W / 2, 900);
+
+  // fun fact
+  c.fillStyle = "#475569";
+  c.font = "30px system-ui, sans-serif";
+  const words = state.funFact.split(" ");
+  let line = "";
+  let y = 1010;
+  for (const w of words) {
+    const test = line ? `${line} ${w}` : w;
+    if (c.measureText(test).width > W - 220) {
+      c.fillText(line, W / 2, y);
+      line = w;
+      y += 44;
+    } else {
+      line = test;
+    }
+  }
+  if (line) c.fillText(line, W / 2, y);
+
+  c.fillStyle = "#94A3B8";
+  c.font = "bold 26px system-ui, sans-serif";
+  c.fillText("India Explorer", W / 2, H - 100);
+
+  return await new Promise<Blob | null>((resolve) =>
+    canvas.toBlob((b) => resolve(b), "image/png"),
+  );
+}
+
+export interface PostcardPreviewModalProps {
+  stateName?: string;
+  open?: boolean;
+  onClose?: () => void;
+  onSave?: () => void;
+}
+
+export function PostcardPreviewModal({
+  stateName,
+  open = false,
+  onClose,
+  onSave,
+}: PostcardPreviewModalProps) {
+  const [isOpen, setIsOpen] = useState(open);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [showPermissionDialog, setShowPermissionDialog] = useState(false);
+  const toast = useToast();
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  useEffect(() => {
+    setIsOpen(open);
+  }, [open]);
+
+  // Generate preview on mount or when stateName changes
+  useEffect(() => {
+    if (!isOpen || !stateName) return;
+
+    async function generatePreview() {
+      try {
+        preloadStateArt(stateName);
+        const blob = await generatePostcardPreview(stateName);
+        if (blob) {
+          const url = URL.createObjectURL(blob);
+          setPreviewUrl(url);
+        }
+      } catch (err) {
+        console.error("[PostcardPreviewModal] Failed to generate preview", err);
+      }
+    }
+
+    generatePreview();
+
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [isOpen, stateName]);
+
+  const handleSaveToPhotos = async () => {
+    if (isSaving) return;
+    
+    setIsSaving(true);
+    fxTap();
+    
+    // Show the kid-friendly permission dialog (Proposal B)
+    setShowPermissionDialog(true);
+  };
+
+  const handlePermissionAccepted = async () => {
+    try {
+      // Generate full postcard blob
+      const blob = await generatePostcardPreview(stateName);
+      if (!blob) {
+        toast.error("Couldn't generate postcard", {
+          subtitle: "Please try again",
+        });
+        setIsSaving(false);
+        return;
+      }
+
+      // Save to device
+      const filename = `${stateName}-postcard.png`;
+      const success = await saveFileToDownloads(blob, filename);
+
+      if (success) {
+        toast.success("Postcard saved!", {
+          subtitle: "Check your photos folder",
+        });
+        onSave?.();
+        handleClose();
+      } else {
+        toast.error("Couldn't save postcard", {
+          subtitle: "Please try again",
+        });
+      }
+    } catch (err) {
+      console.error("[PostcardPreviewModal] Save failed", err);
+      toast.error("Something went wrong", {
+        subtitle: "Please try again",
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handlePermissionRejected = () => {
+    toast.info("No problem!", {
+      subtitle: "You can try again anytime",
+    });
+    setIsSaving(false);
+  };
+
+  const handleKeepInApp = () => {
+    fxTap();
+    toast.success("Postcard saved in app!", {
+      subtitle: "View anytime from your Passport",
+    });
+    onSave?.();
+    handleClose();
+  };
+
+  const handleLater = () => {
+    fxTap();
+    handleClose();
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+    onClose?.();
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setPreviewUrl(null);
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <>
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm p-4">
+        <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden animate-scale-in flex flex-col max-h-[90vh]">
+          
+          {/* Preview */}
+          <div className="relative bg-gray-100 aspect-[3/4] overflow-hidden flex-shrink-0">
+            {previewUrl ? (
+              <img
+                src={previewUrl}
+                alt="Your postcard"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-100">
+                <div className="text-center">
+                  <div className="text-5xl mb-2">✨</div>
+                  <div className="text-sm font-semibold text-gray-600">Creating your postcard...</div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Content */}
+          <div className="p-5 space-y-4 flex-1 overflow-y-auto">
+            {/* Header */}
+            <div>
+              <h2 className="text-2xl font-extrabold text-ink">
+                ✨ Your Postcard's Ready!
+              </h2>
+              <p className="text-sm text-muted-foreground mt-2">
+                You earned a beautiful postcard! What would you like to do?
+              </p>
+            </div>
+
+            {/* Info Cards */}
+            <div className="space-y-2">
+              <div className="bg-green-50 rounded-2xl p-3 border border-green-200">
+                <div className="flex items-start gap-2">
+                  <span className="text-lg mt-0.5">📸</span>
+                  <div>
+                    <div className="font-bold text-sm text-ink">Save to Photos</div>
+                    <div className="text-xs text-muted-foreground">
+                      Keep it on your phone to share with friends
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-blue-50 rounded-2xl p-3 border border-blue-200">
+                <div className="flex items-start gap-2">
+                  <span className="text-lg mt-0.5">📱</span>
+                  <div>
+                    <div className="font-bold text-sm text-ink">Keep in App</div>
+                    <div className="text-xs text-muted-foreground">
+                      Find it anytime in your Passport
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Privacy Note */}
+            <div className="text-xs text-muted-foreground text-center bg-amber-50 rounded-xl p-2 border border-amber-200">
+              🔒 Your postcard is always yours. We never share it.
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="p-5 space-y-2 border-t border-gray-200 flex-shrink-0">
+            <button
+              onClick={handleSaveToPhotos}
+              disabled={isSaving || !previewUrl}
+              className="w-full px-4 py-3 rounded-xl bg-success text-white font-bold text-sm shadow-lg transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isSaving ? "Saving..." : "📸 Save to Photos"}
+            </button>
+
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={handleKeepInApp}
+                disabled={isSaving}
+                className="px-3 py-3 rounded-xl bg-blue-100 text-blue-700 font-bold text-xs transition active:scale-95 disabled:opacity-50"
+              >
+                📱 Keep in App
+              </button>
+              <button
+                onClick={handleLater}
+                disabled={isSaving}
+                className="px-3 py-3 rounded-xl bg-gray-100 text-gray-700 font-bold text-xs transition active:scale-95 disabled:opacity-50"
+              >
+                ⏰ Later
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Proposal B: Kid-friendly permission dialog shown on-demand */}
+      <FilePermissionDialog
+        open={showPermissionDialog}
+        onAccept={handlePermissionAccepted}
+        onReject={handlePermissionRejected}
+      />
+    </>
+  );
+}

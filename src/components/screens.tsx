@@ -21,6 +21,7 @@ import { PassportSeedling } from "@/components/PassportSeedling";
 import { LanguageToggle, type LanguageCode } from "@/components/LanguageToggle";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { PostcardModal } from "@/components/PostcardModal";
+import { PostcardPreviewModal } from "@/components/PostcardPreviewModal";
 import { CardProgressBar } from "@/components/CardProgressBar";
 import { FirstSessionTutorial } from "@/components/FirstSessionTutorial";
 import { AVATAR_CONFIG, type AvatarId } from "@/lib/avatar-config";
@@ -2485,13 +2486,34 @@ export function StateCompletedScreen({
   const art = STATE_ART[state.name];
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
   const [burstKey, setBurstKey] = useState(0);
+  // Proposal A: Auto-show postcard preview modal after quiz completion
+  const [showPostcardModal, setShowPostcardModal] = useState(true);
+  
   useEffect(() => {
     fxConfetti();
     setBurstKey((n) => n + 1);
     if (persist) completeState(state.name);
   }, [state.name, persist]);
+
+  const handlePostcardClose = () => {
+    setShowPostcardModal(false);
+  };
+
+  const handlePostcardSave = () => {
+    setShowPostcardModal(false);
+  };
+
   return (
-    <div className="h-full w-full gradient-gold relative overflow-hidden flex flex-col items-center">
+    <>
+      {/* Proposal A: Auto-show PostcardPreviewModal on state completion */}
+      <PostcardPreviewModal
+        stateName={state.name}
+        open={showPostcardModal}
+        onClose={handlePostcardClose}
+        onSave={handlePostcardSave}
+      />
+
+      <div className="h-full w-full gradient-gold relative overflow-hidden flex flex-col items-center">
       <ConfettiBurst trigger={burstKey} size="big" />
       {Array.from({ length: 28 }).map((_, i) => (
         <div
@@ -2589,7 +2611,8 @@ export function StateCompletedScreen({
           Continue Adventure →
         </button>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
 

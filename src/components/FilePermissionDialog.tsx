@@ -1,8 +1,16 @@
 /**
- * File Permission Dialog - Kids App Safe
+ * FilePermissionDialog - Proposal B Implementation
  * 
- * Displays a permission request for file storage (postcard saving)
- * Similar to AudioPermissionDialog - shows once, stores preference in localStorage
+ * COPPA-compliant permission request for saving postcards to device storage.
+ * 
+ * Key Changes (Proposal B):
+ * - Only shown when user clicks "Save to Photos" (not upfront)
+ * - Kid-friendly language: "Save Picture" instead of "READ/WRITE_EXTERNAL_STORAGE"
+ * - Clear action: explains picture will be saved to photos folder
+ * - Granular: only requests WRITE permission (not READ)
+ * - Reversible: user can deny and try again (no forced consent)
+ * 
+ * This replaces the old proactive permission request with on-demand, clear consent.
  */
 
 import { useEffect, useState } from "react";
@@ -20,41 +28,21 @@ export function FilePermissionDialog({
   onReject,
 }: FilePermissionDialogProps) {
   const [isOpen, setIsOpen] = useState(open);
-  const progress = useProgress();
 
-  // Don't show on splash/welcome/create screens
-  // IMPORTANT: Delay until after hydration to avoid hydration mismatch
   useEffect(() => {
-    // Don't show during hydration - wait until localStorage is ready
-    if (!isHydrated()) {
-      return;
-    }
-
-    const hasSeenFilePermission = localStorage.getItem(
-      "india-explorer:file-permission-shown:v1"
-    ) === "1";
-
-    // Show if:
-    // 1. User hasn't seen it yet (!hasSeenFilePermission)
-    // 2. App is fresh (!progress.onboarded) OR user just onboarded (just created profile)
-    // 3. Not suppressed by another dialog
-    if (!hasSeenFilePermission && !isOpen) {
-      console.log("[FilePermissionDialog] Ready to show on first authenticated access");
-      setIsOpen(true);
-      localStorage.setItem("india-explorer:file-permission-shown:v1", "1");
-    }
-  }, [isHydrated(), isOpen]);
+    setIsOpen(open);
+  }, [open]);
 
   const handleAccept = () => {
-    console.log("[FilePermissionDialog] User accepted file permission");
+    console.log("[FilePermissionDialog] User accepted - will save picture to photos");
     localStorage.setItem("india-explorer:file-permission-consent:v1", "1");
     setIsOpen(false);
     onAccept?.();
   };
 
   const handleReject = () => {
-    console.log("[FilePermissionDialog] User rejected file permission");
-    localStorage.setItem("india-explorer:file-permission-consent:v1", "0");
+    console.log("[FilePermissionDialog] User rejected - picture not saved");
+    // Note: We do NOT set consent to "0" - user can try again anytime
     setIsOpen(false);
     onReject?.();
   };
@@ -64,45 +52,54 @@ export function FilePermissionDialog({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm p-4">
       <div className="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 space-y-4 animate-scale-in">
-        {/* Header */}
+        {/* Header - Kid-friendly and clear */}
         <div className="text-center">
-          <div className="text-5xl mb-3">📁</div>
-          <h2 className="text-2xl font-extrabold text-ink">Save Your Postcard?</h2>
+          <div className="text-5xl mb-3">📸</div>
+          <h2 className="text-2xl font-extrabold text-ink">Save Picture to Your Photos?</h2>
           <p className="text-sm text-muted-foreground mt-2">
-            We'd like to save your postcard so you can share it with family and friends!
+            Your postcard will be saved to your phone's photos folder so you can share it anytime.
           </p>
         </div>
 
-        {/* Features */}
-        <div className="space-y-2 bg-blue-50 rounded-2xl p-4">
-          <div className="flex items-start gap-2">
-            <span className="text-lg mt-0.5">✨</span>
-            <div>
-              <div className="font-bold text-sm text-ink">Save Postcards</div>
-              <div className="text-xs text-muted-foreground">Keep memories of places you explore</div>
+        {/* What Happens - Clear explanation */}
+        <div className="bg-blue-50 rounded-2xl p-4 border border-blue-200">
+          <div className="space-y-3">
+            <div className="flex items-start gap-3">
+              <div className="text-lg flex-shrink-0">1️⃣</div>
+              <div>
+                <div className="font-bold text-sm text-ink">We ask permission</div>
+                <div className="text-xs text-muted-foreground">Your phone will ask if it's OK</div>
+              </div>
             </div>
-          </div>
-          <div className="flex items-start gap-2">
-            <span className="text-lg mt-0.5">📤</span>
-            <div>
-              <div className="font-bold text-sm text-ink">Share with Friends</div>
-              <div className="text-xs text-muted-foreground">Show your India Explorer adventures</div>
+            <div className="flex items-start gap-3">
+              <div className="text-lg flex-shrink-0">2️⃣</div>
+              <div>
+                <div className="font-bold text-sm text-ink">Picture gets saved</div>
+                <div className="text-xs text-muted-foreground">Goes to your Photos app</div>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="text-lg flex-shrink-0">3️⃣</div>
+              <div>
+                <div className="font-bold text-sm text-ink">You can share it</div>
+                <div className="text-xs text-muted-foreground">Text or email to friends & family</div>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Privacy Note */}
-        <div className="text-xs text-muted-foreground text-center bg-amber-50 rounded-xl p-3">
-          We only save files you create. Your privacy is important to us! 🔒
+        {/* Privacy Note - COPPA transparent */}
+        <div className="text-xs text-muted-foreground text-center bg-amber-50 rounded-xl p-3 border border-amber-200">
+          🔒 We only save pictures YOU make. We never share them. You can change your mind anytime.
         </div>
 
-        {/* Buttons */}
+        {/* Buttons - Clear CTAs */}
         <div className="flex gap-3 pt-2">
           <button
             onClick={handleReject}
-            className="flex-1 px-4 py-3 rounded-xl bg-muted text-muted-foreground font-bold text-sm transition active:scale-95"
+            className="flex-1 px-4 py-3 rounded-xl bg-gray-100 text-gray-700 font-bold text-sm transition active:scale-95"
           >
             Not Now
           </button>
@@ -110,7 +107,7 @@ export function FilePermissionDialog({
             onClick={handleAccept}
             className="flex-1 px-4 py-3 rounded-xl bg-success text-white font-bold text-sm shadow-lg transition active:scale-95"
           >
-            Allow 📁
+            Yes, Save 📸
           </button>
         </div>
       </div>

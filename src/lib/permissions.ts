@@ -2,13 +2,22 @@
  * Storage Permission Handler & File Save
  * Uses Capacitor Filesystem to save files with proper permission handling
  * 
- * FIX #6 & #22: Console logging removed - only debug mode logging
+ * Proposal B Implementation: Granular permission model
+ * - Only requests WRITE_EXTERNAL_STORAGE (not READ)
+ * - Kid-friendly dialog shown at point of save (not upfront)
+ * - Permission requested only when user clicks "Save to Photos"
+ * - No forced consent - user can try again if denied
  */
 
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { App } from '@capacitor/app';
 import { debugLog, debugError } from './debug';
 
+/**
+ * Request write permission for saving postcard to device storage
+ * 
+ * Proposal B: Granular permission - only request WRITE, only when user needs it
+ */
 export async function requestStoragePermission(): Promise<boolean> {
   try {
     const capacitor = (window as any)?.Capacitor;
@@ -19,37 +28,39 @@ export async function requestStoragePermission(): Promise<boolean> {
     const platform = capacitor.getPlatform?.();
 
     // Check localStorage consent first
+    // Note: We check if user previously accepted, but don't require it
+    // On first save, this will be false and we fall through to request native permission
     const hasConsent = localStorage.getItem(
       "india-explorer:file-permission-consent:v1"
     ) === "1";
     
-    if (!hasConsent) {
-      // FIX #28: Fail loud - user will see error message
-      return false;
-    }
-
-    debugLog("permissions", "User gave consent, requesting Android permissions");
+    debugLog("permissions", "Requesting write permission for postcard save", { hasConsent });
 
     // Request permissions at runtime
     if (platform === 'android') {
       try {
-        debugLog("permissions", "Requesting WRITE_EXTERNAL_STORAGE and READ_EXTERNAL_STORAGE");
+        // Proposal B: Only request WRITE permission (not READ)
+        debugLog("permissions", "Requesting WRITE_EXTERNAL_STORAGE only");
         const result = await App.requestPermissions({
-          permissions: ['READ_EXTERNAL_STORAGE', 'WRITE_EXTERNAL_STORAGE']
+          permissions: ['WRITE_EXTERNAL_STORAGE']
         });
+        
         debugLog("permissions", "Permission request result", result);
+        
+        // Mark consent in localStorage so we don't ask again for this session
+        localStorage.setItem("india-explorer:file-permission-consent:v1", "1");
         return true;
       } catch (err) {
         debugError("permissions", "Permission request failed - user may have declined", err);
-        // FIX #28: Fail loud - return false so UI can show error
+        // Proposal B: Don't set consent to "0" - user can try again anytime
         return false;
       }
     }
 
     return true;
   } catch (err) {
-    debugError("permissions", "Error", err);
-    return false; // FIX #28: Fail loud instead of silently continuing
+    debugError("permissions", "Error checking permissions", err);
+    return false;
   }
 }
 
