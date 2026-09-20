@@ -3,6 +3,7 @@ import { Capacitor } from "@capacitor/core";
 import { Haptics, ImpactStyle } from "@capacitor/haptics";
 import { initAudioMixer, getEffectsGain, getAmbientGain } from "./audio-mixer";
 import { debugLog, debugError } from "./debug";
+import { hasFeatureConsent } from "./parental-consent";
 
 // Sound + haptics FX using Web Audio API, navigator.vibrate, and Capacitor Haptics.
 // On native (Android/iOS), uses Capacitor.Haptics for richer haptic feedback.
@@ -210,11 +211,16 @@ function ac(): AudioContext | null {
 
 /**
  * Determine if sound output should be played through speakers
- * Checks both Sound toggle AND audio narration permission
- * @returns true if sound should play
+ * Checks BOTH conditions:
+ * 1. Sound toggle enabled in profile (isSoundOn)
+ * 2. Audio consent granted during profile creation (hasFeatureConsent)
+ * @returns true only if BOTH are true
  */
 function shouldPlaySound(): boolean {
-  return isSoundOn();
+  // BOTH must be true for sound to play:
+  // - User clicked "Yes, enable!" during profile creation
+  // - User hasn't disabled sound in profile settings
+  return isSoundOn() && hasFeatureConsent("audio");
 }
 
 type ToneOpts = {

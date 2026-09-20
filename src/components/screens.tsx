@@ -20,6 +20,7 @@ import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { PassportSeedling } from "@/components/PassportSeedling";
 import { AudioSettingRow } from "@/components/AudioSettingToggle";
 import { AudioPermissionDialog } from "@/components/AudioPermissionDialog";
+import { FilePermissionDialog } from "@/components/FilePermissionDialog";
 import { grantFeatureConsent } from "@/lib/parental-consent";
 import { LanguageToggle, type LanguageCode } from "@/components/LanguageToggle";
 import { LanguageSelector } from "@/components/LanguageSelector";
@@ -3183,6 +3184,11 @@ export function ProfileScreen() {
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
   const [isSelectingAvatar, setIsSelectingAvatar] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState<AvatarId>(p.avatar as AvatarId);
+  const [showFilePermissionDialog, setShowFilePermissionDialog] = useState(false);
+  const [hasFileConsent, setHasFileConsent] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("india-explorer:file-permission-consent:v1") === "1";
+  });
   
   // Avatar images list for ProfileScreen
   const avatarImages = [
@@ -3413,7 +3419,35 @@ export function ProfileScreen() {
           <AudioSettingRow />
         </div>
 
-        {/* Achievements Section - Link to Badges */}
+        {/* File Permission Toggle - for saving postcards to photos */}
+        <div className="animate-fade-in" style={{ animationDelay: "210ms" }}>
+          <button
+            onClick={() => setShowFilePermissionDialog(true)}
+            className="w-full flex items-center justify-between p-4 rounded-2xl bg-white border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition"
+          >
+            {/* Left: Icon & Labels */}
+            <div className="flex items-start gap-3">
+              <div className="text-3xl flex-shrink-0">📸</div>
+              <div className="text-left">
+                <div className="font-bold text-ink">Save Pictures</div>
+                <div className="text-xs text-muted-foreground">
+                  {hasFileConsent ? "Can save postcards ✓" : "Ask permission to save"}
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Status Indicator */}
+            <div className={`inline-flex h-8 w-14 items-center rounded-full transition-all flex-shrink-0 ml-4 ${
+              hasFileConsent
+                ? "bg-gradient-to-r from-green-400 to-emerald-500"
+                : "bg-gray-300"
+            }`}>
+              <div className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-md transition-transform ${
+                hasFileConsent ? "translate-x-7" : "translate-x-1"
+              }`} />
+            </div>
+          </button>
+        </div>
         <div className="animate-fade-in" style={{ animationDelay: "225ms" }}>
           <Link
             to="/badges"
@@ -3500,6 +3534,20 @@ export function ProfileScreen() {
           </Link>
         </div>
       </div>
+
+      {/* File Permission Dialog - for saving postcards */}
+      <FilePermissionDialog
+        open={showFilePermissionDialog}
+        onAccept={() => {
+          setShowFilePermissionDialog(false);
+          setHasFileConsent(true);
+          fxTap();
+        }}
+        onReject={() => {
+          setShowFilePermissionDialog(false);
+          fxTap();
+        }}
+      />
     </div>
   );
 }
