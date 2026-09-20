@@ -377,13 +377,24 @@ export function CreateProfileScreen() {
   };
 
   const handleAudioPermissionAccept = () => {
-    // Audio consent already granted by AudioPermissionDialog
-    setTimeout(() => navigate({ to: "/home" }), 400);
+    // User clicked "Yes, enable!" - audio consent already granted by dialog
+    // Close dialog and navigate to home
+    setShowAudioPermission(false);
+    setSaved(false);
+    
+    // Navigate after a brief delay to let dialog close
+    setTimeout(() => navigate({ to: "/home" }), 300);
   };
 
   const handleAudioPermissionReject = () => {
-    // User declined audio, but still proceed to home
-    setTimeout(() => navigate({ to: "/home" }), 400);
+    // User clicked "Not now" - no audio consent, but still proceed to home
+    // They can enable audio later in profile settings
+    // Close dialog and navigate to home
+    setShowAudioPermission(false);
+    setSaved(false);
+    
+    // Navigate after a brief delay to let dialog close
+    setTimeout(() => navigate({ to: "/home" }), 300);
   };
 
   return (

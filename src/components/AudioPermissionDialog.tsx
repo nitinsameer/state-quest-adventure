@@ -28,15 +28,37 @@ export function AudioPermissionDialog({
   onReject,
   open = false,
   forceShow = false,
-  context = "first-load",
+  context = "profile-creation",
 }: AudioPermissionDialogProps) {
   const [isOpen, setIsOpen] = useState(open);
   const progress = useProgress();
 
-  // Auto-show on first launch (first-load context) OR when explicitly forced (profile-creation)
+  // For profile-creation context: sync parent's 'open' prop to internal state
+  // This allows parent to control when dialog shows
+  useEffect(() => {
+    if (!isHydrated()) {
+      return;
+    }
+
+    if (context === "profile-creation") {
+      // Parent controls visibility via 'open' prop
+      // Sync parent prop to internal state
+      setIsOpen(open);
+      return;
+    }
+  }, [open, context, isHydrated()]);
+
+  // Auto-show on first launch (first-load context) OR when explicitly forced
   useEffect(() => {
     // Don't show during hydration - wait until localStorage is ready
     if (!isHydrated()) {
+      return;
+    }
+
+    // CRITICAL: Never auto-show in profile-creation context
+    // Profile creation dialog should ONLY show when explicitly triggered by parent
+    // via showAudioPermission state, not via auto-detection
+    if (context === "profile-creation") {
       return;
     }
 
@@ -45,6 +67,7 @@ export function AudioPermissionDialog({
       "india-explorer:audio-permission-shown:v1"
     ) === "1";
 
+    // Only auto-show for first-load context if not seen before
     const shouldShow = forceShow || (!hasSeenAudioPermission && context === "first-load");
 
     if (shouldShow && !isOpen) {
@@ -66,14 +89,26 @@ export function AudioPermissionDialog({
     debugLog("audio-permission", "User accepted audio", { context });
     fxTap();
     grantFeatureConsent("audio");
+    
+    // Close dialog immediately so it stops rendering
     setIsOpen(false);
-    onAccept?.();
+    
+    // Call callback after dialog closes
+    setTimeout(() => {
+      onAccept?.();
+    }, 100);
   };
 
   const handleReject = () => {
     debugLog("audio-permission", "User rejected audio", { context });
+    
+    // Close dialog immediately so it stops rendering
     setIsOpen(false);
-    onReject?.();
+    
+    // Call callback after dialog closes
+    setTimeout(() => {
+      onReject?.();
+    }, 100);
   };
 
   const isProfileCreation = context === "profile-creation";
