@@ -12,7 +12,7 @@ const DEFAULT_PIN = "1234";
 /**
  * Parental PIN Dialog for Reset Confirmation
  * - Shows PIN entry keypad
- * - 4-digit PIN (default: 1234)
+ * - 4-digit PIN (default: 1234, or custom if set in ParentZone)
  * - 30-second timeout with countdown
  * - Prevents accidental data loss
  */
@@ -21,6 +21,19 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
   const [error, setError] = useState("");
   const [timeLeft, setTimeLeft] = useState(30);
   const [isValid, setIsValid] = useState(false);
+  const [correctPin, setCorrectPin] = useState(DEFAULT_PIN);
+
+  // Load saved PIN on dialog open
+  useEffect(() => {
+    if (open && typeof window !== "undefined") {
+      const savedPin = localStorage.getItem("india-explorer:parent-pin:v1");
+      if (savedPin && savedPin.length === 4) {
+        setCorrectPin(savedPin);
+      } else {
+        setCorrectPin(DEFAULT_PIN);
+      }
+    }
+  }, [open]);
 
   // Countdown timer
   useEffect(() => {
@@ -53,7 +66,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
 
       // Check on 4th digit
       if (newPin.length === 4) {
-        if (newPin === DEFAULT_PIN) {
+        if (newPin === correctPin) {
           setIsValid(true);
           setError("");
           // Auto-confirm after 500ms
@@ -189,7 +202,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
         <div className="text-xs text-muted-foreground text-center mt-4 p-3 bg-blue-50 rounded-lg">
           <span>💡 Default PIN: 1234</span>
           <br />
-          <span>Set in Parent Zone (coming soon)</span>
+          <span>Change in Parent Zone (Profile)</span>
         </div>
       </div>
     </div>

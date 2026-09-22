@@ -1,8 +1,7 @@
 import { useProgress, cardsDone, CARDS_PER_STATE } from "@/lib/progress";
-import { getState } from "@/lib/states";
+import { getState, stateSlug, INDIA_STATES } from "@/lib/states";
 import { fxTap } from "@/lib/fx";
 import { Link } from "@tanstack/react-router";
-import { stateSlug } from "@/lib/states";
 
 /**
  * Daily Goal Card for HomeDashboardScreen
@@ -21,12 +20,11 @@ export function DailyGoalCard() {
     ? getState("Andhra Pradesh") // Default to first state if none completed
     : (() => {
         // Find the current state in progress
-        const journey = require("@/lib/states").INDIA_STATES;
-        const current = journey.find((s: any) => {
+        const current = INDIA_STATES.find((s: any) => {
           const cardCount = p.cards?.[s.name]?.length ?? 0;
           return cardCount > 0 && cardCount < CARDS_PER_STATE;
         });
-        return current || journey[0];
+        return current || INDIA_STATES[0];
       })();
 
   // Determine goal level based on completed states
