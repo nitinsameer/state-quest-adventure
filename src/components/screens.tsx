@@ -90,6 +90,13 @@ import {
   getReplayCount,
   type Achievement,
   type PostcardData,
+  getStreakStatus,
+  getNextAchievementBadge,
+  getPostcardsArray,
+  getTotalStampCount,
+  getRecentlyCompletedState,
+  clearRecentlyCompleted,
+  markRecentlyCompleted,
 } from "@/lib/progress";
 
 
@@ -533,6 +540,8 @@ export function HomeDashboardScreen() {
   const [statsVisible, setStatsVisible] = useState(false);
   const [animateStats, setAnimateStats] = useState(false);
   const [showLockedPreview, setShowLockedPreview] = useState<string | null>(null);
+  const [dismissStreakWarning, setDismissStreakWarning] = useState(false);
+  const [showCompletionCelebration, setShowCompletionCelebration] = useState<string | null>(null);
   // Auto-show tutorial on first session, allow dismiss
   const [showTutorial, setShowTutorial] = useState(() => {
     if (typeof window !== "undefined") {
@@ -667,6 +676,225 @@ export function HomeDashboardScreen() {
 
       {/* Daily Goal Card - Compact inline version */}
       <DailyGoalCard />
+
+      {/* STATE COMPLETION CELEBRATION - Gap #4 */}
+      {(() => {
+        const recentState = getRecentlyCompletedState(p);
+        if (!recentState) return null;
+
+        const state = INDIA_STATES.find(s => s.name === recentState);
+        if (!state) return null;
+
+        // Calculate XP earned for completing this state
+        const xpEarned = 250; // State completion bonus
+
+        return (
+          <div className="px-5 mt-3 animate-fade-in">
+            <div className="rounded-3xl bg-gradient-to-br from-yellow-300 via-orange-400 to-red-500 text-white p-5 shadow-2xl border-2 border-yellow-200 relative overflow-hidden">
+              {/* Decorative confetti-like elements */}
+              <div className="absolute top-2 left-4 text-3xl animate-bounce">🎉</div>
+              <div className="absolute top-3 right-6 text-2xl animate-pulse">⭐</div>
+              <div className="absolute bottom-3 left-8 text-2xl">✨</div>
+
+              <div className="relative z-10 flex flex-col gap-3">
+                {/* Title */}
+                <div className="text-center">
+                  <div className="text-sm font-bold opacity-95">🏆 STATE MASTERED! 🏆</div>
+                  <div className="text-display text-2xl font-extrabold mt-1 drop-shadow-lg">
+                    {recentState}
+                  </div>
+                </div>
+
+                {/* Stats */}
+                <div className="grid grid-cols-3 gap-2 text-center">
+                  <div className="bg-white/20 backdrop-blur rounded-xl p-2">
+                    <div className="text-xs opacity-90">Badges</div>
+                    <div className="text-xl font-extrabold">+3</div>
+                  </div>
+                  <div className="bg-white/20 backdrop-blur rounded-xl p-2">
+                    <div className="text-xs opacity-90">XP</div>
+                    <div className="text-xl font-extrabold">+{xpEarned}</div>
+                  </div>
+                  <div className="bg-white/20 backdrop-blur rounded-xl p-2">
+                    <div className="text-xs opacity-90">Stamp</div>
+                    <div className="text-xl font-extrabold">{state.emoji}</div>
+                  </div>
+                </div>
+
+                {/* Action buttons */}
+                <div className="flex gap-2 mt-2">
+                  <button
+                    onClick={() => clearRecentlyCompleted()}
+                    className="flex-1 h-10 rounded-xl bg-white/20 backdrop-blur border border-white/40 text-white text-sm font-extrabold hover:bg-white/30 transition-all"
+                  >
+                    Dismiss
+                  </button>
+                  <Link
+                    to="/journey"
+                    onClick={() => {
+                      fxTap();
+                      clearRecentlyCompleted();
+                    }}
+                    className="flex-1 h-10 rounded-xl bg-white text-orange-600 text-sm font-extrabold hover:bg-yellow-50 transition-all shadow-lg flex items-center justify-center"
+                  >
+                    Next State →
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* STAMP COLLECTION VISUAL - Gap #3 */}
+      {(() => {
+        const stamps = getPostcardsArray(p);
+        const totalStamps = getTotalStampCount();
+        const collectedPercent = Math.round((stamps.length / totalStamps) * 100);
+
+        if (stamps.length === 0) return null;
+
+        return (
+          <div className="px-5 mt-3 animate-fade-in">
+            <div className="rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-white p-3 shadow-lg">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl">🎫</span>
+                  <div>
+                    <div className="text-xs font-bold opacity-90">Stamp Collection</div>
+                    <div className="text-sm font-extrabold">{stamps.length}/{totalStamps} Collected</div>
+                  </div>
+                </div>
+                <Link 
+                  to="/explorer/postcard-library" 
+                  onClick={() => fxTap()}
+                  className="text-xs font-bold opacity-90 hover:opacity-100 underline"
+                >
+                  View all →
+                </Link>
+              </div>
+
+              {/* Progress bar */}
+              <div className="mb-2 h-1.5 bg-white/30 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-white transition-all duration-500"
+                  style={{ width: `${collectedPercent}%` }}
+                />
+              </div>
+
+              {/* Stamp grid - show first 12 stamps */}
+              <div className="grid grid-cols-6 gap-1">
+                {stamps.slice(0, 12).map((postcard, idx) => {
+                  const state = INDIA_STATES.find(s => s.name === postcard.stateName);
+                  return (
+                    <div
+                      key={`${postcard.stateName}-${idx}`}
+                      className="aspect-square rounded-lg bg-white/20 border border-white/40 flex items-center justify-center text-xl hover:bg-white/30 transition-colors"
+                      title={postcard.stateName}
+                    >
+                      {state?.emoji}
+                    </div>
+                  );
+                })}
+                {/* Show empty slots for uncollected stamps */}
+                {stamps.length < 12 && Array.from({ length: Math.min(12 - stamps.length, totalStamps - stamps.length) }).map((_, idx) => (
+                  <div
+                    key={`empty-${idx}`}
+                    className="aspect-square rounded-lg bg-white/10 border-2 border-dashed border-white/30 flex items-center justify-center text-xs opacity-50"
+                  >
+                    ?
+                  </div>
+                ))}
+              </div>
+
+              {stamps.length > 12 && (
+                <div className="text-xs text-center mt-2 opacity-90">+{stamps.length - 12} more stamps</div>
+              )}
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* STREAK PROTECTION ALERT - Gap #1 */}
+      {(() => {
+        const streakStatus = getStreakStatus(p);
+        if (!streakStatus.isAtRisk || dismissStreakWarning) return null;
+        
+        return (
+          <div className="px-5 mt-3 animate-fade-in">
+            <div className="rounded-2xl bg-gradient-to-r from-orange-400 to-red-500 text-white p-3 shadow-lg border border-orange-600">
+              <div className="flex items-start gap-3">
+                <div className="text-2xl flex-shrink-0">🚨</div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-extrabold">Your streak is at risk!</div>
+                  <div className="text-xs mt-1 opacity-90">Last played {streakStatus.hoursSinceActive} hours ago</div>
+                  <div className="text-xs mt-1 font-bold">Come back within 12 hours to keep your 🔥 {p.streak} day streak!</div>
+                </div>
+                <button
+                  onClick={() => setDismissStreakWarning(true)}
+                  className="text-white opacity-70 hover:opacity-100 text-xl flex-shrink-0"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* ACHIEVEMENT PREVIEW CARD - Gap #2 */}
+      {(() => {
+        const nextBadge = getNextAchievementBadge(p);
+        if (!nextBadge) return null;
+
+        const tierColors: Record<string, string> = {
+          seedling: "from-orange-400 to-yellow-500",
+          growing: "from-green-400 to-emerald-500",
+          mighty: "from-blue-400 to-purple-500",
+          elite: "from-purple-500 to-pink-500",
+        };
+
+        const stepsAway = Math.max(0, (nextBadge.achievementMax - nextBadge.progress));
+        const progressPercent = Math.round((nextBadge.progress / nextBadge.achievementMax) * 100);
+
+        return (
+          <div className="px-5 mt-3 animate-fade-in">
+            <Link 
+              to="/achievements" 
+              onClick={() => fxTap()}
+              className={`block rounded-2xl bg-gradient-to-r ${tierColors[nextBadge.tier]} text-white p-4 shadow-lg hover:shadow-xl transition-shadow`}
+            >
+              <div className="flex items-start gap-3">
+                <div className="text-4xl">{nextBadge.icon}</div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs font-bold opacity-90">Next Achievement</div>
+                  <div className="text-display text-sm font-extrabold leading-tight">{nextBadge.name}</div>
+                  <div className="text-xs opacity-90 mt-1">{nextBadge.description}</div>
+                  
+                  {/* Progress bar */}
+                  <div className="mt-2 flex items-center gap-2">
+                    <div className="flex-1 h-2 bg-white/30 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-white transition-all duration-500"
+                        style={{ width: `${progressPercent}%` }}
+                      />
+                    </div>
+                    <div className="text-xs font-bold whitespace-nowrap">{nextBadge.progress}/{nextBadge.achievementMax}</div>
+                  </div>
+
+                  {/* Steps away message */}
+                  <div className="text-xs font-bold mt-2 opacity-95">
+                    {stepsAway === 0 
+                      ? "🎉 You're ready to earn this badge!" 
+                      : `${stepsAway} step${stepsAway > 1 ? "s" : ""} away`
+                    }
+                  </div>
+                </div>
+              </div>
+            </Link>
+          </div>
+        );
+      })()}
 
       {/* Continue journey - with pulse on play button */}
       <div className="px-5 mt-3 mb-3 flex-shrink-0">
@@ -1210,7 +1438,9 @@ export function JourneyMapScreen() {
   const nodes: MapNode[] = [];
   const banners: { key: string; label: string; icon: string; y: number; done: number; total: number }[] = [];
 
-  let y =50;
+  const STEP = 118;
+  const BANNER_GAP = 120;
+  let y = 50;
   let idx = 0;
   
   // Show all states for all age bands (removed age-based filtering)
@@ -2766,7 +2996,11 @@ export function StateCompletedScreen({
   useEffect(() => {
     fxConfetti();
     setBurstKey((n) => n + 1);
-    if (persist) completeState(state.name);
+    if (persist) {
+      completeState(state.name);
+      // Gap #4: Mark as recently completed for home screen celebration
+      markRecentlyCompleted(state.name);
+    }
   }, [state.name, persist]);
 
   return (

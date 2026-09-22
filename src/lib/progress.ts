@@ -1143,3 +1143,116 @@ export function achievementBadgesForTier(p: Progress, tier: AchievementBadgeTier
 export function unlockedAchievementBadgeCount(p: Progress): number {
   return achievementBadgesFor(p).filter((b) => b.unlocked).length;
 }
+
+/**
+ * Check if streak is at risk (12+ hours since last activity)
+ * Returns object with risk status and hours since last active
+ */
+export function getStreakStatus(p: Progress): { isAtRisk: boolean; hoursSinceActive: number; lastActiveDate: string } {
+  if (!p.lastActive || p.streak === 0) {
+    return { isAtRisk: false, hoursSinceActive: 0, lastActiveDate: "" };
+  }
+
+  const now = new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  
+  // If played today, no risk
+  if (p.lastActive === today) {
+    return { isAtRisk: false, hoursSinceActive: 0, lastActiveDate: today };
+  }
+
+  // Parse last active date and calculate hours difference
+  const [year, month, day] = p.lastActive.split('-').map(Number);
+  const lastActiveTime = new Date(year, month - 1, day, 23, 59, 59); // End of last active day
+  const hoursSince = Math.floor((now.getTime() - lastActiveTime.getTime()) / (1000 * 60 * 60));
+
+  // At risk if 12+ hours without playing and hasn't been 24+ hours (which would break streak)
+  const isAtRisk = hoursSince >= 12 && hoursSince < 24;
+
+  return { isAtRisk, hoursSinceActive: hoursSince, lastActiveDate: p.lastActive };
+}
+
+
+/**
+ * Get the next locked achievement badge (for achievement preview on home)
+ * Returns the first badge that is not yet unlocked
+ */
+export function getNextAchievementBadge(p: Progress): AchievementBadge | null {
+  const allBadges = achievementBadgesFor(p);
+  return allBadges.find((b) => !b.unlocked) || null;
+}
+
+
+/**
+ * Get all postcards as an array sorted by state order
+ * Includes total stamp count and percentage
+ */
+export function getPostcardsArray(p: Progress): (PostcardData & { stateName: string })[] {
+  return Object.entries(p.postcards).map(([stateName, data]) => ({
+    ...data,
+    stateName,
+  })).sort((a, b) => {
+    // Sort by state order (appearance in INDIA_STATES)
+    const aIndex = INDIA_STATES.findIndex(s => s.name === a.stateName);
+    const bIndex = INDIA_STATES.findIndex(s => s.name === b.stateName);
+    return aIndex - bIndex;
+  });
+}
+
+/**
+ * Get total number of possible stamps (total states)
+ */
+export function getTotalStampCount(): number {
+  return TOTAL_STATES;
+}
+
+
+/**
+ * Check if a state was completed recently (within last 5 minutes)
+ * Used to show celebration banner on home screen
+ */
+export function getRecentlyCompletedState(p: Progress): string | null {
+  if (typeof window === "undefined") return null;
+
+  const recentKey = "india-explorer:recently-completed:v1";
+  const stored = localStorage.getItem(recentKey);
+  
+  if (!stored) return null;
+
+  try {
+    const { stateName, timestamp } = JSON.parse(stored) as { stateName: string; timestamp: number };
+    const now = Date.now();
+    const fiveMinutesMs = 5 * 60 * 1000;
+
+    // If more than 5 minutes have passed, clear it
+    if (now - timestamp > fiveMinutesMs) {
+      localStorage.removeItem(recentKey);
+      return null;
+    }
+
+    return stateName;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Mark a state as recently completed (called after state completion)
+ */
+export function markRecentlyCompleted(stateName: string) {
+  if (typeof window === "undefined") return;
+
+  const recentKey = "india-explorer:recently-completed:v1";
+  localStorage.setItem(recentKey, JSON.stringify({
+    stateName,
+    timestamp: Date.now(),
+  }));
+}
+
+/**
+ * Clear the recently completed marker
+ */
+export function clearRecentlyCompleted() {
+  if (typeof window === "undefined") return;
+  localStorage.removeItem("india-explorer:recently-completed:v1");
+}
