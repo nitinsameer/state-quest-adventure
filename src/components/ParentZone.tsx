@@ -18,7 +18,7 @@ export function ParentZoneScreen() {
     { icon: "🗺️", label: "Places completed", value: `${p.completed.length}/${TOTAL_STATES}` },
     { icon: "⭐", label: "Total XP", value: p.xp.toLocaleString() },
     { icon: "🏅", label: "Badges earned", value: String(badgeCount(p)) },
-    { icon: "📓", label: "Passport stamps", value: String(Object.keys(p.stamps).length) },
+    { icon: "🎫", label: "Stamps collected", value: String(Object.keys(p.stamps).length) },
     { icon: "🔥", label: "Day streak", value: String(p.streak) },
     { icon: "🏆", label: "Achievements", value: String(unlocked) },
   ];

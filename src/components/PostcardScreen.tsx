@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, Link } from "@tanstack/react-router";
 import mascot from "@/assets/mascot.png";
 import { getState } from "@/lib/states";
 import { STATE_ART, TONE_GRADIENT, TONE_HEX, preloadStateArt } from "@/lib/state-art";
@@ -9,6 +9,10 @@ import { requestStoragePermission, saveFileToDownloads } from "@/lib/permissions
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { useCelebration } from "@/hooks/useCelebration";
 import { useToast } from "@/hooks/useToast";
+import { hasFeatureConsent, grantFeatureConsent } from "@/lib/parental-consent";
+import { usePostcardLibrary } from "@/store/postcard-library-store";
+import { markPostcardAsExported } from "@/lib/postcard-library";
+import { FilePermissionDialog } from "@/components/FilePermissionDialog";
 
 const BADGE_EMOJI: Record<BadgeId, string> = {
   monument: "🏛️",
@@ -57,28 +61,28 @@ export function StatePostcardScreen({
   const earned = badgesFor(progress, state.name);
   const badge =
     STATE_BADGES.find((b) => b.id === earned[earned.length - 1]) ?? STATE_BADGES[0];
+  
   const [burst, setBurst] = useState(0);
   const [busy, setBusy] = useState(false);
-  const [showPostcardChoice, setShowPostcardChoice] = useState(true);
-  const [showFilePermissionPrompt, setShowFilePermissionPrompt] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [showFilePermissionDialog, setShowFilePermissionDialog] = useState(false);
   const cheer = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
     setBurst((n) => n + 1);
     preloadStateArt(state.name);
+    generateAndPreview();
   }, [state.name]);
 
-  async function makeBlob(): Promise<Blob | null> {
+  async function generatePostcardPreview(): Promise<Blob | null> {
     const W = 900;
     const H = 1200;
     const canvas = document.createElement("canvas");
     canvas.width = W;
     canvas.height = H;
     const c = canvas.getContext("2d");
-    // FIX #14: Handle null context case
-    if (!c) {
-      return null;
-    }
+    
+    if (!c) return null;
 
     const [from, to] = TONE_HEX[state.tone] ?? TONE_HEX.orange;
     const g = c.createLinearGradient(0, 0, W, H);
@@ -114,7 +118,7 @@ export function StatePostcardScreen({
     c.fillStyle = "rgba(255,255,255,0.92)";
     c.fillText(state.nickname, W / 2, 295);
 
-    // artwork — fitted inside a fixed band, centred, never upscaled past 1:1
+    // artwork
     c.imageSmoothingEnabled = true;
     c.imageSmoothingQuality = "high";
     const BAND_X = 250;
@@ -155,7 +159,6 @@ export function StatePostcardScreen({
       /* mascot optional */
     }
 
-
     // badge chip
     c.fillStyle = "#F6F3EC";
     roundRect(c, 120, 830, W - 240, 110, 40);
@@ -191,338 +194,168 @@ export function StatePostcardScreen({
     );
   }
 
-  const [showShareConfirm, setShowShareConfirm] = useState(false);
-
-  async function onShare() {
-    if (busy) return;
-    
-    // Show parent confirmation dialog for sharing
-    setShowShareConfirm(true);
+  async function generateAndPreview() {
+    try {
+      const blob = await generatePostcardPreview();
+      if (blob) {
+        const url = URL.createObjectURL(blob);
+        setPreviewUrl(url);
+      }
+    } catch (err) {
+      console.error("[StatePostcardScreen] Failed to generate preview", err);
+    }
   }
 
-  async function confirmAndShare() {
-    setShowShareConfirm(false);
-    
+  async function handleSaveToPhotos() {
     if (busy) return;
-    
-    // FIX #15: Default to false (opt-in) not true - require explicit acceptance
-    const fileEnabled = localStorage.getItem("india-explorer:file-enabled:v1") === "1";
-    
-    if (!fileEnabled) {
-      toast.warning("Enable 'Save & Share'", {
-        subtitle: "Turn on in settings to save your postcard",
-      });
+
+    // Check if user has already granted file permission
+    if (!hasFeatureConsent("file")) {
+      fxTap();
+      setShowFilePermissionDialog(true);
       return;
     }
-    
-    setBusy(true);
-    fxStamp();
-    try {
-      // Request actual Android permissions
-      const permissionGranted = await requestStoragePermission();
 
-      // FIX #14: Handle null blob case safely
-      const blob = await makeBlob();
+    // Permission already granted, proceed to save
+    await proceedWithSave();
+  }
+
+  async function proceedWithSave() {
+    setBusy(true);
+    try {
+      const blob = await generatePostcardPreview();
       if (!blob) {
-        toast.error("Couldn't generate postcard", {
+        toast.error("Couldn't generate stamp", {
           subtitle: "Please try again",
         });
-        return;
-      }
-
-      // FIX #12: Validate blob size - reject if too large
-      const MAX_BLOB_SIZE = 50 * 1024 * 1024; // 50MB max
-      if (blob.size > MAX_BLOB_SIZE) {
-        toast.warning("Postcard is too large", {
-          subtitle: "Try a lower resolution",
-        });
+        setBusy(false);
         return;
       }
 
       const filename = `${state.name}-postcard.png`;
-      const file = new File([blob], filename, { type: "image/png" });
+      const success = await saveFileToDownloads(blob, filename);
 
-      // Try native share first
-      const nav = navigator as Navigator & {
-        canShare?: (d: ShareData) => boolean;
-        share?: (d: ShareData) => Promise<void>;
-      };
-
-      if (nav.share && nav.canShare?.({ files: [file] })) {
-        try {
-          await nav.share({
-            files: [file],
-            title: `${state.name} postcard`,
-            text: `I just explored ${state.name} on India Explorer!`,
-          });
-          celebration.success("Postcard shared!", {
-            subtitle: "Your friends will love it",
-            confetti: true,
-            duration: 3500,
-          });
-        } catch (shareErr) {
-          // Share cancelled or failed, try saving instead
-          const saved = await saveFileToDownloads(blob, filename);
-          if (saved) {
-            celebration.success("Postcard saved!", {
-              subtitle: "Check your photos",
-              confetti: true,
-              duration: 3500,
-            });
-          } else {
-            toast.error("Couldn't save postcard", {
-              subtitle: "Check your storage",
-            });
-          }
+      if (success) {
+        const library = usePostcardLibrary.getState();
+        const postcard = library.postcards.find((p) => p.state === state.name);
+        if (postcard) {
+          const updatedPostcard = markPostcardAsExported(postcard, filename);
+          library.updatePostcard(postcard.id, updatedPostcard);
         }
+
+        toast.success("✨ Stamp saved to Photos!", {
+          subtitle: "Check your photos folder",
+        });
+        setBusy(false);
       } else {
-        // No native share, save to downloads/cache
-        const saved = await saveFileToDownloads(blob, filename);
-        if (saved) {
-          celebration.success("Postcard saved!", {
-            subtitle: "Check your photos",
-            confetti: true,
-            duration: 3500,
-          });
-        } else {
-          toast.error("Couldn't save postcard", {
-            subtitle: "Check your storage",
-          });
-        }
+        toast.error("Couldn't save stamp", {
+          subtitle: "Please try again",
+        });
+        setBusy(false);
       }
     } catch (err) {
-      if ((err as { name?: string })?.name !== "AbortError") {
-        toast.error("Couldn't save postcard", {
-          subtitle: "Please try again later",
-        });
-      }
-    } finally {
+      console.error("[StatePostcardScreen] Save failed", err);
+      toast.error("Something went wrong", {
+        subtitle: "Please try again",
+      });
       setBusy(false);
     }
+  }
+
+  async function handleKeepInApp() {
+    fxTap();
+    toast.success("📱 Stamp added to your Stamps!", {
+      subtitle: "View anytime from your Stamps tab",
+    });
+    // Auto-navigate to unlock screen after a short delay
+    setTimeout(() => {
+      onContinue?.();
+    }, 1500);
   }
 
   return (
     <div className={`h-full w-full ${grad} relative overflow-hidden flex flex-col`}>
       <ConfettiBurst trigger={burst} size="big" />
 
-      {/* Pre-confirmation: Want to save postcard? */}
-      {showPostcardChoice && (
-        <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl">
-            <div className="text-center mb-4">
-              <div className="text-5xl mb-3">📮</div>
-              <h2 className="text-display text-2xl font-bold text-ink">
-                Save Your Explorer Postcard?
-              </h2>
-            </div>
-            
-            <p className="text-sm font-semibold text-ink/80 text-center mb-6">
-              Show your friends you beat {state.name}! You can save it or skip right to the next adventure.
-            </p>
+      {/* Header */}
+      <div className="pt-5 text-center px-6 relative z-10">
+        <div className="text-white/90 text-xs font-bold tracking-wide">
+          Your Stamp
+        </div>
+        <div className="text-white text-xs font-semibold mt-1">
+          Show your friends you beat {state.name}! 🎫
+        </div>
+      </div>
 
-            <div className="flex flex-col gap-3">
-              <button
-                onClick={() => {
-                  fxTap();
-                  // FIX #15: Check if file saving is explicitly enabled (default off)
-                  const fileEnabled = localStorage.getItem("india-explorer:file-enabled:v1") === "1";
-                  if (!fileEnabled) {
-                    setShowFilePermissionPrompt(true);
-                    return;
-                  }
-                  setShowPostcardChoice(false);
-                }}
-                className="w-full h-14 rounded-2xl bg-gradient-to-r from-blue-400 to-blue-500 text-white text-display text-lg font-bold shadow-lg"
-              >
-                ✨ Yes, Save It!
-              </button>
-              <button
-                onClick={() => {
-                  fxTap();
-                  onContinue?.();
-                }}
-                className="w-full h-14 rounded-2xl bg-gray-200 text-ink text-display text-lg font-bold"
-              >
-                Skip → Continue
-              </button>
-            </div>
+      {/* Postcard Preview */}
+      <div className="flex-1 px-5 pt-3 pb-1 relative z-10 overflow-y-auto">
+        <div className="w-full rounded-[28px] bg-white shadow-2xl border-4 border-white overflow-hidden animate-in zoom-in-95">
+          {/* Preview Image (Loading or Generated) */}
+          <div className="relative bg-gray-100 aspect-[3/4] overflow-hidden flex items-center justify-center">
+            {previewUrl ? (
+              <img
+                src={previewUrl}
+                alt="Your postcard"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="flex flex-col items-center justify-center">
+                <div className="text-5xl mb-2">✨</div>
+                <div className="text-sm font-semibold text-gray-600">
+                  Creating your postcard...
+                </div>
+              </div>
+            )}
           </div>
         </div>
-      )}
+      </div>
 
-      {/* Full postcard screen (only shown if user chose "Yes") */}
-      {!showPostcardChoice && (
-        <>
-          <div className="pt-5 text-center px-6 relative z-10">
-            <div className="text-white/90 text-xs font-bold tracking-wide">
-              Your Explorer Postcard
-            </div>
-            <div className="text-white text-xs font-semibold mt-1">
-              Show your friends you beat {state.name}! 📮
-            </div>
-          </div>
+      {/* Action Buttons */}
+      <div className="p-5 pt-2 relative z-10 space-y-2">
+        {/* Row 1: Save to Photos & Skip for Now (side by side) */}
+        <div className="flex gap-2">
+          {/* Primary: Save to Photos */}
+          <button
+            onClick={handleSaveToPhotos}
+            disabled={busy || !previewUrl}
+            className="flex-1 h-12 rounded-2xl bg-white text-ink text-sm font-bold shadow-xl disabled:opacity-60 active:scale-95 transition-transform"
+          >
+            {busy ? "Saving..." : "📸 Save"}
+          </button>
 
-          <div className="flex-1 px-5 pt-3 pb-1 relative z-10 overflow-y-auto">
-            <button
-              type="button"
-              onClick={(e) => {
-                fxTap();
-                onShare();
-              }}
-              disabled={busy}
-              className="w-full rounded-[28px] bg-white shadow-2xl border-4 border-white overflow-hidden animate-in zoom-in-95 cursor-pointer hover:shadow-3xl active:scale-95 transition-all disabled:opacity-60 text-left"
-            >
-              <div className={`${grad} px-4 pt-4 pb-3 text-center text-white`}>
-                <div className="text-xs font-bold tracking-wide opacity-90">
-                  Greetings from
-                </div>
-                <div className="text-display text-3xl font-extrabold leading-tight">
-                  {state.name}
-                </div>
-                <div className="text-[11px] font-bold opacity-90">{state.nickname}</div>
-              </div>
-
-              <div className="relative px-4 pt-3 pb-2 flex items-end justify-center bg-sky/60 min-h-[150px]">
-                {art ? (
-                  <img
-                    src={art}
-                    alt={`${state.name} illustration`}
-                    decoding="async"
-                    className="h-32 object-contain drop-shadow-lg"
-                  />
-                ) : (
-                  <div className="text-[80px] leading-none">{state.emoji}</div>
-                )}
-                <img
-                  ref={cheer}
-                  src={mascot}
-                  alt=""
-                  className="absolute left-2 bottom-1 w-20 h-20 object-contain mascot-cheer"
-                />
-              </div>
-
-              <div className="px-4 py-3">
-                <div className="flex items-center gap-2 rounded-2xl bg-accent px-3 py-2">
-                  <span className="text-2xl">{BADGE_EMOJI[badge.id]}</span>
-                  <div>
-                    <div className="text-xs font-bold text-accent-foreground/70">
-                      Badge Earned
-                    </div>
-                    <div className="text-display font-extrabold text-sm text-ink">
-                      {badge.name}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-3 rounded-2xl border-2 border-dashed border-border p-3">
-                  <div className="text-xs font-bold text-muted-foreground">
-                    Fun fact
-                  </div>
-                  <p className="text-sm font-bold text-ink mt-0.5">{state.funFact}</p>
-                </div>
-              </div>
-            </button>
-          </div>
-
-          <div className="p-5 pt-2 relative z-10 space-y-2">
-            <button
-              onClick={onShare}
-              disabled={busy || showShareConfirm}
-              className="w-full h-14 rounded-2xl bg-white text-ink text-display text-lg font-bold shadow-xl disabled:opacity-60"
-            >
-              {busy ? "Making postcard…" : "📤 Save / Share Postcard"}
-            </button>
-            <button
-              onClick={() => {
-                fxTap();
-                onContinue?.();
-              }}
-              className="w-full h-12 rounded-2xl bg-white/25 backdrop-blur text-white text-display font-extrabold"
-            >
-              Skip → Continue
-            </button>
-          </div>
-        </>
-      )}
-
-      {/* Parent Gate Dialog for Sharing */}
-      {showShareConfirm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl">
-            <div className="text-center mb-4">
-              <div className="text-4xl mb-2">👨‍👩‍👧</div>
-              <h3 className="text-display text-lg font-extrabold text-ink">
-                Ask a Parent First!
-              </h3>
-            </div>
-            <p className="text-sm font-semibold text-ink/80 text-center mb-6">
-              Before sharing your postcard online, ask a parent or guardian for permission. They can help you share safely! 🛡️
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowShareConfirm(false)}
-                className="flex-1 h-12 rounded-xl bg-gray-200 text-ink text-display font-extrabold"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={confirmAndShare}
-                className="flex-1 h-12 rounded-xl bg-gradient-to-r from-blue-400 to-blue-500 text-white text-display font-extrabold"
-              >
-                Continue
-              </button>
-            </div>
-          </div>
+          {/* Tertiary: Skip */}
+          <button
+            onClick={() => {
+              fxTap();
+              onContinue?.();
+            }}
+            className="flex-1 h-12 rounded-2xl bg-white/25 backdrop-blur text-white text-sm font-bold active:scale-95 transition-transform"
+          >
+            ⏭️ Skip
+          </button>
         </div>
-      )}
 
-      {/* File Save Permission Prompt */}
-      {showFilePermissionPrompt && (
-        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 space-y-4 animate-in zoom-in-95">
-            <div className="text-center">
-              <div className="text-5xl mb-3">📁</div>
-              <h3 className="text-display text-xl font-extrabold text-ink">Enable Save & Share?</h3>
-              <p className="text-sm text-muted-foreground mt-2">
-                Turn on save & share to keep your postcard memories! 📮
-              </p>
-            </div>
+        {/* Row 2: Keep in App (full width) */}
+        <button
+          onClick={handleKeepInApp}
+          className="w-full h-14 rounded-2xl bg-blue-100 text-blue-700 text-display font-extrabold active:scale-95 transition-transform"
+        >
+          📱 Keep in My Stamps
+        </button>
+      </div>
 
-            <div className="bg-green-50 rounded-2xl p-4 space-y-2 text-sm">
-              <div className="flex gap-2">
-                <span>📁</span>
-                <span className="font-semibold text-green-900">Save postcards to device</span>
-              </div>
-              <div className="flex gap-2">
-                <span>👥</span>
-                <span className="font-semibold text-green-900">Share with family & friends</span>
-              </div>
-            </div>
-
-            <div className="flex gap-2 pt-2">
-              <button
-                onClick={() => {
-                  fxTap();
-                  setShowFilePermissionPrompt(false);
-                }}
-                className="flex-1 h-12 rounded-xl bg-gray-100 text-gray-800 font-bold text-sm"
-              >
-                Maybe Later
-              </button>
-              <Link
-                to="/me"
-                onClick={() => {
-                  fxTap();
-                  setShowFilePermissionPrompt(false);
-                }}
-                className="flex-1 h-12 rounded-xl bg-gradient-to-r from-green-400 to-emerald-500 text-white font-bold text-sm flex items-center justify-center"
-              >
-                Go to Settings
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* File Permission Dialog */}
+      <FilePermissionDialog
+        open={showFilePermissionDialog}
+        onAccept={() => {
+          grantFeatureConsent("file");
+          setShowFilePermissionDialog(false);
+          proceedWithSave();
+        }}
+        onReject={() => {
+          setShowFilePermissionDialog(false);
+        }}
+      />
     </div>
   );
 }

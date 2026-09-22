@@ -21,7 +21,7 @@ import avatarGirlFlower from "@/assets/avatars/avatar-girl-flower.png";
 import type { AvatarId } from "@/lib/avatar-config";
 
 /**
- * Passport for Ages 6-7 (Seedling)
+ * My Stamps for Ages 6-7 (Seedling)
  * Organized by regions, full state names with emojis
  */
 export function PassportSeedling() {
@@ -108,11 +108,11 @@ export function PassportSeedling() {
 
       {/* Header with Postcard Library Link - Proposal C */}
       <div className="px-5 pt-4 pb-2 flex items-center justify-between">
-        <h1 className="text-2xl font-extrabold text-ink">📖 My Passport</h1>
+        <h1 className="text-2xl font-extrabold text-ink">🎫 My Stamps</h1>
         <button
           onClick={() => {
             fxTap();
-            navigate({ to: "/passport/postcard-library" });
+            navigate({ to: "/explorer/postcard-library" });
           }}
           className="px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold text-sm shadow-lg hover:shadow-xl transition active:scale-95 flex items-center gap-2"
           title="View all your postcards with granular consent controls"

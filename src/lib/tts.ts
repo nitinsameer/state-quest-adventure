@@ -11,6 +11,7 @@
 import { TextToSpeech } from '@capacitor-community/text-to-speech';
 import { useCelebrationStore } from "@/store/celebrationStore";
 import { useToastStore } from "@/store/toastStore";
+import { hasFeatureConsent } from "./parental-consent";
 import { ensureAudioContext } from "./fx";
 import { getStateLanguageCode } from "./state-content";
 import { debugLog, debugError } from "./debug";
@@ -52,18 +53,38 @@ export function playTts(
   text: string,
   config: Partial<TtsConfig> = {}
 ): void {
-  if (!text || text.trim().length === 0) {
+  console.log("\n[TTS] ===== playTts() CALLED =====");
+  console.log("[TTS] narrationId:", narrationId);
+  console.log("[TTS] text length:", text.length);
+  console.log("[TTS] text preview:", text.substring(0, 100) + (text.length > 100 ? "..." : ""));
+  console.log("[TTS] config:", config);
+
+  // Check audio consent
+  const hasConsent = hasFeatureConsent('audio');
+  console.log("[TTS] Audio consent check:", hasConsent);
+  
+  if (!hasConsent) {
+    console.log("[TTS] ❌ NO AUDIO CONSENT - returning early");
     return;
   }
 
+  if (!text || text.trim().length === 0) {
+    console.log("[TTS] ❌ TEXT IS EMPTY - returning early");
+    return;
+  }
+
+  console.log("[TTS] Ensuring audio context...");
   // Ensure audio context is initialized (required for system audio routing)
   ensureAudioContext();
 
   const finalConfig = { ...DEFAULT_TTS_CONFIG, ...config };
+  console.log("[TTS] Final config:", finalConfig);
 
   // Convert language code: "en-IN" → "en", "hi-IN" → "hi", etc.
   const langCode = finalConfig.language.split("-")[0];
+  console.log("[TTS] Language code:", langCode);
 
+  console.log("[TTS] Calling playTtsNative()...");
   playTtsNative(narrationId, text, finalConfig, langCode);
 }
 
@@ -105,16 +126,35 @@ async function playTtsNative(
   config: TtsConfig,
   langCode: string
 ): Promise<void> {
+  console.log("\n[TTS-NATIVE] ===== playTtsNative() CALLED =====");
+  console.log("[TTS-NATIVE] narrationId:", narrationId);
+  console.log("[TTS-NATIVE] text length:", text.length);
+  console.log("[TTS-NATIVE] language config:", config.language);
+  console.log("[TTS-NATIVE] langCode (ISO 639-1):", langCode);
+  console.log("[TTS-NATIVE] speed:", config.speed);
+  console.log("[TTS-NATIVE] pitch:", config.pitch);
+  console.log("[TTS-NATIVE] volume:", config.volume);
+
   try {
     isPlaying = true;
     currentNarrationId = narrationId;
     notifyListeners();
+    console.log("[TTS-NATIVE] State updated - isPlaying=true");
 
     debugLog("tts", "Starting native playback", {
       narrationId,
       textLength: text.length,
       language: config.language,
       langCode,
+    });
+
+    console.log("[TTS-NATIVE] Calling TextToSpeech.speak() with params:", {
+      text: text.substring(0, 50) + "...",
+      lang: langCode,
+      rate: config.speed,
+      pitch: config.pitch,
+      volume: config.volume,
+      category: "ambient",
     });
 
     // Call native TextToSpeech plugin
@@ -128,14 +168,17 @@ async function playTtsNative(
       category: "ambient",
     });
 
+    console.log("[TTS-NATIVE] ✅ TextToSpeech.speak() completed successfully");
     debugLog("tts", "Native playback completed");
     isPlaying = false;
     currentNarrationId = "";
     notifyListeners();
   } catch (error) {
+    console.log("[TTS-NATIVE] ❌ EXCEPTION in TextToSpeech.speak():", error);
     debugError("tts", "Native playback error", error);
     // FIX #29: Show error via bottom toast instead of modal
     if (error instanceof Error) {
+      console.log("[TTS-NATIVE] Creating error toast:", error.message);
       const toastStore = useToastStore.getState();
       toastStore.show({
         type: "error",

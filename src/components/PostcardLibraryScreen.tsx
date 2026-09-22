@@ -99,7 +99,7 @@ export function PostcardLibraryScreen() {
         : consentState === "declined"
           ? "Declined consent for"
           : "Marked pending";
-    toast.success(`${action} ${selectedPostcards.size} postcard${selectedPostcards.size !== 1 ? "s" : ""}`);
+    toast.success(`${action} ${selectedPostcards.size} stamp${selectedPostcards.size !== 1 ? "s" : ""}`);
   };
 
   const handleClearFilters = () => {
@@ -115,26 +115,26 @@ export function PostcardLibraryScreen() {
     fxTap();
     const exportable = library.getExportable();
     if (exportable.length === 0) {
-      toast.info("No postcards with consent to export");
+      toast.info("No stamps with consent to export");
       return;
     }
-    toast.success(`Ready to export ${exportable.length} postcard${exportable.length !== 1 ? "s" : ""}`);
+    toast.success(`Ready to export ${exportable.length} stamp${exportable.length !== 1 ? "s" : ""}`);
     // Future: Implement actual export to ZIP or PDF
   };
 
   const handleDeleteSelected = () => {
     fxTap();
     if (selectedPostcards.size === 0) {
-      toast.info("No postcards selected");
+      toast.info("No stamps selected");
       return;
     }
 
-    if (confirm(`Delete ${selectedPostcards.size} postcard${selectedPostcards.size !== 1 ? "s" : ""}? This cannot be undone.`)) {
+    if (confirm(`Delete ${selectedPostcards.size} stamp${selectedPostcards.size !== 1 ? "s" : ""}? This cannot be undone.`)) {
       selectedPostcards.forEach((id) => {
         library.deletePostcard(id);
       });
       setSelectedPostcards(new Set());
-      toast.success(`Deleted ${selectedPostcards.size} postcard${selectedPostcards.size !== 1 ? "s" : ""}`);
+      toast.success(`Deleted ${selectedPostcards.size} stamp${selectedPostcards.size !== 1 ? "s" : ""}`);
     }
   };
 
@@ -145,9 +145,9 @@ export function PostcardLibraryScreen() {
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-3xl font-extrabold text-ink">📸 Postcard Library</h1>
+              <h1 className="text-3xl font-extrabold text-ink">🎫 Stamp Library</h1>
               <p className="text-sm text-muted-foreground mt-1">
-                {filteredPostcards.length} postcard{filteredPostcards.length !== 1 ? "s" : ""}{" "}
+                {filteredPostcards.length} stamp{filteredPostcards.length !== 1 ? "s" : ""}{" "}
                 {filteredPostcards.length !== stats.total ? `(${stats.total} total)` : ""}
               </p>
             </div>
@@ -314,10 +314,10 @@ export function PostcardLibraryScreen() {
           {filteredPostcards.length === 0 ? (
             <div className="text-center py-16">
               <div className="text-5xl mb-4">📭</div>
-              <h2 className="text-2xl font-bold text-ink mb-2">No postcards found</h2>
+              <h2 className="text-2xl font-bold text-ink mb-2">No stamps found</h2>
               <p className="text-muted-foreground mb-4">
                 {stats.total === 0
-                  ? "Complete state quizzes to earn postcards!"
+                  ? "Complete state quizzes to earn stamps!"
                   : "Try adjusting your filters"}
               </p>
             </div>

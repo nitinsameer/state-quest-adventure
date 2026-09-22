@@ -217,10 +217,9 @@ function ac(): AudioContext | null {
  * @returns true only if BOTH are true
  */
 function shouldPlaySound(): boolean {
-  // BOTH must be true for sound to play:
-  // - User clicked "Yes, enable!" during profile creation
-  // - User hasn't disabled sound in profile settings
-  return isSoundOn() && hasFeatureConsent("audio");
+  // Sound effects only need the sound toggle, not audio narration consent
+  // Audio narration (TTS) has its own separate consent check
+  return isSoundOn();
 }
 
 type ToneOpts = {
@@ -235,10 +234,27 @@ type ToneOpts = {
 function tone({ freq, dur = 0.18, type = "sine", gain = 0.18, slideTo, delay = 0 }: ToneOpts) {
   // Get or create audio context (decoupled from Sound toggle)
   const a = ac();
-  if (!a) return;
+  if (!a) {
+    console.log("[FX/tone] ❌ No AudioContext available");
+    return;
+  }
+  
+  // Resume AudioContext if suspended (required for user gesture on native)
+  if (a.state === "suspended") {
+    console.log("[FX/tone] ⚠️ AudioContext suspended - attempting to resume");
+    void a.resume()
+      .then(() => console.log("[FX/tone] ✅ AudioContext resumed"))
+      .catch((err) => console.log("[FX/tone] ❌ AudioContext resume failed:", err));
+  }
   
   // Only output sound if Sound toggle is ON
-  if (!shouldPlaySound()) return;
+  const shouldPlay = shouldPlaySound();
+  if (!shouldPlay) {
+    console.log("[FX/tone] ❌ shouldPlaySound=false, isSoundOn=", isSoundOn());
+    return;
+  }
+  
+  console.log("[FX/tone] ✅ Playing tone", { freq, dur, shouldPlay });
   
   const t0 = a.currentTime + delay;
   const osc = a.createOscillator();

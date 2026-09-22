@@ -183,12 +183,12 @@ function Chip({
 export function BottomNav({
   active,
 }: {
-  active: "home" | "map" | "passport" | "badges" | "profile";
+  active: "home" | "map" | "explorer" | "badges" | "profile";
 }) {
   const items = [
     { id: "home", icon: "🏠", label: "Home", to: "/home" },
     { id: "map", icon: "🗺️", label: "Journey", to: "/journey" },
-    { id: "passport", icon: "📓", label: "Passport", to: "/passport" },
+    { id: "explorer", icon: "�", label: "Explorer", to: "/explorer" },
     { id: "badges", icon: "🏅", label: "Badges", to: "/badges" },
     { id: "profile", icon: "👤", label: "Me", to: "/me" },
   ] as const;
@@ -527,7 +527,14 @@ export function HomeDashboardScreen() {
   const [statsVisible, setStatsVisible] = useState(false);
   const [animateStats, setAnimateStats] = useState(false);
   const [showLockedPreview, setShowLockedPreview] = useState<string | null>(null);
-  const [showTutorial, setShowTutorial] = useState(true);
+  // Auto-show tutorial on first session, allow dismiss
+  const [showTutorial, setShowTutorial] = useState(() => {
+    if (typeof window !== "undefined") {
+      const seen = localStorage.getItem("india-explorer:tutorial-seen:v1");
+      return !seen; // Show tutorial if not seen before
+    }
+    return false;
+  });
 
   // Route guard: redirect to welcome if not onboarded (defensive check)
   if (!p.onboarded) {
@@ -552,6 +559,18 @@ export function HomeDashboardScreen() {
   const handleLockedCardTap = (stateName: string) => {
     fxTap();
     setShowLockedPreview(stateName);
+  };
+
+  const handleTutorialToggle = () => {
+    fxTap();
+    setShowTutorial(true);
+  };
+
+  const handleTutorialClose = () => {
+    fxTap();
+    // Mark tutorial as seen so it doesn't auto-show again
+    localStorage.setItem("india-explorer:tutorial-seen:v1", "true");
+    setShowTutorial(false);
   };
 
   const getUnlockRequirement = (stateName: string): string => {
@@ -583,6 +602,15 @@ export function HomeDashboardScreen() {
             <span>🔥</span>
             <span className="text-white text-display font-extrabold">{p.streak}</span>
           </div>
+          
+          {/* Help button - Tutorial trigger - More visible */}
+          <button
+            onClick={handleTutorialToggle}
+            className="h-12 w-12 rounded-full bg-white/90 backdrop-blur flex items-center justify-center text-saffron font-extrabold text-xl hover:bg-white active:scale-95 transition-all shadow-lg hover:shadow-xl"
+            title="How to play - Tap to learn"
+          >
+            ?
+          </button>
         </div>
 
         {/* XP Card with pulse animation */}
@@ -624,9 +652,9 @@ export function HomeDashboardScreen() {
         />
         <StatCardEnhanced 
           tone="green" 
-          icon="📓" 
+          icon="🎫" 
           value={String(postcards)} 
-          label="Postcards"
+          label="Stamps"
           encouragement={postcards === 0 ? "Complete states!" : "Keep collecting!"}
         />
       </div>
@@ -776,10 +804,10 @@ export function HomeDashboardScreen() {
         </div>
       )}
 
-      {/* First Session Tutorial - 3 step walkthrough */}
+      {/* First Session Tutorial - Auto-show on first session with dismiss option */}
       <FirstSessionTutorial 
         isVisible={showTutorial}
-        onComplete={() => setShowTutorial(false)}
+        onComplete={handleTutorialClose}
       />
     </div>
   );
@@ -1199,7 +1227,7 @@ export function JourneyMapScreen() {
         }}
         onDone={() => {
           appLogger.info('journey_map_screen', 'QuizScreen onDone clicked');
-          // Navigate to completion screen which will show postcard → unlock → passport
+          // Navigate to completion screen which will show postcard → unlock → explorer
           const slug = view.name.toLowerCase().replace(/\s+/g, "-");
           navigate({ to: "/state/$slug/complete", params: { slug } });
         }}
@@ -1902,9 +1930,6 @@ export function LearningCardScreen({
   const [playingCardIndex, setPlayingCardIndex] = useState<number | null>(null);
   const [showAudioPermissionPrompt, setShowAudioPermissionPrompt] = useState(false);
   
-  // Check if audio is enabled
-  const isAudioEnabled = localStorage.getItem("india-explorer:audio-enabled:v1") === "1";
-  
   // Now compute cards using displayLanguage and ageBand (which are now declared)
   const cards = useMemo(() => {
     return learningCardsFor(state.name, displayLanguage, progress.ageBand);
@@ -2062,7 +2087,7 @@ export function LearningCardScreen({
             e.stopPropagation();
             
             // Check if audio is enabled
-            if (!isAudioEnabled) {
+            if (!hasFeatureConsent('audio')) {
               setShowAudioPermissionPrompt(true);
               fxTap();
               return;
@@ -2093,11 +2118,11 @@ export function LearningCardScreen({
           className={`h-9 px-3 rounded-full shadow-soft flex items-center justify-center gap-2 text-sm font-bold transition-all active:scale-95 whitespace-nowrap ${
             playingCardIndex === currentCardIndex
               ? "bg-gradient-to-br from-orange-400 to-red-500 text-white shadow-lg animate-pulse"
-              : isAudioEnabled
+              : hasFeatureConsent('audio')
                 ? "bg-blue-50 text-blue-600 hover:shadow-md border border-blue-200"
                 : "bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed"
           }`}
-          title={isAudioEnabled ? "Play card content" : "Enable audio in settings to listen"}
+          title={hasFeatureConsent('audio') ? "Play card content" : "Enable audio in settings to listen"}
         >
           {playingCardIndex === currentCardIndex ? "⏸" : "🔊"} Listen
         </button>
@@ -2521,13 +2546,12 @@ export function StateCompletedScreen({
   stateName,
   persist = true,
   onContinue,
-}: { stateName?: string; persist?: boolean; onContinue?: () => void } = {}) {
+  onCreatePostcard,
+}: { stateName?: string; persist?: boolean; onContinue?: () => void; onCreatePostcard?: () => void } = {}) {
   const state = getState(stateName);
   const art = STATE_ART[state.name];
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
   const [burstKey, setBurstKey] = useState(0);
-  // Proposal A: Auto-show postcard preview modal after quiz completion
-  const [showPostcardModal, setShowPostcardModal] = useState(true);
   
   useEffect(() => {
     fxConfetti();
@@ -2535,25 +2559,8 @@ export function StateCompletedScreen({
     if (persist) completeState(state.name);
   }, [state.name, persist]);
 
-  const handlePostcardClose = () => {
-    setShowPostcardModal(false);
-  };
-
-  const handlePostcardSave = () => {
-    setShowPostcardModal(false);
-  };
-
   return (
-    <>
-      {/* Proposal A: Auto-show PostcardPreviewModal on state completion */}
-      <PostcardPreviewModal
-        stateName={state.name}
-        open={showPostcardModal}
-        onClose={handlePostcardClose}
-        onSave={handlePostcardSave}
-      />
-
-      <div className="h-full w-full gradient-gold relative overflow-hidden flex flex-col items-center">
+    <div className="h-full w-full gradient-gold relative overflow-hidden flex flex-col items-center">
       <ConfettiBurst trigger={burstKey} size="big" />
       {Array.from({ length: 28 }).map((_, i) => (
         <div
@@ -2601,7 +2608,6 @@ export function StateCompletedScreen({
         />
       </div>
 
-
       <div className="mt-6 w-full px-6">
         {/* Combined Achievement Card - Less visual clutter */}
         <div className="rounded-3xl bg-white/30 backdrop-blur-xl p-5 text-white text-center border border-white/40 shadow-lg">
@@ -2640,19 +2646,30 @@ export function StateCompletedScreen({
         </div>
       </div>
 
-      <div className="mt-auto p-6 w-full">
+      <div className="mt-auto p-6 w-full space-y-3">
+        {/* Primary CTA: Add Stamp */}
+        <button
+          onClick={() => {
+            fxTap();
+            onCreatePostcard?.();
+          }}
+          className="w-full h-14 rounded-2xl bg-gradient-to-r from-purple-400 to-pink-400 text-white text-display text-lg font-extrabold shadow-xl active:scale-95 transition-transform"
+        >
+          ✨ Add Stamp
+        </button>
+
+        {/* Secondary CTA: Skip to Next State */}
         <button
           onClick={() => {
             fxTap();
             onContinue?.();
           }}
-          className="w-full h-14 rounded-2xl bg-white text-[color:var(--gold)] text-display text-lg font-extrabold shadow-xl"
+          className="w-full h-12 rounded-xl bg-white/30 text-white text-display font-bold shadow-lg active:scale-95 transition-transform backdrop-blur-sm"
         >
-          Continue Adventure →
+          ⏭️ Skip to Next State
         </button>
       </div>
-      </div>
-    </>
+    </div>
   );
 }
 
@@ -3192,8 +3209,16 @@ export function ProfileScreen() {
   const [showFilePermissionDialog, setShowFilePermissionDialog] = useState(false);
   const [hasFileConsent, setHasFileConsent] = useState(() => {
     if (typeof window === "undefined") return false;
-    return localStorage.getItem("india-explorer:file-permission-consent:v1") === "1";
+    return hasFeatureConsent('file');
   });
+  
+  // Subscribe to file consent changes
+  useEffect(() => {
+    const unsubscribe = subscribeConsentChanges('file', () => {
+      setHasFileConsent(hasFeatureConsent('file'));
+    });
+    return unsubscribe;
+  }, []);
   
   // Avatar images list for ProfileScreen
   const avatarImages = [
@@ -3426,32 +3451,54 @@ export function ProfileScreen() {
 
         {/* File Permission Toggle - for saving postcards to photos */}
         <div className="animate-fade-in" style={{ animationDelay: "210ms" }}>
-          <button
-            onClick={() => setShowFilePermissionDialog(true)}
-            className="w-full flex items-center justify-between p-4 rounded-2xl bg-white border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition"
-          >
-            {/* Left: Icon & Labels */}
-            <div className="flex items-start gap-3">
-              <div className="text-3xl flex-shrink-0">📸</div>
-              <div className="text-left">
-                <div className="font-bold text-ink">Save Pictures</div>
-                <div className="text-xs text-muted-foreground">
-                  {hasFileConsent ? "Can save postcards ✓" : "Ask permission to save"}
+          {hasFileConsent ? (
+            // When permission is granted, show revoke button
+            <button
+              onClick={() => {
+                revokeFeatureConsent('file');
+                fxTap();
+              }}
+              className="w-full flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 hover:border-red-300 hover:bg-red-50 transition"
+            >
+              {/* Left: Icon & Labels */}
+              <div className="flex items-start gap-3">
+                <div className="text-3xl flex-shrink-0">📸</div>
+                <div className="text-left">
+                  <div className="font-bold text-ink">Save Pictures</div>
+                  <div className="text-xs text-green-700 font-semibold">
+                    ✓ Permission granted
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Right: Status Indicator */}
-            <div className={`inline-flex h-8 w-14 items-center rounded-full transition-all flex-shrink-0 ml-4 ${
-              hasFileConsent
-                ? "bg-gradient-to-r from-green-400 to-emerald-500"
-                : "bg-gray-300"
-            }`}>
-              <div className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-md transition-transform ${
-                hasFileConsent ? "translate-x-7" : "translate-x-1"
-              }`} />
-            </div>
-          </button>
+              {/* Right: Revoke Button */}
+              <div className="text-xs font-bold text-red-600 bg-red-100 px-3 py-1.5 rounded-full flex-shrink-0 ml-4">
+                Revoke
+              </div>
+            </button>
+          ) : (
+            // When permission is not granted, show grant button
+            <button
+              onClick={() => setShowFilePermissionDialog(true)}
+              className="w-full flex items-center justify-between p-4 rounded-2xl bg-white border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition"
+            >
+              {/* Left: Icon & Labels */}
+              <div className="flex items-start gap-3">
+                <div className="text-3xl flex-shrink-0">📸</div>
+                <div className="text-left">
+                  <div className="font-bold text-ink">Save Pictures</div>
+                  <div className="text-xs text-muted-foreground">
+                    Ask permission to save
+                  </div>
+                </div>
+              </div>
+
+              {/* Right: Status Indicator */}
+              <div className={`inline-flex h-8 w-14 items-center rounded-full transition-all flex-shrink-0 ml-4 bg-gray-300`}>
+                <div className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-md transition-transform translate-x-1`} />
+              </div>
+            </button>
+          )}
         </div>
         <div className="animate-fade-in" style={{ animationDelay: "225ms" }}>
           <Link
@@ -3591,17 +3638,7 @@ function SoundToggleRow() {
     }
   };
 
-  const [fileEnabled, setFileEnabled] = useState(() => {
-    // FIX #15: Default to false (opt-in) not true
-    return localStorage.getItem("india-explorer:file-enabled:v1") === "1";
-  });
-
-  const toggleFile = () => {
-    const newState = !fileEnabled;
-    setFileEnabled(newState);
-    localStorage.setItem("india-explorer:file-enabled:v1", newState ? "1" : "0");
-    if (newState) fxTap();
-  };
+  // Removed: fileEnabled toggle - now using parental-consent system via hasFeatureConsent('file')
 
   return (
     <div className="space-y-3">
@@ -3674,7 +3711,7 @@ function SoundToggleRow() {
         <div className="flex-1 text-left">
           <div className="text-display font-extrabold text-[15px] leading-tight">Save & Share</div>
           <div className="text-[11px] font-bold text-muted-foreground">
-            {fileEnabled ? "Can save postcards" : "Turn on to save postcards"}
+            {fileEnabled ? "Can save stamps" : "Turn on to save stamps"}
           </div>
         </div>
         <span
@@ -3754,7 +3791,7 @@ function RowLink({
   tone: "orange" | "blue" | "green" | "gold";
   title: string;
   sub: string;
-  to: "/passport" | "/achievements" | "/parent" | "/badges" | "/journey";
+  to: "/explorer" | "/achievements" | "/parent" | "/badges" | "/journey";
 }) {
   const bg = {
     orange: "gradient-saffron",

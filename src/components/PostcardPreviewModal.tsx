@@ -1,5 +1,5 @@
 /**
- * PostcardPreviewModal - Proposal A Implementation
+ * PostcardPreviewModal - Uses StandardModal for consistent design
  * 
  * Auto-shows postcard preview after quiz completion with three CTAs:
  * 1. "Save to Photos" - triggers FilePermissionDialog (kid-friendly), then saves
@@ -8,7 +8,7 @@
  * 
  * Kid-friendly UX: Clear preview of what's being saved, simple language
  * 
- * Integration: Uses FilePermissionDialog (Proposal B) for granular permission request
+ * Integration: Uses FilePermissionDialog (StandardModal-based) for granular permission request
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -19,6 +19,10 @@ import { fxTap } from "@/lib/fx";
 import { requestStoragePermission, saveFileToDownloads } from "@/lib/permissions";
 import { useToast } from "@/hooks/useToast";
 import { FilePermissionDialog } from "@/components/FilePermissionDialog";
+import { hasFeatureConsent } from "@/lib/parental-consent";
+import { usePostcardLibrary } from "@/store/postcard-library-store";
+import { markPostcardAsExported } from "@/lib/postcard-library";
+import { StandardModal } from "@/components/StandardModal";
 
 const BADGE_EMOJI: Record<BadgeId, string> = {
   monument: "🏛️",
@@ -224,11 +228,20 @@ export function PostcardPreviewModal({
   const handleSaveToPhotos = async () => {
     if (isSaving) return;
     
+    // Check if user has granted file permission
+    if (!hasFeatureConsent('file')) {
+      console.log("[POSTCARD] File permission not granted, showing permission dialog");
+      setIsSaving(true);
+      fxTap();
+      setShowPermissionDialog(true);
+      return;
+    }
+    
+    // Permission already granted, proceed directly to save
+    console.log("[POSTCARD] File permission already granted, proceeding to save");
     setIsSaving(true);
     fxTap();
-    
-    // Show the kid-friendly permission dialog (Proposal B)
-    setShowPermissionDialog(true);
+    await handlePermissionAccepted();
   };
 
   const handlePermissionAccepted = async () => {
@@ -261,6 +274,15 @@ export function PostcardPreviewModal({
       const success = await saveFileToDownloads(blob, filename);
 
       if (success) {
+        // Mark postcard as exported in library
+        const library = usePostcardLibrary.getState();
+        const postcard = library.postcards.find((p) => p.state === stateName);
+        if (postcard) {
+          const updatedPostcard = markPostcardAsExported(postcard, filename);
+          library.updatePostcard(postcard.id, updatedPostcard);
+          console.log("[POSTCARD] Export tracking updated for", stateName);
+        }
+        
         toast.success("Postcard saved!", {
           subtitle: "Check your photos folder",
         });
@@ -313,103 +335,61 @@ export function PostcardPreviewModal({
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm p-4 animate-in fade-in">
-        <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden animate-in zoom-in-95 flex flex-col max-h-[90vh]">
-          
-          {/* Preview */}
-          <div className="relative bg-gray-100 aspect-[3/4] overflow-hidden flex-shrink-0">
-            {previewUrl ? (
-              <img
-                src={previewUrl}
-                alt="Your postcard"
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-100">
-                <div className="text-center">
-                  <div className="text-5xl mb-2">✨</div>
-                  <div className="text-sm font-semibold text-gray-600">Creating your postcard...</div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Content */}
-          <div className="p-5 space-y-4 flex-1 overflow-y-auto">
-            {/* Header */}
-            <div>
-              <h2 className="text-2xl font-extrabold text-ink">
-                ✨ Your Postcard's Ready!
-              </h2>
-              <p className="text-sm text-muted-foreground mt-2">
-                You earned a beautiful postcard! What would you like to do?
-              </p>
-            </div>
-
-            {/* Info Cards */}
-            <div className="space-y-2">
-              <div className="bg-green-50 rounded-2xl p-3 border border-green-200">
-                <div className="flex items-start gap-2">
-                  <span className="text-lg mt-0.5">📸</span>
-                  <div>
-                    <div className="font-bold text-sm text-ink">Save to Photos</div>
-                    <div className="text-xs text-muted-foreground">
-                      Keep it on your phone to share with friends
+      <StandardModal
+        open={isOpen}
+        onClose={handleClose}
+        header={{
+          icon: "✨",
+          title: "Your Postcard's Ready!",
+          subtitle: "What would you like to do?",
+        }}
+        headerGradient={["from-purple-400", "to-pink-400"]}
+        content={[
+          {
+            type: "custom",
+            className: "relative bg-gray-100 aspect-[3/4] overflow-hidden rounded-xl -mx-6 -mt-6 mb-4",
+            children: (
+              <div className="relative w-full h-full">
+                {previewUrl ? (
+                  <img
+                    src={previewUrl}
+                    alt="Your postcard"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-100">
+                    <div className="text-center">
+                      <div className="text-5xl mb-2">✨</div>
+                      <div className="text-sm font-semibold text-gray-600">Creating your postcard...</div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
+            ),
+          },
+        ]}
+        buttons={[
+          {
+            label: isSaving ? "Saving..." : "📸 Save to Photos",
+            onClick: handleSaveToPhotos,
+            variant: "primary",
+          },
+          {
+            label: "📱 Keep in App",
+            onClick: handleKeepInApp,
+            variant: "secondary",
+          },
+          {
+            label: "⏰ Later",
+            onClick: handleLater,
+            variant: "tertiary",
+          },
+        ]}
+        maxWidth="max-w-md"
+        contentClassName="!space-y-0"
+      />
 
-              <div className="bg-blue-50 rounded-2xl p-3 border border-blue-200">
-                <div className="flex items-start gap-2">
-                  <span className="text-lg mt-0.5">📱</span>
-                  <div>
-                    <div className="font-bold text-sm text-ink">Keep in App</div>
-                    <div className="text-xs text-muted-foreground">
-                      Find it anytime in your Passport
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Privacy Note */}
-            <div className="text-xs text-muted-foreground text-center bg-amber-50 rounded-xl p-2 border border-amber-200">
-              🔒 Your postcard is always yours. We never share it.
-            </div>
-          </div>
-
-          {/* Actions */}
-          <div className="p-5 space-y-2 border-t border-gray-200 flex-shrink-0">
-            <button
-              onClick={handleSaveToPhotos}
-              disabled={isSaving || !previewUrl}
-              className="w-full px-4 py-3 rounded-xl bg-success text-white font-bold text-sm shadow-lg transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isSaving ? "Saving..." : "📸 Save to Photos"}
-            </button>
-
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                onClick={handleKeepInApp}
-                disabled={isSaving}
-                className="px-3 py-3 rounded-xl bg-blue-100 text-blue-700 font-bold text-xs transition active:scale-95 disabled:opacity-50"
-              >
-                📱 Keep in App
-              </button>
-              <button
-                onClick={handleLater}
-                disabled={isSaving}
-                className="px-3 py-3 rounded-xl bg-gray-100 text-gray-700 font-bold text-xs transition active:scale-95 disabled:opacity-50"
-              >
-                ⏰ Later
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Proposal B: Kid-friendly permission dialog shown on-demand */}
+      {/* Kid-friendly permission dialog shown on-demand */}
       <FilePermissionDialog
         open={showPermissionDialog}
         onAccept={handlePermissionAccepted}

@@ -12,6 +12,7 @@
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { App } from '@capacitor/app';
 import { debugLog, debugError } from './debug';
+import { hasFeatureConsent, grantFeatureConsent } from './parental-consent';
 
 /**
  * Request write permission for saving postcard to device storage
@@ -27,14 +28,15 @@ export async function requestStoragePermission(): Promise<boolean> {
 
     const platform = capacitor.getPlatform?.();
 
-    // Check localStorage consent first
-    // Note: We check if user previously accepted, but don't require it
-    // On first save, this will be false and we fall through to request native permission
-    const hasConsent = localStorage.getItem(
-      "india-explorer:file-permission-consent:v1"
-    ) === "1";
+    // Check parental-consent system for file permission
+    const hasConsent = hasFeatureConsent('file');
     
     debugLog("permissions", "Requesting write permission for postcard save", { hasConsent });
+
+    if (!hasConsent) {
+      debugLog("permissions", "File permission not granted - user must accept dialog first");
+      return false;
+    }
 
     // Request permissions at runtime
     if (platform === 'android') {
@@ -47,8 +49,8 @@ export async function requestStoragePermission(): Promise<boolean> {
         
         debugLog("permissions", "Permission request result", result);
         
-        // Mark consent in localStorage so we don't ask again for this session
-        localStorage.setItem("india-explorer:file-permission-consent:v1", "1");
+        // Grant consent in parental system (in case first time)
+        grantFeatureConsent('file');
         return true;
       } catch (err) {
         debugError("permissions", "Permission request failed - user may have declined", err);

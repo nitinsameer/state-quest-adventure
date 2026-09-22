@@ -24,6 +24,7 @@ import { appLogger } from "@/lib/logger";
 import { firebaseEvents } from "@/lib/firebase-events";
 import { useProgress, isHydrated } from "@/lib/progress";
 import { pauseTts, resumeTts } from "@/lib/tts";
+import { ensureAudioConsentGranted } from "@/lib/parental-consent";
 import { Capacitor } from "@capacitor/core";
 
 // React Error Boundary for catching runtime errors
@@ -233,15 +234,21 @@ function RootComponent() {
       timestamp: new Date().toISOString(),
     });
 
-    // If not set, ensure default is initialized
+    // If not set, ensure default is initialized to ON (sound enabled by default)
     if (soundState === null) {
-      localStorage.setItem(SOUND_KEY, "0");
-      console.log("[App Init] ⚠️ Sound toggle not found in localStorage, initializing to OFF (default)");
+      localStorage.setItem(SOUND_KEY, "1");
+      console.log("[App Init] ✅ Sound toggle not found in localStorage, initializing to ON (enabled)");
     }
   }, []);
 
   // Initialize audio consent on app startup
-  
+  // Note: Don't check isHydrated() - audio consent is independent of progress hydration
+  // Audio consent lives in parental-consent system, progress hydration shouldn't block it
+  useEffect(() => {
+    console.log("[AUDIO INIT] Ensuring audio consent is granted on app startup");
+    ensureAudioConsentGranted();
+  }, []);
+
   // COPPA-compliant: Log Firebase events after user is onboarded
   // Permissions are now deferred (requested when features are used)
   useEffect(() => {
@@ -293,7 +300,7 @@ function RootComponent() {
   const getActiveTab = (): "home" | "map" | "passport" | "badges" | "profile" => {
     const path = location.pathname;
     if (path.startsWith("/journey")) return "map";
-    if (path.startsWith("/passport")) return "passport";
+    if (path.startsWith("/explorer")) return "explorer";
     if (path.startsWith("/badges")) return "badges";
     if (path.startsWith("/me")) return "profile";
     return "home"; // Default for /home or root

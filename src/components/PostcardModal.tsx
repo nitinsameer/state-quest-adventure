@@ -4,6 +4,7 @@ import { STATE_ART, TONE_GRADIENT, TONE_HEX } from "@/lib/state-art";
 import { type PostcardData } from "@/lib/progress";
 import { fxTap } from "@/lib/fx";
 import { requestStoragePermission, saveFileToDownloads } from "@/lib/permissions";
+import { hasFeatureConsent, grantFeatureConsent } from "@/lib/parental-consent";
 import { useCelebration } from "@/hooks/useCelebration";
 import { useToast } from "@/hooks/useToast";
 
@@ -152,28 +153,37 @@ export function PostcardModal({
       fxTap();
       const blob = await generatePostcardBlob(postcard);
       if (!blob) {
-        toast.error("Couldn't generate postcard", {
+        toast.error("Couldn't generate stamp", {
           subtitle: "Please try again",
         });
         setIsSaving(false);
         return;
       }
 
-      const hasPermission = await requestStoragePermission();
-      if (hasPermission) {
-        await saveFileToDownloads(blob, `${postcard.state}-explorer-passport.png`);
-        celebration.success("Passport saved!", {
-          subtitle: "Check your photos",
-          confetti: true,
-          duration: 3500,
-        });
-      } else {
-        toast.error("Permission denied", {
-          subtitle: "Enable storage in settings",
-        });
+      // Check if permission was already granted
+      if (!hasFeatureConsent("file")) {
+        // Request permission if not yet granted
+        const hasPermission = await requestStoragePermission();
+        if (!hasPermission) {
+          toast.error("Permission denied", {
+            subtitle: "Enable storage in settings",
+          });
+          setIsSaving(false);
+          return;
+        }
+        // Mark consent as granted
+        grantFeatureConsent("file");
       }
+
+      // Permission already granted or just granted - save the file
+      await saveFileToDownloads(blob, `${postcard.state}-explorer-stamp.png`);
+      celebration.success("✨ Stamp saved!", {
+        subtitle: "Check your photos",
+        confetti: true,
+        duration: 3500,
+      });
     } catch (error) {
-      toast.error("Couldn't save passport", {
+      toast.error("Couldn't save stamp", {
         subtitle: "Please try again later",
       });
       console.error("Share failed:", error);
@@ -257,7 +267,7 @@ export function PostcardModal({
 
         {/* Info Text */}
         <p className="text-xs text-center text-muted-foreground">
-          Share your achievement or keep it in your explorer passport! 🎉
+          Share your achievement or keep it in your explorer stamps! 🎉
         </p>
 
         {/* Close Button */}

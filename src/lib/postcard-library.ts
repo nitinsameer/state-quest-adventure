@@ -58,6 +58,12 @@ export type LibraryPostcard = {
     reason?: string; // e.g., "user_toggle", "privacy_update"
   }>;
 
+  // Export tracking (file save metadata)
+  isExportedToDevice?: boolean; // Whether postcard has been saved to photos
+  exportedAt?: string; // ISO timestamp when exported
+  exportedFilename?: string; // Filename it was saved as
+  exportCount: number; // How many times exported (for tracking multiple saves)
+
   // Optional location data for future use
   location?: PostcardLocation;
 
@@ -103,6 +109,8 @@ export function createLibraryPostcard(
         reason: "initial_creation",
       },
     ],
+    isExportedToDevice: false,
+    exportCount: 0,
     displayOrder: 0,
     tags: [],
   };
@@ -143,6 +151,24 @@ export function updatePostcardConsent(
         reason,
       },
     ],
+  };
+}
+
+/**
+ * Helper: Mark a postcard as exported to device
+ */
+export function markPostcardAsExported(
+  postcard: LibraryPostcard,
+  filename: string
+): LibraryPostcard {
+  const now = new Date().toISOString();
+  
+  return {
+    ...postcard,
+    isExportedToDevice: true,
+    exportedAt: now,
+    exportedFilename: filename,
+    exportCount: (postcard.exportCount || 0) + 1,
   };
 }
 

@@ -8,7 +8,7 @@ import { PostcardModal } from "@/components/PostcardModal";
 import { fxTap } from "@/lib/fx";
 
 /**
- * Passport for Ages 10-12 (Mighty Tree)
+ * My Stamps for Ages 10-12 (Mighty Tree)
  * Full data: stats, goals, milestones, activity tracking
  */
 export function PassportMightyTree() {
@@ -52,7 +52,7 @@ export function PassportMightyTree() {
 
       {/* Header */}
       <div className="px-5 pt-4 pb-3 bg-gradient-to-r from-blue-400 to-purple-400 text-white rounded-b-3xl shadow-lg">
-        <div className="text-2xl font-extrabold">My Passport 📖</div>
+        <div className="text-2xl font-extrabold">My Stamps 🎫</div>
       </div>
 
       {/* Profile & Detailed Stats */}

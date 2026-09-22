@@ -45,7 +45,7 @@ function Unlock() {
     <StateUnlockScreen
       key={slug}
       stateName={nextName}
-      onContinue={() => navigate({ to: "/passport" })}
+      onContinue={() => navigate({ to: "/explorer" })}
     />
   );
 }

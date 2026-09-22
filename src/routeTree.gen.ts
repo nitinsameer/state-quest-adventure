@@ -14,14 +14,14 @@ import { Route as AchievementsRouteImport } from './routes/achievements'
 import { Route as AudioTestRouteImport } from './routes/audio-test'
 import { Route as BadgesRouteImport } from './routes/badges'
 import { Route as CreateRouteImport } from './routes/create'
+import { Route as ExplorerRouteImport } from './routes/explorer'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as JourneyRouteImport } from './routes/journey'
 import { Route as MeRouteImport } from './routes/me'
 import { Route as ParentRouteImport } from './routes/parent'
-import { Route as PassportRouteImport } from './routes/passport'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as WelcomeRouteImport } from './routes/welcome'
-import { Route as PassportPostcardLibraryRouteImport } from './routes/passport.postcard-library'
+import { Route as ExplorerPostcardLibraryRouteImport } from './routes/explorer.postcard-library'
 import { Route as StateSlugIndexRouteImport } from './routes/state.$slug.index'
 import { Route as StateSlugCardsRouteImport } from './routes/state.$slug.cards'
 import { Route as StateSlugCompleteRouteImport } from './routes/state.$slug.complete'
@@ -56,6 +56,11 @@ const CreateRoute = CreateRouteImport.update({
   path: '/create',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ExplorerRoute = ExplorerRouteImport.update({
+  id: '/explorer',
+  path: '/explorer',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HomeRoute = HomeRouteImport.update({
   id: '/home',
   path: '/home',
@@ -76,11 +81,6 @@ const ParentRoute = ParentRouteImport.update({
   path: '/parent',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PassportRoute = PassportRouteImport.update({
-  id: '/passport',
-  path: '/passport',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
@@ -91,10 +91,10 @@ const WelcomeRoute = WelcomeRouteImport.update({
   path: '/welcome',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PassportPostcardLibraryRoute = PassportPostcardLibraryRouteImport.update({
+const ExplorerPostcardLibraryRoute = ExplorerPostcardLibraryRouteImport.update({
   id: '/postcard-library',
   path: '/postcard-library',
-  getParentRoute: () => PassportRoute,
+  getParentRoute: () => ExplorerRoute,
 } as any)
 const StateSlugIndexRoute = StateSlugIndexRouteImport.update({
   id: '/state/$slug/',
@@ -143,14 +143,14 @@ export interface FileRoutesByFullPath {
   '/audio-test': typeof AudioTestRoute
   '/badges': typeof BadgesRoute
   '/create': typeof CreateRoute
+  '/explorer': typeof ExplorerRouteWithChildren
   '/home': typeof HomeRoute
   '/journey': typeof JourneyRoute
   '/me': typeof MeRoute
   '/parent': typeof ParentRoute
-  '/passport': typeof PassportRouteWithChildren
   '/privacy': typeof PrivacyRoute
   '/welcome': typeof WelcomeRoute
-  '/passport/postcard-library': typeof PassportPostcardLibraryRoute
+  '/explorer/postcard-library': typeof ExplorerPostcardLibraryRoute
   '/state/$slug/cards': typeof StateSlugCardsRoute
   '/state/$slug/complete': typeof StateSlugCompleteRoute
   '/state/$slug/learn': typeof StateSlugLearnRoute
@@ -166,14 +166,14 @@ export interface FileRoutesByTo {
   '/audio-test': typeof AudioTestRoute
   '/badges': typeof BadgesRoute
   '/create': typeof CreateRoute
+  '/explorer': typeof ExplorerRouteWithChildren
   '/home': typeof HomeRoute
   '/journey': typeof JourneyRoute
   '/me': typeof MeRoute
   '/parent': typeof ParentRoute
-  '/passport': typeof PassportRouteWithChildren
   '/privacy': typeof PrivacyRoute
   '/welcome': typeof WelcomeRoute
-  '/passport/postcard-library': typeof PassportPostcardLibraryRoute
+  '/explorer/postcard-library': typeof ExplorerPostcardLibraryRoute
   '/state/$slug/cards': typeof StateSlugCardsRoute
   '/state/$slug/complete': typeof StateSlugCompleteRoute
   '/state/$slug/learn': typeof StateSlugLearnRoute
@@ -190,14 +190,14 @@ export interface FileRoutesById {
   '/audio-test': typeof AudioTestRoute
   '/badges': typeof BadgesRoute
   '/create': typeof CreateRoute
+  '/explorer': typeof ExplorerRouteWithChildren
   '/home': typeof HomeRoute
   '/journey': typeof JourneyRoute
   '/me': typeof MeRoute
   '/parent': typeof ParentRoute
-  '/passport': typeof PassportRouteWithChildren
   '/privacy': typeof PrivacyRoute
   '/welcome': typeof WelcomeRoute
-  '/passport/postcard-library': typeof PassportPostcardLibraryRoute
+  '/explorer/postcard-library': typeof ExplorerPostcardLibraryRoute
   '/state/$slug/cards': typeof StateSlugCardsRoute
   '/state/$slug/complete': typeof StateSlugCompleteRoute
   '/state/$slug/learn': typeof StateSlugLearnRoute
@@ -215,14 +215,14 @@ export interface FileRouteTypes {
     | '/audio-test'
     | '/badges'
     | '/create'
+    | '/explorer'
     | '/home'
     | '/journey'
     | '/me'
     | '/parent'
-    | '/passport'
     | '/privacy'
     | '/welcome'
-    | '/passport/postcard-library'
+    | '/explorer/postcard-library'
     | '/state/$slug/cards'
     | '/state/$slug/complete'
     | '/state/$slug/learn'
@@ -238,14 +238,14 @@ export interface FileRouteTypes {
     | '/audio-test'
     | '/badges'
     | '/create'
+    | '/explorer'
     | '/home'
     | '/journey'
     | '/me'
     | '/parent'
-    | '/passport'
     | '/privacy'
     | '/welcome'
-    | '/passport/postcard-library'
+    | '/explorer/postcard-library'
     | '/state/$slug/cards'
     | '/state/$slug/complete'
     | '/state/$slug/learn'
@@ -261,14 +261,14 @@ export interface FileRouteTypes {
     | '/audio-test'
     | '/badges'
     | '/create'
+    | '/explorer'
     | '/home'
     | '/journey'
     | '/me'
     | '/parent'
-    | '/passport'
     | '/privacy'
     | '/welcome'
-    | '/passport/postcard-library'
+    | '/explorer/postcard-library'
     | '/state/$slug/cards'
     | '/state/$slug/complete'
     | '/state/$slug/learn'
@@ -285,11 +285,11 @@ export interface RootRouteChildren {
   AudioTestRoute: typeof AudioTestRoute
   BadgesRoute: typeof BadgesRoute
   CreateRoute: typeof CreateRoute
+  ExplorerRoute: typeof ExplorerRouteWithChildren
   HomeRoute: typeof HomeRoute
   JourneyRoute: typeof JourneyRoute
   MeRoute: typeof MeRoute
   ParentRoute: typeof ParentRoute
-  PassportRoute: typeof PassportRouteWithChildren
   PrivacyRoute: typeof PrivacyRoute
   WelcomeRoute: typeof WelcomeRoute
   StateSlugCardsRoute: typeof StateSlugCardsRoute
@@ -339,6 +339,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CreateRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/explorer': {
+      id: '/explorer'
+      path: '/explorer'
+      fullPath: '/explorer'
+      preLoaderRoute: typeof ExplorerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/home': {
       id: '/home'
       path: '/home'
@@ -367,13 +374,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ParentRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/passport': {
-      id: '/passport'
-      path: '/passport'
-      fullPath: '/passport'
-      preLoaderRoute: typeof PassportRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/privacy': {
       id: '/privacy'
       path: '/privacy'
@@ -388,12 +388,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WelcomeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/passport/postcard-library': {
-      id: '/passport/postcard-library'
+    '/explorer/postcard-library': {
+      id: '/explorer/postcard-library'
       path: '/postcard-library'
-      fullPath: '/passport/postcard-library'
-      preLoaderRoute: typeof PassportPostcardLibraryRouteImport
-      parentRoute: typeof PassportRoute
+      fullPath: '/explorer/postcard-library'
+      preLoaderRoute: typeof ExplorerPostcardLibraryRouteImport
+      parentRoute: typeof ExplorerRoute
     }
     '/state/$slug/': {
       id: '/state/$slug/'
@@ -454,16 +454,16 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface PassportRouteChildren {
-  PassportPostcardLibraryRoute: typeof PassportPostcardLibraryRoute
+interface ExplorerRouteChildren {
+  ExplorerPostcardLibraryRoute: typeof ExplorerPostcardLibraryRoute
 }
 
-const PassportRouteChildren: PassportRouteChildren = {
-  PassportPostcardLibraryRoute: PassportPostcardLibraryRoute,
+const ExplorerRouteChildren: ExplorerRouteChildren = {
+  ExplorerPostcardLibraryRoute: ExplorerPostcardLibraryRoute,
 }
 
-const PassportRouteWithChildren = PassportRoute._addFileChildren(
-  PassportRouteChildren,
+const ExplorerRouteWithChildren = ExplorerRoute._addFileChildren(
+  ExplorerRouteChildren,
 )
 
 const rootRouteChildren: RootRouteChildren = {
@@ -472,11 +472,11 @@ const rootRouteChildren: RootRouteChildren = {
   AudioTestRoute: AudioTestRoute,
   BadgesRoute: BadgesRoute,
   CreateRoute: CreateRoute,
+  ExplorerRoute: ExplorerRouteWithChildren,
   HomeRoute: HomeRoute,
   JourneyRoute: JourneyRoute,
   MeRoute: MeRoute,
   ParentRoute: ParentRoute,
-  PassportRoute: PassportRouteWithChildren,
   PrivacyRoute: PrivacyRoute,
   WelcomeRoute: WelcomeRoute,
   StateSlugCardsRoute: StateSlugCardsRoute,

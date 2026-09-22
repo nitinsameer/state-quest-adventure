@@ -9,7 +9,7 @@ import { fxTap, fxConfetti } from "@/lib/fx";
 import mascot from "@/assets/mascot.png";
 
 /**
- * Passport for Ages 3-5 (Sprout)
+ * My Stamps for Ages 3-5 (Sprout)
  * Simplified, emoji-only, 4-6 states max per screen, visual progress bar
  */
 export function PassportSprout() {
@@ -57,7 +57,7 @@ export function PassportSprout() {
 
       {/* Header */}
       <div className="px-5 pt-4 pb-3 bg-gradient-to-r from-blue-400 to-purple-400 text-white rounded-b-3xl shadow-lg">
-        <div className="text-2xl font-extrabold">My Passport 📖</div>
+        <div className="text-2xl font-extrabold">My Stamps 🎫</div>
       </div>
 
       {/* Profile Card */}

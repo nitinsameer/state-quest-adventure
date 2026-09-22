@@ -40,10 +40,16 @@ function Complete() {
   const { slug } = Route.useParams();
   const { name } = Route.useLoaderData();
   const navigate = useNavigate();
-  const goNext = () => navigate({ to: "/state/$slug/postcard", params: { slug } });
+  
+  const goToPostcard = () => navigate({ to: "/state/$slug/postcard", params: { slug } });
+  const goToUnlock = () => navigate({ to: "/state/$slug/unlock", params: { slug } });
 
-  // Removed auto-advance timer - kids now have agency to continue when ready
-  // onContinue button is triggered manually by child/parent
-
-  return <StateCompletedScreen key={slug} stateName={name} onContinue={goNext} />;
+  return (
+    <StateCompletedScreen 
+      key={slug} 
+      stateName={name} 
+      onCreatePostcard={goToPostcard}
+      onContinue={goToUnlock}
+    />
+  );
 }

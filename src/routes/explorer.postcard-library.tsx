@@ -1,12 +1,12 @@
 /**
  * Postcard Library Route - Proposal C
- * Accessible from passport/postcard-library or as tab in Passport
+ * Accessible from explorer/postcard-library or as tab in My Stamps
  */
 
 import { createFileRoute } from "@tanstack/react-router";
 import { PostcardLibraryScreen } from "@/components/PostcardLibraryScreen";
 
-export const Route = createFileRoute("/passport/postcard-library")({
+export const Route = createFileRoute("/explorer/postcard-library")({
   head: () => ({
     meta: [
       { title: "📸 Postcard Library — India Explorer" },

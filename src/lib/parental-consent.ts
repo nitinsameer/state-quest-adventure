@@ -15,7 +15,7 @@
  */
 
 export interface ConsentRecord {
-  feature: 'audio' | 'file'
+  feature: 'audio' | 'file' | 'analytics'
   granted: boolean
   timestamp: number
   version: number
@@ -26,59 +26,68 @@ const CONSENT_VERSION = 1
 const consentListeners = new Set<(feature: 'audio' | 'file') => void>()
 
 /**
- * Request consent for a feature (audio or file access)
+ * Request consent for a feature (audio, file, or analytics)
  * Returns true if already granted, false if needs to be requested
  */
-export function hasFeatureConsent(feature: 'audio' | 'file'): boolean {
-  console.log("[AUDIO DEBUG] hasFeatureConsent() called for:", feature);
+export function hasFeatureConsent(feature: 'audio' | 'file' | 'analytics'): boolean {
+  console.log(`\n[CONSENT] ===== hasFeatureConsent('${feature}') CALLED =====`);
   
   try {
     const stored = localStorage.getItem(CONSENT_STORAGE_KEY);
-    console.log("[AUDIO DEBUG] localStorage key retrieved:", { 
+    console.log("[CONSENT] localStorage.getItem result:", { 
       key: CONSENT_STORAGE_KEY, 
-      stored: stored ? `exists (${stored.length} chars)` : "NOT FOUND",
+      value: stored ? `"${stored}"` : "null",
+      length: stored?.length || 0,
     });
     
     if (!stored) {
-      console.log("[AUDIO DEBUG] ✗ No consent records in localStorage");
+      console.log("[CONSENT] ❌ RESULT: NO CONSENT (localStorage empty)");
       return false;
     }
 
-    const records: ConsentRecord[] = JSON.parse(stored);
-    console.log("[AUDIO DEBUG] Parsed consent records:", {
-      totalRecords: records.length,
-      recordFeatures: records.map(r => ({ feature: r.feature, granted: r.granted })),
+    let records: ConsentRecord[];
+    try {
+      records = JSON.parse(stored);
+      console.log("[CONSENT] Parsed JSON:", JSON.stringify(records, null, 2));
+    } catch (parseErr) {
+      console.log("[CONSENT] ❌ JSON parse error:", parseErr);
+      return false;
+    }
+    
+    console.log("[CONSENT] Total records found:", records.length);
+    records.forEach((r, i) => {
+      console.log(`[CONSENT]   Record ${i}:`, { feature: r.feature, granted: r.granted, timestamp: r.timestamp });
     });
     
     const record = records.find(r => r.feature === feature);
-    console.log("[AUDIO DEBUG] Looking for feature:", { 
-      feature, 
-      found: !!record, 
-      granted: record?.granted,
-    });
-
+    
     if (!record) {
-      console.log("[AUDIO DEBUG] ✗ No record found for feature:", feature);
+      console.log(`[CONSENT] ❌ RESULT: NO CONSENT (no record for feature '${feature}')`);
       return false;
     }
 
+    console.log("[CONSENT] Found record:", { feature: record.feature, granted: record.granted, timestamp: record.timestamp });
+
     // Validate consent is recent (within 1 year)
     const oneYearMs = 365 * 24 * 60 * 60 * 1000;
-    const isExpired = Date.now() - record.timestamp > oneYearMs;
+    const ageMs = Date.now() - record.timestamp;
+    const isExpired = ageMs > oneYearMs;
     
-    console.log("[AUDIO DEBUG] Consent expiry check:", {
-      timestamp: record.timestamp,
-      now: Date.now(),
-      ageMs: Date.now() - record.timestamp,
+    console.log("[CONSENT] Expiry check:", {
+      recordTimestamp: new Date(record.timestamp).toISOString(),
+      now: new Date(Date.now()).toISOString(),
+      ageMs,
+      ageHours: (ageMs / (1000 * 60 * 60)).toFixed(2),
+      oneYearMs,
       isExpired,
     });
 
     const result = record.granted && !isExpired;
-    console.log("[AUDIO DEBUG] ✓ hasFeatureConsent result:", result);
+    console.log(`[CONSENT] ✅ RESULT: ${result ? 'CONSENT GRANTED' : 'CONSENT DENIED'} (granted=${record.granted}, expired=${isExpired})`);
     
     return result;
   } catch (err) {
-    console.log("[AUDIO DEBUG] ✗ Exception in hasFeatureConsent:", err);
+    console.log("[CONSENT] ❌ EXCEPTION in hasFeatureConsent:", err);
     return false;
   }
 }
@@ -87,33 +96,47 @@ export function hasFeatureConsent(feature: 'audio' | 'file'): boolean {
  * Grant consent for a feature
  * Should only be called after explicit user acceptance
  */
-export function grantFeatureConsent(feature: 'audio' | 'file'): void {
-  console.log("[CONSENT] grantFeatureConsent() called for:", feature);
+export function grantFeatureConsent(feature: 'audio' | 'file' | 'analytics'): void {
+  console.log(`\n[CONSENT] ===== grantFeatureConsent('${feature}') CALLED =====`);
   try {
-    const stored = localStorage.getItem(CONSENT_STORAGE_KEY)
-    const records: ConsentRecord[] = stored ? JSON.parse(stored) : []
+    const stored = localStorage.getItem(CONSENT_STORAGE_KEY);
+    console.log("[CONSENT] Current localStorage content:", { value: stored ? `"${stored}"` : "null" });
+    
+    const records: ConsentRecord[] = stored ? JSON.parse(stored) : [];
+    console.log("[CONSENT] Parsed existing records:", JSON.stringify(records, null, 2));
 
     // Remove old record if exists
-    const filtered = records.filter(r => r.feature !== feature)
+    const filtered = records.filter(r => r.feature !== feature);
+    console.log(`[CONSENT] After filtering out old '${feature}' record:`, JSON.stringify(filtered, null, 2));
 
     // Add new consent record with timestamp
-    filtered.push({
+    const newRecord: ConsentRecord = {
       feature,
       granted: true,
       timestamp: Date.now(),
       version: CONSENT_VERSION,
-    })
-
-    localStorage.setItem(CONSENT_STORAGE_KEY, JSON.stringify(filtered))
-    console.log("[CONSENT] ✓ Consent granted and saved to localStorage:", { feature, records: filtered });
+    };
+    console.log("[CONSENT] New record to be added:", newRecord);
     
+    filtered.push(newRecord);
+    console.log("[CONSENT] Final records array:", JSON.stringify(filtered, null, 2));
+
+    const jsonToStore = JSON.stringify(filtered);
+    console.log("[CONSENT] JSON to store:", jsonToStore);
+    
+    localStorage.setItem(CONSENT_STORAGE_KEY, jsonToStore);
+    console.log("[CONSENT] ✅ Saved to localStorage");
+    
+    // Verify it was saved
+    const verify = localStorage.getItem(CONSENT_STORAGE_KEY);
+    console.log("[CONSENT] Verification - read back from localStorage:", verify === jsonToStore ? "✅ MATCHES" : "❌ MISMATCH");
+
     // Notify all listeners that consent changed
-    console.log("[CONSENT] Notifying listeners about consent change for:", feature);
-    notifyConsentListeners(feature)
-    console.log("[CONSENT] ✓ Listeners notified");
+    console.log(`[CONSENT] About to notify ${consentListeners.size} listeners...`);
+    notifyConsentListeners(feature);
+    console.log("[CONSENT] ✅ Listeners notified");
   } catch (err) {
-    // Storage error - fail silently but user won't have consent
-    console.log("[CONSENT] ✗ Error granting consent:", err);
+    console.log("[CONSENT] ❌ ERROR in grantFeatureConsent:", err);
   }
 }
 
@@ -121,7 +144,7 @@ export function grantFeatureConsent(feature: 'audio' | 'file'): void {
  * Revoke consent for a feature
  * Can be called from parental controls or settings
  */
-export function revokeFeatureConsent(feature: 'audio' | 'file'): void {
+export function revokeFeatureConsent(feature: 'audio' | 'file' | 'analytics'): void {
   try {
     const stored = localStorage.getItem(CONSENT_STORAGE_KEY)
     if (!stored) return
@@ -142,8 +165,8 @@ export function revokeFeatureConsent(feature: 'audio' | 'file'): void {
  * Subscribe to consent changes for a feature
  * Returns unsubscribe function
  */
-export function subscribeConsentChanges(feature: 'audio' | 'file', listener: () => void): () => void {
-  const wrappedListener = (changedFeature: 'audio' | 'file') => {
+export function subscribeConsentChanges(feature: 'audio' | 'file' | 'analytics', listener: () => void): () => void {
+  const wrappedListener = (changedFeature: 'audio' | 'file' | 'analytics') => {
     if (changedFeature === feature) {
       listener()
     }
@@ -156,7 +179,7 @@ export function subscribeConsentChanges(feature: 'audio' | 'file', listener: () 
 /**
  * Notify all listeners of consent change
  */
-function notifyConsentListeners(feature: 'audio' | 'file'): void {
+function notifyConsentListeners(feature: 'audio' | 'file' | 'analytics'): void {
   for (const listener of consentListeners) {
     listener(feature)
   }
@@ -195,4 +218,14 @@ export function clearAllConsents(): void {
  * Previous 6 fixes attempted to solve wrong problems
  * Root cause: hasFeatureConsent('audio') was returning false, blocking all TTS calls
  */
-
+export function ensureAudioConsentGranted(): void {
+  if (typeof window === 'undefined') return; // SSR safety
+  
+  if (!hasFeatureConsent('audio')) {
+    console.log("[AUDIO SETUP] Audio consent not granted, granting automatically...");
+    grantFeatureConsent('audio');
+    console.log("[AUDIO SETUP] ✅ Audio consent granted - TTS now enabled");
+  } else {
+    console.log("[AUDIO SETUP] ✅ Audio consent already granted");
+  }
+}

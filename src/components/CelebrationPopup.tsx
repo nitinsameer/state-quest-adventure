@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useCelebrationStore, type CelebrationConfig } from "@/store/celebrationStore";
+import { StandardModal } from "@/components/StandardModal";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
-import "@/styles/celebrations.css";
 
 /**
  * Base Celebration Modal Component
- * Renders the current celebration popup from the store
+ * Renders the current celebration popup from the store using StandardModal
  */
 function CelebrationModal({ config }: { config: CelebrationConfig }) {
   const [isExiting, setIsExiting] = useState(false);
@@ -32,55 +32,35 @@ function CelebrationModal({ config }: { config: CelebrationConfig }) {
     handleDismiss();
   };
 
+  // Map config to StandardModal props
+  const buttons = config.action
+    ? [
+        {
+          label: config.action.label,
+          onClick: handleActionClick,
+          variant: "primary" as const,
+        },
+      ]
+    : [];
+
+  const footer = !config.action ? "Tap to continue" : undefined;
+
   return (
     <>
-      {/* Backdrop */}
-      <div
-        className={`celebration-backdrop ${isExiting ? "celebration-backdrop-exit" : "celebration-backdrop-enter"}`}
-        onClick={handleDismiss}
-        role="presentation"
+      {/* Use StandardModal for consistent styling */}
+      <StandardModal
+        open={!isExiting}
+        onClose={handleDismiss}
+        header={{
+          icon: config.icon,
+          title: config.title,
+          subtitle: config.subtitle,
+        }}
+        buttons={buttons}
+        footer={footer}
+        headerGradient={["from-orange-400", "to-yellow-400"]}
+        maxWidth="max-w-sm"
       />
-
-      {/* Modal */}
-      <div
-        className={`celebration-modal-container celebration-modal celebration-${config.type} ${
-          isExiting ? "celebration-modal-exit" : "celebration-modal-enter"
-        }`}
-        role="alertdialog"
-        aria-label={config.title}
-      >
-        <div
-          className={`celebration-${config.type} bg-white rounded-3xl shadow-2xl p-8 w-[320px] text-center space-y-4`}
-          onClick={(e) => e.stopPropagation()}
-        >
-          {/* Icon */}
-          <div className="celebration-icon" role="img" aria-label="celebration">
-            {config.icon}
-          </div>
-
-          {/* Title */}
-          <h2 className="celebration-title">{config.title}</h2>
-
-          {/* Subtitle */}
-          {config.subtitle && <p className="celebration-subtitle">{config.subtitle}</p>}
-
-          {/* Action Button */}
-          {config.action && (
-            <button
-              onClick={handleActionClick}
-              className="celebration-action-button w-full"
-              type="button"
-            >
-              {config.action.label}
-            </button>
-          )}
-
-          {/* Auto-dismiss hint if no action button */}
-          {!config.action && (
-            <p className="celebration-subtitle text-sm pt-2">Tap to continue</p>
-          )}
-        </div>
-      </div>
 
       {/* Confetti overlay */}
       {config.confetti && confettiTrigger > 0 && (

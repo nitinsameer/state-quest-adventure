@@ -18,7 +18,11 @@ export interface CardNarrationPlayerProps {
 export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }: CardNarrationPlayerProps) {
   const [audioNarrationEnabled, setAudioNarrationEnabled] = useState(() => {
     const hasConsent = hasFeatureConsent('audio');
-    console.log("[CardNarrationPlayer] Initial render - checking consent:", { hasConsent });
+    console.log("[CardNarrationPlayer] ===== INITIAL RENDER =====");
+    console.log("[CardNarrationPlayer] Checking audio consent:", { hasConsent });
+    console.log("[CardNarrationPlayer] narrationId:", narrationId);
+    console.log("[CardNarrationPlayer] text length:", text.length);
+    console.log("[CardNarrationPlayer] title:", title);
     return hasConsent;
   });
   const [showPermissionPrompt, setShowPermissionPrompt] = useState(false);
@@ -26,42 +30,54 @@ export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }
   const isCurrentPlaying = ttsState.narrationId === narrationId && ttsState.isPlaying;
   const [hasSupport] = useState(isTtsAvailable());
 
+  console.log("[CardNarrationPlayer] STATE UPDATE:", { 
+    audioNarrationEnabled, 
+    showPermissionPrompt, 
+    isCurrentPlaying,
+    hasSupport,
+    narrationId,
+  });
+
   // Subscribe to consent changes and re-render when consent status changes
   useEffect(() => {
+    console.log("[CardNarrationPlayer] ===== useEffect MOUNTED =====");
     const currentConsent = hasFeatureConsent('audio');
-    console.log("[CardNarrationPlayer] useEffect - checking consent:", { currentConsent });
+    console.log("[CardNarrationPlayer] useEffect - current consent:", { currentConsent });
     setAudioNarrationEnabled(currentConsent);
     
     const unsubscribe = subscribeConsentChanges('audio', () => {
-      console.log("[CardNarrationPlayer] Consent changed via listener - updating state");
-      setAudioNarrationEnabled(hasFeatureConsent('audio'));
+      const consentAfterChange = hasFeatureConsent('audio');
+      console.log("[CardNarrationPlayer] ⚡ Consent changed via listener - NEW VALUE:", { consentAfterChange });
+      setAudioNarrationEnabled(consentAfterChange);
     });
 
-    return unsubscribe;
+    return () => {
+      console.log("[CardNarrationPlayer] useEffect UNMOUNTED - unsubscribing");
+      unsubscribe();
+    };
   }, []);
 
   const handlePlayClick = () => {
-    console.log("[AUDIO DEBUG] Play button clicked", { narrationId, title, audioNarrationEnabled });
+    console.log("\n[CardNarrationPlayer] ===== PLAY BUTTON CLICKED =====");
+    console.log("[CardNarrationPlayer] narrationId:", narrationId);
+    console.log("[CardNarrationPlayer] title:", title);
+    console.log("[CardNarrationPlayer] audioNarrationEnabled:", audioNarrationEnabled);
+    console.log("[CardNarrationPlayer] isCurrentPlaying:", isCurrentPlaying);
+    console.log("[CardNarrationPlayer] hasSupport:", hasSupport);
+    console.log("[CardNarrationPlayer] showPermissionPrompt:", showPermissionPrompt);
     
     if (!audioNarrationEnabled) {
-      // Show permission prompt instead of disabling button
+      console.log("[CardNarrationPlayer] ❌ BLOCKED: Audio narration not enabled - showing permission prompt");
       setShowPermissionPrompt(true);
       return;
     }
     
     if (isCurrentPlaying) {
-      console.log("[AUDIO DEBUG] ⏸ Stopping TTS", { narrationId });
+      console.log("[CardNarrationPlayer] ⏸ STOPPING TTS", { narrationId });
       stopTts();
     } else {
-      console.log("[AUDIO DEBUG] ▶️ Starting TTS playback", { 
-        narrationId, 
-        titleLength: title.length,
-        textLength: text.length,
-        audioNarrationEnabled,
-        hasSupport,
-        isCurrentPlaying,
-      });
-      console.log("[AUDIO DEBUG] Text:", text.substring(0, 100) + (text.length > 100 ? "..." : ""));
+      console.log("[CardNarrationPlayer] ▶️ STARTING TTS PLAYBACK");
+      console.log("[CardNarrationPlayer] Text preview:", text.substring(0, 100) + (text.length > 100 ? "..." : ""));
       playTts(narrationId, text, {
         speed: 0.85,
         pitch: 1.05,
@@ -70,15 +86,27 @@ export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }
   };
 
   const handleEnableAudio = () => {
-    console.log("[AUDIO DEBUG] User enabling audio from TTS prompt");
+    console.log("\n[CardNarrationPlayer] ===== ENABLE AUDIO BUTTON CLICKED =====");
+    console.log("[CardNarrationPlayer] About to grantFeatureConsent('audio')");
     grantFeatureConsent('audio');
+    console.log("[CardNarrationPlayer] ✅ Feature consent granted");
+    
+    const consentAfterGrant = hasFeatureConsent('audio');
+    console.log("[CardNarrationPlayer] Verifying consent after grant:", { consentAfterGrant });
+    
     setAudioNarrationEnabled(true);
+    console.log("[CardNarrationPlayer] State updated - audioNarrationEnabled set to true");
+    
     setShowPermissionPrompt(false);
+    console.log("[CardNarrationPlayer] Permission prompt closed");
+    
     // Auto-play the narration immediately after enabling
+    console.log("[CardNarrationPlayer] Auto-playing narration");
     playTts(narrationId, text, {
       speed: 0.85,
       pitch: 1.05,
     });
+    console.log("[CardNarrationPlayer] playTts() called");
   };
 
   if (!hasSupport) {
