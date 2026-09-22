@@ -3,6 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useProgress, type PostcardData } from "@/lib/progress";
 import { getProgressPercentage, getMilestones, getXpToNextLevel } from "@/lib/passport-helpers";
 import { INDIA_STATES } from "@/lib/states";
+import { generatePassportNumber } from "@/lib/passport-number";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { PostcardModal } from "@/components/PostcardModal";
 import { fxTap } from "@/lib/fx";
@@ -63,7 +64,7 @@ export function PassportMightyTree() {
             <div className="text-4xl">{progress.avatar}</div>
             <div className="flex-1">
               <div className="text-lg font-extrabold">{progress.name}</div>
-              <div className="text-xs opacity-75">Passport No: IN-2026-{String(Math.random() * 10000).padStart(4, "0")}</div>
+              <div className="text-xs opacity-75">Passport No: {generatePassportNumber(progress.avatar, progress.name)}</div>
             </div>
           </div>
           <div className="space-y-1 text-sm opacity-90 mt-3">

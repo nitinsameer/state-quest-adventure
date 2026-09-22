@@ -21,6 +21,7 @@ import { PassportSeedling } from "@/components/PassportSeedling";
 import { AudioSettingRow } from "@/components/AudioSettingToggle";
 import { AudioPermissionDialog } from "@/components/AudioPermissionDialog";
 import { FilePermissionDialog } from "@/components/FilePermissionDialog";
+import { ResetPINDialog } from "@/components/ResetPINDialog";
 import { 
   grantFeatureConsent, 
   revokeFeatureConsent, 
@@ -33,15 +34,19 @@ import { PostcardModal } from "@/components/PostcardModal";
 import { PostcardPreviewModal } from "@/components/PostcardPreviewModal";
 import { CardProgressBar } from "@/components/CardProgressBar";
 import { FirstSessionTutorial } from "@/components/FirstSessionTutorial";
+import { DailyGoalCard } from "@/components/DailyGoalCard";
+import { useToastStore } from "@/store/toastStore";
 import { AVATAR_CONFIG, type AvatarId } from "@/lib/avatar-config";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouter, Navigate } from "@tanstack/react-router";
 import { fxCorrect, fxWrong, fxConfetti, fxStamp, fxTap, useSoundOn, setSoundOn } from "@/lib/fx";
 import { useAndroidBackButton } from "@/hooks/useAndroidBackButton";
 import { setJourneyBackHandler } from "@/lib/journeyBackHandler";
+import { useCelebration } from "@/hooks/useCelebration";
 import { appLogger } from "@/lib/logger";
 import { firebaseEvents } from "@/lib/firebase-events";
 import { isBilingual, getAvailableLanguages } from "@/lib/bilingual-config";
+import { getNewlyUnlockedBadges, markBadgeAsSeen, getBadgeNotificationMessage } from "@/lib/badge-unlock-tracker";
 import {
   INDIA_STATES,
   TOTAL_STATES,
@@ -635,7 +640,7 @@ export function HomeDashboardScreen() {
       </div>
 
       {/* Stats with encouraging messages + count-up animation */}
-      <div className={`px-5 mt-4 relative z-10 grid grid-cols-3 gap-3 transition-all duration-700 ${animateStats ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}>
+      <div className={`px-5 mt-3 relative z-10 grid grid-cols-3 gap-2 transition-all duration-700 ${animateStats ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}>
         <StatCardEnhanced 
           tone="orange" 
           icon="🗺️" 
@@ -659,8 +664,11 @@ export function HomeDashboardScreen() {
         />
       </div>
 
+      {/* Daily Goal Card - Compact inline version */}
+      <DailyGoalCard />
+
       {/* Continue journey - with pulse on play button */}
-      <div className="px-5 mt-4 mb-4 flex-shrink-0">
+      <div className="px-5 mt-3 mb-3 flex-shrink-0">
         <div className="text-display font-bold text-sm text-muted-foreground">
           Continue your journey
         </div>
@@ -1248,31 +1256,39 @@ export function JourneyMapScreen() {
           </div>
           <div className="flex-1">
             <div className="text-display font-extrabold text-white">India Journey</div>
-            <div className="text-xs font-bold text-white/90">
-              {banners.length >= 2 
-                ? `${banners[0].done}/${banners[0].total} states · ${banners[1].done}/${banners[1].total} UTs`
-                : banners.length >= 1
-                ? `${banners[0].done}/${banners[0].total} states`
-                : 'Loading...'
-              }
+            <div className="text-xs font-bold text-white/90 flex items-center gap-2">
+              {p.streak > 0 && (
+                <span className="inline-flex items-center gap-0.5 px-2 py-1 bg-white/30 rounded-full">
+                  <span>🔥</span>
+                  <span className="font-extrabold">{p.streak}-day streak!</span>
+                </span>
+              )}
+              <span>
+                {banners.length >= 2 
+                  ? `${banners[0].done}/${banners[0].total} · ${banners[1].done}/${banners[1].total}`
+                  : banners.length >= 1
+                  ? `${banners[0].done}/${banners[0].total}`
+                  : 'Loading...'
+                }
+              </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5 bg-white/60 rounded-full px-3 py-1.5 backdrop-blur">
+          <div className="flex items-center gap-1.5 bg-white/60 rounded-full px-3 py-1.5 backdrop-blur flex-shrink-0">
             <span>🪙</span>
-            <span className="text-display font-extrabold text-saffron">{p.xp.toLocaleString()}</span>
+            <span className="text-display font-extrabold text-saffron text-sm">{p.xp.toLocaleString()}</span>
           </div>
         </div>
 
         {/* Progress Bar - inside header */}
         <div className="mt-4 animate-fade-in" style={{ animationDelay: "50ms" }}>
           <div className="flex items-center justify-between mb-1">
-            <span className="text-xs font-bold text-white/90">Journey Progress</span>
-            <span className="text-xs font-bold text-white">{Math.round((completedStates / totalStates) * 100)}%</span>
+            <span className="text-xs font-bold text-white/90">Your Journey Progress</span>
+            <span className="text-xs font-extrabold text-white bg-white/30 px-2 py-0.5 rounded-full">{Math.round((completedStates / totalStates) * 100)}%</span>
           </div>
-          <div className="h-2.5 bg-white/30 rounded-full overflow-hidden">
+          <div className="h-3 bg-white/30 rounded-full overflow-hidden shadow-inner">
             <div
-              className="h-full bg-gradient-to-r from-yellow-300 to-yellow-100 rounded-full transition-all duration-500"
+              className="h-full bg-gradient-to-r from-yellow-200 via-yellow-100 to-white rounded-full transition-all duration-500"
               style={{ width: `${(completedStates / totalStates) * 100}%` }}
             />
           </div>
@@ -1367,8 +1383,8 @@ export function JourneyMapScreen() {
                     }
                   }}
                   className={`flex flex-col items-center active:scale-95 transition-transform cursor-pointer z-20 relative ${
-                    isNext ? "animate-bounce-gentle" : ""
-                  } ${n.status === "locked" && !isNext ? "opacity-75 hover:opacity-100" : ""}`}
+                    isNext ? "animate-bounce-gentle scale-110" : ""
+                  } ${n.status === "locked" && !isNext ? "opacity-60 hover:opacity-80" : ""}`}
                 >
                   {/* State/UT Image with Status Badge */}
                   <div className="relative">
@@ -1376,11 +1392,11 @@ export function JourneyMapScreen() {
                       className={`h-20 w-20 rounded-full border-4 overflow-hidden shadow-lg transition flex items-center justify-center ${
                         isCompleted
                           ? n.isUT
-                            ? "gradient-explorer border-white"
-                            : "gradient-gold border-white"
+                            ? "gradient-explorer border-white shadow-[0_0_12px_rgba(59,130,246,0.4)]"
+                            : "gradient-gold border-white shadow-[0_0_12px_rgba(245,158,11,0.4)]"
                           : isNext
-                          ? "gradient-saffron border-white animate-pulse"
-                          : `border-white ${n.isUT ? "border-dashed" : ""} ${n.status === "locked" ? "bg-white/70 animate-shimmer" : "bg-white/70"}`
+                          ? "gradient-saffron border-white shadow-[0_0_20px_rgba(245,158,11,0.6)] animate-pulse"
+                          : `border-white/60 ${n.isUT ? "border-dashed" : ""} ${n.status === "locked" ? "bg-white/40 animate-shimmer" : "bg-white/50"}`
                       }`}
                     >
                       {STATE_ART[n.name] ? (
@@ -1388,7 +1404,7 @@ export function JourneyMapScreen() {
                           src={STATE_ART[n.name]}
                           alt={n.name}
                           className={`w-full h-full object-cover transition-opacity ${
-                            n.status === "locked" ? "opacity-60" : "opacity-100"
+                            n.status === "locked" ? "opacity-50 grayscale" : "opacity-100"
                           }`}
                         />
                       ) : (
@@ -1397,18 +1413,20 @@ export function JourneyMapScreen() {
                     </div>
                     
                     {/* Status Badge Overlay */}
-                    <div className="absolute -bottom-1 -right-1 h-7 w-7 rounded-full border-2 border-white flex items-center justify-center text-sm font-bold shadow-md transition"
+                    <div className={`absolute -bottom-1 -right-1 h-8 w-8 rounded-full border-2 border-white flex items-center justify-center text-sm font-bold shadow-md transition flex-shrink-0 ${
+                      isNext ? "animate-bounce-gentle" : ""
+                    }`}
                       style={{
-                        backgroundColor: isCompleted ? "#22c55e" : isNext ? "#f59e0b" : "#e5e7eb",
+                        backgroundColor: isCompleted ? "#22c55e" : isNext ? "#f59e0b" : "#9ca3af",
                       }}
                     >
                       {isCompleted ? "✓" : isNext ? "▶" : "🔒"}
                     </div>
                   </div>
                   <div
-                    className={`mt-1 text-[10px] font-extrabold px-2 py-0.5 rounded-full max-w-[65px] truncate transition ${
+                    className={`mt-2 text-[11px] font-extrabold px-2 py-0.5 rounded-full max-w-[70px] truncate transition ${
                       n.status === "locked"
-                        ? "bg-white/70 text-muted-foreground"
+                        ? "bg-white/40 text-muted-foreground"
                         : "bg-white text-ink shadow"
                     }`}
                   >
@@ -1417,14 +1435,14 @@ export function JourneyMapScreen() {
                   
                   {/* "Tap to start" label on current state */}
                   {isNext && (
-                    <div className="mt-2 text-[9px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 text-white animate-pulse">
-                      🚀 Tap to start
+                    <div className="mt-2 text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full bg-gradient-to-r from-amber-300 to-orange-500 text-white animate-pulse shadow-lg">
+                      ▶ Tap to start
                     </div>
                   )}
                   
                   {n.isUT && (
-                    <div className="mt-1 text-[9px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-explorer/15 text-explorer">
-                      Union Territory
+                    <div className="mt-1 text-[9px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-explorer/20 text-explorer">
+                      Territory
                     </div>
                   )}
                 </button>
@@ -1432,7 +1450,7 @@ export function JourneyMapScreen() {
                   <img
                     src={airplane}
                     alt="Airplane travel decoration"
-                    className="w-14 h-14 object-contain drop-shadow-lg"
+                    className="w-16 h-16 object-contain drop-shadow-lg -mt-2"
                     style={{ transform: "rotate(20deg)" }}
                   />
                 )}
@@ -1588,6 +1606,7 @@ export function LearningHubScreen({
   
   const progress = useProgress();
   const goBack = useGoBack();
+  const celebration = useCelebration();
   const state = getState(stateName);
   const live = statesWithProgress(progress).find((s) => s.name === state.name);
   let status = live?.status ?? state.status;
@@ -1601,6 +1620,31 @@ export function LearningHubScreen({
   const read = cardsRead(progress, state.name);
   const completedCards = cardsDone(progress, state.name);
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
+
+  // Track which categories have been celebrated to avoid duplicate celebrations
+  const [celebratedCategories, setCelebratedCategories] = useState<Set<number>>(new Set());
+
+  // Detect full category completion and celebrate (when all 6 cards are done)
+  useEffect(() => {
+    if (completedCards === 6 && celebratedCategories.size === 0) {
+      // All 6 categories completed - celebrate!
+      const categoryNames = ["Capital", "Language", "Famous Food", "Places", "State Animal", "Fun Fact"];
+      
+      celebration.custom(
+        `${state.name.toUpperCase()} MASTERED!`,
+        "�",
+        {
+          subtitle: `You've explored all 6 categories! Ready for the quiz?`,
+          confetti: true,
+          duration: 3500,
+          type: "success",
+        }
+      );
+      
+      // Mark as celebrated
+      setCelebratedCategories(new Set([0, 1, 2, 3, 4, 5]));
+    }
+  }, [completedCards, celebratedCategories, celebration, state.name]);
 
   const cards = [
     { icon: "🏛️", title: "Capital", sub: state.capital, tone: "orange" as const },
@@ -1641,6 +1685,11 @@ export function LearningHubScreen({
               Learning Hub
             </div>
             <div className="text-display text-xl font-extrabold">{state.name}</div>
+            {progress.streak > 0 && (
+              <div className="text-xs font-bold text-white/80 mt-0.5">
+                🔥 Day {progress.streak} streak
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-1 text-white text-display font-extrabold">
             <span>⭐</span> {completedCards * XP_PER_CARD}
@@ -2027,6 +2076,19 @@ export function LearningCardScreen({
       // Last card overall - mark as learned and proceed
       fxTap();
       const isReplaying = progress.cards?.[state.name]?.includes(i) ?? false;
+      const wasFirstRead = !isReplaying;
+      
+      // Show XP toast if this is first read (not replay)
+      if (wasFirstRead) {
+        useToastStore.getState().show({
+          type: "success",
+          icon: "🪙",
+          message: `+${XP_PER_CARD} XP`,
+          subtitle: `Great learning! Keep going 🚀`,
+          duration: 2500,
+        });
+      }
+      
       markCard(state.name, i, isReplaying);
       onNext?.(null);
     }
@@ -2035,6 +2097,19 @@ export function LearningCardScreen({
   const handleMainCardDone = () => {
     fxTap();
     // Mark the main card as learned
+    const wasFirstRead = !isReplaying;
+    
+    // Show XP toast if this is first read
+    if (wasFirstRead) {
+      useToastStore.getState().show({
+        type: "success",
+        icon: "🪙",
+        message: `+${XP_PER_CARD} XP`,
+        subtitle: `Learning unlocked! 🎓`,
+        duration: 2500,
+      });
+    }
+    
     markCard(state.name, currentMainCardIndex, isReplaying);
     
     // If this is the last main card, go to quiz
@@ -2390,6 +2465,11 @@ export function QuizScreen({
         <div className="text-display font-extrabold text-explorer">
           Q{index + 1}/{questions.length}
         </div>
+        {progress.streak > 0 && (
+          <div className="ml-2 text-sm font-bold text-explorer">
+            🔥 {progress.streak}
+          </div>
+        )}
       </div>
 
       <div className="px-5 mt-3 flex items-center gap-3">
@@ -2926,6 +3006,36 @@ export function BadgesScreen() {
   const progress = useProgress();
   const [selectedBadge, setSelectedBadge] = useState<AchievementBadge | null>(null);
   const unlockedCount = unlockedAchievementBadgeCount(progress);
+  const celebration = useCelebration();
+  const toastStore = useToastStore();
+
+  // Detect newly unlocked badges and show notifications
+  useEffect(() => {
+    const allBadges = achievementBadgesFor(progress);
+    const newBadges = getNewlyUnlockedBadges(allBadges);
+    
+    // Show notification for each new badge
+    newBadges.forEach((badge, idx) => {
+      setTimeout(() => {
+        const notification = getBadgeNotificationMessage(badge);
+        
+        // Show celebration with confetti
+        celebration.custom(
+          notification.title,
+          notification.emoji,
+          {
+            subtitle: notification.subtitle,
+            confetti: true,
+            duration: 3000,
+            type: "success",
+          }
+        );
+        
+        // Mark badge as seen so we don't show notification again
+        markBadgeAsSeen(badge.id);
+      }, idx * 1500); // Stagger multiple badge notifications by 1.5s
+    });
+  }, [progress, celebration]);
 
   const tierConfig = {
     seedling: { 
@@ -2985,30 +3095,31 @@ export function BadgesScreen() {
             <div className="text-display text-lg font-bold leading-tight">
               {progress.name}
             </div>
+            <div className="text-xs font-bold text-white/80">Achievement Collection</div>
           </div>
         </div>
 
         {/* PART B: Badge Stats (mt-3, bg-white/15 backdrop-blur p-3) */}
-        <div className="mt-3 rounded-2xl bg-white/15 backdrop-blur p-3 relative transition-all duration-700 animate-fade-in" style={{ animationDelay: "100ms" }}>
-          <div className="flex items-center justify-between text-white">
+        <div className="mt-3 rounded-2xl bg-white/15 backdrop-blur p-4 relative transition-all duration-700 animate-fade-in" style={{ animationDelay: "100ms" }}>
+          <div className="flex items-center justify-between text-white gap-3">
             <div>
-              <div className="text-xs font-bold opacity-90">Achievement Badges</div>
-              <div className="text-display text-lg font-extrabold mt-1">
-                {unlockedCount}/20 Unlocked
+              <div className="text-xs font-bold opacity-90 uppercase tracking-wide">Achievements</div>
+              <div className="text-display text-2xl font-extrabold mt-1">
+                {unlockedCount}<span className="text-lg opacity-80 ml-1">/ 20</span>
               </div>
             </div>
-            <div className="flex-1 ml-4 flex flex-col gap-1">
-              <div className="text-xs font-bold opacity-90">
-                {Math.round((unlockedCount / 20) * 100)}% Complete
+            <div className="flex-1 flex flex-col gap-1.5">
+              <div className="text-xs font-extrabold opacity-90">
+                {Math.round((unlockedCount / 20) * 100)}% Unlocked
               </div>
-              <div className="h-2 bg-white/30 rounded-full overflow-hidden">
+              <div className="h-2.5 bg-white/30 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-yellow-300 to-yellow-100 rounded-full transition-all duration-500"
+                  className="h-full bg-gradient-to-r from-yellow-200 via-yellow-100 to-white rounded-full transition-all duration-500"
                   style={{ width: `${(unlockedCount / 20) * 100}%` }}
                 />
               </div>
             </div>
-            <div className="text-5xl ml-4">🏆</div>
+            <div className="text-4xl">🏆</div>
           </div>
         </div>
       </div>
@@ -3023,20 +3134,20 @@ export function BadgesScreen() {
           return (
             <div key={tier} className="animate-fade-in" style={{ animationDelay: `${tierIdx * 100}ms` }}>
               {/* Tier Header */}
-              <div className={`rounded-2xl bg-${config.bgTone} border ${config.borderTone} p-4`}>
+              <div className={`rounded-2xl bg-${config.bgTone} border ${config.borderTone} p-4 shadow-soft`}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="text-3xl">{config.icon}</div>
+                    <div className="text-4xl">{config.icon}</div>
                     <div>
-                      <div className="text-display font-extrabold text-base text-ink">{config.label}</div>
-                      <div className="text-xs font-bold text-muted-foreground">{tierUnlocked}/{badges.length} badges</div>
+                      <div className="text-display font-extrabold text-lg text-ink">{config.label}</div>
+                      <div className="text-xs font-bold text-muted-foreground">{tierUnlocked}/{badges.length} badges unlocked</div>
                     </div>
                   </div>
-                  <div className="flex gap-1.5">
+                  <div className="flex gap-1.5 items-center">
                     {badges.map((_, idx) => (
                       <div
                         key={idx}
-                        className={`h-1.5 w-1.5 rounded-full transition-all ${
+                        className={`h-2 w-2 rounded-full transition-all ${
                           idx < tierUnlocked
                             ? config.gradient.split("-")[1] === "saffron" ? "bg-saffron" 
                             : config.gradient.split("-")[1] === "success" ? "bg-success"
@@ -3059,16 +3170,16 @@ export function BadgesScreen() {
                       fxTap();
                       setSelectedBadge(badge);
                     }}
-                    className={`rounded-2xl p-3 flex flex-col items-center gap-2 border transition-transform active:scale-95 ${
+                    className={`rounded-2xl p-3 flex flex-col items-center gap-2.5 border transition-transform active:scale-95 ${
                       badge.unlocked
-                        ? `bg-white shadow-soft border-black/5`
-                        : "bg-gray-50 border-gray-200 shadow-sm"
+                        ? `bg-white shadow-soft border-black/5 hover:shadow-md`
+                        : "bg-gray-50 border-gray-200 shadow-sm opacity-70 hover:opacity-85"
                     }`}
                     style={{ animationDelay: `${badgeIdx * 50}ms` }}
                   >
                     {/* Badge Icon */}
-                    <div className={`text-4xl transition-transform ${
-                      badge.unlocked ? "" : "opacity-50"
+                    <div className={`text-5xl transition-transform ${
+                      badge.unlocked ? "scale-100" : "scale-75 opacity-60"
                     }`}>
                       {badge.icon}
                     </div>
@@ -3088,7 +3199,7 @@ export function BadgesScreen() {
                         {badge.progress}/{badge.achievementMax}
                       </div>
                     ) : (
-                      <div className="text-[9px] font-extrabold text-success mt-1">
+                      <div className="text-[9px] font-extrabold text-success mt-1 px-2 py-0.5 bg-green-50 rounded-full">
                         ✓ Unlocked
                       </div>
                     )}
@@ -3211,6 +3322,7 @@ export function ProfileScreen() {
     if (typeof window === "undefined") return false;
     return hasFeatureConsent('file');
   });
+  const [showResetPINDialog, setShowResetPINDialog] = useState(false);
   
   // Subscribe to file consent changes
   useEffect(() => {
@@ -3299,10 +3411,10 @@ export function ProfileScreen() {
           <button
             onClick={() => {
               fxTap();
-              resetProgress();
+              setShowResetPINDialog(true);
             }}
-            title="Reset progress"
-            className="h-10 w-10 rounded-full bg-white/20 text-white flex items-center justify-center"
+            title="Reset progress (requires PIN)"
+            className="h-10 w-10 rounded-full bg-white/40 hover:bg-white/60 text-white flex items-center justify-center transition active:scale-90 font-extrabold text-lg"
           >
             ⟲
           </button>
@@ -3384,7 +3496,7 @@ export function ProfileScreen() {
         </div>
       </div>
 
-      <div className="px-5 -mt-8 relative z-10 animate-fade-in" style={{ animationDelay: "150ms" }}>
+      <div className="px-5 -mt-6 relative z-10 animate-fade-in" style={{ animationDelay: "150ms" }}>
         <div className="rounded-3xl bg-white shadow-soft border border-black/5 p-4 grid grid-cols-3 divide-x divide-black/5">
           <ProfileStat value={p.xp.toLocaleString()} label="XP" />
           <ProfileStat value={String(p.completed.length)} label="States" />
@@ -3393,7 +3505,7 @@ export function ProfileScreen() {
       </div>
 
 
-      <div className="px-5 mt-5 space-y-3 flex-1 overflow-auto">
+      <div className="px-5 mt-4 space-y-3 flex-1 overflow-auto">
         {/* Avatar Selector Section */}
         <div className="animate-fade-in" style={{ animationDelay: "175ms" }}>
           <button
@@ -3600,6 +3712,18 @@ export function ProfileScreen() {
           fxTap();
         }}
       />
+
+      {/* Reset PIN Dialog - requires parental PIN to reset progress */}
+      <ResetPINDialog
+        open={showResetPINDialog}
+        onConfirm={() => {
+          setShowResetPINDialog(false);
+          resetProgress();
+        }}
+        onCancel={() => {
+          setShowResetPINDialog(false);
+        }}
+      />
     </div>
   );
 }
@@ -3763,19 +3887,97 @@ function ProfileStat({ value, label }: { value: string; label: string }) {
 }
 
 function ParentZonePlaceholder() {
+  const [showSettings, setShowSettings] = useState(false);
+  const [newPIN, setNewPIN] = useState("");
+  const [pinSaveStatus, setPinSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
+
+  const handleSavePIN = () => {
+    if (newPIN.length !== 4) {
+      alert("PIN must be 4 digits");
+      return;
+    }
+    
+    setPinSaveStatus("saving");
+    try {
+      localStorage.setItem("india-explorer:parent-pin:v1", newPIN);
+      setPinSaveStatus("saved");
+      setTimeout(() => {
+        setShowSettings(false);
+        setNewPIN("");
+        setPinSaveStatus("idle");
+      }, 1500);
+    } catch (e) {
+      alert("Failed to save PIN");
+      setPinSaveStatus("idle");
+    }
+  };
+
   return (
-    <div className="rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-dashed border-blue-300 p-3 flex items-center gap-3 transition opacity-75">
-      <div className="h-12 w-12 rounded-2xl bg-blue-200 flex items-center justify-center text-2xl">
-        👨‍👩‍👧
-      </div>
-      <div className="flex-1">
-        <div className="text-display font-extrabold text-[15px] leading-tight text-blue-900">
-          Parent Zone
+    <div className="rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-300 p-3 transition">
+      <button
+        onClick={() => {
+          fxTap();
+          setShowSettings(!showSettings);
+        }}
+        className="w-full flex items-center gap-3 hover:opacity-80 transition"
+      >
+        <div className="h-12 w-12 rounded-2xl bg-blue-200 flex items-center justify-center text-2xl flex-shrink-0">
+          👨‍👩‍👧
         </div>
-        <div className="text-[11px] font-bold text-blue-700">
-          Coming soon! 👀
+        <div className="flex-1 text-left">
+          <div className="text-display font-extrabold text-[15px] leading-tight text-blue-900">
+            Parent Zone
+          </div>
+          <div className="text-[11px] font-bold text-blue-700">
+            Tap to configure PIN & parental settings
+          </div>
         </div>
-      </div>
+        <div className="text-blue-900 text-lg">{showSettings ? '▼' : '›'}</div>
+      </button>
+
+      {/* PIN Settings Panel */}
+      {showSettings && (
+        <div className="mt-3 pt-3 border-t-2 border-blue-300 space-y-3 animate-fade-in">
+          <div>
+            <label className="text-xs font-bold text-blue-900 block mb-1">
+              Parental PIN (4 digits)
+            </label>
+            <input
+              type="password"
+              maxLength={4}
+              value={newPIN}
+              onChange={(e) => setNewPIN(e.target.value.replace(/\D/g, ""))}
+              placeholder="Enter 4-digit PIN"
+              className="w-full h-10 rounded-lg border-2 border-blue-300 px-3 font-extrabold text-center text-lg tracking-widest text-blue-900"
+            />
+            <div className="text-[10px] text-blue-700 mt-1">
+              💡 Used to reset progress. Default: 1234
+            </div>
+          </div>
+          <button
+            onClick={handleSavePIN}
+            disabled={newPIN.length !== 4 || pinSaveStatus === "saving"}
+            className={`w-full h-10 rounded-lg font-bold text-sm transition text-white ${
+              pinSaveStatus === "saved"
+                ? "bg-green-500"
+                : "bg-blue-600 disabled:opacity-50 hover:bg-blue-700"
+            }`}
+          >
+            {pinSaveStatus === "saved" ? "✓ PIN Saved" : pinSaveStatus === "saving" ? "Saving..." : "Save PIN"}
+          </button>
+          <button
+            onClick={() => {
+              fxTap();
+              setShowSettings(false);
+              setNewPIN("");
+              setPinSaveStatus("idle");
+            }}
+            className="w-full h-10 rounded-lg font-bold text-sm bg-white text-blue-900 hover:bg-blue-50 border border-blue-300"
+          >
+            Close
+          </button>
+        </div>
+      )}
     </div>
   );
 }
