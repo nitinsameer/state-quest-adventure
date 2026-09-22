@@ -57,6 +57,7 @@ import {
   stateSlug,
   nextStateAfter,
 } from "@/lib/states";
+import { REGIONS, REGION_KEYS } from "@/lib/passport-helpers";
 import { randomQuestionsForState, questionCountForAgeBand } from "@/lib/quiz";
 
 import {
@@ -948,7 +949,8 @@ function StateDetailModal({
   onPlay: () => void;
 }) {
   const state = states.find((s) => s.name === stateName);
-  if (!state) return null;
+  const stateData = INDIA_STATES.find((s) => s.name === stateName);
+  if (!state || !stateData) return null;
 
   const isLocked = state.status === "locked";
   const isDone = state.status === "done";
@@ -959,7 +961,7 @@ function StateDetailModal({
       onClick={onClose}
     >
       <div
-        className="w-full bg-white rounded-t-3xl p-6 flex flex-col gap-4 animate-slide-up"
+        className="w-full bg-white rounded-t-3xl p-6 flex flex-col gap-4 max-h-[90vh] overflow-y-auto animate-slide-up"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
@@ -981,16 +983,45 @@ function StateDetailModal({
                 : "gradient-saffron shadow-lg"
             }`}
           >
-            {isDone ? "⭐" : isLocked ? "🔒" : "▶"}
+            {stateData.emoji}
           </div>
 
           <h2 className="text-display text-2xl font-extrabold text-ink">
             {stateName}
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
-            {state.isUT ? "Union Territory" : "State"}
+            {state.isUT ? "Union Territory" : "State"} · {stateData.capital}
           </p>
         </div>
+
+        {/* Gap #3: Sneak Peek Preview for Locked States */}
+        {isLocked && (
+          <div className="rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 p-4 space-y-3">
+            <p className="text-display text-sm font-extrabold text-amber-900 flex items-center gap-2">
+              👀 Sneak Peek Preview
+            </p>
+            <div className="space-y-2 text-sm">
+              <div className="flex items-start gap-2">
+                <span className="text-lg flex-shrink-0">{stateData.animal}</span>
+                <div>
+                  <p className="font-bold text-gray-900">State Animal</p>
+                  <p className="text-gray-700">{stateData.animalName}</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-lg flex-shrink-0">{stateData.monument}</span>
+                <div>
+                  <p className="font-bold text-gray-900">Famous Monument</p>
+                  <p className="text-gray-700">{stateData.monumentName}</p>
+                </div>
+              </div>
+              <div className="pt-2 border-t border-amber-200">
+                <p className="text-xs font-bold text-amber-900 mb-1">Fun Fact</p>
+                <p className="text-gray-700 italic">{stateData.funFact}</p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Status Information */}
         {isLocked ? (
@@ -999,7 +1030,7 @@ function StateDetailModal({
               🔐 Locked
             </p>
             <p className="text-sm font-semibold text-amber-800">
-              Complete the previous state to unlock this one!
+              Complete the previous state to unlock this adventure!
             </p>
           </div>
         ) : isDone ? (
@@ -1053,8 +1084,51 @@ export function JourneyMapScreen() {
   const states = statesWithProgress(p);
   const [view, setView] = useState<{ screen: "intro" | "hub" | "card" | "quiz"; name: string; cardIndex?: number } | null>(null);
   const [selectedState, setSelectedState] = useState<string | null>(null);
-  const STEP = 118;
-  const BANNER_GAP = 120;
+  const [expandedRegion, setExpandedRegion] = useState<string | null>(null);
+  const celebration = useCelebration();
+
+  // Gap #2: Detect and celebrate milestones
+  useEffect(() => {
+    const totalStates = TOTAL_STATES;
+    const completed = p.completed.length;
+    const percentage = Math.round((completed / totalStates) * 100);
+
+    // Check for milestone achievements
+    const milestones = [
+      { threshold: 25, emoji: "🎯", message: "Quarter Way There! 25% Complete!" },
+      { threshold: 50, emoji: "🌎", message: "Halfway Around India! 50% Complete!" },
+      { threshold: 75, emoji: "🏁", message: "Almost Complete! 75% Explored!" },
+      { threshold: 100, emoji: "👑", message: "India Master! 100% Complete!" },
+    ];
+
+    // Track which milestones have been celebrated in localStorage
+    const celebratedKey = "india-explorer:milestones-celebrated:v1";
+    const celebrated = typeof window !== "undefined" 
+      ? JSON.parse(localStorage.getItem(celebratedKey) || "[]")
+      : [];
+
+    milestones.forEach((m) => {
+      if (percentage >= m.threshold && !celebrated.includes(m.threshold)) {
+        // New milestone reached!
+        celebration.custom(
+          m.message,
+          m.emoji,
+          {
+            subtitle: `You've explored ${completed}/${totalStates} regions!`,
+            confetti: true,
+            duration: 4000,
+            type: "success",
+          }
+        );
+        
+        // Mark as celebrated
+        celebrated.push(m.threshold);
+        if (typeof window !== "undefined") {
+          localStorage.setItem(celebratedKey, JSON.stringify(celebrated));
+        }
+      }
+    });
+  }, [p.completed.length, celebration]);
 
   // Register the back handler for this screen with the global journey back handler
   useEffect(() => {
@@ -1108,6 +1182,16 @@ export function JourneyMapScreen() {
     { key: "states", label: "Route 1 · States", icon: "🗺️", items: states.filter((s) => s.kind !== "ut") },
     { key: "ut", label: "Route 2 · Union Territories", icon: "🏝️", items: states.filter((s) => s.kind === "ut") },
   ];
+
+  // Gap #1: Organize states by region for color-coded grouping
+  const statesByRegion = useMemo(() => {
+    const result: Record<string, typeof states> = {};
+    REGION_KEYS.forEach((key) => {
+      const region = REGIONS[key];
+      result[key] = states.filter((s) => region.states.some((rs) => rs.name === s.name));
+    });
+    return result;
+  }, [states]);
 
   // Safety check: ensure we have states data
   if (!states || states.length === 0) {
@@ -1292,6 +1376,13 @@ export function JourneyMapScreen() {
               style={{ width: `${(completedStates / totalStates) * 100}%` }}
             />
           </div>
+          {/* Gap #2: Show next milestone target */}
+          <div className="text-xs font-bold text-white/80 mt-2">
+            {completedStates < 9 && `🎯 25% milestone: ${Math.max(0, 9 - completedStates)} more states`}
+            {completedStates >= 9 && completedStates < 18 && `🌎 50% milestone: ${Math.max(0, 18 - completedStates)} more states`}
+            {completedStates >= 18 && completedStates < 27 && `🏁 75% milestone: ${Math.max(0, 27 - completedStates)} more states`}
+            {completedStates >= 27 && `👑 Explore the final states to become India Master!`}
+          </div>
         </div>
       </div>
 
@@ -1299,165 +1390,155 @@ export function JourneyMapScreen() {
       <Cloud className="absolute top-40 left-2 w-24 opacity-90 pointer-events-none animate-fade-in" style={{ animationDelay: "100ms" }} />
       <Cloud className="absolute top-80 right-1 w-20 opacity-85 pointer-events-none animate-fade-in" style={{ animationDelay: "150ms" }} />
 
-      {/* Map */}
+      {/* Map - Gap #1: Regional grouping with visual separators */}
       <div className="relative flex-1 mx-3 mt-2 rounded-[28px] overflow-y-auto overflow-x-hidden animate-fade-in" style={{ animationDelay: "200ms" }}>
-        <div className="relative w-full" style={{ height }}>
-          <svg
-            className="absolute inset-0 w-full pointer-events-none"
-            style={{ height }}
-            viewBox={`0 0 100 ${height}`}
-            preserveAspectRatio="none"
-          >
-            {filteredRoutes.map((route) => {
-              const rn = nodes.filter((n) => (route.key === "ut" ? n.isUT : !n.isUT));
-              if (rn.length === 0) return null;
-              return (
-                <path
-                  key={route.key}
-                  d={rn
-                    .map((n, i) =>
-                      i === 0
-                        ? `M${n.x},${n.y}`
-                        : `Q${(rn[i - 1].x + n.x) / 2 + (i % 2 === 0 ? -18 : 18)},${
-                            (rn[i - 1].y + n.y) / 2
-                          } ${n.x},${n.y}`
-                    )
-                    .join(" ")}
-                  fill="none"
-                  stroke="#fff"
-                  strokeWidth="1.4"
-                  strokeDasharray={route.key === "ut" ? "3 7" : "6 6"}
-                  strokeLinecap="round"
-                  className="animate-shimmer-path"
-                  style={{ animationDelay: route.key === "ut" ? "300ms" : "250ms" }}
-                />
-              );
-            })}
-          </svg>
-
-          {/* Route banners */}
-          {banners.map((b, idx) => (
-            <div
-              key={b.key}
-              className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-[86%] animate-fade-in"
-              style={{ top: b.y, animationDelay: `${300 + idx * 50}ms` }}
-            >
-              <div className="rounded-2xl bg-white/90 backdrop-blur shadow-soft px-4 py-2.5 flex items-center gap-3">
-                <span className="text-xl">{b.icon}</span>
-                <div className="flex-1 min-w-0">
-                  <div className="text-[12px] font-extrabold text-ink truncate">{b.label}</div>
-                  <div className="mt-1 h-1.5 rounded-full bg-neutral-200 overflow-hidden">
+        {/* Regional sections with color-coded headers - Gap #1 */}
+        <div className="relative w-full px-4 space-y-6 py-6">
+          {REGION_KEYS.map((regionKey, regionIdx) => {
+            const region = REGIONS[regionKey];
+            const regionStates = statesByRegion[regionKey] || [];
+            const regionDone = regionStates.filter((s) => s.status === "done").length;
+            
+            return (
+              <div key={regionKey} className="animate-fade-in" style={{ animationDelay: `${300 + regionIdx * 100}ms` }}>
+                {/* Regional Header - Gap #1 */}
+                <div className={`rounded-2xl bg-gradient-to-r ${region.gradient} text-white p-3 mb-3 shadow-lg`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">{region.emoji}</span>
+                      <div>
+                        <div className="text-sm font-extrabold">{region.name}</div>
+                        <div className="text-xs font-bold opacity-90">{regionDone}/{regionStates.length} explored</div>
+                      </div>
+                    </div>
+                    {/* Regional milestone indicator */}
+                    {regionDone === regionStates.length && regionStates.length > 0 && (
+                      <div className="text-lg">✨ Complete!</div>
+                    )}
+                  </div>
+                  {/* Regional progress bar */}
+                  <div className="mt-2 h-1.5 bg-white/30 rounded-full overflow-hidden">
                     <div
-                      className={b.key === "ut" ? "h-full gradient-explorer" : "h-full gradient-gold"}
-                      style={{ width: `${(b.done / b.total) * 100}%`, transition: "width 0.5s ease-out" }}
+                      className="h-full bg-white rounded-full transition-all duration-500"
+                      style={{ width: `${(regionDone / Math.max(regionStates.length, 1)) * 100}%` }}
                     />
                   </div>
                 </div>
-                <span className="text-[11px] font-extrabold text-muted-foreground whitespace-nowrap">
-                  {b.done}/{b.total}
-                </span>
-              </div>
-            </div>
-          ))}
 
-          {nodes.map((n, i) => {
-            const isNext = i === currentIndex;
-            const isCompleted = n.status === "done";
-            
-            return (
-              <div
-                key={n.name}
-                className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-auto z-10 animate-fade-in"
-                style={{ left: `${n.x}%`, top: n.y, animationDelay: `${350 + i * 30}ms` }}
-              >
-                <button
-                  type="button"
-                  aria-label={`Open ${n.name}`}
-                  onClick={(e) => {
-                    appLogger.info('journey_map_screen', 'CLICK EVENT on state: ' + n.name + ', status: ' + n.status);
-                    fxTap();
-                    setSelectedState(n.name);
-                    // Production: Only allow accessing unlocked states
-                    if (n.status !== "locked") {
-                      setView({ screen: "intro", name: n.name });
-                    }
-                  }}
-                  className={`flex flex-col items-center active:scale-95 transition-transform cursor-pointer z-20 relative ${
-                    isNext ? "animate-bounce-gentle scale-110" : ""
-                  } ${n.status === "locked" && !isNext ? "opacity-60 hover:opacity-80" : ""}`}
-                >
-                  {/* State/UT Image with Status Badge */}
-                  <div className="relative">
-                    <div
-                      className={`h-20 w-20 rounded-full border-4 overflow-hidden shadow-lg transition flex items-center justify-center ${
-                        isCompleted
-                          ? n.isUT
-                            ? "gradient-explorer border-white shadow-[0_0_12px_rgba(59,130,246,0.4)]"
-                            : "gradient-gold border-white shadow-[0_0_12px_rgba(245,158,11,0.4)]"
-                          : isNext
-                          ? "gradient-saffron border-white shadow-[0_0_20px_rgba(245,158,11,0.6)] animate-pulse"
-                          : `border-white/60 ${n.isUT ? "border-dashed" : ""} ${n.status === "locked" ? "bg-white/40 animate-shimmer" : "bg-white/50"}`
-                      }`}
-                    >
-                      {STATE_ART[n.name] ? (
-                        <img
-                          src={STATE_ART[n.name]}
-                          alt={n.name}
-                          className={`w-full h-full object-cover transition-opacity ${
-                            n.status === "locked" ? "opacity-50 grayscale" : "opacity-100"
-                          }`}
-                        />
-                      ) : (
-                        <span className="text-2xl">{n.isUT ? "🏝️" : "📍"}</span>
-                      )}
-                    </div>
+                {/* States in this region - Grid layout */}
+                <div className="grid grid-cols-2 gap-3">
+                  {regionStates.map((state) => {
+                    const isLocked = state.status === "locked";
+                    const isDone = state.status === "done";
+                    const isCurrent = state.status === "current";
                     
-                    {/* Status Badge Overlay */}
-                    <div className={`absolute -bottom-1 -right-1 h-8 w-8 rounded-full border-2 border-white flex items-center justify-center text-sm font-bold shadow-md transition flex-shrink-0 ${
-                      isNext ? "animate-bounce-gentle" : ""
-                    }`}
-                      style={{
-                        backgroundColor: isCompleted ? "#22c55e" : isNext ? "#f59e0b" : "#9ca3af",
-                      }}
-                    >
-                      {isCompleted ? "✓" : isNext ? "▶" : "🔒"}
-                    </div>
-                  </div>
-                  <div
-                    className={`mt-2 text-[11px] font-extrabold px-2 py-0.5 rounded-full max-w-[70px] truncate transition ${
-                      n.status === "locked"
-                        ? "bg-white/40 text-muted-foreground"
-                        : "bg-white text-ink shadow"
-                    }`}
-                  >
-                    {n.short}
-                  </div>
-                  
-                  {/* "Tap to start" label on current state */}
-                  {isNext && (
-                    <div className="mt-2 text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full bg-gradient-to-r from-amber-300 to-orange-500 text-white animate-pulse shadow-lg">
-                      ▶ Tap to start
-                    </div>
-                  )}
-                  
-                  {n.isUT && (
-                    <div className="mt-1 text-[9px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-explorer/20 text-explorer">
-                      Territory
-                    </div>
-                  )}
-                </button>
-                {isNext && (
-                  <img
-                    src={airplane}
-                    alt="Airplane travel decoration"
-                    className="w-16 h-16 object-contain drop-shadow-lg -mt-2"
-                    style={{ transform: "rotate(20deg)" }}
-                  />
-                )}
+                    return (
+                      <button
+                        key={state.name}
+                        onClick={() => {
+                          fxTap();
+                          if (!isLocked) {
+                            setView({ screen: "intro", name: state.name });
+                          }
+                        }}
+                        className={`p-3 rounded-2xl transition transform active:scale-95 ${
+                          isDone
+                            ? `bg-gradient-to-br ${region.gradient} text-white shadow-lg`
+                            : isCurrent
+                            ? `bg-gradient-to-br from-yellow-300 to-orange-400 text-white shadow-lg scale-105 animate-pulse`
+                            : `bg-gray-100 text-gray-700 ${isLocked ? "opacity-60" : ""}`
+                        }`}
+                      >
+                        <div className="text-3xl mb-1">{state.emoji}</div>
+                        <div className="text-xs font-extrabold leading-tight">{state.short}</div>
+                        {isDone && (
+                          <div className="text-[10px] font-bold mt-1 opacity-90">✓ Done</div>
+                        )}
+                        {isCurrent && (
+                          <div className="text-[10px] font-bold mt-1">▶ Play</div>
+                        )}
+                        {isDone && !isCurrent && (
+                          <div className="text-[10px] font-bold mt-1 opacity-90">↻ Replay</div>
+                        )}
+                        {isLocked && (
+                          <div className="text-[10px] font-bold mt-1">🔒 Locked</div>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             );
           })}
 
+          {/* Union Territories section */}
+          <div className="animate-fade-in" style={{ animationDelay: "800ms" }}>
+            <div className="rounded-2xl bg-gradient-to-r from-blue-400 to-purple-500 text-white p-3 mb-3 shadow-lg">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl">🏝️</span>
+                  <div>
+                    <div className="text-sm font-extrabold">Union Territories</div>
+                    <div className="text-xs font-bold opacity-90">{nodes.filter(n => n.isUT && n.status === "done").length}/8 explored</div>
+                  </div>
+                </div>
+                {nodes.filter(n => n.isUT && n.status === "done").length === 8 && (
+                  <div className="text-lg">✨ Complete!</div>
+                )}
+              </div>
+              <div className="mt-2 h-1.5 bg-white/30 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-white rounded-full transition-all duration-500"
+                  style={{ width: `${(nodes.filter(n => n.isUT && n.status === "done").length / 8) * 100}%` }}
+                />
+              </div>
+            </div>
+
+            {/* UTs Grid */}
+            <div className="grid grid-cols-2 gap-3">
+              {nodes.filter(n => n.isUT).map((utNode) => {
+                const utState = states.find(s => s.name === utNode.name);
+                if (!utState) return null;
+                const isLocked = utNode.status === "locked";
+                const isDone = utNode.status === "done";
+                const isCurrent = utNode.status === "current";
+                
+                return (
+                  <button
+                    key={utNode.name}
+                    onClick={() => {
+                      fxTap();
+                      if (!isLocked) {
+                        setView({ screen: "intro", name: utNode.name });
+                      }
+                    }}
+                    className={`p-3 rounded-2xl transition transform active:scale-95 ${
+                      isDone
+                        ? "bg-gradient-to-br from-blue-400 to-purple-500 text-white shadow-lg"
+                        : isCurrent
+                        ? "bg-gradient-to-br from-yellow-300 to-orange-400 text-white shadow-lg scale-105 animate-pulse"
+                        : `bg-gray-100 text-gray-700 ${isLocked ? "opacity-60" : ""}`
+                    }`}
+                  >
+                    <div className="text-3xl mb-1">{utState.emoji}</div>
+                    <div className="text-xs font-extrabold leading-tight">{utState.short}</div>
+                    {isDone && (
+                      <div className="text-[10px] font-bold mt-1 opacity-90">✓ Done</div>
+                    )}
+                    {isCurrent && (
+                      <div className="text-[10px] font-bold mt-1">▶ Play</div>
+                    )}
+                    {isDone && !isCurrent && (
+                      <div className="text-[10px] font-bold mt-1 opacity-90">↻ Replay</div>
+                    )}
+                    {isLocked && (
+                      <div className="text-[10px] font-bold mt-1">🔒 Locked</div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1493,6 +1574,17 @@ export function StateIntroScreen({
   const art = STATE_ART[state.name];
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
 
+  // Gap #4: Determine current region for breadcrumb
+  const currentRegion = useMemo(() => {
+    for (const regionKey of REGION_KEYS) {
+      const region = REGIONS[regionKey];
+      if (region.states.some((s) => s.name === state.name)) {
+        return region;
+      }
+    }
+    return null;
+  }, [state.name]);
+
   appLogger.info('state_intro_screen', 'Rendered with stateName: ' + stateName + ', state.name: ' + state?.name);
 
   useEffect(() => {
@@ -1505,6 +1597,20 @@ export function StateIntroScreen({
       <div className={`relative py-12 ${grad} overflow-hidden`}>
         <Cloud className="absolute top-6 left-2 w-20 opacity-80" />
         <Cloud className="absolute top-14 right-2 w-16 opacity-70" />
+        
+        {/* Gap #4: Breadcrumb Navigation */}
+        <div className="absolute top-3 left-16 flex items-center gap-1 text-white text-xs font-bold">
+          <span className="opacity-75">Journey</span>
+          <span className="opacity-50">›</span>
+          {currentRegion && (
+            <>
+              <span className="opacity-75">{currentRegion.emoji} {currentRegion.name}</span>
+              <span className="opacity-50">›</span>
+            </>
+          )}
+          <span>{state.emoji}</span>
+        </div>
+        
         <button
           onClick={() => {
             if (onBack) {
@@ -1621,6 +1727,17 @@ export function LearningHubScreen({
   const completedCards = cardsDone(progress, state.name);
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
 
+  // Gap #4: Determine current region for breadcrumb
+  const currentRegion = useMemo(() => {
+    for (const regionKey of REGION_KEYS) {
+      const region = REGIONS[regionKey];
+      if (region.states.some((s) => s.name === state.name)) {
+        return region;
+      }
+    }
+    return null;
+  }, [state.name]);
+
   // Track which categories have been celebrated to avoid duplicate celebrations
   const [celebratedCategories, setCelebratedCategories] = useState<Set<number>>(new Set());
 
@@ -1666,6 +1783,19 @@ export function LearningHubScreen({
   return (
     <div className="h-full w-full bg-[#F7F5F0] flex flex-col">
       <div className={`px-5 pt-3 pb-4 ${grad} rounded-b-[32px] relative`}>
+        {/* Gap #4: Breadcrumb Navigation */}
+        <div className="mb-2 flex items-center gap-1 text-white text-xs font-bold px-12">
+          <span className="opacity-75">Journey</span>
+          <span className="opacity-50">›</span>
+          {currentRegion && (
+            <>
+              <span className="opacity-75">{currentRegion.emoji} {currentRegion.name}</span>
+              <span className="opacity-50">›</span>
+            </>
+          )}
+          <span>{state.emoji}</span>
+        </div>
+        
         <div className="flex items-center gap-3">
           <button
             onClick={() => {
