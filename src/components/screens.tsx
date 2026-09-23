@@ -1405,12 +1405,6 @@ export function JourneyMapScreen() {
 
   appLogger.info('journey_map_screen', 'Rendering with states.length=' + (states ? states.length : 'undefined') + ', states=' + (states ? JSON.stringify(states.slice(0, 2)) : 'null'));
 
-  // Two collectible routes: the 28 states, then the 8 union territories.
-  const routes = [
-    { key: "states", label: "Route 1 · States", icon: "🗺️", items: states.filter((s) => s.kind !== "ut") },
-    { key: "ut", label: "Route 2 · Union Territories", icon: "🏝️", items: states.filter((s) => s.kind === "ut") },
-  ];
-
   // Gap #1: Organize states by region for color-coded grouping
   const statesByRegion = useMemo(() => {
     const result: Record<string, typeof states> = {};
@@ -1435,46 +1429,43 @@ export function JourneyMapScreen() {
     x: number;
     y: number;
   };
+
+  // Build nodes from regional data (not from old routes)
   const nodes: MapNode[] = [];
-  const banners: { key: string; label: string; icon: string; y: number; done: number; total: number }[] = [];
-
-  const STEP = 118;
-  const BANNER_GAP = 120;
-  let y = 50;
-  let idx = 0;
   
-  // Show all states for all age bands (removed age-based filtering)
-  // All states are available regardless of age band for equal access
-  const filteredRoutes = routes;
-
-  for (const route of filteredRoutes) {
-    const done = route.items.filter((s) => s.status === "done").length;
-    banners.push({ key: route.key, label: route.label, icon: route.icon, y, done, total: route.items.length });
-    y += BANNER_GAP;
-    for (const s of route.items) {
+  // Add nodes from all regions
+  REGION_KEYS.forEach((regionKey) => {
+    // Skip union territories - they'll be added separately
+    if (regionKey === "unionTerritories") return;
+    
+    const regionStates = statesByRegion[regionKey] || [];
+    regionStates.forEach((state) => {
       nodes.push({
-        name: s.name,
-        short: s.short,
-        status: s.status,
-        isUT: s.kind === "ut",
-        x: idx % 2 === 0 ? 26 : 72,
-        y,
+        name: state.name,
+        short: state.short,
+        status: state.status,
+        isUT: false,
+        x: 0, // Not used in new rendering
+        y: 0, // Not used in new rendering
       });
-      y += STEP;
-      idx += 1;
-    }
-  }
+    });
+  });
+  
+  // Add union territory nodes
+  const utStates = statesByRegion["unionTerritories"] || [];
+  utStates.forEach((state) => {
+    nodes.push({
+      name: state.name,
+      short: state.short,
+      status: state.status,
+      isUT: true,
+      x: 0, // Not used in new rendering
+      y: 0, // Not used in new rendering
+    });
+  });
 
-  const height = y + 20;
-  const currentIndex = nodes.findIndex((n) => n.status === "current");
-  const totalStates = filteredRoutes.reduce((acc, r) => acc + r.items.length, 0);
+  const totalStates = TOTAL_STATES;
   const completedStates = nodes.filter((n) => n.status === "done").length;
-
-  // Validate banners were created
-  if (banners.length < 1) {
-    appLogger.info('journey_map_screen', 'Banners not properly initialized, count: ' + banners.length);
-    return <LoadingScreen />;
-  }
 
   appLogger.info('journey_map_screen', 'nodes count: ' + nodes.length, nodes.map(n => ({ name: n.name, status: n.status })));
 
@@ -1578,12 +1569,7 @@ export function JourneyMapScreen() {
                 </span>
               )}
               <span>
-                {banners.length >= 2 
-                  ? `${banners[0].done}/${banners[0].total} · ${banners[1].done}/${banners[1].total}`
-                  : banners.length >= 1
-                  ? `${banners[0].done}/${banners[0].total}`
-                  : 'Loading...'
-                }
+                {completedStates}/{totalStates} places explored
               </span>
             </div>
           </div>
@@ -1625,6 +1611,9 @@ export function JourneyMapScreen() {
         {/* Regional sections with color-coded headers - Gap #1 */}
         <div className="relative w-full px-4 space-y-6 py-6">
           {REGION_KEYS.map((regionKey, regionIdx) => {
+            // Skip union territories region - they're rendered separately below
+            if (regionKey === "unionTerritories") return null;
+            
             const region = REGIONS[regionKey];
             const regionStates = statesByRegion[regionKey] || [];
             const regionDone = regionStates.filter((s) => s.status === "done").length;
@@ -1971,15 +1960,32 @@ export function LearningHubScreen({
   // Track which categories have been celebrated to avoid duplicate celebrations
   const [celebratedCategories, setCelebratedCategories] = useState<Set<number>>(new Set());
 
-  // Detect full category completion and celebrate (when all 6 cards are done)
+  // Detect intermediate and full category completions and celebrate
   useEffect(() => {
-    if (completedCards === 6 && celebratedCategories.size === 0) {
+    // Celebrate at 3/6 (halfway milestone)
+    if (completedCards === 3 && !celebratedCategories.has(3)) {
+      celebration.custom(
+        `Halfway there! 🌟`,
+        "🏃‍♂️",
+        {
+          subtitle: `3/6 categories explored! Keep up the momentum 💨`,
+          confetti: true,
+          duration: 2500,
+          type: "success",
+        }
+      );
+      
+      setCelebratedCategories(prev => new Set([...prev, 3]));
+    }
+    
+    // Celebrate at 6/6 (full completion, before quiz)
+    if (completedCards === 6 && !celebratedCategories.has(6)) {
       // All 6 categories completed - celebrate!
       const categoryNames = ["Capital", "Language", "Famous Food", "Places", "State Animal", "Fun Fact"];
       
       celebration.custom(
         `${state.name.toUpperCase()} MASTERED!`,
-        "�",
+        "🎓",
         {
           subtitle: `You've explored all 6 categories! Ready for the quiz?`,
           confetti: true,
@@ -1989,7 +1995,7 @@ export function LearningHubScreen({
       );
       
       // Mark as celebrated
-      setCelebratedCategories(new Set([0, 1, 2, 3, 4, 5]));
+      setCelebratedCategories(prev => new Set([...prev, 6]));
     }
   }, [completedCards, celebratedCategories, celebration, state.name]);
 
@@ -2000,15 +2006,32 @@ export function LearningHubScreen({
     { icon: state.monument, title: "Places", sub: state.monumentName, tone: "green" as const },
     { icon: state.animal, title: "State Animal", sub: state.animalName, tone: "orange" as const },
     { icon: "💡", title: "Fun Fact", sub: state.funFact, tone: "blue" as const },
-  ].map((c, i) => ({
-    ...c,
-    index: i,
-    done: read.includes(i) || completedCards >= CARDS_PER_STATE,
-    active: i === completedCards && status !== "locked",
-    locked: status === "locked",
-    canClick: status !== "locked", // Allow all unlocked cards to be clicked (replay anytime)
-    onOpen: () => onCard?.(i),
-  }));
+  ].map((c, i) => {
+    // Get cards for this specific category to calculate category-scoped progress
+    const categoryCards = useMemo(() => {
+      return learningCardsFor(state.name, "en", progress.ageBand).filter(
+        card => card.mainCardIndex === i
+      );
+    }, [state.name, progress.ageBand, i]);
+    
+    // Calculate how many cards in THIS category have been read (not cumulative)
+    const cardsReadInCategory = categoryCards.filter(card => {
+      const cardIndex = learningCardsFor(state.name, "en", progress.ageBand).indexOf(card);
+      return read.includes(cardIndex);
+    }).length;
+    
+    return {
+      ...c,
+      index: i,
+      categoryCardsTotal: categoryCards.length,
+      categoryCardsRead: cardsReadInCategory,
+      done: read.includes(i) || completedCards >= CARDS_PER_STATE,
+      active: i === completedCards && status !== "locked",
+      locked: status === "locked",
+      canClick: status !== "locked",
+      onOpen: () => onCard?.(i),
+    };
+  });
 
   return (
     <div className="h-full w-full bg-[#F7F5F0] flex flex-col">
@@ -2097,6 +2120,8 @@ function HubCard({
   locked,
   canClick,
   stateName,
+  categoryCardsTotal,
+  categoryCardsRead,
   onOpen,
 }: {
   icon: string;
@@ -2109,6 +2134,8 @@ function HubCard({
   canClick?: boolean;
   index?: number;
   stateName?: string;
+  categoryCardsTotal?: number;
+  categoryCardsRead?: number;
   onOpen?: () => void;
 }) {
   const bg = {
@@ -2140,7 +2167,12 @@ function HubCard({
         {title}
       </div>
       <div className="text-xs font-bold text-muted-foreground">{sub}</div>
-      {stateName && <CardProgressBar stateName={stateName} cardCategory={title.toLowerCase().replace(/\s+/g, "-")} />}
+      {/* Category-scoped progress counter */}
+      {categoryCardsTotal !== undefined && categoryCardsRead !== undefined && (
+        <div className="mt-2 text-xs font-bold text-muted-foreground">
+          {categoryCardsRead}/{categoryCardsTotal} cards
+        </div>
+      )}
       {done && (
         <div className="absolute top-2 right-2 h-7 w-7 rounded-full bg-success text-white flex items-center justify-center text-xs font-black">
           ✓
@@ -2330,6 +2362,8 @@ export function LearningCardScreen({
   const state = getState(stateName);
   const art = STATE_ART[state.name];
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
+  const celebration = useCelebration();
+  const level = levelInfo(progress.xp);
   
   // Declare ALL state hooks FIRST, before any computations
   const [displayLanguage, setDisplayLanguage] = useState<LanguageCode>("en");
@@ -2343,6 +2377,25 @@ export function LearningCardScreen({
   const cards = useMemo(() => {
     return learningCardsFor(state.name, displayLanguage, progress.ageBand);
   }, [state.name, displayLanguage, progress.ageBand]);
+  
+  // Calculate category-scoped cards (only cards in the current category)
+  const cardsInCurrentCategory = useMemo(() => {
+    const currentCard = cards[currentCardIndex];
+    if (!currentCard) return cards; // Fallback to all cards if no current card
+    
+    // Get all cards with same mainCardIndex as current card
+    return cards.filter(c => c.mainCardIndex === currentCard.mainCardIndex);
+  }, [cards, currentCardIndex]);
+  
+  // Calculate position within category (0-based index within category)
+  const categoryCardIndex = useMemo(() => {
+    const currentCard = cards[currentCardIndex];
+    if (!currentCard) return 0;
+    
+    return cardsInCurrentCategory.findIndex(c => 
+      cards.indexOf(c) === currentCardIndex
+    );
+  }, [cards, currentCardIndex, cardsInCurrentCategory]);
   
   const enrichedContent = getStateContent(stateName);
   
@@ -2430,47 +2483,91 @@ export function LearningCardScreen({
 
   const handleNext = () => {
     if (currentCardIndex < cards.length - 1) {
+      // Moving to next card - show immediate celebration for this card
+      const currentCard = cards[currentCardIndex];
+      const isReplaying = progress.cards?.[state.name]?.includes(currentCardIndex) ?? false;
+      
+      // Mark current card as learned BEFORE showing celebration
+      markCard(state.name, currentCardIndex, isReplaying);
+      
+      // Show immediate celebration only on first read (not replay)
+      if (!isReplaying) {
+        fxCorrect(); // Rising chime sound
+        celebration.custom(
+          `${currentCard.kicker} card learned!`,
+          "📚",
+          {
+            subtitle: `+${XP_PER_CARD} XP • ${categoryCardIndex + 1}/${cardsInCurrentCategory.length} complete`,
+            confetti: true,
+            duration: 2000,
+            type: "success",
+          }
+        );
+      }
+      
       fxTap();
       setCurrentCardIndex(currentCardIndex + 1);
     } else {
       // Last card overall - mark as learned and proceed
-      fxTap();
-      const isReplaying = progress.cards?.[state.name]?.includes(i) ?? false;
-      const wasFirstRead = !isReplaying;
+      const currentCard = cards[currentCardIndex];
+      const isReplaying = progress.cards?.[state.name]?.includes(currentCardIndex) ?? false;
       
-      // Show XP toast if this is first read (not replay)
-      if (wasFirstRead) {
-        useToastStore.getState().show({
-          type: "success",
-          icon: "🪙",
-          message: `+${XP_PER_CARD} XP`,
-          subtitle: `Great learning! Keep going 🚀`,
-          duration: 2500,
-        });
+      // Mark final card as learned BEFORE showing celebration
+      markCard(state.name, currentCardIndex, isReplaying);
+      
+      // Show final card celebration
+      if (!isReplaying) {
+        fxCorrect(); // Rising chime sound
+        celebration.custom(
+          `${currentCard.kicker} card learned!`,
+          "📚",
+          {
+            subtitle: `+${XP_PER_CARD} XP • Category complete! 🎓`,
+            confetti: true,
+            duration: 2000,
+            type: "success",
+          }
+        );
       }
       
-      markCard(state.name, i, isReplaying);
+      fxTap();
       onNext?.(null);
     }
   };
 
   const handleMainCardDone = () => {
     fxTap();
-    // Mark the main card as learned
-    const wasFirstRead = !isReplaying;
     
-    // Show XP toast if this is first read
+    // Get the main card index and calculate completedCards for this main card
+    const mainCardIdx = currentMainCardIndex;
+    const mainCardSectionCards = cards.filter(c => c.mainCardIndex === mainCardIdx);
+    const allCardsInMainCardRead = mainCardSectionCards.every(c => 
+      progress.cards?.[state.name]?.includes(cards.indexOf(c)) ?? false
+    );
+    
+    // Mark the main card as learned
+    const wasFirstRead = !allCardsInMainCardRead;
+    
+    // Show immediate celebration when completing main card
     if (wasFirstRead) {
-      useToastStore.getState().show({
-        type: "success",
-        icon: "🪙",
-        message: `+${XP_PER_CARD} XP`,
-        subtitle: `Learning unlocked! 🎓`,
-        duration: 2500,
-      });
+      fxCorrect(); // Rising chime sound
+      
+      const mainCardNames = ["Capital", "Language", "Famous Food", "Places", "State Animal", "Fun Fact"];
+      const categoryName = mainCardNames[mainCardIdx] ?? `Category ${mainCardIdx + 1}`;
+      
+      celebration.custom(
+        `${categoryName} mastered!`,
+        "🌟",
+        {
+          subtitle: `+${XP_PER_CARD * mainCardSectionCards.length} XP • ${mainCardIdx + 1}/6 categories`,
+          confetti: true,
+          duration: 2500,
+          type: "success",
+        }
+      );
     }
     
-    markCard(state.name, currentMainCardIndex, isReplaying);
+    markCard(state.name, currentMainCardIndex, !wasFirstRead);
     
     // If this is the last main card, go to quiz
     if (currentMainCardIndex === 5) {
@@ -2499,14 +2596,20 @@ export function LearningCardScreen({
         {/* Card counter and progress bar */}
         <div className="flex items-center gap-2 flex-1 min-w-0">
           <div className="text-display font-extrabold text-saffron whitespace-nowrap">
-            {currentCardIndex + 1}/{cards.length}
+            {categoryCardIndex + 1}/{cardsInCurrentCategory.length}
           </div>
           <div className="h-2 rounded-full bg-white overflow-hidden shadow-inner flex-1">
             <div
               className={`h-full ${grad} transition-all`}
-              style={{ width: `${((currentCardIndex + 1) / cards.length) * 100}%` }}
+              style={{ width: `${((categoryCardIndex + 1) / cardsInCurrentCategory.length) * 100}%` }}
             />
           </div>
+        </div>
+
+        {/* Level progress context */}
+        <div className="ml-2 text-xs font-bold text-muted-foreground flex flex-col items-end">
+          <div>Lv {level.level}</div>
+          <div className="text-[10px] text-muted-foreground/70">{level.pct}%</div>
         </div>
 
         {/* Language Selector */}
@@ -2692,6 +2795,7 @@ export function QuizScreen({
 }: { stateName?: string; onDone?: () => void; onClose?: () => void } = {}) {
   const progress = useProgress();
   const states = statesWithProgress(progress);
+  const level = levelInfo(progress.xp);
   
   // Safety check: ensure states data is loaded
   if (!states || states.length === 0) {
@@ -2825,11 +2929,20 @@ export function QuizScreen({
         <div className="text-display font-extrabold text-explorer">
           Q{index + 1}/{questions.length}
         </div>
+        {/* Level progress context */}
+        <div className="ml-2 text-xs font-bold text-muted-foreground flex flex-col items-end">
+          <div>Lv {level.level}</div>
+          <div className="text-[10px] text-muted-foreground/70">{level.pct}%</div>
+        </div>
         {progress.streak > 0 && (
           <div className="ml-2 text-sm font-bold text-explorer">
             🔥 {progress.streak}
           </div>
         )}
+        {/* PHASE 1a: Quiz Correct-In-A-Row Counter */}
+        <div className="ml-2 text-sm font-bold text-success flex items-center gap-1">
+          ✅ {correctCount}/{index + (result === "correct" ? 1 : 0)} correct
+        </div>
       </div>
 
       <div className="px-5 mt-3 flex items-center gap-3">
@@ -3123,6 +3236,12 @@ export function StateUnlockScreen({
 }: { stateName?: string; onContinue?: () => void } = {}) {
   const state = stateName ? getState(stateName) : (INDIA_STATES && INDIA_STATES.length > 1 ? INDIA_STATES[1] : INDIA_STATES[0] || { name: "India", emoji: "🇮🇳", nickname: "Incredible India" });
   const art = STATE_ART[state.name];
+
+  // PHASE 1b: Play sound effect when state unlocks
+  useEffect(() => {
+    // Play celebratory sound on mount
+    fxCorrect();
+  }, []);
   return (
     <div className="h-full w-full gradient-explorer relative overflow-hidden flex flex-col">
       <Cloud className="absolute top-10 left-2 w-28 opacity-90" />
