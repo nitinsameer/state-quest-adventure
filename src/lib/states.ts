@@ -1,5 +1,5 @@
 export type StateTone = "orange" | "blue" | "green" | "gold";
-export type StateStatus = "done" | "current" | "locked";
+export type StateStatus = "done" | "current" | "locked" | "available";
 
 export type IndiaState = {
   name: string;
@@ -82,7 +82,7 @@ export const INDIA_STATES: IndiaState[] = sortedWithUTsAtEnd.map((s, i) => ({
 export const UNION_TERRITORIES = INDIA_STATES.filter((s) => s.kind === "ut");
 export const STATES_ONLY = INDIA_STATES.filter((s) => s.kind !== "ut");
 
-export const TOTAL_STATES = INDIA_STATES.length;
+export const TOTAL_STATES = 36; // 28 states + 8 union territories
 export const COMPLETED_STATES = INDIA_STATES.filter((s) => s.status === "done").length;
 
 export function getState(name?: string): IndiaState {

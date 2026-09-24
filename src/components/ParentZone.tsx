@@ -1,8 +1,11 @@
 import { useProgress, levelInfo, badgeCount, resetProgress, unlockedCount, cardsDone, CARDS_PER_STATE } from "@/lib/progress";
-import { INDIA_STATES, TOTAL_STATES } from "@/lib/states";
+import { INDIA_STATES } from "@/lib/states";
 import { useGoBack, BottomNav } from "@/components/screens";
 import { fxTap } from "@/lib/fx";
 import { useState } from "react";
+
+// Local constant to avoid bundler issues
+const TOTAL_STATES = 36;
 
 export function ParentZoneScreen() {
   const p = useProgress();

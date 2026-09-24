@@ -49,7 +49,6 @@ import { isBilingual, getAvailableLanguages } from "@/lib/bilingual-config";
 import { getNewlyUnlockedBadges, markBadgeAsSeen, getBadgeNotificationMessage } from "@/lib/badge-unlock-tracker";
 import {
   INDIA_STATES,
-  TOTAL_STATES,
   TOTAL_STATES_ONLY,
   TOTAL_UNION_TERRITORIES,
   getState,
@@ -91,6 +90,7 @@ import {
   type Achievement,
   type PostcardData,
   getStreakStatus,
+  getStreakMilestone,
   getNextAchievementBadge,
   getPostcardsArray,
   getTotalStampCount,
@@ -99,6 +99,8 @@ import {
   markRecentlyCompleted,
 } from "@/lib/progress";
 
+// Local constant to avoid bundler issues with imported TOTAL_STATES
+const TOTAL_STATES = 36;
 
 /* ---------- shared bits ---------- */
 
@@ -534,6 +536,38 @@ export function CreateProfileScreen() {
   );
 }
 
+/**
+ * Floating XP Animation Component
+ * Displays "+X XP" feedback with animation rising up and fading out
+ */
+function FloatingXPFeedback({ xp, key: feedbackKey }: { xp: number; key: string }) {
+  return (
+    <div
+      className="fixed pointer-events-none z-50 font-extrabold text-lg text-yellow-500 drop-shadow-lg animate-ping-rise"
+      style={{
+        left: "50%",
+        top: "50%",
+        transform: "translate(-50%, -50%)",
+        animation: "rise-fade 1.5s ease-out forwards",
+      }}
+    >
+      <style>{`
+        @keyframes rise-fade {
+          0% {
+            opacity: 1;
+            transform: translate(-50%, -50%);
+          }
+          100% {
+            opacity: 0;
+            transform: translate(-50%, -150px);
+          }
+        }
+      `}</style>
+      +{xp} XP ✨
+    </div>
+  );
+}
+
 export function HomeDashboardScreen() {
   const p = useProgress();
   const navigate = useNavigate();
@@ -562,14 +596,36 @@ export function HomeDashboardScreen() {
   const journey = statesWithProgress(p);
   const current = journey.find((s) => s.status === "current") ?? journey[journey.length - 1];
   const currentDone = cardsDone(p, current.name);
-  const upNext = journey.filter((s) => s.name !== current.name && s.status === "locked").slice(0, 2);
+  const upNext = journey.filter((s) => s.name !== current.name && s.status !== "done" && s.status !== "current").slice(0, 2);
 
   useEffect(() => {
     touchStreak();
+    
+    // Check for streak milestone celebrations
+    const { reached, message } = getStreakMilestone(p.streak);
+    if (reached) {
+      const celebrated = localStorage.getItem(`india-explorer:streak-milestone-${p.streak}:v1`);
+      if (!celebrated) {
+        setTimeout(() => {
+          celebration.custom(
+            message,
+            "🔥",
+            {
+              subtitle: `Keep up this amazing momentum!`,
+              confetti: true,
+              duration: 3000,
+              type: "success",
+            }
+          );
+          localStorage.setItem(`india-explorer:streak-milestone-${p.streak}:v1`, "true");
+        }, 500);
+      }
+    }
+    
     // Trigger animations on mount
     setTimeout(() => setStatsVisible(true), 100);
     setTimeout(() => setAnimateStats(true), 500);
-  }, []);
+  }, [p.streak]);
 
   const handleLockedCardTap = (stateName: string) => {
     fxTap();
@@ -589,95 +645,134 @@ export function HomeDashboardScreen() {
   };
 
   const getUnlockRequirement = (stateName: string): string => {
-    const completed = p.completed.length;
-    const stateIndex = journey.findIndex((s) => s.name === stateName);
-    const requiredStates = stateIndex + 1;
-    const needed = Math.max(0, requiredStates - completed);
-    if (needed === 0) return "Ready to play!";
-    return `Complete ${needed} more state${needed > 1 ? "s" : ""} to unlock`;
+    // All states unlocked from day 1 - free exploration mode
+    return "🌍 All states open - explore freely!";
   };
 
   return (
     <div className="h-full w-full bg-[#F7F5F0] flex flex-col overflow-hidden">
 
-      {/* Header with fade-in animation */}
-      <div className={`px-5 pt-3 pb-3 gradient-saffron rounded-b-[32px] relative overflow-hidden transition-opacity duration-500 ${statsVisible ? "opacity-100" : "opacity-0"}`}>
+      {/* Header with fade-in animation - Premium spacing */}
+      <div className={`px-6 pt-4 pb-4 gradient-saffron rounded-b-[32px] relative overflow-hidden transition-opacity duration-500 ${statsVisible ? "opacity-100" : "opacity-0"}`}>
         <Cloud className="absolute top-2 right-4 w-14 opacity-40" />
-        <div className="flex items-center gap-3 relative">
-          <div className="h-14 w-14 rounded-2xl bg-white p-1 shadow-soft flex items-center justify-center overflow-hidden">
+        <div className="flex items-center gap-4 relative mb-3">
+          {/* Avatar - Larger and more prominent */}
+          <div className="h-20 w-20 rounded-2xl bg-white p-1.5 shadow-soft flex items-center justify-center overflow-hidden flex-shrink-0">
             <img src={getAvatarImage(p.avatar)} alt={getAvatarName(p.avatar)} className="w-full h-full object-cover" />
           </div>
-          <div className="flex-1 text-white">
-            <div className="text-xs font-bold opacity-90">Namaste,</div>
-            <div className="text-display text-lg font-bold leading-tight">
-              {(p?.name?.split(" ")[0] || "Explorer")}! 👋
+          
+          <div className="flex-1 min-w-0">
+            {/* Greeting - Single line, cleaner */}
+            <div className="text-white">
+              <div className="text-display text-xl font-extrabold leading-tight">
+                Namaste, {(p?.name?.split(" ")[0] || "Explorer")}! 👋
+              </div>
+              <div className="text-xs font-semibold opacity-95 mt-1">Level {level} · Explorer</div>
             </div>
           </div>
-          <div className={`flex items-center gap-1.5 bg-white/60 rounded-full px-3 py-1.5 backdrop-blur transition-transform duration-1000 ${p.streak > 0 ? "animate-bounce" : ""}`}>
-            <span>🔥</span>
-            <span className="text-white text-display font-extrabold">{p.streak}</span>
-          </div>
           
-          {/* Help button - Tutorial trigger - More visible */}
-          <button
-            onClick={handleTutorialToggle}
-            className="h-12 w-12 rounded-full bg-white/90 backdrop-blur flex items-center justify-center text-saffron font-extrabold text-xl hover:bg-white active:scale-95 transition-all shadow-lg hover:shadow-xl"
-            title="How to play - Tap to learn"
-          >
-            ?
-          </button>
+          {/* Right side: Streak + Help button */}
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <div className={`flex items-center gap-1.5 bg-white/70 rounded-full px-3 py-2 backdrop-blur transition-transform duration-1000 ${p.streak > 0 ? "animate-bounce" : ""}`}>
+              <span className="text-lg">🔥</span>
+              <span className="text-white text-display font-black">{p.streak}</span>
+            </div>
+            
+            {/* Help button - Tutorial trigger */}
+            <button
+              onClick={handleTutorialToggle}
+              className="h-12 w-12 rounded-full bg-white/90 backdrop-blur flex items-center justify-center text-saffron font-extrabold text-lg hover:bg-white active:scale-95 transition-all shadow-lg hover:shadow-xl"
+              title="How to play"
+            >
+              ?
+            </button>
+          </div>
         </div>
 
         {/* XP Card with pulse animation */}
-        <div className={`mt-4 rounded-2xl bg-white/15 backdrop-blur p-3 relative transition-all duration-700 ${statsVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}>
+        <div className={`rounded-2xl bg-white/15 backdrop-blur p-4 relative transition-all duration-700 ${statsVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}>
           <div className="flex items-center justify-between text-white">
             <div>
-              <div className="text-xs font-bold opacity-90">Level {level} · Explorer</div>
-              <div className="text-display text-xl font-extrabold">
+              <div className="text-xs font-bold opacity-90">XP Progress</div>
+              <div className="text-display text-2xl font-extrabold">
                 {p.xp.toLocaleString()} XP
               </div>
             </div>
             <div className="text-right text-xs font-bold opacity-90">
-              {toNext} XP to
+              {toNext} to
               <br />
-              Level {level + 1}
+              Lv {level + 1}
             </div>
           </div>
           <div className="mt-2">
             <XPBar value={pct} />
           </div>
         </div>
+
+        {/* % INDIA EXPLORED - NEW DOPAMINE DRIVER */}
+        <div className={`mt-3 rounded-2xl bg-gradient-to-r from-orange-400 to-red-500 text-white p-4 relative overflow-hidden transition-all duration-700 ${statsVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}>
+          {/* Decorative pattern */}
+          <div className="absolute top-1 right-2 text-3xl opacity-20">🇮🇳</div>
+          
+          <div className="relative z-10">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <span className="text-3xl">🗺️</span>
+                <div>
+                  <div className="text-xs font-bold opacity-90">India Explored</div>
+                  <div className="text-display text-2xl font-extrabold">{Math.round((p.completed.length / TOTAL_STATES) * 100)}%</div>
+                </div>
+              </div>
+              <div className="text-right text-xs font-bold opacity-90">
+                {p.completed.length}/{TOTAL_STATES}<br/>States
+              </div>
+            </div>
+            {/* Progress bar */}
+            <div className="h-2.5 bg-white/25 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-white transition-all duration-700"
+                style={{ width: `${(p.completed.length / TOTAL_STATES) * 100}%` }}
+              />
+            </div>
+            {/* Milestone message */}
+            <div className="text-xs font-bold mt-2 opacity-95">
+              {p.completed.length === 0 && "🚀 Start your adventure!"}
+              {p.completed.length > 0 && p.completed.length < 9 && `🌱 You're ${p.completed.length} state${p.completed.length > 1 ? 's' : ''} in!`}
+              {p.completed.length >= 9 && p.completed.length < 18 && `🌿 Quarter way there!`}
+              {p.completed.length >= 18 && p.completed.length < 27 && `🌳 Halfway across India!`}
+              {p.completed.length >= 27 && p.completed.length < TOTAL_STATES && `🏆 Almost a master!`}
+              {p.completed.length === TOTAL_STATES && `👑 INDIA MASTER! 🎉`}
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Stats with encouraging messages + count-up animation */}
-      <div className={`px-5 mt-3 relative z-10 grid grid-cols-3 gap-2 transition-all duration-700 ${animateStats ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}>
+      {/* Stats with count-up animation - cleaner layout */}
+      <div className={`px-6 mt-3 relative z-10 grid grid-cols-3 gap-2 transition-all duration-700 ${animateStats ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}>
         <StatCardEnhanced 
           tone="orange" 
           icon="🗺️" 
           value={String(p.completed.length)} 
           label="States"
-          encouragement={p.completed.length === 0 ? "Ready to go!" : "Keep exploring!"}
         />
         <StatCardEnhanced 
           tone="gold" 
           icon="🏅" 
           value={String(badgeCount(p))} 
           label="Badges"
-          encouragement={badgeCount(p) === 0 ? "Earn in quizzes!" : "Great job!"}
         />
         <StatCardEnhanced 
           tone="green" 
           icon="🎫" 
           value={String(postcards)} 
           label="Stamps"
-          encouragement={postcards === 0 ? "Complete states!" : "Keep collecting!"}
         />
       </div>
 
       {/* Daily Goal Card - Compact inline version */}
       <DailyGoalCard />
 
-      {/* STATE COMPLETION CELEBRATION - Gap #4 */}
+      {/* Recently Completed State Celebration */}
       {(() => {
         const recentState = getRecentlyCompletedState(p);
         if (!recentState) return null;
@@ -746,7 +841,7 @@ export function HomeDashboardScreen() {
         );
       })()}
 
-      {/* STAMP COLLECTION VISUAL - Gap #3 */}
+      {/* Stamp Collection Display */}
       {(() => {
         const stamps = getPostcardsArray(p);
         const totalStamps = getTotalStampCount();
@@ -815,7 +910,7 @@ export function HomeDashboardScreen() {
         );
       })()}
 
-      {/* STREAK PROTECTION ALERT - Gap #1 */}
+      {/* Streak Protection Alert */}
       {(() => {
         const streakStatus = getStreakStatus(p);
         if (!streakStatus.isAtRisk || dismissStreakWarning) return null;
@@ -842,7 +937,7 @@ export function HomeDashboardScreen() {
         );
       })()}
 
-      {/* ACHIEVEMENT PREVIEW CARD - Gap #2 */}
+      {/* Achievement Badge Preview */}
       {(() => {
         const nextBadge = getNextAchievementBadge(p);
         if (!nextBadge) return null;
@@ -862,30 +957,29 @@ export function HomeDashboardScreen() {
             <Link 
               to="/achievements" 
               onClick={() => fxTap()}
-              className={`block rounded-2xl bg-gradient-to-r ${tierColors[nextBadge.tier]} text-white p-4 shadow-lg hover:shadow-xl transition-shadow`}
+              className={`block rounded-2xl bg-white border-2 border-gradient p-4 shadow-soft hover:shadow-md transition-shadow`}
             >
               <div className="flex items-start gap-3">
-                <div className="text-4xl">{nextBadge.icon}</div>
+                <div className="text-4xl flex-shrink-0">{nextBadge.icon}</div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs font-bold opacity-90">Next Achievement</div>
-                  <div className="text-display text-sm font-extrabold leading-tight">{nextBadge.name}</div>
-                  <div className="text-xs opacity-90 mt-1">{nextBadge.description}</div>
+                  <div className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Next Achievement</div>
+                  <div className="text-display text-sm font-extrabold text-ink leading-tight">{nextBadge.name}</div>
                   
                   {/* Progress bar */}
-                  <div className="mt-2 flex items-center gap-2">
-                    <div className="flex-1 h-2 bg-white/30 rounded-full overflow-hidden">
+                  <div className="mt-2.5 flex items-center gap-2">
+                    <div className="flex-1 h-2.5 bg-gray-200 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-white transition-all duration-500"
+                        className={`h-full bg-gradient-to-r ${tierColors[nextBadge.tier]} transition-all duration-500`}
                         style={{ width: `${progressPercent}%` }}
                       />
                     </div>
-                    <div className="text-xs font-bold whitespace-nowrap">{nextBadge.progress}/{nextBadge.achievementMax}</div>
+                    <div className="text-xs font-bold text-muted-foreground whitespace-nowrap">{nextBadge.progress}/{nextBadge.achievementMax}</div>
                   </div>
 
-                  {/* Steps away message */}
-                  <div className="text-xs font-bold mt-2 opacity-95">
+                  {/* Steps away message - compact */}
+                  <div className="text-xs font-bold text-ink mt-2">
                     {stepsAway === 0 
-                      ? "🎉 You're ready to earn this badge!" 
+                      ? "🎉 Ready to earn!" 
                       : `${stepsAway} step${stepsAway > 1 ? "s" : ""} away`
                     }
                   </div>
@@ -961,9 +1055,11 @@ export function HomeDashboardScreen() {
               <div className="text-display font-bold text-sm text-center leading-tight line-clamp-ellipsis-2">
                 {s.name}
               </div>
-              <div className="text-xs font-bold text-muted-foreground">🔒 Locked</div>
-              <div className="text-[9px] font-semibold text-saffron mt-1">
-                Tap to see preview
+              <div className="text-xs font-bold text-success">
+                🌍 Open
+              </div>
+              <div className="text-[9px] font-semibold text-success/70 mt-0.5">
+                Start exploring
               </div>
             </button>
           ))}
@@ -1080,50 +1176,53 @@ function StatCard({
 }
 
 /**
- * Enhanced stat card with encouraging messages for kids
- * Shows encouragement text instead of bare numbers
+ * Premium stats card - minimal, impactful design
+ * Just icon, number, and label - no encouragement text clutter
  */
 function StatCardEnhanced({
   icon,
   value,
   label,
   tone,
-  encouragement,
 }: {
   icon: string;
   value: string;
   label: string;
   tone: "orange" | "gold" | "green";
-  encouragement: string;
 }) {
-  const border = {
-    orange: "border-saffron/25",
-    gold: "border-[color:var(--gold)]/30",
-    green: "border-success/25",
+  const bgGradient = {
+    orange: "bg-gradient-to-br from-saffron/20 to-orange-100/10",
+    gold: "bg-gradient-to-br from-yellow-200/25 to-yellow-100/15",
+    green: "bg-gradient-to-br from-success/20 to-emerald-100/10",
   }[tone];
 
-  const bgColor = {
-    orange: "bg-saffron/5",
-    gold: "bg-yellow/5",
-    green: "bg-success/5",
+  const borderColor = {
+    orange: "border-saffron/30",
+    gold: "border-yellow-300/40",
+    green: "border-success/30",
+  }[tone];
+
+  const numberColor = {
+    orange: "text-saffron",
+    gold: "text-yellow-600",
+    green: "text-success",
   }[tone];
 
   return (
-    <div className={`rounded-2xl bg-white border ${border} p-3 shadow-soft hover:shadow-md transition-shadow`}>
-      <div className="flex items-start justify-between">
-        <div>
-          <div className="text-lg">{icon}</div>
-          <div className="text-display text-xl font-extrabold leading-snug mt-1">
+    <div className={`rounded-2xl ${bgGradient} border ${borderColor} p-2 shadow-soft hover:shadow-md transition-all`}>
+      <div className="flex flex-col gap-1">
+        {/* Icon and Number - Horizontal */}
+        <div className="flex items-center gap-1.5 pl-1">
+          <div className="text-2xl flex-shrink-0">{icon}</div>
+          <div className={`text-3xl font-black ${numberColor} leading-none`}>
             {value}
           </div>
-          <div className="text-xs font-bold text-muted-foreground mt-0.5">
-            {label}
-          </div>
         </div>
-      </div>
-      {/* Encouragement message */}
-      <div className={`mt-2 px-2 py-1 rounded-lg ${bgColor} text-[9px] font-bold text-center leading-tight`}>
-        {encouragement}
+        
+        {/* Label */}
+        <div className="text-xs font-bold text-muted-foreground px-1">
+          {label}
+        </div>
       </div>
     </div>
   );
@@ -1222,7 +1321,7 @@ function StateDetailModal({
           </p>
         </div>
 
-        {/* Gap #3: Sneak Peek Preview for Locked States */}
+        {/* Sneak Peek Preview for Locked States */}
         {isLocked && (
           <div className="rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 p-4 space-y-3">
             <p className="text-display text-sm font-extrabold text-amber-900 flex items-center gap-2">
@@ -1271,7 +1370,7 @@ function StateDetailModal({
             </p>
           </div>
         ) : (
-          <div className="rounded-2xl bg-blue-50 border-2 border-blue-200 p-4">
+          <div className="roundepppd-2xl bg-blue-50 border-2 border-blue-200 p-4">
             <p className="text-display text-sm font-extrabold text-blue-900 mb-2">
               ▶ In Progress
             </p>
@@ -1315,7 +1414,7 @@ export function JourneyMapScreen() {
   const [expandedRegion, setExpandedRegion] = useState<string | null>(null);
   const celebration = useCelebration();
 
-  // Gap #2: Detect and celebrate milestones
+  // Detect and celebrate milestones
   useEffect(() => {
     const totalStates = TOTAL_STATES;
     const completed = p.completed.length;
@@ -1405,7 +1504,7 @@ export function JourneyMapScreen() {
 
   appLogger.info('journey_map_screen', 'Rendering with states.length=' + (states ? states.length : 'undefined') + ', states=' + (states ? JSON.stringify(states.slice(0, 2)) : 'null'));
 
-  // Gap #1: Organize states by region for color-coded grouping
+  // Organize states by region for color-coded grouping
   const statesByRegion = useMemo(() => {
     const result: Record<string, typeof states> = {};
     REGION_KEYS.forEach((key) => {
@@ -1592,7 +1691,7 @@ export function JourneyMapScreen() {
               style={{ width: `${(completedStates / totalStates) * 100}%` }}
             />
           </div>
-          {/* Gap #2: Show next milestone target */}
+          {/* Progress toward next milestone */}
           <div className="text-xs font-bold text-white/80 mt-2">
             {completedStates < 9 && `🎯 25% milestone: ${Math.max(0, 9 - completedStates)} more states`}
             {completedStates >= 9 && completedStates < 18 && `🌎 50% milestone: ${Math.max(0, 18 - completedStates)} more states`}
@@ -1606,9 +1705,9 @@ export function JourneyMapScreen() {
       <Cloud className="absolute top-40 left-2 w-24 opacity-90 pointer-events-none animate-fade-in" style={{ animationDelay: "100ms" }} />
       <Cloud className="absolute top-80 right-1 w-20 opacity-85 pointer-events-none animate-fade-in" style={{ animationDelay: "150ms" }} />
 
-      {/* Map - Gap #1: Regional grouping with visual separators */}
+      {/* Explorable States Map with Regional Organization */}
       <div className="relative flex-1 mx-3 mt-2 rounded-[28px] overflow-y-auto overflow-x-hidden animate-fade-in" style={{ animationDelay: "200ms" }}>
-        {/* Regional sections with color-coded headers - Gap #1 */}
+        {/* Regional sections with color-coded headers */}
         <div className="relative w-full px-4 space-y-6 py-6">
           {REGION_KEYS.map((regionKey, regionIdx) => {
             // Skip union territories region - they're rendered separately below
@@ -1620,14 +1719,14 @@ export function JourneyMapScreen() {
             
             return (
               <div key={regionKey} className="animate-fade-in" style={{ animationDelay: `${300 + regionIdx * 100}ms` }}>
-                {/* Regional Header - Gap #1 */}
+                {/* Region Header with Progress */}
                 <div className={`rounded-2xl bg-gradient-to-r ${region.gradient} text-white p-3 mb-3 shadow-lg`}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <span className="text-2xl">{region.emoji}</span>
                       <div>
                         <div className="text-sm font-extrabold">{region.name}</div>
-                        <div className="text-xs font-bold opacity-90">{regionDone}/{regionStates.length} explored</div>
+                        <div className="text-xs font-bold opacity-90">{regionDone}/{regionStates.length} explored · {Math.round((regionDone / Math.max(regionStates.length, 1)) * 100)}%</div>
                       </div>
                     </div>
                     {/* Regional milestone indicator */}
@@ -1650,6 +1749,7 @@ export function JourneyMapScreen() {
                     const isLocked = state.status === "locked";
                     const isDone = state.status === "done";
                     const isCurrent = state.status === "current";
+                    const isAvailable = state.status === "available"; // New status
                     
                     return (
                       <button
@@ -1665,7 +1765,9 @@ export function JourneyMapScreen() {
                             ? `bg-gradient-to-br ${region.gradient} text-white shadow-lg`
                             : isCurrent
                             ? `bg-gradient-to-br from-yellow-300 to-orange-400 text-white shadow-lg scale-105 animate-pulse`
-                            : `bg-gray-100 text-gray-700 ${isLocked ? "opacity-60" : ""}`
+                            : isAvailable
+                            ? `bg-gradient-to-br from-slate-100 to-slate-200 text-slate-800 shadow-sm hover:shadow-md hover:scale-102` // Available states - clickable
+                            : `bg-gray-100 text-gray-700 ${isLocked ? "opacity-60 cursor-not-allowed" : ""}`
                         }`}
                       >
                         <div className="text-3xl mb-1">{state.emoji}</div>
@@ -1678,6 +1780,9 @@ export function JourneyMapScreen() {
                         )}
                         {isDone && !isCurrent && (
                           <div className="text-[10px] font-bold mt-1 opacity-90">↻ Replay</div>
+                        )}
+                        {isAvailable && (
+                          <div className="text-[10px] font-bold mt-1 text-slate-600">🔓 Ready</div>
                         )}
                         {isLocked && (
                           <div className="text-[10px] font-bold mt-1">🔒 Locked</div>
@@ -1698,7 +1803,7 @@ export function JourneyMapScreen() {
                   <span className="text-2xl">🏝️</span>
                   <div>
                     <div className="text-sm font-extrabold">Union Territories</div>
-                    <div className="text-xs font-bold opacity-90">{nodes.filter(n => n.isUT && n.status === "done").length}/8 explored</div>
+                    <div className="text-xs font-bold opacity-90">{nodes.filter(n => n.isUT && n.status === "done").length}/8 explored · {Math.round((nodes.filter(n => n.isUT && n.status === "done").length / 8) * 100)}%</div>
                   </div>
                 </div>
                 {nodes.filter(n => n.isUT && n.status === "done").length === 8 && (
@@ -1721,6 +1826,7 @@ export function JourneyMapScreen() {
                 const isLocked = utNode.status === "locked";
                 const isDone = utNode.status === "done";
                 const isCurrent = utNode.status === "current";
+                const isAvailable = utNode.status === "available"; // New status
                 
                 return (
                   <button
@@ -1736,7 +1842,9 @@ export function JourneyMapScreen() {
                         ? "bg-gradient-to-br from-blue-400 to-purple-500 text-white shadow-lg"
                         : isCurrent
                         ? "bg-gradient-to-br from-yellow-300 to-orange-400 text-white shadow-lg scale-105 animate-pulse"
-                        : `bg-gray-100 text-gray-700 ${isLocked ? "opacity-60" : ""}`
+                        : isAvailable
+                        ? "bg-gradient-to-br from-slate-100 to-slate-200 text-slate-800 shadow-sm hover:shadow-md hover:scale-102" // Available UTs
+                        : `bg-gray-100 text-gray-700 ${isLocked ? "opacity-60 cursor-not-allowed" : ""}`
                     }`}
                   >
                     <div className="text-3xl mb-1">{utState.emoji}</div>
@@ -1749,6 +1857,9 @@ export function JourneyMapScreen() {
                     )}
                     {isDone && !isCurrent && (
                       <div className="text-[10px] font-bold mt-1 opacity-90">↻ Replay</div>
+                    )}
+                    {isAvailable && (
+                      <div className="text-[10px] font-bold mt-1 text-slate-600">🔓 Ready</div>
                     )}
                     {isLocked && (
                       <div className="text-[10px] font-bold mt-1">🔒 Locked</div>
@@ -1793,7 +1904,7 @@ export function StateIntroScreen({
   const art = STATE_ART[state.name];
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
 
-  // Gap #4: Determine current region for breadcrumb
+  // Determine current region for breadcrumb navigation
   const currentRegion = useMemo(() => {
     for (const regionKey of REGION_KEYS) {
       const region = REGIONS[regionKey];
@@ -1817,7 +1928,7 @@ export function StateIntroScreen({
         <Cloud className="absolute top-6 left-2 w-20 opacity-80" />
         <Cloud className="absolute top-14 right-2 w-16 opacity-70" />
         
-        {/* Gap #4: Breadcrumb Navigation */}
+        {/* Breadcrumb Navigation */}
         <div className="absolute top-3 left-16 flex items-center gap-1 text-white text-xs font-bold">
           <span className="opacity-75">Journey</span>
           <span className="opacity-50">›</span>
@@ -1946,7 +2057,7 @@ export function LearningHubScreen({
   const completedCards = cardsDone(progress, state.name);
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
 
-  // Gap #4: Determine current region for breadcrumb
+  // Determine current region for breadcrumb navigation
   const currentRegion = useMemo(() => {
     for (const regionKey of REGION_KEYS) {
       const region = REGIONS[regionKey];
@@ -1999,6 +2110,27 @@ export function LearningHubScreen({
     }
   }, [completedCards, celebratedCategories, celebration, state.name]);
 
+  // Category progress tracking - calculate card counts
+  const allCards = useMemo(() => {
+    return learningCardsFor(state.name, "en", progress.ageBand);
+  }, [state.name, progress.ageBand]);
+
+  const cardCounts = useMemo(() => {
+    return Array.from({ length: 6 }).map((_, i) => {
+      const categoryCards = allCards.filter(card => card.mainCardIndex === i);
+      const cardsReadInCategory = categoryCards.filter(card => {
+        const cardIndex = allCards.indexOf(card);
+        return read.includes(cardIndex);
+      }).length;
+
+      return {
+        total: categoryCards.length,
+        read: cardsReadInCategory,
+      };
+    });
+  }, [allCards, read]);
+
+  // Track completion per category - all cards must be read
   const cards = [
     { icon: "🏛️", title: "Capital", sub: state.capital, tone: "orange" as const },
     { icon: "🗣️", title: "Language", sub: state.language, tone: "blue" as const },
@@ -2007,25 +2139,16 @@ export function LearningHubScreen({
     { icon: state.animal, title: "State Animal", sub: state.animalName, tone: "orange" as const },
     { icon: "💡", title: "Fun Fact", sub: state.funFact, tone: "blue" as const },
   ].map((c, i) => {
-    // Get cards for this specific category to calculate category-scoped progress
-    const categoryCards = useMemo(() => {
-      return learningCardsFor(state.name, "en", progress.ageBand).filter(
-        card => card.mainCardIndex === i
-      );
-    }, [state.name, progress.ageBand, i]);
-    
-    // Calculate how many cards in THIS category have been read (not cumulative)
-    const cardsReadInCategory = categoryCards.filter(card => {
-      const cardIndex = learningCardsFor(state.name, "en", progress.ageBand).indexOf(card);
-      return read.includes(cardIndex);
-    }).length;
-    
+    // Category is complete only if ALL cards in it are read
+    const isCategoryComplete = cardCounts[i].total > 0 && 
+      cardCounts[i].read === cardCounts[i].total;
+
     return {
       ...c,
       index: i,
-      categoryCardsTotal: categoryCards.length,
-      categoryCardsRead: cardsReadInCategory,
-      done: read.includes(i) || completedCards >= CARDS_PER_STATE,
+      categoryCardsTotal: cardCounts[i].total,
+      categoryCardsRead: cardCounts[i].read,
+      done: isCategoryComplete,
       active: i === completedCards && status !== "locked",
       locked: status === "locked",
       canClick: status !== "locked",
@@ -2036,7 +2159,7 @@ export function LearningHubScreen({
   return (
     <div className="h-full w-full bg-[#F7F5F0] flex flex-col">
       <div className={`px-5 pt-3 pb-4 ${grad} rounded-b-[32px] relative`}>
-        {/* Gap #4: Breadcrumb Navigation */}
+        {/* Breadcrumb Navigation Context */}
         <div className="mb-2 flex items-center gap-1 text-white text-xs font-bold px-12">
           <span className="opacity-75">Journey</span>
           <span className="opacity-50">›</span>
@@ -2095,14 +2218,23 @@ export function LearningHubScreen({
         ))}
       </div>
       <div className="p-4">
+        {/* Quiz Button with Completion Guard */}
         <button
           onClick={() => {
             fxTap();
             onQuiz?.();
           }}
-          className="w-full h-14 rounded-2xl gradient-success text-white text-display text-lg font-extrabold shadow-[var(--shadow-glow-green)]"
+          disabled={completedCards < 6}
+          className={`w-full h-14 rounded-2xl text-white text-display text-lg font-extrabold shadow-[var(--shadow-glow-green)] transition ${
+            completedCards === 6
+              ? "gradient-success"
+              : "bg-gray-300 opacity-60 cursor-not-allowed"
+          }`}
         >
-          Take the Quiz! 🎯
+          {completedCards === 6 
+            ? "Take the Quiz! 🎯" 
+            : `Take the Quiz! 🎯 (${completedCards}/6 categories)`
+          }
         </button>
       </div>
     </div>
@@ -2174,7 +2306,7 @@ function HubCard({
         </div>
       )}
       {done && (
-        <div className="absolute top-2 right-2 h-7 w-7 rounded-full bg-success text-white flex items-center justify-center text-xs font-black">
+        <div className="absolute top-2 right-2 h-8 w-8 rounded-full bg-gradient-to-br from-success to-emerald-600 text-white flex items-center justify-center text-lg font-black shadow-lg animate-bounce">
           ✓
         </div>
       )}
@@ -2365,9 +2497,12 @@ export function LearningCardScreen({
   const celebration = useCelebration();
   const level = levelInfo(progress.xp);
   
-  // Declare ALL state hooks FIRST, before any computations
+  // Learning Card Screen - State and Navigation
+  // mainCardIndex tracks which category (0-5)
+  // cardIndexInCategory tracks position within category (0-4 or more)
   const [displayLanguage, setDisplayLanguage] = useState<LanguageCode>("en");
-  const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  const [mainCardIndex, setMainCardIndex] = useState(cardIndex ?? 0); // Which category (0-5)
+  const [cardIndexInCategory, setCardIndexInCategory] = useState(0); // Position within category (0-4 usually)
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [playingCardIndex, setPlayingCardIndex] = useState<number | null>(null);
@@ -2378,32 +2513,18 @@ export function LearningCardScreen({
     return learningCardsFor(state.name, displayLanguage, progress.ageBand);
   }, [state.name, displayLanguage, progress.ageBand]);
   
-  // Calculate category-scoped cards (only cards in the current category)
+  // Get cards for current category only
   const cardsInCurrentCategory = useMemo(() => {
-    const currentCard = cards[currentCardIndex];
-    if (!currentCard) return cards; // Fallback to all cards if no current card
-    
-    // Get all cards with same mainCardIndex as current card
-    return cards.filter(c => c.mainCardIndex === currentCard.mainCardIndex);
-  }, [cards, currentCardIndex]);
+    return cards.filter(c => c.mainCardIndex === mainCardIndex);
+  }, [cards, mainCardIndex]);
   
-  // Calculate position within category (0-based index within category)
-  const categoryCardIndex = useMemo(() => {
-    const currentCard = cards[currentCardIndex];
-    if (!currentCard) return 0;
-    
-    return cardsInCurrentCategory.findIndex(c => 
-      cards.indexOf(c) === currentCardIndex
-    );
-  }, [cards, currentCardIndex, cardsInCurrentCategory]);
+  // Get current card object
+  const currentCard = cardsInCurrentCategory[cardIndexInCategory];
+  
+  // Get global index for progress tracking
+  const currentCardIndex = cards.indexOf(currentCard);
   
   const enrichedContent = getStateContent(stateName);
-  
-  // Now compute derived values from cards
-  const startIndexForMainCard = getMainCardStartIndex(cardIndex, cards);
-  const i = Math.min(Math.max(startIndexForMainCard, 0), cards.length - 1);
-  const isReplaying = progress.cards?.[state.name]?.includes(i) ?? false;
-  const replayCount = getReplayCount(progress, state.name, i);
   
   useEffect(() => {
     preloadStateArt(state.name, nextStateAfter(state.name)?.name);
@@ -2411,18 +2532,17 @@ export function LearningCardScreen({
 
   // Track card visit when a new card is displayed
   useEffect(() => {
-    if (card && state) {
-      const cardCategory = card.kicker.toLowerCase().replace(/\s+/g, "-");
-      markCardVisit(state.name, cardCategory, currentCardIndex);
+    if (currentCard && state) {
+      const cardCategory = currentCard.kicker.toLowerCase().replace(/\s+/g, "-");
+      markCardVisit(state.name, cardCategory, cardIndexInCategory);
     }
-  }, [currentCardIndex, state?.name]);
+  }, [cardIndexInCategory, state?.name]);
 
-  // Reset card index when cardIndex prop changes (for replay scenarios)
+  // When cardIndex prop changes, update mainCardIndex
   useEffect(() => {
-    const startIndexForMainCard = getMainCardStartIndex(cardIndex, cards);
-    const newI = Math.min(Math.max(startIndexForMainCard, 0), cards.length - 1);
-    setCurrentCardIndex(newI);
-  }, [cardIndex, stateName]); // Don't include 'cards' - language changes shouldn't reset position
+    setMainCardIndex(cardIndex ?? 0);
+    setCardIndexInCategory(0);
+  }, [cardIndex]);
 
   // Stop TTS on unmount
   useEffect(() => {
@@ -2433,6 +2553,7 @@ export function LearningCardScreen({
 
   const card = cards[currentCardIndex];
   const isLast = currentCardIndex === cards.length - 1;
+  const isReplaying = isCardReplaying(progress, state.name, currentCardIndex);
 
   // Safety check: ensure card exists
   if (!card) {
@@ -2462,29 +2583,29 @@ export function LearningCardScreen({
       const diff = touchStart - e.changedTouches[0].clientX;
       
       // Swipe left (show next card)
-      if (diff > swipeThreshold && currentCardIndex < cards.length - 1) {
+      if (diff > swipeThreshold && cardIndexInCategory < cardsInCurrentCategory.length - 1) {
         fxTap();
-        setCurrentCardIndex(currentCardIndex + 1);
+        setCardIndexInCategory(cardIndexInCategory + 1);
       }
       // Swipe right (show previous card)
-      else if (diff < -swipeThreshold && currentCardIndex > 0) {
+      else if (diff < -swipeThreshold && cardIndexInCategory > 0) {
         fxTap();
-        setCurrentCardIndex(currentCardIndex - 1);
+        setCardIndexInCategory(cardIndexInCategory - 1);
       }
     }
   };
 
   const handlePrevious = () => {
-    if (currentCardIndex > 0) {
+    if (cardIndexInCategory > 0) {
       fxTap();
-      setCurrentCardIndex(currentCardIndex - 1);
+      setCardIndexInCategory(cardIndexInCategory - 1);
     }
   };
 
   const handleNext = () => {
-    if (currentCardIndex < cards.length - 1) {
-      // Moving to next card - show immediate celebration for this card
-      const currentCard = cards[currentCardIndex];
+    if (cardIndexInCategory < cardsInCurrentCategory.length - 1) {
+      // Moving to next card in same category - show immediate celebration
+      const currentCard = cardsInCurrentCategory[cardIndexInCategory];
       const isReplaying = progress.cards?.[state.name]?.includes(currentCardIndex) ?? false;
       
       // Mark current card as learned BEFORE showing celebration
@@ -2492,12 +2613,16 @@ export function LearningCardScreen({
       
       // Show immediate celebration only on first read (not replay)
       if (!isReplaying) {
-        fxCorrect(); // Rising chime sound
+        fxCorrect();
+        
+        // Trigger floating XP animation
+        const feedbackId = `xp-${Date.now()}-${Math.random()}`;
+        
         celebration.custom(
           `${currentCard.kicker} card learned!`,
           "📚",
           {
-            subtitle: `+${XP_PER_CARD} XP • ${categoryCardIndex + 1}/${cardsInCurrentCategory.length} complete`,
+            subtitle: `+${XP_PER_CARD} XP • ${cardIndexInCategory + 1}/${cardsInCurrentCategory.length} complete`,
             confetti: true,
             duration: 2000,
             type: "success",
@@ -2506,18 +2631,18 @@ export function LearningCardScreen({
       }
       
       fxTap();
-      setCurrentCardIndex(currentCardIndex + 1);
+      setCardIndexInCategory(cardIndexInCategory + 1);
     } else {
-      // Last card overall - mark as learned and proceed
-      const currentCard = cards[currentCardIndex];
+      // Last card in this category - mark and move to next category or exit
+      const currentCard = cardsInCurrentCategory[cardIndexInCategory];
       const isReplaying = progress.cards?.[state.name]?.includes(currentCardIndex) ?? false;
       
-      // Mark final card as learned BEFORE showing celebration
+      // Mark final card as learned
       markCard(state.name, currentCardIndex, isReplaying);
       
-      // Show final card celebration
+      // Show category completion celebration
       if (!isReplaying) {
-        fxCorrect(); // Rising chime sound
+        fxCorrect();
         celebration.custom(
           `${currentCard.kicker} card learned!`,
           "📚",
@@ -2596,12 +2721,12 @@ export function LearningCardScreen({
         {/* Card counter and progress bar */}
         <div className="flex items-center gap-2 flex-1 min-w-0">
           <div className="text-display font-extrabold text-saffron whitespace-nowrap">
-            {categoryCardIndex + 1}/{cardsInCurrentCategory.length}
+            {cardIndexInCategory + 1}/{cardsInCurrentCategory.length}
           </div>
           <div className="h-2 rounded-full bg-white overflow-hidden shadow-inner flex-1">
             <div
               className={`h-full ${grad} transition-all`}
-              style={{ width: `${((categoryCardIndex + 1) / cardsInCurrentCategory.length) * 100}%` }}
+              style={{ width: `${((cardIndexInCategory + 1) / cardsInCurrentCategory.length) * 100}%` }}
             />
           </div>
         </div>
@@ -3111,7 +3236,7 @@ export function StateCompletedScreen({
     setBurstKey((n) => n + 1);
     if (persist) {
       completeState(state.name);
-      // Gap #4: Mark as recently completed for home screen celebration
+      // Mark as recently completed for home screen celebration
       markRecentlyCompleted(state.name);
     }
   }, [state.name, persist]);

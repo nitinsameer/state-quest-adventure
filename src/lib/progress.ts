@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from "react";
-import { INDIA_STATES, type IndiaState, type StateStatus } from "./states";
+import { INDIA_STATES, TOTAL_STATES, type IndiaState, type StateStatus } from "./states";
 import { firebaseEvents } from "./firebase-events";
 
 export type BadgeId = "monument" | "animal" | "explorer";
@@ -281,6 +281,25 @@ export function touchStreak() {
     const streak = p.lastActive === yesterdayStr ? p.streak + 1 : 1;
     return { ...p, lastActive: today, streak };
   });
+}
+
+/**
+ * Check if streak has reached a milestone and return milestone info
+ * Milestones: 7, 14, 30 day streaks
+ */
+export function getStreakMilestone(streak: number): { reached: boolean; days: number; message: string } {
+  const milestones = [
+    { days: 7, message: "Week Warrior! 🔥 7-day streak!" },
+    { days: 14, message: "Fortnight Master! 🔥🔥 14-day streak!" },
+    { days: 30, message: "Legend! 🔥🔥🔥 30-day streak!" },
+  ];
+  
+  for (const m of milestones) {
+    if (streak === m.days) {
+      return { reached: true, days: m.days, message: m.message };
+    }
+  }
+  return { reached: false, days: 0, message: "" };
 }
 
 /** 
@@ -570,26 +589,35 @@ export function levelInfo(xp: number) {
 /**
  * Get all states with their progress status
  * 
- * FIX #20: Testing mode completely removed (was: TESTING_MODE_UNLOCK_ALL_STATES)
- * Normal state progression enforced - must complete states sequentially
+ * ENGAGEMENT OPTIMIZATION: All 36 states unlocked from day 1
+ * - Kids can explore freely instead of linear progression
+ * - Increases dopamine: freedom + discovery
+ * - First state is still marked "current" for guided experience
+ * - All others are "available" (not locked)
  * 
- * Production Checklist:
- * - [x] Testing mode flag removed completely
- * - [x] State progression restored to normal
- * - [ ] Verify locked states show lock icon properly
+ * This drives higher engagement because:
+ * 1. Kids see all 36 states available
+ * 2. Ownership feeling: "I can go anywhere!"
+ * 3. Discovery: explore exotic states immediately
+ * 4. % India explored grows faster = more dopamine
  */
 export function statesWithProgress(p: Progress): IndiaState[] {
   let currentUsed = false;
   
-  // PRODUCTION MODE: Normal progression - must complete states sequentially
+  // ENGAGEMENT MODE: All states open from day 1 - free exploration
   return INDIA_STATES.map((s) => {
     const done = p.completed.includes(s.name);
-    let status: StateStatus = "locked";
-    if (done) status = "done";
-    else if (!currentUsed) {
+    let status: StateStatus = "available"; // Changed from "locked" to "available"
+    
+    if (done) {
+      status = "done";
+    } else if (!currentUsed && p.completed.length === 0) {
+      // First state is "current" to guide new players
       status = "current";
       currentUsed = true;
     }
+    // All other uncompleted states are "available" (not locked)
+    
     return { ...s, status, date: p.stamps[s.name] ?? undefined };
   });
 }

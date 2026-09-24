@@ -74,7 +74,7 @@ export function DailyGoalCard() {
   };
 
   return (
-    <div className="px-5 mt-2 mb-2 flex-shrink-0">
+    <div className="px-5 mt-2 mb-4 flex-shrink-0">
       <div className={`rounded-2xl bg-gradient-to-br ${goalColor} p-3 shadow-lg relative overflow-hidden`}>
         {/* Decorative background element */}
         <div className="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full blur-2xl pointer-events-none" />
@@ -87,7 +87,7 @@ export function DailyGoalCard() {
               {dailyGoal} State{dailyGoal > 1 ? "s" : ""} Today
             </div>
             <div className="text-xs font-bold text-white/90 mt-1">
-              {goalProgress}/{dailyGoal} {getEncouragementMessage().substring(0, 15)}...
+              {getEncouragementMessage()}
             </div>
           </div>
 

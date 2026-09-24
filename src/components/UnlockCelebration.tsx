@@ -180,6 +180,12 @@ export function UnlockCelebration() {
       subtitle: subtitle || undefined,
       confetti: true,
       duration: 4500,
+      action: {
+        label: "Awesome! 🎉",
+        onClick: () => {
+          // Auto-dismissed by celebration system
+        }
+      }
     });
 
     // One burst per tick, never stacked.
