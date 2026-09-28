@@ -3,6 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useProgress, type PostcardData } from "@/lib/progress";
 import { getProgressPercentage } from "@/lib/passport-helpers";
 import { INDIA_STATES } from "@/lib/states";
+import { STATE_ART } from "@/lib/state-art";
 import { generatePassportNumber } from "@/lib/passport-number";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { PostcardModal } from "@/components/PostcardModal";
@@ -99,13 +100,19 @@ export function PassportSapling() {
               <button
                 key={state.name}
                 onClick={() => handleStateClick(slug, isUnlocked)}
-                className={`aspect-square rounded-2xl flex flex-col items-center justify-center gap-1 transition transform text-xs font-bold ${
+                className={`aspect-square rounded-lg flex flex-col items-center justify-center gap-1 transition transform text-xs font-bold ${
                   isUnlocked
                     ? "bg-gradient-to-br from-yellow-300 to-amber-400 text-amber-900 shadow-md hover:shadow-lg active:scale-95"
                     : "bg-gray-200 text-gray-600 opacity-40 hover:opacity-60 active:scale-95"
                 }`}
               >
-                <div className="text-xl">{state.emoji}</div>
+                <img
+                  src={STATE_ART[state.name]}
+                  alt={state.name}
+                  className="w-8 h-8 object-cover rounded"
+                  loading="lazy"
+                  decoding="async"
+                />
                 <div className="text-[9px] leading-tight">{state.short}</div>
               </button>
             );

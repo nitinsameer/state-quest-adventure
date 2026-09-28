@@ -33,11 +33,18 @@ function Splash() {
   const p = useProgress();
   const [isReady, setIsReady] = useState(false);
 
+  // Immediate console logging on mount
+  console.log("🎬 [Splash] Component MOUNTED");
+  console.log("🎬 [Splash] useProgress returned:", { onboarded: p.onboarded, xp: p.xp });
+  console.log("🎬 [Splash] isHydrated():", isHydrated());
+
   // Wait for hydration to complete (with 3s timeout safety limit)
   useEffect(() => {
+    console.log("🎬 [Splash] useEffect running - hydration check");
     appLogger.info('splash_screen', 'Splash component rendering', { onboarded: p.onboarded, isHydrated: isHydrated() });
     
     if (isHydrated()) {
+      console.log("🎬 [Splash] Hydration already complete - setting isReady=true");
       appLogger.info('splash_screen', 'Hydration already complete');
       setIsReady(true);
       return;
@@ -70,11 +77,16 @@ function Splash() {
   }, []);
 
   useEffect(() => {
-    if (!isReady) return;
+    if (!isReady) {
+      console.log("🎬 [Splash] isReady is false, not navigating yet");
+      return;
+    }
 
+    console.log("🎬 [Splash] isReady=true, scheduling navigation in 600ms");
     appLogger.info('splash_screen', 'Splash effect setup', { delay: 600 });
     const t = setTimeout(() => {
       const destination = p.onboarded ? "/home" : "/welcome";
+      console.log("🎬 [Splash] ⏱️ Navigation timer fired - navigating to:", destination);
       appLogger.info('splash_screen', 'Navigating after splash', { destination, onboarded: p.onboarded, isHydrated: isHydrated() });
       navigate({ to: destination });
     }, 600);

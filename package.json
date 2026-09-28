@@ -17,6 +17,7 @@
     "validate:android": "node scripts/validate-android-build.mjs"
   },
   "dependencies": {
+    "framer-motion": "^11.0.3",
     "@capacitor-community/text-to-speech": "^5.1.0",
     "@capacitor/filesystem": "^6.0.4",
     "@hookform/resolvers": "^5.2.2",

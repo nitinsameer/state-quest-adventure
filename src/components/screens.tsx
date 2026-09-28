@@ -37,6 +37,7 @@ import { FirstSessionTutorial } from "@/components/FirstSessionTutorial";
 import { DailyGoalCard } from "@/components/DailyGoalCard";
 import { useToastStore } from "@/store/toastStore";
 import { AVATAR_CONFIG, type AvatarId } from "@/lib/avatar-config";
+import { AnimationWrapper, animationPresets, StaggerContainer } from "@/components/AnimationWrapper";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouter, Navigate } from "@tanstack/react-router";
 import { fxCorrect, fxWrong, fxConfetti, fxStamp, fxTap, useSoundOn, setSoundOn } from "@/lib/fx";
@@ -183,7 +184,7 @@ function Chip({
     orange: "bg-saffron-soft text-saffron",
     blue: "bg-explorer-soft text-explorer",
     green: "bg-success-soft text-success",
-    gold: "bg-gold-soft text-[color:var(--gold)]",
+    gold: "bg-gold-soft text-[color:var(--color-brand-gold-dark)]",
   } as const;
   return (
     <span
@@ -516,7 +517,7 @@ export function CreateProfileScreen() {
       <div className="p-5 pb-safe bg-white border-t border-gray-100">
         <button
           onClick={handleProfileSave}
-          className={`w-full h-14 rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-white text-display text-lg font-bold shadow-xl transition transform ${
+          className={`w-full h-12 rounded-2xl gradient-saffron text-white text-display font-bold shadow-xl transition transform focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)] ${
             saved ? "scale-95 opacity-80" : "hover:shadow-2xl active:scale-95"
           }`}
         >
@@ -653,7 +654,7 @@ export function HomeDashboardScreen() {
     <div className="h-full w-full bg-[#F7F5F0] flex flex-col overflow-hidden">
 
       {/* Header with fade-in animation - Premium spacing */}
-      <div className={`px-6 pt-4 pb-4 gradient-saffron rounded-b-[32px] relative overflow-hidden transition-opacity duration-500 ${statsVisible ? "opacity-100" : "opacity-0"}`}>
+      <div className={`px-5 pt-3 pb-4 gradient-saffron rounded-b-[32px] relative overflow-hidden transition-opacity duration-500 ${statsVisible ? "opacity-100" : "opacity-0"}`}>
         <Cloud className="absolute top-2 right-4 w-14 opacity-40" />
         <div className="flex items-center gap-4 relative mb-3">
           {/* Avatar - Larger and more prominent */}
@@ -681,7 +682,7 @@ export function HomeDashboardScreen() {
             {/* Help button - Tutorial trigger */}
             <button
               onClick={handleTutorialToggle}
-              className="h-12 w-12 rounded-full bg-white/90 backdrop-blur flex items-center justify-center text-saffron font-extrabold text-lg hover:bg-white active:scale-95 transition-all shadow-lg hover:shadow-xl"
+              className="h-12 w-12 rounded-full bg-white/90 backdrop-blur flex items-center justify-center text-saffron font-extrabold text-lg hover:bg-white active:scale-95 transition-all shadow-lg hover:shadow-xl focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
               title="How to play"
             >
               ?
@@ -748,7 +749,7 @@ export function HomeDashboardScreen() {
       </div>
 
       {/* Stats with count-up animation - cleaner layout */}
-      <div className={`px-6 mt-3 relative z-10 grid grid-cols-3 gap-2 transition-all duration-700 ${animateStats ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}>
+      <div className={`px-5 mt-3 relative z-10 grid grid-cols-3 gap-2 transition-all duration-700 ${animateStats ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}>
         <StatCardEnhanced 
           tone="orange" 
           icon="🗺️" 
@@ -957,7 +958,7 @@ export function HomeDashboardScreen() {
             <Link 
               to="/achievements" 
               onClick={() => fxTap()}
-              className={`block rounded-2xl bg-white border-2 border-gradient p-4 shadow-soft hover:shadow-md transition-shadow`}
+              className={`block rounded-2xl bg-white border-2 border-gradient p-4 shadow-soft hover:shadow-md transition-shadow focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]`}
             >
               <div className="flex items-start gap-3">
                 <div className="text-4xl flex-shrink-0">{nextBadge.icon}</div>
@@ -1022,7 +1023,7 @@ export function HomeDashboardScreen() {
             to="/state/$slug/learn"
             params={{ slug: stateSlug(current.name) }}
             onClick={() => fxTap()}
-            className="h-11 px-3 rounded-2xl gradient-saffron text-white text-display font-bold text-sm shadow-[var(--shadow-glow-orange)] flex items-center transition-all duration-300 hover:scale-105 active:scale-95 animate-pulse"
+            className="h-12 px-4 rounded-2xl gradient-saffron text-white text-display font-bold text-sm shadow-[var(--shadow-glow-orange)] flex items-center transition-all duration-300 hover:scale-105 active:scale-95 animate-pulse focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
           >
             Play ▶
           </Link>
@@ -1118,13 +1119,13 @@ export function HomeDashboardScreen() {
                   <div className="mt-4 space-y-2">
                     <button
                       onClick={() => setShowLockedPreview(null)}
-                      className="w-full h-12 rounded-2xl bg-gray-100 text-gray-800 font-extrabold"
+                      className="w-full h-12 rounded-2xl bg-gray-100 text-gray-800 font-extrabold transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
                     >
                       Close
                     </button>
                     <Link
                       to="/journey"
-                      className="w-full h-12 rounded-2xl gradient-saffron text-white font-extrabold flex items-center justify-center"
+                      className="w-full h-12 rounded-2xl gradient-saffron text-white font-extrabold flex items-center justify-center transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
                       onClick={() => fxTap()}
                     >
                       View Journey Map
@@ -1209,8 +1210,8 @@ function StatCardEnhanced({
   }[tone];
 
   return (
-    <div className={`rounded-2xl ${bgGradient} border ${borderColor} p-2 shadow-soft hover:shadow-md transition-all`}>
-      <div className="flex flex-col gap-1">
+    <div className={`rounded-2xl ${bgGradient} border ${borderColor} p-3 shadow-soft hover:shadow-md transition-all`}>
+      <div className="flex flex-col gap-2">
         {/* Icon and Number - Horizontal */}
         <div className="flex items-center gap-1.5 pl-1">
           <div className="text-2xl flex-shrink-0">{icon}</div>
@@ -1384,7 +1385,7 @@ function StateDetailModal({
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 h-12 rounded-2xl bg-gray-100 text-display font-extrabold text-gray-700 hover:bg-gray-200 transition"
+            className="flex-1 h-12 rounded-2xl bg-gray-100 text-display font-extrabold text-gray-700 hover:bg-gray-200 transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
           >
             Close
           </button>
@@ -1394,7 +1395,7 @@ function StateDetailModal({
                 fxTap();
                 onPlay();
               }}
-              className="flex-1 h-12 rounded-2xl bg-gradient-to-r from-saffron-400 to-saffron-500 text-display font-extrabold text-white shadow-lg hover:shadow-xl transition"
+              className="flex-1 h-12 rounded-2xl gradient-saffron text-display font-extrabold text-white shadow-lg hover:shadow-xl transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
             >
               {isDone ? "🎖️ Review" : "▶ Play"}
             </button>
@@ -1993,7 +1994,7 @@ export function StateIntroScreen({
             fxTap();
             onContinue?.();
           }}
-          className={`mt-6 w-full h-14 rounded-2xl ${grad} text-white text-display text-lg font-extrabold shadow-[var(--shadow-glow-orange)]`}
+          className={`mt-6 w-full h-12 rounded-2xl ${grad} text-white text-display font-extrabold shadow-[var(--shadow-glow-orange)] transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]`}
         >
           Start Exploring! ✈️
         </button>
@@ -2225,7 +2226,7 @@ export function LearningHubScreen({
             onQuiz?.();
           }}
           disabled={completedCards < 6}
-          className={`w-full h-14 rounded-2xl text-white text-display text-lg font-extrabold shadow-[var(--shadow-glow-green)] transition ${
+          className={`w-full h-12 rounded-2xl text-white text-display font-extrabold shadow-[var(--shadow-glow-green)] transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)] ${
             completedCards === 6
               ? "gradient-success"
               : "bg-gray-300 opacity-60 cursor-not-allowed"
@@ -2713,7 +2714,7 @@ export function LearningCardScreen({
             onClose?.();
           }}
           aria-label="Close learning card"
-          className="h-12 w-12 rounded-full bg-white shadow-soft flex items-center justify-center text-lg font-bold"
+          className="h-12 w-12 rounded-full bg-white shadow-soft flex items-center justify-center text-lg font-bold transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
         >
           ✕
         </button>
@@ -2855,7 +2856,7 @@ export function LearningCardScreen({
               handleNext();
             }
           }}
-          className={`w-full h-14 rounded-2xl ${grad} text-white text-display text-lg font-bold shadow-[var(--shadow-glow-orange)]`}
+          className={`w-full h-12 rounded-2xl ${grad} text-white text-display font-bold shadow-[var(--shadow-glow-orange)] transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]`}
         >
           {isLastInMainCardSection ? (currentMainCardIndex === 5 ? "Take the Quiz! 🎯" : "Done! Back to Cards") : "Got it! Next →"}
         </button>
@@ -2900,7 +2901,7 @@ export function LearningCardScreen({
                   fxTap();
                   setShowAudioPermissionPrompt(false);
                 }}
-                className="flex-1 h-12 rounded-xl bg-gradient-to-r from-blue-400 to-cyan-500 text-white font-bold text-sm flex items-center justify-center"
+                className="flex-1 h-12 rounded-xl gradient-explorer text-white font-bold text-sm flex items-center justify-center transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
               >
                 Go to Settings
               </Link>
@@ -3110,7 +3111,7 @@ export function QuizScreen({
             <button
               key={label}
               onClick={() => onSelect(label)}
-              className={`h-16 rounded-2xl px-5 flex items-center justify-between text-display text-lg font-bold shadow-soft border-2 transition-all active:scale-[0.99] hover:scale-[1.02] ${
+              className={`h-16 rounded-2xl px-5 flex items-center justify-between text-display text-lg font-bold shadow-soft border-2 transition-all active:scale-[0.99] hover:scale-[1.02] focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)] ${
                 isCorrectPick
                   ? "bg-success/10 border-success text-success"
                   : isWrongPick
@@ -3143,7 +3144,7 @@ export function QuizScreen({
         <button
           onClick={result ? onReset : onCheck}
           disabled={!selected}
-          className={`w-full h-14 rounded-2xl text-white text-display text-lg font-bold shadow-[var(--shadow-glow-blue)] disabled:opacity-50 ${
+          className={`w-full h-12 rounded-2xl text-white text-display font-bold shadow-[var(--shadow-glow-blue)] disabled:opacity-50 transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)] ${
             result === "correct"
               ? "bg-success"
               : result === "wrong"
@@ -3212,7 +3213,7 @@ export function CorrectAnswerScreen({ stateName }: { stateName?: string } = {}) 
       </div>
 
       <div className="p-6 relative">
-        <button className="w-full h-14 rounded-2xl bg-white text-success text-display text-lg font-extrabold shadow-lg animate-pulse active:scale-95 transition-transform">
+        <button className="w-full h-12 rounded-2xl bg-white text-success text-display font-extrabold shadow-lg animate-pulse active:scale-95 transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]">
           Next Question →
         </button>
       </div>
@@ -3335,7 +3336,7 @@ export function StateCompletedScreen({
             fxTap();
             onCreatePostcard?.();
           }}
-          className="w-full h-14 rounded-2xl bg-gradient-to-r from-purple-400 to-pink-400 text-white text-display text-lg font-extrabold shadow-xl active:scale-95 transition-transform"
+          className="w-full h-12 rounded-2xl bg-gradient-to-r from-yellow-400 to-yellow-500 text-white text-display font-extrabold shadow-xl active:scale-95 transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
         >
           ✨ Add Stamp
         </button>
@@ -3346,7 +3347,7 @@ export function StateCompletedScreen({
             fxTap();
             onContinue?.();
           }}
-          className="w-full h-12 rounded-xl bg-white/30 text-white text-display font-bold shadow-lg active:scale-95 transition-transform backdrop-blur-sm"
+          className="w-full h-12 rounded-xl bg-white/30 text-white text-display font-bold shadow-lg active:scale-95 transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)] backdrop-blur-sm"
         >
           ⏭️ Skip to Next State
         </button>
@@ -3412,7 +3413,7 @@ export function StateUnlockScreen({
             fxTap();
             onContinue?.();
           }}
-          className="w-full h-14 rounded-2xl bg-white text-explorer text-display text-lg font-extrabold shadow-xl"
+          className="w-full h-12 rounded-2xl bg-white text-explorer text-display font-extrabold shadow-xl transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
         >
           Continue Adventure ✈️
         </button>
@@ -3589,7 +3590,7 @@ function BadgeDetailModal({
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 h-12 rounded-2xl bg-gray-100 text-display font-extrabold text-gray-700 hover:bg-gray-200 transition"
+            className="flex-1 h-12 rounded-2xl bg-gray-100 text-display font-extrabold text-gray-700 hover:bg-gray-200 transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
           >
             Close
           </button>
@@ -3599,7 +3600,7 @@ function BadgeDetailModal({
                 fxConfetti();
                 onClose();
               }}
-              className="flex-1 h-12 rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-display font-extrabold text-white shadow-lg hover:shadow-xl transition"
+              className="flex-1 h-12 rounded-2xl bg-gradient-to-r from-yellow-400 to-yellow-500 text-display font-extrabold text-white shadow-lg hover:shadow-xl transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
             >
               🎉 Celebrate!
             </button>
@@ -3895,7 +3896,7 @@ export function BadgesScreen() {
             <div className="flex gap-3 mt-2">
               <button
                 onClick={() => setSelectedBadge(null)}
-                className="flex-1 h-12 rounded-2xl bg-gray-100 text-display font-extrabold text-gray-800 active:scale-95 transition"
+                className="flex-1 h-12 rounded-2xl bg-gray-100 text-display font-extrabold text-gray-800 active:scale-95 transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
               >
                 Close
               </button>
@@ -3905,7 +3906,7 @@ export function BadgesScreen() {
                     fxConfetti();
                     setSelectedBadge(null);
                   }}
-                  className="flex-1 h-12 rounded-2xl gradient-gold text-display font-extrabold text-white shadow-lg active:scale-95 transition"
+                  className="flex-1 h-12 rounded-2xl gradient-gold text-display font-extrabold text-white shadow-lg active:scale-95 transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
                 >
                   🎉 Celebrate!
                 </button>
@@ -4224,7 +4225,7 @@ export function ProfileScreen() {
           <Link
             to="/badges"
             onClick={() => fxTap()}
-            className="rounded-2xl bg-white shadow-soft border border-black/5 p-3 flex items-center gap-3 transition active:scale-[0.99]"
+            className="rounded-2xl bg-white shadow-soft border border-black/5 p-3 flex items-center gap-3 transition active:scale-[0.99] focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
           >
             <div className="h-12 w-12 rounded-2xl gradient-gold flex items-center justify-center text-2xl">
               🏆
@@ -4760,10 +4761,10 @@ export function EmptyStateScreen() {
           Invite a friend to join your adventure and travel across India
           together.
         </p>
-        <button className="mt-6 h-14 px-6 rounded-2xl gradient-saffron text-white text-display text-lg font-extrabold shadow-[var(--shadow-glow-orange)]">
+        <button className="mt-6 h-12 px-6 rounded-2xl gradient-saffron text-white text-display font-extrabold shadow-[var(--shadow-glow-orange)] transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]">
           Invite a Friend ✨
         </button>
-        <button className="mt-2 h-12 px-6 rounded-2xl bg-muted text-ink text-display font-extrabold">
+        <button className="mt-2 h-12 px-6 rounded-2xl bg-muted text-ink text-display font-extrabold transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]">
           Maybe later
         </button>
       </div>

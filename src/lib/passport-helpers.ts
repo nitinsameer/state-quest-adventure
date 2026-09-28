@@ -169,3 +169,59 @@ export function getWeeklyStats(progress: Progress, today: Date = new Date()): { 
   // For now, return placeholder
   return { count: 3, dates: [] };
 }
+
+/**
+ * Get "Up Next" states for a given current state
+ * Shows states from the same region first, then moves to next region when region is complete
+ * @param currentStateName Name of the current state
+ * @param allStates Array of all states with their status
+ * @param count How many states to return (default 2)
+ * @returns Array of up next states
+ */
+export function getUpNext(currentStateName: string, allStates: IndiaState[], count: number = 2): IndiaState[] {
+  // Find which region the current state belongs to
+  let currentRegionKey: keyof typeof REGIONS | null = null;
+  for (const [key, region] of Object.entries(REGIONS)) {
+    if (region.states.some(s => s.name === currentStateName)) {
+      currentRegionKey = key as keyof typeof REGIONS;
+      break;
+    }
+  }
+  
+  if (!currentRegionKey) return [];
+  
+  const currentRegion = REGIONS[currentRegionKey];
+  
+  // Get uncompleted states in the same region (excluding current)
+  const sameRegionUp = allStates
+    .filter(s => 
+      currentRegion.states.some(rs => rs.name === s.name) &&
+      s.status !== "done" &&
+      s.name !== currentStateName
+    )
+    .slice(0, count);
+  
+  // If we have enough states from same region, return them
+  if (sameRegionUp.length >= count) {
+    return sameRegionUp;
+  }
+  
+  // Otherwise, find next region and add states from there
+  const regionOrder: (keyof typeof REGIONS)[] = ["south", "east", "central", "west", "northeast", "north", "unionTerritories"];
+  const currentIndex = regionOrder.indexOf(currentRegionKey);
+  const nextRegionKey = currentIndex !== -1 && currentIndex + 1 < regionOrder.length 
+    ? regionOrder[currentIndex + 1]
+    : null;
+  
+  if (!nextRegionKey) return sameRegionUp;
+  
+  const nextRegion = REGIONS[nextRegionKey];
+  const nextRegionUp = allStates
+    .filter(s => 
+      nextRegion.states.some(rs => rs.name === s.name) &&
+      s.status !== "done"
+    )
+    .slice(0, count - sameRegionUp.length);
+  
+  return [...sameRegionUp, ...nextRegionUp];
+}

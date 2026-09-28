@@ -4,6 +4,7 @@
  * 
  * FIX #6 & #22: Console logging removed - only debug mode
  * FIX #13: Fail fast if required config is missing
+ * FIX #27: Analytics disabled by default (COPPA compliance) - enable only after consent
  */
 
 import { initializeApp } from 'firebase/app'
@@ -40,6 +41,7 @@ let app: ReturnType<typeof initializeApp> | null = null
 let analytics: ReturnType<typeof getAnalytics> | null = null
 let db: ReturnType<typeof getFirestore> | null = null
 let initialized = false
+let analyticsEnabled = false
 
 function initializeFirebase() {
   if (initialized) return
@@ -54,14 +56,46 @@ function initializeFirebase() {
     analytics = getAnalytics(app)
     db = getFirestore(app)
     
-    // Enable analytics collection (can be disabled for privacy)
+    // FIX #27: Disable analytics by default (COPPA compliance)
+    // Only enable after parent grants explicit consent
     if (analytics) {
-      setAnalyticsCollectionEnabled(analytics, true)
+      setAnalyticsCollectionEnabled(analytics, false)
     }
     
-    debugLog('firebase', 'Firebase initialized successfully')
+    debugLog('firebase', 'Firebase initialized successfully (analytics disabled by default)')
   } catch (error) {
     debugError('firebase', 'Firebase initialization failed', error)
+  }
+}
+
+/**
+ * Enable Firebase analytics after parental consent is granted
+ * FIX #27: COPPA compliance - only enable after explicit parent consent
+ */
+export function enableAnalyticsAfterConsent(): void {
+  if (!analytics) {
+    // Try to initialize if not already done
+    if (!initialized) {
+      initializeFirebase()
+    }
+  }
+  
+  if (analytics && !analyticsEnabled) {
+    setAnalyticsCollectionEnabled(analytics, true)
+    analyticsEnabled = true
+    debugLog('firebase', 'Analytics enabled after parental consent')
+  }
+}
+
+/**
+ * Disable Firebase analytics if consent is revoked
+ * FIX #27: COPPA compliance - support consent revocation
+ */
+export function disableAnalyticsAfterConsentRevoked(): void {
+  if (analytics && analyticsEnabled) {
+    setAnalyticsCollectionEnabled(analytics, false)
+    analyticsEnabled = false
+    debugLog('firebase', 'Analytics disabled after consent revocation')
   }
 }
 

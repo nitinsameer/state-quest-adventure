@@ -10,6 +10,7 @@ import {
   StateUnlockScreen,
 } from "@/components/screens";
 import { INDIA_STATES } from "@/lib/states";
+import { STATE_ART } from "@/lib/state-art";
 import { fxTap } from "@/lib/fx";
 
 
@@ -45,13 +46,19 @@ export function AllStatesSection() {
                 fxTap();
                 setActive(s.name);
               }}
-              className={`rounded-full px-3.5 py-2 text-sm font-extrabold border-2 transition-colors ${
+              className={`rounded-lg px-3.5 py-2 text-sm font-extrabold border-2 transition-colors flex items-center gap-2 ${
                 isActive
                   ? "gradient-saffron text-white border-transparent shadow-[var(--shadow-glow-orange)]"
                   : "bg-card text-foreground border-border hover:border-saffron"
               }`}
             >
-              <span className="mr-1">{s.emoji}</span>
+              <img
+                src={STATE_ART[s.name]}
+                alt={s.name}
+                className="w-6 h-6 object-cover rounded"
+                loading="lazy"
+                decoding="async"
+              />
               {s.short}
             </button>
           );

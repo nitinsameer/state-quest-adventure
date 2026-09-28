@@ -3,6 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useProgress, type PostcardData } from "@/lib/progress";
 import { getSproutStates, getProgressPercentage } from "@/lib/passport-helpers";
 import { INDIA_STATES } from "@/lib/states";
+import { STATE_ART } from "@/lib/state-art";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { PostcardModal } from "@/components/PostcardModal";
 import { fxTap, fxConfetti } from "@/lib/fx";
@@ -97,13 +98,19 @@ export function PassportSprout() {
               <button
                 key={state.name}
                 onClick={() => handleStateClick(state.name)}
-                className={`aspect-square rounded-3xl flex flex-col items-center justify-center gap-2 transition transform ${
+                className={`aspect-square rounded-2xl flex flex-col items-center justify-center gap-2 transition transform ${
                   isUnlocked
                     ? "bg-gradient-to-br from-yellow-300 to-amber-400 shadow-lg hover:scale-105 active:scale-95"
                     : "bg-gray-100 hover:bg-gray-200 active:scale-95"
                 }`}
               >
-                <div className="text-4xl">{state.emoji}</div>
+                <img
+                  src={STATE_ART[state.name]}
+                  alt={state.name}
+                  className="w-12 h-12 object-cover rounded"
+                  loading="lazy"
+                  decoding="async"
+                />
                 {isUnlocked && <div className="text-xs font-bold text-amber-900">Tap!</div>}
                 {!isUnlocked && <div className="text-lg">🔒</div>}
               </button>

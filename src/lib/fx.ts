@@ -121,6 +121,64 @@ let ctx: AudioContext | null = null;
 const activeSoundNodes = new Set<{ osc?: OscillatorNode; gain: GainNode }>();
 
 /**
+ * FIX #4: Cleanup AudioContext to prevent memory leaks
+ * Called when app pauses/resumes or is destroyed
+ * Safe to call multiple times
+ */
+export function cleanupAudioContext(): void {
+  console.log("[AUDIO CLEANUP] Cleaning up audio context");
+  
+  // Stop ambient music first
+  stopAmbientMusic();
+  
+  // Stop all active sound effects
+  stopAllActiveSounds();
+  
+  // Close AudioContext if it exists
+  if (ctx) {
+    try {
+      // Disconnect all nodes before closing
+      if (ctx.state !== "closed") {
+        // Give pending sounds time to fade
+        setTimeout(() => {
+          if (ctx && ctx.state !== "closed") {
+            ctx.close().catch((err) => {
+              console.error("[AUDIO CLEANUP] Error closing AudioContext:", err);
+            });
+          }
+          ctx = null;
+        }, 100);
+      }
+    } catch (err) {
+      console.error("[AUDIO CLEANUP] Error during AudioContext cleanup:", err);
+      ctx = null;
+    }
+  }
+  
+  // Clear ambient audio elements
+  if (ambientAudioElement) {
+    ambientAudioElement.pause();
+    ambientAudioElement.src = "";
+    ambientAudioElement = null;
+  }
+  
+  if (ambientOscillator) {
+    try {
+      ambientOscillator.stop();
+    } catch {
+      // Already stopped
+    }
+    ambientOscillator = null;
+  }
+  
+  if (localAmbientGain) {
+    localAmbientGain = null;
+  }
+  
+  console.log("[AUDIO CLEANUP] Audio cleanup complete");
+}
+
+/**
  * Stop all currently playing sound effects immediately
  * Called when user disables audio toggle
  */
@@ -133,7 +191,11 @@ function stopAllActiveSounds() {
       if (node.osc) {
         // Cancel scheduled frequency/gain changes and stop immediately
         node.osc.frequency.cancelScheduledValues(a.currentTime);
-        node.osc.stop(a.currentTime);
+        try {
+          node.osc.stop(a.currentTime);
+        } catch {
+          // Already stopped
+        }
       }
       // Fade out gain immediately to silence
       node.gain.gain.cancelScheduledValues(a.currentTime);
@@ -515,7 +577,8 @@ function startAmbientTone() {
   const lfoGain = a.createGain();
   lfoGain.gain.setValueAtTime(0.008, a.currentTime);
 
-  lfo.connect(localAmbientGain.gain);
+  lfo.connect(lfoGain);
+  lfoGain.connect(localAmbientGain.gain);
 
   // Connect signal chain
   ambientOscillator.connect(filter);
@@ -553,25 +616,52 @@ function stopAmbientMusic() {
       ambientAudioElement.volume = 0.15 * (1 - progress);
       if (progress >= 1) {
         clearInterval(fadeInterval);
-        ambientAudioElement.pause();
-        ambientAudioElement.currentTime = 0;
+        try {
+          ambientAudioElement.pause();
+          ambientAudioElement.currentTime = 0;
+        } catch {
+          // Already paused
+        }
       }
     }, 50);
   }
 
-  // Stop oscillator if playing
+  // Stop oscillator and LFO if playing
   if (ambientOscillator && localAmbientGain) {
     const a = ac();
     if (a) {
-      localAmbientGain.gain.exponentialRampToValueAtTime(
-        0.0001,
-        a.currentTime + 0.5
-      );
-      setTimeout(() => {
-        ambientOscillator?.stop();
+      try {
+        localAmbientGain.gain.exponentialRampToValueAtTime(
+          0.0001,
+          a.currentTime + 0.5
+        );
+        
+        // FIX #4: Properly disconnect and stop all ambient nodes
+        setTimeout(() => {
+          try {
+            if (ambientOscillator) {
+              ambientOscillator.stop();
+              ambientOscillator.disconnect();
+            }
+          } catch {
+            // Already stopped
+          }
+          ambientOscillator = null;
+          
+          try {
+            if (localAmbientGain) {
+              localAmbientGain.disconnect();
+            }
+          } catch {
+            // Already disconnected
+          }
+          localAmbientGain = null;
+        }, 550);
+      } catch (err) {
+        console.error("[Ambient] Error stopping oscillator:", err);
         ambientOscillator = null;
         localAmbientGain = null;
-      }, 550);
+      }
     }
   }
 }

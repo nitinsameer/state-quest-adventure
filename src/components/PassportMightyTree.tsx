@@ -3,6 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useProgress, type PostcardData } from "@/lib/progress";
 import { getProgressPercentage, getMilestones, getXpToNextLevel } from "@/lib/passport-helpers";
 import { INDIA_STATES } from "@/lib/states";
+import { STATE_ART } from "@/lib/state-art";
 import { generatePassportNumber } from "@/lib/passport-number";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { PostcardModal } from "@/components/PostcardModal";
@@ -125,9 +126,17 @@ export function PassportMightyTree() {
                 <button
                   key={stateName}
                   onClick={() => handleStateClick(stateName.toLowerCase().replace(/\s+/g, "-"), true)}
-                  className="w-full p-2 rounded-xl bg-gradient-to-r from-blue-100 to-purple-100 text-gray-800 text-sm font-semibold hover:shadow-md active:scale-95 transition text-left"
+                  className="w-full p-2 rounded-xl bg-gradient-to-r from-blue-100 to-purple-100 text-gray-800 text-sm font-semibold hover:shadow-md active:scale-95 transition text-left flex items-center gap-2"
                 >
-                  {state.emoji} {stateName} <span className="text-xs opacity-75">· 2d ago</span>
+                  <img
+                    src={STATE_ART[stateName]}
+                    alt={stateName}
+                    className="w-6 h-6 object-cover rounded"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <span>{stateName}</span>
+                  <span className="text-xs opacity-75 ml-auto">· 2d ago</span>
                 </button>
               );
             })}
@@ -145,13 +154,19 @@ export function PassportMightyTree() {
                 <button
                   key={state.name}
                   onClick={() => handleStateClick(slug, isUnlocked)}
-                  className={`aspect-square rounded-xl flex flex-col items-center justify-center gap-0.5 transition transform text-xs font-bold ${
+                  className={`aspect-square rounded-lg flex flex-col items-center justify-center gap-0.5 transition transform text-xs font-bold ${
                     isUnlocked
                       ? "bg-gradient-to-br from-yellow-300 to-amber-400 text-amber-900 shadow-md hover:shadow-lg active:scale-95"
-                      : "bg-gray-300 text-gray-600 opacity-30 hover:opacity-50 active:scale-95"
+                      : "bg-gray-300 text-[color:var(--color-state-disabled-text)] opacity-40 hover:opacity-60 active:scale-95"
                   }`}
                 >
-                  <div className="text-lg">{state.emoji}</div>
+                  <img
+                    src={STATE_ART[state.name]}
+                    alt={state.name}
+                    className="w-6 h-6 object-cover rounded"
+                    loading="lazy"
+                    decoding="async"
+                  />
                   <div className="text-[8px] leading-tight text-center">{state.short}</div>
                 </button>
               );

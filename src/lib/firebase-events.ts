@@ -2,6 +2,8 @@
  * Firebase Analytics Events Wrapper
  * Type-safe event logging with automatic null-safety
  * 
+ * FIX #27: Analytics consent check - no tracking without parent consent (COPPA)
+ * FIX #28: Reduced event set - only educationally-relevant metrics for kids app
  * All events are logged to Firebase Analytics and local logger
  */
 
@@ -9,6 +11,7 @@ import { analytics, isFirebaseConfigured } from './firebase-init'
 import { logEvent } from 'firebase/analytics'
 import { appLogger } from './logger'
 import { eventQueue } from './event-queue'
+import { hasFeatureConsent } from './parental-consent'
 import type { BadgeId } from './progress'
 
 // FIX #10: Rate limiting and deduplication for events
@@ -66,12 +69,6 @@ interface CardReadParams {
   isReplay: boolean
 }
 
-interface BadgeEarnParams {
-  stateName: string
-  badgeId: BadgeId
-  method: 'quiz' | 'cards' | 'achievement'
-}
-
 interface StateCompleteParams {
   stateName: string
   totalXp: number
@@ -100,11 +97,6 @@ interface CrashParams {
   ageBand?: string
 }
 
-interface FeaturePermissionParams {
-  feature: 'audio' | 'file'
-  granted: boolean
-}
-
 interface StorageHydrationParams {
   timeout: boolean
   storedDataSizeBytes?: number
@@ -115,11 +107,21 @@ interface StorageHydrationParams {
  * Safe event logging - handles Firebase not being initialized
  * FIX #2: Uses offline queue for persistence and retry
  * FIX #10: Rate limiting to prevent quota overages
+ * FIX #27: Consent check - only log if parental consent granted (COPPA)
+ * FIX #28: Kids app - only essential events
  */
 function safeLogEvent<T extends Record<string, any>>(
   eventName: string,
   params?: T
 ): void {
+  // FIX #27: Check analytics consent before logging any event
+  // COPPA requires parental consent before any tracking begins
+  if (!hasFeatureConsent('analytics')) {
+    // No consent - don't queue or log event
+    // This ensures no data is collected before parental permission
+    return
+  }
+
   // FIX #10: Skip if rate limited
   if (isRateLimited(eventName)) {
     return
@@ -196,13 +198,22 @@ function validateAndSanitizeParams<T extends Record<string, any>>(
 }
 
 /**
- * Firebase Events API
- * All methods return void and handle errors gracefully
+ * Firebase Events API - COPPA-Compliant & Kids App Safe
+ * 
+ * FIX #28: Only essential educationally-relevant events
+ * - Quiz tracking (learning assessment)
+ * - Card reading (content consumption)
+ * - State completion (major milestones)
+ * - XP earning (engagement)
+ * - Session tracking (retention metrics)
+ * - Error reporting (debugging)
+ * 
+ * Removed: Excessive tracking, behavioral profiling, permission tracking
  */
 export const firebaseEvents = {
-  // ========== QUIZ EVENTS ==========
+  // ========== QUIZ EVENTS (ESSENTIAL) ==========
   /**
-   * User starts a quiz
+   * User starts a quiz - learning engagement
    */
   quizStart: (params: QuizEventParams): void => {
     safeLogEvent('quiz_start', {
@@ -213,7 +224,7 @@ export const firebaseEvents = {
   },
 
   /**
-   * User answers a quiz question
+   * User answers a quiz question - learning assessment
    */
   quizAnswer: (params: QuizAnswerParams): void => {
     safeLogEvent('quiz_answer', {
@@ -224,7 +235,7 @@ export const firebaseEvents = {
   },
 
   /**
-   * User completes a quiz
+   * User completes a quiz - learning completion
    */
   quizComplete: (params: QuizCompleteParams): void => {
     safeLogEvent('quiz_complete', {
@@ -236,9 +247,9 @@ export const firebaseEvents = {
     })
   },
 
-  // ========== CARD/LEARNING EVENTS ==========
+  // ========== CARD/LEARNING EVENTS (ESSENTIAL) ==========
   /**
-   * User reads a learning card
+   * User reads a learning card - content consumption
    */
   cardRead: (params: CardReadParams): void => {
     safeLogEvent('card_read', {
@@ -248,30 +259,9 @@ export const firebaseEvents = {
     })
   },
 
+  // ========== PROGRESSION EVENTS (ESSENTIAL) ==========
   /**
-   * User expands card to see more details
-   */
-  cardExpanded: (params: Omit<CardReadParams, 'isReplay'>): void => {
-    safeLogEvent('card_expanded', {
-      state_name: params.stateName,
-      card_index: params.cardIndex,
-    })
-  },
-
-  // ========== PROGRESSION EVENTS ==========
-  /**
-   * User earns a badge
-   */
-  badgeEarned: (params: BadgeEarnParams): void => {
-    safeLogEvent('badge_earned', {
-      state_name: params.stateName,
-      badge_id: params.badgeId,
-      method: params.method,
-    })
-  },
-
-  /**
-   * User completes a state
+   * User completes a state - major learning milestone
    */
   stateCompleted: (params: StateCompleteParams): void => {
     safeLogEvent('state_completed', {
@@ -284,7 +274,7 @@ export const firebaseEvents = {
   },
 
   /**
-   * User earns XP
+   * User earns XP - engagement tracking
    */
   xpEarned: (amount: number, source: 'card' | 'quiz' | 'achievement'): void => {
     safeLogEvent('xp_earned', {
@@ -293,34 +283,17 @@ export const firebaseEvents = {
     })
   },
 
-  // ========== ONBOARDING EVENTS ==========
+  // ========== ONBOARDING EVENTS (ESSENTIAL) ==========
   /**
-   * User creates profile (completes onboarding)
-   */
-  profileCreated: (ageBand: string, avatar: string): void => {
-    safeLogEvent('profile_created', {
-      age_band: ageBand,
-      avatar,
-    })
-  },
-
-  /**
-   * User completes first state (key milestone)
+   * User completes first state - retention milestone
    */
   firstStateCompleted: (): void => {
     safeLogEvent('first_state_completed', {})
   },
 
+  // ========== SESSION/RETENTION EVENTS (ESSENTIAL) ==========
   /**
-   * User earns first badge
-   */
-  firstBadgeEarned: (): void => {
-    safeLogEvent('first_badge_earned', {})
-  },
-
-  // ========== SESSION/RETENTION EVENTS ==========
-  /**
-   * Session starts (user opens app)
+   * Session starts (user opens app) - DAU tracking
    */
   sessionStart: (params: SessionStartParams): void => {
     safeLogEvent('session_start', {
@@ -331,7 +304,7 @@ export const firebaseEvents = {
   },
 
   /**
-   * Daily visit (tracks DAU/MAU)
+   * Daily visit (tracks DAU/MAU) - retention metric
    */
   dailyVisit: (params: DailyVisitParams): void => {
     safeLogEvent('daily_visit', {
@@ -343,7 +316,7 @@ export const firebaseEvents = {
   },
 
   /**
-   * Streak milestone achieved
+   * Streak milestone achieved - motivation/engagement
    */
   streakMilestone: (streak: number): void => {
     safeLogEvent('streak_milestone', {
@@ -351,9 +324,9 @@ export const firebaseEvents = {
     })
   },
 
-  // ========== QUALITY/ERROR EVENTS ==========
+  // ========== QUALITY/ERROR EVENTS (ESSENTIAL) ==========
   /**
-   * App crash or fatal error
+   * App crash or fatal error - debugging/QA only
    */
   crash: (params: CrashParams): void => {
     safeLogEvent('crash', {
@@ -364,7 +337,7 @@ export const firebaseEvents = {
   },
 
   /**
-   * Storage hydration timeout (app performance issue)
+   * Storage hydration timeout - performance issue debugging
    */
   storageHydrationTimeout: (params: StorageHydrationParams): void => {
     safeLogEvent('storage_hydration_timeout', {
@@ -372,45 +345,30 @@ export const firebaseEvents = {
       stored_data_kb: params.storedDataSizeBytes ? Math.round(params.storedDataSizeBytes / 1024) : 0,
     })
   },
-
-  /**
-   * Invalid card mark attempt
-   */
-  invalidCardMark: (stateName: string, cardIndex: number): void => {
-    safeLogEvent('invalid_card_mark', {
-      state_name: stateName,
-      card_index: cardIndex,
-    })
-  },
-
-  // ========== PERMISSION EVENTS ==========
-  /**
-   * User grants or denies permission
-   */
-  permissionRequested: (params: FeaturePermissionParams): void => {
-    safeLogEvent('permission_requested', {
-      feature: params.feature,
-      granted: params.granted,
-    })
-  },
-
-  // ========== NAVIGATION EVENTS ==========
-  /**
-   * Track screen/page views
-   */
-  screenView: (screenName: string, screenClass?: string): void => {
-    safeLogEvent('screen_view', {
-      screen_name: screenName,
-      screen_class: screenClass || screenName,
-    })
-  },
-
-  /**
-   * User engagement event
-   */
-  engagement: (eventName: string, metadata?: Record<string, any>): void => {
-    safeLogEvent(eventName, metadata)
-  },
 }
 
 export default firebaseEvents
+
+/**
+ * REMOVED EVENTS (FIX #28: Kids App Compliance)
+ * =============================================
+ * 
+ * The following events were removed to reduce unnecessary tracking
+ * and maintain COPPA compliance:
+ * 
+ * - screenView() - Excessive navigation tracking not needed for kids app
+ * - engagement() - Generic tracking can enable behavioral profiling
+ * - badgeEarned() - Redundant (badges tracked via stateCompleted)
+ * - firstBadgeEarned() - Redundant subset of badgeEarned
+ * - cardExpanded() - Granular tracking of every UI interaction (privacy concern)
+ * - invalidCardMark() - Debug event, not needed in production
+ * - profileCreated() - Removed to avoid tracking avatar data
+ * - permissionRequested() - Permission tracking can identify children
+ * 
+ * Rationale:
+ * ✓ Reduces data collection surface
+ * ✓ Simplifies privacy compliance disclosure
+ * ✓ Removes granular behavioral tracking
+ * ✓ Keeps only educationally-relevant metrics
+ * ✓ COPPA-compliant minimal event set
+ */

@@ -4,6 +4,7 @@ import { useProgress, type PostcardData } from "@/lib/progress";
 import { REGIONS, REGION_KEYS, getProgressPercentage } from "@/lib/passport-helpers";
 import { getState } from "@/lib/states";
 import { generatePassportNumber } from "@/lib/passport-number";
+import { STATE_ART } from "@/lib/state-art";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { PostcardModal } from "@/components/PostcardModal";
 import { fxTap } from "@/lib/fx";
@@ -238,7 +239,13 @@ export function PassportSeedling() {
                     : "bg-gradient-to-br from-gray-100 to-gray-200 text-gray-700 hover:to-gray-300"
                 }`}
               >
-                <div className="text-4xl mb-2">{state.emoji}</div>
+                <img
+                  src={STATE_ART[state.name]}
+                  alt={state.name}
+                  className="w-16 h-16 object-cover rounded-lg mb-2"
+                  loading="lazy"
+                  decoding="async"
+                />
                 <div className="text-sm font-extrabold leading-tight">{state.name}</div>
                 <div className="text-[11px] font-bold mt-1 opacity-90">
                   {isUnlocked ? "✓ Collected" : "🔒 Locked"}

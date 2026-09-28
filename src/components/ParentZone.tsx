@@ -1,5 +1,6 @@
 import { useProgress, levelInfo, badgeCount, resetProgress, unlockedCount, cardsDone, CARDS_PER_STATE } from "@/lib/progress";
 import { INDIA_STATES } from "@/lib/states";
+import { STATE_ART } from "@/lib/state-art";
 import { useGoBack, BottomNav } from "@/components/screens";
 import { fxTap } from "@/lib/fx";
 import { useState } from "react";
@@ -175,7 +176,13 @@ export function ParentZoneScreen() {
                 ) : (
                   inProgress.map((s) => (
                     <div key={s.name} className="flex items-center gap-3">
-                      <span className="text-2xl">{s.emoji}</span>
+                      <img
+                        src={STATE_ART[s.name]}
+                        alt={s.name}
+                        className="w-8 h-8 object-cover rounded-lg flex-shrink-0"
+                        loading="lazy"
+                        decoding="async"
+                      />
                       <div className="flex-1">
                         <div className="text-display font-extrabold text-sm">{s.name}</div>
                         <div className="h-1.5 mt-1 rounded-full bg-muted overflow-hidden">

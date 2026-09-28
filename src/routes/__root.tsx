@@ -24,29 +24,65 @@ import { appLogger } from "@/lib/logger";
 import { firebaseEvents } from "@/lib/firebase-events";
 import { useProgress, isHydrated } from "@/lib/progress";
 import { pauseTts, resumeTts } from "@/lib/tts";
-import { ensureAudioConsentGranted } from "@/lib/parental-consent";
+import { ensureAudioConsentGranted, hasFeatureConsent, subscribeConsentChanges } from "@/lib/parental-consent";
+import { cleanupAudioContext } from "@/lib/fx";
+import { enableAnalyticsAfterConsent, disableAnalyticsAfterConsentRevoked } from "@/lib/firebase-init";
 import { Capacitor } from "@capacitor/core";
 
 // React Error Boundary for catching runtime errors
+// FIX #2: Enhanced error boundary with better error recovery and logging
 class RootErrorBoundary extends React.Component<
   { children: React.ReactNode },
-  { hasError: boolean; error: Error | null }
+  { hasError: boolean; error: Error | null; errorCount: number }
 > {
+  private resetTimeoutId: NodeJS.Timeout | null = null;
+
   constructor(props: { children: React.ReactNode }) {
     super(props);
-    this.state = { hasError: false, error: null };
+    this.state = { hasError: false, error: null, errorCount: 0 };
     appLogger.info('root_error_boundary', 'RootErrorBoundary mounted');
   }
 
   static getDerivedStateFromError(error: Error) {
     appLogger.error('root_error_boundary', 'getDerivedStateFromError called', { errorMessage: error.message }, error);
-    return { hasError: true, error };
+    return (prevState: any) => ({
+      hasError: true,
+      error,
+      errorCount: (prevState?.errorCount || 0) + 1,
+    });
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     appLogger.error('root_error_boundary', 'componentDidCatch called', { errorInfo }, error);
     console.error("RootErrorBoundary caught error:", error, errorInfo);
+    
+    // Report to error tracking service
     reportLovableError(error, { boundary: "root_error_boundary", errorInfo });
+    
+    // Try to report to Firebase if available
+    try {
+      firebaseEvents.crash({
+        errorType: 'RootErrorBoundary',
+        errorMessage: error.message,
+        errorStack: error.stack,
+        componentStack: errorInfo.componentStack,
+      });
+    } catch {
+      // Firebase not available
+    }
+    
+    // Auto-recover after 5 seconds if error count is low (transient errors)
+    if (this.state.errorCount < 3) {
+      this.resetTimeoutId = setTimeout(() => {
+        this.setState({ hasError: false, error: null });
+      }, 5000);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.resetTimeoutId) {
+      clearTimeout(this.resetTimeoutId);
+    }
   }
 
   render() {
@@ -75,6 +111,13 @@ class RootErrorBoundary extends React.Component<
                 {this.state.error?.stack}
               </pre>
             </details>
+
+            {/* Error Recovery Status */}
+            {this.state.errorCount < 3 && (
+              <p className="mt-4 text-xs text-muted-foreground animate-pulse">
+                ⏳ Auto-recovering in a few seconds...
+              </p>
+            )}
 
             {/* Action Button */}
             <div className="mt-8">
@@ -221,23 +264,21 @@ function RootComponent() {
   // Pre-auth routes that should NOT show BottomNav
   const preAuthRoutes = ['/', '/welcome', '/create'];
 
+  // Immediate logging on component mount
+  console.log("🚀 [RootComponent] MOUNTED - location.pathname:", location.pathname);
+  console.log("🚀 [RootComponent] progress.onboarded:", progress.onboarded);
+  console.log("🚀 [RootComponent] document.readyState:", typeof document !== "undefined" ? document.readyState : "N/A");
+  console.log("🚀 [RootComponent] window.location:", typeof window !== "undefined" ? window.location.href : "N/A");
+
   // Initialize and verify Sound toggle state on app load
   useEffect(() => {
     const SOUND_KEY = "india-explorer:sound:v1";
     const soundState = localStorage.getItem(SOUND_KEY);
     const isSoundOn = soundState === "1";
-    
-    console.log("[App Init] Sound Toggle State", {
-      storageKey: SOUND_KEY,
-      storedValue: soundState,
-      isSoundOn,
-      timestamp: new Date().toISOString(),
-    });
 
     // If not set, ensure default is initialized to ON (sound enabled by default)
     if (soundState === null) {
       localStorage.setItem(SOUND_KEY, "1");
-      console.log("[App Init] ✅ Sound toggle not found in localStorage, initializing to ON (enabled)");
     }
   }, []);
 
@@ -245,7 +286,6 @@ function RootComponent() {
   // Note: Don't check isHydrated() - audio consent is independent of progress hydration
   // Audio consent lives in parental-consent system, progress hydration shouldn't block it
   useEffect(() => {
-    console.log("[AUDIO INIT] Ensuring audio consent is granted on app startup");
     ensureAudioConsentGranted();
   }, []);
 
@@ -338,6 +378,8 @@ function RootComponent() {
     const pauseListener = App.addListener('pause', () => {
       appLogger.info('app_lifecycle', 'App paused');
       pauseTts();
+      // FIX #4: Clean up audio context when app pauses to prevent memory leaks
+      cleanupAudioContext();
     });
 
     // Listen for app resume (brought to foreground)
@@ -350,13 +392,28 @@ function RootComponent() {
     return () => {
       pauseListener.remove();
       resumeListener.remove();
+      // FIX #4: Clean up audio on component unmount
+      cleanupAudioContext();
     };
   }, [location.pathname]);
 
-  // Monitor consent changes - re-render if consent status changes
+  // FIX #27: Monitor analytics consent changes and enable/disable Firebase accordingly
   useEffect(() => {
-    // Component re-renders when consent storage changes
-    // Parental consent system handles all consent logic
+    // Check if analytics consent is already granted
+    if (hasFeatureConsent('analytics')) {
+      enableAnalyticsAfterConsent();
+    }
+    
+    // Subscribe to analytics consent changes
+    const unsubscribe = subscribeConsentChanges('analytics', () => {
+      if (hasFeatureConsent('analytics')) {
+        enableAnalyticsAfterConsent();
+      } else {
+        disableAnalyticsAfterConsentRevoked();
+      }
+    });
+    
+    return () => unsubscribe();
   }, []);
 
   const innerComponent = (

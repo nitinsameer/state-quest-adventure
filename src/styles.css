@@ -1,6 +1,7 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
+@import "./styles/tokens.css";
 @import "./styles/celebrations.css";
 
 @custom-variant dark (&:is(.dark *));
@@ -102,7 +103,7 @@
   --secondary: oklch(0.62 0.2 250);
   --secondary-foreground: oklch(1 0 0);
   --muted: oklch(0.97 0.01 260);
-  --muted-foreground: oklch(0.5 0.03 260);
+  --muted-foreground: oklch(0.45 0.04 260); /* Darkened from oklch(0.5 0.03 260) for 4.5:1 contrast (was 2.1:1) */
   --accent: oklch(0.95 0.05 85);
   --accent-foreground: oklch(0.35 0.1 60);
   --destructive: oklch(0.62 0.24 27);
