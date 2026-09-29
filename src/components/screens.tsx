@@ -38,7 +38,11 @@ import { CardProgressBar } from "@/components/CardProgressBar";
 import { DailyGoalCard } from "@/components/DailyGoalCard";
 import { lazy, Suspense } from "react";
 
-const IndiaProgressMap = lazy(() => import("@/components/IndiaProgressMap").then(m => ({ default: m.IndiaProgressMap })));
+const IndiaProgressMapLazy = lazy(() =>
+  import("@/components/IndiaProgressMap").then(m => ({
+    default: m.IndiaProgressMap,
+  }))
+);
 import { useToastStore } from "@/store/toastStore";
 import { AVATAR_CONFIG, type AvatarId } from "@/lib/avatar-config";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
@@ -661,7 +665,7 @@ export function HomeDashboardScreen() {
               </div>
             </div>
           }>
-            <IndiaProgressMap />
+            <IndiaProgressMapLazy />
           </Suspense>
         </div>
       </div>
