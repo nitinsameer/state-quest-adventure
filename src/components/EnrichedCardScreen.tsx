@@ -26,7 +26,7 @@ export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: st
 
   if (!content) {
     return (
-      <div className="h-full w-full bg-[#F7F5F0] flex flex-col items-center justify-center gap-4 p-6">
+      <div className="h-full w-full bg-[#F7F5F0] flex flex-col items-center justify-center gap-[--gap-base] p-[--padding-lg]">
         <div className="text-4xl">🏜️</div>
         <div className="text-center">
           <div className="text-display font-extrabold text-lg">Coming Soon!</div>
@@ -60,7 +60,7 @@ export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: st
   return (
     <div className="h-full w-full bg-[#F7F5F0] flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="relative gradient-explorer px-5 pt-4 pb-4 rounded-b-[36px] flex-shrink-0">
+      <div className="relative gradient-explorer px-5 pt-[--padding-base] pb-[--padding-base] rounded-b-[36px] flex-shrink-0">
         <div className="flex items-center justify-between">
           <button
             onClick={() => {
@@ -80,7 +80,7 @@ export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: st
       </div>
 
       {/* Card Display Area */}
-      <div className="flex-1 overflow-y-auto px-5 py-4">
+      <div className="flex-1 overflow-y-auto px-5 py-[--padding-md]">
         <ExpandableCard
           cardId={`${stateName}-${currentCard.id}`}
           title={currentCard.title}
@@ -97,13 +97,13 @@ export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: st
       </div>
 
       {/* Card Navigation Tabs */}
-      <div className="flex-shrink-0 bg-white/80 backdrop-blur border-t border-black/5 px-2 py-3">
-        <div className="flex gap-1.5 overflow-x-auto pb-1">
+      <div className="flex-shrink-0 bg-white/80 backdrop-blur border-t border-black/5 px-[--padding-sm] py-[--padding-base]">
+        <div className="flex gap-[--gap-compact] overflow-x-auto pb-1">
           {cards.map((card, index) => (
             <button
               key={index}
               onClick={() => handleTabChange(index)}
-              className={`flex-shrink-0 h-14 px-3 rounded-2xl transition-all font-extrabold text-display text-sm ${
+              className={`flex-shrink-0 h-14 px-[--padding-sm] rounded-2xl transition-all font-extrabold text-display text-sm ${
                 activeTab === index
                   ? `${CARD_COLORS[index].bg} border-2 ${CARD_COLORS[index].border} shadow-md scale-105`
                   : "bg-white/50 border-2 border-transparent hover:bg-white/70"
@@ -115,7 +115,7 @@ export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: st
         </div>
 
         {/* Card Info */}
-        <div className="px-3 mt-2 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+        <div className="px-[--padding-sm] mt-[--space-3] text-xs font-bold text-muted-foreground uppercase tracking-wider">
           {activeTab + 1} of {cards.length} • {currentCard.title.split(" ")[0]}
         </div>
       </div>

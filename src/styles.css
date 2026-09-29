@@ -144,6 +144,138 @@
   }
 }
 
+/* Phase 4.5: Spacing & Layout Grid System - Component Spacing Utilities */
+
+@utility card {
+  padding: var(--padding-md);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  background: white;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-base);
+}
+
+@utility card-sm {
+  padding: var(--padding-base);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  background: white;
+  gap: var(--gap-compact);
+}
+
+@utility card-lg {
+  padding: var(--padding-lg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  background: white;
+  gap: var(--gap-loose);
+}
+
+@utility btn-spacing {
+  padding: var(--padding-base) var(--padding-md);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-base);
+  min-height: var(--touch-target-min);
+}
+
+@utility btn-spacing-sm {
+  padding: var(--padding-xs) var(--padding-sm);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-compact);
+  min-height: 40px;
+}
+
+@utility btn-spacing-lg {
+  padding: var(--padding-md) var(--padding-lg);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-base);
+  min-height: var(--touch-target-min);
+}
+
+@utility form-group {
+  margin-bottom: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-compact);
+}
+
+@utility form-label {
+  font-weight: 700;
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--gap-compact);
+  display: block;
+}
+
+@utility form-hint {
+  margin-top: var(--gap-compact);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+@utility list-base {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-base);
+}
+
+@utility list-compact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-compact);
+}
+
+@utility list-loose {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-loose);
+}
+
+@utility grid-base {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--gap-base);
+}
+
+@utility grid-compact {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--gap-compact);
+}
+
+@utility grid-loose {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--gap-loose);
+}
+
+@utility section-spacing {
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-4);
+  padding: var(--padding-lg);
+}
+
+@utility section-spacing-tight {
+  margin-top: var(--space-2);
+  margin-bottom: var(--space-2);
+  padding: var(--padding-md);
+}
+
+@utility section-spacing-loose {
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-6);
+  padding: var(--padding-lg);
+}
+
 /* Typography Utility Classes - Phase 4.4 */
 
 /* Display Sizes (Headers) */

@@ -53,7 +53,7 @@ export function AudioSettingToggle() {
   };
 
   return (
-    <div className="flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200">
+    <div className="flex items-center justify-between p-[--padding-md] rounded-2xl bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200">
       {/* Left: Label & Description */}
       <div className="flex-1">
         <h3 className="font-bold text-ink text-base">🎧 Audio Narration</h3>
@@ -68,7 +68,7 @@ export function AudioSettingToggle() {
       <button
         onClick={handleToggle}
         disabled={isToggling}
-        className={`ml-4 relative inline-flex h-8 w-14 items-center rounded-full transition-all flex-shrink-0 ${
+        className={`ml-[--space-3] relative inline-flex h-8 w-14 items-center rounded-full transition-all flex-shrink-0 ${
           audioEnabled
             ? "bg-gradient-to-r from-green-400 to-emerald-500 shadow-lg shadow-green-400/50"
             : "bg-gray-300 shadow-md"
@@ -172,10 +172,10 @@ export function AudioSettingRow() {
   return (
     <button
       onClick={handleToggle}
-      className="w-full flex items-center justify-between p-4 rounded-2xl bg-white border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition"
+      className="w-full flex items-center justify-between p-[--padding-md] rounded-2xl bg-white border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition"
     >
       {/* Left: Icon & Labels */}
-      <div className="flex items-start gap-3">
+      <div className="flex items-start gap-[--gap-base]">
         <div className="text-3xl flex-shrink-0">🎧</div>
         <div className="text-left">
           <div className="font-bold text-ink">Audio Narration</div>

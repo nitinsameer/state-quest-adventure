@@ -406,9 +406,9 @@ export function CreateProfileScreen() {
     <div className="w-full bg-gradient-to-b from-blue-50 to-white flex flex-col select-none touch-none" style={{ touchAction: 'pan-y' }}>
       <div className="px-5 flex-1 overflow-auto">
         {/* Step 1: Avatar Selection */}
-        <div className="rounded-3xl gradient-explorer p-5 text-white relative overflow-hidden">
+        <div className="rounded-3xl gradient-explorer p-[--padding-lg] text-white relative overflow-hidden">
           <Cloud className="absolute -top-3 right-2 w-16 opacity-40" />
-          <div className="text-h2 mt-1">
+          <div className="text-h2 mt-[--space-1]">
             Pick your avatar
           </div>
           <div className="text-body opacity-90">
@@ -416,7 +416,7 @@ export function CreateProfileScreen() {
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-2 mt-6">
+        <div className="grid grid-cols-4 gap-[--gap-compact] mt-[--space-2]">
           {avatarImages.map((a) => (
             <button
               key={a.id}
@@ -446,7 +446,7 @@ export function CreateProfileScreen() {
           const selectedAvatar = avatarImages.find(a => a.id === avatar);
           const avatarName = getAvatarName(avatar);
           return selectedAvatar ? (
-            <div className="mt-6 rounded-2xl gradient-saffron p-4 text-center text-white animate-fade-in flex items-center justify-center gap-4">
+            <div className="mt-[--space-3] rounded-2xl gradient-saffron p-[--padding-md] text-center text-white animate-fade-in flex items-center justify-center gap-[--gap-md]">
               <img src={selectedAvatar.image} alt={avatarName} className="w-20 h-20 rounded-full border-4 border-white shadow-lg" />
               <div>
                 <div className="text-body-sm opacity-90">Your explorer!</div>
@@ -457,11 +457,11 @@ export function CreateProfileScreen() {
         })()}
 
         {/* Age Selection with Vibrant Colors & Emojis */}
-        <div className="mt-8 mb-2">
+        <div className="mt-[--space-4] mb-[--space-0-5]">
           <label className="text-h5 text-gray-700">
             🎂 How old are you?
           </label>
-          <div className="mt-3 space-y-2">
+          <div className="mt-[--space-1] space-y-[--space-0-5]">
             {ageBands.map((band, idx) => {
               const isSelected = band.value === ageBand;
               return (
@@ -497,7 +497,7 @@ export function CreateProfileScreen() {
         </div>
       </div>
 
-      <div className="p-5 pb-safe bg-white border-t border-gray-100">
+      <div className="p-[--padding-lg] pb-safe bg-white border-t border-gray-100">
         <button
           onClick={handleProfileSave}
           className={`w-full h-14 rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-white text-h4 text-display shadow-xl transition transform ${
@@ -1626,7 +1626,7 @@ export function JourneyMapScreen() {
                 </div>
 
                 {/* States in this region - Grid layout */}
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-[--gap-base]">
                   {regionStates.map((state) => {
                     const isLocked = state.status === "locked";
                     const isDone = state.status === "done";
@@ -1642,7 +1642,7 @@ export function JourneyMapScreen() {
                             setView({ screen: "intro", name: state.name });
                           }
                         }}
-                        className={`p-3 rounded-2xl transition transform active:scale-95 ${
+                        className={`p-[--padding-base] rounded-2xl transition transform active:scale-95 ${
                           isDone
                             ? `bg-gradient-to-br ${region.gradient} text-white shadow-lg`
                             : isCurrent

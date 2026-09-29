@@ -84,9 +84,9 @@ export function StandardModal({
               headerGradient
                 ? `bg-gradient-to-r ${headerGradient[0]} ${headerGradient[1]}`
                 : "bg-gradient-to-r from-blue-400 to-cyan-500"
-            } p-6 flex flex-col items-center text-center`}
+            } p-[--padding-lg] flex flex-col items-center text-center`}
           >
-            <div className="text-5xl mb-3">{header.icon}</div>
+            <div className="text-5xl mb-[--space-3]">{header.icon}</div>
             <h2 className="text-2xl font-extrabold text-white">{header.title}</h2>
             {header.subtitle && (
               <p className="text-sm text-white/90 mt-1">{header.subtitle}</p>
@@ -95,7 +95,7 @@ export function StandardModal({
         )}
 
         {/* Content Area */}
-        <div className={`flex-1 overflow-y-auto p-6 space-y-3 ${contentClassName}`}>
+        <div className={`flex-1 overflow-y-auto p-[--padding-lg] space-y-[--gap-base] ${contentClassName}`}>
           {children ? (
             children
           ) : (
@@ -109,7 +109,7 @@ export function StandardModal({
                 )}
 
                 {item.type === "bullet" && (
-                  <div className={`flex items-start gap-2 ${item.className}`}>
+                  <div className={`flex items-start gap-[--gap-compact] ${item.className}`}>
                     <span className="text-lg flex-shrink-0 mt-0.5">{item.emoji || "•"}</span>
                     <p className="text-sm text-ink/80 leading-relaxed pt-0.5">{item.text}</p>
                   </div>
@@ -125,11 +125,11 @@ export function StandardModal({
 
         {/* Buttons Section */}
         {buttons.length > 0 && (
-          <div className="border-t border-gray-200 p-6 space-y-2 flex-shrink-0">
+          <div className="border-t border-gray-200 p-[--padding-lg] space-y-2 flex-shrink-0">
             {buttons.length === 1 && (
               <button
                 onClick={buttons[0].onClick}
-                className="w-full px-4 py-3 rounded-full bg-gradient-to-r from-blue-400 to-cyan-500 text-white font-bold text-sm shadow-lg transition active:scale-95"
+                className="w-full px-[--padding-md] py-[--padding-base] rounded-full bg-gradient-to-r from-blue-400 to-cyan-500 text-white font-bold text-sm shadow-lg transition active:scale-95"
               >
                 {buttons[0].emoji && <span className="mr-2">{buttons[0].emoji}</span>}
                 {buttons[0].label}
@@ -137,7 +137,7 @@ export function StandardModal({
             )}
 
             {buttons.length === 2 && (
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-[--gap-compact]">
                 <button
                   onClick={buttons[0].onClick}
                   className={`px-3 py-3 rounded-full font-bold text-xs transition active:scale-95 ${
@@ -164,7 +164,7 @@ export function StandardModal({
             )}
 
             {buttons.length > 2 && (
-              <div className="space-y-2">
+              <div className="space-y-[--gap-compact]">
                 {buttons.map((btn, idx) => (
                   <button
                     key={idx}
@@ -188,7 +188,7 @@ export function StandardModal({
 
         {/* Footer Note */}
         {footer && (
-          <div className="bg-blue-50 px-6 py-3 text-center border-t border-gray-100">
+          <div className="bg-blue-50 px-[--padding-lg] py-[--padding-base] text-center border-t border-gray-100">
             <p className="text-xs text-muted-foreground leading-relaxed">
               {footer}
             </p>
