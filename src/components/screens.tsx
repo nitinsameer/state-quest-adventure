@@ -552,6 +552,7 @@ function FloatingXPFeedback({ xp, key: feedbackKey }: { xp: number; key: string 
 export function HomeDashboardScreen() {
   const p = useProgress();
   const navigate = useNavigate();
+  const celebration = useCelebration();
   const [statsVisible, setStatsVisible] = useState(false);
   const [animateStats, setAnimateStats] = useState(false);
   const [showLockedPreview, setShowLockedPreview] = useState<string | null>(null);

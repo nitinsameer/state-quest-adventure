@@ -51,12 +51,12 @@ export function HomeScreen() {
 
   const handlePlayClick = () => {
     fxTap();
-    navigate({ to: `/state/${current.slug}` });
+    navigate({ to: `/state/${current.name}` });
   };
 
-  const handleStateClick = (slug: string) => {
+  const handleStateClick = (name: string) => {
     fxTap();
-    navigate({ to: `/state/${slug}` });
+    navigate({ to: `/state/${name}` });
   };
 
   const handleTabClick = (tab: string) => {
@@ -176,8 +176,8 @@ export function HomeScreen() {
             <div className="grid grid-cols-2 gap-[--gap-base]">
               {nextStates.map((state) => (
                 <button
-                  key={state.slug}
-                  onClick={() => handleStateClick(state.slug)}
+                  key={state.name}
+                  onClick={() => handleStateClick(state.name)}
                   className="bg-white rounded-2xl shadow-sm p-[--padding-md] text-center"
                 >
                   {/* State Image */}
