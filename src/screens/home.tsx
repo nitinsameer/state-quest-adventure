@@ -1,16 +1,12 @@
 import { Navigate } from "@tanstack/react-router";
-import { useEffect, useState, useMemo, ReactNode } from "react";
-import { Cloud, BottomNav, HeaderBar, XPBar, Chip, useGoBack, AVATAR_IMAGE_MAP, getAvatarImage, getAvatarName } from "./shared";
-import { useProgress, statesWithProgress, cardsDone, levelInfo, badgeCount, addXP, CARDS_PER_STATE, XP_PER_CARD, getRecentlyCompletedState, clearRecentlyCompleted, getStreakStatus, getStreakMilestone, getNextAchievementBadge, getPostcardsArray, getTotalStampCount } from "@/lib/progress";
-import { fxTap, fxCorrect, fxWrong, fxConfetti } from "@/lib/fx";
+import { useEffect, useState } from "react";
+import { Cloud, BottomNav, getAvatarImage, getAvatarName } from "./shared";
+import { useProgress, statesWithProgress, cardsDone, levelInfo, badgeCount, CARDS_PER_STATE, getNextAchievementBadge } from "@/lib/progress";
+import { fxTap } from "@/lib/fx";
 import { useNavigate, Link } from "@tanstack/react-router";
-import { useCelebration } from "@/hooks/useCelebration";
 import { appLogger } from "@/lib/logger";
 import { FirstSessionTutorial } from "@/components/FirstSessionTutorial";
-import { DailyGoalCard } from "@/components/DailyGoalCard";
-import { ConfettiBurst } from "@/components/ConfettiBurst";
-import { INDIA_STATES, stateSlug } from "@/lib/states";
-import { TOTAL_STATES } from "@/lib/states";
+import { stateSlug } from "@/lib/states";
 
 const HOME_TOTAL_STATES = 36;
 
@@ -247,7 +243,6 @@ export function HomeDashboardScreen() {
   const [statsVisible, setStatsVisible] = useState(false);
   const [animateStats, setAnimateStats] = useState(false);
   const [showLockedPreview, setShowLockedPreview] = useState<string | null>(null);
-  const [dismissStreakWarning, setDismissStreakWarning] = useState(false);
   const [showTutorial, setShowTutorial] = useState(() => {
     if (typeof window !== "undefined") {
       const seen = localStorage.getItem("india-explorer:tutorial-seen:v1");
@@ -267,8 +262,7 @@ export function HomeDashboardScreen() {
   const current = journey.find((s) => s.status === "current") ?? journey[journey.length - 1];
   const currentDone = cardsDone(p, current.name);
   const upNext = journey.filter((s) => s.name !== current.name && s.status !== "done" && s.status !== "current").slice(0, 2);
-
-  const celebration = useCelebration();
+  const nextBadge = getNextAchievementBadge(p);
 
   useEffect(() => {
     setTimeout(() => setStatsVisible(true), 100);
@@ -283,10 +277,13 @@ export function HomeDashboardScreen() {
 
   return (
     <div className="h-full w-full bg-[#F7F5F0] flex flex-col overflow-hidden">
-      <div className={`px-6 pt-4 pb-4 gradient-saffron rounded-b-[32px] relative overflow-hidden transition-opacity duration-500 ${statsVisible ? "opacity-100" : "opacity-0"}`}>
+      {/* Premium Orange Header */}
+      <div className={`px-6 pt-4 pb-6 gradient-saffron rounded-b-[32px] relative overflow-hidden transition-opacity duration-500 ${statsVisible ? "opacity-100" : "opacity-0"}`}>
         <Cloud className="absolute top-2 right-4 w-14 opacity-40" />
-        <div className="flex items-center gap-4 relative mb-3">
-          <div className="h-20 w-20 rounded-2xl bg-white p-1.5 shadow-soft flex items-center justify-center overflow-hidden flex-shrink-0">
+        
+        {/* Header: Avatar + Greeting + Streak + Help */}
+        <div className="flex items-center gap-3 relative mb-4">
+          <div className="h-16 w-16 rounded-2xl bg-white p-1 shadow-soft flex items-center justify-center overflow-hidden flex-shrink-0">
             <img src={getAvatarImage(p.avatar)} alt={getAvatarName(p.avatar)} className="w-full h-full object-cover" />
           </div>
           
@@ -295,14 +292,15 @@ export function HomeDashboardScreen() {
               <div className="text-display text-xl font-extrabold leading-tight">
                 Namaste, {(p?.name?.split(" ")[0] || "Explorer")}! 🙏
               </div>
-              <div className="text-xs font-semibold opacity-95 mt-1">Level {level} • Explorer</div>
+              <div className="text-xs font-semibold opacity-90 mt-0.5">Level {level} • Explorer</div>
             </div>
           </div>
           
+          {/* Flame Badge + Help Button */}
           <div className="flex items-center gap-2 flex-shrink-0">
-            <div className={`flex items-center gap-1.5 bg-white/70 rounded-full px-3 py-2 backdrop-blur transition-transform duration-1000 ${p.streak > 0 ? "animate-bounce" : ""}`}>
-              <span className="text-lg">🔥</span>
-              <span className="text-white text-display font-black">{p.streak}</span>
+            <div className="flex items-center gap-1 bg-white rounded-full px-2.5 py-1.5 shadow-md">
+              <span className="text-base">🔥</span>
+              <span className="text-white text-display font-black text-sm">{p.streak}</span>
             </div>
             
             <button
@@ -310,60 +308,17 @@ export function HomeDashboardScreen() {
                 fxTap();
                 setShowTutorial(true);
               }}
-              className="h-12 w-12 rounded-full bg-white/90 backdrop-blur flex items-center justify-center text-saffron font-extrabold text-lg hover:bg-white active:scale-95 transition-all shadow-lg hover:shadow-xl"
+              className="h-10 w-10 rounded-full bg-white/95 flex items-center justify-center text-saffron font-extrabold text-lg hover:bg-white active:scale-95 transition-all shadow-md"
               title="How to play"
             >
               ?
             </button>
           </div>
         </div>
-
-        <div className={`rounded-2xl bg-white/15 backdrop-blur p-4 relative transition-all duration-700 ${statsVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}>
-          <div className="flex items-center justify-between text-white">
-            <div>
-              <div className="text-xs font-bold opacity-90">XP Progress</div>
-              <div className="text-display text-2xl font-extrabold">
-                {p.xp.toLocaleString()} XP
-              </div>
-            </div>
-            <div className="text-right text-xs font-bold opacity-90">
-              {toNext} to
-              <br />
-              Lv {level + 1}
-            </div>
-          </div>
-          <div className="mt-2">
-            <XPBar value={pct} />
-          </div>
-        </div>
-
-        <div className={`mt-3 rounded-2xl bg-gradient-to-r from-orange-400 to-red-500 text-white p-4 relative overflow-hidden transition-all duration-700 ${statsVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}>
-          <div className="absolute top-1 right-2 text-3xl opacity-20">🌏🗺️</div>
-          
-          <div className="relative z-10">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <span className="text-3xl">🗺️</span>
-                <div>
-                  <div className="text-xs font-bold opacity-90">India Explored</div>
-                  <div className="text-display text-2xl font-extrabold">{Math.round((p.completed.length / HOME_TOTAL_STATES) * 100)}%</div>
-                </div>
-              </div>
-              <div className="text-right text-xs font-bold opacity-90">
-                {p.completed.length}/{HOME_TOTAL_STATES}<br/>States
-              </div>
-            </div>
-            <div className="h-2.5 bg-white/25 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-white transition-all duration-700"
-                style={{ width: `${(p.completed.length / HOME_TOTAL_STATES) * 100}%` }}
-              />
-            </div>
-          </div>
-        </div>
       </div>
 
-      <div className={`px-6 mt-3 relative z-10 grid grid-cols-3 gap-2 transition-all duration-700 ${animateStats ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}>
+      {/* Stats Cards Row */}
+      <div className={`px-5 mt-4 relative z-10 grid grid-cols-3 gap-2 transition-all duration-700 ${animateStats ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}>
         <StatCardEnhanced 
           tone="orange" 
           icon="🗺️" 
@@ -384,25 +339,74 @@ export function HomeDashboardScreen() {
         />
       </div>
 
-      <DailyGoalCard />
+      {/* Beginner Path Engagement CTA - Blue Gradient */}
+      <div className="px-5 mt-4 flex-shrink-0">
+        <Link
+          to="/state/$slug/learn"
+          params={{ slug: stateSlug(current.name) }}
+          onClick={() => fxTap()}
+          className="block rounded-3xl bg-gradient-to-r from-blue-400 to-blue-500 text-white p-4 shadow-md hover:shadow-lg transition-all active:scale-95 relative overflow-hidden"
+        >
+          <div className="absolute top-1 right-3 text-3xl opacity-30">🎯</div>
+          <div className="relative z-10">
+            <div className="text-xs font-bold opacity-95">Beginner Path</div>
+            <div className="text-display font-black text-lg">1 State Today</div>
+            <div className="text-xs opacity-90 mt-1 flex items-center gap-1">
+              🎓 <span>Complete 1 state today!</span>
+            </div>
+            <button className="mt-2 bg-white text-blue-600 px-3 py-1.5 rounded-full text-display font-bold text-xs hover:bg-blue-50 transition-colors">
+              Play →
+            </button>
+          </div>
+        </Link>
+      </div>
 
-      <div className="px-5 mt-4 mb-4 flex-shrink-0">
-        <div className="text-display font-bold text-sm text-muted-foreground">
+      {/* Next Achievement Card */}
+      {nextBadge && (
+        <div className="px-5 mt-4 flex-shrink-0">
+          <div className="rounded-3xl bg-white p-4 shadow-soft border border-black/5">
+            <div className="flex items-start gap-3">
+              <div className="text-2xl flex-shrink-0">{nextBadge.icon || "🎖️"}</div>
+              <div className="flex-1 min-w-0">
+                <div className="text-xs font-bold text-muted-foreground uppercase tracking-wide">
+                  NEXT ACHIEVEMENT
+                </div>
+                <div className="text-display font-bold text-base leading-tight mt-1">
+                  {nextBadge.name}
+                </div>
+                <div className="mt-2 h-2 bg-gray-200 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-gray-400 transition-all duration-500"
+                    style={{ width: "45%" }}
+                  />
+                </div>
+                <div className="text-xs font-semibold text-muted-foreground mt-1">
+                  1 step away
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Continue Your Journey */}
+      <div className="px-5 mt-4 flex-shrink-0">
+        <div className="text-display font-bold text-xs text-muted-foreground">
           Continue your journey
         </div>
-        <div className="mt-2 rounded-3xl bg-white p-4 shadow-soft border border-black/5 flex items-center gap-3">
-          <div className="h-16 w-16 rounded-2xl gradient-saffron p-2 flex items-center justify-center text-3xl animate-bounce">
+        <div className="mt-2 rounded-3xl bg-white p-3 shadow-soft border border-black/5 flex items-center gap-3">
+          <div className="h-14 w-14 rounded-2xl gradient-saffron p-1.5 flex items-center justify-center text-2xl animate-bounce flex-shrink-0">
             {current.emoji}
           </div>
           <div className="flex-1">
             <div className="text-xs font-bold text-saffron">
-              {current.kind === "ut" ? "Union Territory" : "Currently Exploring"}
+              Currently Exploring
             </div>
-            <div className="text-display text-lg font-bold leading-tight">
+            <div className="text-display text-base font-bold leading-tight">
               {current.name}
             </div>
             <div className="mt-1 flex items-center gap-1.5">
-              <div className="h-2.5 flex-1 rounded-full bg-muted overflow-hidden">
+              <div className="h-2 flex-1 rounded-full bg-gray-200 overflow-hidden">
                 <div
                   className="h-full gradient-saffron transition-all duration-500"
                   style={{ width: `${(currentDone / CARDS_PER_STATE) * 100}%` }}
@@ -417,23 +421,24 @@ export function HomeDashboardScreen() {
             to="/state/$slug/learn"
             params={{ slug: stateSlug(current.name) }}
             onClick={() => fxTap()}
-            className="h-11 px-3 rounded-2xl gradient-saffron text-white text-display font-bold text-sm shadow-[var(--shadow-glow-orange)] flex items-center transition-all duration-300 hover:scale-105 active:scale-95 animate-pulse"
+            className="h-10 px-2.5 rounded-2xl gradient-saffron text-white text-display font-bold text-xs shadow-md flex items-center justify-center transition-all active:scale-95"
           >
             Play ▶
           </Link>
         </div>
       </div>
 
+      {/* Up Next States */}
       <div className="px-5 mt-4 mb-4 flex-shrink-0">
-        <div className="flex items-center justify-between">
-          <div className="text-display font-bold text-sm text-muted-foreground">
+        <div className="flex items-center justify-between mb-2">
+          <div className="text-display font-bold text-xs text-muted-foreground">
             Up next
           </div>
-          <Link to="/journey" className="text-xs font-extrabold text-explorer">
+          <Link to="/journey" className="text-xs font-extrabold text-explorer hover:underline">
             View all
           </Link>
         </div>
-        <div className="mt-2 grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-3">
           {upNext.map((s, idx) => (
             <button
               key={s.name}
@@ -441,13 +446,13 @@ export function HomeDashboardScreen() {
                 fxTap();
                 setShowLockedPreview(s.name);
               }}
-              className={`rounded-3xl bg-white p-3 shadow-soft border border-black/5 flex flex-col items-center gap-1 transition-all duration-300 transform hover:scale-105 active:scale-95 ${
+              className={`rounded-3xl bg-white p-3 shadow-soft border border-black/5 flex flex-col items-center gap-1.5 transition-all duration-300 transform hover:scale-105 active:scale-95 ${
                 animateStats ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
               }`}
               style={{ transitionDelay: `${idx * 100}ms` }}
             >
-              <div className="text-3xl">{s.emoji}</div>
-              <div className="text-display font-bold text-sm text-center leading-tight line-clamp-2">
+              <div className="text-2xl">{s.emoji}</div>
+              <div className="text-display font-bold text-xs text-center leading-tight line-clamp-2">
                 {s.name}
               </div>
               <div className="text-xs font-bold text-success">
