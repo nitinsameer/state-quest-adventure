@@ -1,0 +1,65 @@
+name: Quick E2E Test (Onboarding Only)
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'src/**'
+      - 'tests/e2e/**'
+      - 'playwright.config.ts'
+      - 'package.json'
+
+jobs:
+  quick-test:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Build application
+        run: npm run build
+
+      - name: Start dev server
+        run: |
+          npm run dev &
+          for i in {1..60}; do
+            if curl -f http://localhost:8080 > /dev/null 2>&1; then
+              echo "Dev server is ready"
+              break
+            fi
+            sleep 1
+          done
+
+      - name: Run quick tests (Onboarding + Home Dashboard)
+        run: npm run test:e2e -- tests/e2e/journeys/01-onboarding.spec.ts tests/e2e/journeys/05-engagement-dashboard.spec.ts
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: quick-test-report
+          path: playwright-report/
+          retention-days: 7
+
+  status-check:
+    if: failure()
+    needs: [quick-test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify failure
+        run: |
+          echo "Quick tests failed - full E2E suite will run on PR"
+          exit 1
