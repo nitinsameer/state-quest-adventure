@@ -95,6 +95,12 @@ async function main() {
     'Running production build...'
   );
 
+  // Step 2.5: Build Android APK using Gradle
+  executeCommand(
+    'cd android && .\\gradlew.bat assembleRelease',
+    'Building Android APK with Gradle...'
+  );
+
   // Step 3: Verify APK was generated
   // Capacitor builds APK in android/app/build/outputs/apk/
   const apkPaths = [
