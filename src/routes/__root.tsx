@@ -83,19 +83,19 @@ class RootErrorBoundary extends React.Component<
             {/* Error Icon */}
             <div className="text-6xl mb-4">💥</div>
             
-            <h1 className="text-2xl font-bold text-ink">
+            <h1 className="text-h2">
               App encountered an error
             </h1>
-            <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+            <p className="mt-3 text-body text-muted-foreground leading-relaxed">
               Something unexpected happened. Let's try reloading the app!
             </p>
 
             {/* Error Details */}
             <details className="mt-4 text-left">
-              <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground">
+              <summary className="cursor-pointer text-caption text-muted-foreground hover:text-foreground">
                 Error details (for debugging)
               </summary>
-              <pre className="mt-2 overflow-auto rounded bg-muted p-2 text-xs text-foreground font-mono max-h-[150px]">
+              <pre className="mt-2 overflow-auto rounded bg-muted p-2 text-caption text-foreground font-mono max-h-[150px]">
                 {this.state.error?.stack}
               </pre>
             </details>
@@ -104,14 +104,14 @@ class RootErrorBoundary extends React.Component<
             <div className="mt-8">
               <button
                 onClick={() => window.location.reload()}
-                className="w-full h-14 rounded-2xl bg-gradient-to-r from-blue-400 to-cyan-500 text-white font-bold text-lg shadow-lg transition-all hover:shadow-xl active:scale-95"
+                className="w-full h-14 rounded-2xl bg-gradient-to-r from-blue-400 to-cyan-500 text-white text-h4 shadow-lg transition-all hover:shadow-xl active:scale-95"
               >
                 🔄 Reload App
               </button>
             </div>
 
             {/* Reassuring message */}
-            <p className="mt-6 text-xs text-muted-foreground">
+            <p className="mt-6 text-caption text-muted-foreground">
               Your progress is saved! 💾
             </p>
           </div>
@@ -128,14 +128,14 @@ function NotFoundComponent() {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
+        <h2 className="mt-4 text-h4 text-foreground">Page not found</h2>
+        <p className="mt-2 text-body text-muted-foreground">
           The page you're looking for doesn't exist or has been moved.
         </p>
         <div className="mt-6">
           <Link
             to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-label text-primary-foreground transition-colors hover:bg-primary/90"
           >
             Go home
           </Link>
@@ -158,19 +158,19 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         {/* Error Icon */}
         <div className="text-6xl mb-4">⚠️</div>
         
-        <h1 className="text-2xl font-bold text-ink">
+        <h1 className="text-h2 text-ink">
           Oops! Something went wrong
         </h1>
-        <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+        <p className="mt-3 text-body text-muted-foreground leading-relaxed">
           The page didn't load properly. Don't worry—just try again or go back home!
         </p>
         
         {/* Debug info (small, for parents/developers) */}
         <details className="mt-4 text-left">
-          <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground">
+          <summary className="cursor-pointer text-caption text-muted-foreground hover:text-foreground">
             Error details (for debugging)
           </summary>
-          <pre className="mt-2 overflow-auto rounded bg-muted p-2 text-xs text-foreground font-mono max-h-[150px]">
+          <pre className="mt-2 overflow-auto rounded bg-muted p-2 text-caption text-foreground font-mono max-h-[150px]">
             {error?.message}
           </pre>
         </details>
@@ -182,20 +182,20 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
               router.invalidate();
               reset();
             }}
-            className="w-full h-14 rounded-2xl bg-gradient-to-r from-blue-400 to-cyan-500 text-white font-bold text-lg shadow-lg transition-all hover:shadow-xl active:scale-95"
+            className="w-full h-14 rounded-2xl bg-gradient-to-r from-blue-400 to-cyan-500 text-white text-h4 shadow-lg transition-all hover:shadow-xl active:scale-95"
           >
             🔄 Try Again
           </button>
           <a
             href="/"
-            className="w-full h-14 rounded-2xl bg-white border-2 border-blue-200 text-blue-600 font-bold text-lg flex items-center justify-center transition-all hover:bg-blue-50 active:scale-95"
+            className="w-full h-14 rounded-2xl bg-white border-2 border-blue-200 text-blue-600 text-h4 flex items-center justify-center transition-all hover:bg-blue-50 active:scale-95"
           >
             🏠 Go Home
           </a>
         </div>
 
         {/* Reassuring message */}
-        <p className="mt-6 text-xs text-muted-foreground">
+        <p className="mt-6 text-caption text-muted-foreground">
           If this keeps happening, talk to an adult about what's going on! 👋
         </p>
       </div>

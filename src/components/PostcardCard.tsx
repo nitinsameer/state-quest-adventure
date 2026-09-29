@@ -66,7 +66,7 @@ export function PostcardCard({
         <div className="text-6xl mb-2">🎨</div>
 
         {/* State Name */}
-        <h3 className="text-center font-bold text-white text-lg drop-shadow leading-tight">
+        <h3 className="text-center text-h4 text-white drop-shadow leading-tight">
           {postcard.state}
         </h3>
 
@@ -74,7 +74,7 @@ export function PostcardCard({
         <div className="mt-2 text-4xl">{badgeEmoji}</div>
 
         {/* Date */}
-        <div className="mt-auto pt-4 text-center text-xs font-semibold text-white/90">
+        <div className="mt-auto pt-4 text-center text-caption text-white/90">
           {postcard.stampDate}
         </div>
       </div>
@@ -104,7 +104,7 @@ export function PostcardCard({
             e.stopPropagation();
             handleCardClick();
           }}
-          className={`ml-auto rounded-lg border-2 px-2 py-1 text-xs font-bold transition hover:scale-110 ${consentInfo.color}`}
+          className={`ml-auto rounded-lg border-2 px-2 py-1 text-label transition hover:scale-110 ${consentInfo.color}`}
           title={`Tap to change consent state (currently ${consentInfo.label})`}
         >
           {consentInfo.emoji}
@@ -114,14 +114,14 @@ export function PostcardCard({
       {/* Bottom Info Bar */}
       <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur px-3 py-2 flex items-center justify-between">
         <div className="flex items-center gap-2 flex-1">
-          <div className="text-xs font-semibold text-gray-700">{dateStr}</div>
+          <div className="text-caption text-gray-700">{dateStr}</div>
         </div>
         <button
           onClick={(e) => {
             e.stopPropagation();
             handleCardClick();
           }}
-          className="ml-auto text-sm font-bold text-blue-600 hover:text-blue-700 transition"
+          className="ml-auto text-body font-bold text-blue-600 hover:text-blue-700 transition"
           title="Tap to manage consent"
         >
           {consentInfo.label}

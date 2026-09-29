@@ -192,7 +192,7 @@ function Chip({
   } as const;
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold ${map[tone]}`}
+      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-label ${map[tone]}`}
     >
       <span>{icon}</span>
       {children}
@@ -227,9 +227,9 @@ export function BottomNav({
                 on ? "bg-saffron-soft" : ""
               }`}
             >
-              <span className="text-lg leading-none">{i.icon}</span>
+              <span className="text-2xl leading-none">{i.icon}</span>
               <span
-                className={`text-xs font-bold ${
+                className={`text-label ${
                   on ? "text-saffron" : "text-muted-foreground"
                 }`}
               >
@@ -286,7 +286,7 @@ function HeaderBar({
       ) : (
         <div className="w-10" />
       )}
-      <h2 className="text-display text-lg font-extrabold">{title}</h2>
+      <h2 className="text-h4 text-display">{title}</h2>
       <div className="w-10 flex justify-end">{right}</div>
     </div>
   );
@@ -309,7 +309,7 @@ export function SplashScreen() {
         className="w-52 h-52 object-contain drop-shadow-2xl relative z-10"
       />
       <div className="mt-4 text-center relative z-10 px-8">
-        <h1 className="text-display text-4xl font-extrabold text-white leading-relaxed">
+        <h1 className="text-h1 text-white leading-relaxed">
           India
           <br />
           Explorer
@@ -319,7 +319,7 @@ export function SplashScreen() {
           <br /> One State at a Time
         </p>
       </div>
-      <div className="absolute bottom-20 flex items-center gap-2 text-white/90 text-sm font-bold">
+      <div className="absolute bottom-20 flex items-center gap-2 text-white/90 text-body">
         <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
         <span className="h-2 w-2 rounded-full bg-white/60" />
         <span className="h-2 w-2 rounded-full bg-white/40" />
@@ -408,10 +408,10 @@ export function CreateProfileScreen() {
         {/* Step 1: Avatar Selection */}
         <div className="rounded-3xl gradient-explorer p-5 text-white relative overflow-hidden">
           <Cloud className="absolute -top-3 right-2 w-16 opacity-40" />
-          <div className="text-display text-2xl font-bold mt-1">
+          <div className="text-h2 mt-1">
             Pick your avatar
           </div>
-          <div className="text-sm opacity-90 font-semibold">
+          <div className="text-body opacity-90">
             Choose the explorer who will travel with you
           </div>
         </div>
@@ -449,8 +449,8 @@ export function CreateProfileScreen() {
             <div className="mt-6 rounded-2xl gradient-saffron p-4 text-center text-white animate-fade-in flex items-center justify-center gap-4">
               <img src={selectedAvatar.image} alt={avatarName} className="w-20 h-20 rounded-full border-4 border-white shadow-lg" />
               <div>
-                <div className="text-sm font-bold opacity-90">Your explorer!</div>
-                <div className="text-display text-lg font-extrabold">{avatarName}</div>
+                <div className="text-body-sm opacity-90">Your explorer!</div>
+                <div className="text-h4 text-display">{avatarName}</div>
               </div>
             </div>
           ) : null;
@@ -458,7 +458,7 @@ export function CreateProfileScreen() {
 
         {/* Age Selection with Vibrant Colors & Emojis */}
         <div className="mt-8 mb-2">
-          <label className="text-display text-sm font-bold text-gray-700">
+          <label className="text-h5 text-gray-700">
             🎂 How old are you?
           </label>
           <div className="mt-3 space-y-2">
@@ -475,10 +475,10 @@ export function CreateProfileScreen() {
                       : "bg-white border-2 border-gray-200 text-gray-700 hover:border-gray-300 hover:scale-102"
                   }`}
                 >
-                  <span className="text-3xl">{band.emoji}</span>
+                  <span className="text-4xl">{band.emoji}</span>
                   <div className="flex-1 text-center">
-                    <div className="text-lg">{band.value}</div>
-                    <div className={`text-xs font-bold ${isSelected ? "text-white/90" : "text-gray-500"}`}>
+                    <div className="text-body-lg">{band.value}</div>
+                    <div className={`text-caption ${isSelected ? "text-white/90" : "text-gray-500"}`}>
                       {band.label}
                     </div>
                   </div>
@@ -500,7 +500,7 @@ export function CreateProfileScreen() {
       <div className="p-5 pb-safe bg-white border-t border-gray-100">
         <button
           onClick={handleProfileSave}
-          className={`w-full h-14 rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-white text-display text-lg font-bold shadow-xl transition transform ${
+          className={`w-full h-14 rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-white text-h4 text-display shadow-xl transition transform ${
             saved ? "scale-95 opacity-80" : "hover:shadow-2xl active:scale-95"
           }`}
         >
@@ -520,7 +520,7 @@ export function CreateProfileScreen() {
 function FloatingXPFeedback({ xp, key: feedbackKey }: { xp: number; key: string }) {
   return (
     <div
-      className="fixed pointer-events-none z-50 font-extrabold text-lg text-yellow-500 drop-shadow-lg animate-ping-rise"
+      className="fixed pointer-events-none z-50 text-h4 text-yellow-500 drop-shadow-lg animate-ping-rise"
       style={{
         left: "50%",
         top: "50%",
@@ -635,17 +635,17 @@ export function HomeDashboardScreen() {
           <div className="flex-1 min-w-0">
             {/* Greeting - Single line, cleaner */}
             <div className="text-white">
-              <div className="text-display text-xl font-extrabold leading-tight">
+              <div className="text-h4 text-display leading-tight">
                 Namaste, {(p?.name?.split(" ")[0] || "Explorer")}! 👋
               </div>
-              <div className="text-xs font-semibold opacity-95 mt-1">Level {level} · Explorer</div>
+              <div className="text-body-sm opacity-95 mt-1">Level {level} · Explorer</div>
             </div>
           </div>
           
           {/* Right side: Streak + Help button */}
           <div className="flex items-center gap-2 flex-shrink-0">
             <div className={`flex items-center gap-1.5 bg-white/70 rounded-full px-3 py-2 backdrop-blur transition-transform duration-1000`}>
-              <span className="text-lg">🔥</span>
+              <span className="text-2xl">🔥</span>
               <span className="text-white text-display font-black">{p.streak}</span>
             </div>
           </div>
@@ -690,8 +690,8 @@ export function HomeDashboardScreen() {
               <div className="relative z-10 flex flex-col gap-3">
                 {/* Title */}
                 <div className="text-center">
-                  <div className="text-sm font-bold opacity-95">🏆 STATE MASTERED! 🏆</div>
-                  <div className="text-display text-2xl font-extrabold mt-1 drop-shadow-lg">
+                  <div className="text-body font-bold opacity-95">🏆 STATE MASTERED! 🏆</div>
+                  <div className="text-h2 text-display mt-1 drop-shadow-lg">
                     {recentState}
                   </div>
                 </div>
@@ -699,15 +699,15 @@ export function HomeDashboardScreen() {
                 {/* Stats */}
                 <div className="grid grid-cols-3 gap-2 text-center">
                   <div className="bg-white/20 backdrop-blur rounded-xl p-2">
-                    <div className="text-xs opacity-90">Badges</div>
-                    <div className="text-xl font-extrabold">+3</div>
+                    <div className="text-caption opacity-90">Badges</div>
+                    <div className="text-h4 font-bold">+3</div>
                   </div>
                   <div className="bg-white/20 backdrop-blur rounded-xl p-2">
-                    <div className="text-xs opacity-90">XP</div>
-                    <div className="text-xl font-extrabold">+{xpEarned}</div>
+                    <div className="text-caption opacity-90">XP</div>
+                    <div className="text-h4 font-bold">+{xpEarned}</div>
                   </div>
                   <div className="bg-white/20 backdrop-blur rounded-xl p-2">
-                    <div className="text-xs opacity-90">Stamp</div>
+                    <div className="text-caption opacity-90">Stamp</div>
                     <img
                       src={STATE_ART[recentState]}
                       alt={recentState}
@@ -722,7 +722,7 @@ export function HomeDashboardScreen() {
                 <div className="flex gap-2 mt-2">
                   <button
                     onClick={() => clearRecentlyCompleted()}
-                    className="flex-1 h-10 rounded-xl bg-white/20 backdrop-blur border border-white/40 text-white text-sm font-extrabold hover:bg-white/30 transition-all"
+                    className="flex-1 h-10 rounded-xl bg-white/20 backdrop-blur border border-white/40 text-white text-label hover:bg-white/30 transition-all"
                   >
                     Dismiss
                   </button>
@@ -732,7 +732,7 @@ export function HomeDashboardScreen() {
                       fxTap();
                       clearRecentlyCompleted();
                     }}
-                    className="flex-1 h-10 rounded-xl bg-white text-orange-600 text-sm font-extrabold hover:bg-yellow-50 transition-all shadow-lg flex items-center justify-center"
+                    className="flex-1 h-10 rounded-xl bg-white text-orange-600 text-label hover:bg-yellow-50 transition-all shadow-lg flex items-center justify-center"
                   >
                     Next State →
                   </Link>
@@ -758,14 +758,14 @@ export function HomeDashboardScreen() {
                 <div className="flex items-center gap-2">
                   <span className="text-2xl">🎫</span>
                   <div>
-                    <div className="text-xs font-bold opacity-90">Stamp Collection</div>
-                    <div className="text-sm font-extrabold">{stamps.length}/{totalStamps} Collected</div>
+                    <div className="text-label opacity-90">Stamp Collection</div>
+                    <div className="text-body font-bold">{stamps.length}/{totalStamps} Collected</div>
                   </div>
                 </div>
                 <Link 
                   to="/explorer/postcard-library" 
                   onClick={() => fxTap()}
-                  className="text-xs font-bold opacity-90 hover:opacity-100 underline"
+                  className="text-label opacity-90 hover:opacity-100 underline"
                 >
                   View all →
                 </Link>
@@ -823,9 +823,9 @@ export function HomeDashboardScreen() {
               <div className="flex items-start gap-3">
                 <div className="text-2xl flex-shrink-0">🚨</div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-extrabold">Your streak is at risk!</div>
-                  <div className="text-xs mt-1 opacity-90">Last played {streakStatus.hoursSinceActive} hours ago</div>
-                  <div className="text-xs mt-1 font-bold">Come back within 12 hours to keep your 🔥 {p.streak} day streak!</div>
+                  <div className="text-body font-bold">Your streak is at risk!</div>
+                  <div className="text-caption mt-1 opacity-90">Last played {streakStatus.hoursSinceActive} hours ago</div>
+                  <div className="text-caption mt-1">Come back within 12 hours to keep your 🔥 {p.streak} day streak!</div>
                 </div>
                 <button
                   onClick={() => setDismissStreakWarning(true)}
@@ -857,10 +857,10 @@ export function HomeDashboardScreen() {
             />
           </div>
           <div className="flex-1">
-            <div className="text-xs font-bold text-saffron">
+            <div className="text-label text-saffron">
               {current.kind === "ut" ? "Union Territory" : "Currently Exploring"}
             </div>
-            <div className="text-display text-lg font-bold leading-tight">
+            <div className="text-h4 font-bold leading-tight">
               {current.name}
             </div>
             <div className="mt-1 flex items-center gap-1.5">
@@ -870,7 +870,7 @@ export function HomeDashboardScreen() {
                   style={{ width: `${(currentDone / CARDS_PER_STATE) * 100}%` }}
                 />
               </div>
-              <span className="text-xs font-bold text-muted-foreground">
+              <span className="text-label text-muted-foreground">
                 {currentDone}/{CARDS_PER_STATE}
               </span>
             </div>
@@ -935,7 +935,7 @@ export function HomeDashboardScreen() {
                   e.stopPropagation();
                   fxTap();
                 }}
-                className="mt-1 px-3 py-1.5 rounded-lg gradient-saffron text-white text-xs font-bold hover:opacity-90 transition-all"
+                className="mt-1 px-3 py-1.5 rounded-lg gradient-saffron text-white text-label hover:opacity-90 transition-all"
                 aria-label={`Start exploring ${s.name}`}
               >
                 Start exploring
@@ -979,23 +979,23 @@ export function HomeDashboardScreen() {
                   {/* State facts */}
                   <div className="space-y-3">
                     <div className="p-3 rounded-2xl bg-orange-50 border-l-4 border-orange-400">
-                      <div className="text-xs font-bold text-orange-900 uppercase tracking-wider">Monument</div>
-                      <div className="text-sm font-semibold text-orange-800 mt-1">{state.monumentName}</div>
+                      <div className="text-label text-orange-900 uppercase tracking-wider">Monument</div>
+                      <div className="text-body text-orange-800 mt-1">{state.monumentName}</div>
                     </div>
 
                     <div className="p-3 rounded-2xl bg-green-50 border-l-4 border-green-400">
-                      <div className="text-xs font-bold text-green-900 uppercase tracking-wider">Wildlife</div>
-                      <div className="text-sm font-semibold text-green-800 mt-1">{state.animalName}</div>
+                      <div className="text-label text-green-900 uppercase tracking-wider">Wildlife</div>
+                      <div className="text-body text-green-800 mt-1">{state.animalName}</div>
                     </div>
 
                     <div className="p-3 rounded-2xl bg-blue-50 border-l-4 border-blue-400">
-                      <div className="text-xs font-bold text-blue-900 uppercase tracking-wider">Fun Fact</div>
-                      <div className="text-sm font-semibold text-blue-800 mt-1">{state.funFact}</div>
+                      <div className="text-label text-blue-900 uppercase tracking-wider">Fun Fact</div>
+                      <div className="text-body text-blue-800 mt-1">{state.funFact}</div>
                     </div>
 
                     <div className="p-3 rounded-2xl bg-purple-50 border-l-4 border-purple-400">
-                      <div className="text-xs font-bold text-purple-900 uppercase tracking-wider">Unlock Path</div>
-                      <div className="text-sm font-semibold text-purple-800 mt-1">{getUnlockRequirement(state.name)}</div>
+                      <div className="text-label text-purple-900 uppercase tracking-wider">Unlock Path</div>
+                      <div className="text-body text-purple-800 mt-1">{getUnlockRequirement(state.name)}</div>
                     </div>
                   </div>
 
@@ -1046,10 +1046,10 @@ function StatCard({
   return (
     <div className={`rounded-2xl bg-white border ${border} p-3 shadow-soft`}>
       <div className="text-lg">{icon}</div>
-      <div className="text-display text-xl font-extrabold leading-snug mt-1">
+      <div className="text-display text-h2 leading-snug mt-1">
         {value}
       </div>
-      <div className="text-xs font-bold text-muted-foreground">
+      <div className="text-label text-muted-foreground">
         {label}
       </div>
     </div>
@@ -1095,13 +1095,13 @@ function StatCardEnhanced({
         {/* Icon and Number - Horizontal */}
         <div className="flex items-center gap-1.5 pl-1">
           <div className="text-2xl flex-shrink-0">{icon}</div>
-          <div className={`text-3xl font-black ${numberColor} leading-none`}>
+          <div className={`text-h1 font-black ${numberColor} leading-none`}>
             {value}
           </div>
         </div>
         
         {/* Label */}
-        <div className="text-xs font-bold text-muted-foreground px-1">
+        <div className="text-label text-muted-foreground px-1">
           {label}
         </div>
       </div>
@@ -1194,7 +1194,7 @@ function StateDetailModal({
             {stateData.emoji}
           </div>
 
-          <h2 className="text-display text-2xl font-extrabold text-ink">
+          <h2 className="text-h2 text-ink">
             {stateName}
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
@@ -1205,21 +1205,21 @@ function StateDetailModal({
         {/* Sneak Peek Preview for Locked States */}
         {isLocked && (
           <div className="rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 p-4 space-y-3">
-            <p className="text-display text-sm font-extrabold text-amber-900 flex items-center gap-2">
+            <p className="text-h5 text-amber-900 flex items-center gap-2">
               👀 Sneak Peek Preview
             </p>
             <div className="space-y-2 text-sm">
               <div className="flex items-start gap-2">
-                <span className="text-lg flex-shrink-0">{stateData.animal}</span>
+                <span className="text-2xl flex-shrink-0">{stateData.animal}</span>
                 <div>
-                  <p className="font-bold text-gray-900">State Animal</p>
+                  <p className="text-body font-bold text-gray-900">State Animal</p>
                   <p className="text-gray-700">{stateData.animalName}</p>
                 </div>
               </div>
               <div className="flex items-start gap-2">
-                <span className="text-lg flex-shrink-0">{stateData.monument}</span>
+                <span className="text-2xl flex-shrink-0">{stateData.monument}</span>
                 <div>
-                  <p className="font-bold text-gray-900">Famous Monument</p>
+                  <p className="text-body font-bold text-gray-900">Famous Monument</p>
                   <p className="text-gray-700">{stateData.monumentName}</p>
                 </div>
               </div>
@@ -1234,28 +1234,28 @@ function StateDetailModal({
         {/* Status Information */}
         {isLocked ? (
           <div className="rounded-2xl bg-amber-50 border-2 border-amber-200 p-4">
-            <p className="text-display text-sm font-extrabold text-amber-900 mb-2">
+            <p className="text-h5 text-amber-900 mb-2">
               🔐 Locked
             </p>
-            <p className="text-sm font-semibold text-amber-800">
+            <p className="text-body text-amber-800">
               Complete the previous state to unlock this adventure!
             </p>
           </div>
         ) : isDone ? (
           <div className="rounded-2xl bg-green-50 border-2 border-green-200 p-4">
-            <p className="text-display text-sm font-extrabold text-green-900 mb-2">
+            <p className="text-h5 text-green-900 mb-2">
               ✓ Completed
             </p>
-            <p className="text-sm font-semibold text-green-800">
+            <p className="text-body text-green-800">
               You've earned all badges for this state!
             </p>
           </div>
         ) : (
           <div className="roundepppd-2xl bg-blue-50 border-2 border-blue-200 p-4">
-            <p className="text-display text-sm font-extrabold text-blue-900 mb-2">
+            <p className="text-h5 text-blue-900 mb-2">
               ▶ In Progress
             </p>
-            <p className="text-sm font-semibold text-blue-800">
+            <p className="text-body text-blue-800">
               Complete 3 cards and take the quiz to unlock the next state!
             </p>
           </div>
@@ -1607,13 +1607,13 @@ export function JourneyMapScreen() {
                     <div className="flex items-center gap-2">
                       <span className="text-2xl">{region.emoji}</span>
                       <div>
-                        <div className="text-sm font-extrabold">{region.name}</div>
-                        <div className="text-xs font-bold opacity-90">{regionDone}/{regionStates.length} explored · {Math.round((regionDone / Math.max(regionStates.length, 1)) * 100)}%</div>
+                        <div className="text-body font-bold">{region.name}</div>
+                        <div className="text-label opacity-90">{regionDone}/{regionStates.length} explored · {Math.round((regionDone / Math.max(regionStates.length, 1)) * 100)}%</div>
                       </div>
                     </div>
                     {/* Regional milestone indicator */}
                     {regionDone === regionStates.length && regionStates.length > 0 && (
-                      <div className="text-lg">✨ Complete!</div>
+                      <div className="text-2xl">✨ Complete!</div>
                     )}
                   </div>
                   {/* Regional progress bar */}
@@ -1687,12 +1687,12 @@ export function JourneyMapScreen() {
                 <div className="flex items-center gap-2">
                   <span className="text-2xl">🏝️</span>
                   <div>
-                    <div className="text-sm font-extrabold">Union Territories</div>
-                    <div className="text-xs font-bold opacity-90">{nodes.filter(n => n.isUT && n.status === "done").length}/8 explored · {Math.round((nodes.filter(n => n.isUT && n.status === "done").length / 8) * 100)}%</div>
+                    <div className="text-body font-bold">Union Territories</div>
+                    <div className="text-label opacity-90">{nodes.filter(n => n.isUT && n.status === "done").length}/8 explored · {Math.round((nodes.filter(n => n.isUT && n.status === "done").length / 8) * 100)}%</div>
                   </div>
                 </div>
                 {nodes.filter(n => n.isUT && n.status === "done").length === 8 && (
-                  <div className="text-lg">✨ Complete!</div>
+                  <div className="text-2xl">✨ Complete!</div>
                 )}
               </div>
               <div className="mt-2 h-1.5 bg-white/30 rounded-full overflow-hidden">
@@ -1880,10 +1880,10 @@ export function StateIntroScreen({
         <div className="text-xs font-black uppercase tracking-widest text-saffron">
           Welcome to
         </div>
-        <h1 className="text-display text-4xl font-extrabold leading-snug mt-1">
+        <h1 className="text-h1 leading-snug mt-1">
           {state.name}
         </h1>
-        <div className="text-sm font-bold text-muted-foreground mt-1">
+        <div className="text-body text-muted-foreground mt-1">
           <img
             src={STATE_ART[state.name]}
             alt={state.name}
@@ -1907,7 +1907,7 @@ export function StateIntroScreen({
             fxTap();
             onContinue?.();
           }}
-          className={`mt-6 w-full h-14 rounded-2xl ${grad} text-white text-display text-lg font-extrabold shadow-[var(--shadow-glow-orange)]`}
+          className={`mt-6 w-full h-14 rounded-2xl ${grad} text-white text-h4 text-display shadow-[var(--shadow-glow-orange)]`}
         >
           Start Exploring! ✈️
         </button>
@@ -1928,11 +1928,11 @@ function IntroFact({
 }) {
   return (
     <div className="rounded-2xl bg-saffron-soft/60 p-3 border border-saffron/15">
-      <div className="text-lg">{icon}</div>
-      <div className="text-xs font-bold text-saffron">
+      <div className="text-2xl">{icon}</div>
+      <div className="text-label text-saffron">
         {label}
       </div>
-      <div className="text-display font-extrabold text-lg leading-tight">
+      <div className="text-h5 font-bold text-saffron leading-tight">
         {value}
       </div>
     </div>
@@ -2152,7 +2152,7 @@ export function LearningHubScreen({
             onQuiz?.();
           }}
           disabled={completedCards < 6}
-          className={`w-full h-14 rounded-2xl text-white text-display text-lg font-extrabold shadow-[var(--shadow-glow-green)] transition ${
+          className={`w-full h-14 rounded-2xl text-white text-h4 text-display shadow-[var(--shadow-glow-green)] transition ${
             completedCards === 6
               ? "gradient-success"
               : "bg-gray-300 opacity-60 cursor-not-allowed"
@@ -2221,8 +2221,8 @@ function HubCard({
         active ? ring : "border-transparent"
       } ${locked ? "bg-muted opacity-70 pointer-events-none cursor-not-allowed" : `${bg}`}`}
     >
-      <div className="text-3xl">{icon}</div>
-      <div className="text-display text-base font-extrabold mt-1 leading-tight">
+      <div className="text-h1">{icon}</div>
+      <div className="text-h5 text-display mt-1 leading-tight">
         {title}
       </div>
       <div className="text-xs font-bold text-muted-foreground">{sub}</div>
@@ -2233,7 +2233,7 @@ function HubCard({
         </div>
       )}
       {done && (
-        <div className="absolute top-2 right-2 h-8 w-8 rounded-full bg-gradient-to-br from-success to-emerald-600 text-white flex items-center justify-center text-lg font-black shadow-lg animate-bounce">
+        <div className="absolute top-2 right-2 h-8 w-8 rounded-full bg-gradient-to-br from-success to-emerald-600 text-white flex items-center justify-center text-h5 font-black shadow-lg animate-bounce">
           ✓
         </div>
       )}
@@ -2512,7 +2512,7 @@ export function LearningCardScreen({
       <div className="w-full h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-white">
         <div className="text-center">
           <div className="text-5xl mb-3">⚠️</div>
-          <h1 className="text-lg font-bold text-ink mb-2">Card content unavailable</h1>
+          <h1 className="text-h4 text-ink mb-2">Card content unavailable</h1>
           <p className="text-sm text-muted-foreground mb-4">Please try again or go back</p>
           <button
             onClick={() => window.history.back()}
@@ -2690,7 +2690,7 @@ export function LearningCardScreen({
             onClose?.();
           }}
           aria-label="Close learning card"
-          className="h-12 w-12 rounded-full bg-white shadow-soft flex items-center justify-center text-lg font-bold"
+          className="h-12 w-12 rounded-full bg-white shadow-soft flex items-center justify-center text-h4"
         >
           ✕
         </button>
@@ -2764,7 +2764,7 @@ export function LearningCardScreen({
           onTouchEnd={(e) => {
             e.stopPropagation();
           }}
-          className={`h-9 px-3 rounded-full shadow-soft flex items-center justify-center gap-2 text-sm font-bold transition-all active:scale-95 whitespace-nowrap ${
+          className={`h-9 px-3 rounded-full shadow-soft flex items-center justify-center gap-2 text-label transition-all active:scale-95 whitespace-nowrap ${
             playingCardIndex === currentCardIndex
               ? "bg-gradient-to-br from-orange-400 to-red-500 text-white shadow-lg animate-pulse"
               : hasFeatureConsent('audio')
@@ -2851,7 +2851,7 @@ export function LearningCardScreen({
               handleNext();
             }
           }}
-          className={`w-full h-14 rounded-2xl ${grad} text-white text-display text-lg font-bold shadow-[var(--shadow-glow-orange)]`}
+          className={`w-full h-14 rounded-2xl ${grad} text-white text-h4 text-display shadow-[var(--shadow-glow-orange)]`}
         >
           {isLastInMainCardSection ? (currentMainCardIndex === 5 ? "Take the Quiz! 🎯" : "Done! Back to Cards") : isReplaying ? "Replay Complete ✨" : "Got it! Next →"}
         </button>
@@ -3069,12 +3069,12 @@ export function QuizScreen({
           <div className="text-[10px] text-muted-foreground/70">{level.pct}%</div>
         </div>
         {progress.streak > 0 && (
-          <div className="ml-2 text-sm font-bold text-explorer">
+          <div className="ml-2 text-h5 text-explorer">
             🔥 {progress.streak}
           </div>
         )}
         {/* PHASE 1a: Quiz Correct-In-A-Row Counter */}
-        <div className="ml-2 text-sm font-bold text-success flex items-center gap-1">
+        <div className="ml-2 text-h5 text-success flex items-center gap-1">
           ✅ {correctCount}/{index + (result === "correct" ? 1 : 0)} correct
         </div>
       </div>
@@ -3086,7 +3086,7 @@ export function QuizScreen({
           alt=""
           className={`w-16 h-16 object-contain ${result === "correct" ? "mascot-cheer" : ""}`}
         />
-        <div className="relative bg-white rounded-2xl shadow-soft px-3 py-2 text-sm font-extrabold">
+        <div className="relative bg-white rounded-2xl shadow-soft px-3 py-2 text-label font-bold">
           {result === "correct"
             ? "Nailed it! 🎉"
             : result === "wrong"
@@ -3119,7 +3119,7 @@ export function QuizScreen({
             <button
               key={label}
               onClick={() => onSelect(label)}
-              className={`h-16 rounded-2xl px-5 flex items-center justify-between text-display text-lg font-bold shadow-soft border-2 transition-all active:scale-[0.99] hover:scale-[1.02] ${
+              className={`h-16 rounded-2xl px-5 flex items-center justify-between text-h4 text-display shadow-soft border-2 transition-all active:scale-[0.99] hover:scale-[1.02] ${
                 isCorrectPick
                   ? "bg-success/10 border-success text-success"
                   : isWrongPick
@@ -3152,7 +3152,7 @@ export function QuizScreen({
         <button
           onClick={result ? onReset : onCheck}
           disabled={!selected}
-          className={`w-full h-14 rounded-2xl text-white text-display text-lg font-bold shadow-[var(--shadow-glow-blue)] disabled:opacity-50 ${
+          className={`w-full h-14 rounded-2xl text-white text-h4 text-display shadow-[var(--shadow-glow-blue)] disabled:opacity-50 ${
             result === "correct"
               ? "bg-success"
               : result === "wrong"
@@ -3202,7 +3202,7 @@ export function CorrectAnswerScreen({ stateName }: { stateName?: string } = {}) 
             <div className="text-6xl">✅</div>
           </div>
         </div>
-        <h1 className="mt-6 text-display text-4xl font-extrabold text-white text-center leading-relaxed">
+        <h1 className="mt-6 text-h1 text-white text-center leading-relaxed">
           Awesome!
         </h1>
         <p className="mt-2 text-white/95 font-bold text-center">
@@ -3338,7 +3338,7 @@ export function StateCompletedScreen({
         <div className="text-white/90 text-xs font-black uppercase tracking-[0.3em]">
           State Complete
         </div>
-        <h1 className="text-display text-4xl font-extrabold text-white mt-1 drop-shadow leading-relaxed">
+        <h1 className="text-h1 text-white mt-1 drop-shadow leading-relaxed">
           {state.name} Cleared!
         </h1>
       </div>
@@ -3399,12 +3399,12 @@ export function StateCompletedScreen({
           <div className="grid grid-cols-2 gap-2">
             <div className="bg-white/15 rounded-xl p-2">
               <div className="text-lg">⭐</div>
-              <div className="text-display text-sm font-extrabold leading-tight">+250 XP</div>
+              <div className="text-display text-h5 leading-tight">+250 XP</div>
               <div className="text-[9px] opacity-75 mt-1">State Complete</div>
             </div>
             <div className="bg-white/15 rounded-xl p-2">
               <div className="text-lg">📜</div>
-              <div className="text-display text-sm font-extrabold leading-tight">Stamp</div>
+              <div className="text-display text-h5 leading-tight">Stamp</div>
               <div className="text-[9px] opacity-75 mt-1">Added</div>
             </div>
           </div>
@@ -3460,7 +3460,7 @@ export function StateUnlockScreen({
         <div className="text-white/90 text-xs font-black uppercase tracking-[0.3em]">
           New State Unlocked
         </div>
-        <h1 className="text-display text-4xl font-extrabold text-white mt-1 drop-shadow leading-relaxed">
+        <h1 className="text-h1 text-white mt-1 drop-shadow leading-relaxed">
           {state.name}!
         </h1>
         <p className="text-white/90 font-bold mt-1">{state.nickname}</p>
@@ -3653,19 +3653,19 @@ function BadgeDetailModal({
         {/* Unlock Information */}
         {!badge.done && (
           <div className="rounded-2xl bg-amber-50 border-2 border-amber-200 p-4">
-            <p className="text-display text-sm font-extrabold text-amber-900 mb-2">
+            <p className="text-h5 text-amber-900 mb-2">
               How to Unlock
             </p>
-            <p className="text-sm font-semibold text-amber-800">{unlockText}</p>
+            <p className="text-body text-amber-800">{unlockText}</p>
           </div>
         )}
 
         {/* Badge Info */}
         <div className="rounded-2xl bg-blue-50 border border-blue-200 p-4">
-          <p className="text-display text-sm font-extrabold text-blue-900 mb-1">
+          <p className="text-h5 text-blue-900 mb-1">
             Badge Type
           </p>
-          <p className="text-sm font-semibold text-blue-800">
+          <p className="text-body text-blue-800">
             {badge.name === "Monument" && "🏛️ Learn about famous landmarks"}
             {badge.name === "Animal" && "🦁 Discover local wildlife"}
             {badge.name === "Explorer" && "🎖️ Master all cards in this state"}
@@ -3821,7 +3821,7 @@ export function BadgesScreen() {
             <img src={getAvatarImage(progress.avatar)} alt={getAvatarName(progress.avatar)} className="w-full h-full object-cover" />
           </div>
           <div className="flex-1 text-white">
-            <div className="text-display text-lg font-bold leading-tight">
+            <div className="text-h4 text-display leading-tight">
               {progress.name}
             </div>
             <div className="text-xs font-bold text-white/80">Achievement Collection</div>
@@ -3968,7 +3968,7 @@ export function BadgesScreen() {
                 {selectedBadge.icon}
               </div>
 
-              <h2 className="text-display text-3xl font-extrabold text-ink mt-4">
+              <h2 className="text-h2 text-ink mt-4">
                 {selectedBadge.name}
               </h2>
               <p className="text-xs font-bold text-muted-foreground mt-1 uppercase tracking-wider">
@@ -3978,7 +3978,7 @@ export function BadgesScreen() {
 
             {/* Description */}
             <div className="rounded-2xl bg-blue-50 border border-blue-200 p-4">
-              <p className="text-sm font-semibold text-blue-900 leading-relaxed">
+              <p className="text-body text-blue-900 leading-relaxed">
                 {selectedBadge.description}
               </p>
             </div>
@@ -4006,7 +4006,7 @@ export function BadgesScreen() {
                 <div className="text-xs font-extrabold text-success uppercase tracking-wider">
                   ✨ Unlocked
                 </div>
-                <p className="text-sm font-bold text-success mt-2">
+                <p className="text-label text-success mt-2">
                   🎉 Amazing achievement! Keep exploring!
                 </p>
               </div>
@@ -4207,7 +4207,7 @@ export function ProfileScreen() {
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="absolute -bottom-2 -right-2 h-9 w-9 rounded-full gradient-gold text-white flex items-center justify-center text-display text-sm font-extrabold border-4 border-white">
+            <div className="absolute -bottom-2 -right-2 h-9 w-9 rounded-full gradient-gold text-white flex items-center justify-center text-display text-h5 border-4 border-white">
               {level}
             </div>
           </div>
@@ -4967,8 +4967,8 @@ export function LoadingScreen() {
         />
       </div>
       <div className="mt-8 text-center">
-        <div className="text-display text-2xl font-extrabold">Flying to Gujarat…</div>
-        <div className="text-sm font-bold text-muted-foreground mt-1">
+        <div className="text-display text-h2 font-bold">Flying to Gujarat…</div>
+        <div className="text-body text-muted-foreground mt-1">
           Packing camel snacks 🐪
         </div>
       </div>
@@ -4991,7 +4991,7 @@ export function EmptyStateScreen() {
         <h2 className="text-display text-2xl font-extrabold mt-4">
           No explorer friends yet!
         </h2>
-        <p className="mt-2 text-sm font-bold text-muted-foreground max-w-[260px]">
+        <p className="mt-2 text-body text-muted-foreground max-w-[260px]">
           Invite a friend to join your adventure and travel across India
           together.
         </p>
