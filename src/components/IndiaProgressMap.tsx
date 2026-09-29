@@ -21,8 +21,8 @@ export function IndiaProgressMap() {
   return (
     <div className="w-full bg-white rounded-2xl shadow-soft border border-black/5 overflow-hidden">
       {/* Header */}
-      <div className="bg-gradient-to-r from-orange-400 to-red-500 text-white p-4">
-        <div className="flex items-center justify-between mb-3 gap-2">
+      <div className="bg-gradient-to-r from-orange-400 to-red-500 text-white p-[--padding-md]">
+        <div className="flex items-center justify-between mb-[--space-0-5] gap-[--gap-base]">
           <h3 className="text-base font-bold flex-1">India Explored Map</h3>
           <span className="text-xs font-bold bg-white/30 px-2 py-1 rounded-full flex-shrink-0 whitespace-nowrap">
             {p.completed.length}/36
@@ -30,7 +30,7 @@ export function IndiaProgressMap() {
         </div>
 
         {/* Main progress bar - animated */}
-        <div className="h-3 bg-white/25 rounded-full overflow-hidden mb-2">
+        <div className="h-3 bg-white/25 rounded-full overflow-hidden mb-[--space-0-25]">
           <div
             className="h-full bg-white transition-all duration-1500 ease-out"
             style={{ width: `${completionPercentage}%` }}
@@ -41,14 +41,14 @@ export function IndiaProgressMap() {
 
       {/* Milestones Grid - Only show if user has started */}
       {p.completed.length > 0 && (
-        <div className="p-3 space-y-2 max-h-48 overflow-y-auto">
+        <div className="p-[--padding-base] space-y-[--space-0-25] max-h-48 overflow-y-auto">
           {milestones.map((milestone, idx) => {
             const reached = p.completed.length >= milestone.states;
             const isNearby = Math.abs(p.completed.length - milestone.states) <= 1;
 
             return (
-              <div key={idx} className="space-y-0.5">
-                <div className="flex items-center justify-between gap-2">
+              <div key={idx} className="space-y-[--space-0-25]">
+                <div className="flex items-center justify-between gap-[--gap-base]">
                   <span className={`text-xs font-bold flex-1 ${reached ? "text-gray-800" : "text-gray-500"}`}>
                     {milestone.label}
                   </span>
@@ -73,7 +73,7 @@ export function IndiaProgressMap() {
       )}
 
       {/* Motivational message */}
-      <div className="px-4 py-3 bg-gradient-to-r from-orange-50 to-red-50 border-t border-gray-200">
+      <div className="px-[--padding-md] py-[--padding-base] bg-gradient-to-r from-orange-50 to-red-50 border-t border-gray-200">
         <p className="text-xs font-semibold text-center text-gray-700">
           {completionPercentage === 0
             ? "🚀 Start exploring to unlock milestones!"
