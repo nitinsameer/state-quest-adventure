@@ -116,73 +116,92 @@ export function BadgesScreen() {
         </div>
       </div>
 
-      {/* Achievement Tiers */}
+      {/* Achievement Tiers Section */}
       <div className="flex-1 overflow-auto px-5 py-4">
         <div className="space-y-4">
-          {ACHIEVEMENT_TIERS.map((tierConfig) => {
-            const tierNumber = ACHIEVEMENT_TIERS.indexOf(tierConfig) + 1;
-            const tieredBadges = ACHIEVEMENT_BADGES.slice((tierNumber - 1) * 3, tierNumber * 3);
-            const tierUnlocked = earnedCount >= tierNumber * 3;
-
-            return (
-              <div key={tierConfig.tier}>
-                {/* Tier Card */}
-                <div className={`rounded-3xl bg-gradient-to-r ${tierConfig.bgColor} border-2 border-${tierConfig.tier}-200 p-3.5 mb-2.5`}>
-                  <div className="flex items-center justify-between">
+          {/* Tier Progress Cards */}
+          <div className="space-y-2.5">
+            {ACHIEVEMENT_TIERS.map((tierConfig, tierIdx) => {
+              const tierBadgeCount = 3; // Each tier has 3 badges (10 total / 4 tiers ≈ 2-3 per tier)
+              const tierBadges = ACHIEVEMENT_BADGES.slice(tierIdx * tierBadgeCount, (tierIdx + 1) * tierBadgeCount);
+              const earnedInTier = tierBadges.filter(b => b.unlocked || p.badges.includes(b.name)).length;
+              const tierProgress = Math.round((earnedInTier / tierBadges.length) * 100);
+              
+              const borderColorMap: Record<string, string> = {
+                seedling: "border-orange-200",
+                growing: "border-green-200",
+                mighty: "border-blue-200",
+                elite: "border-amber-200"
+              };
+              
+              return (
+                <div
+                  key={tierConfig.tier}
+                  className={`rounded-2xl bg-gradient-to-r ${tierConfig.bgColor} border ${borderColorMap[tierConfig.tier]} p-3`}
+                >
+                  <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      <div className="text-2xl">{tierConfig.emoji}</div>
+                      <div className="text-xl">{tierConfig.emoji}</div>
                       <div>
-                        <div className={`text-display font-bold text-sm ${tierConfig.textColor}`}>
+                        <div className={`text-display font-bold text-xs ${tierConfig.textColor}`}>
                           {tierConfig.label}
                         </div>
                         <div className="text-xs font-semibold text-muted-foreground">
-                          {tieredBadges.filter(b => b.unlocked || earnedCount > ACHIEVEMENT_BADGES.indexOf(b)).length}/{tieredBadges.length} badges unlocked
+                          {earnedInTier}/{tierBadges.length} badges unlocked
                         </div>
                       </div>
                     </div>
-                    <div className={`text-display font-bold text-lg ${tierConfig.textColor}`}>
-                      {tieredBadges.filter(b => b.unlocked || earnedCount > ACHIEVEMENT_BADGES.indexOf(b)).length}
-                    </div>
+                  </div>
+                  {/* Progress Bar */}
+                  <div className="h-1.5 bg-white/30 rounded-full overflow-hidden">
+                    <div
+                      className={`h-full bg-gradient-to-r ${tierConfig.color} transition-all duration-500`}
+                      style={{ width: `${tierProgress}%` }}
+                    />
                   </div>
                 </div>
+              );
+            })}
+          </div>
 
-                {/* Tier Badges Grid */}
-                <div className="grid grid-cols-2 gap-2.5 mb-4">
-                  {tieredBadges.map((badge, idx) => {
-                    const badgeIndex = ACHIEVEMENT_BADGES.indexOf(badge);
-                    const isUnlocked = badge.unlocked || p.badges.includes(badge.name);
-                    
-                    return (
-                      <button
-                        key={badge.name}
-                        onClick={() => {
-                          fxTap();
-                          setSelectedBadge({ name: badge.name, icon: badge.icon });
-                        }}
-                        className={`rounded-2xl p-3 flex flex-col items-center justify-center transition-all transform active:scale-95 ${
-                          isUnlocked
-                            ? `bg-yellow-300 border-2 border-yellow-400 shadow-md hover:shadow-lg`
-                            : `bg-gray-100 border-2 border-gray-200 opacity-50`
-                        }`}
-                      >
-                        <div className="relative">
-                          <div className="text-3xl">{badge.icon}</div>
-                          {isUnlocked && (
-                            <div className="absolute -top-1 -right-1 bg-green-500 rounded-full h-5 w-5 flex items-center justify-center text-white text-xs font-bold">
-                              ✓
-                            </div>
-                          )}
+          {/* All Achievement Badges Grid */}
+          <div className="mt-6">
+            <div className="text-xs font-bold text-muted-foreground mb-3">
+              ALL ACHIEVEMENTS
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              {ACHIEVEMENT_BADGES.map((badge) => {
+                const isUnlocked = badge.unlocked || p.badges.includes(badge.name);
+                
+                return (
+                  <button
+                    key={badge.name}
+                    onClick={() => {
+                      fxTap();
+                      setSelectedBadge({ name: badge.name, icon: badge.icon });
+                    }}
+                    className={`rounded-2xl p-3 flex flex-col items-center justify-center transition-all transform active:scale-95 ${
+                      isUnlocked
+                        ? `bg-gradient-to-br from-yellow-300 to-yellow-200 border-2 border-yellow-400 shadow-md hover:shadow-lg`
+                        : `bg-white border-2 border-gray-200 opacity-60`
+                    }`}
+                  >
+                    <div className="relative mb-1">
+                      <div className="text-3xl">{badge.icon}</div>
+                      {isUnlocked && (
+                        <div className="absolute -top-2 -right-2 bg-green-500 rounded-full h-5 w-5 flex items-center justify-center text-white text-xs font-bold">
+                          ✓
                         </div>
-                        <div className="text-xs font-bold text-center line-clamp-2 mt-2 leading-tight">
-                          {badge.name}
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })}
+                      )}
+                    </div>
+                    <div className="text-xs font-bold text-center line-clamp-2 leading-tight">
+                      {badge.name}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
 
