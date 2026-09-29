@@ -22,6 +22,7 @@ import { AudioSettingRow } from "@/components/AudioSettingToggle";
 import { AudioPermissionDialog } from "@/components/AudioPermissionDialog";
 import { FilePermissionDialog } from "@/components/FilePermissionDialog";
 import { ResetPINDialog } from "@/components/ResetPINDialog";
+import { StatePerformanceBadgesView } from "@/components/state-performance-badges-view";
 import { 
   grantFeatureConsent, 
   revokeFeatureConsent, 
@@ -33,11 +34,13 @@ import { LanguageSelector } from "@/components/LanguageSelector";
 import { PostcardModal } from "@/components/PostcardModal";
 import { PostcardPreviewModal } from "@/components/PostcardPreviewModal";
 import { CardProgressBar } from "@/components/CardProgressBar";
-import { FirstSessionTutorial } from "@/components/FirstSessionTutorial";
+
 import { DailyGoalCard } from "@/components/DailyGoalCard";
+import { lazy, Suspense } from "react";
+
+const IndiaProgressMap = lazy(() => import("@/components/IndiaProgressMap").then(m => ({ default: m.IndiaProgressMap })));
 import { useToastStore } from "@/store/toastStore";
 import { AVATAR_CONFIG, type AvatarId } from "@/lib/avatar-config";
-import { AnimationWrapper, animationPresets, StaggerContainer } from "@/components/AnimationWrapper";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouter, Navigate } from "@tanstack/react-router";
 import { fxCorrect, fxWrong, fxConfetti, fxStamp, fxTap, useSoundOn, setSoundOn } from "@/lib/fx";
@@ -68,6 +71,7 @@ import {
   resetProgress,
   levelInfo,
   statesWithProgress,
+  setLastPlayedState,
   badgeCount,
   badgesFor,
   STATE_BADGES,
@@ -160,11 +164,11 @@ function XPBar({ value, max = 100 }: { value: number; max?: number }) {
   return (
     <div className="relative h-3 w-full rounded-full bg-black/10 overflow-hidden">
       <div
-        className="h-full rounded-full gradient-gold"
+        className="h-full rounded-full gradient-gold transition-all duration-1000 ease-out"
         style={{ width: `${pct}%` }}
       />
       <div
-        className="absolute top-0 h-1 rounded-full bg-white/70"
+        className="absolute top-0 h-1 rounded-full bg-white/70 transition-all duration-1000 ease-out"
         style={{ width: `${pct * 0.9}%`, left: "5%" }}
       />
     </div>
@@ -184,7 +188,7 @@ function Chip({
     orange: "bg-saffron-soft text-saffron",
     blue: "bg-explorer-soft text-explorer",
     green: "bg-success-soft text-success",
-    gold: "bg-gold-soft text-[color:var(--color-brand-gold-dark)]",
+    gold: "bg-gold-soft text-[color:var(--gold)]",
   } as const;
   return (
     <span
@@ -204,7 +208,7 @@ export function BottomNav({
   const items = [
     { id: "home", icon: "🏠", label: "Home", to: "/home" },
     { id: "map", icon: "🗺️", label: "Journey", to: "/journey" },
-    { id: "explorer", icon: "�", label: "Explorer", to: "/explorer" },
+    { id: "explorer", icon: "🔍", label: "Explorer", to: "/explorer" },
     { id: "badges", icon: "🏅", label: "Badges", to: "/badges" },
     { id: "profile", icon: "👤", label: "Me", to: "/me" },
   ] as const;
@@ -368,7 +372,6 @@ export function CreateProfileScreen() {
   const [saved, setSaved] = useState(false);
   const [selectedAgeIndex, setSelectedAgeIndex] = useState(0);
   const [burst, setBurst] = useState(0);
-  const [showAudioPermission, setShowAudioPermission] = useState(false);
 
   // Age bands with milestone emoji and vibrant gradient
   const ageBands = [
@@ -393,29 +396,9 @@ export function CreateProfileScreen() {
     const avatarName = getAvatarName(avatar);
     saveProfile({ name: avatarName, avatar, ageBand });
     
-    // Show audio permission dialog for profile creation
-    setShowAudioPermission(true);
+    // Navigate directly to home - no audio dialog here
+    // Audio consent will be requested in Profile settings instead
     setSaved(true);
-  };
-
-  const handleAudioPermissionAccept = () => {
-    // User clicked "Yes, enable!" - audio consent already granted by dialog
-    // Close dialog and navigate to home
-    setShowAudioPermission(false);
-    setSaved(false);
-    
-    // Navigate after a brief delay to let dialog close
-    setTimeout(() => navigate({ to: "/home" }), 300);
-  };
-
-  const handleAudioPermissionReject = () => {
-    // User clicked "Not now" - no audio consent, but still proceed to home
-    // They can enable audio later in profile settings
-    // Close dialog and navigate to home
-    setShowAudioPermission(false);
-    setSaved(false);
-    
-    // Navigate after a brief delay to let dialog close
     setTimeout(() => navigate({ to: "/home" }), 300);
   };
 
@@ -517,7 +500,7 @@ export function CreateProfileScreen() {
       <div className="p-5 pb-safe bg-white border-t border-gray-100">
         <button
           onClick={handleProfileSave}
-          className={`w-full h-12 rounded-2xl gradient-saffron text-white text-display font-bold shadow-xl transition transform focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)] ${
+          className={`w-full h-14 rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-white text-display text-lg font-bold shadow-xl transition transform ${
             saved ? "scale-95 opacity-80" : "hover:shadow-2xl active:scale-95"
           }`}
         >
@@ -525,14 +508,7 @@ export function CreateProfileScreen() {
         </button>
       </div>
 
-      {/* Audio Permission Dialog - shown after profile creation */}
-      <AudioPermissionDialog
-        open={showAudioPermission}
-        forceShow={true}
-        context="profile-creation"
-        onAccept={handleAudioPermissionAccept}
-        onReject={handleAudioPermissionReject}
-      />
+      {/* Audio Permission Dialog removed from onboarding - moved to profile settings */}
     </div>
   );
 }
@@ -578,13 +554,7 @@ export function HomeDashboardScreen() {
   const [dismissStreakWarning, setDismissStreakWarning] = useState(false);
   const [showCompletionCelebration, setShowCompletionCelebration] = useState<string | null>(null);
   // Auto-show tutorial on first session, allow dismiss
-  const [showTutorial, setShowTutorial] = useState(() => {
-    if (typeof window !== "undefined") {
-      const seen = localStorage.getItem("india-explorer:tutorial-seen:v1");
-      return !seen; // Show tutorial if not seen before
-    }
-    return false;
-  });
+  const [showTutorial, setShowTutorial] = useState(false);
 
   // Route guard: redirect to welcome if not onboarded (defensive check)
   if (!p.onboarded) {
@@ -654,7 +624,7 @@ export function HomeDashboardScreen() {
     <div className="h-full w-full bg-[#F7F5F0] flex flex-col overflow-hidden">
 
       {/* Header with fade-in animation - Premium spacing */}
-      <div className={`px-5 pt-3 pb-4 gradient-saffron rounded-b-[32px] relative overflow-hidden transition-opacity duration-500 ${statsVisible ? "opacity-100" : "opacity-0"}`}>
+      <div className={`px-6 pt-4 pb-4 gradient-saffron rounded-b-[32px] relative overflow-hidden transition-opacity duration-500 ${statsVisible ? "opacity-100" : "opacity-0"}`}>
         <Cloud className="absolute top-2 right-4 w-14 opacity-40" />
         <div className="flex items-center gap-4 relative mb-3">
           {/* Avatar - Larger and more prominent */}
@@ -674,104 +644,29 @@ export function HomeDashboardScreen() {
           
           {/* Right side: Streak + Help button */}
           <div className="flex items-center gap-2 flex-shrink-0">
-            <div className={`flex items-center gap-1.5 bg-white/70 rounded-full px-3 py-2 backdrop-blur transition-transform duration-1000 ${p.streak > 0 ? "animate-bounce" : ""}`}>
+            <div className={`flex items-center gap-1.5 bg-white/70 rounded-full px-3 py-2 backdrop-blur transition-transform duration-1000`}>
               <span className="text-lg">🔥</span>
               <span className="text-white text-display font-black">{p.streak}</span>
             </div>
-            
-            {/* Help button - Tutorial trigger */}
-            <button
-              onClick={handleTutorialToggle}
-              className="h-12 w-12 rounded-full bg-white/90 backdrop-blur flex items-center justify-center text-saffron font-extrabold text-lg hover:bg-white active:scale-95 transition-all shadow-lg hover:shadow-xl focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
-              title="How to play"
-            >
-              ?
-            </button>
           </div>
         </div>
 
-        {/* XP Card with pulse animation */}
-        <div className={`rounded-2xl bg-white/15 backdrop-blur p-4 relative transition-all duration-700 ${statsVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}>
-          <div className="flex items-center justify-between text-white">
-            <div>
-              <div className="text-xs font-bold opacity-90">XP Progress</div>
-              <div className="text-display text-2xl font-extrabold">
-                {p.xp.toLocaleString()} XP
+        {/* Animated India Map - Moved to main content area */}
+        <div className={`mt-3 transition-all duration-700 ${statsVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}>
+          <Suspense fallback={
+            <div className="w-full bg-white rounded-2xl shadow-soft p-4 animate-pulse">
+              <div className="h-8 bg-gray-200 rounded w-1/3 mb-3" />
+              <div className="space-y-2">
+                {[1,2,3].map(i => <div key={i} className="h-4 bg-gray-200 rounded" />)}
               </div>
             </div>
-            <div className="text-right text-xs font-bold opacity-90">
-              {toNext} to
-              <br />
-              Lv {level + 1}
-            </div>
-          </div>
-          <div className="mt-2">
-            <XPBar value={pct} />
-          </div>
-        </div>
-
-        {/* % INDIA EXPLORED - NEW DOPAMINE DRIVER */}
-        <div className={`mt-3 rounded-2xl bg-gradient-to-r from-orange-400 to-red-500 text-white p-4 relative overflow-hidden transition-all duration-700 ${statsVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}>
-          {/* Decorative pattern */}
-          <div className="absolute top-1 right-2 text-3xl opacity-20">🇮🇳</div>
-          
-          <div className="relative z-10">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <span className="text-3xl">🗺️</span>
-                <div>
-                  <div className="text-xs font-bold opacity-90">India Explored</div>
-                  <div className="text-display text-2xl font-extrabold">{Math.round((p.completed.length / TOTAL_STATES) * 100)}%</div>
-                </div>
-              </div>
-              <div className="text-right text-xs font-bold opacity-90">
-                {p.completed.length}/{TOTAL_STATES}<br/>States
-              </div>
-            </div>
-            {/* Progress bar */}
-            <div className="h-2.5 bg-white/25 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-white transition-all duration-700"
-                style={{ width: `${(p.completed.length / TOTAL_STATES) * 100}%` }}
-              />
-            </div>
-            {/* Milestone message */}
-            <div className="text-xs font-bold mt-2 opacity-95">
-              {p.completed.length === 0 && "🚀 Start your adventure!"}
-              {p.completed.length > 0 && p.completed.length < 9 && `🌱 You're ${p.completed.length} state${p.completed.length > 1 ? 's' : ''} in!`}
-              {p.completed.length >= 9 && p.completed.length < 18 && `🌿 Quarter way there!`}
-              {p.completed.length >= 18 && p.completed.length < 27 && `🌳 Halfway across India!`}
-              {p.completed.length >= 27 && p.completed.length < TOTAL_STATES && `🏆 Almost a master!`}
-              {p.completed.length === TOTAL_STATES && `👑 INDIA MASTER! 🎉`}
-            </div>
-          </div>
+          }>
+            <IndiaProgressMap />
+          </Suspense>
         </div>
       </div>
 
-      {/* Stats with count-up animation - cleaner layout */}
-      <div className={`px-5 mt-3 relative z-10 grid grid-cols-3 gap-2 transition-all duration-700 ${animateStats ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}>
-        <StatCardEnhanced 
-          tone="orange" 
-          icon="🗺️" 
-          value={String(p.completed.length)} 
-          label="States"
-        />
-        <StatCardEnhanced 
-          tone="gold" 
-          icon="🏅" 
-          value={String(badgeCount(p))} 
-          label="Badges"
-        />
-        <StatCardEnhanced 
-          tone="green" 
-          icon="🎫" 
-          value={String(postcards)} 
-          label="Stamps"
-        />
-      </div>
 
-      {/* Daily Goal Card - Compact inline version */}
-      <DailyGoalCard />
 
       {/* Recently Completed State Celebration */}
       {(() => {
@@ -813,7 +708,13 @@ export function HomeDashboardScreen() {
                   </div>
                   <div className="bg-white/20 backdrop-blur rounded-xl p-2">
                     <div className="text-xs opacity-90">Stamp</div>
-                    <div className="text-xl font-extrabold">{state.emoji}</div>
+                    <img
+                      src={STATE_ART[recentState]}
+                      alt={recentState}
+                      className="w-8 h-8 object-cover rounded mt-1"
+                      loading="lazy"
+                      decoding="async"
+                    />
                   </div>
                 </div>
 
@@ -938,67 +839,22 @@ export function HomeDashboardScreen() {
         );
       })()}
 
-      {/* Achievement Badge Preview */}
-      {(() => {
-        const nextBadge = getNextAchievementBadge(p);
-        if (!nextBadge) return null;
 
-        const tierColors: Record<string, string> = {
-          seedling: "from-orange-400 to-yellow-500",
-          growing: "from-green-400 to-emerald-500",
-          mighty: "from-blue-400 to-purple-500",
-          elite: "from-purple-500 to-pink-500",
-        };
-
-        const stepsAway = Math.max(0, (nextBadge.achievementMax - nextBadge.progress));
-        const progressPercent = Math.round((nextBadge.progress / nextBadge.achievementMax) * 100);
-
-        return (
-          <div className="px-5 mt-3 animate-fade-in">
-            <Link 
-              to="/achievements" 
-              onClick={() => fxTap()}
-              className={`block rounded-2xl bg-white border-2 border-gradient p-4 shadow-soft hover:shadow-md transition-shadow focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]`}
-            >
-              <div className="flex items-start gap-3">
-                <div className="text-4xl flex-shrink-0">{nextBadge.icon}</div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Next Achievement</div>
-                  <div className="text-display text-sm font-extrabold text-ink leading-tight">{nextBadge.name}</div>
-                  
-                  {/* Progress bar */}
-                  <div className="mt-2.5 flex items-center gap-2">
-                    <div className="flex-1 h-2.5 bg-gray-200 rounded-full overflow-hidden">
-                      <div
-                        className={`h-full bg-gradient-to-r ${tierColors[nextBadge.tier]} transition-all duration-500`}
-                        style={{ width: `${progressPercent}%` }}
-                      />
-                    </div>
-                    <div className="text-xs font-bold text-muted-foreground whitespace-nowrap">{nextBadge.progress}/{nextBadge.achievementMax}</div>
-                  </div>
-
-                  {/* Steps away message - compact */}
-                  <div className="text-xs font-bold text-ink mt-2">
-                    {stepsAway === 0 
-                      ? "🎉 Ready to earn!" 
-                      : `${stepsAway} step${stepsAway > 1 ? "s" : ""} away`
-                    }
-                  </div>
-                </div>
-              </div>
-            </Link>
-          </div>
-        );
-      })()}
 
       {/* Continue journey - with pulse on play button */}
       <div className="px-5 mt-3 mb-3 flex-shrink-0">
-        <div className="text-display font-bold text-sm text-muted-foreground">
+        <h2 className="text-display font-bold text-sm text-muted-foreground">
           Continue your journey
-        </div>
+        </h2>
         <div className="mt-2 rounded-3xl bg-white p-4 shadow-soft border border-black/5 flex items-center gap-3">
-          <div className="h-16 w-16 rounded-2xl gradient-saffron p-2 flex items-center justify-center text-3xl animate-bounce">
-            {current.emoji}
+          <div className="h-16 w-16 rounded-2xl overflow-hidden flex-shrink-0">
+            <img 
+              src={STATE_ART[current.name]} 
+              alt={current.name}
+              className="w-full h-full object-cover"
+              loading="eager"
+              decoding="auto"
+            />
           </div>
           <div className="flex-1">
             <div className="text-xs font-bold text-saffron">
@@ -1010,7 +866,7 @@ export function HomeDashboardScreen() {
             <div className="mt-1 flex items-center gap-1.5">
               <div className="h-2.5 flex-1 rounded-full bg-muted overflow-hidden">
                 <div
-                  className="h-full gradient-saffron transition-all duration-500"
+                  className="h-full gradient-saffron transition-all duration-1000 ease-out"
                   style={{ width: `${(currentDone / CARDS_PER_STATE) * 100}%` }}
                 />
               </div>
@@ -1023,7 +879,7 @@ export function HomeDashboardScreen() {
             to="/state/$slug/learn"
             params={{ slug: stateSlug(current.name) }}
             onClick={() => fxTap()}
-            className="h-12 px-4 rounded-2xl gradient-saffron text-white text-display font-bold text-sm shadow-[var(--shadow-glow-orange)] flex items-center transition-all duration-300 hover:scale-105 active:scale-95 animate-pulse focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
+            className="h-11 px-3 rounded-2xl gradient-saffron text-white text-display font-bold text-sm shadow-[var(--shadow-glow-orange)] flex items-center transition-all duration-300 hover:scale-105 active:scale-95"
           >
             Play ▶
           </Link>
@@ -1035,10 +891,10 @@ export function HomeDashboardScreen() {
       {/* Up next - with interactive locked cards */}
       <div className="px-5 mt-4 mb-4 flex-shrink-0">
         <div className="flex items-center justify-between">
-          <div className="text-display font-bold text-sm text-muted-foreground">
+          <h2 className="text-display font-bold text-sm text-muted-foreground">
             Up next
-          </div>
-          <Link to="/journey" className="text-xs font-extrabold text-explorer">
+          </h2>
+          <Link to="/journey" className="text-xs font-extrabold text-explorer" aria-label="View all states">
             View all
           </Link>
         </div>
@@ -1047,21 +903,43 @@ export function HomeDashboardScreen() {
             <button
               key={s.name}
               onClick={() => handleLockedCardTap(s.name)}
-              className={`rounded-3xl bg-white p-3 shadow-soft border border-black/5 flex flex-col items-center gap-1 transition-all duration-300 transform hover:scale-105 active:scale-95 ${
+              className={`rounded-3xl bg-white p-3 shadow-soft border border-black/5 flex flex-col items-center gap-2 transition-all duration-300 overflow-hidden ${
                 animateStats ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
               }`}
               style={{ transitionDelay: `${idx * 100}ms` }}
+              aria-label={`Next state to explore: ${s.name}`}
+              role="button"
+              tabIndex={0}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  handleLockedCardTap(s.name);
+                }
+              }}
             >
-              <div className="text-3xl">{s.emoji}</div>
+              <div className="w-12 h-12 rounded-xl overflow-hidden">
+                <img 
+                  src={STATE_ART[s.name]} 
+                  alt={s.name}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
               <div className="text-display font-bold text-sm text-center leading-tight line-clamp-ellipsis-2">
                 {s.name}
               </div>
-              <div className="text-xs font-bold text-success">
-                🌍 Open
-              </div>
-              <div className="text-[9px] font-semibold text-success/70 mt-0.5">
+              <Link
+                to="/state/$slug/learn"
+                params={{ slug: stateSlug(s.name) }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  fxTap();
+                }}
+                className="mt-1 px-3 py-1.5 rounded-lg gradient-saffron text-white text-xs font-bold hover:opacity-90 transition-all"
+                aria-label={`Start exploring ${s.name}`}
+              >
                 Start exploring
-              </div>
+              </Link>
             </button>
           ))}
         </div>
@@ -1087,7 +965,13 @@ export function HomeDashboardScreen() {
 
                   {/* State preview */}
                   <div className={`rounded-2xl gradient-saffron text-white p-4 text-center mb-4`}>
-                    <div className="text-5xl mb-2">{state.emoji}</div>
+                    <div className="w-20 h-20 mx-auto mb-2 rounded-lg overflow-hidden">
+                      <img 
+                        src={STATE_ART[state.name]} 
+                        alt={state.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
                     <div className="text-display text-xl font-extrabold">{state.name}</div>
                     <div className="text-sm opacity-90 mt-1">{state.nickname}</div>
                   </div>
@@ -1119,13 +1003,13 @@ export function HomeDashboardScreen() {
                   <div className="mt-4 space-y-2">
                     <button
                       onClick={() => setShowLockedPreview(null)}
-                      className="w-full h-12 rounded-2xl bg-gray-100 text-gray-800 font-extrabold transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
+                      className="w-full h-12 rounded-2xl bg-gray-100 text-gray-800 font-extrabold"
                     >
                       Close
                     </button>
                     <Link
                       to="/journey"
-                      className="w-full h-12 rounded-2xl gradient-saffron text-white font-extrabold flex items-center justify-center transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
+                      className="w-full h-12 rounded-2xl gradient-saffron text-white font-extrabold flex items-center justify-center"
                       onClick={() => fxTap()}
                     >
                       View Journey Map
@@ -1138,11 +1022,7 @@ export function HomeDashboardScreen() {
         </div>
       )}
 
-      {/* First Session Tutorial - Auto-show on first session with dismiss option */}
-      <FirstSessionTutorial 
-        isVisible={showTutorial}
-        onComplete={handleTutorialClose}
-      />
+      {/* First Session Tutorial removed from onboarding flow */}
     </div>
   );
 }
@@ -1210,8 +1090,8 @@ function StatCardEnhanced({
   }[tone];
 
   return (
-    <div className={`rounded-2xl ${bgGradient} border ${borderColor} p-3 shadow-soft hover:shadow-md transition-all`}>
-      <div className="flex flex-col gap-2">
+    <div className={`rounded-2xl ${bgGradient} border ${borderColor} p-2 shadow-soft hover:shadow-md transition-all`}>
+      <div className="flex flex-col gap-1">
         {/* Icon and Number - Horizontal */}
         <div className="flex items-center gap-1.5 pl-1">
           <div className="text-2xl flex-shrink-0">{icon}</div>
@@ -1385,7 +1265,7 @@ function StateDetailModal({
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 h-12 rounded-2xl bg-gray-100 text-display font-extrabold text-gray-700 hover:bg-gray-200 transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
+            className="flex-1 h-12 rounded-2xl bg-gray-100 text-display font-extrabold text-gray-700 hover:bg-gray-200 transition"
           >
             Close
           </button>
@@ -1395,7 +1275,7 @@ function StateDetailModal({
                 fxTap();
                 onPlay();
               }}
-              className="flex-1 h-12 rounded-2xl gradient-saffron text-display font-extrabold text-white shadow-lg hover:shadow-xl transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
+              className="flex-1 h-12 rounded-2xl bg-gradient-to-r from-saffron-400 to-saffron-500 text-display font-extrabold text-white shadow-lg hover:shadow-xl transition"
             >
               {isDone ? "🎖️ Review" : "▶ Play"}
             </button>
@@ -1580,6 +1460,7 @@ export function JourneyMapScreen() {
         }}
         onContinue={() => {
           appLogger.info('journey_map_screen', 'StateIntroScreen onContinue clicked');
+          setLastPlayedState(view.name);
           setView({ screen: "hub", name: view.name });
         }}
       />
@@ -1771,7 +1652,13 @@ export function JourneyMapScreen() {
                             : `bg-gray-100 text-gray-700 ${isLocked ? "opacity-60 cursor-not-allowed" : ""}`
                         }`}
                       >
-                        <div className="text-3xl mb-1">{state.emoji}</div>
+                        <img
+                          src={STATE_ART[state.name]}
+                          alt={state.name}
+                          className="w-12 h-12 object-cover rounded mb-1 mx-auto"
+                          loading="lazy"
+                          decoding="async"
+                        />
                         <div className="text-xs font-extrabold leading-tight">{state.short}</div>
                         {isDone && (
                           <div className="text-[10px] font-bold mt-1 opacity-90">✓ Done</div>
@@ -1781,9 +1668,6 @@ export function JourneyMapScreen() {
                         )}
                         {isDone && !isCurrent && (
                           <div className="text-[10px] font-bold mt-1 opacity-90">↻ Replay</div>
-                        )}
-                        {isAvailable && (
-                          <div className="text-[10px] font-bold mt-1 text-slate-600">🔓 Ready</div>
                         )}
                         {isLocked && (
                           <div className="text-[10px] font-bold mt-1">🔒 Locked</div>
@@ -1848,7 +1732,13 @@ export function JourneyMapScreen() {
                         : `bg-gray-100 text-gray-700 ${isLocked ? "opacity-60 cursor-not-allowed" : ""}`
                     }`}
                   >
-                    <div className="text-3xl mb-1">{utState.emoji}</div>
+                    <img
+                      src={STATE_ART[utState.name]}
+                      alt={utState.name}
+                      className="w-12 h-12 object-cover rounded mb-1 mx-auto"
+                      loading="lazy"
+                      decoding="async"
+                    />
                     <div className="text-xs font-extrabold leading-tight">{utState.short}</div>
                     {isDone && (
                       <div className="text-[10px] font-bold mt-1 opacity-90">✓ Done</div>
@@ -1858,9 +1748,6 @@ export function JourneyMapScreen() {
                     )}
                     {isDone && !isCurrent && (
                       <div className="text-[10px] font-bold mt-1 opacity-90">↻ Replay</div>
-                    )}
-                    {isAvailable && (
-                      <div className="text-[10px] font-bold mt-1 text-slate-600">🔓 Ready</div>
                     )}
                     {isLocked && (
                       <div className="text-[10px] font-bold mt-1">🔒 Locked</div>
@@ -1935,11 +1822,24 @@ export function StateIntroScreen({
           <span className="opacity-50">›</span>
           {currentRegion && (
             <>
-              <span className="opacity-75">{currentRegion.emoji} {currentRegion.name}</span>
+              <img
+                src={STATE_ART[currentRegion.name]}
+                alt={currentRegion.name}
+                className="w-3 h-3 object-cover rounded inline-block"
+                loading="lazy"
+                decoding="async"
+              />
+              <span className="opacity-75">{currentRegion.name}</span>
               <span className="opacity-50">›</span>
             </>
           )}
-          <span>{state.emoji}</span>
+          <img
+            src={STATE_ART[state.name]}
+            alt={state.name}
+            className="w-3 h-3 object-cover rounded inline-block"
+            loading="lazy"
+            decoding="async"
+          />
         </div>
         
         <button
@@ -1964,8 +1864,14 @@ export function StateIntroScreen({
             alt={`${stateName} state illustration`}
           />
         ) : (
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 h-48 aspect-square rounded-full bg-white/25 backdrop-blur flex items-center justify-center text-[68px] drop-shadow-2xl">
-            {state.emoji}
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 h-48 aspect-square flex items-center justify-center drop-shadow-2xl">
+            <img
+              src={STATE_ART[state.name]}
+              alt={state.name}
+              className="w-48 h-48 object-cover rounded-lg"
+              loading="lazy"
+              decoding="async"
+            />
           </div>
         )}
       </div>
@@ -1978,7 +1884,14 @@ export function StateIntroScreen({
           {state.name}
         </h1>
         <div className="text-sm font-bold text-muted-foreground mt-1">
-          {state.emoji} {state.nickname}
+          <img
+            src={STATE_ART[state.name]}
+            alt={state.name}
+            className="w-4 h-4 object-cover rounded inline-block mr-1"
+            loading="lazy"
+            decoding="async"
+          />
+          {state.nickname}
         </div>
 
         <div className="mt-5 grid grid-cols-2 gap-3">
@@ -1994,7 +1907,7 @@ export function StateIntroScreen({
             fxTap();
             onContinue?.();
           }}
-          className={`mt-6 w-full h-12 rounded-2xl ${grad} text-white text-display font-extrabold shadow-[var(--shadow-glow-orange)] transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]`}
+          className={`mt-6 w-full h-14 rounded-2xl ${grad} text-white text-display text-lg font-extrabold shadow-[var(--shadow-glow-orange)]`}
         >
           Start Exploring! ✈️
         </button>
@@ -2166,11 +2079,24 @@ export function LearningHubScreen({
           <span className="opacity-50">›</span>
           {currentRegion && (
             <>
-              <span className="opacity-75">{currentRegion.emoji} {currentRegion.name}</span>
+              <img
+                src={STATE_ART[currentRegion.name]}
+                alt={currentRegion.name}
+                className="w-3 h-3 object-cover rounded inline-block"
+                loading="lazy"
+                decoding="async"
+              />
+              <span className="opacity-75">{currentRegion.name}</span>
               <span className="opacity-50">›</span>
             </>
           )}
-          <span>{state.emoji}</span>
+          <img
+            src={STATE_ART[state.name]}
+            alt={state.name}
+            className="w-3 h-3 object-cover rounded inline-block"
+            loading="lazy"
+            decoding="async"
+          />
         </div>
         
         <div className="flex items-center gap-3">
@@ -2226,7 +2152,7 @@ export function LearningHubScreen({
             onQuiz?.();
           }}
           disabled={completedCards < 6}
-          className={`w-full h-12 rounded-2xl text-white text-display font-extrabold shadow-[var(--shadow-glow-green)] transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)] ${
+          className={`w-full h-14 rounded-2xl text-white text-display text-lg font-extrabold shadow-[var(--shadow-glow-green)] transition ${
             completedCards === 6
               ? "gradient-success"
               : "bg-gray-300 opacity-60 cursor-not-allowed"
@@ -2501,7 +2427,11 @@ export function LearningCardScreen({
   // Learning Card Screen - State and Navigation
   // mainCardIndex tracks which category (0-5)
   // cardIndexInCategory tracks position within category (0-4 or more)
-  const [displayLanguage, setDisplayLanguage] = useState<LanguageCode>("en");
+  const [displayLanguage, setDisplayLanguage] = useState<LanguageCode>(() => {
+    // Start with English, will validate based on available languages
+    const available = getAvailableLanguages(stateName);
+    return (available.includes("en") ? "en" : available[0] ?? "en") as LanguageCode;
+  });
   const [mainCardIndex, setMainCardIndex] = useState(cardIndex ?? 0); // Which category (0-5)
   const [cardIndexInCategory, setCardIndexInCategory] = useState(0); // Position within category (0-4 usually)
   const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -2511,19 +2441,39 @@ export function LearningCardScreen({
   
   // Now compute cards using displayLanguage and ageBand (which are now declared)
   const cards = useMemo(() => {
-    return learningCardsFor(state.name, displayLanguage, progress.ageBand);
+    const loadedCards = learningCardsFor(state.name, displayLanguage, progress.ageBand);
+    // Validate we got cards back
+    if (!Array.isArray(loadedCards) || loadedCards.length === 0) {
+      // Fallback to English if current language failed
+      const fallbackCards = learningCardsFor(state.name, "en", progress.ageBand);
+      if (displayLanguage !== "en" && Array.isArray(fallbackCards) && fallbackCards.length > 0) {
+        setDisplayLanguage("en");
+        return fallbackCards;
+      }
+      return [];
+    }
+    return loadedCards;
   }, [state.name, displayLanguage, progress.ageBand]);
   
   // Get cards for current category only
   const cardsInCurrentCategory = useMemo(() => {
-    return cards.filter(c => c.mainCardIndex === mainCardIndex);
+    if (!Array.isArray(cards)) return [];
+    return cards.filter(c => c && c.mainCardIndex === mainCardIndex);
   }, [cards, mainCardIndex]);
   
-  // Get current card object
-  const currentCard = cardsInCurrentCategory[cardIndexInCategory];
+  // Get current card object with validation
+  const currentCard = useMemo(() => {
+    if (!Array.isArray(cardsInCurrentCategory) || cardIndexInCategory >= cardsInCurrentCategory.length) {
+      return undefined;
+    }
+    return cardsInCurrentCategory[cardIndexInCategory];
+  }, [cardsInCurrentCategory, cardIndexInCategory]);
   
-  // Get global index for progress tracking
-  const currentCardIndex = cards.indexOf(currentCard);
+  // Get global index for progress tracking with validation
+  const currentCardIndex = useMemo(() => {
+    if (!currentCard || !Array.isArray(cards)) return -1;
+    return cards.findIndex(c => c && c.mainCardIndex === currentCard.mainCardIndex && c.kicker === currentCard.kicker && c.title === currentCard.title);
+  }, [currentCard, cards]);
   
   const enrichedContent = getStateContent(stateName);
   
@@ -2552,13 +2502,27 @@ export function LearningCardScreen({
     };
   }, []);
 
-  const card = cards[currentCardIndex];
-  const isLast = currentCardIndex === cards.length - 1;
-  const isReplaying = isCardReplaying(progress, state.name, currentCardIndex);
+  const card = currentCard; // Use validated currentCard from useMemo
+  const isLast = currentCardIndex >= 0 && currentCardIndex === cards.length - 1;
+  const isReplaying = currentCardIndex >= 0 && currentCard ? isCardReplaying(progress, state.name, currentCardIndex) : false;
 
-  // Safety check: ensure card exists
-  if (!card) {
-    return <LoadingScreen />;
+  // Safety check: ensure card exists and currentCardIndex is valid
+  if (!card || currentCardIndex < 0 || !Array.isArray(cards) || cards.length === 0) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-white">
+        <div className="text-center">
+          <div className="text-5xl mb-3">⚠️</div>
+          <h1 className="text-lg font-bold text-ink mb-2">Card content unavailable</h1>
+          <p className="text-sm text-muted-foreground mb-4">Please try again or go back</p>
+          <button
+            onClick={() => window.history.back()}
+            className="px-4 py-2 rounded-lg bg-blue-500 text-white font-bold"
+          >
+            Go Back
+          </button>
+        </div>
+      </div>
+    );
   }
 
   // Find the main card index for the current card
@@ -2623,16 +2587,22 @@ export function LearningCardScreen({
           `${currentCard.kicker} card learned!`,
           "📚",
           {
-            subtitle: `+${XP_PER_CARD} XP • ${cardIndexInCategory + 1}/${cardsInCurrentCategory.length} complete`,
+            subtitle: `+${XP_PER_CARD} XP earned • ${cardIndexInCategory + 1}/${cardsInCurrentCategory.length} cards in ${currentCard.kicker}`,
             confetti: true,
             duration: 2000,
             type: "success",
           }
         );
+        
+        // Auto-advance to next card after celebration
+        setTimeout(() => {
+          setCardIndexInCategory(cardIndexInCategory + 1);
+        }, 2100);
+      } else {
+        // Replay: advance immediately without celebration
+        fxTap();
+        setCardIndexInCategory(cardIndexInCategory + 1);
       }
-      
-      fxTap();
-      setCardIndexInCategory(cardIndexInCategory + 1);
     } else {
       // Last card in this category - mark and move to next category or exit
       const currentCard = cardsInCurrentCategory[cardIndexInCategory];
@@ -2648,16 +2618,22 @@ export function LearningCardScreen({
           `${currentCard.kicker} card learned!`,
           "📚",
           {
-            subtitle: `+${XP_PER_CARD} XP • Category complete! 🎓`,
+            subtitle: `+${XP_PER_CARD} XP earned • ${currentCard.kicker} category complete! 🎓`,
             confetti: true,
             duration: 2000,
             type: "success",
           }
         );
+        
+        // Auto-advance to next category or exit after celebration
+        setTimeout(() => {
+          onNext?.(null);
+        }, 2100);
+      } else {
+        // Replay: advance immediately
+        fxTap();
+        onNext?.(null);
       }
-      
-      fxTap();
-      onNext?.(null);
     }
   };
 
@@ -2685,7 +2661,7 @@ export function LearningCardScreen({
         `${categoryName} mastered!`,
         "🌟",
         {
-          subtitle: `+${XP_PER_CARD * mainCardSectionCards.length} XP • ${mainCardIdx + 1}/6 categories`,
+          subtitle: `+${XP_PER_CARD * mainCardSectionCards.length} XP earned • ${mainCardIdx + 1}/6 categories mastered`,
           confetti: true,
           duration: 2500,
           type: "success",
@@ -2714,7 +2690,7 @@ export function LearningCardScreen({
             onClose?.();
           }}
           aria-label="Close learning card"
-          className="h-12 w-12 rounded-full bg-white shadow-soft flex items-center justify-center text-lg font-bold transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
+          className="h-12 w-12 rounded-full bg-white shadow-soft flex items-center justify-center text-lg font-bold"
         >
           ✕
         </button>
@@ -2732,18 +2708,27 @@ export function LearningCardScreen({
           </div>
         </div>
 
-        {/* Level progress context */}
-        <div className="ml-2 text-xs font-bold text-muted-foreground flex flex-col items-end">
-          <div>Lv {level.level}</div>
-          <div className="text-[10px] text-muted-foreground/70">{level.pct}%</div>
-        </div>
-
-        {/* Language Selector */}
-        <LanguageSelector
-          currentLanguage={displayLanguage as LanguageCode}
-          availableLanguages={getAvailableLanguages(stateName)}
-          onLanguageChange={(lang) => setDisplayLanguage(lang)}
-        />
+        {/* Language Toggle - Left aligned pill style */}
+        {getAvailableLanguages(stateName).length > 1 && (
+          <div className="flex items-center gap-1 bg-white/60 backdrop-blur-sm rounded-full p-1 border border-white/40">
+            {getAvailableLanguages(stateName).map((lang) => (
+              <button
+                key={lang}
+                onClick={() => {
+                  fxTap();
+                  setDisplayLanguage(lang);
+                }}
+                className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
+                  displayLanguage === lang
+                    ? "bg-blue-500 text-white shadow-md"
+                    : "text-gray-600 hover:bg-white/50"
+                }`}
+              >
+                {lang === "en" ? "English" : lang.charAt(0).toUpperCase() + lang.slice(1)}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Listen Button */}
         <button
@@ -2809,12 +2794,15 @@ export function LearningCardScreen({
 
         {/* Replay indicator - shown when user is replaying a card */}
         {isReplaying && currentCardIndex === i && (
-          <div className="mb-3 p-3 bg-white rounded-xl flex items-center gap-2 shadow-sm">
+          <div className="mb-3 p-3 bg-gradient-to-r from-purple-100 to-blue-100 rounded-xl flex items-center gap-2 shadow-sm border border-purple-200">
             <span className="text-lg">📖</span>
             <div className="flex-1">
-              <p className="text-xs font-bold text-ink/70">Replaying this card</p>
-              <p className="text-xs text-ink/60 font-medium">No XP earned this time {replayCount > 0 && `• Replayed ${replayCount}x`}</p>
+              <p className="text-xs font-bold text-purple-900">Replaying this card</p>
+              <p className="text-xs text-purple-700 font-medium">
+                You've mastered this! {replayCount > 0 && `• Replayed ${replayCount}x already`}
+              </p>
             </div>
+            <span className="text-2xl">✨</span>
           </div>
         )}
         
@@ -2845,6 +2833,13 @@ export function LearningCardScreen({
             ← Swipe or tap Next →
           </div>
         )}
+
+        {/* Mastery badge for replayed cards */}
+        {isReplaying && replayCount > 0 && (
+          <div className="mt-3 px-3 py-2 bg-gradient-to-r from-amber-100 to-orange-100 rounded-lg text-center border border-amber-300">
+            <p className="text-xs font-bold text-amber-900">⭐ Mastered! Replayed {replayCount}x</p>
+          </div>
+        )}
       </div>
 
       <div className="p-5 flex flex-col gap-2">
@@ -2856,9 +2851,9 @@ export function LearningCardScreen({
               handleNext();
             }
           }}
-          className={`w-full h-12 rounded-2xl ${grad} text-white text-display font-bold shadow-[var(--shadow-glow-orange)] transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]`}
+          className={`w-full h-14 rounded-2xl ${grad} text-white text-display text-lg font-bold shadow-[var(--shadow-glow-orange)]`}
         >
-          {isLastInMainCardSection ? (currentMainCardIndex === 5 ? "Take the Quiz! 🎯" : "Done! Back to Cards") : "Got it! Next →"}
+          {isLastInMainCardSection ? (currentMainCardIndex === 5 ? "Take the Quiz! 🎯" : "Done! Back to Cards") : isReplaying ? "Replay Complete ✨" : "Got it! Next →"}
         </button>
       </div>
 
@@ -2901,7 +2896,7 @@ export function LearningCardScreen({
                   fxTap();
                   setShowAudioPermissionPrompt(false);
                 }}
-                className="flex-1 h-12 rounded-xl gradient-explorer text-white font-bold text-sm flex items-center justify-center transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
+                className="flex-1 h-12 rounded-xl bg-gradient-to-r from-blue-400 to-cyan-500 text-white font-bold text-sm flex items-center justify-center"
               >
                 Go to Settings
               </Link>
@@ -2918,7 +2913,11 @@ export function QuizScreen({
   stateName,
   onDone,
   onClose,
-}: { stateName?: string; onDone?: () => void; onClose?: () => void } = {}) {
+}: { 
+  stateName?: string
+  onDone?: (quizMetrics?: { timeToComplete: number; quizAttempts: number; quizScore: number }) => void
+  onClose?: () => void
+} = {}) {
   const progress = useProgress();
   const states = statesWithProgress(progress);
   const level = levelInfo(progress.xp);
@@ -3009,17 +3008,26 @@ export function QuizScreen({
       
       // Track quiz completion
       const quizDuration = Date.now() - quizStartTime;
+      const scorePercentage = ((correctCount + 1) / questions.length) * 100;
+      
       firebaseEvents.quizComplete({
         stateName: activeName,
         questionsAnswered: questions.length,
         correctAnswers: correctCount + 1, // +1 for current correct answer
-        scorePercentage: ((correctCount + 1) / questions.length) * 100,
+        scorePercentage,
         timeSpentSeconds: quizDuration / 1000,
       })
       
+      // Pass quiz metrics to completion screen for badge tracking
+      const quizMetrics = {
+        timeToComplete: quizDuration,
+        quizAttempts: 1, // First attempt (simplified for now)
+        quizScore: scorePercentage,
+      };
+      
       // Use setTimeout to ensure state is settled before navigation
       setTimeout(() => {
-        onDone?.();
+        onDone?.(quizMetrics);
       }, 50);
       return;
     }
@@ -3111,7 +3119,7 @@ export function QuizScreen({
             <button
               key={label}
               onClick={() => onSelect(label)}
-              className={`h-16 rounded-2xl px-5 flex items-center justify-between text-display text-lg font-bold shadow-soft border-2 transition-all active:scale-[0.99] hover:scale-[1.02] focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)] ${
+              className={`h-16 rounded-2xl px-5 flex items-center justify-between text-display text-lg font-bold shadow-soft border-2 transition-all active:scale-[0.99] hover:scale-[1.02] ${
                 isCorrectPick
                   ? "bg-success/10 border-success text-success"
                   : isWrongPick
@@ -3144,7 +3152,7 @@ export function QuizScreen({
         <button
           onClick={result ? onReset : onCheck}
           disabled={!selected}
-          className={`w-full h-12 rounded-2xl text-white text-display font-bold shadow-[var(--shadow-glow-blue)] disabled:opacity-50 transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)] ${
+          className={`w-full h-14 rounded-2xl text-white text-display text-lg font-bold shadow-[var(--shadow-glow-blue)] disabled:opacity-50 ${
             result === "correct"
               ? "bg-success"
               : result === "wrong"
@@ -3213,7 +3221,7 @@ export function CorrectAnswerScreen({ stateName }: { stateName?: string } = {}) 
       </div>
 
       <div className="p-6 relative">
-        <button className="w-full h-12 rounded-2xl bg-white text-success text-display font-extrabold shadow-lg animate-pulse active:scale-95 transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]">
+        <button className="w-full h-14 rounded-2xl bg-white text-success text-display text-lg font-extrabold shadow-lg animate-pulse active:scale-95 transition-transform">
           Next Question →
         </button>
       </div>
@@ -3226,36 +3234,102 @@ export function StateCompletedScreen({
   persist = true,
   onContinue,
   onCreatePostcard,
-}: { stateName?: string; persist?: boolean; onContinue?: () => void; onCreatePostcard?: () => void } = {}) {
+  quizMetrics,
+}: { 
+  stateName?: string
+  persist?: boolean
+  onContinue?: () => void
+  onCreatePostcard?: () => void
+  quizMetrics?: {
+    timeToComplete: number
+    quizAttempts: number
+    quizScore: number
+  }
+} = {}) {
   const state = getState(stateName);
   const art = STATE_ART[state.name];
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
   const [burstKey, setBurstKey] = useState(0);
+  const [celebrationDone, setCelebrationDone] = useState(false);
+  const [earnedPerformanceBadges, setEarnedPerformanceBadges] = useState<string[]>([]);
+  const progress = useProgress();
+  const celebration = useCelebration();
   
   useEffect(() => {
-    fxConfetti();
-    setBurstKey((n) => n + 1);
-    if (persist) {
-      completeState(state.name);
-      // Mark as recently completed for home screen celebration
-      markRecentlyCompleted(state.name);
+    // Only run celebration once per mount
+    if (!celebrationDone) {
+      fxConfetti();
+      setBurstKey((n) => n + 1);
+      if (persist) {
+        completeState(state.name);
+        
+        // Track performance badges if metrics provided
+        if (quizMetrics) {
+          const { recordStatePerformance, getStatePerformance } = require("@/lib/progress");
+          const cardsReplayed = progress.replayCount?.[state.name]
+            ? Object.values(progress.replayCount[state.name]).reduce((sum: number, count: number) => sum + count, 0)
+            : 0;
+          
+          recordStatePerformance(
+            state.name,
+            quizMetrics.timeToComplete,
+            quizMetrics.quizAttempts,
+            quizMetrics.quizScore,
+            cardsReplayed,
+          );
+          
+          // Get the newly earned badges to show celebration
+          setTimeout(() => {
+            const perf = getStatePerformance(progress, state.name);
+            if (perf?.earnedPerformanceBadges) {
+              setEarnedPerformanceBadges(perf.earnedPerformanceBadges);
+              
+              // Show celebration for each badge earned
+              perf.earnedPerformanceBadges.forEach((badgeId: string, idx: number) => {
+                setTimeout(() => {
+                  const { STATE_PERFORMANCE_BADGE_DEFS, getPerformanceBadgeIcon } = require("@/lib/state-performance-badges");
+                  const badgeDef = STATE_PERFORMANCE_BADGE_DEFS[badgeId as keyof typeof STATE_PERFORMANCE_BADGE_DEFS];
+                  
+                  if (badgeDef && celebration) {
+                    celebration.custom(
+                      badgeDef.name,
+                      getPerformanceBadgeIcon(badgeId as any),
+                      {
+                        subtitle: badgeDef.description,
+                        confetti: true,
+                        duration: 2500,
+                        type: "success",
+                      }
+                    );
+                  }
+                }, idx * 1500);
+              });
+            }
+          }, 100);
+        }
+        
+        // Mark as recently completed for home screen celebration
+        markRecentlyCompleted(state.name);
+      }
+      setCelebrationDone(true);
     }
-  }, [state.name, persist]);
+  }, [state.name, persist, celebrationDone, quizMetrics, progress, celebration]);
 
   return (
     <div className="h-full w-full gradient-gold relative overflow-hidden flex flex-col items-center">
       <ConfettiBurst trigger={burstKey} size="big" />
-      {Array.from({ length: 28 }).map((_, i) => (
+      {Array.from({ length: 12 }).map((_, i) => (
         <div
           key={i}
-          className="absolute rounded-sm"
+          className="absolute rounded-sm pointer-events-none"
           style={{
-            left: `${(i * 29) % 100}%`,
-            top: `${(i * 47) % 70}%`,
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
             width: 6 + (i % 4) * 2,
             height: 12 + (i % 3) * 3,
             background: ["#FF7A1A", "#2E7DFF", "#fff", "#22C55E", "#F5B301"][i % 5],
             transform: `rotate(${i * 15}deg)`,
+            opacity: 0.6,
           }}
         />
       ))}
@@ -3276,7 +3350,13 @@ export function StateCompletedScreen({
             {art ? (
               <img src={art} alt="" loading="lazy" decoding="async" className="h-20 object-contain drop-shadow" />
             ) : (
-              <div className="text-[54px] leading-none drop-shadow">{state.emoji}</div>
+              <img
+                src={STATE_ART[state.name]}
+                alt={state.name}
+                className="h-20 object-contain drop-shadow rounded"
+                loading="lazy"
+                decoding="async"
+              />
             )}
             <div className="text-display font-extrabold text-sm mt-1 text-center leading-tight uppercase">
               {state.name}
@@ -3320,10 +3400,12 @@ export function StateCompletedScreen({
             <div className="bg-white/15 rounded-xl p-2">
               <div className="text-lg">⭐</div>
               <div className="text-display text-sm font-extrabold leading-tight">+250 XP</div>
+              <div className="text-[9px] opacity-75 mt-1">State Complete</div>
             </div>
             <div className="bg-white/15 rounded-xl p-2">
               <div className="text-lg">📜</div>
               <div className="text-display text-sm font-extrabold leading-tight">Stamp</div>
+              <div className="text-[9px] opacity-75 mt-1">Added</div>
             </div>
           </div>
         </div>
@@ -3336,7 +3418,7 @@ export function StateCompletedScreen({
             fxTap();
             onCreatePostcard?.();
           }}
-          className="w-full h-12 rounded-2xl bg-gradient-to-r from-yellow-400 to-yellow-500 text-white text-display font-extrabold shadow-xl active:scale-95 transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
+          className="w-full h-14 rounded-2xl bg-gradient-to-r from-purple-400 to-pink-400 text-white text-display text-lg font-extrabold shadow-xl active:scale-95 transition-transform"
         >
           ✨ Add Stamp
         </button>
@@ -3347,7 +3429,7 @@ export function StateCompletedScreen({
             fxTap();
             onContinue?.();
           }}
-          className="w-full h-12 rounded-xl bg-white/30 text-white text-display font-bold shadow-lg active:scale-95 transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)] backdrop-blur-sm"
+          className="w-full h-12 rounded-xl bg-white/30 text-white text-display font-bold shadow-lg active:scale-95 transition-transform backdrop-blur-sm"
         >
           ⏭️ Skip to Next State
         </button>
@@ -3395,9 +3477,13 @@ export function StateUnlockScreen({
             className="relative h-72 object-contain drop-shadow-2xl animate-fade-in"
           />
         ) : (
-          <div className="relative text-[130px] drop-shadow-2xl animate-fade-in">
-            {state.emoji}
-          </div>
+          <img
+            src={STATE_ART[state.name]}
+            alt={state.name}
+            className="relative h-72 object-contain drop-shadow-2xl animate-fade-in rounded-lg"
+            loading="lazy"
+            decoding="async"
+          />
         )}
         <img
           src={airplane}
@@ -3413,7 +3499,7 @@ export function StateUnlockScreen({
             fxTap();
             onContinue?.();
           }}
-          className="w-full h-12 rounded-2xl bg-white text-explorer text-display font-extrabold shadow-xl transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
+          className="w-full h-14 rounded-2xl bg-white text-explorer text-display text-lg font-extrabold shadow-xl"
         >
           Continue Adventure ✈️
         </button>
@@ -3590,7 +3676,7 @@ function BadgeDetailModal({
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 h-12 rounded-2xl bg-gray-100 text-display font-extrabold text-gray-700 hover:bg-gray-200 transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
+            className="flex-1 h-12 rounded-2xl bg-gray-100 text-display font-extrabold text-gray-700 hover:bg-gray-200 transition"
           >
             Close
           </button>
@@ -3600,7 +3686,7 @@ function BadgeDetailModal({
                 fxConfetti();
                 onClose();
               }}
-              className="flex-1 h-12 rounded-2xl bg-gradient-to-r from-yellow-400 to-yellow-500 text-display font-extrabold text-white shadow-lg hover:shadow-xl transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
+              className="flex-1 h-12 rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-display font-extrabold text-white shadow-lg hover:shadow-xl transition"
             >
               🎉 Celebrate!
             </button>
@@ -3614,6 +3700,7 @@ function BadgeDetailModal({
 export function BadgesScreen() {
   const progress = useProgress();
   const [selectedBadge, setSelectedBadge] = useState<AchievementBadge | null>(null);
+  const [activeTab, setActiveTab] = useState<"achievements" | "states">("achievements");
   const unlockedCount = unlockedAchievementBadgeCount(progress);
   const celebration = useCelebration();
   const toastStore = useToastStore();
@@ -3691,8 +3778,41 @@ export function BadgesScreen() {
 
   return (
     <div className="h-full w-full bg-[#F7F5F0] flex flex-col">
+      {/* Tab Switcher - Before Header */}
+      <div className="px-5 pt-4 pb-0 flex gap-2 border-b border-gray-200 bg-white z-10">
+        <button
+          onClick={() => {
+            fxTap();
+            setActiveTab("achievements");
+          }}
+          className={`px-4 py-3 rounded-t-lg font-bold text-sm transition ${
+            activeTab === "achievements"
+              ? "bg-transparent border-b-2 border-orange-400 text-orange-600"
+              : "text-gray-600 hover:text-gray-800"
+          }`}
+        >
+          🏆 Achievement Badges
+        </button>
+        <button
+          onClick={() => {
+            fxTap();
+            setActiveTab("states");
+          }}
+          className={`px-4 py-3 rounded-t-lg font-bold text-sm transition ${
+            activeTab === "states"
+              ? "bg-transparent border-b-2 border-orange-400 text-orange-600"
+              : "text-gray-600 hover:text-gray-800"
+          }`}
+        >
+          🎖️ State Badges
+        </button>
+      </div>
+
+      {/* Achievement Badges View */}
+      {activeTab === "achievements" && (
+        <>
       {/* Combined Header - Avatar + Name + Badge Stats (120px) */}
-      <div className="px-5 pt-3 pb-4 gradient-saffron rounded-b-[32px] relative overflow-hidden animate-fade-in">
+      <div className="px-5 pt-3 pb-4 gradient-explorer rounded-b-[32px] relative overflow-hidden animate-fade-in">
         <Cloud className="absolute top-2 right-4 w-14 opacity-40 pointer-events-none" />
         
         {/* PART A: Avatar + Name (flex items-center gap-3) */}
@@ -3896,7 +4016,7 @@ export function BadgesScreen() {
             <div className="flex gap-3 mt-2">
               <button
                 onClick={() => setSelectedBadge(null)}
-                className="flex-1 h-12 rounded-2xl bg-gray-100 text-display font-extrabold text-gray-800 active:scale-95 transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
+                className="flex-1 h-12 rounded-2xl bg-gray-100 text-display font-extrabold text-gray-800 active:scale-95 transition"
               >
                 Close
               </button>
@@ -3906,7 +4026,7 @@ export function BadgesScreen() {
                     fxConfetti();
                     setSelectedBadge(null);
                   }}
-                  className="flex-1 h-12 rounded-2xl gradient-gold text-display font-extrabold text-white shadow-lg active:scale-95 transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
+                  className="flex-1 h-12 rounded-2xl gradient-gold text-display font-extrabold text-white shadow-lg active:scale-95 transition"
                 >
                   🎉 Celebrate!
                 </button>
@@ -3914,6 +4034,13 @@ export function BadgesScreen() {
             </div>
           </div>
         </div>
+      )}
+        </>
+      )}
+
+      {/* State Badges View */}
+      {activeTab === "states" && (
+        <StatePerformanceBadgesView />
       )}
     </div>
   );
@@ -3932,11 +4059,24 @@ export function ProfileScreen() {
     return hasFeatureConsent('file');
   });
   const [showResetPINDialog, setShowResetPINDialog] = useState(false);
+  const [showAudioPermission, setShowAudioPermission] = useState(false);
+  const [hasAudioConsent, setHasAudioConsent] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return hasFeatureConsent('audio');
+  });
   
   // Subscribe to file consent changes
   useEffect(() => {
     const unsubscribe = subscribeConsentChanges('file', () => {
       setHasFileConsent(hasFeatureConsent('file'));
+    });
+    return unsubscribe;
+  }, []);
+
+  // Subscribe to audio consent changes
+  useEffect(() => {
+    const unsubscribe = subscribeConsentChanges('audio', () => {
+      setHasAudioConsent(hasFeatureConsent('audio'));
     });
     return unsubscribe;
   }, []);
@@ -4004,6 +4144,20 @@ export function ProfileScreen() {
     setIsSelectingAvatar(false);
   };
 
+  const handleAudioPermissionAccept = () => {
+    // User clicked "Yes, enable!" - audio consent is granted by dialog
+    // Must close parent state to prevent dialog from re-showing
+    setShowAudioPermission(false);
+    debugLog("audio-permission", "Accepted in profile settings");
+  };
+
+  const handleAudioPermissionReject = () => {
+    // User clicked "Not now" - no audio consent
+    // Must close parent state to prevent dialog from re-showing
+    setShowAudioPermission(false);
+    debugLog("audio-permission", "Rejected in profile settings");
+  };
+
   return (
     <div className="h-full w-full bg-[#F7F5F0] flex flex-col">
       <div className="relative gradient-explorer px-5 pt-4 pb-14 rounded-b-[36px] animate-fade-in">
@@ -4017,16 +4171,32 @@ export function ProfileScreen() {
             ‹
           </button>
           <div className="text-display font-extrabold text-white">Profile</div>
-          <button
-            onClick={() => {
-              fxTap();
-              setShowResetPINDialog(true);
-            }}
-            title="Reset progress (requires PIN)"
-            className="h-10 w-10 rounded-full bg-white/40 hover:bg-white/60 text-white flex items-center justify-center transition active:scale-90 font-extrabold text-lg"
-          >
-            ⟲
-          </button>
+          <div className="flex items-center gap-2">
+            {/* Info button - Tutorial trigger */}
+            <button
+              onClick={() => {
+                fxTap();
+                // Trigger tutorial from profile
+                const showTutorialEvent = new CustomEvent('showTutorial');
+                window.dispatchEvent(showTutorialEvent);
+              }}
+              title="How to play - Learn the basics"
+              aria-label="Info - Learn how to play"
+              className="h-10 w-10 rounded-full bg-white/40 hover:bg-white/60 text-white flex items-center justify-center transition active:scale-90 font-extrabold text-lg"
+            >
+              ℹ
+            </button>
+            <button
+              onClick={() => {
+                fxTap();
+                setShowResetPINDialog(true);
+              }}
+              title="Reset progress (requires PIN)"
+              className="h-10 w-10 rounded-full bg-white/40 hover:bg-white/60 text-white flex items-center justify-center transition active:scale-90 font-extrabold text-lg"
+            >
+              ⟲
+            </button>
+          </div>
         </div>
         <div className="flex flex-col items-center mt-4">
           <div className="relative animate-bounce" style={{ animationDelay: "0ms" }}>
@@ -4170,6 +4340,61 @@ export function ProfileScreen() {
           <AudioSettingRow />
         </div>
 
+        {/* Audio Permission Toggle - for enabling/disabling audio features */}
+        <div className="animate-fade-in" style={{ animationDelay: "205ms" }}>
+          {hasAudioConsent ? (
+            // When permission is granted, show revoke button
+            <button
+              onClick={() => {
+                revokeFeatureConsent('audio');
+                fxTap();
+              }}
+              className="w-full flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 hover:border-red-300 hover:bg-red-50 transition"
+            >
+              {/* Left: Icon & Labels */}
+              <div className="flex items-start gap-3">
+                <div className="text-3xl flex-shrink-0">🔊</div>
+                <div className="text-left">
+                  <div className="font-bold text-ink">Audio Stories & Narration</div>
+                  <div className="text-xs text-green-700 font-semibold">
+                    ✓ Permission granted
+                  </div>
+                </div>
+              </div>
+
+              {/* Right: Revoke Button */}
+              <div className="text-xs font-bold text-red-600 bg-red-100 px-3 py-1.5 rounded-full flex-shrink-0 ml-4">
+                Revoke
+              </div>
+            </button>
+          ) : (
+            // When permission is not granted, show request button
+            <button
+              onClick={() => {
+                fxTap();
+                setShowAudioPermission(true);
+              }}
+              className="w-full flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 hover:border-green-300 hover:bg-green-50 transition"
+            >
+              {/* Left: Icon & Labels */}
+              <div className="flex items-start gap-3">
+                <div className="text-3xl flex-shrink-0">🔊</div>
+                <div className="text-left">
+                  <div className="font-bold text-ink">Audio Stories & Narration</div>
+                  <div className="text-xs text-muted-foreground font-semibold">
+                    Tap to enable (parental permission needed)
+                  </div>
+                </div>
+              </div>
+
+              {/* Right: Enable Button */}
+              <div className="text-xs font-bold text-green-600 bg-green-100 px-3 py-1.5 rounded-full flex-shrink-0 ml-4">
+                Enable
+              </div>
+            </button>
+          )}
+        </div>
+
         {/* File Permission Toggle - for saving postcards to photos */}
         <div className="animate-fade-in" style={{ animationDelay: "210ms" }}>
           {hasFileConsent ? (
@@ -4225,7 +4450,7 @@ export function ProfileScreen() {
           <Link
             to="/badges"
             onClick={() => fxTap()}
-            className="rounded-2xl bg-white shadow-soft border border-black/5 p-3 flex items-center gap-3 transition active:scale-[0.99] focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]"
+            className="rounded-2xl bg-white shadow-soft border border-black/5 p-3 flex items-center gap-3 transition active:scale-[0.99]"
           >
             <div className="h-12 w-12 rounded-2xl gradient-gold flex items-center justify-center text-2xl">
               🏆
@@ -4332,6 +4557,15 @@ export function ProfileScreen() {
         onCancel={() => {
           setShowResetPINDialog(false);
         }}
+      />
+
+      {/* Audio Permission Dialog - for audio features in profile */}
+      <AudioPermissionDialog
+        open={showAudioPermission}
+        forceShow={true}
+        context="profile-settings"
+        onAccept={handleAudioPermissionAccept}
+        onReject={handleAudioPermissionReject}
       />
     </div>
   );
@@ -4761,10 +4995,10 @@ export function EmptyStateScreen() {
           Invite a friend to join your adventure and travel across India
           together.
         </p>
-        <button className="mt-6 h-12 px-6 rounded-2xl gradient-saffron text-white text-display font-extrabold shadow-[var(--shadow-glow-orange)] transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]">
+        <button className="mt-6 h-14 px-6 rounded-2xl gradient-saffron text-white text-display text-lg font-extrabold shadow-[var(--shadow-glow-orange)]">
           Invite a Friend ✨
         </button>
-        <button className="mt-2 h-12 px-6 rounded-2xl bg-muted text-ink text-display font-extrabold transition-all focus:outline-2 focus:outline-offset-2 focus:outline-[var(--focus-ring-color)]">
+        <button className="mt-2 h-12 px-6 rounded-2xl bg-muted text-ink text-display font-extrabold">
           Maybe later
         </button>
       </div>

@@ -68,7 +68,7 @@ export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: st
               goBack();
             }}
             aria-label="Go back"
-            className="h-10 w-10 rounded-full bg-white/20 text-[color:var(--color-text-inverted)] flex items-center justify-center hover:bg-white/30 transition"
+            className="h-10 w-10 rounded-full bg-white/20 text-white flex items-center justify-center"
           >
             ‹
           </button>

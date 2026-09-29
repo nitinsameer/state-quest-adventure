@@ -4,13 +4,14 @@
  * 
  * FIX #6 & #22: Console logging removed - only debug mode
  * FIX #13: Fail fast if required config is missing
- * FIX #27: Analytics disabled by default (COPPA compliance) - enable only after consent
+ * COPPA FIX #1.5: Analytics disabled by default, enabled only after consent granted
  */
 
 import { initializeApp } from 'firebase/app'
 import { getAnalytics, setAnalyticsCollectionEnabled } from 'firebase/analytics'
 import { getFirestore } from 'firebase/firestore'
 import { debugLog, debugError } from './debug'
+import { hasFeatureConsent } from './parental-consent'
 
 // Firebase configuration - loaded from environment variables
 // Make sure these are set in .env.local or Vercel environment
@@ -41,7 +42,6 @@ let app: ReturnType<typeof initializeApp> | null = null
 let analytics: ReturnType<typeof getAnalytics> | null = null
 let db: ReturnType<typeof getFirestore> | null = null
 let initialized = false
-let analyticsEnabled = false
 
 function initializeFirebase() {
   if (initialized) return
@@ -56,47 +56,33 @@ function initializeFirebase() {
     analytics = getAnalytics(app)
     db = getFirestore(app)
     
-    // FIX #27: Disable analytics by default (COPPA compliance)
-    // Only enable after parent grants explicit consent
+    // COPPA FIX #1.5: Analytics disabled by default for kids app
+    // Only enable analytics AFTER explicit parental consent is granted
+    // This prevents illegal data collection before consent
     if (analytics) {
+      // Start with analytics collection DISABLED
       setAnalyticsCollectionEnabled(analytics, false)
+      debugLog('firebase', 'Firebase initialized - Analytics collection DISABLED pending consent')
     }
-    
-    debugLog('firebase', 'Firebase initialized successfully (analytics disabled by default)')
   } catch (error) {
     debugError('firebase', 'Firebase initialization failed', error)
   }
 }
 
+
 /**
- * Enable Firebase analytics after parental consent is granted
- * FIX #27: COPPA compliance - only enable after explicit parent consent
+ * Enable analytics after consent is granted
+ * Call this function only after user/parent has explicitly consented to analytics
+ * COPPA REQUIREMENT: Must be called after hasFeatureConsent('analytics') returns true
  */
-export function enableAnalyticsAfterConsent(): void {
-  if (!analytics) {
-    // Try to initialize if not already done
-    if (!initialized) {
-      initializeFirebase()
+function enableAnalyticsAfterConsent() {
+  if (analytics) {
+    try {
+      setAnalyticsCollectionEnabled(analytics, true)
+      debugLog('firebase', 'Analytics collection ENABLED after consent granted')
+    } catch (error) {
+      debugError('firebase', 'Failed to enable analytics after consent', error)
     }
   }
-  
-  if (analytics && !analyticsEnabled) {
-    setAnalyticsCollectionEnabled(analytics, true)
-    analyticsEnabled = true
-    debugLog('firebase', 'Analytics enabled after parental consent')
-  }
 }
-
-/**
- * Disable Firebase analytics if consent is revoked
- * FIX #27: COPPA compliance - support consent revocation
- */
-export function disableAnalyticsAfterConsentRevoked(): void {
-  if (analytics && analyticsEnabled) {
-    setAnalyticsCollectionEnabled(analytics, false)
-    analyticsEnabled = false
-    debugLog('firebase', 'Analytics disabled after consent revocation')
-  }
-}
-
-export { app, analytics, db, isFirebaseConfigured, initializeFirebase }
+export { app, analytics, db, isFirebaseConfigured, initializeFirebase, enableAnalyticsAfterConsent }

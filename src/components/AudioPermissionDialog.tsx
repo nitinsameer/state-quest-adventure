@@ -22,7 +22,7 @@ export interface AudioPermissionDialogProps {
   onReject?: () => void;
   open?: boolean;
   forceShow?: boolean; // Force show regardless of previous state
-  context?: "profile-creation" | "first-load"; // Where dialog is shown from
+  context?: "profile-creation" | "profile-settings" | "first-load"; // Where dialog is shown from
 }
 
 export function AudioPermissionDialog({
@@ -36,15 +36,16 @@ export function AudioPermissionDialog({
   const progress = useProgress();
 
   // For profile-creation context: sync parent's 'open' prop to internal state
+  // For profile-settings context: also sync parent's 'open' prop
   // This allows parent to control when dialog shows
   useEffect(() => {
     if (!isHydrated()) {
       return;
     }
 
-    if (context === "profile-creation") {
-      // Parent controls visibility via 'open' prop
-      // Sync parent prop to internal state
+    // For both profile-creation AND profile-settings contexts,
+    // sync the parent's open prop to internal state
+    if (context === "profile-creation" || context === "profile-settings") {
       setIsOpen(open);
       return;
     }
@@ -57,10 +58,10 @@ export function AudioPermissionDialog({
       return;
     }
 
-    // CRITICAL: Never auto-show in profile-creation context
-    // Profile creation dialog should ONLY show when explicitly triggered by parent
+    // CRITICAL: Never auto-show in profile-creation or profile-settings context
+    // These contexts should ONLY show when explicitly triggered by parent
     // via showAudioPermission state, not via auto-detection
-    if (context === "profile-creation") {
+    if (context === "profile-creation" || context === "profile-settings") {
       return;
     }
 
@@ -76,7 +77,7 @@ export function AudioPermissionDialog({
       debugLog("audio-permission", "Ready to show", { context, forceShow });
       setIsOpen(true);
       
-      // Mark as seen (unless in profile-creation context with forceShow)
+      // Mark as seen (unless in profile contexts with forceShow)
       if (context === "first-load" || !forceShow) {
         localStorage.setItem("india-explorer:audio-permission-shown:v1", "1");
       }

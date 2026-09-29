@@ -30,19 +30,10 @@
     </application>
 
     <!-- Permissions -->
-    <!-- FIX #29: Minimal permission set for kids app COPPA compliance -->
 
-    <!-- Required for Firebase, API calls -->
     <uses-permission android:name="android.permission.INTERNET" />
-    
-    <!-- Required for saving postcards to device -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    
-    <!-- Required for TTS volume control -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    
-    <!-- REMOVED: READ_EXTERNAL_STORAGE - app only writes files, never reads (FIX #29) -->
-    <!-- REMOVED: This permission would expand privacy surface unnecessarily -->
     <!-- Required for TTS engine access -->
     <queries>
         <intent>

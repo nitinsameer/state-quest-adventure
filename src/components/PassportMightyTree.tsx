@@ -157,7 +157,7 @@ export function PassportMightyTree() {
                   className={`aspect-square rounded-lg flex flex-col items-center justify-center gap-0.5 transition transform text-xs font-bold ${
                     isUnlocked
                       ? "bg-gradient-to-br from-yellow-300 to-amber-400 text-amber-900 shadow-md hover:shadow-lg active:scale-95"
-                      : "bg-gray-300 text-[color:var(--color-state-disabled-text)] opacity-40 hover:opacity-60 active:scale-95"
+                      : "bg-gray-300 text-gray-600 opacity-30 hover:opacity-50 active:scale-95"
                   }`}
                 >
                   <img
