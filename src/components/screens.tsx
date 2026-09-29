@@ -2798,13 +2798,13 @@ export function LearningCardScreen({
       >
 
         {/* Replay indicator - shown when user is replaying a card */}
-        {isReplaying && currentCardIndex === i && (
+        {isReplaying && (
           <div className="mb-3 p-3 bg-gradient-to-r from-purple-100 to-blue-100 rounded-xl flex items-center gap-2 shadow-sm border border-purple-200">
             <span className="text-lg">📖</span>
             <div className="flex-1">
               <p className="text-xs font-bold text-purple-900">Replaying this card</p>
               <p className="text-xs text-purple-700 font-medium">
-                You've mastered this! {replayCount > 0 && `• Replayed ${replayCount}x already`}
+                You've mastered this! Keep practicing ✨
               </p>
             </div>
             <span className="text-2xl">✨</span>
@@ -4153,14 +4153,12 @@ export function ProfileScreen() {
     // User clicked "Yes, enable!" - audio consent is granted by dialog
     // Must close parent state to prevent dialog from re-showing
     setShowAudioPermission(false);
-    debugLog("audio-permission", "Accepted in profile settings");
   };
 
   const handleAudioPermissionReject = () => {
     // User clicked "Not now" - no audio consent
     // Must close parent state to prevent dialog from re-showing
     setShowAudioPermission(false);
-    debugLog("audio-permission", "Rejected in profile settings");
   };
 
   return (
@@ -4668,32 +4666,7 @@ function SoundToggleRow() {
         </span>
       </button>
 
-      {/* File Save Permission */}
-      <button
-        type="button"
-        role="switch"
-        aria-checked={fileEnabled}
-        aria-label="File save permission"
-        onClick={toggleFile}
-        className="w-full rounded-2xl bg-white shadow-soft border border-black/5 p-3 flex items-center gap-3 transition active:scale-[0.99]"
-      >
-        <div className="h-12 w-12 rounded-2xl bg-green-100 flex items-center justify-center text-2xl">
-          📁
-        </div>
-        <div className="flex-1 text-left">
-          <div className="text-display font-extrabold text-[15px] leading-tight">Save & Share</div>
-          <div className="text-[11px] font-bold text-muted-foreground">
-            {fileEnabled ? "Can save stamps" : "Turn on to save stamps"}
-          </div>
-        </div>
-        <span
-          className={`h-7 w-12 rounded-full flex items-center px-1 transition ${fileEnabled ? "gradient-success" : "bg-muted"}`}
-        >
-          <span
-            className={`h-5 w-5 rounded-full bg-white shadow transition-transform ${fileEnabled ? "translate-x-5" : "translate-x-0"}`}
-          />
-        </span>
-      </button>
+      {/* File Save Permission - Now handled via FilePermissionDialog */}
     </div>
   );
 }
