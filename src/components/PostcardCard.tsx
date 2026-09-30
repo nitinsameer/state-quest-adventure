@@ -61,9 +61,9 @@ export function PostcardCard({
       }`}
     >
       {/* Postcard Preview Background */}
-      <div className="aspect-[3/4] bg-gradient-to-br from-orange-300 via-yellow-300 to-orange-200 relative flex flex-col items-center justify-center p-[--padding-md]">
+      <div className="aspect-[3/4] bg-gradient-to-br from-orange-300 via-yellow-300 to-orange-200 relative flex flex-col items-center justify-center p-4">
         {/* State Emoji or Art Placeholder */}
-        <div className="text-6xl mb-[--space-0-5]">🎨</div>
+        <div className="text-6xl mb-2">🎨</div>
 
         {/* State Name */}
         <h3 className="text-center text-h4 text-white drop-shadow leading-tight">
@@ -71,16 +71,16 @@ export function PostcardCard({
         </h3>
 
         {/* Badge Earned */}
-        <div className="mt-[--space-0-5] text-4xl">{badgeEmoji}</div>
+        <div className="mt-2 text-4xl">{badgeEmoji}</div>
 
         {/* Date */}
-        <div className="mt-auto pt-[--padding-md] text-center text-caption text-white/90">
+        <div className="mt-auto pt-4 text-center text-caption text-white/90">
           {postcard.stampDate}
         </div>
       </div>
 
       {/* Overlay Controls */}
-      <div className="absolute inset-0 bg-black/0 hover:bg-black/20 transition flex flex-col items-start justify-start p-[--padding-base] gap-[--gap-base]">
+      <div className="absolute inset-0 bg-black/0 hover:bg-black/20 transition flex flex-col items-start justify-start p-3 gap-2">
         {/* Checkbox for Bulk Selection */}
         {onToggleSelect && (
           <button
@@ -104,7 +104,7 @@ export function PostcardCard({
             e.stopPropagation();
             handleCardClick();
           }}
-          className={`ml-auto rounded-lg border-2 px-[--padding-sm] py-[--padding-xs] text-label transition hover:scale-110 ${consentInfo.color}`}
+          className={`ml-auto rounded-lg border-2 px-2 py-1 text-label transition hover:scale-110 ${consentInfo.color}`}
           title={`Tap to change consent state (currently ${consentInfo.label})`}
         >
           {consentInfo.emoji}
@@ -112,8 +112,8 @@ export function PostcardCard({
       </div>
 
       {/* Bottom Info Bar */}
-      <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur px-[--padding-base] py-[--padding-xs] flex items-center justify-between">
-        <div className="flex items-center gap-[--gap-base] flex-1">
+      <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur px-3 py-2 flex items-center justify-between">
+        <div className="flex items-center gap-2 flex-1">
           <div className="text-caption text-gray-700">{dateStr}</div>
         </div>
         <button

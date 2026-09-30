@@ -125,18 +125,18 @@ export function AudioTestScreen() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100 p-[--padding-md]">
+    <div className="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100 p-4">
       <div className="max-w-2xl mx-auto">
-        <div className="bg-white rounded-lg shadow-lg p-[--padding-lg] mb-[--space-2]">
-          <h1 className="text-3xl font-bold text-purple-600 mb-[--space-0-5]">🔊 Audio Test Screen</h1>
-          <p className="text-sm text-gray-600 mb-[--space-2]">Developer-only minimal TTS test</p>
+        <div className="bg-white rounded-lg shadow-lg p-6 mb-4">
+          <h1 className="text-3xl font-bold text-purple-600 mb-2">🔊 Audio Test Screen</h1>
+          <p className="text-sm text-gray-600 mb-4">Developer-only minimal TTS test</p>
 
           {/* Buttons */}
-          <div className="grid grid-cols-2 gap-[--gap-base] mb-[--space-2]">
+          <div className="grid grid-cols-2 gap-2 mb-6">
             <button
               onClick={runAllTests}
               disabled={isRunning}
-              className="bg-gradient-to-r from-green-400 to-green-600 text-white font-bold py-[--padding-base] px-[--padding-md] rounded-lg hover:from-green-500 hover:to-green-700 disabled:opacity-50"
+              className="bg-gradient-to-r from-green-400 to-green-600 text-white font-bold py-3 px-4 rounded-lg hover:from-green-500 hover:to-green-700 disabled:opacity-50"
             >
               🚀 Run All Tests
             </button>
@@ -178,7 +178,7 @@ export function AudioTestScreen() {
           </div>
 
           {/* Results */}
-          <div className="bg-gray-900 text-green-400 font-mono text-sm p-[--padding-md] rounded-lg overflow-y-auto max-h-96 border border-green-600">
+          <div className="bg-gray-900 text-green-400 font-mono text-sm p-4 rounded-lg overflow-y-auto max-h-96 border border-green-600">
             {testResults.length === 0 ? (
               <div className="text-gray-500">Click a button to start testing...</div>
             ) : (
@@ -191,9 +191,9 @@ export function AudioTestScreen() {
           </div>
 
           {/* Instructions */}
-          <div className="mt-[--space-2] p-[--padding-md] bg-yellow-50 border-l-4 border-yellow-400">
-            <p className="text-sm text-yellow-800 font-semibold mb-[--space-0-25]">📝 Testing Instructions:</p>
-            <ol className="text-sm text-yellow-700 list-decimal list-inside space-y-[--space-0-25]">
+          <div className="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-400">
+            <p className="text-sm text-yellow-800 font-semibold mb-2">📝 Testing Instructions:</p>
+            <ol className="text-sm text-yellow-700 list-decimal list-inside space-y-1">
               <li>Click "Run All Tests" to test everything</li>
               <li>Check console for [AUDIO DEBUG] logs</li>
               <li>If Native TTS test works → audio system is OK</li>

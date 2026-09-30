@@ -78,10 +78,10 @@ export function LanguageToggle({
   // Single toggle chip - shows ONLY the current active language
   // Click to switch to the other language (acts like a toggle/switch)
   return (
-    <div className="mt-[--space-0-25] flex items-center justify-center">
+    <div className="mt-2 flex items-center justify-center">
       <button
         onClick={handleToggle}
-        className="px-[--padding-lg] py-[--padding-base] rounded-full text-sm font-bold transition-all bg-blue-500 text-white shadow-md hover:shadow-lg active:scale-95"
+        className="px-5 py-2 rounded-full text-sm font-bold transition-all bg-blue-500 text-white shadow-md hover:shadow-lg active:scale-95"
         title={`Switch to ${otherDisplayName}`}
       >
         📖 {currentDisplayName}

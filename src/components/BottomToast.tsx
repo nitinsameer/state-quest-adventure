@@ -34,20 +34,20 @@ function ToastNotification({ config }: { config: ToastConfig }) {
 
   return (
     <div
-      className={`fixed bottom-[--space-2] left-[--padding-base] right-[--padding-base] max-w-md mx-auto transform transition-all duration-200 ${
+      className={`fixed bottom-6 left-4 right-4 max-w-md mx-auto transform transition-all duration-200 ${
         isExiting ? "translate-y-full opacity-0" : "translate-y-0 opacity-100"
       }`}
       role="status"
       aria-live="polite"
     >
       <div
-        className={`bg-gradient-to-r ${colors[config.type]} rounded-2xl shadow-lg p-[--padding-md] flex items-center gap-[--gap-base] text-white`}
+        className={`bg-gradient-to-r ${colors[config.type]} rounded-2xl shadow-lg p-4 flex items-center gap-3 text-white`}
       >
         <span className="text-xl flex-shrink-0">{config.icon}</span>
         <div className="flex-1 min-w-0">
           <p className="font-semibold text-sm leading-tight">{config.message}</p>
           {config.subtitle && (
-            <p className="text-xs opacity-90 leading-tight mt-[--space-0-25]">{config.subtitle}</p>
+            <p className="text-xs opacity-90 leading-tight mt-1">{config.subtitle}</p>
           )}
         </div>
         <button

@@ -95,24 +95,24 @@ export function FilePermissionDialog({
       content={[
         !hasManyDismissals && {
           type: "custom",
-          className: "space-y-3 bg-blue-50 rounded-2xl p-[--padding-md] border border-blue-200",
+          className: "space-y-3 bg-blue-50 rounded-2xl p-4 border border-blue-200",
           children: (
-            <div className="space-y-[--gap-base]">
-              <div className="flex items-start gap-[--gap-base]">
+            <div className="space-y-3">
+              <div className="flex items-start gap-3">
                 <div className="text-lg flex-shrink-0">1️⃣</div>
                 <div>
                   <div className="font-bold text-sm text-ink">We ask permission</div>
                   <div className="text-xs text-muted-foreground">Your phone will ask if it's OK</div>
                 </div>
               </div>
-              <div className="flex items-start gap-[--gap-base]">
+              <div className="flex items-start gap-3">
                 <div className="text-lg flex-shrink-0">2️⃣</div>
                 <div>
                   <div className="font-bold text-sm text-ink">Picture gets saved</div>
                   <div className="text-xs text-muted-foreground">Goes to your Photos app</div>
                 </div>
               </div>
-              <div className="flex items-start gap-[--gap-base]">
+              <div className="flex items-start gap-3">
                 <div className="text-lg flex-shrink-0">3️⃣</div>
                 <div>
                   <div className="font-bold text-sm text-ink">You can share it</div>
@@ -124,9 +124,9 @@ export function FilePermissionDialog({
         },
         hasManyDismissals && {
           type: "custom",
-          className: "bg-amber-50 rounded-2xl p-[--padding-md] border border-amber-200",
+          className: "bg-amber-50 rounded-2xl p-4 border border-amber-200",
           children: (
-            <div className="space-y-[--space-0-25]">
+            <div className="space-y-2">
               <p className="text-sm font-semibold text-amber-900">
                 💡 Need help? Ask a parent or guardian to enable photo saving in your phone's Settings.
               </p>

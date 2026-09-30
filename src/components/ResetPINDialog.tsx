@@ -99,22 +99,22 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 backdrop-blur-sm">
-      <div className="bg-white rounded-3xl p-[--padding-lg] w-[90%] max-w-sm shadow-2xl">
+      <div className="bg-white rounded-3xl p-6 w-[90%] max-w-sm shadow-2xl">
         {/* Header */}
-        <div className="text-center mb-[--space-4]">
-          <div className="text-4xl mb-[--space-0-5]">🔐</div>
+        <div className="text-center mb-6">
+          <div className="text-4xl mb-2">🔐</div>
           <h2 className="text-display text-xl font-extrabold text-ink">Parent PIN Required</h2>
-          <p className="text-sm text-muted-foreground mt-[--space-0-5]">
+          <p className="text-sm text-muted-foreground mt-2">
             This will erase all progress. Enter the parental PIN to confirm.
           </p>
         </div>
 
         {/* Timer */}
-        <div className="text-center mb-[--space-2]">
+        <div className="text-center mb-4">
           <div className="text-xs font-bold text-muted-foreground">
             ⏱️ {timeLeft}s remaining
           </div>
-          <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden mt-[--space-0-25]">
+          <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden mt-1">
             <div
               className="h-full bg-gradient-to-r from-red-400 to-red-600 transition-all"
               style={{ width: `${(timeLeft / 30) * 100}%` }}
@@ -123,8 +123,8 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
         </div>
 
         {/* PIN Input Display */}
-        <div className="bg-gray-100 rounded-2xl p-[--padding-md] mb-[--space-2]">
-          <div className="flex justify-center gap-[--gap-base]">
+        <div className="bg-gray-100 rounded-2xl p-4 mb-4">
+          <div className="flex justify-center gap-2">
             {[0, 1, 2, 3].map((i) => (
               <div
                 key={i}
@@ -139,19 +139,19 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
             ))}
           </div>
           {error && (
-            <div className="text-center text-sm font-bold text-red-600 mt-[--space-0-25]">
+            <div className="text-center text-sm font-bold text-red-600 mt-3">
               {error}
             </div>
           )}
           {isValid && (
-            <div className="text-center text-sm font-bold text-green-600 mt-[--space-0-25]">
+            <div className="text-center text-sm font-bold text-green-600 mt-3">
               ✓ PIN correct, resetting...
             </div>
           )}
         </div>
 
         {/* Keypad */}
-        <div className="grid grid-cols-3 gap-[--gap-base] mb-[--space-2]">
+        <div className="grid grid-cols-3 gap-2 mb-4">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((digit) => (
             <button
               key={digit}
@@ -172,7 +172,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-[--gap-base]">
+        <div className="flex gap-2">
           <button
             onClick={handleBackspace}
             disabled={isValid}
@@ -193,13 +193,13 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
         <button
           onClick={onCancel}
           disabled={isValid}
-          className="w-full h-10 rounded-lg bg-gray-100 text-gray-700 font-extrabold text-sm hover:bg-gray-200 active:scale-95 transition mt-[--space-0-25] disabled:opacity-50"
+          className="w-full h-10 rounded-lg bg-gray-100 text-gray-700 font-extrabold text-sm hover:bg-gray-200 active:scale-95 transition mt-3 disabled:opacity-50"
         >
           Cancel
         </button>
 
         {/* PIN Info */}
-        <div className="text-xs text-muted-foreground text-center mt-[--space-2] p-[--padding-base] bg-blue-50 rounded-lg">
+        <div className="text-xs text-muted-foreground text-center mt-4 p-3 bg-blue-50 rounded-lg">
           <span>💡 Default PIN: 1234</span>
           <br />
           <span>Change in Parent Zone (Profile)</span>
