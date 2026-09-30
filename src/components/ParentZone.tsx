@@ -101,7 +101,7 @@ export function ParentZoneScreen() {
   return (
     <div className="h-full w-full bg-[#F7F5F0] flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="px-5 pt-3 pb-4 gradient-explorer rounded-b-[32px] text-white">
+      <div className="px-[--padding-base] pt-[--space-0-25] pb-[--space-2] gradient-explorer rounded-b-[32px] text-white">
         <div className="flex items-center justify-between">
           <button
             onClick={goBack}
@@ -113,19 +113,19 @@ export function ParentZoneScreen() {
           <h1 className="text-display text-lg font-extrabold">Parent Controls</h1>
           <div className="w-10" />
         </div>
-        <div className="mt-3 rounded-2xl bg-white/15 p-3">
+        <div className="mt-[--space-0-25] rounded-2xl bg-white/15 p-[--padding-base]">
           <div className="text-xs font-bold opacity-90">Learner</div>
           <div className="text-display text-xl font-extrabold">
             {p.avatar} {p.name}
           </div>
-          <div className="text-xs font-bold opacity-90 mt-1">
+          <div className="text-xs font-bold opacity-90 mt-[--space-0-25]">
             Age {p.ageBand} · Level {level}
           </div>
         </div>
       </div>
 
       {/* Tab Navigation */}
-      <div className="flex gap-0 px-5 pt-3 pb-0 border-b border-black/5 overflow-x-auto">
+      <div className="flex gap-0 px-[--padding-base] pt-[--space-0-25] pb-0 border-b border-black/5 overflow-x-auto">
         {[
           { key: "overview", label: "Overview", icon: "📊" },
           { key: "analytics", label: "Analytics", icon: "📈" },
@@ -135,7 +135,7 @@ export function ParentZoneScreen() {
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key as any)}
-            className={`px-4 py-3 font-bold text-sm transition whitespace-nowrap border-b-2 ${
+            className={`px-[--padding-md] py-[--space-0-25] font-bold text-sm transition whitespace-nowrap border-b-2 ${
               activeTab === tab.key
                 ? "text-explorer border-explorer"
                 : "text-muted-foreground border-transparent hover:text-explorer"
@@ -147,35 +147,35 @@ export function ParentZoneScreen() {
       </div>
 
       {/* Tab Content */}
-      <div className="px-5 flex-1 overflow-auto py-4">
+      <div className="px-[--padding-base] flex-1 overflow-auto py-[--space-2]">
         {/* OVERVIEW TAB */}
         {activeTab === "overview" && (
-          <div className="space-y-4">
+          <div className="space-y-[--space-2]">
             <div className="text-display font-extrabold text-sm text-muted-foreground uppercase">
               Quick Stats
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-[--gap-base]">
               {stats.map((s) => (
-                <div key={s.label} className="rounded-3xl bg-white p-3 shadow-soft border border-black/5">
+                <div key={s.label} className="rounded-3xl bg-white p-[--padding-base] shadow-soft border border-black/5">
                   <div className="text-2xl">{s.icon}</div>
-                  <div className="text-display text-lg font-extrabold mt-1">{s.value}</div>
+                  <div className="text-display text-lg font-extrabold mt-[--space-0-25]">{s.value}</div>
                   <div className="text-[10px] font-bold text-muted-foreground leading-tight">{s.label}</div>
                 </div>
               ))}
             </div>
 
-            <div className="mt-6">
+            <div className="mt-[--space-4]">
               <div className="text-display font-extrabold text-sm text-muted-foreground uppercase">
                 Currently learning
               </div>
-              <div className="mt-2 rounded-3xl bg-white p-4 shadow-soft border border-black/5 space-y-3">
+              <div className="mt-[--space-2] rounded-3xl bg-white p-[--padding-md] shadow-soft border border-black/5 space-y-[--space-0-25]">
                 {inProgress.length === 0 ? (
                   <div className="text-sm font-semibold text-muted-foreground">
                     No lessons in progress right now.
                   </div>
                 ) : (
                   inProgress.map((s) => (
-                    <div key={s.name} className="flex items-center gap-3">
+                    <div key={s.name} className="flex items-center gap-[--gap-base]">
                       <img
                         src={STATE_ART[s.name]}
                         alt={s.name}
@@ -185,7 +185,7 @@ export function ParentZoneScreen() {
                       />
                       <div className="flex-1">
                         <div className="text-display font-extrabold text-sm">{s.name}</div>
-                        <div className="h-1.5 mt-1 rounded-full bg-muted overflow-hidden">
+                        <div className="h-1.5 mt-[--space-0-25] rounded-full bg-muted overflow-hidden">
                           <div
                             className="h-full gradient-explorer"
                             style={{ width: `${(cardsDone(p, s.name) / CARDS_PER_STATE) * 100}%` }}
@@ -205,15 +205,15 @@ export function ParentZoneScreen() {
 
         {/* ANALYTICS TAB */}
         {activeTab === "analytics" && (
-          <div className="space-y-4">
+          <div className="space-y-[--space-2]">
             <div className="text-display font-extrabold text-sm text-muted-foreground uppercase">
               Engagement Metrics
             </div>
             
-            <div className="rounded-3xl bg-white p-4 shadow-soft border border-black/5 space-y-4">
+            <div className="rounded-3xl bg-white p-[--padding-md] shadow-soft border border-black/5 space-y-[--space-2]">
               <div>
-                <div className="text-sm font-bold text-muted-foreground mb-1">Overall Progress</div>
-                <div className="flex items-center gap-2">
+                <div className="text-sm font-bold text-muted-foreground mb-[--space-0-25]">Overall Progress</div>
+                <div className="flex items-center gap-[--gap-base]">
                   <div className="flex-1 h-3 bg-muted rounded-full overflow-hidden">
                     <div
                       className="h-full gradient-saffron"
@@ -227,7 +227,7 @@ export function ParentZoneScreen() {
               </div>
 
               <div>
-                <div className="text-sm font-bold text-muted-foreground mb-1">
+                <div className="text-sm font-bold text-muted-foreground mb-[--space-0-25]">
                   Daily Average XP
                 </div>
                 <div className="text-display text-2xl font-extrabold text-explorer">
@@ -236,7 +236,7 @@ export function ParentZoneScreen() {
               </div>
 
               <div>
-                <div className="text-sm font-bold text-muted-foreground mb-1">
+                <div className="text-sm font-bold text-muted-foreground mb-[--space-0-25]">
                   Estimated Hours Played
                 </div>
                 <div className="text-display text-2xl font-extrabold text-success">
@@ -245,7 +245,7 @@ export function ParentZoneScreen() {
               </div>
 
               <div>
-                <div className="text-sm font-bold text-muted-foreground mb-1">
+                <div className="text-sm font-bold text-muted-foreground mb-[--space-0-25]">
                   Days Active
                 </div>
                 <div className="text-display text-2xl font-extrabold text-orange-500">
@@ -254,8 +254,8 @@ export function ParentZoneScreen() {
               </div>
             </div>
 
-            <div className="rounded-3xl bg-blue-50 border border-blue-200 p-4">
-              <div className="text-sm font-bold text-blue-900 mb-2">💡 Insights</div>
+            <div className="rounded-3xl bg-blue-50 border border-blue-200 p-[--padding-md]">
+              <div className="text-sm font-bold text-blue-900 mb-[--space-0-5]">💡 Insights</div>
               <div className="text-xs text-blue-800 leading-relaxed">
                 {estimatedHours < 5 ? "Great balance! Your child is learning at a healthy pace." : "Your child is very engaged! Consider encouraging breaks."}
               </div>
@@ -265,13 +265,13 @@ export function ParentZoneScreen() {
 
         {/* CONTROLS TAB */}
         {activeTab === "controls" && (
-          <div className="space-y-4">
+          <div className="space-y-[--space-2]">
             <div className="text-display font-extrabold text-sm text-muted-foreground uppercase">
               Parental Controls
             </div>
 
-            <div className="rounded-3xl bg-white p-4 shadow-soft border border-black/5">
-              <div className="flex items-center justify-between mb-3">
+            <div className="rounded-3xl bg-white p-[--padding-md] shadow-soft border border-black/5">
+              <div className="flex items-center justify-between mb-[--space-0-25]">
                 <div>
                   <div className="text-sm font-bold text-ink">Parental PIN</div>
                   <div className="text-xs text-muted-foreground">Protect sensitive settings</div>
@@ -285,7 +285,7 @@ export function ParentZoneScreen() {
               </div>
 
               {showPINSettings && (
-                <div className="mt-3 space-y-2 border-t pt-3">
+                <div className="mt-[--space-0-25] space-y-[--space-0-5] border-t pt-[--space-0-25]">
                   <input
                     type="password"
                     maxLength={4}
@@ -309,7 +309,7 @@ export function ParentZoneScreen() {
               )}
             </div>
 
-            <div className="rounded-3xl bg-white p-4 shadow-soft border border-black/5">
+            <div className="rounded-3xl bg-white p-[--padding-md] shadow-soft border border-black/5">
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-sm font-bold text-ink">Audio</div>
@@ -319,7 +319,7 @@ export function ParentZoneScreen() {
               </div>
             </div>
 
-            <div className="rounded-3xl bg-white p-4 shadow-soft border border-black/5">
+            <div className="rounded-3xl bg-white p-[--padding-md] shadow-soft border border-black/5">
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-sm font-bold text-ink">File Storage</div>
@@ -333,13 +333,13 @@ export function ParentZoneScreen() {
 
         {/* EXPORT TAB */}
         {activeTab === "export" && (
-          <div className="space-y-4">
+          <div className="space-y-[--space-2]">
             <div className="text-display font-extrabold text-sm text-muted-foreground uppercase">
               Data Export
             </div>
 
-            <div className="rounded-3xl bg-blue-50 border border-blue-200 p-4">
-              <div className="text-sm font-bold text-blue-900 mb-2">📋 About Export</div>
+            <div className="rounded-3xl bg-blue-50 border border-blue-200 p-[--padding-md]">
+              <div className="text-sm font-bold text-blue-900 mb-[--space-0-5]">📋 About Export</div>
               <div className="text-xs text-blue-800 leading-relaxed">
                 Download your child's progress as a CSV file. Useful for school reports or tracking learning over time.
               </div>
@@ -352,9 +352,9 @@ export function ParentZoneScreen() {
               💾 Download Progress Report
             </button>
 
-            <div className="rounded-3xl bg-white p-4 shadow-soft border border-black/5 space-y-2">
+            <div className="rounded-3xl bg-white p-[--padding-md] shadow-soft border border-black/5 space-y-[--space-0-5]">
               <div className="text-sm font-bold text-ink">What's included:</div>
-              <ul className="text-xs text-muted-foreground space-y-1">
+              <ul className="text-xs text-muted-foreground space-y-[--space-0-25]">
                 <li>✓ Summary stats (XP, badges, states)</li>
                 <li>✓ States in progress with completion %</li>
                 <li>✓ All completed states list</li>
@@ -366,22 +366,22 @@ export function ParentZoneScreen() {
       </div>
 
       {/* Data & Privacy Section - Always visible */}
-      <div className="px-5 pb-4 border-t border-black/5 pt-4">
+      <div className="px-[--padding-base] pb-[--space-2] border-t border-black/5 pt-[--space-2]">
         <div className="text-display font-extrabold text-sm uppercase tracking-wider text-muted-foreground">
           Data & Privacy
         </div>
-        <div className="mt-2 rounded-3xl bg-white p-4 shadow-soft border border-black/5">
+        <div className="mt-[--space-0-5] rounded-3xl bg-white p-[--padding-md] shadow-soft border border-black/5">
           <p className="text-sm font-semibold text-muted-foreground">
             All progress is stored only on this device. No account, no ads, and nothing is uploaded.
           </p>
           <a
             href="/privacy"
-            className="inline-block mt-2 text-xs font-bold text-explorer hover:underline"
+            className="inline-block mt-[--space-0-5] text-xs font-bold text-explorer hover:underline"
           >
             Read our Privacy Policy →
           </a>
           {confirm ? (
-            <div className="mt-3 flex gap-2">
+            <div className="mt-[--space-0-25] flex gap-[--gap-base]">
               <button
                 onClick={() => {
                   fxTap();
@@ -405,7 +405,7 @@ export function ParentZoneScreen() {
                 fxTap();
                 setConfirm(true);
               }}
-              className="mt-3 w-full h-12 rounded-2xl bg-red-50 text-red-600 text-display font-extrabold"
+              className="mt-[--space-0-25] w-full h-12 rounded-2xl bg-red-50 text-red-600 text-display font-extrabold"
             >
               Reset all progress
             </button>

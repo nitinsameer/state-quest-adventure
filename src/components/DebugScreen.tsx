@@ -95,12 +95,12 @@ export function DebugScreen() {
   return (
     <div className="fixed inset-0 z-[9999] flex flex-col bg-black text-white font-mono text-xs overflow-hidden">
       {/* Header */}
-      <div className="bg-gray-900 border-b border-gray-700 p-2 flex justify-between items-center flex-wrap gap-2">
-        <div className="flex items-center gap-2">
+      <div className="bg-gray-900 border-b border-gray-700 p-[--padding-xs] flex justify-between items-center flex-wrap gap-[--gap-xs]">
+        <div className="flex items-center gap-[--gap-xs]">
           <h1 className="font-bold text-sm">🐛 DEBUG CONSOLE</h1>
           <span className="text-gray-400">Logs: {logs.length}</span>
         </div>
-        <div className="flex gap-1 flex-wrap">
+        <div className="flex gap-[--gap-xs] flex-wrap">
           <button
             onClick={() => setFilter('all')}
             className={`px-2 py-1 rounded ${
@@ -141,7 +141,7 @@ export function DebugScreen() {
           >
             Info
           </button>
-          <label className="px-2 py-1 bg-gray-700 rounded flex items-center gap-1 cursor-pointer hover:bg-gray-600">
+          <label className="px-[--padding-xs] py-[--padding-xs] bg-gray-700 rounded flex items-center gap-[--gap-xs] cursor-pointer hover:bg-gray-600">
             <input
               type="checkbox"
               checked={autoScroll}
@@ -151,19 +151,19 @@ export function DebugScreen() {
           </label>
           <button
             onClick={handleExportLogs}
-            className="px-2 py-1 bg-blue-700 rounded hover:bg-blue-600"
+            className="px-[--padding-xs] py-[--padding-xs] bg-blue-700 rounded hover:bg-blue-600"
           >
             Export
           </button>
           <button
             onClick={handleClearLogs}
-            className="px-2 py-1 bg-red-700 rounded hover:bg-red-600"
+            className="px-[--padding-xs] py-[--padding-xs] bg-red-700 rounded hover:bg-red-600"
           >
             Clear
           </button>
           <button
             onClick={() => setIsVisible(false)}
-            className="px-2 py-1 bg-gray-700 rounded hover:bg-gray-600"
+            className="px-[--padding-xs] py-[--padding-xs] bg-gray-700 rounded hover:bg-gray-600"
           >
             Close
           </button>
@@ -173,7 +173,7 @@ export function DebugScreen() {
       {/* Logs Container */}
       <div
         id="debug-logs-container"
-        className="flex-1 overflow-y-auto bg-black p-2 space-y-1"
+        className="flex-1 overflow-y-auto bg-black p-[--padding-xs] space-y-[--space-0-25]"
       >
         {logs.length === 0 ? (
           <div className="text-gray-500">
@@ -196,7 +196,7 @@ export function DebugScreen() {
                       : 'border-gray-500 text-gray-400'
               }`}
             >
-              <div className="flex gap-2">
+              <div className="flex gap-[--gap-base]">
                 <span className="text-gray-500 min-w-fit">
                   {new Date(log.timestamp).toLocaleTimeString()}
                 </span>
@@ -220,7 +220,7 @@ export function DebugScreen() {
       </div>
 
       {/* Footer */}
-      <div className="bg-gray-900 border-t border-gray-700 p-2 text-gray-400 text-xs">
+      <div className="bg-gray-900 border-t border-gray-700 p-[--padding-xs] text-gray-400 text-xs">
         <p>💡 Ctrl+D or tap corner 5x to toggle | Export logs for analysis</p>
       </div>
     </div>
