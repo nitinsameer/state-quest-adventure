@@ -254,8 +254,8 @@ export function ParentZoneScreen() {
               </div>
             </div>
 
-            <div className="rounded-3xl bg-blue-50 border border-blue-200 p-[--padding-md]">
-              <div className="text-sm font-bold text-blue-900 mb-[--space-0-5]">💡 Insights</div>
+            <div className="rounded-3xl bg-info-soft border border-info p-[--padding-md]">
+              <div className="text-sm font-bold text-info mb-[--space-0-5]">💡 Insights</div>
               <div className="text-xs text-blue-800 leading-relaxed">
                 {estimatedHours < 5 ? "Great balance! Your child is learning at a healthy pace." : "Your child is very engaged! Consider encouraging breaks."}
               </div>
@@ -292,7 +292,7 @@ export function ParentZoneScreen() {
                     value={newPIN}
                     onChange={(e) => setNewPIN(e.target.value.replace(/\D/g, ""))}
                     placeholder="Enter 4-digit PIN"
-                    className="w-full h-10 rounded-lg border-2 border-gray-300 px-3 font-extrabold text-center text-lg tracking-widest"
+                    className="w-full h-10 rounded-lg border-2 border-muted px-3 font-extrabold text-center text-lg tracking-widest"
                   />
                   <button
                     onClick={handleSavePIN}
@@ -338,8 +338,8 @@ export function ParentZoneScreen() {
               Data Export
             </div>
 
-            <div className="rounded-3xl bg-blue-50 border border-blue-200 p-[--padding-md]">
-              <div className="text-sm font-bold text-blue-900 mb-[--space-0-5]">📋 About Export</div>
+            <div className="rounded-3xl bg-info-soft border border-info p-[--padding-md]">
+              <div className="text-sm font-bold text-info mb-[--space-0-5]">📋 About Export</div>
               <div className="text-xs text-blue-800 leading-relaxed">
                 Download your child's progress as a CSV file. Useful for school reports or tracking learning over time.
               </div>
@@ -388,7 +388,7 @@ export function ParentZoneScreen() {
                   resetProgress();
                   setConfirm(false);
                 }}
-                className="flex-1 h-12 rounded-2xl bg-red-500 text-white text-display font-extrabold"
+                className="flex-1 h-12 rounded-2xl bg-error-soft0 text-white text-display font-extrabold"
               >
                 Yes, erase everything
               </button>
@@ -405,7 +405,7 @@ export function ParentZoneScreen() {
                 fxTap();
                 setConfirm(true);
               }}
-              className="mt-[--space-0-25] w-full h-12 rounded-2xl bg-red-50 text-red-600 text-display font-extrabold"
+              className="mt-[--space-0-25] w-full h-12 rounded-2xl bg-error-soft text-error text-display font-extrabold"
             >
               Reset all progress
             </button>
@@ -415,3 +415,4 @@ export function ParentZoneScreen() {
     </div>
   );
 }
+

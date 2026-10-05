@@ -11,10 +11,10 @@ import { fxTap, fxWhoosh } from "@/lib/fx";
 import { useGoBack } from "./screens";
 
 const CARD_COLORS = [
-  { bg: "bg-orange-50", border: "border-orange-200" }, // Capital
-  { bg: "bg-blue-50", border: "border-blue-200" }, // Language
+  { bg: "bg-orange-soft", border: "border-orange-200" }, // Capital
+  { bg: "bg-info-soft", border: "border-info" }, // Language
   { bg: "bg-yellow-50", border: "border-yellow-200" }, // Food
-  { bg: "bg-green-50", border: "border-green-200" }, // Places
+  { bg: "bg-success-soft", border: "border-success" }, // Places
   { bg: "bg-rose-50", border: "border-rose-200" }, // Animal
   { bg: "bg-indigo-50", border: "border-indigo-200" }, // Fun Fact
 ];
@@ -122,3 +122,4 @@ export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: st
     </div>
   );
 }
+

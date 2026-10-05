@@ -125,7 +125,7 @@ export function StandardModal({
 
         {/* Buttons Section */}
         {buttons.length > 0 && (
-          <div className="border-t border-gray-200 p-[--padding-lg] space-y-2 flex-shrink-0">
+          <div className="border-t border-muted p-[--padding-lg] space-y-2 flex-shrink-0">
             {buttons.length === 1 && (
               <button
                 onClick={buttons[0].onClick}
@@ -154,7 +154,7 @@ export function StandardModal({
                   className={`px-3 py-3 rounded-full font-bold text-xs transition active:scale-95 ${
                     buttons[1].variant === "primary"
                       ? "bg-gradient-to-r from-blue-400 to-cyan-500 text-white shadow-lg"
-                      : "bg-gray-100 text-gray-700"
+                      : "bg-muted text-muted"
                   }`}
                 >
                   {buttons[1].emoji && <span className="mr-1">{buttons[1].emoji}</span>}
@@ -174,7 +174,7 @@ export function StandardModal({
                         ? "bg-gradient-to-r from-blue-400 to-cyan-500 text-white shadow-lg"
                         : btn.variant === "secondary"
                           ? "bg-blue-100 text-blue-700"
-                          : "bg-gray-100 text-gray-700"
+                          : "bg-muted text-muted"
                     }`}
                   >
                     {btn.emoji && <span className="mr-2">{btn.emoji}</span>}
@@ -188,7 +188,7 @@ export function StandardModal({
 
         {/* Footer Note */}
         {footer && (
-          <div className="bg-blue-50 px-[--padding-lg] py-[--padding-base] text-center border-t border-gray-100">
+          <div className="bg-info-soft px-[--padding-lg] py-[--padding-base] text-center border-t border-muted-light">
             <p className="text-xs text-muted-foreground leading-relaxed">
               {footer}
             </p>
@@ -198,3 +198,4 @@ export function StandardModal({
     </div>
   );
 }
+

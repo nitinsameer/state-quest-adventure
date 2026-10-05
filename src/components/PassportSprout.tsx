@@ -45,7 +45,7 @@ export function PassportSprout() {
   };
 
   return (
-    <div className="w-full h-full bg-gradient-to-b from-blue-50 to-white flex flex-col overflow-hidden">
+    <div className="w-full h-full bg-gradient-to-b from-info-soft to-white flex flex-col overflow-hidden">
       <ConfettiBurst trigger={burst} size="big" />
 
       {/* Postcard Modal - shown on same screen */}
@@ -89,7 +89,7 @@ export function PassportSprout() {
 
       {/* States Grid */}
       <div className="px-5 pt-4 pb-2 flex-1 overflow-auto">
-        <div className="text-sm font-bold text-gray-700 mb-3">🌍 Time to Explore!</div>
+        <div className="text-sm font-bold text-muted mb-3">🌍 Time to Explore!</div>
 
         <div className="grid grid-cols-2 gap-3 mb-4">
           {statesThisPage.map((state) => {
@@ -101,7 +101,7 @@ export function PassportSprout() {
                 className={`aspect-square rounded-2xl flex flex-col items-center justify-center gap-2 transition transform ${
                   isUnlocked
                     ? "bg-gradient-to-br from-yellow-300 to-amber-400 shadow-lg hover:scale-105 active:scale-95"
-                    : "bg-gray-100 hover:bg-gray-200 active:scale-95"
+                    : "bg-muted hover:bg-muted active:scale-95"
                 }`}
               >
                 <img
@@ -111,7 +111,7 @@ export function PassportSprout() {
                   loading="lazy"
                   decoding="async"
                 />
-                {isUnlocked && <div className="text-xs font-bold text-amber-900">Tap!</div>}
+                {isUnlocked && <div className="text-xs font-bold text-warning">Tap!</div>}
                 {!isUnlocked && <div className="text-lg">🔒</div>}
               </button>
             );
@@ -120,7 +120,7 @@ export function PassportSprout() {
 
         {/* Locked State Encouragement */}
         {statesThisPage.some((s) => !progress.completed.includes(s.name)) && (
-          <div className="bg-purple-50 border-2 border-purple-200 rounded-2xl p-3 text-center">
+          <div className="bg-purple-soft border-2 border-purple rounded-2xl p-3 text-center">
             <div className="text-sm font-bold text-purple-700">
               🌟 Complete quizzes to unlock more!
             </div>
@@ -136,7 +136,7 @@ export function PassportSprout() {
               fxTap();
               setCurrentPage(currentPage - 1);
             }}
-            className="flex-1 h-12 rounded-2xl bg-white border-2 border-gray-300 text-gray-700 font-extrabold text-lg"
+            className="flex-1 h-12 rounded-2xl bg-white border-2 border-muted text-muted font-extrabold text-lg"
           >
             ← Previous
           </button>
@@ -164,3 +164,4 @@ export function PassportSprout() {
     </div>
   );
 }
+

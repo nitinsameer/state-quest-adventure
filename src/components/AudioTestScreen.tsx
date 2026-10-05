@@ -125,11 +125,11 @@ export function AudioTestScreen() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100 p-[--padding-md]">
+    <div className="min-h-screen bg-gradient-to-br from-purple-soft to-info-soft p-[--padding-md]">
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-lg shadow-lg p-[--padding-lg] mb-[--space-2]">
           <h1 className="text-3xl font-bold text-purple-600 mb-[--space-0-5]">🔊 Audio Test Screen</h1>
-          <p className="text-sm text-gray-600 mb-[--space-2]">Developer-only minimal TTS test</p>
+          <p className="text-sm text-muted mb-[--space-2]">Developer-only minimal TTS test</p>
 
           {/* Buttons */}
           <div className="grid grid-cols-2 gap-[--gap-base] mb-[--space-2]">
@@ -143,21 +143,21 @@ export function AudioTestScreen() {
             <button
               onClick={testNativeTTS}
               disabled={isRunning}
-              className="bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 disabled:opacity-50"
+              className="bg-info-soft0 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 disabled:opacity-50"
             >
               📢 Native TTS
             </button>
             <button
               onClick={testWebSpeech}
               disabled={isRunning}
-              className="bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 disabled:opacity-50"
+              className="bg-info-soft0 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 disabled:opacity-50"
             >
               🗣️ Web Speech
             </button>
             <button
               onClick={showDiagnostics}
               disabled={isRunning}
-              className="bg-purple-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-purple-600 disabled:opacity-50"
+              className="bg-purple-soft0 text-white font-bold py-3 px-4 rounded-lg hover:bg-purple-600 disabled:opacity-50"
             >
               📊 Diagnostics
             </button>
@@ -171,7 +171,7 @@ export function AudioTestScreen() {
             <button
               onClick={clearResults}
               disabled={isRunning}
-              className="bg-red-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-red-600 disabled:opacity-50"
+              className="bg-error-soft0 text-white font-bold py-3 px-4 rounded-lg hover:bg-red-600 disabled:opacity-50"
             >
               🗑️ Clear
             </button>
@@ -180,7 +180,7 @@ export function AudioTestScreen() {
           {/* Results */}
           <div className="bg-gray-900 text-green-400 font-mono text-sm p-[--padding-md] rounded-lg overflow-y-auto max-h-96 border border-green-600">
             {testResults.length === 0 ? (
-              <div className="text-gray-500">Click a button to start testing...</div>
+              <div className="text-muted-light">Click a button to start testing...</div>
             ) : (
               testResults.map((result, i) => (
                 <div key={i} className="mb-1">
@@ -207,3 +207,4 @@ export function AudioTestScreen() {
     </div>
   );
 }
+

@@ -82,8 +82,8 @@ export function LanguageSelector({
               }}
               className={`w-full px-[--padding-md] py-[--padding-xs] text-left text-sm font-semibold transition-colors ${
                 lang === currentLanguage
-                  ? "bg-blue-50 text-blue-600"
-                  : "text-gray-600 hover:bg-gray-50"
+                  ? "bg-info-soft text-blue-600"
+                  : "text-muted hover:bg-muted-light"
               }`}
             >
               {lang === currentLanguage ? "✓ " : "  "}
@@ -95,3 +95,4 @@ export function LanguageSelector({
     </div>
   );
 }
+

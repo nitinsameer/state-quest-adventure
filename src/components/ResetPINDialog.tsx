@@ -114,7 +114,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
           <div className="text-xs font-bold text-muted-foreground">
             ⏱️ {timeLeft}s remaining
           </div>
-          <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden mt-[--space-0-25]">
+          <div className="h-1.5 bg-muted rounded-full overflow-hidden mt-[--space-0-25]">
             <div
               className="h-full bg-gradient-to-r from-red-400 to-red-600 transition-all"
               style={{ width: `${(timeLeft / 30) * 100}%` }}
@@ -123,7 +123,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
         </div>
 
         {/* PIN Input Display */}
-        <div className="bg-gray-100 rounded-2xl p-[--padding-md] mb-[--space-2]">
+        <div className="bg-muted rounded-2xl p-[--padding-md] mb-[--space-2]">
           <div className="flex justify-center gap-[--gap-base]">
             {[0, 1, 2, 3].map((i) => (
               <div
@@ -131,7 +131,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
                 className={`h-12 w-12 rounded-lg flex items-center justify-center font-extrabold text-lg transition ${
                   i < pin.length
                     ? "bg-gradient-to-br from-blue-400 to-blue-600 text-white"
-                    : "bg-white border-2 border-gray-300 text-gray-400"
+                    : "bg-white border-2 border-muted text-muted-light"
                 }`}
               >
                 {i < pin.length ? "●" : "○"}
@@ -139,7 +139,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
             ))}
           </div>
           {error && (
-            <div className="text-center text-sm font-bold text-red-600 mt-[--space-0-25]">
+            <div className="text-center text-sm font-bold text-error mt-[--space-0-25]">
               {error}
             </div>
           )}
@@ -157,7 +157,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
               key={digit}
               onClick={() => handleKeyPress(String(digit))}
               disabled={isValid}
-              className="h-12 rounded-xl bg-white border-2 border-gray-300 text-display text-lg font-extrabold hover:bg-gray-100 active:scale-95 transition disabled:opacity-50"
+              className="h-12 rounded-xl bg-white border-2 border-muted text-display text-lg font-extrabold hover:bg-muted active:scale-95 transition disabled:opacity-50"
             >
               {digit}
             </button>
@@ -165,7 +165,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
           <button
             onClick={() => handleKeyPress("0")}
             disabled={isValid}
-            className="col-span-3 h-12 rounded-xl bg-white border-2 border-gray-300 text-display text-lg font-extrabold hover:bg-gray-100 active:scale-95 transition disabled:opacity-50"
+            className="col-span-3 h-12 rounded-xl bg-white border-2 border-muted text-display text-lg font-extrabold hover:bg-muted active:scale-95 transition disabled:opacity-50"
           >
             0
           </button>
@@ -176,14 +176,14 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
           <button
             onClick={handleBackspace}
             disabled={isValid}
-            className="flex-1 h-10 rounded-lg bg-orange-50 text-orange-600 font-extrabold text-sm hover:bg-orange-100 active:scale-95 transition disabled:opacity-50"
+            className="flex-1 h-10 rounded-lg bg-orange-soft text-orange font-extrabold text-sm hover:bg-orange-100 active:scale-95 transition disabled:opacity-50"
           >
             ← Back
           </button>
           <button
             onClick={handleClear}
             disabled={isValid || pin.length === 0}
-            className="flex-1 h-10 rounded-lg bg-red-50 text-red-600 font-extrabold text-sm hover:bg-red-100 active:scale-95 transition disabled:opacity-50"
+            className="flex-1 h-10 rounded-lg bg-error-soft text-error font-extrabold text-sm hover:bg-red-100 active:scale-95 transition disabled:opacity-50"
           >
             Clear
           </button>
@@ -193,13 +193,13 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
         <button
           onClick={onCancel}
           disabled={isValid}
-          className="w-full h-10 rounded-lg bg-gray-100 text-gray-700 font-extrabold text-sm hover:bg-gray-200 active:scale-95 transition mt-[--space-0-25] disabled:opacity-50"
+          className="w-full h-10 rounded-lg bg-muted text-muted font-extrabold text-sm hover:bg-muted active:scale-95 transition mt-[--space-0-25] disabled:opacity-50"
         >
           Cancel
         </button>
 
         {/* PIN Info */}
-        <div className="text-xs text-muted-foreground text-center mt-[--space-2] p-[--padding-base] bg-blue-50 rounded-lg">
+        <div className="text-xs text-muted-foreground text-center mt-[--space-2] p-[--padding-base] bg-info-soft rounded-lg">
           <span>💡 Default PIN: 1234</span>
           <br />
           <span>Change in Parent Zone (Profile)</span>
@@ -208,3 +208,4 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
     </div>
   );
 }
+

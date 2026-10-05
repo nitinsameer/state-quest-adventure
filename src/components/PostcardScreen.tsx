@@ -291,7 +291,7 @@ export function StatePostcardScreen({
       <div className="flex-1 px-5 pt-[--padding-base] pb-1 relative z-10 overflow-y-auto">
         <div className="w-full rounded-[28px] bg-white shadow-2xl border-4 border-white overflow-hidden animate-in zoom-in-95">
           {/* Preview Image (Loading or Generated) */}
-          <div className="relative bg-gray-100 aspect-[3/4] overflow-hidden flex items-center justify-center">
+          <div className="relative bg-muted aspect-[3/4] overflow-hidden flex items-center justify-center">
             {previewUrl ? (
               <img
                 src={previewUrl}
@@ -301,7 +301,7 @@ export function StatePostcardScreen({
             ) : (
               <div className="flex flex-col items-center justify-center">
                 <div className="text-5xl mb-2">✨</div>
-                <div className="text-sm font-semibold text-gray-600">
+                <div className="text-sm font-semibold text-muted">
                   Creating your postcard...
                 </div>
               </div>
@@ -359,3 +359,4 @@ export function StatePostcardScreen({
     </div>
   );
 }
+

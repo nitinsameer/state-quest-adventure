@@ -95,7 +95,7 @@ export function FilePermissionDialog({
       content={[
         !hasManyDismissals && {
           type: "custom",
-          className: "space-y-3 bg-blue-50 rounded-2xl p-[--padding-md] border border-blue-200",
+          className: "space-y-3 bg-info-soft rounded-2xl p-[--padding-md] border border-info",
           children: (
             <div className="space-y-[--gap-base]">
               <div className="flex items-start gap-[--gap-base]">
@@ -124,10 +124,10 @@ export function FilePermissionDialog({
         },
         hasManyDismissals && {
           type: "custom",
-          className: "bg-amber-50 rounded-2xl p-[--padding-md] border border-amber-200",
+          className: "bg-warning-soft rounded-2xl p-[--padding-md] border border-warning",
           children: (
             <div className="space-y-[--space-0-25]">
-              <p className="text-sm font-semibold text-amber-900">
+              <p className="text-sm font-semibold text-warning">
                 💡 Need help? Ask a parent or guardian to enable photo saving in your phone's Settings.
               </p>
               <p className="text-xs text-amber-700">
@@ -154,3 +154,4 @@ export function FilePermissionDialog({
     />
   );
 }
+

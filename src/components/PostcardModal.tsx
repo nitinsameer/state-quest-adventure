@@ -206,7 +206,7 @@ export function PostcardModal({
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200"
+          className="absolute top-4 right-4 h-8 w-8 rounded-full bg-muted flex items-center justify-center text-muted hover:bg-muted"
         >
           ✕
         </button>
@@ -281,3 +281,4 @@ export function PostcardModal({
     </div>
   );
 }
+

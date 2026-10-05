@@ -47,7 +47,7 @@ export function StatePerformanceBadgeModal({
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-display font-extrabold text-2xl text-gray-900">
+            <h2 className="text-display font-extrabold text-2xl text-muted-dark">
               {stateName} Badges
             </h2>
             <p className="text-xs font-bold text-muted-foreground mt-1">
@@ -59,7 +59,7 @@ export function StatePerformanceBadgeModal({
               fxTap();
               onClose();
             }}
-            className="text-2xl text-gray-400 hover:text-gray-600 transition"
+            className="text-2xl text-muted-light hover:text-muted transition"
           >
             ✕
           </button>
@@ -67,28 +67,28 @@ export function StatePerformanceBadgeModal({
 
         {/* Metrics Summary */}
         {metrics && (
-          <div className="grid grid-cols-2 gap-3 p-3 bg-orange-50 rounded-2xl border border-orange-200">
+          <div className="grid grid-cols-2 gap-3 p-3 bg-orange-soft rounded-2xl border border-orange-200">
             <div>
               <div className="text-xs font-bold text-muted-foreground">Quiz Score</div>
-              <div className="text-2xl font-extrabold text-orange-600 mt-1">
+              <div className="text-2xl font-extrabold text-orange mt-1">
                 {metrics.quizScore}%
               </div>
             </div>
             <div>
               <div className="text-xs font-bold text-muted-foreground">Time Taken</div>
-              <div className="text-2xl font-extrabold text-orange-600 mt-1">
+              <div className="text-2xl font-extrabold text-orange mt-1">
                 {Math.round(metrics.timeToComplete / 60000)}m
               </div>
             </div>
             <div>
               <div className="text-xs font-bold text-muted-foreground">Cards Read</div>
-              <div className="text-2xl font-extrabold text-orange-600 mt-1">
+              <div className="text-2xl font-extrabold text-orange mt-1">
                 {metrics.cardsRead}/6
               </div>
             </div>
             <div>
               <div className="text-xs font-bold text-muted-foreground">Quiz Attempts</div>
-              <div className="text-2xl font-extrabold text-orange-600 mt-1">
+              <div className="text-2xl font-extrabold text-orange mt-1">
                 {metrics.quizAttempts}
               </div>
             </div>
@@ -98,7 +98,7 @@ export function StatePerformanceBadgeModal({
         {/* Earned Badges */}
         {earnedBadges.length > 0 && (
           <div>
-            <h3 className="text-display font-extrabold text-lg mb-3 text-gray-900">
+            <h3 className="text-display font-extrabold text-lg mb-3 text-muted-dark">
               ✓ Earned Badges ({earnedBadges.length})
             </h3>
             <div className="space-y-3">
@@ -116,7 +116,7 @@ export function StatePerformanceBadgeModal({
         {/* Available Badges */}
         {availableBadges.length > 0 && (
           <div>
-            <h3 className="text-display font-extrabold text-lg mb-3 text-gray-900">
+            <h3 className="text-display font-extrabold text-lg mb-3 text-muted-dark">
               ⏳ Available Badges ({availableBadges.length})
             </h3>
             <div className="space-y-3">
@@ -137,7 +137,7 @@ export function StatePerformanceBadgeModal({
             fxTap();
             onClose();
           }}
-          className="mt-4 w-full py-3 rounded-2xl bg-orange-500 text-white font-bold text-lg transition active:scale-95"
+          className="mt-4 w-full py-3 rounded-2xl bg-orange-soft0 text-white font-bold text-lg transition active:scale-95"
         >
           Close
         </button>
@@ -159,7 +159,7 @@ function BadgeDetailCard({ badgeId, progress }: BadgeDetailCardProps) {
       className={`rounded-2xl p-4 border-2 transition ${
         progress.earned
           ? "bg-gradient-to-r from-yellow-50 to-orange-50 border-orange-300"
-          : "bg-gray-50 border-gray-200"
+          : "bg-muted-light border-muted"
       }`}
     >
       <div className="flex items-start gap-4">
@@ -171,7 +171,7 @@ function BadgeDetailCard({ badgeId, progress }: BadgeDetailCardProps) {
         {/* Badge Info */}
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <h4 className={`text-display font-extrabold ${progress.earned ? "text-orange-900" : "text-gray-600"}`}>
+            <h4 className={`text-display font-extrabold ${progress.earned ? "text-orange-900" : "text-muted"}`}>
               {badgeDef.name}
             </h4>
             {progress.earned && <div className="text-lg">✓</div>}
@@ -181,20 +181,20 @@ function BadgeDetailCard({ badgeId, progress }: BadgeDetailCardProps) {
             {badgeDef.description}
           </p>
 
-          <p className="text-xs font-bold text-gray-700 mt-2 mb-2">
+          <p className="text-xs font-bold text-muted mt-2 mb-2">
             {badgeDef.requirement}
           </p>
 
           {/* Progress Bar */}
           {!progress.earned && (
             <div className="flex items-center gap-2">
-              <div className="flex-1 h-2 bg-gray-300 rounded-full overflow-hidden">
+              <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-orange-400 to-orange-600 transition-all"
                   style={{ width: `${Math.min(100, (progress.progress / progress.max) * 100)}%` }}
                 />
               </div>
-              <div className="text-xs font-bold text-gray-600 min-w-fit">
+              <div className="text-xs font-bold text-muted min-w-fit">
                 {progress.progress}/{progress.max}
               </div>
             </div>
@@ -202,7 +202,7 @@ function BadgeDetailCard({ badgeId, progress }: BadgeDetailCardProps) {
 
           {/* Message */}
           <p className={`text-xs font-bold mt-2 ${
-            progress.earned ? "text-green-600" : "text-orange-600"
+            progress.earned ? "text-green-600" : "text-orange"
           }`}>
             {progress.message}
           </p>
@@ -211,3 +211,4 @@ function BadgeDetailCard({ badgeId, progress }: BadgeDetailCardProps) {
     </div>
   );
 }
+

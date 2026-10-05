@@ -10,12 +10,12 @@ export function IndiaProgressMap() {
 
   const milestones = [
     { states: 5, label: "🌱 5 States", color: "bg-green-400" },
-    { states: 10, label: "🌿 10 States", color: "bg-green-500" },
+    { states: 10, label: "🌿 10 States", color: "bg-success-soft0" },
     { states: 15, label: "🌳 15 States", color: "bg-emerald-500" },
-    { states: 20, label: "🏆 20 States", color: "bg-amber-500" },
-    { states: 25, label: "💎 25 States", color: "bg-purple-500" },
+    { states: 20, label: "🏆 20 States", color: "bg-warning-soft0" },
+    { states: 25, label: "💎 25 States", color: "bg-purple-soft0" },
     { states: 30, label: "👑 30 States", color: "bg-yellow-500" },
-    { states: 36, label: "🎉 36 States - Master!", color: "bg-orange-500" },
+    { states: 36, label: "🎉 36 States - Master!", color: "bg-orange-soft0" },
   ];
 
   return (
@@ -49,17 +49,17 @@ export function IndiaProgressMap() {
             return (
               <div key={idx} className="space-y-[--space-0-25]">
                 <div className="flex items-center justify-between gap-[--gap-base]">
-                  <span className={`text-xs font-bold flex-1 ${reached ? "text-gray-800" : "text-gray-500"}`}>
+                  <span className={`text-xs font-bold flex-1 ${reached ? "text-muted-dark" : "text-muted-light"}`}>
                     {milestone.label}
                   </span>
-                  <span className="text-xs font-bold text-gray-600 flex-shrink-0">{milestone.states}/36</span>
+                  <span className="text-xs font-bold text-muted flex-shrink-0">{milestone.states}/36</span>
                 </div>
 
                 {/* Milestone progress bar */}
-                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div className="h-2 bg-muted rounded-full overflow-hidden">
                   <div
                     className={`h-full transition-all duration-1000 ease-out rounded-full ${
-                      reached ? milestone.color : "bg-gray-300"
+                      reached ? milestone.color : "bg-muted"
                     } ${isNearby ? "shadow-lg" : ""}`}
                     style={{
                       width: `${Math.min(100, (p.completed.length / milestone.states) * 100)}%`,
@@ -73,8 +73,8 @@ export function IndiaProgressMap() {
       )}
 
       {/* Motivational message */}
-      <div className="px-[--padding-md] py-[--padding-base] bg-gradient-to-r from-orange-50 to-red-50 border-t border-gray-200">
-        <p className="text-xs font-semibold text-center text-gray-700">
+      <div className="px-[--padding-md] py-[--padding-base] bg-gradient-to-r from-orange-50 to-red-50 border-t border-muted">
+        <p className="text-xs font-semibold text-center text-muted">
           {completionPercentage === 0
             ? "🚀 Start exploring to unlock milestones!"
             : completionPercentage === 100
@@ -89,3 +89,4 @@ export function IndiaProgressMap() {
     </div>
   );
 }
+

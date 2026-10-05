@@ -49,6 +49,44 @@
   --color-ink: var(--ink);
   --color-sky: var(--sky);
 
+  /* === SEMANTIC COLOR ALIASES FOR TAILWIND UTILITIES === */
+  /* These map hardcoded colors to design tokens for consistency */
+  
+  /* Muted/Gray replacements */
+  --color-muted-bg: var(--muted);                    /* replaces bg-gray-100 */
+  --color-muted-bg-light: oklch(0.95 0.01 260);     /* replaces bg-gray-50 */
+  --color-text-muted: var(--muted-foreground);      /* replaces text-gray-700 */
+  --color-text-muted-light: oklch(0.6 0.02 260);    /* replaces text-gray-500 */
+  --color-text-muted-dark: oklch(0.22 0.05 260);    /* replaces text-gray-900 */
+  --color-border-muted: var(--border);              /* replaces border-gray-200 */
+  --color-border-muted-light: oklch(0.95 0.01 260); /* replaces border-gray-100 */
+
+  /* Feedback state backgrounds */
+  --color-bg-warning-soft: oklch(0.95 0.06 55);     /* replaces bg-amber-50 */
+  --color-bg-success-soft: oklch(0.95 0.06 150);    /* replaces bg-green-50 */
+  --color-bg-error-soft: oklch(0.96 0.08 27);       /* replaces bg-red-50 */
+  --color-bg-info-soft: oklch(0.95 0.05 250);       /* replaces bg-blue-50 */
+  
+  /* Feedback state text */
+  --color-text-warning: oklch(0.35 0.1 45);         /* replaces text-amber-900 */
+  --color-text-warning-light: oklch(0.5 0.08 50);   /* replaces text-amber-800 */
+  --color-text-success: oklch(0.35 0.1 150);        /* replaces text-green-900 */
+  --color-text-error: oklch(0.35 0.1 27);           /* replaces text-red-900 */
+  --color-text-info: oklch(0.35 0.1 250);           /* replaces text-blue-900 */
+
+  /* Feedback state borders */
+  --color-border-warning: oklch(0.75 0.16 50);      /* replaces border-amber-200 */
+  --color-border-success: oklch(0.72 0.19 150);     /* replaces border-green-200 */
+  --color-border-error: oklch(0.62 0.24 27);        /* replaces border-red-200 */
+  --color-border-info: oklch(0.62 0.2 250);         /* replaces border-blue-200 */
+  --color-border-purple: oklch(0.75 0.1 280);       /* replaces border-purple-200 */
+
+  /* Brand feedback variants */
+  --color-bg-orange-soft: oklch(0.95 0.06 55);      /* replaces bg-orange-50 */
+  --color-text-orange: oklch(0.35 0.1 45);          /* replaces text-orange-600 */
+  --color-border-orange: oklch(0.75 0.16 50);       /* replaces border-orange-400 */
+  --color-bg-purple-soft: oklch(0.96 0.05 280);     /* replaces bg-purple-50 */
+
   /* Semantic Text Colors */
   --color-text-primary: var(--ink);
   --color-text-secondary: var(--muted-foreground);
@@ -393,6 +431,112 @@
 }
 @utility gradient-sky {
   background-image: linear-gradient(180deg, #cfe6ff 0%, #eaf4ff 60%, #ffffff 100%);
+}
+
+/* === SEMANTIC COLOR UTILITIES (Token-based) === */
+/* These replace hardcoded Tailwind colors with design tokens */
+
+@utility bg-muted {
+  background-color: var(--color-muted-bg);
+}
+
+@utility bg-muted-light {
+  background-color: var(--color-muted-bg-light);
+}
+
+@utility text-muted {
+  color: var(--color-text-muted);
+}
+
+@utility text-muted-light {
+  color: var(--color-text-muted-light);
+}
+
+@utility text-muted-dark {
+  color: var(--color-text-muted-dark);
+}
+
+@utility border-muted {
+  border-color: var(--color-border-muted);
+}
+
+@utility border-muted-light {
+  border-color: var(--color-border-muted-light);
+}
+
+/* Feedback state backgrounds */
+@utility bg-warning-soft {
+  background-color: var(--color-bg-warning-soft);
+}
+
+@utility bg-success-soft {
+  background-color: var(--color-bg-success-soft);
+}
+
+@utility bg-error-soft {
+  background-color: var(--color-bg-error-soft);
+}
+
+@utility bg-info-soft {
+  background-color: var(--color-bg-info-soft);
+}
+
+@utility bg-orange-soft {
+  background-color: var(--color-bg-orange-soft);
+}
+
+@utility bg-purple-soft {
+  background-color: var(--color-bg-purple-soft);
+}
+
+/* Feedback state text */
+@utility text-warning {
+  color: var(--color-text-warning);
+}
+
+@utility text-warning-light {
+  color: var(--color-text-warning-light);
+}
+
+@utility text-success {
+  color: var(--color-text-success);
+}
+
+@utility text-error {
+  color: var(--color-text-error);
+}
+
+@utility text-info {
+  color: var(--color-text-info);
+}
+
+@utility text-orange {
+  color: var(--color-text-orange);
+}
+
+/* Feedback state borders */
+@utility border-warning {
+  border-color: var(--color-border-warning);
+}
+
+@utility border-success {
+  border-color: var(--color-border-success);
+}
+
+@utility border-error {
+  border-color: var(--color-border-error);
+}
+
+@utility border-info {
+  border-color: var(--color-border-info);
+}
+
+@utility border-orange {
+  border-color: var(--color-border-orange);
+}
+
+@utility border-purple {
+  border-color: var(--color-border-purple);
 }
 
 @utility line-clamp-ellipsis-2 {

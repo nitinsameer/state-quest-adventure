@@ -40,7 +40,7 @@ export function PassportSapling() {
   };
 
   return (
-    <div className="w-full h-full bg-gradient-to-b from-blue-50 to-white flex flex-col overflow-hidden">
+    <div className="w-full h-full bg-gradient-to-b from-info-soft to-white flex flex-col overflow-hidden">
       <ConfettiBurst trigger={burst} size="big" />
 
       {/* Postcard Modal - shown on same screen */}
@@ -90,7 +90,7 @@ export function PassportSapling() {
 
       {/* States Grid */}
       <div className="px-5 pt-4 pb-2 flex-1 overflow-auto">
-        <div className="text-sm font-bold text-gray-700 mb-2">All 36 States</div>
+        <div className="text-sm font-bold text-muted mb-2">All 36 States</div>
 
         <div className="grid grid-cols-4 gap-2">
           {INDIA_STATES.map((state) => {
@@ -102,8 +102,8 @@ export function PassportSapling() {
                 onClick={() => handleStateClick(slug, isUnlocked)}
                 className={`aspect-square rounded-lg flex flex-col items-center justify-center gap-1 transition transform text-xs font-bold ${
                   isUnlocked
-                    ? "bg-gradient-to-br from-yellow-300 to-amber-400 text-amber-900 shadow-md hover:shadow-lg active:scale-95"
-                    : "bg-gray-200 text-gray-600 opacity-40 hover:opacity-60 active:scale-95"
+                    ? "bg-gradient-to-br from-yellow-300 to-amber-400 text-warning shadow-md hover:shadow-lg active:scale-95"
+                    : "bg-muted text-muted opacity-40 hover:opacity-60 active:scale-95"
                 }`}
               >
                 <img
@@ -132,3 +132,4 @@ export function PassportSapling() {
     </div>
   );
 }
+

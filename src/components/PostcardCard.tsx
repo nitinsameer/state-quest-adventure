@@ -90,8 +90,8 @@ export function PostcardCard({
             }}
             className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition ${
               isSelected
-                ? "bg-blue-500 border-blue-600"
-                : "bg-white/80 border-gray-300 hover:bg-white"
+                ? "bg-info-soft0 border-blue-600"
+                : "bg-white/80 border-muted hover:bg-white"
             }`}
           >
             {isSelected && <span className="text-white font-bold text-sm">✓</span>}
@@ -114,7 +114,7 @@ export function PostcardCard({
       {/* Bottom Info Bar */}
       <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur px-[--padding-base] py-[--padding-xs] flex items-center justify-between">
         <div className="flex items-center gap-[--gap-base] flex-1">
-          <div className="text-caption text-gray-700">{dateStr}</div>
+          <div className="text-caption text-muted">{dateStr}</div>
         </div>
         <button
           onClick={(e) => {
@@ -137,3 +137,4 @@ export function PostcardCard({
     </div>
   );
 }
+

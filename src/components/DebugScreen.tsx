@@ -98,7 +98,7 @@ export function DebugScreen() {
       <div className="bg-gray-900 border-b border-gray-700 p-[--padding-xs] flex justify-between items-center flex-wrap gap-[--gap-xs]">
         <div className="flex items-center gap-[--gap-xs]">
           <h1 className="font-bold text-sm">🐛 DEBUG CONSOLE</h1>
-          <span className="text-gray-400">Logs: {logs.length}</span>
+          <span className="text-muted-light">Logs: {logs.length}</span>
         </div>
         <div className="flex gap-[--gap-xs] flex-wrap">
           <button
@@ -176,7 +176,7 @@ export function DebugScreen() {
         className="flex-1 overflow-y-auto bg-black p-[--padding-xs] space-y-[--space-0-25]"
       >
         {logs.length === 0 ? (
-          <div className="text-gray-500">
+          <div className="text-muted-light">
             <p>No logs found. Try interacting with the app.</p>
             <p className="mt-2 text-xs">
               🎯 Shortcuts: Ctrl+D to toggle debug | Tap corner 5x to toggle
@@ -193,11 +193,11 @@ export function DebugScreen() {
                     ? 'border-yellow-500 text-yellow-300'
                     : log.level === 'info'
                       ? 'border-green-500 text-green-300'
-                      : 'border-gray-500 text-gray-400'
+                      : 'border-gray-500 text-muted-light'
               }`}
             >
               <div className="flex gap-[--gap-base]">
-                <span className="text-gray-500 min-w-fit">
+                <span className="text-muted-light min-w-fit">
                   {new Date(log.timestamp).toLocaleTimeString()}
                 </span>
                 <span className="font-bold min-w-fit">[{log.level}]</span>
@@ -205,12 +205,12 @@ export function DebugScreen() {
                 <span className="flex-1">{log.message}</span>
               </div>
               {log.data && (
-                <div className="ml-2 text-gray-500 text-xs mt-1">
+                <div className="ml-2 text-muted-light text-xs mt-1">
                   📊 {JSON.stringify(log.data).substring(0, 150)}
                 </div>
               )}
               {log.stack && (
-                <div className="ml-2 text-gray-600 text-xs mt-1 whitespace-pre-wrap overflow-auto max-h-20">
+                <div className="ml-2 text-muted text-xs mt-1 whitespace-pre-wrap overflow-auto max-h-20">
                   {log.stack}
                 </div>
               )}
@@ -220,9 +220,10 @@ export function DebugScreen() {
       </div>
 
       {/* Footer */}
-      <div className="bg-gray-900 border-t border-gray-700 p-[--padding-xs] text-gray-400 text-xs">
+      <div className="bg-gray-900 border-t border-gray-700 p-[--padding-xs] text-muted-light text-xs">
         <p>💡 Ctrl+D or tap corner 5x to toggle | Export logs for analysis</p>
       </div>
     </div>
   );
 }
+

@@ -79,14 +79,14 @@ export function StatePerformanceBadgesView() {
       </div>
 
       {/* View Mode Toggle */}
-      <div className="px-5 pt-4 flex gap-2 border-b border-gray-200">
+      <div className="px-5 pt-4 flex gap-2 border-b border-muted">
         <button
           onClick={() => {
             fxTap();
             setViewMode("grid");
           }}
           className={`px-4 py-2 rounded-t-lg font-bold text-sm transition ${
-            viewMode === "grid" ? "bg-white border-b-2 border-orange-400 text-orange-600" : "text-gray-600"
+            viewMode === "grid" ? "bg-white border-b-2 border-orange text-orange" : "text-muted"
           }`}
         >
           Grid
@@ -97,7 +97,7 @@ export function StatePerformanceBadgesView() {
             setViewMode("card");
           }}
           className={`px-4 py-2 rounded-t-lg font-bold text-sm transition ${
-            viewMode === "card" ? "bg-white border-b-2 border-orange-400 text-orange-600" : "text-gray-600"
+            viewMode === "card" ? "bg-white border-b-2 border-orange text-orange" : "text-muted"
           }`}
         >
           Card
@@ -108,7 +108,7 @@ export function StatePerformanceBadgesView() {
             setViewMode("list");
           }}
           className={`px-4 py-2 rounded-t-lg font-bold text-sm transition ${
-            viewMode === "list" ? "bg-white border-b-2 border-orange-400 text-orange-600" : "text-gray-600"
+            viewMode === "list" ? "bg-white border-b-2 border-orange text-orange" : "text-muted"
           }`}
         >
           List
@@ -120,7 +120,7 @@ export function StatePerformanceBadgesView() {
         {/* Completed States */}
         {completedStates.length > 0 && (
           <div>
-            <h2 className="text-display font-extrabold text-lg mb-4 text-gray-900">
+            <h2 className="text-display font-extrabold text-lg mb-4 text-muted-dark">
               ✓ Completed ({completedStates.length})
             </h2>
             
@@ -177,7 +177,7 @@ export function StatePerformanceBadgesView() {
         {/* Locked States */}
         {lockedStates.length > 0 && (
           <div>
-            <h2 className="text-display font-extrabold text-lg mb-4 text-gray-900">
+            <h2 className="text-display font-extrabold text-lg mb-4 text-muted-dark">
               🔒 Not Started ({lockedStates.length})
             </h2>
             
@@ -186,10 +186,10 @@ export function StatePerformanceBadgesView() {
                 {lockedStates.map(state => (
                   <div
                     key={state.name}
-                    className="rounded-2xl p-3 flex flex-col items-center gap-2 border bg-gray-50 border-gray-200 opacity-70"
+                    className="rounded-2xl p-3 flex flex-col items-center gap-2 border bg-muted-light border-muted opacity-70"
                   >
                     <div className="text-2xl">🔒</div>
-                    <div className="text-display font-extrabold text-xs text-center leading-tight text-gray-600">
+                    <div className="text-display font-extrabold text-xs text-center leading-tight text-muted">
                       {state.name}
                     </div>
                     <div className="text-[10px] font-bold text-muted-foreground">
@@ -210,7 +210,7 @@ export function StatePerformanceBadgesView() {
                     <div className="flex items-center gap-4">
                       <div className="text-4xl">🔒</div>
                       <div className="flex-1">
-                        <h3 className="text-display font-extrabold text-gray-900">{state.name}</h3>
+                        <h3 className="text-display font-extrabold text-muted-dark">{state.name}</h3>
                         <p className="text-xs font-bold text-muted-foreground mt-1">Not yet started</p>
                       </div>
                     </div>
@@ -226,7 +226,7 @@ export function StatePerformanceBadgesView() {
                     key={state.name}
                     className="flex items-center gap-3 py-2 px-3 rounded-lg"
                   >
-                    <span className="text-display font-extrabold text-sm min-w-[80px] text-gray-600">
+                    <span className="text-display font-extrabold text-sm min-w-[80px] text-muted">
                       {state.name}
                     </span>
                     <div className="text-2xl ml-auto">🔒</div>
@@ -260,7 +260,7 @@ function StateGridBadgeCard({ state, progress, onSelect }: any) {
       onClick={onSelect}
       className="rounded-2xl p-4 flex flex-col items-center gap-3 border bg-white shadow-soft border-black/5 hover:shadow-md transition active:scale-95"
     >
-      <div className="text-display font-extrabold text-sm text-center leading-tight text-gray-900">
+      <div className="text-display font-extrabold text-sm text-center leading-tight text-muted-dark">
         {state.name}
       </div>
       
@@ -298,7 +298,7 @@ function StateDetailBadgeCard({ state, progress, onSelect }: any) {
       {/* State Name and Badge Count */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1">
-          <h3 className="text-display font-extrabold text-lg text-gray-900">{state.name}</h3>
+          <h3 className="text-display font-extrabold text-lg text-muted-dark">{state.name}</h3>
           <div className="text-xs font-bold text-muted-foreground mt-1">
             {earnedBadges.length}/9 Badges
           </div>
@@ -307,13 +307,13 @@ function StateDetailBadgeCard({ state, progress, onSelect }: any) {
 
       {/* Progress Bar */}
       <div className="mt-3 flex items-center gap-2">
-        <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
           <div 
             className="h-full bg-gradient-to-r from-orange-400 to-orange-600 transition-all"
             style={{ width: `${(earnedBadges.length / totalBadges) * 100}%` }}
           />
         </div>
-        <span className="text-xs font-bold text-gray-600 min-w-fit">
+        <span className="text-xs font-bold text-muted min-w-fit">
           {Math.round((earnedBadges.length / totalBadges) * 100)}%
         </span>
       </div>
@@ -335,7 +335,7 @@ function StateDetailBadgeCard({ state, progress, onSelect }: any) {
         {availableBadges.slice(0, 3).map((badge: StatePerformanceBadgeId) => (
           <div 
             key={badge}
-            className="h-7 w-7 rounded-full bg-gray-100 border-2 border-gray-300 flex items-center justify-center text-base opacity-40 flex-shrink-0"
+            className="h-7 w-7 rounded-full bg-muted border-2 border-muted flex items-center justify-center text-base opacity-40 flex-shrink-0"
             title={`${STATE_PERFORMANCE_BADGE_DEFS[badge]?.name} - Not yet earned`}
           >
             {getPerformanceBadgeIcon(badge)}
@@ -345,7 +345,7 @@ function StateDetailBadgeCard({ state, progress, onSelect }: any) {
 
       {/* Action Text */}
       {earnedBadges.length < totalBadges && (
-        <div className="mt-3 text-xs font-bold text-orange-600">
+        <div className="mt-3 text-xs font-bold text-orange">
           {availableBadges.length} badges available • Replay to earn more
         </div>
       )}
@@ -361,10 +361,10 @@ function StateListBadgeRow({ state, progress, onSelect }: any) {
   return (
     <button
       onClick={onSelect}
-      className="flex items-center gap-4 py-3 px-4 rounded-xl hover:bg-gray-50 transition active:scale-95 bg-white border border-black/5 shadow-soft"
+      className="flex items-center gap-4 py-3 px-4 rounded-xl hover:bg-muted-light transition active:scale-95 bg-white border border-black/5 shadow-soft"
     >
       {/* State Name */}
-      <span className="text-display font-extrabold text-sm flex-shrink-0 text-gray-900 min-w-[120px]">
+      <span className="text-display font-extrabold text-sm flex-shrink-0 text-muted-dark min-w-[120px]">
         {state.name}
       </span>
       
@@ -380,3 +380,4 @@ function StateListBadgeRow({ state, progress, onSelect }: any) {
     </button>
   );
 }
+

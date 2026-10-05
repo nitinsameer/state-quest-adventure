@@ -97,7 +97,7 @@ export function PassportSeedling() {
   };
 
   return (
-    <div className="w-full h-full bg-gradient-to-b from-blue-50 to-white flex flex-col overflow-hidden">
+    <div className="w-full h-full bg-gradient-to-b from-info-soft to-white flex flex-col overflow-hidden">
       <ConfettiBurst trigger={burst} size="big" />
 
       {/* Postcard Modal - shown on same screen */}
@@ -116,7 +116,7 @@ export function PassportSeedling() {
             fxTap();
             navigate({ to: "/explorer/postcard-library" });
           }}
-          className="px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold text-sm shadow-lg hover:shadow-xl transition active:scale-95 flex items-center gap-2"
+          className="px-4 py-2 rounded-full bg-gradient-to-r from-info-soft0 to-purple-500 text-white font-bold text-sm shadow-lg hover:shadow-xl transition active:scale-95 flex items-center gap-2"
           title="View all your postcards with granular consent controls"
         >
           📸 Library
@@ -199,7 +199,7 @@ export function PassportSeedling() {
                 className={`px-4 py-2 rounded-full font-extrabold text-sm whitespace-nowrap transition active:scale-95 ${
                   isSelected
                     ? `bg-gradient-to-r ${reg.gradient} text-white shadow-lg`
-                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    : "bg-muted text-muted hover:bg-muted"
                 }`}
                 title={`${completed}/${regionStates.length} explored`}
               >
@@ -212,11 +212,11 @@ export function PassportSeedling() {
 
       {/* Region Title & Progress */}
       <div className="px-5 mt-4 mb-2">
-        <div className="text-lg font-extrabold text-gray-800">{region.name}</div>
-        <div className="text-sm font-semibold text-gray-600 mt-1">
+        <div className="text-lg font-extrabold text-muted-dark">{region.name}</div>
+        <div className="text-sm font-semibold text-muted mt-1">
           {regionProgress} explored {unlockedInRegion.length === regionStates.length && "✨ Region Complete!"}
         </div>
-        <div className="mt-2 h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div className="mt-2 h-2 bg-muted rounded-full overflow-hidden">
           <div
             className={`h-full bg-gradient-to-r ${region.gradient} transition-all duration-300`}
             style={{ width: `${(unlockedInRegion.length / regionStates.length) * 100}%` }}
@@ -236,7 +236,7 @@ export function PassportSeedling() {
                 className={`p-4 rounded-2xl transition transform active:scale-95 ${
                   isUnlocked
                     ? `bg-gradient-to-br ${REGIONS[selectedRegion].gradient} text-white shadow-lg hover:shadow-xl`
-                    : "bg-gradient-to-br from-gray-100 to-gray-200 text-gray-700 hover:to-gray-300"
+                    : "bg-gradient-to-br from-gray-100 to-gray-200 text-muted hover:to-gray-300"
                 }`}
               >
                 <img
@@ -258,3 +258,4 @@ export function PassportSeedling() {
     </div>
   );
 }
+

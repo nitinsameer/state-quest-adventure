@@ -408,7 +408,7 @@ export function CreateProfileScreen() {
   };
 
   return (
-    <div className="w-full bg-gradient-to-b from-blue-50 to-white flex flex-col select-none touch-none" style={{ touchAction: 'pan-y' }}>
+    <div className="w-full bg-gradient-to-b from-info-soft to-white flex flex-col select-none touch-none" style={{ touchAction: 'pan-y' }}>
       <div className="px-5 flex-1 overflow-auto">
         {/* Step 1: Avatar Selection */}
         <div className="rounded-3xl gradient-explorer p-[--padding-lg] text-white relative overflow-hidden">
@@ -434,7 +434,7 @@ export function CreateProfileScreen() {
               className={`aspect-square rounded-2xl flex items-center justify-center border-4 transition transform overflow-hidden ${
                 a.id === avatar
                   ? "border-saffron shadow-[var(--shadow-glow-orange)] scale-110"
-                  : "border-gray-200 hover:scale-105"
+                  : "border-muted hover:scale-105"
               }`}
             >
               <img
@@ -463,7 +463,7 @@ export function CreateProfileScreen() {
 
         {/* Age Selection with Vibrant Colors & Emojis */}
         <div className="mt-[--space-4] mb-[--space-0-5]">
-          <label className="text-h5 text-gray-700">
+          <label className="text-h5 text-muted-dark">
             🎂 How old are you?
           </label>
           <div className="mt-[--space-1] space-y-[--space-0-5]">
@@ -477,13 +477,13 @@ export function CreateProfileScreen() {
                   className={`w-full h-16 rounded-2xl flex items-center justify-between px-5 font-extrabold transition transform ${
                     isSelected
                       ? `bg-gradient-to-r ${band.gradient} text-white shadow-xl scale-105 border-4 border-white animate-pulse`
-                      : "bg-white border-2 border-gray-200 text-gray-700 hover:border-gray-300 hover:scale-102"
+                      : "bg-white border-2 border-muted text-muted-dark hover:border-muted hover:scale-102"
                   }`}
                 >
                   <span className="text-4xl">{band.emoji}</span>
                   <div className="flex-1 text-center">
                     <div className="text-body-lg">{band.value}</div>
-                    <div className={`text-caption ${isSelected ? "text-white/90" : "text-gray-500"}`}>
+                    <div className={`text-caption ${isSelected ? "text-white/90" : "text-muted-light"}`}>
                       {band.label}
                     </div>
                   </div>
@@ -502,10 +502,10 @@ export function CreateProfileScreen() {
         </div>
       </div>
 
-      <div className="p-[--padding-lg] pb-safe bg-white border-t border-gray-100">
+      <div className="p-[--padding-lg] pb-safe bg-white border-t border-muted-light">
         <button
           onClick={handleProfileSave}
-          className={`w-full h-14 rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-white text-h4 text-display shadow-xl transition transform ${
+          className={`w-full h-14 rounded-2xl bg-gradient-to-r from-green-400 to-success-soft0 text-white text-h4 text-display shadow-xl transition transform ${
             saved ? "scale-95 opacity-80" : "hover:shadow-2xl active:scale-95"
           }`}
         >
@@ -661,9 +661,9 @@ export function HomeDashboardScreen() {
         <div className={`mt-3 transition-all duration-700 ${statsVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}>
           <Suspense fallback={
             <div className="w-full bg-white rounded-2xl shadow-soft p-4 animate-pulse">
-              <div className="h-8 bg-gray-200 rounded w-1/3 mb-3" />
+              <div className="h-8 bg-muted rounded w-1/3 mb-3" />
               <div className="space-y-2">
-                {[1,2,3].map(i => <div key={i} className="h-4 bg-gray-200 rounded" />)}
+                {[1,2,3].map(i => <div key={i} className="h-4 bg-muted rounded" />)}
               </div>
             </div>
           }>
@@ -738,7 +738,7 @@ export function HomeDashboardScreen() {
                       fxTap();
                       clearRecentlyCompleted();
                     }}
-                    className="flex-1 h-10 rounded-xl bg-white text-orange-600 text-label hover:bg-yellow-50 transition-all shadow-lg flex items-center justify-center"
+                    className="flex-1 h-10 rounded-xl bg-white text-orange text-label hover:bg-warning-soft transition-all shadow-lg flex items-center justify-center"
                   >
                     Next State →
                   </Link>
@@ -759,7 +759,7 @@ export function HomeDashboardScreen() {
 
         return (
           <div className="px-5 mt-3 animate-fade-in">
-            <div className="rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-white p-3 shadow-lg">
+            <div className="rounded-2xl bg-gradient-to-r from-green-400 to-success-soft0 text-white p-3 shadow-lg">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <span className="text-2xl">🎫</span>
@@ -825,7 +825,7 @@ export function HomeDashboardScreen() {
         
         return (
           <div className="px-5 mt-3 animate-fade-in">
-            <div className="rounded-2xl bg-gradient-to-r from-orange-400 to-red-500 text-white p-3 shadow-lg border border-orange-600">
+            <div className="rounded-2xl bg-gradient-to-r from-orange-400 to-red-500 text-white p-3 shadow-lg border border-orange">
               <div className="flex items-start gap-3">
                 <div className="text-2xl flex-shrink-0">🚨</div>
                 <div className="flex-1 min-w-0">
@@ -964,7 +964,7 @@ export function HomeDashboardScreen() {
                   {/* Close button */}
                   <button
                     onClick={() => setShowLockedPreview(null)}
-                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl"
+                    className="absolute top-4 right-4 text-muted-light hover:text-muted text-xl"
                   >
                     ✕
                   </button>
@@ -984,22 +984,22 @@ export function HomeDashboardScreen() {
 
                   {/* State facts */}
                   <div className="space-y-3">
-                    <div className="p-3 rounded-2xl bg-orange-50 border-l-4 border-orange-400">
+                    <div className="p-3 rounded-2xl bg-orange-soft border-l-4 border-orange">
                       <div className="text-label text-orange-900 uppercase tracking-wider">Monument</div>
                       <div className="text-body text-orange-800 mt-1">{state.monumentName}</div>
                     </div>
 
-                    <div className="p-3 rounded-2xl bg-green-50 border-l-4 border-green-400">
-                      <div className="text-label text-green-900 uppercase tracking-wider">Wildlife</div>
-                      <div className="text-body text-green-800 mt-1">{state.animalName}</div>
+                    <div className="p-3 rounded-2xl bg-success-soft border-l-4 border-success">
+                      <div className="text-label text-success uppercase tracking-wider">Wildlife</div>
+                      <div className="text-body text-success mt-1">{state.animalName}</div>
                     </div>
 
-                    <div className="p-3 rounded-2xl bg-blue-50 border-l-4 border-blue-400">
-                      <div className="text-label text-blue-900 uppercase tracking-wider">Fun Fact</div>
+                    <div className="p-3 rounded-2xl bg-info-soft border-l-4 border-info">
+                      <div className="text-label text-info uppercase tracking-wider">Fun Fact</div>
                       <div className="text-body text-blue-800 mt-1">{state.funFact}</div>
                     </div>
 
-                    <div className="p-3 rounded-2xl bg-purple-50 border-l-4 border-purple-400">
+                    <div className="p-3 rounded-2xl bg-purple-soft border-l-4 border-purple">
                       <div className="text-label text-purple-900 uppercase tracking-wider">Unlock Path</div>
                       <div className="text-body text-purple-800 mt-1">{getUnlockRequirement(state.name)}</div>
                     </div>
@@ -1009,7 +1009,7 @@ export function HomeDashboardScreen() {
                   <div className="mt-4 space-y-2">
                     <button
                       onClick={() => setShowLockedPreview(null)}
-                      className="w-full h-12 rounded-2xl bg-gray-100 text-gray-800 font-extrabold"
+                      className="w-full h-12 rounded-2xl bg-muted text-muted-dark font-extrabold"
                     >
                       Close
                     </button>
@@ -1085,7 +1085,7 @@ function StatCardEnhanced({
 
   const borderColor = {
     orange: "border-saffron/30",
-    gold: "border-yellow-300/40",
+    gold: "border-warning/40",
     green: "border-success/30",
   }[tone];
 
@@ -1181,7 +1181,7 @@ function StateDetailModal({
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200"
+          className="absolute top-4 right-4 h-8 w-8 rounded-full bg-muted flex items-center justify-center text-muted hover:bg-muted"
         >
           ✕
         </button>
@@ -1210,28 +1210,28 @@ function StateDetailModal({
 
         {/* Sneak Peek Preview for Locked States */}
         {isLocked && (
-          <div className="rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 p-4 space-y-3">
-            <p className="text-h5 text-amber-900 flex items-center gap-2">
+          <div className="rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-warning p-4 space-y-3">
+            <p className="text-h5 text-warning flex items-center gap-2">
               👀 Sneak Peek Preview
             </p>
             <div className="space-y-2 text-sm">
               <div className="flex items-start gap-2">
                 <span className="text-2xl flex-shrink-0">{stateData.animal}</span>
                 <div>
-                  <p className="text-body font-bold text-gray-900">State Animal</p>
-                  <p className="text-gray-700">{stateData.animalName}</p>
+                  <p className="text-body font-bold text-muted-dark">State Animal</p>
+                  <p className="text-muted">{stateData.animalName}</p>
                 </div>
               </div>
               <div className="flex items-start gap-2">
                 <span className="text-2xl flex-shrink-0">{stateData.monument}</span>
                 <div>
-                  <p className="text-body font-bold text-gray-900">Famous Monument</p>
-                  <p className="text-gray-700">{stateData.monumentName}</p>
+                  <p className="text-body font-bold text-muted-dark">Famous Monument</p>
+                  <p className="text-muted">{stateData.monumentName}</p>
                 </div>
               </div>
-              <div className="pt-2 border-t border-amber-200">
-                <p className="text-xs font-bold text-amber-900 mb-1">Fun Fact</p>
-                <p className="text-gray-700 italic">{stateData.funFact}</p>
+              <div className="pt-2 border-t border-warning">
+                <p className="text-xs font-bold text-warning mb-1">Fun Fact</p>
+                <p className="text-muted italic">{stateData.funFact}</p>
               </div>
             </div>
           </div>
@@ -1239,26 +1239,26 @@ function StateDetailModal({
 
         {/* Status Information */}
         {isLocked ? (
-          <div className="rounded-2xl bg-amber-50 border-2 border-amber-200 p-4">
-            <p className="text-h5 text-amber-900 mb-2">
+          <div className="rounded-2xl bg-warning-soft border-2 border-warning p-4">
+            <p className="text-h5 text-warning mb-2">
               🔐 Locked
             </p>
-            <p className="text-body text-amber-800">
+            <p className="text-body text-warning-light">
               Complete the previous state to unlock this adventure!
             </p>
           </div>
         ) : isDone ? (
-          <div className="rounded-2xl bg-green-50 border-2 border-green-200 p-4">
-            <p className="text-h5 text-green-900 mb-2">
+          <div className="rounded-2xl bg-success-soft border-2 border-success p-4">
+            <p className="text-h5 text-success mb-2">
               ✓ Completed
             </p>
-            <p className="text-body text-green-800">
+            <p className="text-body text-success">
               You've earned all badges for this state!
             </p>
           </div>
         ) : (
-          <div className="roundepppd-2xl bg-blue-50 border-2 border-blue-200 p-4">
-            <p className="text-h5 text-blue-900 mb-2">
+          <div className="roundepppd-2xl bg-info-soft border-2 border-info p-4">
+            <p className="text-h5 text-info mb-2">
               ▶ In Progress
             </p>
             <p className="text-body text-blue-800">
@@ -1271,7 +1271,7 @@ function StateDetailModal({
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 h-12 rounded-2xl bg-gray-100 text-display font-extrabold text-gray-700 hover:bg-gray-200 transition"
+            className="flex-1 h-12 rounded-2xl bg-muted text-display font-extrabold text-muted hover:bg-muted transition"
           >
             Close
           </button>
@@ -1655,7 +1655,7 @@ export function JourneyMapScreen() {
                             ? `bg-gradient-to-br from-yellow-300 to-orange-400 text-white shadow-lg scale-105 animate-pulse`
                             : isAvailable
                             ? `bg-gradient-to-br from-slate-100 to-slate-200 text-slate-800 shadow-sm hover:shadow-md hover:scale-102` // Available states - clickable
-                            : `bg-gray-100 text-gray-700 ${isLocked ? "opacity-60 cursor-not-allowed" : ""}`
+                            : `bg-muted text-muted ${isLocked ? "opacity-60 cursor-not-allowed" : ""}`
                         }`}
                       >
                         <img
@@ -1735,7 +1735,7 @@ export function JourneyMapScreen() {
                         ? "bg-gradient-to-br from-yellow-300 to-orange-400 text-white shadow-lg scale-105 animate-pulse"
                         : isAvailable
                         ? "bg-gradient-to-br from-slate-100 to-slate-200 text-slate-800 shadow-sm hover:shadow-md hover:scale-102" // Available UTs
-                        : `bg-gray-100 text-gray-700 ${isLocked ? "opacity-60 cursor-not-allowed" : ""}`
+                        : `bg-muted text-muted ${isLocked ? "opacity-60 cursor-not-allowed" : ""}`
                     }`}
                   >
                     <img
@@ -2161,7 +2161,7 @@ export function LearningHubScreen({
           className={`w-full h-14 rounded-2xl text-white text-h4 text-display shadow-[var(--shadow-glow-green)] transition ${
             completedCards === 6
               ? "gradient-success"
-              : "bg-gray-300 opacity-60 cursor-not-allowed"
+              : "bg-muted opacity-60 cursor-not-allowed"
           }`}
         >
           {completedCards === 6 
@@ -2515,14 +2515,14 @@ export function LearningCardScreen({
   // Safety check: ensure card exists and currentCardIndex is valid
   if (!card || currentCardIndex < 0 || !Array.isArray(cards) || cards.length === 0) {
     return (
-      <div className="w-full h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-white">
+      <div className="w-full h-screen flex items-center justify-center bg-gradient-to-b from-info-soft to-white">
         <div className="text-center">
           <div className="text-5xl mb-3">⚠️</div>
           <h1 className="text-h4 text-ink mb-2">Card content unavailable</h1>
           <p className="text-sm text-muted-foreground mb-4">Please try again or go back</p>
           <button
             onClick={() => window.history.back()}
-            className="px-4 py-2 rounded-lg bg-blue-500 text-white font-bold"
+            className="px-4 py-2 rounded-lg bg-info-soft0 text-white font-bold"
           >
             Go Back
           </button>
@@ -2726,8 +2726,8 @@ export function LearningCardScreen({
                 }}
                 className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
                   displayLanguage === lang
-                    ? "bg-blue-500 text-white shadow-md"
-                    : "text-gray-600 hover:bg-white/50"
+                    ? "bg-info-soft0 text-white shadow-md"
+                    : "text-muted hover:bg-white/50"
                 }`}
               >
                 {lang === "en" ? "English" : lang.charAt(0).toUpperCase() + lang.slice(1)}
@@ -2774,8 +2774,8 @@ export function LearningCardScreen({
             playingCardIndex === currentCardIndex
               ? "bg-gradient-to-br from-orange-400 to-red-500 text-white shadow-lg animate-pulse"
               : hasFeatureConsent('audio')
-                ? "bg-blue-50 text-blue-600 hover:shadow-md border border-blue-200"
-                : "bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed"
+                ? "bg-info-soft text-blue-600 hover:shadow-md border border-info"
+                : "bg-muted text-muted-light border border-muted cursor-not-allowed"
           }`}
           title={hasFeatureConsent('audio') ? "Play card content" : "Enable audio in settings to listen"}
         >
@@ -2800,7 +2800,7 @@ export function LearningCardScreen({
 
         {/* Replay indicator - shown when user is replaying a card */}
         {isReplaying && (
-          <div className="mb-3 p-3 bg-gradient-to-r from-purple-100 to-blue-100 rounded-xl flex items-center gap-2 shadow-sm border border-purple-200">
+          <div className="mb-3 p-3 bg-gradient-to-r from-purple-soft to-info-soft rounded-xl flex items-center gap-2 shadow-sm border border-purple">
             <span className="text-lg">📖</span>
             <div className="flex-1">
               <p className="text-xs font-bold text-purple-900">Replaying this card</p>
@@ -2843,7 +2843,7 @@ export function LearningCardScreen({
         {/* Mastery badge for replayed cards */}
         {isReplaying && replayCount > 0 && (
           <div className="mt-3 px-3 py-2 bg-gradient-to-r from-amber-100 to-orange-100 rounded-lg text-center border border-amber-300">
-            <p className="text-xs font-bold text-amber-900">⭐ Mastered! Replayed {replayCount}x</p>
+            <p className="text-xs font-bold text-warning">⭐ Mastered! Replayed {replayCount}x</p>
           </div>
         )}
       </div>
@@ -2875,14 +2875,14 @@ export function LearningCardScreen({
               </p>
             </div>
 
-            <div className="bg-blue-50 rounded-2xl p-4 space-y-2 text-sm">
+            <div className="bg-info-soft rounded-2xl p-4 space-y-2 text-sm">
               <div className="flex gap-2">
                 <span>🎧</span>
-                <span className="font-semibold text-blue-900">Stories read aloud</span>
+                <span className="font-semibold text-info">Stories read aloud</span>
               </div>
               <div className="flex gap-2">
                 <span>🌍</span>
-                <span className="font-semibold text-blue-900">Available in multiple languages</span>
+                <span className="font-semibold text-info">Available in multiple languages</span>
               </div>
             </div>
 
@@ -2892,7 +2892,7 @@ export function LearningCardScreen({
                   fxTap();
                   setShowAudioPermissionPrompt(false);
                 }}
-                className="flex-1 h-12 rounded-xl bg-gray-100 text-gray-800 font-bold text-sm"
+                className="flex-1 h-12 rounded-xl bg-muted text-muted-dark font-bold text-sm"
               >
                 Maybe Later
               </button>
@@ -2902,7 +2902,7 @@ export function LearningCardScreen({
                   fxTap();
                   setShowAudioPermissionPrompt(false);
                 }}
-                className="flex-1 h-12 rounded-xl bg-gradient-to-r from-blue-400 to-cyan-500 text-white font-bold text-sm flex items-center justify-center"
+                className="flex-1 h-12 rounded-xl bg-gradient-to-r from-blue-400 to-info-soft0 text-white font-bold text-sm flex items-center justify-center"
               >
                 Go to Settings
               </Link>
@@ -3633,7 +3633,7 @@ function BadgeDetailModal({
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200"
+          className="absolute top-4 right-4 h-8 w-8 rounded-full bg-muted flex items-center justify-center text-muted hover:bg-muted"
         >
           ✕
         </button>
@@ -3658,17 +3658,17 @@ function BadgeDetailModal({
 
         {/* Unlock Information */}
         {!badge.done && (
-          <div className="rounded-2xl bg-amber-50 border-2 border-amber-200 p-4">
-            <p className="text-h5 text-amber-900 mb-2">
+          <div className="rounded-2xl bg-warning-soft border-2 border-warning p-4">
+            <p className="text-h5 text-warning mb-2">
               How to Unlock
             </p>
-            <p className="text-body text-amber-800">{unlockText}</p>
+            <p className="text-body text-warning-light">{unlockText}</p>
           </div>
         )}
 
         {/* Badge Info */}
-        <div className="rounded-2xl bg-blue-50 border border-blue-200 p-4">
-          <p className="text-h5 text-blue-900 mb-1">
+        <div className="rounded-2xl bg-info-soft border border-info p-4">
+          <p className="text-h5 text-info mb-1">
             Badge Type
           </p>
           <p className="text-body text-blue-800">
@@ -3682,7 +3682,7 @@ function BadgeDetailModal({
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 h-12 rounded-2xl bg-gray-100 text-display font-extrabold text-gray-700 hover:bg-gray-200 transition"
+            className="flex-1 h-12 rounded-2xl bg-muted text-display font-extrabold text-muted hover:bg-muted transition"
           >
             Close
           </button>
@@ -3692,7 +3692,7 @@ function BadgeDetailModal({
                 fxConfetti();
                 onClose();
               }}
-              className="flex-1 h-12 rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-display font-extrabold text-white shadow-lg hover:shadow-xl transition"
+              className="flex-1 h-12 rounded-2xl bg-gradient-to-r from-green-400 to-success-soft0 text-display font-extrabold text-white shadow-lg hover:shadow-xl transition"
             >
               🎉 Celebrate!
             </button>
@@ -3777,7 +3777,7 @@ export function BadgesScreen() {
   };
 
   const getBadgeBackgroundColor = (tier: AchievementBadgeTier, unlocked: boolean) => {
-    if (!unlocked) return "bg-gray-50";
+    if (!unlocked) return "bg-muted-light";
     const config = getTierConfig(tier);
     return `bg-${config.bgTone}`;
   };
@@ -3785,7 +3785,7 @@ export function BadgesScreen() {
   return (
     <div className="h-full w-full bg-[#F7F5F0] flex flex-col">
       {/* Tab Switcher - Before Header */}
-      <div className="px-5 pt-4 pb-0 flex gap-2 border-b border-gray-200 bg-white z-10">
+      <div className="px-5 pt-4 pb-0 flex gap-2 border-b border-muted bg-white z-10">
         <button
           onClick={() => {
             fxTap();
@@ -3793,8 +3793,8 @@ export function BadgesScreen() {
           }}
           className={`px-4 py-3 rounded-t-lg font-bold text-sm transition ${
             activeTab === "achievements"
-              ? "bg-transparent border-b-2 border-orange-400 text-orange-600"
-              : "text-gray-600 hover:text-gray-800"
+              ? "bg-transparent border-b-2 border-orange text-orange"
+              : "text-muted hover:text-muted-dark"
           }`}
         >
           🏆 Achievement Badges
@@ -3806,8 +3806,8 @@ export function BadgesScreen() {
           }}
           className={`px-4 py-3 rounded-t-lg font-bold text-sm transition ${
             activeTab === "states"
-              ? "bg-transparent border-b-2 border-orange-400 text-orange-600"
-              : "text-gray-600 hover:text-gray-800"
+              ? "bg-transparent border-b-2 border-orange text-orange"
+              : "text-muted hover:text-muted-dark"
           }`}
         >
           🎖️ State Badges
@@ -3888,7 +3888,7 @@ export function BadgesScreen() {
                             : config.gradient.split("-")[1] === "success" ? "bg-success"
                             : config.gradient.split("-")[1] === "explorer" ? "bg-explorer"
                             : "bg-gold"
-                            : "bg-gray-300"
+                            : "bg-muted"
                         }`}
                       />
                     ))}
@@ -3908,7 +3908,7 @@ export function BadgesScreen() {
                     className={`rounded-2xl p-3 flex flex-col items-center gap-2.5 border transition-transform active:scale-95 ${
                       badge.unlocked
                         ? `bg-white shadow-soft border-black/5 hover:shadow-md`
-                        : "bg-gray-50 border-gray-200 shadow-sm opacity-70 hover:opacity-85"
+                        : "bg-muted-light border-muted shadow-sm opacity-70 hover:opacity-85"
                     }`}
                     style={{ animationDelay: `${badgeIdx * 50}ms` }}
                   >
@@ -3934,7 +3934,7 @@ export function BadgesScreen() {
                         {badge.progress}/{badge.achievementMax}
                       </div>
                     ) : (
-                      <div className="text-[9px] font-extrabold text-success mt-1 px-2 py-0.5 bg-green-50 rounded-full">
+                      <div className="text-[9px] font-extrabold text-success mt-1 px-2 py-0.5 bg-success-soft rounded-full">
                         ✓ Unlocked
                       </div>
                     )}
@@ -3959,7 +3959,7 @@ export function BadgesScreen() {
             {/* Close Button */}
             <button
               onClick={() => setSelectedBadge(null)}
-              className="absolute top-4 right-4 h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition"
+              className="absolute top-4 right-4 h-10 w-10 rounded-full bg-muted flex items-center justify-center text-muted hover:bg-muted transition"
             >
               ✕
             </button>
@@ -3969,7 +3969,7 @@ export function BadgesScreen() {
               <div className={`h-24 w-24 rounded-full flex items-center justify-center text-5xl ${
                 selectedBadge.unlocked
                   ? getTierConfig(selectedBadge.tier).gradient
-                  : "bg-gray-100"
+                  : "bg-muted"
               } shadow-lg`}>
                 {selectedBadge.icon}
               </div>
@@ -3983,8 +3983,8 @@ export function BadgesScreen() {
             </div>
 
             {/* Description */}
-            <div className="rounded-2xl bg-blue-50 border border-blue-200 p-4">
-              <p className="text-body text-blue-900 leading-relaxed">
+            <div className="rounded-2xl bg-info-soft border border-info p-4">
+              <p className="text-body text-info leading-relaxed">
                 {selectedBadge.description}
               </p>
             </div>
@@ -4022,7 +4022,7 @@ export function BadgesScreen() {
             <div className="flex gap-3 mt-2">
               <button
                 onClick={() => setSelectedBadge(null)}
-                className="flex-1 h-12 rounded-2xl bg-gray-100 text-display font-extrabold text-gray-800 active:scale-95 transition"
+                className="flex-1 h-12 rounded-2xl bg-muted text-display font-extrabold text-muted-dark active:scale-95 transition"
               >
                 Close
               </button>
@@ -4237,7 +4237,7 @@ export function ProfileScreen() {
                   disabled={saveStatus === "saving"}
                   className={`flex-1 h-10 rounded-lg text-display font-extrabold text-white text-sm transition ${
                     saveStatus === "saved"
-                      ? "bg-green-400"
+                      ? "bg-success"
                       : saveStatus === "saving"
                         ? "bg-white/50"
                         : "bg-white/80 hover:bg-white"
@@ -4324,7 +4324,7 @@ export function ProfileScreen() {
                     className={`aspect-square rounded-2xl flex items-center justify-center border-4 transition transform overflow-hidden ${
                       a.id === p.avatar
                         ? "border-saffron shadow-[var(--shadow-glow-orange)] scale-110"
-                        : "border-gray-200 hover:scale-105"
+                        : "border-muted hover:scale-105"
                     }`}
                     title={getAvatarName(a.id)}
                   >
@@ -4353,7 +4353,7 @@ export function ProfileScreen() {
                 revokeFeatureConsent('audio');
                 fxTap();
               }}
-              className="w-full flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 hover:border-red-300 hover:bg-red-50 transition"
+              className="w-full flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-success-soft to-success-soft border-2 border-success hover:border-error hover:bg-error-soft transition"
             >
               {/* Left: Icon & Labels */}
               <div className="flex items-start gap-3">
@@ -4367,7 +4367,7 @@ export function ProfileScreen() {
               </div>
 
               {/* Right: Revoke Button */}
-              <div className="text-xs font-bold text-red-600 bg-red-100 px-3 py-1.5 rounded-full flex-shrink-0 ml-4">
+              <div className="text-xs font-bold text-error bg-error-soft px-3 py-1.5 rounded-full flex-shrink-0 ml-4">
                 Revoke
               </div>
             </button>
@@ -4378,7 +4378,7 @@ export function ProfileScreen() {
                 fxTap();
                 setShowAudioPermission(true);
               }}
-              className="w-full flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 hover:border-green-300 hover:bg-green-50 transition"
+              className="w-full flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-info-soft to-info-soft border-2 border-info hover:border-success hover:bg-success-soft transition"
             >
               {/* Left: Icon & Labels */}
               <div className="flex items-start gap-3">
@@ -4392,7 +4392,7 @@ export function ProfileScreen() {
               </div>
 
               {/* Right: Enable Button */}
-              <div className="text-xs font-bold text-green-600 bg-green-100 px-3 py-1.5 rounded-full flex-shrink-0 ml-4">
+              <div className="text-xs font-bold text-success bg-success-soft px-3 py-1.5 rounded-full flex-shrink-0 ml-4">
                 Enable
               </div>
             </button>
@@ -4408,7 +4408,7 @@ export function ProfileScreen() {
                 revokeFeatureConsent('file');
                 fxTap();
               }}
-              className="w-full flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 hover:border-red-300 hover:bg-red-50 transition"
+              className="w-full flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-success-soft to-success-soft border-2 border-success hover:border-error hover:bg-error-soft transition"
             >
               {/* Left: Icon & Labels */}
               <div className="flex items-start gap-3">
@@ -4422,7 +4422,7 @@ export function ProfileScreen() {
               </div>
 
               {/* Right: Revoke Button */}
-              <div className="text-xs font-bold text-red-600 bg-red-100 px-3 py-1.5 rounded-full flex-shrink-0 ml-4">
+              <div className="text-xs font-bold text-error bg-error-soft px-3 py-1.5 rounded-full flex-shrink-0 ml-4">
                 Revoke
               </div>
             </button>
@@ -4430,7 +4430,7 @@ export function ProfileScreen() {
             // When permission is not granted, show grant button
             <button
               onClick={() => setShowFilePermissionDialog(true)}
-              className="w-full flex items-center justify-between p-4 rounded-2xl bg-white border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition"
+              className="w-full flex items-center justify-between p-4 rounded-2xl bg-white border border-muted hover:border-info hover:bg-info-soft transition"
             >
               {/* Left: Icon & Labels */}
               <div className="flex items-start gap-3">
@@ -4444,7 +4444,7 @@ export function ProfileScreen() {
               </div>
 
               {/* Right: Status Indicator */}
-              <div className={`inline-flex h-8 w-14 items-center rounded-full transition-all flex-shrink-0 ml-4 bg-gray-300`}>
+              <div className={`inline-flex h-8 w-14 items-center rounded-full transition-all flex-shrink-0 ml-4 bg-muted`}>
                 <div className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-md transition-transform translate-x-1`} />
               </div>
             </button>
@@ -4503,7 +4503,7 @@ export function ProfileScreen() {
                 </div>
 
                 {/* Next Reward */}
-                <div className="ml-15 text-[11px] font-bold text-amber-600">
+                <div className="ml-15 text-[11px] font-bold text-warning">
                   {daysUntilNext === 0 
                     ? "🎁 Claim your milestone reward!" 
                     : `🎁 ${daysUntilNext} day${daysUntilNext !== 1 ? 's' : ''} until ${nextMilestone}-day bonus!`}
@@ -4696,7 +4696,7 @@ function ProfileStat({ value, label }: { value: string; label: string }) {
     <div className="flex flex-col items-center py-1">
       <div className="text-display text-xl font-extrabold">{value}</div>
       {encouragement ? (
-        <div className="text-[9px] font-bold uppercase tracking-wider text-amber-600 leading-tight mt-0.5">
+        <div className="text-[9px] font-bold uppercase tracking-wider text-warning leading-tight mt-0.5">
           {encouragement}
         </div>
       ) : (
@@ -4735,7 +4735,7 @@ function ParentZonePlaceholder() {
   };
 
   return (
-    <div className="rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-300 p-3 transition">
+    <div className="rounded-2xl bg-gradient-to-br from-info-soft to-info-soft border-2 border-info p-3 transition">
       <button
         onClick={() => {
           fxTap();
@@ -4747,21 +4747,21 @@ function ParentZonePlaceholder() {
           👨‍👩‍👧
         </div>
         <div className="flex-1 text-left">
-          <div className="text-display font-extrabold text-[15px] leading-tight text-blue-900">
+          <div className="text-display font-extrabold text-[15px] leading-tight text-info">
             Parent Zone
           </div>
           <div className="text-[11px] font-bold text-blue-700">
             Tap to configure PIN & parental settings
           </div>
         </div>
-        <div className="text-blue-900 text-lg">{showSettings ? '▼' : '›'}</div>
+        <div className="text-info text-lg">{showSettings ? '▼' : '›'}</div>
       </button>
 
       {/* PIN Settings Panel */}
       {showSettings && (
-        <div className="mt-3 pt-3 border-t-2 border-blue-300 space-y-3 animate-fade-in">
+        <div className="mt-3 pt-3 border-t-2 border-info space-y-3 animate-fade-in">
           <div>
-            <label className="text-xs font-bold text-blue-900 block mb-1">
+            <label className="text-xs font-bold text-info block mb-1">
               Parental PIN (4 digits)
             </label>
             <input
@@ -4770,7 +4770,7 @@ function ParentZonePlaceholder() {
               value={newPIN}
               onChange={(e) => setNewPIN(e.target.value.replace(/\D/g, ""))}
               placeholder="Enter 4-digit PIN"
-              className="w-full h-10 rounded-lg border-2 border-blue-300 px-3 font-extrabold text-center text-lg tracking-widest text-blue-900"
+              className="w-full h-10 rounded-lg border-2 border-info px-3 font-extrabold text-center text-lg tracking-widest text-info"
             />
             <div className="text-[10px] text-blue-700 mt-1">
               💡 Used to reset progress. Default: 1234
@@ -4781,7 +4781,7 @@ function ParentZonePlaceholder() {
             disabled={newPIN.length !== 4 || pinSaveStatus === "saving"}
             className={`w-full h-10 rounded-lg font-bold text-sm transition text-white ${
               pinSaveStatus === "saved"
-                ? "bg-green-500"
+                ? "bg-success-soft0"
                 : "bg-blue-600 disabled:opacity-50 hover:bg-blue-700"
             }`}
           >
@@ -4794,7 +4794,7 @@ function ParentZonePlaceholder() {
               setNewPIN("");
               setPinSaveStatus("idle");
             }}
-            className="w-full h-10 rounded-lg font-bold text-sm bg-white text-blue-900 hover:bg-blue-50 border border-blue-300"
+            className="w-full h-10 rounded-lg font-bold text-sm bg-white text-info hover:bg-info-soft border border-info"
           >
             Close
           </button>
@@ -4984,3 +4984,5 @@ export function EmptyStateScreen() {
     </div>
   );
 }
+
+

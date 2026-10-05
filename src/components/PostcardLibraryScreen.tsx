@@ -139,9 +139,9 @@ export function PostcardLibraryScreen() {
   };
 
   return (
-    <div className="h-full w-full bg-gradient-to-b from-blue-50 to-white overflow-auto flex flex-col">
+    <div className="h-full w-full bg-gradient-to-b from-info-soft to-white overflow-auto flex flex-col">
       {/* Header */}
-      <div className="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-gray-200 p-[--padding-md]">
+      <div className="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-muted p-[--padding-md]">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-[--space-2]">
             <div>
@@ -161,7 +161,7 @@ export function PostcardLibraryScreen() {
             </div>
             <div className="bg-red-100 rounded-lg p-[--padding-base] text-center">
               <div className="text-2xl font-bold text-red-700">{stats.byConsent.declined}</div>
-              <div className="text-xs font-semibold text-red-600">Declined ❌</div>
+              <div className="text-xs font-semibold text-error">Declined ❌</div>
             </div>
             <div className="bg-amber-100 rounded-lg p-[--padding-base] text-center">
               <div className="text-2xl font-bold text-amber-700">{stats.byConsent.pending}</div>
@@ -179,19 +179,19 @@ export function PostcardLibraryScreen() {
             placeholder="Search by state, date, or tags..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-[--padding-md] py-[--padding-xs] rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-[--padding-md] py-[--padding-xs] rounded-lg border border-muted text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
       </div>
 
       {/* Filters & Controls */}
-      <div className="sticky top-24 z-30 bg-white/80 backdrop-blur border-b border-gray-200 p-[--padding-md] max-w-6xl mx-auto w-full">
+      <div className="sticky top-24 z-30 bg-white/80 backdrop-blur border-b border-muted p-[--padding-md] max-w-6xl mx-auto w-full">
         <div className="flex flex-wrap gap-[--gap-base] mb-[--space-0-5]">
           {/* Filter by State */}
           <select
             value={filterState}
             onChange={(e) => setFilterState(e.target.value)}
-            className="px-[--padding-base] py-[--padding-xs] rounded-lg border border-gray-300 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-[--padding-base] py-[--padding-xs] rounded-lg border border-muted text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">All States</option>
             {Array.from(new Set(stats.total > 0 ? library.postcards.map((p) => p.state) : [])).map((
@@ -207,7 +207,7 @@ export function PostcardLibraryScreen() {
           <select
             value={filterConsent}
             onChange={(e) => setFilterConsent(e.target.value as ConsentState | "")}
-            className="px-[--padding-base] py-[--padding-xs] rounded-lg border border-gray-300 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-[--padding-base] py-[--padding-xs] rounded-lg border border-muted text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">All Consent States</option>
             <option value="accepted">✅ Accepted</option>
@@ -227,7 +227,7 @@ export function PostcardLibraryScreen() {
                   | "state-desc"
               )
             }
-            className="px-[--padding-base] py-[--padding-xs] rounded-lg border border-gray-300 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-[--padding-base] py-[--padding-xs] rounded-lg border border-muted text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="date-newest">Newest First</option>
             <option value="date-oldest">Oldest First</option>
@@ -239,7 +239,7 @@ export function PostcardLibraryScreen() {
           {(filterState || filterConsent || searchTerm) && (
             <button
               onClick={handleClearFilters}
-              className="px-[--padding-base] py-[--padding-xs] rounded-lg bg-gray-200 text-gray-700 text-sm font-semibold hover:bg-gray-300 transition"
+              className="px-[--padding-base] py-[--padding-xs] rounded-lg bg-muted text-muted text-sm font-semibold hover:bg-muted transition"
             >
               Clear Filters
             </button>
@@ -258,7 +258,7 @@ export function PostcardLibraryScreen() {
                   ? "Deselect All"
                   : "Select All"}
               </button>
-              <span className="text-sm font-semibold text-gray-600">
+              <span className="text-sm font-semibold text-muted">
                 {selectedPostcards.size} selected
               </span>
               <button
@@ -273,28 +273,28 @@ export function PostcardLibraryScreen() {
 
         {/* Bulk Actions Menu */}
         {showBulkActions && selectedPostcards.size > 0 && (
-          <div className="mt-[--space-0-5] flex flex-wrap gap-[--gap-base] p-[--padding-base] bg-purple-50 rounded-lg border border-purple-200">
+          <div className="mt-[--space-0-5] flex flex-wrap gap-[--gap-base] p-[--padding-base] bg-purple-soft rounded-lg border border-purple">
             <button
               onClick={() => handleBulkConsent("accepted")}
-              className="px-[--padding-base] py-[--padding-xs] rounded-lg bg-green-500 text-white text-sm font-semibold hover:bg-green-600 transition"
+              className="px-[--padding-base] py-[--padding-xs] rounded-lg bg-success-soft0 text-white text-sm font-semibold hover:bg-green-600 transition"
             >
               ✅ Accept Consent
             </button>
             <button
               onClick={() => handleBulkConsent("declined")}
-              className="px-[--padding-base] py-[--padding-xs] rounded-lg bg-red-500 text-white text-sm font-semibold hover:bg-red-600 transition"
+              className="px-[--padding-base] py-[--padding-xs] rounded-lg bg-error-soft0 text-white text-sm font-semibold hover:bg-red-600 transition"
             >
               ❌ Decline Consent
             </button>
             <button
               onClick={() => handleBulkConsent("pending")}
-              className="px-[--padding-base] py-[--padding-xs] rounded-lg bg-amber-500 text-white text-sm font-semibold hover:bg-amber-600 transition"
+              className="px-[--padding-base] py-[--padding-xs] rounded-lg bg-warning-soft0 text-white text-sm font-semibold hover:bg-amber-600 transition"
             >
               ⏳ Mark Pending
             </button>
             <button
               onClick={handleExportAll}
-              className="px-3 py-2 rounded-lg bg-blue-500 text-white text-sm font-semibold hover:bg-blue-600 transition"
+              className="px-3 py-2 rounded-lg bg-info-soft0 text-white text-sm font-semibold hover:bg-blue-600 transition"
             >
               📥 Export All
             </button>
@@ -358,3 +358,4 @@ export function PostcardLibraryScreen() {
     </div>
   );
 }
+

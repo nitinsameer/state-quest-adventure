@@ -67,7 +67,7 @@ export function LanguageToggle({
     return (
       <button
         onClick={handleToggle}
-        className="h-10 w-10 rounded-full bg-white shadow-soft flex items-center justify-center text-lg transition-all active:scale-95 hover:shadow-md border border-blue-200"
+        className="h-10 w-10 rounded-full bg-white shadow-soft flex items-center justify-center text-lg transition-all active:scale-95 hover:shadow-md border border-info"
         title={`Switch to ${otherDisplayName}`}
       >
         {currentLanguage === "en" ? "📖" : "🌐"}
@@ -81,7 +81,7 @@ export function LanguageToggle({
     <div className="mt-[--space-0-25] flex items-center justify-center">
       <button
         onClick={handleToggle}
-        className="px-[--padding-lg] py-[--padding-base] rounded-full text-sm font-bold transition-all bg-blue-500 text-white shadow-md hover:shadow-lg active:scale-95"
+        className="px-[--padding-lg] py-[--padding-base] rounded-full text-sm font-bold transition-all bg-info-soft0 text-white shadow-md hover:shadow-lg active:scale-95"
         title={`Switch to ${otherDisplayName}`}
       >
         📖 {currentDisplayName}
@@ -89,3 +89,4 @@ export function LanguageToggle({
     </div>
   );
 }
+

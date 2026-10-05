@@ -347,7 +347,7 @@ export function PostcardPreviewModal({
         content={[
           {
             type: "custom",
-            className: "relative bg-gray-100 aspect-[3/4] overflow-hidden rounded-xl -mx-6 -mt-6 mb-[--space-2]",
+            className: "relative bg-muted aspect-[3/4] overflow-hidden rounded-xl -mx-6 -mt-6 mb-[--space-2]",
             children: (
               <div className="relative w-full h-full">
                 {previewUrl ? (
@@ -360,7 +360,7 @@ export function PostcardPreviewModal({
                   <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-100">
                     <div className="text-center">
                       <div className="text-5xl mb-2">✨</div>
-                      <div className="text-sm font-semibold text-gray-600">Creating your postcard...</div>
+                      <div className="text-sm font-semibold text-muted">Creating your postcard...</div>
                     </div>
                   </div>
                 )}
@@ -398,3 +398,4 @@ export function PostcardPreviewModal({
     </>
   );
 }
+
