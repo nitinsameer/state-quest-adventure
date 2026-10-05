@@ -108,3 +108,18 @@ yarn.lock
 *.swo
 *~
 .#*
+# Test Results & Artifacts
+test-results/
+.last-run.json
+playwright-report/
+
+# Screenshots
+*.png
+home-screen.png
+
+# Build Outputs
+dist/
+build/
+
+# Lovable Config
+.lovable/

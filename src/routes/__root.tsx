@@ -391,10 +391,10 @@ function HydratedApp() {
     <QueryClientProvider client={queryClient}>
       <div className="h-full w-full flex flex-col bg-[#F7F5F0] relative" suppressHydrationWarning>
         {/* Scrollable content area - conditional padding: pb-safe for pre-auth, pb-[80px] for authenticated */}
-        <div className={`flex-1 overflow-auto pt-safe px-safe ${scrollContainerPadding}`} suppressHydrationWarning>
+        <main className={`flex-1 overflow-auto pt-safe px-safe ${scrollContainerPadding}`} suppressHydrationWarning>
           {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
           <Outlet />
-        </div>
+        </main>
       </div>
       
       {/* Global BottomNav - positioned fixed OUTSIDE flex container to prevent flex layout interference */}

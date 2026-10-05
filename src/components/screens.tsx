@@ -217,7 +217,7 @@ export function BottomNav({
     { id: "profile", icon: "👤", label: "Me", to: "/me" },
   ] as const;
   return (
-    <div className="fixed bottom-0 inset-x-0 z-20">
+    <div className="fixed bottom-0 inset-x-0 z-20" data-testid="bottom-nav" role="navigation">
       <div className="mx-3 mb-3 rounded-3xl bg-white shadow-[0_8px_24px_-6px_rgba(15,23,42,0.18)] border border-black/5 px-2 py-2 flex items-center justify-between">
         {items.map((i) => {
           const on = i.id === active;
@@ -227,6 +227,7 @@ export function BottomNav({
               to={i.to}
               onClick={() => fxTap()}
               aria-label={i.label}
+              data-testid={`nav-${i.id}`}
               className={`flex-1 flex flex-col items-center gap-0.5 py-1.5 rounded-2xl transition active:scale-95 ${
                 on ? "bg-saffron-soft" : ""
               }`}
@@ -626,14 +627,14 @@ export function HomeDashboardScreen() {
   };
 
   return (
-    <div className="h-full w-full bg-[#F7F5F0] flex flex-col overflow-hidden">
+    <div className="h-full w-full bg-[#F7F5F0] flex flex-col overflow-hidden" data-testid="home-screen">
 
       {/* Header with fade-in animation - Premium spacing */}
       <div className={`px-6 pt-4 pb-4 gradient-saffron rounded-b-[32px] relative overflow-hidden transition-opacity duration-500 ${statsVisible ? "opacity-100" : "opacity-0"}`}>
         <Cloud className="absolute top-2 right-4 w-14 opacity-40" />
         <div className="flex items-center gap-4 relative mb-3">
           {/* Avatar - Larger and more prominent */}
-          <div className="h-20 w-20 rounded-2xl bg-white p-1.5 shadow-soft flex items-center justify-center overflow-hidden flex-shrink-0">
+          <div className="h-20 w-20 rounded-2xl bg-white p-1.5 shadow-soft flex items-center justify-center overflow-hidden flex-shrink-0" data-testid="profile-avatar">
             <img src={getAvatarImage(p.avatar)} alt={getAvatarName(p.avatar)} className="w-full h-full object-cover" />
           </div>
           
