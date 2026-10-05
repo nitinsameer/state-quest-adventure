@@ -36,9 +36,7 @@ import { PostcardPreviewModal } from "@/components/PostcardPreviewModal";
 import { CardProgressBar } from "@/components/CardProgressBar";
 
 import { DailyGoalCard } from "@/components/DailyGoalCard";
-import { lazy, Suspense } from "react";
-
-const IndiaProgressMap = lazy(() => import("@/components/IndiaProgressMap").then(m => ({ default: m.IndiaProgressMap })));
+import { IndiaProgressMap } from "@/components/IndiaProgressMap";
 import { useToastStore } from "@/store/toastStore";
 import { AVATAR_CONFIG, type AvatarId } from "@/lib/avatar-config";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
@@ -653,16 +651,7 @@ export function HomeDashboardScreen() {
 
         {/* Animated India Map - Moved to main content area */}
         <div className={`mt-3 transition-all duration-700 ${statsVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}>
-          <Suspense fallback={
-            <div className="w-full bg-white rounded-2xl shadow-soft p-4 animate-pulse">
-              <div className="h-8 bg-gray-200 rounded w-1/3 mb-3" />
-              <div className="space-y-2">
-                {[1,2,3].map(i => <div key={i} className="h-4 bg-gray-200 rounded" />)}
-              </div>
-            </div>
-          }>
-            <IndiaProgressMap />
-          </Suspense>
+          <IndiaProgressMap />
         </div>
       </div>
 

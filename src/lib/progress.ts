@@ -242,6 +242,18 @@ function set(update: (p: Progress) => Progress) {
 }
 
 function subscribe(listener: () => void) {
+  // CRITICAL FIX: Prevent adding listeners during initial hydration phase
+  // This prevents the infinite update loop (React #310) where:
+  // 1. useProgress() called during render → adds listener
+  // 2. hydrate() calls emit() → fires listener
+  // 3. Listener fire → triggers re-render
+  // 4. Re-render calls useProgress() again → adds another listener
+  // 5. More listeners = more renders when emit() is called again
+  // Solution: Don't subscribe during hydration, return noop cleanup
+  if (isHydrating) {
+    return () => {}; // Noop cleanup function during hydration
+  }
+  
   // CRITICAL FIX: Do NOT call hydrate() synchronously in subscribe
   // This blocks the main thread during React's render phase
   // Hydration is triggered asynchronously via useEffect in __root.tsx
