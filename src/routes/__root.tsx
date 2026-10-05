@@ -237,45 +237,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   errorComponent: ErrorComponent,
 });
 
-function RootComponent() {
+// RULES OF HOOKS FIX: Separate HydratedApp component
+// This ensures useProgress() is called consistently (always called, never conditionally)
+// All progress-dependent logic and hooks are in this component, not in RootComponent
+function HydratedApp() {
   const { queryClient } = Route.useRouteContext();
   const location = useLocation();
+
+  // RULES OF HOOKS: useProgress() is ALWAYS called here, never conditionally
+  // This ensures hook count/order is consistent across renders
   const progress = useProgress();
-  const [isReady, setIsReady] = useState(false);
-
-  // CRITICAL FIX #1.1: Initialize hydration asynchronously, not during render
-  // This prevents localStorage access from blocking the main thread
-  // Also catches hydration errors gracefully
-  useEffect(() => {
-    initializeHydration()
-      .then(() => {
-        setIsReady(true);
-      })
-      .catch((error) => {
-        // Hydration failed - log it and continue with defaults
-        const { logError } = require("@/lib/error-tracking");
-        logError(error, {
-          boundary: 'hydration',
-          severity: 'critical',
-          screen: 'root_component',
-        });
-        
-        // Set ready anyway - use default progress
-        setIsReady(true);
-      });
-  }, []);
-
-  // Show loading screen until hydration completes
-  if (!isReady) {
-    return (
-      <div className="h-screen w-full flex items-center justify-center bg-gradient-to-br from-orange-400 to-red-500">
-        <div className="text-center">
-          <div className="text-6xl mb-4 animate-bounce">🗺️</div>
-          <div className="text-white font-bold text-lg">Loading your adventure...</div>
-        </div>
-      </div>
-    );
-  }
 
   // Pre-auth routes that should NOT show BottomNav
   const preAuthRoutes = ['/', '/welcome', '/create'];
@@ -349,7 +320,7 @@ function RootComponent() {
 
   useAndroidBackButton(handleAndroidBack);
   
-  appLogger.info('root_component', 'RootComponent rendering', { pathname: location.pathname });
+  appLogger.info('root_component', 'HydratedApp rendering', { pathname: location.pathname });
 
   const shouldShowBottomNav = !preAuthRoutes.includes(location.pathname);
 
@@ -446,4 +417,50 @@ function RootComponent() {
       {innerComponent}
     </RootErrorBoundary>
   );
+}
+
+function RootComponent() {
+  const [isReady, setIsReady] = useState(false);
+
+  // CRITICAL FIX #1.1: Initialize hydration asynchronously, not during render
+  // This prevents localStorage access from blocking the main thread
+  // Also catches hydration errors gracefully
+  useEffect(() => {
+    initializeHydration()
+      .then(() => {
+        setIsReady(true);
+      })
+      .catch((error) => {
+        // Hydration failed - log it and continue with defaults
+        const { logError } = require("@/lib/error-tracking");
+        logError(error, {
+          boundary: 'hydration',
+          severity: 'critical',
+          screen: 'root_component',
+        });
+        
+        // Set ready anyway - use default progress
+        setIsReady(true);
+      });
+  }, []);
+
+  // Show loading screen until hydration completes
+  // CRITICAL: Split component to respect Rules of Hooks
+  // useProgress() must be called same number/order every render
+  // useProgress() is NOT called in RootComponent (always same hook count)
+  // useProgress() IS called in HydratedApp (separate component, always called)
+  if (!isReady) {
+    return (
+      <div className="h-screen w-full flex items-center justify-center bg-gradient-to-br from-orange-400 to-red-500">
+        <div className="text-center">
+          <div className="text-6xl mb-4 animate-bounce">🗺️</div>
+          <div className="text-white font-bold text-lg">Loading your adventure...</div>
+        </div>
+      </div>
+    );
+  }
+
+  // RULES OF HOOKS: Render HydratedApp in separate component
+  // This ensures useProgress() is called consistently in HydratedApp
+  return <HydratedApp />;
 }
