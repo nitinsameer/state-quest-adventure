@@ -696,6 +696,127 @@
   animation: slide-down 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/* === PHASE 2: DOPAMINE ANIMATION SYSTEM === */
+/* High-engagement animations for kids app */
+
+/* POP-IN: Used for badge unlocks, rewards, celebrations */
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) rotate(-10deg);
+  }
+  50% {
+    transform: scale(1.1) rotate(5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+/* SLIDE-UP: Used for content sections, modals */
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* WIGGLE: Used for incorrect quiz answers (gentle, not harsh) */
+@keyframes wiggle {
+  0%, 100% { transform: translateX(-2px) rotate(-1deg); }
+  25% { transform: translateX(2px) rotate(1deg); }
+  50% { transform: translateX(-2px) rotate(-1deg); }
+  75% { transform: translateX(2px) rotate(1deg); }
+}
+
+/* JIGGLE: Used for try-again feedback (encouraging) */
+@keyframes jiggle {
+  0%, 100% { transform: rotate(-1deg) scale(1); }
+  25% { transform: rotate(1deg) scale(1.02); }
+  50% { transform: rotate(-1deg) scale(1); }
+  75% { transform: rotate(1deg) scale(1.02); }
+}
+
+/* FLOAT-UP: Used for XP popups, rewards floating away */
+@keyframes float-up {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(-15deg);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-60px) scale(1.2) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-120px) scale(0.5) rotate(15deg);
+  }
+}
+
+/* BOUNCE-SCALE: Used for celebration items (stars, emojis) */
+@keyframes bounce-scale {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+/* FADE-IN: Smooth entrance */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* SUCCESS-PULSE: Quick pulse on success */
+@keyframes success-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Utility classes for animations */
+.animate-pop-in {
+  animation: pop-in 600ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-slide-up {
+  animation: slide-up 400ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-wiggle {
+  animation: wiggle 300ms ease-in-out;
+}
+
+.animate-jiggle {
+  animation: jiggle 400ms ease-in-out;
+}
+
+.animate-float-up {
+  animation: float-up 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  pointer-events: none;
+}
+
+.animate-bounce-scale {
+  animation: bounce-scale 600ms cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
+
+.animate-fade-in {
+  animation: fade-in 300ms ease-out forwards;
+}
+
+.animate-success-pulse {
+  animation: success-pulse 500ms ease-in-out;
+}
+
+/* Stagger delays for sequential animations */
+.animate-delay-100 { animation-delay: 100ms; }
+.animate-delay-200 { animation-delay: 200ms; }
+.animate-delay-300 { animation-delay: 300ms; }
+.animate-delay-400 { animation-delay: 400ms; }
+.animate-delay-500 { animation-delay: 500ms; }
+
 @media (prefers-reduced-motion: reduce) {
   .mascot-cheer,
   .confetti-fall,
@@ -703,7 +824,14 @@
   .animate-slide-up,
   .animate-bounce-gentle,
   .animate-shimmer-path,
-  .animate-slide-down {
+  .animate-slide-down,
+  .animate-pop-in,
+  .animate-wiggle,
+  .animate-jiggle,
+  .animate-float-up,
+  .animate-bounce-scale,
+  .animate-fade-in,
+  .animate-success-pulse {
     animation: none;
   }
 }
