@@ -431,10 +431,10 @@ export function CreateProfileScreen() {
                 setAvatar(a.id);
                 setSaved(false);
               }}
-              className={`aspect-square rounded-2xl flex items-center justify-center border-4 transition transform overflow-hidden ${
+              className={`aspect-square rounded-2xl flex items-center justify-center border-4 transition-all duration-300 transform overflow-hidden ${
                 a.id === avatar
-                  ? "border-saffron shadow-[var(--shadow-glow-orange)] scale-110"
-                  : "border-muted hover:scale-105"
+                  ? "border-gold shadow-glow-warm scale-110"
+                  : "border-muted/50 hover:border-muted hover:scale-105 hover:shadow-elevated-1"
               }`}
             >
               <img
@@ -474,16 +474,16 @@ export function CreateProfileScreen() {
                   key={band.value}
                   type="button"
                   onClick={() => handleAgeSelect(band.value, idx)}
-                  className={`w-full h-16 rounded-2xl flex items-center justify-between px-5 font-extrabold transition transform ${
+                  className={`w-full h-16 rounded-2xl flex items-center justify-between px-5 font-extrabold transition-all duration-300 transform ${
                     isSelected
-                      ? `bg-gradient-to-r ${band.gradient} text-white shadow-xl scale-105 border-4 border-white animate-pulse`
-                      : "bg-white border-2 border-muted text-muted-dark hover:border-muted hover:scale-102"
+                      ? `bg-gradient-to-r ${band.gradient} text-white shadow-glow-warm scale-105 border-4 border-white`
+                      : "bg-white border-2 border-muted/50 text-muted-dark hover:border-muted hover:scale-102 hover:shadow-elevated-1"
                   }`}
                 >
                   <span className="text-4xl">{band.emoji}</span>
                   <div className="flex-1 text-center">
                     <div className="text-body-lg">{band.value}</div>
-                    <div className={`text-caption ${isSelected ? "text-white/90" : "text-muted-light"}`}>
+                    <div className={`text-caption transition-colors ${isSelected ? "text-white/90 font-semibold" : "text-muted-light"}`}>
                       {band.label}
                     </div>
                   </div>
@@ -505,8 +505,8 @@ export function CreateProfileScreen() {
       <div className="p-[--padding-lg] pb-safe bg-white border-t border-muted-light">
         <button
           onClick={handleProfileSave}
-          className={`w-full h-14 rounded-2xl bg-gradient-to-r from-green-400 to-success-soft0 text-white text-h4 text-display shadow-xl transition transform ${
-            saved ? "scale-95 opacity-80" : "hover:shadow-2xl active:scale-95"
+          className={`w-full h-14 rounded-2xl bg-gradient-to-r from-green-500 to-green-400 text-white text-h4 text-display shadow-glow-success transition-all duration-300 transform font-bold ${
+            saved ? "scale-95 opacity-80" : "hover:shadow-elevated-hover hover:scale-105 active:scale-95"
           }`}
         >
           {saved ? "🎉 Saved ✓" : "Continue → Let's Explore!"}
@@ -630,7 +630,7 @@ export function HomeDashboardScreen() {
     <div className="h-full w-full bg-[#F7F5F0] flex flex-col overflow-hidden" data-testid="home-screen">
 
       {/* Header with fade-in animation - Premium spacing */}
-      <div className={`px-6 pt-4 pb-4 gradient-saffron rounded-b-[32px] relative overflow-hidden transition-opacity duration-500 ${statsVisible ? "opacity-100" : "opacity-0"}`}>
+      <div className={`px-6 pt-4 pb-5 bg-gradient-to-br from-orange-500 via-orange-450 to-orange-600 rounded-b-[32px] relative overflow-hidden transition-opacity duration-500 ${statsVisible ? "opacity-100" : "opacity-0"}`}>
         <Cloud className="absolute top-2 right-4 w-14 opacity-40" />
         <div className="flex items-center gap-4 relative mb-3">
           {/* Avatar - Larger and more prominent */}
@@ -686,7 +686,7 @@ export function HomeDashboardScreen() {
         const xpEarned = 250; // State completion bonus
 
         return (
-          <div className="px-5 mt-3 animate-fade-in">
+          <div className="px-5 mt-5 animate-fade-in">
             <div className="rounded-3xl bg-gradient-to-br from-yellow-300 via-orange-400 to-red-500 text-white p-5 shadow-2xl border-2 border-yellow-200 relative overflow-hidden">
               {/* Decorative confetti-like elements */}
               <div className="absolute top-2 left-4 text-3xl animate-bounce">🎉</div>
@@ -758,7 +758,7 @@ export function HomeDashboardScreen() {
         if (stamps.length === 0) return null;
 
         return (
-          <div className="px-5 mt-3 animate-fade-in">
+          <div className="px-5 mt-5 animate-fade-in">
             <div className="rounded-2xl bg-gradient-to-br from-green-500 via-green-400 to-emerald-300 text-white p-4 shadow-elevated-2 transition-all hover:shadow-elevated-3">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
@@ -824,7 +824,7 @@ export function HomeDashboardScreen() {
         if (!streakStatus.isAtRisk || dismissStreakWarning) return null;
         
         return (
-          <div className="px-5 mt-3 animate-fade-in">
+          <div className="px-5 mt-5 animate-fade-in">
             <div className="rounded-2xl bg-gradient-to-r from-orange-400 to-red-500 text-white p-4 shadow-elevated-2 transition-all hover:shadow-elevated-3 border border-orange-200/30">
               <div className="flex items-start gap-3">
                 <div className="text-2xl flex-shrink-0">🚨</div>
@@ -848,8 +848,8 @@ export function HomeDashboardScreen() {
 
 
       {/* Continue journey - with pulse on play button */}
-      <div className="px-5 mt-3 mb-3 flex-shrink-0">
-        <h2 className="text-display font-bold text-sm text-muted-foreground">
+      <div className="px-5 mt-5 mb-4 flex-shrink-0">
+        <h2 className="text-display font-bold text-sm text-muted-foreground mb-2">
           Continue your journey
         </h2>
         <div className="mt-2 rounded-3xl bg-white p-4 shadow-elevated-2 border border-black/5 flex items-center gap-3">
@@ -895,8 +895,8 @@ export function HomeDashboardScreen() {
 
 
       {/* Up next - with interactive locked cards */}
-      <div className="px-5 mt-4 mb-4 flex-shrink-0">
-        <div className="flex items-center justify-between">
+      <div className="px-5 mt-5 mb-6 flex-shrink-0">
+        <div className="flex items-center justify-between mb-2">
           <h2 className="text-display font-bold text-sm text-muted-foreground">
             Up next
           </h2>
@@ -984,42 +984,42 @@ export function HomeDashboardScreen() {
 
                   {/* State facts */}
                   <div className="space-y-3">
-                    <div className="p-3 rounded-2xl bg-orange-soft border-l-4 border-orange">
-                      <div className="text-label text-orange-900 uppercase tracking-wider">Monument</div>
-                      <div className="text-body text-orange-800 mt-1">{state.monumentName}</div>
+                    <div className="p-4 rounded-2xl bg-orange-soft border-l-4 border-orange shadow-elevated-1 hover:shadow-elevated-2 transition-all">
+                      <div className="text-label text-orange-900 uppercase tracking-wider font-bold">🏛️ Monument</div>
+                      <div className="text-body text-orange-800 mt-2 font-semibold">{state.monumentName}</div>
                     </div>
 
-                    <div className="p-3 rounded-2xl bg-success-soft border-l-4 border-success">
-                      <div className="text-label text-success uppercase tracking-wider">Wildlife</div>
-                      <div className="text-body text-success mt-1">{state.animalName}</div>
+                    <div className="p-4 rounded-2xl bg-success-soft border-l-4 border-success shadow-elevated-1 hover:shadow-elevated-2 transition-all">
+                      <div className="text-label text-success uppercase tracking-wider font-bold">🦁 Wildlife</div>
+                      <div className="text-body text-success mt-2 font-semibold">{state.animalName}</div>
                     </div>
 
-                    <div className="p-3 rounded-2xl bg-info-soft border-l-4 border-info">
-                      <div className="text-label text-info uppercase tracking-wider">Fun Fact</div>
-                      <div className="text-body text-blue-800 mt-1">{state.funFact}</div>
+                    <div className="p-4 rounded-2xl bg-info-soft border-l-4 border-info shadow-elevated-1 hover:shadow-elevated-2 transition-all">
+                      <div className="text-label text-info uppercase tracking-wider font-bold">💡 Fun Fact</div>
+                      <div className="text-body text-blue-800 mt-2 font-semibold">{state.funFact}</div>
                     </div>
 
-                    <div className="p-3 rounded-2xl bg-purple-soft border-l-4 border-purple">
-                      <div className="text-label text-purple-900 uppercase tracking-wider">Unlock Path</div>
-                      <div className="text-body text-purple-800 mt-1">{getUnlockRequirement(state.name)}</div>
+                    <div className="p-4 rounded-2xl bg-purple-soft border-l-4 border-purple shadow-elevated-1 hover:shadow-elevated-2 transition-all">
+                      <div className="text-label text-purple-900 uppercase tracking-wider font-bold">🔓 Unlock Path</div>
+                      <div className="text-body text-purple-800 mt-2 font-semibold">{getUnlockRequirement(state.name)}</div>
                     </div>
                   </div>
 
                   {/* Action buttons */}
-                  <div className="mt-4 space-y-2">
-                    <button
-                      onClick={() => setShowLockedPreview(null)}
-                      className="w-full h-12 rounded-2xl bg-muted text-muted-dark font-extrabold"
-                    >
-                      Close
-                    </button>
+                  <div className="mt-5 space-y-2">
                     <Link
                       to="/journey"
-                      className="w-full h-12 rounded-2xl gradient-saffron text-white font-extrabold flex items-center justify-center"
+                      className="w-full h-12 rounded-2xl gradient-saffron text-white font-extrabold flex items-center justify-center shadow-glow-warm hover:shadow-elevated-hover hover:scale-105 transition-all active:scale-95"
                       onClick={() => fxTap()}
                     >
                       View Journey Map
                     </Link>
+                    <button
+                      onClick={() => setShowLockedPreview(null)}
+                      className="w-full h-11 rounded-2xl bg-muted text-muted-dark font-bold shadow-elevated-1 hover:shadow-elevated-2 transition-all active:scale-95"
+                    >
+                      Close
+                    </button>
                   </div>
                 </div>
               );
@@ -3322,7 +3322,7 @@ export function StateCompletedScreen({
   }, [state.name, persist, celebrationDone, quizMetrics, progress, celebration]);
 
   return (
-    <div className="h-full w-full gradient-gold relative overflow-hidden flex flex-col items-center">
+    <div className="h-full w-full bg-gradient-to-b from-yellow-300 via-yellow-200 to-orange-200 relative overflow-hidden flex flex-col items-center">
       <ConfettiBurst trigger={burstKey} size="big" />
       {Array.from({ length: 12 }).map((_, i) => (
         <div
@@ -3344,7 +3344,7 @@ export function StateCompletedScreen({
         <div className="text-white/90 text-xs font-black uppercase tracking-[0.3em]">
           State Complete
         </div>
-        <h1 className="text-h1 text-white mt-1 drop-shadow leading-relaxed">
+        <h1 className="text-h1 text-white mt-2 drop-shadow leading-relaxed">
           {state.name} Cleared!
         </h1>
       </div>
@@ -3377,15 +3377,15 @@ export function StateCompletedScreen({
         />
       </div>
 
-      <div className="mt-6 w-full px-6">
+      <div className="mt-8 w-full px-6">
         {/* Combined Achievement Card - Less visual clutter */}
-        <div className="rounded-3xl bg-white/30 backdrop-blur-xl p-5 text-white text-center border border-white/40 shadow-lg">
-          <div className="text-[11px] font-black uppercase tracking-[0.2em] opacity-90 mb-3">
+        <div className="rounded-3xl bg-white/30 backdrop-blur-xl p-6 text-white text-center border border-white/40 shadow-elevated-2">
+          <div className="text-[11px] font-black uppercase tracking-[0.2em] opacity-90 mb-4">
             Achievements
           </div>
           
           {/* Badges in compact row */}
-          <div className="flex justify-center gap-2 mb-4">
+          <div className="flex justify-center gap-3 mb-5">
             {[
               { icon: state.monument, name: "Monument" },
               { icon: state.animal, name: "Animal" },
@@ -3393,7 +3393,7 @@ export function StateCompletedScreen({
             ].map((b) => (
               <div
                 key={b.name}
-                className="h-12 w-12 rounded-full bg-white/25 flex items-center justify-center text-lg animate-fade-in border border-white/30"
+                className="h-14 w-14 rounded-full bg-white/25 flex items-center justify-center text-xl animate-fade-in border border-white/30 shadow-elevated-1"
                 title={b.name}
               >
                 {b.icon}
@@ -3402,16 +3402,16 @@ export function StateCompletedScreen({
           </div>
 
           {/* XP + Stamp in single row */}
-          <div className="grid grid-cols-2 gap-2">
-            <div className="bg-white/15 rounded-xl p-2">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-white/15 rounded-2xl p-3 border border-white/20">
               <div className="text-lg">⭐</div>
-              <div className="text-display text-h5 leading-tight">+250 XP</div>
-              <div className="text-[9px] opacity-75 mt-1">State Complete</div>
+              <div className="text-display text-h5 leading-tight mt-1">+250 XP</div>
+              <div className="text-[9px] opacity-75 mt-2">State Complete</div>
             </div>
-            <div className="bg-white/15 rounded-xl p-2">
+            <div className="bg-white/15 rounded-2xl p-3 border border-white/20">
               <div className="text-lg">📜</div>
-              <div className="text-display text-h5 leading-tight">Stamp</div>
-              <div className="text-[9px] opacity-75 mt-1">Added</div>
+              <div className="text-display text-h5 leading-tight mt-1">Stamp</div>
+              <div className="text-[9px] opacity-75 mt-2">Added</div>
             </div>
           </div>
         </div>
