@@ -759,7 +759,7 @@ export function HomeDashboardScreen() {
 
         return (
           <div className="px-5 mt-3 animate-fade-in">
-            <div className="rounded-2xl bg-gradient-to-r from-green-400 to-success-soft0 text-white p-3 shadow-lg">
+            <div className="rounded-2xl bg-gradient-to-br from-green-500 via-green-400 to-emerald-300 text-white p-4 shadow-elevated-2 transition-all hover:shadow-elevated-3">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <span className="text-2xl">🎫</span>
@@ -771,14 +771,14 @@ export function HomeDashboardScreen() {
                 <Link 
                   to="/explorer/postcard-library" 
                   onClick={() => fxTap()}
-                  className="text-label opacity-90 hover:opacity-100 underline"
+                  className="text-label opacity-90 hover:opacity-100 underline transition-all duration-200"
                 >
                   View all →
                 </Link>
               </div>
 
               {/* Progress bar */}
-              <div className="mb-2 h-1.5 bg-white/30 rounded-full overflow-hidden">
+              <div className="mb-3 h-2 bg-white/30 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-white transition-all duration-500"
                   style={{ width: `${collectedPercent}%` }}
@@ -786,13 +786,13 @@ export function HomeDashboardScreen() {
               </div>
 
               {/* Stamp grid - show first 12 stamps */}
-              <div className="grid grid-cols-6 gap-1">
+              <div className="grid grid-cols-6 gap-2">
                 {stamps.slice(0, 12).map((postcard, idx) => {
                   const state = INDIA_STATES.find(s => s.name === postcard.stateName);
                   return (
                     <div
                       key={`${postcard.stateName}-${idx}`}
-                      className="aspect-square rounded-lg bg-white/20 border border-white/40 flex items-center justify-center text-xl hover:bg-white/30 transition-colors"
+                      className="aspect-square rounded-lg bg-white/25 border border-white/50 flex items-center justify-center text-xl hover:bg-white/40 hover:shadow-elevated-1 hover:scale-110 transition-all duration-200 cursor-pointer"
                       title={postcard.stateName}
                     >
                       {state?.emoji}
@@ -825,7 +825,7 @@ export function HomeDashboardScreen() {
         
         return (
           <div className="px-5 mt-3 animate-fade-in">
-            <div className="rounded-2xl bg-gradient-to-r from-orange-400 to-red-500 text-white p-3 shadow-lg border border-orange">
+            <div className="rounded-2xl bg-gradient-to-r from-orange-400 to-red-500 text-white p-4 shadow-elevated-2 transition-all hover:shadow-elevated-3 border border-orange-200/30">
               <div className="flex items-start gap-3">
                 <div className="text-2xl flex-shrink-0">🚨</div>
                 <div className="flex-1 min-w-0">
@@ -835,7 +835,7 @@ export function HomeDashboardScreen() {
                 </div>
                 <button
                   onClick={() => setDismissStreakWarning(true)}
-                  className="text-white opacity-70 hover:opacity-100 text-xl flex-shrink-0"
+                  className="text-white opacity-70 hover:opacity-100 text-xl flex-shrink-0 transition-all duration-200"
                 >
                   ✕
                 </button>
@@ -852,7 +852,7 @@ export function HomeDashboardScreen() {
         <h2 className="text-display font-bold text-sm text-muted-foreground">
           Continue your journey
         </h2>
-        <div className="mt-2 rounded-3xl bg-white p-4 shadow-soft border border-black/5 flex items-center gap-3">
+        <div className="mt-2 rounded-3xl bg-white p-4 shadow-elevated-2 border border-black/5 flex items-center gap-3">
           <div className="h-16 w-16 rounded-2xl overflow-hidden flex-shrink-0">
             <img 
               src={STATE_ART[current.name]} 
@@ -885,7 +885,7 @@ export function HomeDashboardScreen() {
             to="/state/$slug/learn"
             params={{ slug: stateSlug(current.name) }}
             onClick={() => fxTap()}
-            className="h-11 px-3 rounded-2xl gradient-saffron text-white text-display font-bold text-sm shadow-[var(--shadow-glow-orange)] flex items-center transition-all duration-300 hover:scale-105 active:scale-95"
+            className="h-12 px-4 rounded-2xl gradient-saffron text-white text-display font-bold text-sm shadow-glow-warm flex items-center transition-all duration-300 hover:shadow-elevated-hover hover:scale-105 active:scale-95 active:shadow-elevated-2"
           >
             Play ▶
           </Link>
@@ -909,7 +909,7 @@ export function HomeDashboardScreen() {
             <button
               key={s.name}
               onClick={() => handleLockedCardTap(s.name)}
-              className={`rounded-3xl bg-white p-3 shadow-soft border border-black/5 flex flex-col items-center gap-2 transition-all duration-300 overflow-hidden ${
+              className={`rounded-3xl bg-white p-3 shadow-elevated-1 border border-black/5 flex flex-col items-center gap-2 transition-all duration-300 overflow-hidden hover:shadow-elevated-2 hover:scale-105 ${
                 animateStats ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
               }`}
               style={{ transitionDelay: `${idx * 100}ms` }}
@@ -941,7 +941,7 @@ export function HomeDashboardScreen() {
                   e.stopPropagation();
                   fxTap();
                 }}
-                className="mt-1 px-3 py-1.5 rounded-lg gradient-saffron text-white text-label hover:opacity-90 transition-all"
+                className="mt-1 px-4 py-2 rounded-lg gradient-saffron text-white text-label font-bold shadow-elevated-1 transition-all duration-200 hover:shadow-glow-warm hover:scale-105 active:scale-95"
                 aria-label={`Start exploring ${s.name}`}
               >
                 Start exploring
@@ -3424,7 +3424,7 @@ export function StateCompletedScreen({
             fxTap();
             onCreatePostcard?.();
           }}
-          className="w-full h-14 rounded-2xl bg-gradient-to-r from-purple-400 to-pink-400 text-white text-display text-lg font-extrabold shadow-xl active:scale-95 transition-transform"
+          className="w-full h-14 rounded-2xl bg-gradient-to-r from-purple-500 via-purple-400 to-pink-500 text-white text-display text-lg font-extrabold shadow-glow-warm active:scale-95 transition-all duration-200 hover:shadow-elevated-hover hover:scale-105"
         >
           ✨ Add Stamp
         </button>
@@ -3435,7 +3435,7 @@ export function StateCompletedScreen({
             fxTap();
             onContinue?.();
           }}
-          className="w-full h-12 rounded-xl bg-white/30 text-white text-display font-bold shadow-lg active:scale-95 transition-transform backdrop-blur-sm"
+          className="w-full h-12 rounded-xl bg-gradient-to-r from-orange-400 to-orange-500 text-white text-display font-bold shadow-elevated-2 active:scale-95 transition-all duration-200 hover:shadow-elevated-hover hover:scale-105"
         >
           ⏭️ Skip to Next State
         </button>
