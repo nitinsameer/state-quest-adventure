@@ -1,90 +1,118 @@
 import { useProgress } from "@/lib/progress";
+import { useNavigate } from "@tanstack/react-router";
+import { fxTap } from "@/lib/fx";
 
 /**
- * Simple animated India progress visualization
- * Shows progress with animated milestone bars
+ * India Journey Meta-Game Progress Card
+ * 
+ * Features:
+ * - Prominent white card showcasing milestone progression
+ * - Progress visualization with dots (one per milestone)
+ * - Motivational messages at different completion levels
+ * - CTA button to start exploring
+ * - Tappable to view full milestone details
  */
 export function IndiaProgressMap() {
   const p = useProgress();
+  const navigate = useNavigate();
   const completionPercentage = Math.round((p.completed.length / 36) * 100);
 
   const milestones = [
-    { states: 5, label: "🌱 5 States", color: "bg-green-400" },
-    { states: 10, label: "🌿 10 States", color: "bg-success-soft0" },
-    { states: 15, label: "🌳 15 States", color: "bg-emerald-500" },
-    { states: 20, label: "🏆 20 States", color: "bg-warning-soft0" },
-    { states: 25, label: "💎 25 States", color: "bg-purple-soft0" },
-    { states: 30, label: "👑 30 States", color: "bg-yellow-500" },
-    { states: 36, label: "🎉 36 States - Master!", color: "bg-orange-soft0" },
+    { states: 5, emoji: "🌱", label: "5 States" },
+    { states: 10, emoji: "🌿", label: "10 States" },
+    { states: 15, emoji: "🌳", label: "15 States" },
+    { states: 20, emoji: "🏆", label: "20 States" },
+    { states: 25, emoji: "💎", label: "25 States" },
+    { states: 30, emoji: "👑", label: "30 States" },
+    { states: 36, emoji: "🎉", label: "36 States" },
   ];
 
+  const handleStartExploring = () => {
+    fxTap();
+    navigate({ to: "/journey" });
+  };
+
+  const getMotivationalMessage = () => {
+    if (completionPercentage === 0) {
+      return "🚀 Start exploring";
+    } else if (completionPercentage === 100) {
+      return "👑 Congratulations! You're an India Master!";
+    } else if (completionPercentage >= 75) {
+      return "🏆 You're almost there! Just a few more states!";
+    } else if (completionPercentage >= 50) {
+      return "🌳 Halfway there! Keep exploring!";
+    } else {
+      return "🌱 Great start! Keep the momentum going!";
+    }
+  };
+
   return (
-    <div className="w-full bg-white rounded-2xl shadow-soft border border-black/5 overflow-hidden">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-orange-400 to-red-500 text-white p-[--padding-md]">
-        <div className="flex items-center justify-between mb-[--space-0-5] gap-[--gap-base]">
-          <h3 className="text-base font-bold flex-1">India Explored Map</h3>
-          <span className="text-xs font-bold bg-white/30 px-2 py-1 rounded-full flex-shrink-0 whitespace-nowrap">
-            {p.completed.length}/36
-          </span>
+    <div className="w-full bg-white rounded-3xl shadow-soft border border-black/5 overflow-hidden">
+      {/* Main card content */}
+      <div className="p-5">
+        {/* Title row with flag and count */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <span className="text-xl">🇮🇳</span>
+            <div>
+              <h3 className="text-base font-black text-slate-900">India Journey</h3>
+              <p className="text-xs text-slate-500 font-semibold">{p.completed.length} / 36 states explored</p>
+            </div>
+          </div>
+          <button
+            onClick={handleStartExploring}
+            className="flex items-center gap-1.5 bg-blue-100 hover:bg-blue-200 text-blue-600 px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 active:scale-95"
+          >
+            <span>🚀</span>
+            <span>Start exploring!</span>
+          </button>
         </div>
 
-        {/* Main progress bar - animated */}
-        <div className="h-3 bg-white/25 rounded-full overflow-hidden mb-[--space-0-25]">
-          <div
-            className="h-full bg-white transition-all duration-1500 ease-out"
-            style={{ width: `${completionPercentage}%` }}
-          />
+        {/* Main progress bar */}
+        <div className="mb-4">
+          <div className="h-2.5 bg-slate-200 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-saffron-500 to-orange-500 transition-all duration-1500 ease-out rounded-full"
+              style={{ width: `${completionPercentage}%` }}
+            />
+          </div>
         </div>
-        <div className="text-xs font-semibold text-white">{completionPercentage}% Complete</div>
-      </div>
 
-      {/* Milestones Grid - Only show if user has started */}
-      {p.completed.length > 0 && (
-        <div className="p-[--padding-base] space-y-[--space-0-25] max-h-48 overflow-y-auto">
+        {/* Milestone dots row */}
+        <div className="flex items-end justify-between gap-1 mb-4">
           {milestones.map((milestone, idx) => {
             const reached = p.completed.length >= milestone.states;
             const isNearby = Math.abs(p.completed.length - milestone.states) <= 1;
+            const progressPct = Math.min(100, (p.completed.length / milestone.states) * 100);
 
             return (
-              <div key={idx} className="space-y-[--space-0-25]">
-                <div className="flex items-center justify-between gap-[--gap-base]">
-                  <span className={`text-xs font-bold flex-1 ${reached ? "text-muted-dark" : "text-muted-light"}`}>
-                    {milestone.label}
-                  </span>
-                  <span className="text-xs font-bold text-muted flex-shrink-0">{milestone.states}/36</span>
+              <div key={idx} className="flex-1 flex flex-col items-center gap-1.5">
+                {/* Milestone dot */}
+                <div
+                  className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-500 ${
+                    reached
+                      ? "bg-gradient-to-br from-saffron-400 to-orange-500 text-white shadow-md"
+                      : isNearby
+                        ? "bg-slate-300 text-slate-600 shadow-lg"
+                        : "bg-slate-200 text-slate-500"
+                  }`}
+                  style={{
+                    transform: isNearby && !reached ? "scale(1.1)" : "scale(1)",
+                  }}
+                >
+                  {milestone.emoji}
                 </div>
-
-                {/* Milestone progress bar */}
-                <div className="h-2 bg-muted rounded-full overflow-hidden">
-                  <div
-                    className={`h-full transition-all duration-1000 ease-out rounded-full ${
-                      reached ? milestone.color : "bg-muted"
-                    } ${isNearby ? "shadow-lg" : ""}`}
-                    style={{
-                      width: `${Math.min(100, (p.completed.length / milestone.states) * 100)}%`,
-                    }}
-                  />
-                </div>
+                {/* Label */}
+                <span className="text-xs font-bold text-slate-600 text-center">{milestone.label}</span>
               </div>
             );
           })}
         </div>
-      )}
 
-      {/* Motivational message */}
-      <div className="px-[--padding-md] py-[--padding-base] bg-gradient-to-r from-orange-50 to-red-50 border-t border-muted">
-        <p className="text-xs font-semibold text-center text-muted">
-          {completionPercentage === 0
-            ? "🚀 Start exploring to unlock milestones!"
-            : completionPercentage === 100
-              ? "👑 Congratulations! You're an India Master!"
-              : completionPercentage >= 75
-                ? "🏆 You're almost there! Just a few more states!"
-                : completionPercentage >= 50
-                  ? "🌳 Halfway there! Keep exploring!"
-                  : "🌱 Great start! Keep the momentum going!"}
-        </p>
+        {/* Motivational message */}
+        <div className="text-center">
+          <p className="text-sm font-semibold text-slate-700">{getMotivationalMessage()}</p>
+        </div>
       </div>
     </div>
   );

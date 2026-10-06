@@ -411,19 +411,19 @@ export function CreateProfileScreen() {
     <div className="w-full bg-gradient-to-b from-info-soft to-white flex flex-col select-none touch-none" style={{ touchAction: 'pan-y' }}>
       <div className="px-5 flex-1 overflow-auto">
         {/* Step 1: Avatar Selection */}
-        <div className="rounded-3xl bg-gradient-to-br from-blue-500 via-blue-400 to-blue-600 p-8 text-white relative overflow-hidden shadow-elevated-3">
-          <Cloud className="absolute -top-6 right-4 w-20 opacity-30" />
+        <div className="rounded-3xl bg-gradient-to-br from-blue-500 via-blue-450 to-blue-600 p-7 text-white relative overflow-hidden shadow-elevated-2 min-h-[140px] flex flex-col justify-center">
+          <Cloud className="absolute -top-5 right-3 w-20 opacity-25" />
           <div className="relative z-10">
-            <div className="text-h1 font-black mt-2 leading-tight">
+            <div className="text-3xl font-black leading-normal">
               Pick your avatar
             </div>
-            <div className="text-body-lg opacity-95 mt-3">
+            <div className="text-base opacity-90 mt-3 leading-normal">
               Choose the explorer who will travel with you
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-3 mt-6">
+        <div className="grid grid-cols-4 gap-2 mt-4">
           {avatarImages.map((a) => (
             <button
               key={a.id}
@@ -433,10 +433,10 @@ export function CreateProfileScreen() {
                 setAvatar(a.id);
                 setSaved(false);
               }}
-              className={`aspect-square rounded-3xl flex items-center justify-center overflow-hidden transition-all duration-300 transform ring-offset-2 ${
+              className={`aspect-square rounded-2xl flex items-center justify-center overflow-hidden transition-all duration-300 transform ${
                 a.id === avatar
-                  ? "ring-4 ring-gold shadow-glow-warm scale-110 ring-offset-blue-50"
-                  : "ring-2 ring-muted/30 shadow-elevated-2 hover:ring-muted hover:scale-108 hover:shadow-elevated-3"
+                  ? "ring-3 ring-yellow-400 shadow-elevated-2 scale-105"
+                  : "ring-2 ring-gray-300 shadow-sm hover:ring-gray-400 hover:scale-103"
               }`}
             >
               <img
@@ -453,22 +453,22 @@ export function CreateProfileScreen() {
           const selectedAvatar = avatarImages.find(a => a.id === avatar);
           const avatarName = getAvatarName(avatar);
           return selectedAvatar ? (
-            <div className="mt-6 rounded-3xl bg-gradient-to-br from-orange-400 via-orange-300 to-orange-500 p-6 text-white animate-fade-in flex items-center justify-center gap-5 shadow-elevated-3 border-2 border-orange-200">
-              <img src={selectedAvatar.image} alt={avatarName} className="w-24 h-24 rounded-full border-4 border-white shadow-elevated-3" />
+            <div className="mt-4 rounded-2xl bg-gradient-to-r from-orange-400 to-orange-500 p-4 text-white animate-fade-in flex items-center gap-4 shadow-elevated-2">
+              <img src={selectedAvatar.image} alt={avatarName} className="w-20 h-20 rounded-full border-3 border-white shadow-elevated-2 flex-shrink-0" />
               <div>
-                <div className="text-body-sm opacity-95 font-semibold">Your explorer!</div>
-                <div className="text-h3 text-display font-black mt-1">{avatarName}</div>
+                <div className="text-xs opacity-90 font-semibold">Your explorer!</div>
+                <div className="text-lg font-black">{avatarName}</div>
               </div>
             </div>
           ) : null;
         })()}
 
         {/* Age Selection with Vibrant Colors & Emojis */}
-        <div className="mt-8 mb-2">
-          <label className="text-h4 text-ink font-black">
+        <div className="mt-6 mb-1">
+          <label className="text-base font-black text-gray-800">
             🎂 How old are you?
           </label>
-          <div className="mt-4 space-y-3">
+          <div className="mt-3 space-y-2">
             {ageBands.map((band, idx) => {
               const isSelected = band.value === ageBand;
               return (
@@ -476,21 +476,21 @@ export function CreateProfileScreen() {
                   key={band.value}
                   type="button"
                   onClick={() => handleAgeSelect(band.value, idx)}
-                  className={`w-full h-20 rounded-2xl flex items-center justify-between px-6 font-extrabold transition-all duration-300 transform ${
+                  className={`w-full h-14 rounded-xl flex items-center justify-between px-4 font-bold transition-all duration-300 transform ${
                     isSelected
-                      ? `bg-gradient-to-r ${band.gradient} text-white shadow-glow-warm scale-105 border-3 border-white`
-                      : "bg-white border-2 border-muted/40 text-muted-dark hover:border-muted/70 hover:scale-103 hover:shadow-elevated-2"
+                      ? `bg-gradient-to-r ${band.gradient} text-white shadow-elevated-2 scale-100 border-2 border-white`
+                      : "bg-white border-2 border-gray-300 text-gray-700 hover:border-gray-400 hover:shadow-elevated-1"
                   }`}
                 >
-                  <span className="text-5xl drop-shadow">{band.emoji}</span>
+                  <span className="text-3xl">{band.emoji}</span>
                   <div className="flex-1 text-center">
-                    <div className="text-h3 font-black">{band.value}</div>
-                    <div className={`text-body-sm transition-colors font-semibold ${isSelected ? "text-white/95" : "text-muted"}`}>
+                    <div className="text-sm font-black">{band.value}</div>
+                    <div className={`text-xs transition-colors ${isSelected ? "text-white/90" : "text-gray-600"}`}>
                       {band.label}
                     </div>
                   </div>
                   {isSelected && (
-                    <div className="text-3xl animate-bounce drop-shadow">⭐</div>
+                    <div className="text-2xl">⭐</div>
                   )}
                 </button>
               );
@@ -504,11 +504,11 @@ export function CreateProfileScreen() {
         </div>
       </div>
 
-      <div className="p-6 pb-safe bg-white border-t-2 border-muted/30 shadow-2xl">
+      <div className="p-4 pb-safe bg-white border-t border-gray-200">
         <button
           onClick={handleProfileSave}
-          className={`w-full h-16 rounded-full bg-gradient-to-r from-green-500 via-green-400 to-green-600 text-white text-h3 text-display shadow-glow-success transition-all duration-300 transform font-black tracking-wide ${
-            saved ? "scale-95 opacity-80" : "hover:shadow-elevated-4 hover:scale-108 active:scale-95"
+          className={`w-full h-12 rounded-xl bg-gradient-to-r from-green-500 to-green-600 text-white text-sm font-black shadow-elevated-2 transition-all duration-300 transform ${
+            saved ? "scale-95 opacity-80" : "hover:shadow-elevated-3 hover:scale-102 active:scale-95"
           }`}
         >
           {saved ? "🎉 Saved ✓" : "Continue → Let's Explore!"}
@@ -563,6 +563,8 @@ export function HomeDashboardScreen() {
   const [showCompletionCelebration, setShowCompletionCelebration] = useState<string | null>(null);
   // Auto-show tutorial on first session, allow dismiss
   const [showTutorial, setShowTutorial] = useState(false);
+  // Auto-dismiss celebration popup after 3 seconds
+  const [showCelebrationPopup, setShowCelebrationPopup] = useState(true);
 
   // Route guard: redirect to welcome if not onboarded (defensive check)
   if (!p.onboarded) {
@@ -650,36 +652,40 @@ export function HomeDashboardScreen() {
             </div>
           </div>
           
-          {/* Right side: Streak + Help button */}
+          {/* Right side: Streak badge */}
           <div className="flex items-center gap-2 flex-shrink-0">
-            <div className={`flex items-center gap-1.5 bg-white/70 rounded-full px-3 py-2 backdrop-blur transition-transform duration-1000`}>
+            <div className={`flex items-center gap-1.5 bg-white/70 rounded-full px-4 py-2.5 backdrop-blur transition-transform duration-1000 shadow-soft`}>
               <span className="text-2xl">🔥</span>
-              <span className="text-white text-display font-black">{p.streak}</span>
+              <div className="flex flex-col items-start">
+                <span className="text-white text-h5 font-black leading-none">{p.streak}</span>
+                <span className="text-white text-xs font-bold opacity-90 leading-none">day streak</span>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Animated India Map - Moved to main content area */}
-        <div className={`mt-3 transition-all duration-700 ${statsVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}>
-          <Suspense fallback={
-            <div className="w-full bg-white rounded-2xl shadow-soft p-4 animate-pulse">
-              <div className="h-8 bg-muted rounded w-1/3 mb-3" />
-              <div className="space-y-2">
-                {[1,2,3].map(i => <div key={i} className="h-4 bg-muted rounded" />)}
-              </div>
+      </div>
+
+      {/* India Journey Meta-Game Card - Separate featured section */}
+      <div className={`px-6 pt-5 pb-4 transition-opacity duration-700 ${statsVisible ? "opacity-100" : "opacity-0"}`}>
+        <Suspense fallback={
+          <div className="w-full bg-white rounded-3xl shadow-soft p-6 animate-pulse">
+            <div className="h-8 bg-muted rounded w-1/3 mb-4" />
+            <div className="space-y-3">
+              {[1,2,3].map(i => <div key={i} className="h-3 bg-muted rounded" />)}
             </div>
-          }>
-            <IndiaProgressMapLazy />
-          </Suspense>
-        </div>
+          </div>
+        }>
+          <IndiaProgressMapLazy />
+        </Suspense>
       </div>
 
 
 
-      {/* Recently Completed State Celebration */}
+      {/* Recently Completed State Celebration - Premium Popup */}
       {(() => {
         const recentState = getRecentlyCompletedState(p);
-        if (!recentState) return null;
+        if (!recentState || !showCelebrationPopup) return null;
 
         const state = INDIA_STATES.find(s => s.name === recentState);
         if (!state) return null;
@@ -687,63 +693,91 @@ export function HomeDashboardScreen() {
         // Calculate XP earned for completing this state
         const xpEarned = 250; // State completion bonus
 
-        return (
-          <div className="px-5 mt-5 animate-fade-in">
-            <div className="rounded-3xl bg-gradient-to-br from-yellow-300 via-orange-400 to-red-500 text-white p-5 shadow-2xl border-2 border-yellow-200 relative overflow-hidden">
-              {/* Decorative confetti-like elements */}
-              <div className="absolute top-2 left-4 text-3xl animate-bounce">🎉</div>
-              <div className="absolute top-3 right-6 text-2xl animate-pulse">⭐</div>
-              <div className="absolute bottom-3 left-8 text-2xl">✨</div>
+        // Auto-dismiss after 3 seconds
+        useEffect(() => {
+          const timer = setTimeout(() => {
+            setShowCelebrationPopup(false);
+          }, 3000);
+          return () => clearTimeout(timer);
+        }, [recentState]);
 
-              <div className="relative z-10 flex flex-col gap-3">
-                {/* Title */}
+        const handleDismiss = () => {
+          setShowCelebrationPopup(false);
+          clearRecentlyCompleted();
+        };
+
+        const handleNextState = () => {
+          fxTap();
+          setShowCelebrationPopup(false);
+          clearRecentlyCompleted();
+          navigate({ to: "/journey" });
+        };
+
+        return (
+          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 animate-fade-in">
+            {/* Backdrop click to close */}
+            <div 
+              className="absolute inset-0"
+              onClick={handleDismiss}
+              aria-label="Close celebration"
+            />
+            
+            {/* Celebration Card */}
+            <div className="relative bg-gradient-to-br from-amber-300 via-orange-400 to-red-500 text-white rounded-3xl p-6 shadow-2xl max-w-sm w-full animate-scale-in border-2 border-amber-200">
+              {/* Prominent Close Button - Top Right */}
+              <button
+                onClick={handleDismiss}
+                className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/30 hover:bg-white/50 flex items-center justify-center text-white text-lg transition-all duration-200 z-10"
+                aria-label="Close"
+              >
+                ✕
+              </button>
+
+              <div className="relative z-10 flex flex-col gap-4">
+                {/* Title - Celebration message */}
                 <div className="text-center">
-                  <div className="text-body font-bold opacity-95">🏆 STATE MASTERED! 🏆</div>
-                  <div className="text-h2 text-display mt-1 drop-shadow-lg">
+                  <div className="text-lg font-bold opacity-95">🏆 STATE MASTERED! 🏆</div>
+                  <div className="text-3xl font-black mt-2 drop-shadow-lg">
                     {recentState}
                   </div>
                 </div>
 
-                {/* Stats */}
-                <div className="grid grid-cols-3 gap-2 text-center">
-                  <div className="bg-white/20 backdrop-blur rounded-xl p-2">
-                    <div className="text-caption opacity-90">Badges</div>
-                    <div className="text-h4 font-bold">+3</div>
+                {/* Stats Grid - Improved spacing */}
+                <div className="grid grid-cols-3 gap-3 text-center">
+                  <div className="bg-white/25 backdrop-blur rounded-xl p-3">
+                    <div className="text-sm opacity-90 font-semibold">Badges</div>
+                    <div className="text-2xl font-bold mt-1">+3</div>
                   </div>
-                  <div className="bg-white/20 backdrop-blur rounded-xl p-2">
-                    <div className="text-caption opacity-90">XP</div>
-                    <div className="text-h4 font-bold">+{xpEarned}</div>
+                  <div className="bg-white/25 backdrop-blur rounded-xl p-3">
+                    <div className="text-sm opacity-90 font-semibold">XP</div>
+                    <div className="text-2xl font-bold mt-1">+{xpEarned}</div>
                   </div>
-                  <div className="bg-white/20 backdrop-blur rounded-xl p-2">
-                    <div className="text-caption opacity-90">Stamp</div>
+                  <div className="bg-white/25 backdrop-blur rounded-xl p-3">
+                    <div className="text-sm opacity-90 font-semibold">Stamp</div>
                     <img
                       src={STATE_ART[recentState]}
                       alt={recentState}
-                      className="w-8 h-8 object-cover rounded mt-1"
-                      loading="lazy"
-                      decoding="async"
+                      className="w-10 h-10 object-cover rounded mx-auto mt-1"
+                      loading="eager"
+                      decoding="auto"
                     />
                   </div>
                 </div>
 
-                {/* Action buttons */}
-                <div className="flex gap-2 mt-2">
+                {/* Action buttons - Clear hierarchy */}
+                <div className="flex gap-3 mt-2">
                   <button
-                    onClick={() => clearRecentlyCompleted()}
-                    className="flex-1 h-10 rounded-xl bg-white/20 backdrop-blur border border-white/40 text-white text-label hover:bg-white/30 transition-all"
+                    onClick={handleDismiss}
+                    className="flex-1 h-11 rounded-xl bg-white/20 backdrop-blur border border-white/40 text-white text-sm font-bold hover:bg-white/30 transition-all duration-200"
                   >
                     Dismiss
                   </button>
-                  <Link
-                    to="/journey"
-                    onClick={() => {
-                      fxTap();
-                      clearRecentlyCompleted();
-                    }}
-                    className="flex-1 h-10 rounded-xl bg-white text-orange text-label hover:bg-warning-soft transition-all shadow-lg flex items-center justify-center"
+                  <button
+                    onClick={handleNextState}
+                    className="flex-1 h-11 rounded-xl bg-white text-orange-600 text-sm font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 active:scale-95"
                   >
                     Next State →
-                  </Link>
+                  </button>
                 </div>
               </div>
             </div>

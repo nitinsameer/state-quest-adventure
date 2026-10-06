@@ -1460,3 +1460,72 @@ export function clearRecentlyCompleted() {
     // Storage error - fail silently
   }
 }
+
+
+/* ========== TESTING UTILITIES (DEV ONLY) ========== */
+
+/**
+ * Export testing utilities to window for E2E tests
+ * Only enabled in development mode
+ */
+if (typeof window !== 'undefined' && (import.meta.env.DEV || (window as any).__TEST_MODE__)) {
+  (window as any).getProgressStateForTesting = () => ({
+    completed: current.completed,
+    xp: current.xp,
+    streak: current.streak,
+    stamps: current.stamps,
+    badges: current.badges,
+    length: current.completed.length,
+    percentage: Math.round((current.completed.length / 36) * 100),
+  });
+
+  (window as any).completeStateForTesting = (stateName: string) => {
+    // Validate state exists
+    const stateExists = INDIA_STATES.some(s => s.name === stateName);
+    if (!stateExists) {
+      console.error(`[TEST] Invalid state: ${stateName}`);
+      return;
+    }
+
+    // Skip if already completed
+    if (current.completed.includes(stateName)) {
+      console.log(`[TEST] State already completed: ${stateName}`);
+      return;
+    }
+
+    // Simulate state completion with XP reward
+    completeState(stateName, 100);
+    console.log(`[TEST] Completed state: ${stateName} (${current.completed.length}/36)`);
+  };
+
+  (window as any).resetProgressForTesting = () => {
+    set(() => defaultProgress());
+    console.log(`[TEST] Progress reset to default`);
+  };
+
+  (window as any).getCompletionPercentageForTesting = () => {
+    return Math.round((current.completed.length / 36) * 100);
+  };
+
+  (window as any).getMotivationalMessageForTesting = () => {
+    const completionPercentage = Math.round((current.completed.length / 36) * 100);
+    
+    if (completionPercentage === 0) {
+      return "🚀 Start exploring to unlock milestones!";
+    } else if (completionPercentage === 100) {
+      return "👑 Congratulations! You're an India Master!";
+    } else if (completionPercentage >= 75) {
+      return "🏆 You're almost there! Just a few more states!";
+    } else if (completionPercentage >= 50) {
+      return "🌳 Halfway there! Keep exploring!";
+    } else {
+      return "🌱 Great start! Keep the momentum going!";
+    }
+  };
+
+  (window as any).getMilestoneStateForTesting = () => {
+    return current.completed.length >= 5 ? 'reached' : 'locked';
+  };
+
+  console.log('[TESTING] Window testing APIs available: getProgressStateForTesting, completeStateForTesting, resetProgressForTesting');
+}
