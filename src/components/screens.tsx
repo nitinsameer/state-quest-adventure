@@ -1335,7 +1335,7 @@ export function JourneyMapScreen() {
   const states = statesWithProgress(p);
   const [view, setView] = useState<{ screen: "intro" | "hub" | "card" | "quiz"; name: string; cardIndex?: number } | null>(null);
   const [selectedState, setSelectedState] = useState<string | null>(null);
-  const [expandedRegion, setExpandedRegion] = useState<string | null>(null);
+  const [expandedRegion, setExpandedRegion] = useState<string | null>(REGION_KEYS[0]); // First region expanded by default
   const celebration = useCelebration();
 
   // Detect and celebrate milestones
@@ -1574,8 +1574,8 @@ export function JourneyMapScreen() {
 
   return (
     <div className="h-full w-full gradient-sky relative overflow-hidden flex flex-col">
-      {/* Header with orange gradient - matching Home screen */}
-      <div className="px-5 pt-3 pb-4 gradient-saffron rounded-b-[32px] relative overflow-hidden animate-fade-in">
+      {/* Header with orange gradient - matching Home screen with sticky positioning */}
+      <div className="sticky top-0 z-40 px-6 pt-3 pb-4 gradient-saffron rounded-b-3xl relative overflow-hidden animate-fade-in shadow-elevated-2">
         <Cloud className="absolute top-2 right-4 w-14 opacity-40 pointer-events-none" />
         
         {/* Journey Info */}
@@ -1596,11 +1596,6 @@ export function JourneyMapScreen() {
                 {completedStates}/{totalStates} states & UTs explored
               </span>
             </div>
-          </div>
-
-          <div className="flex items-center gap-1.5 bg-white/60 rounded-full px-3 py-1.5 backdrop-blur flex-shrink-0">
-            <span>🪙</span>
-            <span className="text-display font-extrabold text-saffron text-sm">{p.xp.toLocaleString()}</span>
           </div>
         </div>
 
@@ -1632,13 +1627,13 @@ export function JourneyMapScreen() {
       </div>
 
       {/* Clouds decoration below header */}
-      <Cloud className="absolute top-40 left-2 w-24 opacity-90 pointer-events-none animate-fade-in" style={{ animationDelay: "100ms" }} />
-      <Cloud className="absolute top-80 right-1 w-20 opacity-85 pointer-events-none animate-fade-in" style={{ animationDelay: "150ms" }} />
+      <Cloud className="absolute top-96 left-2 w-24 opacity-90 pointer-events-none animate-fade-in" style={{ animationDelay: "100ms" }} />
+      <Cloud className="absolute top-[500px] right-1 w-20 opacity-85 pointer-events-none animate-fade-in" style={{ animationDelay: "150ms" }} />
 
       {/* Explorable States Map with Regional Organization */}
-      <div className="relative flex-1 mx-3 mt-2 rounded-[28px] overflow-y-auto overflow-x-hidden animate-fade-in" style={{ animationDelay: "200ms" }}>
+      <div className="relative flex-1 overflow-y-auto overflow-x-hidden animate-fade-in" style={{ animationDelay: "200ms" }}>
         {/* Regional sections with color-coded headers */}
-        <div className="relative w-full px-4 space-y-6 py-6 pb-28">
+        <div className="relative w-full space-y-6 py-6 pb-32" style={{ paddingLeft: 'var(--padding-lg)', paddingRight: 'var(--padding-lg)' }}>
           {REGION_KEYS.map((regionKey, regionIdx) => {
             // Skip union territories region - they're rendered separately below
             if (regionKey === "unionTerritories") return null;
@@ -1646,40 +1641,42 @@ export function JourneyMapScreen() {
             const region = REGIONS[regionKey];
             const regionStates = statesByRegion[regionKey] || [];
             const regionDone = regionStates.filter((s) => s.status === "done").length;
+            const isRegionExpanded = expandedRegion === regionKey;
             
             return (
               <div key={regionKey} className="animate-fade-in" style={{ animationDelay: `${300 + regionIdx * 100}ms` }}>
-                {/* Region Header with Progress */}
-                <div className={`rounded-2xl bg-gradient-to-r ${region.gradient} text-white p-3 mb-3 shadow-lg`}>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-2xl">{region.emoji}</span>
-                      <div>
-                        <div className="text-body font-bold">{region.name}</div>
-                        <div className="text-label opacity-90">{regionDone}/{regionStates.length} explored · {Math.round((regionDone / Math.max(regionStates.length, 1)) * 100)}%</div>
-                      </div>
-                    </div>
-                    {/* Regional milestone indicator */}
-                    {regionDone === regionStates.length && regionStates.length > 0 && (
-                      <div className="text-2xl">✨ Complete!</div>
-                    )}
+                {/* Region Header - Horizontal Pill Style with Premium Shadows */}
+                <button
+                  onClick={() => setExpandedRegion(isRegionExpanded ? null : regionKey)}
+                  className={`w-full rounded-2xl py-2.5 shadow-elevated-1 flex items-center justify-between transition-all hover:shadow-elevated-2 hover:scale-102 active:scale-95 bg-gradient-to-r ${region.gradient} text-white`}
+                  style={{ paddingLeft: 'var(--padding-md)', paddingRight: 'var(--padding-md)', marginBottom: 'var(--gap-base)' }}
+                >
+                  <div className="flex items-center gap-2 flex-1">
+                    <span className="text-xl">{region.emoji}</span>
+                    <span className="font-bold text-sm text-white">{region.name}</span>
                   </div>
-                  {/* Regional progress bar */}
-                  <div className="mt-2 h-1.5 bg-white/30 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-white rounded-full transition-all duration-500"
-                      style={{ width: `${(regionDone / Math.max(regionStates.length, 1)) * 100}%` }}
-                    />
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs font-semibold text-white opacity-90">{regionDone}/{regionStates.length}</span>
+                    <svg 
+                      className={`w-5 h-5 transition-transform text-white ${isRegionExpanded ? "rotate-180" : ""}`}
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                    </svg>
                   </div>
-                </div>
+                </button>
 
-                {/* States in this region - Grid layout */}
-                <div className="grid grid-cols-2 gap-[--gap-base]">
-                  {regionStates.map((state) => {
+                {/* States in this region - 3-Column Grid layout with Premium Shadows */}
+                {isRegionExpanded && (
+                <div className="grid grid-cols-3 mb-4" style={{ gap: 'var(--gap-base)' }}>
+                  {regionStates.map((state, stateIndex) => {
                     const isLocked = state.status === "locked";
                     const isDone = state.status === "done";
                     const isCurrent = state.status === "current";
                     const isAvailable = state.status === "available"; // New status
+                    const isFirstState = stateIndex === 0; // First state in region
                     
                     // Detect in-progress state (partially completed cards)
                     const cardsRead = cardsDone(p, state.name);
@@ -1697,12 +1694,12 @@ export function JourneyMapScreen() {
                         }}
                         className={`p-[--padding-base] rounded-2xl transition transform active:scale-95 ${
                           isDone
-                            ? `bg-gradient-to-br ${region.gradient} text-white shadow-lg`
-                            : isCurrent
-                            ? `bg-gradient-to-br from-yellow-300 to-orange-400 text-white shadow-lg scale-105 animate-pulse`
+                            ? `bg-gradient-to-br ${region.gradient} text-white shadow-elevated-2 hover:shadow-elevated-3`
+                            : isCurrent || (isFirstState && !isDone && !isLocked)
+                            ? `bg-gradient-to-br from-yellow-300 to-orange-400 text-white shadow-elevated-2 hover:shadow-elevated-3 scale-105 animate-pulse`
                             : isAvailable
-                            ? `bg-gradient-to-br from-slate-100 to-slate-200 text-slate-800 shadow-sm hover:shadow-md hover:scale-102` // Available states - clickable
-                            : `bg-muted text-muted ${isLocked ? "opacity-60 cursor-not-allowed" : ""}`
+                            ? `bg-white text-slate-800 shadow-elevated-1 hover:shadow-elevated-2 hover:scale-105 border border-black/5` // Available states - clickable with white bg
+                            : `bg-muted text-muted shadow-elevated-1 ${isLocked ? "opacity-60 cursor-not-allowed" : ""}`
                         }`}
                       >
                         <img
@@ -1741,42 +1738,46 @@ export function JourneyMapScreen() {
                     );
                   })}
                 </div>
+                )}
               </div>
             );
           })}
 
           {/* Union Territories section */}
           <div className="animate-fade-in" style={{ animationDelay: "800ms" }}>
-            <div className="rounded-2xl bg-gradient-to-r from-blue-400 to-purple-500 text-white p-3 mb-3 shadow-lg">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl">🏝️</span>
-                  <div>
-                    <div className="text-body font-bold">Union Territories</div>
-                    <div className="text-label opacity-90">{nodes.filter(n => n.isUT && n.status === "done").length}/8 explored · {Math.round((nodes.filter(n => n.isUT && n.status === "done").length / 8) * 100)}%</div>
-                  </div>
-                </div>
-                {nodes.filter(n => n.isUT && n.status === "done").length === 8 && (
-                  <div className="text-2xl">✨ Complete!</div>
-                )}
+            <button
+              onClick={() => setExpandedRegion(expandedRegion === "unionTerritories" ? null : "unionTerritories")}
+              className="w-full rounded-2xl bg-gradient-to-r from-blue-400 to-purple-500 text-white py-2.5 shadow-elevated-1 flex items-center justify-between transition-all hover:shadow-elevated-2 hover:scale-102 active:scale-95"
+              style={{ paddingLeft: 'var(--padding-md)', paddingRight: 'var(--padding-md)', marginBottom: 'var(--gap-base)' }}
+            >
+              <div className="flex items-center gap-2 flex-1">
+                <span className="text-xl">🏝️</span>
+                <span className="font-bold text-sm text-white">Union Territories</span>
               </div>
-              <div className="mt-2 h-1.5 bg-white/30 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-white rounded-full transition-all duration-500"
-                  style={{ width: `${(nodes.filter(n => n.isUT && n.status === "done").length / 8) * 100}%` }}
-                />
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-semibold text-white opacity-90">{nodes.filter(n => n.isUT && n.status === "done").length}/8</span>
+                <svg 
+                  className={`w-5 h-5 transition-transform text-white ${expandedRegion === "unionTerritories" ? "rotate-180" : ""}`}
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                </svg>
               </div>
-            </div>
+            </button>
 
-            {/* UTs Grid */}
-            <div className="grid grid-cols-2 gap-3">
-              {nodes.filter(n => n.isUT).map((utNode) => {
+            {/* UTs Grid - 3 Column with Premium Styling */}
+            {expandedRegion === "unionTerritories" && (
+            <div className="grid grid-cols-3 mb-4" style={{ gap: 'var(--gap-base)' }}>
+              {nodes.filter(n => n.isUT).map((utNode, utIndex) => {
                 const utState = states.find(s => s.name === utNode.name);
                 if (!utState) return null;
                 const isLocked = utNode.status === "locked";
                 const isDone = utNode.status === "done";
                 const isCurrent = utNode.status === "current";
                 const isAvailable = utNode.status === "available"; // New status
+                const isFirstState = utIndex === 0; // First UT in list
                 
                 // Detect in-progress state (partially completed cards)
                 const cardsRead = cardsDone(p, utNode.name);
@@ -1794,12 +1795,12 @@ export function JourneyMapScreen() {
                     }}
                     className={`p-3 rounded-2xl transition transform active:scale-95 ${
                       isDone
-                        ? "bg-gradient-to-br from-blue-400 to-purple-500 text-white shadow-lg"
-                        : isCurrent
-                        ? "bg-gradient-to-br from-yellow-300 to-orange-400 text-white shadow-lg scale-105 animate-pulse"
+                        ? "bg-gradient-to-br from-blue-400 to-purple-500 text-white shadow-elevated-2 hover:shadow-elevated-3"
+                        : isCurrent || (isFirstState && !isDone && !isLocked)
+                        ? "bg-gradient-to-br from-yellow-300 to-orange-400 text-white shadow-elevated-2 hover:shadow-elevated-3 scale-105 animate-pulse"
                         : isAvailable
-                        ? "bg-gradient-to-br from-slate-100 to-slate-200 text-slate-800 shadow-sm hover:shadow-md hover:scale-102" // Available UTs
-                        : `bg-muted text-muted ${isLocked ? "opacity-60 cursor-not-allowed" : ""}`
+                        ? "bg-white text-slate-800 shadow-elevated-1 hover:shadow-elevated-2 hover:scale-105 border border-black/5" // Available UTs with white bg
+                        : `bg-muted text-muted shadow-elevated-1 ${isLocked ? "opacity-60 cursor-not-allowed" : ""}`
                     }`}
                   >
                     <img
@@ -1838,6 +1839,7 @@ export function JourneyMapScreen() {
                 );
               })}
             </div>
+            )}
           </div>
         </div>
       </div>
