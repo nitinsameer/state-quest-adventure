@@ -7,6 +7,8 @@ import { generatePassportNumber } from "@/lib/passport-number";
 import { STATE_ART } from "@/lib/state-art";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { PostcardModal } from "@/components/PostcardModal";
+import { PostcardCard } from "@/components/PostcardCard";
+import { LockedPostcardModal } from "@/components/LockedPostcardModal";
 import { fxTap } from "@/lib/fx";
 import avatarExplorerHat from "@/assets/avatars/avatar-explorer-hat.png";
 import avatarExplorerPink from "@/assets/avatars/avatar-explorer-pink.png";
@@ -23,8 +25,8 @@ import avatarGirlFlower from "@/assets/avatars/avatar-girl-flower.png";
 import type { AvatarId } from "@/lib/avatar-config";
 
 /**
- * My Stamps for Ages 6-7 (Seedling)
- * Organized by regions, full state names with emojis
+ * My Explorer - Postcard Collection
+ * Organized by regions with postcard-based UI
  */
 export function PassportSeedling() {
   const progress = useProgress();
@@ -32,6 +34,7 @@ export function PassportSeedling() {
   const [selectedRegion, setSelectedRegion] = useState<keyof typeof REGIONS>("north");
   const [burst, setBurst] = useState(0);
   const [selectedPostcard, setSelectedPostcard] = useState<PostcardData | null>(null);
+  const [lockedPostcardState, setLockedPostcardState] = useState<string | null>(null);
 
   // Map avatar IDs to image imports
   const AVATAR_IMAGE_MAP: Record<AvatarId, string> = {
@@ -88,6 +91,9 @@ export function PassportSeedling() {
         setBurst(b => b + 1);
         return;
       }
+    } else {
+      // Show locked postcard modal
+      setLockedPostcardState(stateName);
     }
   };
 
@@ -108,19 +114,17 @@ export function PassportSeedling() {
         />
       )}
 
-      {/* Header with Postcard Library Link - Proposal C */}
+      {/* Locked Postcard Modal */}
+      {lockedPostcardState && (
+        <LockedPostcardModal
+          destination={lockedPostcardState}
+          onClose={() => setLockedPostcardState(null)}
+        />
+      )}
+
+      {/* Header with title */}
       <div className="px-5 pt-4 pb-2 flex items-center justify-between">
-        <h1 className="text-2xl font-extrabold text-ink">🎫 My Stamps</h1>
-        <button
-          onClick={() => {
-            fxTap();
-            navigate({ to: "/explorer/postcard-library" });
-          }}
-          className="px-4 py-2 rounded-full bg-gradient-to-r from-info-soft0 to-purple-500 text-white font-bold text-sm shadow-lg hover:shadow-xl transition active:scale-95 flex items-center gap-2"
-          title="View all your postcards with granular consent controls"
-        >
-          📸 Library
-        </button>
+        <h1 className="text-2xl font-extrabold text-ink">🎫 My Explorer</h1>
       </div>
 
       {/* Profile Card - EXPANDED to 140px */}
@@ -224,33 +228,20 @@ export function PassportSeedling() {
         </div>
       </div>
 
-      {/* States Grid */}
+      {/* States Grid - Using PostcardCard component */}
       <div className="px-5 pt-2 pb-3 flex-1 overflow-auto">
         <div className="grid grid-cols-2 gap-3">
           {regionStates.map((state) => {
-            const isUnlocked = progress.completed.includes(state.name);
+            const isCollected = progress.completed.includes(state.name);
             return (
-              <button
+              <PostcardCard
                 key={state.name}
+                destination={state.name}
+                landmarkSrc={STATE_ART[state.name]}
+                isCollected={isCollected}
+                region={selectedRegion}
                 onClick={() => handleStateClick(state.name)}
-                className={`p-4 rounded-2xl transition transform active:scale-95 ${
-                  isUnlocked
-                    ? `bg-gradient-to-br ${REGIONS[selectedRegion].gradient} text-white shadow-lg hover:shadow-xl`
-                    : "bg-gradient-to-br from-gray-100 to-gray-200 text-muted hover:to-gray-300"
-                }`}
-              >
-                <img
-                  src={STATE_ART[state.name]}
-                  alt={state.name}
-                  className="w-16 h-16 object-cover rounded-lg mb-2"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div className="text-sm font-extrabold leading-tight">{state.name}</div>
-                <div className="text-[11px] font-bold mt-1 opacity-90">
-                  {isUnlocked ? "✓ Collected" : "🔒 Locked"}
-                </div>
-              </button>
+              />
             );
           })}
         </div>

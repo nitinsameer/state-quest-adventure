@@ -1,140 +1,90 @@
-/**
- * PostcardCard - Individual postcard display in library
- * 
- * Shows:
- * - Postcard preview/thumbnail
- * - State name and earned badge
- * - Date earned
- * - Consent state indicator
- * - Checkbox for bulk selection
- * - Tap to open consent dialog
- */
-
-import type { LibraryPostcard } from "@/lib/postcard-library";
+import { useState } from "react";
 import { fxTap } from "@/lib/fx";
 
-const BADGE_EMOJI: Record<string, string> = {
-  monument: "🏛️",
-  animal: "🐾",
-  explorer: "🎖️",
-};
-
-const CONSENT_INDICATOR = {
-  accepted: { emoji: "✅", label: "Consent", color: "bg-green-100 border-green-300" },
-  declined: { emoji: "❌", label: "Declined", color: "bg-red-100 border-red-300" },
-  pending: { emoji: "⏳", label: "Pending", color: "bg-amber-100 border-amber-300" },
-};
-
-export interface PostcardCardProps {
-  postcard: LibraryPostcard;
-  isSelected?: boolean;
-  onToggleSelect?: () => void;
-  onTapConsent?: () => void;
+interface PostcardCardProps {
+  destination: string;
+  landmarkSrc: string;
+  isCollected: boolean;
+  region: string;
+  onClick: () => void;
 }
 
+/**
+ * Reusable Postcard Card component for all 36 states/UTs
+ * Uses existing landmark SVGs with CSS styling to create postcard appearance
+ * Locked state: muted SVG with lock overlay
+ * Collected state: full color SVG with collected badge
+ */
 export function PostcardCard({
-  postcard,
-  isSelected = false,
-  onToggleSelect,
-  onTapConsent,
+  destination,
+  landmarkSrc,
+  isCollected,
+  onClick,
 }: PostcardCardProps) {
-  const consentInfo = CONSENT_INDICATOR[postcard.consentState];
-  const badgeEmoji = BADGE_EMOJI[postcard.badge] || "🎖️";
+  const [imageLoaded, setImageLoaded] = useState(false);
 
-  // Parse date from ISO timestamp
-  const dateObj = new Date(postcard.generatedAt);
-  const dateStr = dateObj.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-
-  const handleCardClick = () => {
+  const handleClick = () => {
     fxTap();
-    onTapConsent?.();
+    onClick();
   };
 
   return (
-    <div
-      className={`relative rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition cursor-pointer ${
-        isSelected ? "ring-4 ring-blue-500" : ""
-      }`}
+    <button
+      onClick={handleClick}
+      className="w-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 rounded-xl transition-transform active:scale-95"
+      title={`${destination} postcard`}
     >
-      {/* Postcard Preview Background */}
-      <div className="aspect-[3/4] bg-gradient-to-br from-orange-300 via-yellow-300 to-orange-200 relative flex flex-col items-center justify-center p-[--padding-md]">
-        {/* State Emoji or Art Placeholder */}
-        <div className="text-6xl mb-[--space-0-5]">🎨</div>
+      <div className="relative">
+        {/* Postcard container with warm paper-like background */}
+        <div className="relative bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow">
+          {/* Dashed/perforated border effect */}
+          <div className="absolute inset-0 rounded-xl border-2 border-dashed border-amber-300/50 pointer-events-none" />
 
-        {/* State Name */}
-        <h3 className="text-center text-h4 text-white drop-shadow leading-tight">
-          {postcard.state}
-        </h3>
-
-        {/* Badge Earned */}
-        <div className="mt-[--space-0-5] text-4xl">{badgeEmoji}</div>
-
-        {/* Date */}
-        <div className="mt-auto pt-[--padding-md] text-center text-caption text-white/90">
-          {postcard.stampDate}
-        </div>
-      </div>
-
-      {/* Overlay Controls */}
-      <div className="absolute inset-0 bg-black/0 hover:bg-black/20 transition flex flex-col items-start justify-start p-[--padding-base] gap-[--gap-base]">
-        {/* Checkbox for Bulk Selection */}
-        {onToggleSelect && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggleSelect();
-            }}
-            className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition ${
-              isSelected
-                ? "bg-info-soft0 border-blue-600"
-                : "bg-white/80 border-muted hover:bg-white"
+          {/* Landmark SVG container */}
+          <div
+            className={`w-full h-32 rounded-lg overflow-hidden mb-3 bg-white shadow-sm transition-opacity duration-300 ${
+              isCollected ? "opacity-100" : "opacity-60"
             }`}
           >
-            {isSelected && <span className="text-white font-bold text-sm">✓</span>}
-          </button>
-        )}
+            <img
+              src={landmarkSrc}
+              alt={destination}
+              className="w-full h-full object-cover"
+              onLoad={() => setImageLoaded(true)}
+              loading="lazy"
+              decoding="async"
+            />
 
-        {/* Consent Badge */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            handleCardClick();
-          }}
-          className={`ml-auto rounded-lg border-2 px-[--padding-sm] py-[--padding-xs] text-label transition hover:scale-110 ${consentInfo.color}`}
-          title={`Tap to change consent state (currently ${consentInfo.label})`}
-        >
-          {consentInfo.emoji}
-        </button>
-      </div>
+            {/* Locked state overlay */}
+            {!isCollected && (
+              <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                <div className="text-center">
+                  <div className="text-2xl mb-1">🔒</div>
+                  <div className="text-xs font-bold text-white">Locked</div>
+                </div>
+              </div>
+            )}
+          </div>
 
-      {/* Bottom Info Bar */}
-      <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur px-[--padding-base] py-[--padding-xs] flex items-center justify-between">
-        <div className="flex items-center gap-[--gap-base] flex-1">
-          <div className="text-caption text-muted">{dateStr}</div>
+          {/* State name */}
+          <div className="text-sm font-extrabold text-ink mb-2 line-clamp-2">{destination}</div>
+
+          {/* Status badge */}
+          <div className="text-xs font-bold text-muted-dark">
+            {isCollected ? (
+              <span className="inline-flex items-center gap-1 text-green-700">
+                <span>✓</span>
+                <span>Collected</span>
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1 text-amber-700">
+                <span>🔒</span>
+                <span>Explore to earn</span>
+              </span>
+            )}
+          </div>
         </div>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            handleCardClick();
-          }}
-          className="ml-auto text-body font-bold text-blue-600 hover:text-blue-700 transition"
-          title="Tap to manage consent"
-        >
-          {consentInfo.label}
-        </button>
       </div>
-
-      {/* Click Handler Area */}
-      <div
-        onClick={handleCardClick}
-        className="absolute inset-0 cursor-pointer"
-        title="Tap to manage consent and postcard details"
-      />
-    </div>
+    </button>
   );
 }
-

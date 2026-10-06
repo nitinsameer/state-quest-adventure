@@ -806,7 +806,7 @@ export function HomeDashboardScreen() {
                   </div>
                 </div>
                 <Link 
-                  to="/explorer/postcard-library" 
+                  to="/explorer" 
                   onClick={() => fxTap()}
                   className="text-label opacity-90 hover:opacity-100 underline transition-all duration-200"
                 >
