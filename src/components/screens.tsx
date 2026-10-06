@@ -1681,6 +1681,11 @@ export function JourneyMapScreen() {
                     const isCurrent = state.status === "current";
                     const isAvailable = state.status === "available"; // New status
                     
+                    // Detect in-progress state (partially completed cards)
+                    const cardsRead = cardsDone(p, state.name);
+                    const totalCards = INDIA_STATES.find(s => s.name === state.name)?.cards?.length ?? 6;
+                    const isInProgress = !isDone && cardsRead > 0 && cardsRead < totalCards;
+                    
                     return (
                       <button
                         key={state.name}
@@ -1711,11 +1716,23 @@ export function JourneyMapScreen() {
                         {isDone && (
                           <div className="text-[10px] font-bold mt-1 opacity-90">✓ Done</div>
                         )}
-                        {isCurrent && (
+                        {isInProgress && (
+                          <div className="mt-1 w-full">
+                            <div className="text-[9px] font-bold opacity-80">{cardsRead}/{totalCards} adventures</div>
+                            <div className="h-1 bg-white/30 rounded-full mt-0.5 overflow-hidden">
+                              <div className="h-full bg-white rounded-full" style={{ width: `${Math.round((cardsRead / totalCards) * 100)}%` }} />
+                            </div>
+                            <div className="text-[10px] font-bold mt-0.5">▶ Continue</div>
+                          </div>
+                        )}
+                        {isCurrent && !isInProgress && (
                           <div className="text-[10px] font-bold mt-1">▶ Play</div>
                         )}
                         {isDone && !isCurrent && (
                           <div className="text-[10px] font-bold mt-1 opacity-90">↻ Replay</div>
+                        )}
+                        {isAvailable && !isInProgress && (
+                          <div className="text-[10px] font-bold mt-1">▶ Play</div>
                         )}
                         {isLocked && (
                           <div className="text-[10px] font-bold mt-1">🔒 Locked</div>
@@ -1761,6 +1778,11 @@ export function JourneyMapScreen() {
                 const isCurrent = utNode.status === "current";
                 const isAvailable = utNode.status === "available"; // New status
                 
+                // Detect in-progress state (partially completed cards)
+                const cardsRead = cardsDone(p, utNode.name);
+                const totalCards = INDIA_STATES.find(s => s.name === utNode.name)?.cards?.length ?? 6;
+                const isInProgress = !isDone && cardsRead > 0 && cardsRead < totalCards;
+                
                 return (
                   <button
                     key={utNode.name}
@@ -1791,11 +1813,23 @@ export function JourneyMapScreen() {
                     {isDone && (
                       <div className="text-[10px] font-bold mt-1 opacity-90">✓ Done</div>
                     )}
-                    {isCurrent && (
+                    {isInProgress && (
+                      <div className="mt-1 w-full">
+                        <div className="text-[9px] font-bold opacity-80">{cardsRead}/{totalCards} adventures</div>
+                        <div className="h-1 bg-white/30 rounded-full mt-0.5 overflow-hidden">
+                          <div className="h-full bg-white rounded-full" style={{ width: `${Math.round((cardsRead / totalCards) * 100)}%` }} />
+                        </div>
+                        <div className="text-[10px] font-bold mt-0.5">▶ Continue</div>
+                      </div>
+                    )}
+                    {isCurrent && !isInProgress && (
                       <div className="text-[10px] font-bold mt-1">▶ Play</div>
                     )}
                     {isDone && !isCurrent && (
                       <div className="text-[10px] font-bold mt-1 opacity-90">↻ Replay</div>
+                    )}
+                    {isAvailable && !isInProgress && (
+                      <div className="text-[10px] font-bold mt-1">▶ Play</div>
                     )}
                     {isLocked && (
                       <div className="text-[10px] font-bold mt-1">🔒 Locked</div>
