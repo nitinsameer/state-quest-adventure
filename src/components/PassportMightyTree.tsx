@@ -167,7 +167,7 @@ export function PassportMightyTree() {
                     loading="lazy"
                     decoding="async"
                   />
-                  <div className="text-[8px] leading-tight text-center">{state.short}</div>
+                  <div className="text-[8px] leading-tight text-center">{state.name}</div>
                 </button>
               );
             })}

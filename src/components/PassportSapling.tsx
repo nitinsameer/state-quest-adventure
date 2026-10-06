@@ -113,7 +113,7 @@ export function PassportSapling() {
                   loading="lazy"
                   decoding="async"
                 />
-                <div className="text-[9px] leading-tight">{state.short}</div>
+                <div className="text-[9px] leading-tight">{state.name}</div>
               </button>
             );
           })}

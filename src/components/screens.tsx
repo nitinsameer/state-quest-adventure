@@ -16,6 +16,7 @@ import avatarGirlFlower from "@/assets/avatars/avatar-girl-flower.png";
 import { STATE_ART, TONE_GRADIENT, preloadStateArt } from "@/lib/state-art";
 import { getStateContent, getCardContent, getCardContentByAge } from "@/lib/state-content";
 import { stopTts, playTts, playStateNarration } from "@/lib/tts";
+import { getJourneyMotivationalMessage } from "@/lib/journey-messaging";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { PassportSeedling } from "@/components/PassportSeedling";
 import { AudioSettingRow } from "@/components/AudioSettingToggle";
@@ -212,7 +213,7 @@ export function BottomNav({
   const items = [
     { id: "home", icon: "🏠", label: "Home", to: "/home" },
     { id: "map", icon: "🗺️", label: "Journey", to: "/journey" },
-    { id: "explorer", icon: "🔍", label: "Explorer", to: "/explorer" },
+    { id: "explorer", icon: "🔍", label: "Explore", to: "/explorer" },
     { id: "badges", icon: "🏅", label: "Badges", to: "/badges" },
     { id: "profile", icon: "👤", label: "Me", to: "/me" },
   ] as const;
@@ -1592,7 +1593,7 @@ export function JourneyMapScreen() {
                 </span>
               )}
               <span>
-                {completedStates}/{totalStates} places explored
+                {completedStates}/{totalStates} states & UTs explored
               </span>
             </div>
           </div>
@@ -1616,11 +1617,16 @@ export function JourneyMapScreen() {
             />
           </div>
           {/* Progress toward next milestone */}
-          <div className="text-xs font-bold text-white/80 mt-2">
-            {completedStates < 9 && `🎯 25% milestone: ${Math.max(0, 9 - completedStates)} more states`}
-            {completedStates >= 9 && completedStates < 18 && `🌎 50% milestone: ${Math.max(0, 18 - completedStates)} more states`}
-            {completedStates >= 18 && completedStates < 27 && `🏁 75% milestone: ${Math.max(0, 27 - completedStates)} more states`}
-            {completedStates >= 27 && `👑 Explore the final states to become India Master!`}
+          <div className="text-xs font-bold text-white/80 mt-2 space-y-0.5">
+            {(() => {
+              const msg = getJourneyMotivationalMessage(completedStates);
+              return (
+                <>
+                  <div>{msg.line1}</div>
+                  <div>{msg.line2}</div>
+                </>
+              );
+            })()}
           </div>
         </div>
       </div>
@@ -1632,7 +1638,7 @@ export function JourneyMapScreen() {
       {/* Explorable States Map with Regional Organization */}
       <div className="relative flex-1 mx-3 mt-2 rounded-[28px] overflow-y-auto overflow-x-hidden animate-fade-in" style={{ animationDelay: "200ms" }}>
         {/* Regional sections with color-coded headers */}
-        <div className="relative w-full px-4 space-y-6 py-6">
+        <div className="relative w-full px-4 space-y-6 py-6 pb-28">
           {REGION_KEYS.map((regionKey, regionIdx) => {
             // Skip union territories region - they're rendered separately below
             if (regionKey === "unionTerritories") return null;
@@ -1701,7 +1707,7 @@ export function JourneyMapScreen() {
                           loading="lazy"
                           decoding="async"
                         />
-                        <div className="text-xs font-extrabold leading-tight">{state.short}</div>
+                        <div className="text-xs font-extrabold leading-tight">{state.name}</div>
                         {isDone && (
                           <div className="text-[10px] font-bold mt-1 opacity-90">✓ Done</div>
                         )}
@@ -1781,7 +1787,7 @@ export function JourneyMapScreen() {
                       loading="lazy"
                       decoding="async"
                     />
-                    <div className="text-xs font-extrabold leading-tight">{utState.short}</div>
+                    <div className="text-xs font-extrabold leading-tight">{utState.name}</div>
                     {isDone && (
                       <div className="text-[10px] font-bold mt-1 opacity-90">✓ Done</div>
                     )}

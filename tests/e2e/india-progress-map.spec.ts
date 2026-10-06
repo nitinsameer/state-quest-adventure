@@ -1,65 +1,55 @@
 /**
- * Functional Integration Tests for IndiaProgressMap
+ * Complete Functional Audit for State Quest Adventure
  * 
- * Tests the complete milestone progression from 0/36 to 36/36
- * Verifies:
- * - Single source of truth (no duplicate counters)
- * - Consistent data across all screens
- * - Correct message at each threshold
- * - Persistence across app restarts
+ * Tests comprehensive gameplay progression:
+ * 1. First user journey (avatar, age, onboarding)
+ * 2. State progression (unlock, current, completed)
+ * 3. Card progression (read, complete, unlock next)
+ * 4. Quiz gating and completion
+ * 5. Rewards (XP, badges, achievements, passport, postcards)
+ * 6. Data persistence and cross-screen consistency
+ * 7. Replay behavior (no duplicate rewards)
+ * 8. Rapid-tap safety (no race conditions)
  */
 
 import { test, expect } from '@playwright/test';
 
-// Helper to extract motivational message from home screen
-async function getMotivationalMessage(page) {
-  const messageText = await page.locator('text=/🚀 Start exploring|🌱 Great start|🌳 Halfway|🏆 Almost|👑 Congratulations/').first().innerText();
-  return messageText;
+// Testing utilities from window
+async function getProgressState(page) {
+  return await page.evaluate(() => {
+    const w = window as any;
+    return w.getProgressStateForTesting?.() || null;
+  });
 }
 
-// Helper to get completion count from home screen
-async function getCompletionCount(page) {
-  const countText = await page.locator('text=/\\d+ \\/ 36 states explored/').innerText();
-  const match = countText.match(/(\d+) \/ 36/);
-  return match ? parseInt(match[1]) : 0;
+async function completeStateForTesting(page, stateName: string) {
+  await page.evaluate((name) => {
+    const w = window as any;
+    w.completeStateForTesting?.(name);
+  }, stateName);
+  await page.waitForTimeout(300);
 }
 
-// Helper to get percentage from home screen
+async function resetProgressForTesting(page) {
+  await page.evaluate(() => {
+    const w = window as any;
+    w.resetProgressForTesting?.();
+  });
+  await page.waitForTimeout(300);
+}
+
 async function getCompletionPercentage(page) {
-  const countText = await page.locator('text=/\\d+% Complete/').innerText();
-  const match = countText.match(/(\d+)%/);
-  return match ? parseInt(match[1]) : 0;
+  return await page.evaluate(() => {
+    const w = window as any;
+    return w.getCompletionPercentageForTesting?.() ?? 0;
+  });
 }
 
-// Helper to programmatically complete states
-async function completeStates(page, count: number) {
-  // This uses the developer console to directly update progress
-  await page.evaluate((stateCount) => {
-    // Access the progress store
-    const window_obj = window as any;
-    
-    // Simulate completing N states
-    for (let i = 0; i < stateCount; i++) {
-      const stateName = [
-        'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
-        'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand',
-        'Karnataka', 'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur',
-        'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab',
-        'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura',
-        'Uttar Pradesh', 'Uttarakhand', 'West Bengal',
-        'Andaman and Nicobar Islands', 'Chandigarh', 'Dadra and Nagar Haveli and Daman and Diu',
-        'Lakshadweep', 'Delhi', 'Puducherry', 'Ladakh', 'Jammu and Kashmir'
-      ][i];
-      
-      // Trigger the completeState function
-      if (window_obj.completeStateForTesting) {
-        window_obj.completeStateForTesting(stateName);
-      }
-    }
-  }, count);
-  
-  // Wait for UI to update
-  await page.waitForTimeout(500);
+async function getMotivationalMessage(page) {
+  return await page.evaluate(() => {
+    const w = window as any;
+    return w.getMotivationalMessageForTesting?.() ?? '';
+  });
 }
 
 test.describe('IndiaProgressMap Functional Integration', () => {
