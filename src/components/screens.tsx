@@ -411,17 +411,19 @@ export function CreateProfileScreen() {
     <div className="w-full bg-gradient-to-b from-info-soft to-white flex flex-col select-none touch-none" style={{ touchAction: 'pan-y' }}>
       <div className="px-5 flex-1 overflow-auto">
         {/* Step 1: Avatar Selection */}
-        <div className="rounded-3xl gradient-explorer p-[--padding-lg] text-white relative overflow-hidden">
-          <Cloud className="absolute -top-3 right-2 w-16 opacity-40" />
-          <div className="text-h2 mt-[--space-1]">
-            Pick your avatar
-          </div>
-          <div className="text-body opacity-90">
-            Choose the explorer who will travel with you
+        <div className="rounded-3xl bg-gradient-to-br from-blue-500 via-blue-400 to-blue-600 p-8 text-white relative overflow-hidden shadow-elevated-3">
+          <Cloud className="absolute -top-6 right-4 w-20 opacity-30" />
+          <div className="relative z-10">
+            <div className="text-h1 font-black mt-2 leading-tight">
+              Pick your avatar
+            </div>
+            <div className="text-body-lg opacity-95 mt-3">
+              Choose the explorer who will travel with you
+            </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-[--gap-compact] mt-[--space-2]">
+        <div className="grid grid-cols-4 gap-3 mt-6">
           {avatarImages.map((a) => (
             <button
               key={a.id}
@@ -431,10 +433,10 @@ export function CreateProfileScreen() {
                 setAvatar(a.id);
                 setSaved(false);
               }}
-              className={`aspect-square rounded-2xl flex items-center justify-center border-4 transition-all duration-300 transform overflow-hidden ${
+              className={`aspect-square rounded-3xl flex items-center justify-center overflow-hidden transition-all duration-300 transform ring-offset-2 ${
                 a.id === avatar
-                  ? "border-gold shadow-glow-warm scale-110"
-                  : "border-muted/50 hover:border-muted hover:scale-105 hover:shadow-elevated-1"
+                  ? "ring-4 ring-gold shadow-glow-warm scale-110 ring-offset-blue-50"
+                  : "ring-2 ring-muted/30 shadow-elevated-2 hover:ring-muted hover:scale-108 hover:shadow-elevated-3"
               }`}
             >
               <img
@@ -451,22 +453,22 @@ export function CreateProfileScreen() {
           const selectedAvatar = avatarImages.find(a => a.id === avatar);
           const avatarName = getAvatarName(avatar);
           return selectedAvatar ? (
-            <div className="mt-[--space-3] rounded-2xl gradient-saffron p-[--padding-md] text-center text-white animate-fade-in flex items-center justify-center gap-[--gap-md]">
-              <img src={selectedAvatar.image} alt={avatarName} className="w-20 h-20 rounded-full border-4 border-white shadow-lg" />
+            <div className="mt-6 rounded-3xl bg-gradient-to-br from-orange-400 via-orange-300 to-orange-500 p-6 text-white animate-fade-in flex items-center justify-center gap-5 shadow-elevated-3 border-2 border-orange-200">
+              <img src={selectedAvatar.image} alt={avatarName} className="w-24 h-24 rounded-full border-4 border-white shadow-elevated-3" />
               <div>
-                <div className="text-body-sm opacity-90">Your explorer!</div>
-                <div className="text-h4 text-display">{avatarName}</div>
+                <div className="text-body-sm opacity-95 font-semibold">Your explorer!</div>
+                <div className="text-h3 text-display font-black mt-1">{avatarName}</div>
               </div>
             </div>
           ) : null;
         })()}
 
         {/* Age Selection with Vibrant Colors & Emojis */}
-        <div className="mt-[--space-4] mb-[--space-0-5]">
-          <label className="text-h5 text-muted-dark">
+        <div className="mt-8 mb-2">
+          <label className="text-h4 text-ink font-black">
             🎂 How old are you?
           </label>
-          <div className="mt-[--space-1] space-y-[--space-0-5]">
+          <div className="mt-4 space-y-3">
             {ageBands.map((band, idx) => {
               const isSelected = band.value === ageBand;
               return (
@@ -474,21 +476,21 @@ export function CreateProfileScreen() {
                   key={band.value}
                   type="button"
                   onClick={() => handleAgeSelect(band.value, idx)}
-                  className={`w-full h-16 rounded-2xl flex items-center justify-between px-5 font-extrabold transition-all duration-300 transform ${
+                  className={`w-full h-20 rounded-2xl flex items-center justify-between px-6 font-extrabold transition-all duration-300 transform ${
                     isSelected
-                      ? `bg-gradient-to-r ${band.gradient} text-white shadow-glow-warm scale-105 border-4 border-white`
-                      : "bg-white border-2 border-muted/50 text-muted-dark hover:border-muted hover:scale-102 hover:shadow-elevated-1"
+                      ? `bg-gradient-to-r ${band.gradient} text-white shadow-glow-warm scale-105 border-3 border-white`
+                      : "bg-white border-2 border-muted/40 text-muted-dark hover:border-muted/70 hover:scale-103 hover:shadow-elevated-2"
                   }`}
                 >
-                  <span className="text-4xl">{band.emoji}</span>
+                  <span className="text-5xl drop-shadow">{band.emoji}</span>
                   <div className="flex-1 text-center">
-                    <div className="text-body-lg">{band.value}</div>
-                    <div className={`text-caption transition-colors ${isSelected ? "text-white/90 font-semibold" : "text-muted-light"}`}>
+                    <div className="text-h3 font-black">{band.value}</div>
+                    <div className={`text-body-sm transition-colors font-semibold ${isSelected ? "text-white/95" : "text-muted"}`}>
                       {band.label}
                     </div>
                   </div>
                   {isSelected && (
-                    <div className="text-2xl animate-bounce">⭐</div>
+                    <div className="text-3xl animate-bounce drop-shadow">⭐</div>
                   )}
                 </button>
               );
@@ -502,11 +504,11 @@ export function CreateProfileScreen() {
         </div>
       </div>
 
-      <div className="p-[--padding-lg] pb-safe bg-white border-t border-muted-light">
+      <div className="p-6 pb-safe bg-white border-t-2 border-muted/30 shadow-2xl">
         <button
           onClick={handleProfileSave}
-          className={`w-full h-14 rounded-2xl bg-gradient-to-r from-green-500 to-green-400 text-white text-h4 text-display shadow-glow-success transition-all duration-300 transform font-bold ${
-            saved ? "scale-95 opacity-80" : "hover:shadow-elevated-hover hover:scale-105 active:scale-95"
+          className={`w-full h-16 rounded-full bg-gradient-to-r from-green-500 via-green-400 to-green-600 text-white text-h3 text-display shadow-glow-success transition-all duration-300 transform font-black tracking-wide ${
+            saved ? "scale-95 opacity-80" : "hover:shadow-elevated-4 hover:scale-108 active:scale-95"
           }`}
         >
           {saved ? "🎉 Saved ✓" : "Continue → Let's Explore!"}
