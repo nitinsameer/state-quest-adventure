@@ -137,6 +137,9 @@ rebuild-log.txt
 # Lovable Config
 .lovable/
 
+# Kiro Agent Artifacts & Workflow Outputs
+.agents/
+
 # Working Directories & Temporary Files
 DOCUMENT/
 SCRIPT/
