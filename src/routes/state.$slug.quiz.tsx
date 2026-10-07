@@ -1,12 +1,20 @@
-import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, notFound, redirect, useNavigate } from "@tanstack/react-router";
 import { QuizScreen } from "@/components/screens";
 import { getStateBySlug } from "@/lib/states";
 import { NotFoundPlace, PlaceError } from "@/components/PlaceFallbacks";
+import { getProgress, cardsDone, CARDS_PER_STATE } from "@/lib/progress";
 
 export const Route = createFileRoute("/state/$slug/quiz")({
   loader: ({ params }) => {
     const state = getStateBySlug(params.slug);
     if (!state) throw notFound();
+
+    const progress = getProgress();
+    if (cardsDone(progress, state.name) < CARDS_PER_STATE) {
+      console.warn("[QuizRoute] Guard check failed, redirecting — cards not all done");
+      throw redirect({ to: "/state/$slug/learn", params: { slug: params.slug } });
+    }
+
     return { name: state.name };
   },
   head: ({ loaderData }) => {
