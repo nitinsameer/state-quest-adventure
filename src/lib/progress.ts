@@ -291,6 +291,14 @@ export function useProgress(): Progress {
   );
 }
 
+/**
+ * Direct (non-hook) access to the current progress snapshot.
+ * Use this in route loaders and other non-React contexts where hooks are forbidden.
+ */
+export function getProgress(): Progress {
+  return current;
+}
+
 /* ---------- actions ---------- */
 
 export function saveProfile(profile: { name: string; avatar: string; ageBand: string }) {
