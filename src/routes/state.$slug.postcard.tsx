@@ -1,12 +1,20 @@
-import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, notFound, redirect, useNavigate } from "@tanstack/react-router";
 import { StatePostcardScreen } from "@/components/PostcardScreen";
 import { getStateBySlug } from "@/lib/states";
 import { NotFoundPlace, PlaceError } from "@/components/PlaceFallbacks";
+import { getProgress } from "@/lib/progress";
 
 export const Route = createFileRoute("/state/$slug/postcard")({
   loader: ({ params }) => {
     const state = getStateBySlug(params.slug);
     if (!state) throw notFound();
+
+    const progress = getProgress();
+    if (!progress.completed.includes(state.name)) {
+      console.warn("[PostcardRoute] Guard check failed, redirecting — state not completed");
+      throw redirect({ to: "/state/$slug/", params: { slug: params.slug } });
+    }
+
     return { name: state.name };
   },
   head: ({ loaderData }) => {
