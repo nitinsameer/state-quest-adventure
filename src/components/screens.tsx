@@ -597,6 +597,7 @@ export function HomeDashboardScreen() {
               confetti: true,
               duration: 3000,
               type: "success",
+              showCloseButton: true,
             }
           );
           localStorage.setItem(`india-explorer:streak-milestone-${p.streak}:v1`, "true");
@@ -786,75 +787,12 @@ export function HomeDashboardScreen() {
         );
       })()}
 
-      {/* Stamp Collection Display */}
+      {/* Stamp Collection Display - HIDDEN: Breaking home screen layout */}
       {(() => {
-        const stamps = getPostcardsArray(p);
-        const totalStamps = getTotalStampCount();
-        const collectedPercent = Math.round((stamps.length / totalStamps) * 100);
-
-        if (stamps.length === 0) return null;
-
-        return (
-          <div className="px-5 mt-5 animate-fade-in">
-            <div className="rounded-2xl bg-gradient-to-br from-green-500 via-green-400 to-emerald-300 text-white p-4 shadow-elevated-2 transition-all hover:shadow-elevated-3">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl">🎫</span>
-                  <div>
-                    <div className="text-label opacity-90">Stamp Collection</div>
-                    <div className="text-body font-bold">{stamps.length}/{totalStamps} Collected</div>
-                  </div>
-                </div>
-                <Link 
-                  to="/explorer" 
-                  onClick={() => fxTap()}
-                  className="text-label opacity-90 hover:opacity-100 underline transition-all duration-200"
-                >
-                  View all →
-                </Link>
-              </div>
-
-              {/* Progress bar */}
-              <div className="mb-3 h-2 bg-white/30 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-white transition-all duration-500"
-                  style={{ width: `${collectedPercent}%` }}
-                />
-              </div>
-
-              {/* Stamp grid - show first 12 stamps */}
-              <div className="grid grid-cols-6 gap-2">
-                {stamps.slice(0, 12).map((postcard, idx) => {
-                  const state = INDIA_STATES.find(s => s.name === postcard.stateName);
-                  return (
-                    <div
-                      key={`${postcard.stateName}-${idx}`}
-                      className="aspect-square rounded-lg bg-white/25 border border-white/50 flex items-center justify-center text-xl hover:bg-white/40 hover:shadow-elevated-1 hover:scale-110 transition-all duration-200 cursor-pointer"
-                      title={postcard.stateName}
-                    >
-                      {state?.emoji}
-                    </div>
-                  );
-                })}
-                {/* Show empty slots for uncollected stamps */}
-                {stamps.length < 12 && Array.from({ length: Math.min(12 - stamps.length, totalStamps - stamps.length) }).map((_, idx) => (
-                  <div
-                    key={`empty-${idx}`}
-                    className="aspect-square rounded-lg bg-white/10 border-2 border-dashed border-white/30 flex items-center justify-center text-xs opacity-50"
-                  >
-                    ?
-                  </div>
-                ))}
-              </div>
-
-              {stamps.length > 12 && (
-                <div className="text-xs text-center mt-2 opacity-90">+{stamps.length - 12} more stamps</div>
-              )}
-            </div>
-          </div>
-        );
+        // Disabled: Green popup breaking home screen UX
+        return null;
       })()}
-
+      
       {/* Streak Protection Alert */}
       {(() => {
         const streakStatus = getStreakStatus(p);
@@ -1092,7 +1030,7 @@ function StatCard({
       <div className="text-display text-h2 leading-snug mt-1">
         {value}
       </div>
-      <div className="text-label text-muted-foreground">
+      <div className="text-label text-slate-700">
         {label}
       </div>
     </div>
@@ -1144,7 +1082,7 @@ function StatCardEnhanced({
         </div>
         
         {/* Label */}
-        <div className="text-label text-muted-foreground px-1">
+        <div className="text-label text-slate-700 px-1">
           {label}
         </div>
       </div>
@@ -1240,7 +1178,7 @@ function StateDetailModal({
           <h2 className="text-h2 text-ink">
             {stateName}
           </h2>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="text-sm text-slate-600 mt-1">
             {state.isUT ? "Union Territory" : "State"} · {stateData.capital}
           </p>
         </div>
@@ -1255,20 +1193,20 @@ function StateDetailModal({
               <div className="flex items-start gap-2">
                 <span className="text-2xl flex-shrink-0">{stateData.animal}</span>
                 <div>
-                  <p className="text-body font-bold text-muted-dark">State Animal</p>
-                  <p className="text-muted">{stateData.animalName}</p>
+                  <p className="text-body font-bold text-slate-800">State Animal</p>
+                  <p className="text-slate-700">{stateData.animalName}</p>
                 </div>
               </div>
               <div className="flex items-start gap-2">
                 <span className="text-2xl flex-shrink-0">{stateData.monument}</span>
                 <div>
-                  <p className="text-body font-bold text-muted-dark">Famous Monument</p>
-                  <p className="text-muted">{stateData.monumentName}</p>
+                  <p className="text-body font-bold text-slate-800">Famous Monument</p>
+                  <p className="text-slate-700">{stateData.monumentName}</p>
                 </div>
               </div>
               <div className="pt-2 border-t border-warning">
                 <p className="text-xs font-bold text-warning mb-1">Fun Fact</p>
-                <p className="text-muted italic">{stateData.funFact}</p>
+                <p className="text-slate-700 italic">{stateData.funFact}</p>
               </div>
             </div>
           </div>
@@ -1280,7 +1218,7 @@ function StateDetailModal({
             <p className="text-h5 text-warning mb-2">
               🔐 Locked
             </p>
-            <p className="text-body text-warning-light">
+            <p className="text-body text-orange-700">
               Complete the previous state to unlock this adventure!
             </p>
           </div>
@@ -2589,6 +2527,7 @@ export function LearningCardScreen({
   const card = currentCard; // Use validated currentCard from useMemo
   const isLast = currentCardIndex >= 0 && currentCardIndex === cards.length - 1;
   const isReplaying = currentCardIndex >= 0 && currentCard ? isCardReplaying(progress, state.name, currentCardIndex) : false;
+  const replayCount = currentCardIndex >= 0 ? getReplayCount(progress, state.name, currentCardIndex) : 0;
 
   // Safety check: ensure card exists and currentCardIndex is valid
   if (!card || currentCardIndex < 0 || !Array.isArray(cards) || cards.length === 0) {
@@ -2597,7 +2536,7 @@ export function LearningCardScreen({
         <div className="text-center">
           <div className="text-5xl mb-3">⚠️</div>
           <h1 className="text-h4 text-ink mb-2">Card content unavailable</h1>
-          <p className="text-sm text-muted-foreground mb-4">Please try again or go back</p>
+          <p className="text-sm text-slate-700 mb-4">Please try again or go back</p>
           <button
             onClick={() => window.history.back()}
             className="px-4 py-2 rounded-lg bg-info-soft0 text-white font-bold"
@@ -2667,16 +2606,17 @@ export function LearningCardScreen({
         // Trigger floating XP animation
         const feedbackId = `xp-${Date.now()}-${Math.random()}`;
         
-        celebration.custom(
-          `${currentCard.kicker} card learned!`,
-          "📚",
-          {
-            subtitle: `+${XP_PER_CARD} XP earned • ${cardIndexInCategory + 1}/${cardsInCurrentCategory.length} cards in ${currentCard.kicker}`,
-            confetti: true,
-            duration: 2000,
-            type: "success",
-          }
-        );
+        // DISABLED FOR NOW - PHASE 2: Card learning celebration
+        // celebration.custom(
+        //   `${currentCard.kicker} card learned!`,
+        //   "📚",
+        //   {
+        //     subtitle: `+${XP_PER_CARD} XP earned • ${cardIndexInCategory + 1}/${cardsInCurrentCategory.length} cards in ${currentCard.kicker}`,
+        //     confetti: true,
+        //     duration: 2000,
+        //     type: "success",
+        //   }
+        // );
         
         // Auto-advance to next card after celebration
         setTimeout(() => {
@@ -2698,16 +2638,17 @@ export function LearningCardScreen({
       // Show category completion celebration
       if (!isReplaying) {
         fxCorrect();
-        celebration.custom(
-          `${currentCard.kicker} card learned!`,
-          "📚",
-          {
-            subtitle: `+${XP_PER_CARD} XP earned • ${currentCard.kicker} category complete! 🎓`,
-            confetti: true,
-            duration: 2000,
-            type: "success",
-          }
-        );
+        // DISABLED FOR NOW - PHASE 2: Card learning celebration
+        // celebration.custom(
+        //   `${currentCard.kicker} card learned!`,
+        //   "📚",
+        //   {
+        //     subtitle: `+${XP_PER_CARD} XP earned • ${currentCard.kicker} category complete! 🎓`,
+        //     confetti: true,
+        //     duration: 2000,
+        //     type: "success",
+        //   }
+        // );
         
         // Auto-advance to next category or exit after celebration
         setTimeout(() => {
@@ -2749,6 +2690,7 @@ export function LearningCardScreen({
           confetti: true,
           duration: 2500,
           type: "success",
+          showCloseButton: true,
         }
       );
     }
@@ -2948,7 +2890,7 @@ export function LearningCardScreen({
             <div className="text-center">
               <div className="text-5xl mb-3">🎧</div>
               <h3 className="text-display text-xl font-extrabold text-ink">Enable Audio?</h3>
-              <p className="text-sm text-muted-foreground mt-2">
+              <p className="text-sm text-slate-700 mt-2">
                 Turn on audio to hear the stories read aloud! 🎵
               </p>
             </div>
@@ -2970,7 +2912,7 @@ export function LearningCardScreen({
                   fxTap();
                   setShowAudioPermissionPrompt(false);
                 }}
-                className="flex-1 h-12 rounded-xl bg-muted text-muted-dark font-bold text-sm"
+                className="flex-1 h-12 rounded-xl bg-slate-200 text-slate-800 font-bold text-sm"
               >
                 Maybe Later
               </button>
@@ -3259,11 +3201,20 @@ export function QuizScreen({
   );
 }
 
-export function CorrectAnswerScreen({ stateName }: { stateName?: string } = {}) {
+export function CorrectAnswerScreen({ stateName, onDismiss }: { stateName?: string; onDismiss?: () => void } = {}) {
   const state = getState(stateName);
   useEffect(() => { fxCorrect(); }, []);
   return (
     <div className="h-full w-full gradient-success relative overflow-hidden flex flex-col">
+      {/* Premium Close Button - Top Right */}
+      <button
+        onClick={onDismiss}
+        className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/30 hover:bg-white/50 text-white flex items-center justify-center text-lg transition-all duration-200 z-10"
+        aria-label="Close"
+      >
+        ✕
+      </button>
+
       {/* confetti dots */}
       {Array.from({ length: 22 }).map((_, i) => (
         <div
@@ -3368,26 +3319,27 @@ export function StateCompletedScreen({
             if (perf?.earnedPerformanceBadges) {
               setEarnedPerformanceBadges(perf.earnedPerformanceBadges);
               
+              // DISABLED FOR NOW - PHASE 2: Performance badge celebrations
               // Show celebration for each badge earned
-              perf.earnedPerformanceBadges.forEach((badgeId: string, idx: number) => {
-                setTimeout(() => {
-                  const { STATE_PERFORMANCE_BADGE_DEFS, getPerformanceBadgeIcon } = require("@/lib/state-performance-badges");
-                  const badgeDef = STATE_PERFORMANCE_BADGE_DEFS[badgeId as keyof typeof STATE_PERFORMANCE_BADGE_DEFS];
-                  
-                  if (badgeDef && celebration) {
-                    celebration.custom(
-                      badgeDef.name,
-                      getPerformanceBadgeIcon(badgeId as any),
-                      {
-                        subtitle: badgeDef.description,
-                        confetti: true,
-                        duration: 2500,
-                        type: "success",
-                      }
-                    );
-                  }
-                }, idx * 1500);
-              });
+              // perf.earnedPerformanceBadges.forEach((badgeId: string, idx: number) => {
+              //   setTimeout(() => {
+              //     const { STATE_PERFORMANCE_BADGE_DEFS, getPerformanceBadgeIcon } = require("@/lib/state-performance-badges");
+              //     const badgeDef = STATE_PERFORMANCE_BADGE_DEFS[badgeId as keyof typeof STATE_PERFORMANCE_BADGE_DEFS];
+              //     
+              //     if (badgeDef && celebration) {
+              //       celebration.custom(
+              //         badgeDef.name,
+              //         getPerformanceBadgeIcon(badgeId as any),
+              //         {
+              //           subtitle: badgeDef.description,
+              //           confetti: true,
+              //           duration: 2500,
+              //           type: "success",
+              //         }
+              //       );
+              //     }
+              //   }, idx * 1500);
+              // });
             }
           }, 100);
         }
@@ -3401,6 +3353,18 @@ export function StateCompletedScreen({
 
   return (
     <div className="h-full w-full bg-gradient-to-b from-yellow-300 via-yellow-200 to-orange-200 relative overflow-hidden flex flex-col items-center">
+      {/* Premium Close Button - Top Right */}
+      <button
+        onClick={() => {
+          fxTap();
+          onContinue?.();
+        }}
+        className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/30 hover:bg-white/50 text-white flex items-center justify-center text-lg transition-all duration-200 z-10"
+        aria-label="Close"
+      >
+        ✕
+      </button>
+
       <ConfettiBurst trigger={burstKey} size="big" />
       {Array.from({ length: 12 }).map((_, i) => (
         <div
@@ -3536,6 +3500,18 @@ export function StateUnlockScreen({
   }, []);
   return (
     <div className="h-full w-full gradient-explorer relative overflow-hidden flex flex-col">
+      {/* Premium Close Button - Top Right */}
+      <button
+        onClick={() => {
+          fxTap();
+          onContinue?.();
+        }}
+        className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/30 hover:bg-white/50 text-white flex items-center justify-center text-lg transition-all duration-200 z-10"
+        aria-label="Close"
+      >
+        ✕
+      </button>
+
       <Cloud className="absolute top-10 left-2 w-28 opacity-90" />
       <Cloud className="absolute top-20 right-0 w-24 opacity-85" />
       <Cloud className="absolute bottom-56 left-0 w-32 opacity-80" />

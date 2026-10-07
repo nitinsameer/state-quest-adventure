@@ -216,8 +216,8 @@ export function PassportSeedling() {
 
       {/* Region Title & Progress */}
       <div className="px-5 mt-4 mb-2">
-        <div className="text-lg font-extrabold text-muted-dark">{region.name}</div>
-        <div className="text-sm font-semibold text-muted mt-1">
+        <div className="text-lg font-extrabold text-slate-900">{region.name}</div>
+        <div className="text-sm font-semibold text-slate-600 mt-1">
           {regionProgress} explored {unlockedInRegion.length === regionStates.length && "✨ Region Complete!"}
         </div>
         <div className="mt-2 h-2 bg-muted rounded-full overflow-hidden">

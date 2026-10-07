@@ -14,6 +14,7 @@ export interface CelebrationConfig {
     label: string;
     onClick: () => void;
   };
+  showCloseButton?: boolean;
 }
 
 interface CelebrationStore {

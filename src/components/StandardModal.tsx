@@ -27,6 +27,8 @@ export interface StandardModalProps {
     icon: ReactNode;
     title: string;
     subtitle?: string;
+    closeButton?: boolean;
+    onClose?: () => void;
   };
   
   /** Main content sections */
@@ -84,8 +86,17 @@ export function StandardModal({
               headerGradient
                 ? `bg-gradient-to-r ${headerGradient[0]} ${headerGradient[1]}`
                 : "bg-gradient-to-r from-blue-400 to-cyan-500"
-            } p-[--padding-lg] flex flex-col items-center text-center`}
+            } p-[--padding-lg] flex flex-col items-center text-center relative`}
           >
+            {header.closeButton && (
+              <button
+                onClick={header.onClose}
+                className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/30 hover:bg-white/50 text-white flex items-center justify-center text-lg transition-all duration-200 z-10"
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            )}
             <div className="text-5xl mb-[--space-3]">{header.icon}</div>
             <h2 className="text-2xl font-extrabold text-white">{header.title}</h2>
             {header.subtitle && (
