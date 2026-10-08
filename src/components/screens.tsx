@@ -3269,12 +3269,14 @@ export function StateCompletedScreen({
   persist = true,
   onContinue,
   onCreatePostcard,
+  onReplay,
   quizMetrics,
 }: { 
   stateName?: string
   persist?: boolean
   onContinue?: () => void
   onCreatePostcard?: () => void
+  onReplay?: () => void
   quizMetrics?: {
     timeToComplete: number
     quizAttempts: number
@@ -3357,10 +3359,11 @@ export function StateCompletedScreen({
       <button
         onClick={() => {
           fxTap();
-          onContinue?.();
+          // Close button does nothing - user must choose See Stamp or Replay
         }}
-        className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/30 hover:bg-white/50 text-white flex items-center justify-center text-lg transition-all duration-200 z-10"
-        aria-label="Close"
+        className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/30 hover:bg-white/50 text-white flex items-center justify-center text-lg transition-all duration-200 z-10 cursor-not-allowed opacity-50"
+        aria-label="Choose an action"
+        disabled
       >
         ✕
       </button>
@@ -3460,26 +3463,26 @@ export function StateCompletedScreen({
       </div>
 
       <div className="mt-auto p-6 w-full space-y-3">
-        {/* Primary CTA: Add Stamp */}
+        {/* Primary CTA: See Stamp */}
         <button
           onClick={() => {
             fxTap();
             onCreatePostcard?.();
           }}
-          className="w-full h-14 rounded-2xl bg-gradient-to-r from-purple-500 via-purple-400 to-pink-500 text-white text-display text-lg font-extrabold shadow-glow-warm active:scale-95 transition-all duration-200 hover:shadow-elevated-hover hover:scale-105"
+          className="w-full h-14 rounded-2xl bg-gradient-to-r from-orange-400 via-orange-500 to-amber-500 text-white text-display text-lg font-extrabold shadow-glow-warm active:scale-95 transition-all duration-200 hover:shadow-elevated-hover hover:scale-105"
         >
-          ✨ Add Stamp
+          👁️ See Stamp
         </button>
 
-        {/* Secondary CTA: Skip to Next State */}
+        {/* Secondary CTA: Replay */}
         <button
           onClick={() => {
             fxTap();
-            onContinue?.();
+            onReplay?.();
           }}
-          className="w-full h-12 rounded-xl bg-gradient-to-r from-orange-400 to-orange-500 text-white text-display font-bold shadow-elevated-2 active:scale-95 transition-all duration-200 hover:shadow-elevated-hover hover:scale-105"
+          className="w-full h-12 rounded-xl bg-white/20 backdrop-blur text-white text-display font-bold shadow-elevated-2 active:scale-95 transition-all duration-200 hover:shadow-elevated-hover hover:scale-105"
         >
-          ⏭️ Skip to Next State
+          🔄 Replay
         </button>
       </div>
     </div>

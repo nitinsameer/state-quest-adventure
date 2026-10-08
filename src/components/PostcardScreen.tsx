@@ -49,8 +49,9 @@ function roundRect(
 
 export function StatePostcardScreen({
   stateName,
-  onContinue,
-}: { stateName?: string; onContinue?: () => void } = {}) {
+  onHome,
+  onNextState,
+}: { stateName?: string; onHome?: () => void; onNextState?: () => void } = {}) {
   const state = getState(stateName);
   const progress = useProgress();
   const navigate = useNavigate();
@@ -267,10 +268,7 @@ export function StatePostcardScreen({
     toast.success("📱 Stamp added to your Stamps!", {
       subtitle: "View anytime from your Stamps tab",
     });
-    // Auto-navigate to unlock screen after a short delay
-    setTimeout(() => {
-      onContinue?.();
-    }, 1500);
+    // No auto-navigation - user explicitly chooses Home or Next State
   }
 
   return (
@@ -312,7 +310,7 @@ export function StatePostcardScreen({
 
       {/* Action Buttons */}
       <div className="p-[--padding-md] pt-2 relative z-10 space-y-2">
-        {/* Row 1: Save to Photos & Skip for Now (side by side) */}
+        {/* Row 1: Save to Photos & Keep in App (side by side) */}
         <div className="flex gap-[--gap-compact]">
           {/* Primary: Save to Photos */}
           <button
@@ -323,24 +321,34 @@ export function StatePostcardScreen({
             {busy ? "Saving..." : "📸 Save"}
           </button>
 
-          {/* Tertiary: Skip */}
+          {/* Secondary: Keep in App */}
           <button
-            onClick={() => {
-              fxTap();
-              onContinue?.();
-            }}
-            className="flex-1 h-12 rounded-2xl bg-white/25 backdrop-blur text-white text-sm font-bold active:scale-95 transition-transform"
+            onClick={handleKeepInApp}
+            className="flex-1 h-12 rounded-2xl bg-blue-100 text-blue-700 text-sm font-bold active:scale-95 transition-transform"
           >
-            ⏭️ Skip
+            📱 Keep
           </button>
         </div>
 
-        {/* Row 2: Keep in App (full width) */}
+        {/* Row 2: Home (Primary) & Next State (Secondary) - full width each */}
         <button
-          onClick={handleKeepInApp}
-          className="w-full h-14 rounded-2xl bg-blue-100 text-blue-700 text-display font-extrabold active:scale-95 transition-transform"
+          onClick={() => {
+            fxTap();
+            onHome?.();
+          }}
+          className="w-full h-14 rounded-2xl bg-gradient-to-r from-orange-400 to-orange-500 text-white text-display font-extrabold shadow-xl active:scale-95 transition-transform"
         >
-          📱 Keep in My Stamps
+          🏠 Home
+        </button>
+
+        <button
+          onClick={() => {
+            fxTap();
+            onNextState?.();
+          }}
+          className="w-full h-12 rounded-xl bg-white/20 backdrop-blur text-white text-display font-bold active:scale-95 transition-transform"
+        >
+          Next State ✈️
         </button>
       </div>
 

@@ -52,7 +52,8 @@ function Postcard() {
     <StatePostcardScreen
       key={slug}
       stateName={name}
-      onContinue={() => navigate({ to: "/state/$slug/unlock", params: { slug } })}
+      onHome={() => navigate({ to: "/home" })}
+      onNextState={() => navigate({ to: "/state/$slug/unlock", params: { slug } })}
     />
   );
 }

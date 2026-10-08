@@ -42,14 +42,14 @@ function Complete() {
   const navigate = useNavigate();
   
   const goToPostcard = () => navigate({ to: "/state/$slug/postcard", params: { slug } });
-  const goToUnlock = () => navigate({ to: "/state/$slug/unlock", params: { slug } });
+  const goToReplay = () => navigate({ to: "/state/$slug/learn", params: { slug } });
 
   return (
     <StateCompletedScreen 
       key={slug} 
       stateName={name} 
       onCreatePostcard={goToPostcard}
-      onContinue={goToUnlock}
+      onReplay={goToReplay}
     />
   );
 }
