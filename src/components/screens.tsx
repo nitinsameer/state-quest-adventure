@@ -2167,6 +2167,32 @@ export function LearningHubScreen({
         ))}
       </div>
       <div className="p-4">
+        {/* Category Progress Indicator */}
+        <div className="mb-4">
+          <div className="flex justify-center gap-2 mb-3">
+            {cards.map((card, i) => (
+              <div
+                key={i}
+                className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold transition-all ${
+                  card.done
+                    ? "bg-success text-white"
+                    : "bg-slate-300 text-slate-700"
+                }`}
+              >
+                {card.done ? "✓" : i + 1}
+              </div>
+            ))}
+          </div>
+          <div className="text-center text-xs font-bold text-slate-700">
+            {completedCards}/6 categories complete
+          </div>
+          {completedCards < 6 && (
+            <div className="text-center text-xs text-slate-600 mt-1">
+              Complete all 6 to unlock the quiz
+            </div>
+          )}
+        </div>
+
         {/* Quiz Button with Completion Guard */}
         <button
           onClick={() => {
@@ -2174,15 +2200,15 @@ export function LearningHubScreen({
             onQuiz?.();
           }}
           disabled={completedCards < 6}
-          className={`w-full h-14 rounded-2xl text-white text-h4 text-display shadow-[var(--shadow-glow-green)] transition ${
+          className={`w-full h-14 rounded-2xl text-h4 text-display transition ${
             completedCards === 6
-              ? "gradient-success"
-              : "bg-muted opacity-60 cursor-not-allowed"
+              ? "gradient-success text-white shadow-[var(--shadow-glow-green)]"
+              : "bg-slate-500/40 text-slate-400 cursor-not-allowed"
           }`}
         >
           {completedCards === 6 
             ? "Take the Quiz! 🎯" 
-            : `Take the Quiz! 🎯 (${completedCards}/6 categories)`
+            : `🔒 Quiz Locked (${completedCards}/6 done)`
           }
         </button>
       </div>
@@ -2250,8 +2276,10 @@ function HubCard({
       <div className="text-xs font-bold text-muted-foreground">{sub}</div>
       {/* Category-scoped progress counter */}
       {categoryCardsTotal !== undefined && categoryCardsRead !== undefined && (
-        <div className="mt-2 text-xs font-bold text-muted-foreground">
-          {categoryCardsRead}/{categoryCardsTotal} cards
+        <div className={`mt-2 text-xs font-bold ${
+          done ? "text-success" : "text-muted-foreground"
+        }`}>
+          {categoryCardsRead}/{categoryCardsTotal} cards{done && " ✓"}
         </div>
       )}
       {done && (
