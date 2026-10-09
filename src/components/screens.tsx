@@ -35,6 +35,7 @@ import { LanguageSelector } from "@/components/LanguageSelector";
 import { PostcardModal } from "@/components/PostcardModal";
 import { PostcardPreviewModal } from "@/components/PostcardPreviewModal";
 import { CardProgressBar } from "@/components/CardProgressBar";
+import { JourneyDestinationCard } from "@/components/JourneyDestinationCard";
 
 import { DailyGoalCard } from "@/components/DailyGoalCard";
 import { lazy, Suspense } from "react";
@@ -1619,73 +1620,50 @@ export function JourneyMapScreen() {
                 </div>
                 )}
 
-                {/* States in this region - 3-Column Grid layout with Premium Shadows */}
+                {/* States in this region - 2-Column Grid on mobile, 3-col tablet, 4-col desktop */}
                 {isRegionExpanded && (
-                <div className="grid grid-cols-3 mb-4" style={{ gap: 'var(--gap-base)' }}>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mb-4" style={{ gap: 'var(--gap-base)' }}>
                   {regionStates.map((state, stateIndex) => {
                     const isLocked = state.status === "locked";
                     const isDone = state.status === "done";
                     const isCurrent = state.status === "current";
-                    const isAvailable = state.status === "available"; // New status
-                    const isFirstState = stateIndex === 0; // First state in region
+                    const isAvailable = state.status === "available";
                     
                     // Detect in-progress state (partially completed cards)
                     const cardsRead = cardsDone(p, state.name);
                     const totalCards = INDIA_STATES.find(s => s.name === state.name)?.cards?.length ?? 6;
                     const isInProgress = !isDone && cardsRead > 0 && cardsRead < totalCards;
                     
+                    // Determine card status
+                    let cardStatus: "available" | "completed" | "locked" = "available";
+                    if (isDone) {
+                      cardStatus = "completed";
+                    } else if (isLocked) {
+                      cardStatus = "locked";
+                    } else if (isAvailable || isCurrent || isInProgress) {
+                      cardStatus = "available";
+                    }
+                    
                     return (
-                      <button
+                      <JourneyDestinationCard
                         key={state.name}
-                        onClick={() => {
+                        stateName={state.name}
+                        status={cardStatus}
+                        cardIndex={stateIndex}
+                        isInProgress={isInProgress}
+                        cardsDone={cardsRead}
+                        totalCards={totalCards}
+                        onStart={() => {
                           fxTap();
                           if (!isLocked) {
                             setView({ screen: "intro", name: state.name });
                           }
                         }}
-                        className={`p-[--padding-base] rounded-2xl transition transform active:scale-95 ${
-                          isDone
-                            ? `bg-gradient-to-br ${region.gradient} text-white shadow-elevated-2 hover:shadow-elevated-3`
-                            : isCurrent || (isFirstState && !isDone && !isLocked)
-                            ? `bg-gradient-to-br from-yellow-300 to-orange-400 text-white shadow-elevated-2 hover:shadow-elevated-3 scale-105 animate-pulse`
-                            : isAvailable
-                            ? `bg-white text-slate-800 shadow-elevated-1 hover:shadow-elevated-2 hover:scale-105 border border-black/5` // Available states - clickable with white bg
-                            : `bg-muted text-muted shadow-elevated-1 ${isLocked ? "opacity-60 cursor-not-allowed" : ""}`
-                        }`}
-                      >
-                        <img
-                          src={STATE_ART[state.name]}
-                          alt={state.name}
-                          className="w-12 h-12 object-cover rounded mb-1 mx-auto"
-                          loading="lazy"
-                          decoding="async"
-                        />
-                        <div className="text-xs font-extrabold leading-tight">{state.name}</div>
-                        {isDone && (
-                          <div className="text-[10px] font-bold mt-1 opacity-90">✓ Done</div>
-                        )}
-                        {isInProgress && (
-                          <div className="mt-1 w-full">
-                            <div className="text-[9px] font-bold opacity-80">{cardsRead}/{totalCards} adventures</div>
-                            <div className="h-1 bg-white/30 rounded-full mt-0.5 overflow-hidden">
-                              <div className="h-full bg-white rounded-full" style={{ width: `${Math.round((cardsRead / totalCards) * 100)}%` }} />
-                            </div>
-                            <div className="text-[10px] font-bold mt-0.5">▶ Continue</div>
-                          </div>
-                        )}
-                        {isCurrent && !isInProgress && (
-                          <div className="text-[10px] font-bold mt-1">▶ Play</div>
-                        )}
-                        {isDone && !isCurrent && (
-                          <div className="text-[10px] font-bold mt-1 opacity-90">↻ Replay</div>
-                        )}
-                        {isAvailable && !isInProgress && (
-                          <div className="text-[10px] font-bold mt-1">▶ Play</div>
-                        )}
-                        {isLocked && (
-                          <div className="text-[10px] font-bold mt-1">🔒 Locked</div>
-                        )}
-                      </button>
+                        onReplay={() => {
+                          fxTap();
+                          setView({ screen: "intro", name: state.name });
+                        }}
+                      />
                     );
                   })}
                 </div>
@@ -1720,73 +1698,50 @@ export function JourneyMapScreen() {
 
             {/* UTs Grid - 3 Column with Premium Styling */}
             {expandedRegion === "unionTerritories" && (
-            <div className="grid grid-cols-3 mb-4" style={{ gap: 'var(--gap-base)' }}>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mb-4" style={{ gap: 'var(--gap-base)' }}>
               {nodes.filter(n => n.isUT).map((utNode, utIndex) => {
                 const utState = states.find(s => s.name === utNode.name);
                 if (!utState) return null;
                 const isLocked = utNode.status === "locked";
                 const isDone = utNode.status === "done";
                 const isCurrent = utNode.status === "current";
-                const isAvailable = utNode.status === "available"; // New status
-                const isFirstState = utIndex === 0; // First UT in list
+                const isAvailable = utNode.status === "available";
                 
                 // Detect in-progress state (partially completed cards)
                 const cardsRead = cardsDone(p, utNode.name);
                 const totalCards = INDIA_STATES.find(s => s.name === utNode.name)?.cards?.length ?? 6;
                 const isInProgress = !isDone && cardsRead > 0 && cardsRead < totalCards;
                 
+                // Determine card status
+                let cardStatus: "available" | "completed" | "locked" = "available";
+                if (isDone) {
+                  cardStatus = "completed";
+                } else if (isLocked) {
+                  cardStatus = "locked";
+                } else if (isAvailable || isCurrent || isInProgress) {
+                  cardStatus = "available";
+                }
+                
                 return (
-                  <button
+                  <JourneyDestinationCard
                     key={utNode.name}
-                    onClick={() => {
+                    stateName={utNode.name}
+                    status={cardStatus}
+                    cardIndex={utIndex}
+                    isInProgress={isInProgress}
+                    cardsDone={cardsRead}
+                    totalCards={totalCards}
+                    onStart={() => {
                       fxTap();
                       if (!isLocked) {
                         setView({ screen: "intro", name: utNode.name });
                       }
                     }}
-                    className={`p-3 rounded-2xl transition transform active:scale-95 ${
-                      isDone
-                        ? "bg-gradient-to-br from-blue-400 to-purple-500 text-white shadow-elevated-2 hover:shadow-elevated-3"
-                        : isCurrent || (isFirstState && !isDone && !isLocked)
-                        ? "bg-gradient-to-br from-yellow-300 to-orange-400 text-white shadow-elevated-2 hover:shadow-elevated-3 scale-105 animate-pulse"
-                        : isAvailable
-                        ? "bg-white text-slate-800 shadow-elevated-1 hover:shadow-elevated-2 hover:scale-105 border border-black/5" // Available UTs with white bg
-                        : `bg-muted text-muted shadow-elevated-1 ${isLocked ? "opacity-60 cursor-not-allowed" : ""}`
-                    }`}
-                  >
-                    <img
-                      src={STATE_ART[utState.name]}
-                      alt={utState.name}
-                      className="w-12 h-12 object-cover rounded mb-1 mx-auto"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                    <div className="text-xs font-extrabold leading-tight">{utState.name}</div>
-                    {isDone && (
-                      <div className="text-[10px] font-bold mt-1 opacity-90">✓ Done</div>
-                    )}
-                    {isInProgress && (
-                      <div className="mt-1 w-full">
-                        <div className="text-[9px] font-bold opacity-80">{cardsRead}/{totalCards} adventures</div>
-                        <div className="h-1 bg-white/30 rounded-full mt-0.5 overflow-hidden">
-                          <div className="h-full bg-white rounded-full" style={{ width: `${Math.round((cardsRead / totalCards) * 100)}%` }} />
-                        </div>
-                        <div className="text-[10px] font-bold mt-0.5">▶ Continue</div>
-                      </div>
-                    )}
-                    {isCurrent && !isInProgress && (
-                      <div className="text-[10px] font-bold mt-1">▶ Play</div>
-                    )}
-                    {isDone && !isCurrent && (
-                      <div className="text-[10px] font-bold mt-1 opacity-90">↻ Replay</div>
-                    )}
-                    {isAvailable && !isInProgress && (
-                      <div className="text-[10px] font-bold mt-1">▶ Play</div>
-                    )}
-                    {isLocked && (
-                      <div className="text-[10px] font-bold mt-1">🔒 Locked</div>
-                    )}
-                  </button>
+                    onReplay={() => {
+                      fxTap();
+                      setView({ screen: "intro", name: utNode.name });
+                    }}
+                  />
                 );
               })}
             </div>
