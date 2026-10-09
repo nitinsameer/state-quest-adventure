@@ -1,8 +1,9 @@
 import { Navigate, Link, useNavigate } from "@tanstack/react-router";
-import { useProgress, levelInfo, statesWithProgress, cardsDone } from "@/lib/progress";
+import { useProgress, levelInfo, statesWithProgress, cardsDone, completedCategoriesCount, learningCardsFor, getLevelName } from "@/lib/progress";
 import { getUpNext } from "@/lib/passport-helpers";
 import { STATE_ART } from "@/lib/state-art";
 import { fxTap } from "@/lib/fx";
+import { learningCardsFor } from "@/components/screens";
 
 // Background Assets
 import screenBg from "@/assets/home/background/screen-bg.png";
@@ -46,7 +47,16 @@ export function HomeScreen() {
     current = journey.find(s => s.status !== "done") ?? journey[journey.length - 1];
   }
   
-  const currentDone = cardsDone(p, current.name);
+  const allCards = learningCardsFor(current.name, "en", p.ageBand);
+  console.log(`[HomeScreen] State: ${current.name}`);
+  console.log(`[HomeScreen] allCards.length: ${allCards.length}`);
+  allCards.forEach((card, idx) => {
+    console.log(`[HomeScreen] Card[${idx}]: mainCardIndex=${card.mainCardIndex}`);
+  });
+  
+  const currentDone = completedCategoriesCount(p, current.name, allCards);
+  console.log(`[HomeScreen] completedCategoriesCount result: ${currentDone}`);
+  
   const nextStates = getUpNext(current.name, journey, 2);
 
   const handlePlayClick = () => {
@@ -95,7 +105,7 @@ export function HomeScreen() {
           {/* Greeting + Level */}
           <div>
             <h1 className="text-h2 text-white">Namaste, Explorer! 👋</h1>
-            <p className="text-body-sm font-semibold text-white/90">Level {level} • Explorer • v3.0</p>
+            <p className="text-body-sm font-semibold text-white/90">Level {level} • {getLevelName(level)} • v3.0</p>
           </div>
         </div>
 

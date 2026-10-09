@@ -471,6 +471,65 @@ export function cardsDone(p: Progress, stateName: string): number {
 }
 
 /**
+ * Calculate how many complete CATEGORIES (out of 6) have all their sub-cards visited
+ * Returns a number 0-6 representing completed categories
+ * Uses cardVisits structure which tracks cards visited in each category
+ */
+export function completedCategoriesCount(p: Progress, stateName: string, allCards: Array<{ mainCardIndex: number; kicker?: string }>): number {
+  const cardVisits = p.cardVisits?.[stateName];
+  
+  console.log(`[completedCategoriesCount] State: ${stateName}`);
+  console.log(`[completedCategoriesCount] Card visits: ${JSON.stringify(cardVisits)}`);
+  
+  // Count how many categories are complete
+  let completedCount = 0;
+  
+  // Process each of the 6 main categories (0-5)
+  for (let categoryIndex = 0; categoryIndex < 6; categoryIndex++) {
+    // Get all cards in this category
+    const categoryCards = allCards.filter(card => card.mainCardIndex === categoryIndex);
+    
+    if (categoryCards.length === 0) {
+      console.log(`[completedCategoriesCount] Category index ${categoryIndex}: NO CARDS DEFINED`);
+      continue;
+    }
+    
+    // Get the kicker from the first main card in this category to derive the key
+    const mainCardInCategory = categoryCards.find(c => c.kicker);
+    if (!mainCardInCategory) {
+      console.log(`[completedCategoriesCount] Category index ${categoryIndex}: NO MAIN CARD FOUND`);
+      continue;
+    }
+    
+    // Normalize the kicker to match how it's stored in cardVisits
+    const categoryKey = mainCardInCategory.kicker!.toLowerCase().replace(/\s+/g, '-');
+    
+    // Special normalization for known variations
+    let normalizedKey = categoryKey;
+    if (categoryKey === "state-animal") {
+      normalizedKey = "animal";
+    } else if (categoryKey === "fun-fact") {
+      normalizedKey = "fact";
+    }
+    
+    // Get visited cards in this category
+    const visitedIndices = cardVisits?.[normalizedKey] ?? [];
+    
+    console.log(`[completedCategoriesCount] Category index ${categoryIndex} (kicker="${mainCardInCategory.kicker}", key="${normalizedKey}"): ${categoryCards.length} total cards, ${visitedIndices.length} visited`);
+    
+    // Category is complete if all cards in it have been visited
+    if (visitedIndices.length === categoryCards.length) {
+      completedCount++;
+      console.log(`[completedCategoriesCount] Category index ${categoryIndex}: COMPLETE ✓`);
+    }
+  }
+  
+  console.log(`[completedCategoriesCount] FINAL RESULT: ${completedCount}/6 categories complete`);
+  
+  return completedCount;
+}
+
+/**
  * Record that a card was visited by the user
  * Used to track which specific cards in a category have been opened
  * @param stateName The state name
@@ -478,25 +537,36 @@ export function cardsDone(p: Progress, stateName: string): number {
  * @param cardIndex The index of the card within that category
  */
 export function markCardVisit(stateName: string, cardCategory: string, cardIndex: number) {
+  console.log(`[markCardVisit] ENTRY: state="${stateName}", category="${cardCategory}", cardIndex=${cardIndex}`);
+  
   set((p) => {
     const visits = p.cardVisits ?? {};
     const stateVisits = visits[stateName] ?? {};
     const categoryVisits = stateVisits[cardCategory] ?? [];
     
+    console.log(`[markCardVisit] Before: state cardVisits:`, stateVisits);
+    
     // Only add if not already present (avoid duplicates)
     if (!categoryVisits.includes(cardIndex)) {
       categoryVisits.push(cardIndex);
+      console.log(`[markCardVisit] Added cardIndex ${cardIndex}. New categoryVisits:`, categoryVisits);
+    } else {
+      console.log(`[markCardVisit] CardIndex ${cardIndex} already present, skipping duplicate`);
     }
+    
+    const updatedVisits = {
+      ...visits,
+      [stateName]: {
+        ...stateVisits,
+        [cardCategory]: categoryVisits,
+      },
+    };
+    
+    console.log(`[markCardVisit] After: complete cardVisits structure:`, updatedVisits);
     
     return {
       ...p,
-      cardVisits: {
-        ...visits,
-        [stateName]: {
-          ...stateVisits,
-          [cardCategory]: categoryVisits,
-        },
-      },
+      cardVisits: updatedVisits,
     };
   });
 }
@@ -506,9 +576,21 @@ export function markCardVisit(stateName: string, cardCategory: string, cardIndex
  * @returns Number of cards the user has opened in this category
  */
 export function getVisitedCardCount(p: Progress, stateName: string, cardCategory: string): number {
-  const visits = p.cardVisits?.[stateName]?.[cardCategory];
-  if (!visits) return 0;
-  return Array.isArray(visits) ? visits.length : 0;
+  const stateVisits = p.cardVisits?.[stateName];
+  const visits = stateVisits?.[cardCategory];
+  
+  console.log(`[getVisitedCardCount] state="${stateName}", category="${cardCategory}"`);
+  console.log(`[getVisitedCardCount] stateVisits:`, stateVisits);
+  console.log(`[getVisitedCardCount] visits for category:`, visits);
+  
+  if (!visits) {
+    console.log(`[getVisitedCardCount] No visits found, returning 0`);
+    return 0;
+  }
+  
+  const count = Array.isArray(visits) ? visits.length : 0;
+  console.log(`[getVisitedCardCount] Returning count: ${count}`);
+  return count;
 }
 
 /**
@@ -752,6 +834,33 @@ export function levelInfo(xp: number) {
     toNext: XP_PER_LEVEL - into,
     pct: Math.round((into / XP_PER_LEVEL) * 100),
   };
+}
+
+/**
+ * Get fun, themed level names based on progression
+ * Names scale from beginner to master explorer
+ */
+export const LEVEL_NAMES = [
+  "Curious Learner",      // Level 1 (0-399 XP)
+  "Wandering Explorer",   // Level 2 (400-799 XP)
+  "State Scout",          // Level 3 (800-1199 XP)
+  "Regional Navigator",   // Level 4 (1200-1599 XP)
+  "India Voyager",        // Level 5 (1600-1999 XP)
+  "Geography Champion",   // Level 6 (2000+ XP)
+  "Subcontinent Master",  // Level 7
+  "Cultural Ambassador",  // Level 8
+  "National Legend",      // Level 9
+  "India's Greatest",     // Level 10+
+];
+
+/**
+ * Get the fun level name for a given level number
+ * Names are themed around exploration and Indian geography
+ */
+export function getLevelName(level: number): string {
+  // Cap at max available name, repeat the highest for levels beyond
+  const index = Math.min(level - 1, LEVEL_NAMES.length - 1);
+  return LEVEL_NAMES[index] || "India's Greatest";
 }
 
 /**

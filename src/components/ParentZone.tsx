@@ -1,4 +1,4 @@
-import { useProgress, levelInfo, badgeCount, resetProgress, unlockedCount, cardsDone, CARDS_PER_STATE } from "@/lib/progress";
+import { useProgress, levelInfo, badgeCount, resetProgress, unlockedCount, cardsDone, CARDS_PER_STATE, getLevelName } from "@/lib/progress";
 import { INDIA_STATES } from "@/lib/states";
 import { STATE_ART } from "@/lib/state-art";
 import { useGoBack, BottomNav } from "@/components/screens";
@@ -64,7 +64,7 @@ export function ParentZoneScreen() {
     // Create CSV export of progress
     const csv = [
       ["India Explorer - Progress Report"],
-      [`Learner: ${p.name}`, `Age: ${p.ageBand}`, `Level: ${level}`],
+      [`Learner: ${p.name}`, `Age: ${p.ageBand}`, `Level: ${level} - ${getLevelName(level)}`],
       [""],
       ["SUMMARY STATS"],
       ["Metric", "Value"],

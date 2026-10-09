@@ -1,7 +1,9 @@
 import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
 import { StateCompletedScreen } from "@/components/screens";
 import { getStateBySlug } from "@/lib/states";
-import { NotFoundPlace, PlaceError } from "@/components/PlaceFallbacks";
+import { statesWithProgress, setLastPlayedState } from "@/lib/progress";
+import { useProgress } from "@/lib/progress";
+import { PlaceError, NotFoundPlace } from "@/components/PlaceFallbacks";
 
 export const Route = createFileRoute("/state/$slug/complete")({
   loader: ({ params }) => {
@@ -40,14 +42,32 @@ function Complete() {
   const { slug } = Route.useParams();
   const { name } = Route.useLoaderData();
   const navigate = useNavigate();
+  const progress = useProgress();
   
   const goToPostcard = () => navigate({ to: "/state/$slug/postcard", params: { slug } });
   const goToReplay = () => navigate({ to: "/state/$slug/learn", params: { slug } });
+  
+  // Navigate to next uncompleted state
+  const goToNextState = () => {
+    const states = statesWithProgress(progress);
+    // Find next uncompleted state after current
+    const currentIndex = states.findIndex(s => s.name === name);
+    const nextState = states.slice(currentIndex + 1).find(s => s.status !== "done");
+    
+    if (nextState) {
+      setLastPlayedState(nextState.name);
+      navigate({ to: "/state/$slug/learn", params: { slug: nextState.name.toLowerCase().replace(/\s+/g, "-") } });
+    } else {
+      // All states completed, go to home
+      navigate({ to: "/home" });
+    }
+  };
 
   return (
     <StateCompletedScreen 
       key={slug} 
       stateName={name} 
+      onContinue={goToNextState}
       onCreatePostcard={goToPostcard}
       onReplay={goToReplay}
     />

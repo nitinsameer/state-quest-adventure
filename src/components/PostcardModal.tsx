@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { getState } from "@/lib/states";
 import { STATE_ART, TONE_GRADIENT, TONE_HEX } from "@/lib/state-art";
 import { type PostcardData } from "@/lib/progress";
@@ -142,6 +143,7 @@ export function PostcardModal({
   postcard: PostcardData;
   onClose: () => void;
 }) {
+  const navigate = useNavigate();
   const state = getState(postcard.state);
   const celebration = useCelebration();
   const toast = useToast();
@@ -216,7 +218,7 @@ export function PostcardModal({
           <h2 className="text-display font-extrabold text-2xl text-ink">
             Achievement Unlocked!
           </h2>
-          <p className="text-sm text-muted-foreground mt-[--space-0-25]">
+          <p className="text-sm text-ink mt-[--space-0-25]">
             You completed {state.name}
           </p>
         </div>
@@ -225,13 +227,13 @@ export function PostcardModal({
         <div className="flex flex-col items-center gap-[--gap-base]">
           <div className="text-6xl">{badgeEmoji}</div>
           <div className="text-center">
-            <div className="text-sm font-extrabold text-muted-foreground">
+            <div className="text-sm font-extrabold text-ink">
               {postcard.badge.toUpperCase()} BADGE
             </div>
             <div className="text-display font-extrabold text-lg text-ink mt-[--space-0-25]">
               {state.name} Explorer
             </div>
-            <div className="text-xs text-muted-foreground mt-[--space-0-25]">
+            <div className="text-xs text-ink mt-[--space-0-25]">
               {postcard.stampDate}
             </div>
           </div>
@@ -239,7 +241,7 @@ export function PostcardModal({
 
         {/* Fun Fact Section */}
         <div className="bg-saffron-soft rounded-2xl p-[--padding-md] my-[--space-0-5]">
-          <div className="text-xs font-extrabold text-muted-foreground uppercase tracking-wider">
+          <div className="text-xs font-extrabold text-ink uppercase tracking-wider">
             💡 Did You Know?
           </div>
           <p className="text-sm text-ink mt-[--space-2] leading-relaxed">
@@ -266,9 +268,33 @@ export function PostcardModal({
         </button>
 
         {/* Info Text */}
-        <p className="text-xs text-center text-muted-foreground">
+        <p className="text-xs text-center text-ink">
           Share your achievement or keep it in your explorer stamps! 🎉
         </p>
+
+        {/* Home Button */}
+        <button
+          onClick={() => {
+            fxTap();
+            onClose();
+            navigate({ to: "/home" });
+          }}
+          className="w-full h-12 rounded-2xl bg-blue-500 text-white font-extrabold transition-all duration-200 hover:bg-blue-600 active:scale-95"
+        >
+          🏠 Home
+        </button>
+
+        {/* Next State Button */}
+        <button
+          onClick={() => {
+            fxTap();
+            onClose();
+            navigate({ to: "/journey" });
+          }}
+          className="w-full h-12 rounded-2xl bg-orange-500 text-white font-extrabold transition-all duration-200 hover:bg-orange-600 active:scale-95"
+        >
+          🎯 Next State
+        </button>
 
         {/* Close Button */}
         <button

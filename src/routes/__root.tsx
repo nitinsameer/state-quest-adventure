@@ -6,7 +6,7 @@ import {
   useRouter,
   useLocation,
 } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import React from "react";
 import { App } from "@capacitor/app";
 
@@ -22,7 +22,7 @@ import { DebugScreen } from "@/components/DebugScreen";
 import { BottomNav } from "@/components/screens";
 import { appLogger } from "@/lib/logger";
 import { firebaseEvents } from "@/lib/firebase-events";
-import { useProgress, isHydrated, initializeHydration } from "@/lib/progress";
+import { useProgress, isHydrated, initializeHydration, levelInfo, getLevelName } from "@/lib/progress";
 import { pauseTts, resumeTts } from "@/lib/tts";
 import { ensureAudioConsentGranted } from "@/lib/parental-consent";
 import { initializeAudioCleanup } from "@/lib/fx";
@@ -309,6 +309,63 @@ function HydratedApp() {
       }
     }, 500); // Defer by 500ms to avoid blocking initial render
   }, [progress.onboarded, progress]);
+
+  // Level-up celebration detection
+  // Tracks when user advances to a new level and shows celebration
+  const prevLevelRef = useRef<number | null>(null);
+  
+  useEffect(() => {
+    if (!progress.onboarded) return;
+    
+    // Calculate current level
+    const currentLevel = levelInfo(progress.xp).level;
+    
+    // On first load, just record the level
+    if (prevLevelRef.current === null) {
+      prevLevelRef.current = currentLevel;
+      return;
+    }
+    
+    // Check if level increased
+    if (currentLevel > prevLevelRef.current) {
+      console.log(`[LevelUp] User advanced to Level ${currentLevel}! 🎉`);
+      
+      // Get the fun level name
+      const levelName = getLevelName(currentLevel);
+      
+      // Log level-up event to Firebase
+      try {
+        firebaseEvents.levelUp?.({
+          newLevel: currentLevel,
+          totalXp: progress.xp,
+          ageBand: progress.ageBand,
+        }).catch(() => {});
+      } catch (e) {
+        console.warn("[LevelUp] Firebase event failed", e);
+      }
+      
+      // Show celebration with confetti via celebration store
+      try {
+        const { useCelebrationStore } = require("@/store/celebrationStore");
+        const setCelebration = useCelebrationStore((state: any) => state.setCelebration);
+        
+        setCelebration({
+          title: `🎉 Level ${currentLevel} - ${levelName}!`,
+          subtitle: `You're now a "${levelName}"!\nKeep exploring to reach the next milestone! 🚀`,
+          icon: "⭐",
+          confetti: true,
+          duration: 3500,
+          type: "success",
+        });
+        
+        console.log(`[LevelUp] Celebration shown for Level ${currentLevel} (${levelName})`);
+      } catch (e) {
+        console.warn("[LevelUp] Could not show celebration", e);
+      }
+      
+      prevLevelRef.current = currentLevel;
+    }
+  }, [progress.xp, progress.onboarded]);
   
   // Get the journey back handler dynamically so it always calls the current one
   const handleAndroidBack = () => {
@@ -362,22 +419,29 @@ function HydratedApp() {
     
     // Ambient audio disabled - background music removed
 
-    // Listen for app pause (minimized)
-    const pauseListener = App.addListener('pause', () => {
-      appLogger.info('app_lifecycle', 'App paused');
-      pauseTts();
-    });
+    // Listen for app pause/resume only on native platforms (Capacitor)
+    // On web, App.addListener returns a Promise — calling .remove() on a Promise crashes
+    // CRITICAL FIX: Guard with Capacitor.isNativePlatform() + use async handle
+    let pauseHandle: { remove: () => Promise<void> } | null = null;
+    let resumeHandle: { remove: () => Promise<void> } | null = null;
 
-    // Listen for app resume (brought to foreground)
-    const resumeListener = App.addListener('resume', () => {
-      appLogger.info('app_lifecycle', 'App resumed');
-      resumeTts();
-    });
+    if (Capacitor.isNativePlatform()) {
+      // On Android/iOS: listeners work correctly
+      App.addListener('pause', () => {
+        appLogger.info('app_lifecycle', 'App paused');
+        pauseTts();
+      }).then(handle => { pauseHandle = handle; }).catch(() => {});
+
+      App.addListener('resume', () => {
+        appLogger.info('app_lifecycle', 'App resumed');
+        resumeTts();
+      }).then(handle => { resumeHandle = handle; }).catch(() => {});
+    }
 
     // Cleanup listeners on unmount or route change
     return () => {
-      pauseListener.remove();
-      resumeListener.remove();
+      pauseHandle?.remove().catch(() => {});
+      resumeHandle?.remove().catch(() => {});
     };
   }, [location.pathname]);
 
@@ -426,12 +490,21 @@ function RootComponent() {
   // This prevents localStorage access from blocking the main thread
   // Also catches hydration errors gracefully
   useEffect(() => {
+    // FIX: Add timeout to force ready state if hydration never completes (DEBUG)
+    const timeoutId = setTimeout(() => {
+      console.warn('[HYDRATION DEBUG] Hydration timeout - forcing ready state');
+      setIsReady(true);
+    }, 5000); // 5 second timeout
+    
     initializeHydration()
       .then(() => {
+        clearTimeout(timeoutId);
         setIsReady(true);
       })
       .catch((error) => {
+        clearTimeout(timeoutId);
         // Hydration failed - log it and continue with defaults
+        console.error('[HYDRATION ERROR]', error);
         const { logError } = require("@/lib/error-tracking");
         logError(error, {
           boundary: 'hydration',

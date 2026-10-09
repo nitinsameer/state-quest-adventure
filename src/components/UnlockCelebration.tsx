@@ -95,12 +95,33 @@ export function UnlockCelebration() {
       return;
     }
 
+    // GATE: Suppress all achievement popups on first login (fresh user)
+    // First login is when user just finished onboarding (onboarded=true, xp=0 or minimal)
+    // This avoids annoying users with "Fired Up" streak badge on day 1
+    const isFirstLogin = progress.xp === 0;
+    if (isFirstLogin) {
+      console.log("[UnlockCelebration] First login after onboarding - suppressing all popups");
+      
+      // Still record baseline so we don't celebrate these on future logins
+      const achievements = achievementsFor(progress).filter((a) => a.done);
+      const achievementIds = new Set(achievements.map((a) => a.id));
+      const badges = new Set(badgeKeys(progress.badges));
+      
+      prevAchievements.current = achievementIds;
+      prevBadges.current = badges;
+      for (const id of achievementIds) celebrated.current.add(`a:${id}`);
+      for (const k of badges) celebrated.current.add(`b:${k}`);
+      saveCelebrated(celebrated.current);
+      return;
+    }
+
     const achievements = achievementsFor(progress).filter((a) => a.done);
     const achievementIds = new Set(achievements.map((a) => a.id));
     const badges = new Set(badgeKeys(progress.badges));
 
     console.log("[UnlockCelebration] Checking for new unlocks:", {
       onboarded: progress.onboarded,
+      xp: progress.xp,
       celebratedCount: celebrated.current.size,
       achievementCount: achievementIds.size,
       badgeCount: badges.size,
