@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { STATE_ART, TONE_GRADIENT, TONE_HEX } from "@/lib/state-art";
+import { STATE_ART } from "@/lib/state-art";
 import { getState } from "@/lib/states";
 import { fxTap } from "@/lib/fx";
 
@@ -17,11 +16,12 @@ export interface JourneyDestinationCardProps {
 /**
  * Journey screen destination card component
  * Renders a state/UT card with:
- * - Large landmark SVG (140px)
+ * - Large landmark illustration (full card top section)
  * - State/UT name
  * - Status indicator (completed badge, lock, or empty)
  * - Prominent action button ("Start Exploring", "Replay", or "Locked")
- * - CSS-based background (no new image assets)
+ * - Tone-specific background colors and gradient buttons
+ * - Flicker-free image rendering
  */
 export function JourneyDestinationCard({
   stateName,
@@ -33,32 +33,40 @@ export function JourneyDestinationCard({
   onStart,
   onReplay,
 }: JourneyDestinationCardProps) {
-  const [imageLoaded, setImageLoaded] = useState(false);
   const state = getState(stateName);
   const artSrc = STATE_ART[stateName];
   
-  // Determine card background based on status
-  let cardBgClass = "";
-  let textColorClass = "";
-  let buttonBgClass = "";
-  let buttonTextClass = "";
+  // Tone-specific background color mapping
+  const toneBackgrounds: Record<string, string> = {
+    orange: "#FFF3E8",
+    gold: "#FFF9E8",
+    green: "#E8F8EE",
+    blue: "#E8F0FF",
+  };
+  
+  // Gradient button class mapping per tone
+  const toneGradients: Record<string, string> = {
+    orange: "gradient-saffron",
+    gold: "gradient-gold",
+    green: "gradient-success",
+    blue: "gradient-explorer",
+  };
+  
+  // Determine card styling based on status and tone
+  let cardBgColor = toneBackgrounds[state.tone] || toneBackgrounds.orange;
+  let textColorClass = "text-slate-800";
+  let buttonGradientClass = toneGradients[state.tone] || "gradient-saffron";
+  let buttonTextClass = "text-white";
   
   if (status === "completed") {
-    const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
-    cardBgClass = `bg-gradient-to-br ${grad}`;
-    textColorClass = "text-white";
-    buttonBgClass = `bg-gradient-to-r ${grad}`;
+    cardBgColor = toneBackgrounds[state.tone] || toneBackgrounds.orange;
+    textColorClass = "text-slate-900";
+    buttonGradientClass = toneGradients[state.tone] || "gradient-saffron";
     buttonTextClass = "text-white";
-  } else if (status === "available" || isInProgress) {
-    cardBgClass = "bg-white border border-black/5";
-    textColorClass = "text-slate-800";
-    buttonBgClass = "gradient-saffron";
-    buttonTextClass = "text-white";
-  } else {
-    // locked
-    cardBgClass = "bg-slate-200";
+  } else if (status === "locked") {
+    cardBgColor = "#F0F0F0";
     textColorClass = "text-slate-600";
-    buttonBgClass = "bg-slate-400 cursor-not-allowed";
+    buttonGradientClass = "bg-slate-400";
     buttonTextClass = "text-slate-100";
   }
 
@@ -78,27 +86,39 @@ export function JourneyDestinationCard({
     }
   };
 
-  const handleLockedClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    // No action for locked state
-  };
+  // Determine button text and handler based on state
+  let buttonText = "Start Exploring ›";
+  let buttonHandler = handleStartClick;
+  let isButtonDisabled = false;
+  
+  if (status === "completed" && !isInProgress) {
+    buttonText = "Replay ↻";
+    buttonHandler = handleReplayClick;
+  } else if (status === "locked") {
+    buttonText = "🔒 Locked";
+    isButtonDisabled = true;
+    buttonHandler = () => {};
+  } else if (isInProgress) {
+    buttonText = "Continue ›";
+    buttonHandler = handleStartClick;
+  }
 
   return (
     <div
-      className={`relative rounded-2xl shadow-elevated-2 overflow-hidden flex flex-col transition-all active:scale-95 h-full ${cardBgClass}`}
-      style={{ padding: "var(--padding-base)" }}
+      className="relative rounded-2xl shadow-elevated-2 overflow-hidden flex flex-col transition-all active:scale-95 h-full"
+      style={{ 
+        backgroundColor: cardBgColor,
+        padding: "var(--padding-base)"
+      }}
     >
-      {/* Landmark SVG container */}
-      <div className="w-full h-40 rounded-lg overflow-hidden mb-3 bg-white shadow-sm flex items-center justify-center flex-shrink-0">
-        <img
-          src={artSrc}
-          alt={stateName}
-          className="w-full h-full object-contain"
-          onLoad={() => setImageLoaded(true)}
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
+      {/* Landmark illustration - full width, no white container */}
+      <img
+        src={artSrc}
+        alt={stateName}
+        className="w-full h-40 object-contain mb-3 flex-shrink-0 transition-opacity"
+        loading="lazy"
+        decoding="async"
+      />
 
       {/* State name */}
       <div className={`text-sm font-extrabold leading-tight mb-2 line-clamp-2 ${textColorClass}`}>
@@ -120,12 +140,13 @@ export function JourneyDestinationCard({
         </div>
       )}
 
+      {/* In-progress indicator */}
       {isInProgress && (
         <div className="mb-2 text-xs font-bold opacity-75">
           <div className="mb-1">{cardsDone}/{totalCards} adventures</div>
-          <div className="h-1.5 bg-white/30 rounded-full overflow-hidden">
+          <div className="h-1.5 bg-black/10 rounded-full overflow-hidden">
             <div
-              className="h-full bg-white rounded-full transition-all"
+              className="h-full bg-black/30 rounded-full transition-all"
               style={{ width: `${Math.round((cardsDone / totalCards) * 100)}%` }}
             />
           </div>
@@ -135,43 +156,14 @@ export function JourneyDestinationCard({
       {/* Spacer to push button to bottom */}
       <div className="flex-1" />
 
-      {/* Action button */}
-      {status === "available" && (
-        <button
-          onClick={handleStartClick}
-          className={`w-full py-3 rounded-lg font-bold text-sm transition-all active:scale-95 ${buttonBgClass} ${buttonTextClass}`}
-        >
-          Start Exploring ›
-        </button>
-      )}
-
-      {status === "completed" && (
-        <button
-          onClick={handleReplayClick}
-          className={`w-full py-3 rounded-lg font-bold text-sm transition-all active:scale-95 ${buttonBgClass} ${buttonTextClass}`}
-        >
-          Replay ↻
-        </button>
-      )}
-
-      {status === "locked" && (
-        <button
-          onClick={handleLockedClick}
-          disabled
-          className={`w-full py-3 rounded-lg font-bold text-sm opacity-60 cursor-not-allowed ${buttonBgClass} ${buttonTextClass}`}
-        >
-          🔒 Locked
-        </button>
-      )}
-
-      {isInProgress && (
-        <button
-          onClick={handleStartClick}
-          className={`w-full py-3 rounded-lg font-bold text-sm transition-all active:scale-95 ${buttonBgClass} ${buttonTextClass}`}
-        >
-          Continue ›
-        </button>
-      )}
+      {/* Single action button - consolidated logic, no duplicates */}
+      <button
+        onClick={buttonHandler}
+        disabled={isButtonDisabled}
+        className={`w-full py-3 rounded-lg font-bold text-sm transition-all active:scale-95 ${buttonGradientClass} ${buttonTextClass} ${isButtonDisabled ? "opacity-60 cursor-not-allowed" : ""}`}
+      >
+        {buttonText}
+      </button>
     </div>
   );
 }
