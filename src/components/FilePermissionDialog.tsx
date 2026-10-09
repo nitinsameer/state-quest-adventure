@@ -75,12 +75,33 @@ export function FilePermissionDialog({
 
   // Determine which message to show based on dismissal count
   const hasManyDismissals = dismissalCount >= 3;
-  const title = hasManyDismissals
-    ? "Save Your Stamp?"
-    : "Save Picture to Your Photos?";
-  const subtitle = hasManyDismissals
-    ? "Your phone needs permission to save to the Photos app. You can enable it anytime in Settings."
-    : "Your stamp will be saved to your phone's photos folder so you can share it anytime.";
+
+  const contentItems = [
+    !hasManyDismissals && {
+      type: "bullet" as const,
+      emoji: "✨",
+      text: "Your stamp is super cool! / Save it to your photos so you can share it anytime.",
+    },
+    !hasManyDismissals && {
+      type: "bullet" as const,
+      emoji: "🔒",
+      text: "It's totally safe. / We only save pictures YOU make. Your photos stay private.",
+    },
+    hasManyDismissals && {
+      type: "custom" as const,
+      className: "bg-warning-soft rounded-2xl p-[--padding-md] border border-warning",
+      children: (
+        <div className="space-y-[--space-0-25]">
+          <p className="text-sm font-semibold text-warning">
+            💡 Need help? Ask a parent or guardian to enable photo saving in your phone's Settings.
+          </p>
+          <p className="text-xs text-amber-700">
+            We don't require this feature to play. You can still enjoy all other parts of India Explorer!
+          </p>
+        </div>
+      ),
+    },
+  ].filter(Boolean);
 
   return (
     <StandardModal
@@ -88,68 +109,24 @@ export function FilePermissionDialog({
       onClose={handleAskLater}
       header={{
         icon: "📸",
-        title,
-        subtitle,
+        title: "Capture Your Moment! 📸",
       }}
-      headerGradient={["from-blue-400", "to-cyan-500"]}
-      content={[
-        !hasManyDismissals && {
-          type: "custom",
-          className: "space-y-3 bg-info-soft rounded-2xl p-[--padding-md] border border-info",
-          children: (
-            <div className="space-y-[--gap-base]">
-              <div className="flex items-start gap-[--gap-base]">
-                <div className="text-lg flex-shrink-0">1️⃣</div>
-                <div>
-                  <div className="font-bold text-sm text-ink">We ask permission</div>
-                  <div className="text-xs text-muted-foreground">Your phone will ask if it's OK</div>
-                </div>
-              </div>
-              <div className="flex items-start gap-[--gap-base]">
-                <div className="text-lg flex-shrink-0">2️⃣</div>
-                <div>
-                  <div className="font-bold text-sm text-ink">Picture gets saved</div>
-                  <div className="text-xs text-muted-foreground">Goes to your Photos app</div>
-                </div>
-              </div>
-              <div className="flex items-start gap-[--gap-base]">
-                <div className="text-lg flex-shrink-0">3️⃣</div>
-                <div>
-                  <div className="font-bold text-sm text-ink">You can share it</div>
-                  <div className="text-xs text-muted-foreground">Text or email to friends & family</div>
-                </div>
-              </div>
-            </div>
-          ),
-        },
-        hasManyDismissals && {
-          type: "custom",
-          className: "bg-warning-soft rounded-2xl p-[--padding-md] border border-warning",
-          children: (
-            <div className="space-y-[--space-0-25]">
-              <p className="text-sm font-semibold text-warning">
-                💡 Need help? Ask a parent or guardian to enable photo saving in your phone's Settings.
-              </p>
-              <p className="text-xs text-amber-700">
-                We don't require this feature to play. You can still enjoy all other parts of India Explorer!
-              </p>
-            </div>
-          ),
-        },
-      ].filter(Boolean)}
+      headerGradient={["from-amber-400", "to-orange-500"]}
+      buttonsLayout="stack"
+      content={contentItems}
       buttons={[
         {
-          label: hasManyDismissals ? "Maybe Later" : "Ask Later",
+          label: "Maybe Later",
           onClick: handleAskLater,
           variant: "secondary",
         },
         {
-          label: "Yes, Allow 📸",
+          label: "Yes, Save it! 📸",
           onClick: handleAccept,
           variant: "primary",
         },
       ]}
-      footer="🔒 We only save pictures YOU make. We never share them."
+      footer="Always save stamps later from Profile settings"
       maxWidth="max-w-md"
     />
   );

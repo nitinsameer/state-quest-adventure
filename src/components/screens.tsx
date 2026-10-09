@@ -4440,14 +4440,14 @@ export function ProfileScreen() {
                 revokeFeatureConsent('audio');
                 fxTap();
               }}
-              className="w-full flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-success-soft to-success-soft border-2 border-success hover:border-error hover:bg-error-soft transition"
+              className="w-full flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-blue-50 to-blue-50 border-2 border-blue-200 hover:border-error hover:bg-error-soft transition"
             >
               {/* Left: Icon & Labels */}
               <div className="flex items-start gap-3">
                 <div className="text-3xl flex-shrink-0">🔊</div>
                 <div className="text-left">
                   <div className="font-bold text-ink">Audio Stories & Narration</div>
-                  <div className="text-xs text-green-700 font-semibold">
+                  <div className="text-xs text-blue-600 font-semibold">
                     ✓ Permission granted
                   </div>
                 </div>
@@ -4465,21 +4465,21 @@ export function ProfileScreen() {
                 fxTap();
                 setShowAudioPermission(true);
               }}
-              className="w-full flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-info-soft to-info-soft border-2 border-info hover:border-success hover:bg-success-soft transition"
+              className="w-full flex items-center justify-between p-4 rounded-2xl bg-white border border-muted hover:border-blue hover:bg-blue-soft transition"
             >
               {/* Left: Icon & Labels */}
               <div className="flex items-start gap-3">
                 <div className="text-3xl flex-shrink-0">🔊</div>
                 <div className="text-left">
                   <div className="font-bold text-ink">Audio Stories & Narration</div>
-                  <div className="text-xs text-muted-foreground font-semibold">
-                    Tap to enable (parental permission needed)
+                  <div className="text-xs text-gray-600 font-semibold">
+                    🔒 Tap to enable
                   </div>
                 </div>
               </div>
 
               {/* Right: Enable Button */}
-              <div className="text-xs font-bold text-success bg-success-soft px-3 py-1.5 rounded-full flex-shrink-0 ml-4">
+              <div className="text-xs font-bold text-gray-600 bg-gray-100 px-3 py-1.5 rounded-full flex-shrink-0 ml-4">
                 Enable
               </div>
             </button>
@@ -4495,14 +4495,14 @@ export function ProfileScreen() {
                 revokeFeatureConsent('file');
                 fxTap();
               }}
-              className="w-full flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-success-soft to-success-soft border-2 border-success hover:border-error hover:bg-error-soft transition"
+              className="w-full flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-blue-50 to-blue-50 border-2 border-blue-200 hover:border-error hover:bg-error-soft transition"
             >
               {/* Left: Icon & Labels */}
               <div className="flex items-start gap-3">
                 <div className="text-3xl flex-shrink-0">📸</div>
                 <div className="text-left">
                   <div className="font-bold text-ink">Save Pictures</div>
-                  <div className="text-xs text-green-700 font-semibold">
+                  <div className="text-xs text-blue-600 font-semibold">
                     ✓ Permission granted
                   </div>
                 </div>
@@ -4517,7 +4517,7 @@ export function ProfileScreen() {
             // When permission is not granted, show grant button
             <button
               onClick={() => setShowFilePermissionDialog(true)}
-              className="w-full flex items-center justify-between p-4 rounded-2xl bg-white border border-muted hover:border-info hover:bg-info-soft transition"
+              className="w-full flex items-center justify-between p-4 rounded-2xl bg-white border border-muted hover:border-muted hover:bg-gray-50 transition"
             >
               {/* Left: Icon & Labels */}
               <div className="flex items-start gap-3">

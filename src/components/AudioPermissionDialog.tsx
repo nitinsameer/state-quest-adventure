@@ -116,7 +116,7 @@ export function AudioPermissionDialog({
 
   const isProfileCreation = context === "profile-creation";
   const headerText = isProfileCreation 
-    ? "Let's add some fun to your adventure! 🎵" 
+    ? "Your adventure just got better! 🎵" 
     : "Can we play sounds?";
 
   return (
@@ -124,10 +124,11 @@ export function AudioPermissionDialog({
       open={isOpen}
       onClose={handleReject}
       header={{
-        icon: "🔊",
+        icon: "🎵",
         title: headerText,
       }}
-      headerGradient={["from-green-400", "to-emerald-500"]}
+      headerGradient={["from-blue-500", "to-cyan-400"]}
+      buttonsLayout="stack"
       content={[
         {
           type: "text",
@@ -138,37 +139,32 @@ export function AudioPermissionDialog({
         {
           type: "bullet",
           emoji: "🎮",
-          text: "Game sounds when you tap",
+          text: "Tap Effects / Sound when you find a new state",
         },
         {
           type: "bullet",
           emoji: "🎵",
-          text: "Calm background music",
+          text: "Chill Music / Relaxing background while exploring",
         },
         {
           type: "bullet",
           emoji: "🎧",
-          text: "Stories read to you",
-        },
-        {
-          type: "custom",
-          className: "text-xs text-muted-foreground text-center italic py-2",
-          children: <p>Parents: You can turn sound on/off anytime in settings</p>,
+          text: "Story Time / Listen to state stories read aloud",
         },
       ]}
       buttons={[
         {
-          label: isProfileCreation ? "Not now 🔇" : "No thanks 🔇",
+          label: "No, explore quietly 🔇",
           onClick: handleReject,
           variant: "secondary",
         },
         {
-          label: isProfileCreation ? "Yes, enable! 🔊" : "Yes please! 🔊",
+          label: "Yes, turn on sounds! 🔊",
           onClick: handleAccept,
           variant: "primary",
         },
       ]}
-      footer="No microphone access. We only play sounds."
+      footer="You can change this anytime in Profile settings"
       maxWidth="max-w-md"
     />
   );

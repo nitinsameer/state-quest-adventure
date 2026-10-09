@@ -48,6 +48,9 @@ export interface StandardModalProps {
     emoji?: string;
   }>;
   
+  /** Button layout: "grid" (default, 2 cols) or "stack" (full-width stacked) */
+  buttonsLayout?: "grid" | "stack";
+  
   /** Footer note (small text at bottom) */
   footer?: string;
   
@@ -68,6 +71,7 @@ export function StandardModal({
   header,
   content,
   buttons = [],
+  buttonsLayout = "grid",
   footer,
   children,
   maxWidth = "max-w-md",
@@ -136,18 +140,47 @@ export function StandardModal({
 
         {/* Buttons Section */}
         {buttons.length > 0 && (
-          <div className="border-t border-muted p-[--padding-lg] space-y-2 flex-shrink-0">
+          <div className="border-t border-muted p-[--padding-lg] flex-shrink-0">
             {buttons.length === 1 && (
-              <button
-                onClick={buttons[0].onClick}
-                className="w-full px-[--padding-md] py-[--padding-base] rounded-full bg-gradient-to-r from-blue-400 to-cyan-500 text-white font-bold text-sm shadow-lg transition active:scale-95"
-              >
-                {buttons[0].emoji && <span className="mr-2">{buttons[0].emoji}</span>}
-                {buttons[0].label}
-              </button>
+              <div className="space-y-2">
+                <button
+                  onClick={buttons[0].onClick}
+                  className="w-full px-[--padding-md] py-[--padding-base] rounded-full bg-gradient-to-r from-blue-400 to-cyan-500 text-white font-bold text-sm shadow-lg transition active:scale-95"
+                >
+                  {buttons[0].emoji && <span className="mr-2">{buttons[0].emoji}</span>}
+                  {buttons[0].label}
+                </button>
+              </div>
             )}
 
-            {buttons.length === 2 && (
+            {buttons.length === 2 && buttonsLayout === "stack" && (
+              <div className="space-y-2">
+                <button
+                  onClick={buttons[0].onClick}
+                  className={`w-full px-4 py-3 rounded-full font-bold text-sm transition active:scale-95 ${
+                    buttons[0].variant === "primary"
+                      ? "bg-gradient-to-r from-blue-400 to-cyan-500 text-white shadow-lg"
+                      : "bg-blue-100 text-blue-700"
+                  }`}
+                >
+                  {buttons[0].emoji && <span className="mr-2">{buttons[0].emoji}</span>}
+                  {buttons[0].label}
+                </button>
+                <button
+                  onClick={buttons[1].onClick}
+                  className={`w-full px-4 py-3 rounded-full font-bold text-sm transition active:scale-95 ${
+                    buttons[1].variant === "primary"
+                      ? "bg-gradient-to-r from-blue-400 to-cyan-500 text-white shadow-lg"
+                      : "bg-blue-100 text-blue-700"
+                  }`}
+                >
+                  {buttons[1].emoji && <span className="mr-2">{buttons[1].emoji}</span>}
+                  {buttons[1].label}
+                </button>
+              </div>
+            )}
+
+            {buttons.length === 2 && buttonsLayout !== "stack" && (
               <div className="grid grid-cols-2 gap-[--gap-compact]">
                 <button
                   onClick={buttons[0].onClick}
