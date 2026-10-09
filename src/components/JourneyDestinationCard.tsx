@@ -52,7 +52,7 @@ export function JourneyDestinationCard({
   } else if (status === "available" || isInProgress) {
     cardBgClass = "bg-white border border-black/5";
     textColorClass = "text-slate-800";
-    buttonBgClass = "bg-gradient-to-r from-cyan-400 to-cyan-500";
+    buttonBgClass = "gradient-saffron";
     buttonTextClass = "text-white";
   } else {
     // locked
@@ -85,7 +85,7 @@ export function JourneyDestinationCard({
 
   return (
     <div
-      className={`rounded-2xl shadow-elevated-2 overflow-hidden flex flex-col transition-all active:scale-95 h-full ${cardBgClass}`}
+      className={`relative rounded-2xl shadow-elevated-2 overflow-hidden flex flex-col transition-all active:scale-95 h-full ${cardBgClass}`}
       style={{ padding: "var(--padding-base)" }}
     >
       {/* Landmark SVG container */}
@@ -106,17 +106,17 @@ export function JourneyDestinationCard({
       </div>
 
       {/* Status indicator */}
-      {status === "completed" && (
-        <div className="mb-2 flex items-center gap-1 text-sm font-bold text-white opacity-90">
-          <span>✓</span>
-          <span>Completed</span>
-        </div>
-      )}
-
       {status === "locked" && (
         <div className="mb-2 flex items-center gap-1 text-sm font-bold text-slate-700">
           <span>🔒</span>
           <span>Locked</span>
+        </div>
+      )}
+
+      {/* Checkmark overlay badge for completed states */}
+      {status === "completed" && (
+        <div className="absolute top-2 right-2 w-10 h-10 rounded-full bg-success/80 shadow-lg flex items-center justify-center backdrop-blur-sm">
+          <span className="text-white text-lg font-bold leading-none">✓</span>
         </div>
       )}
 
