@@ -150,3 +150,27 @@ test-app.mjs
 test-assets.mjs
 test-resources.mjs
 fix-paths.mjs
+
+# APK & Build Verification Artifacts
+apk_extract/
+temp_apk/
+app-release.zip
+build-errors.txt
+full-errors.txt
+logcat_output.txt
+ui_dump.xml
+view_hierarchy.xml
+
+# Documentation & Audit Files
+ARCHITECTURE-ENFORCEMENT.md
+MOBILE_TESTING_GUIDE.md
+PHASE_1_AUDIT_COMPLETE.md
+PHASE_2_TESTING_PLAN.md
+docs/
+
+# Static Server Files
+serve-dist.mjs
+serve-static.mjs
+
+# Build Output Logs
+build-output.txt
