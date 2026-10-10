@@ -1,21 +1,14 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-# Run lint and tests before commit
+# Run lint-staged before commit (fast checks on staged files only)
 echo "🔍 Running pre-commit checks..."
 
-# Run lint
-echo "📝 Linting..."
-npm run lint || {
-  echo "❌ Linting failed. Please fix lint errors before committing."
+# Install lint-staged if needed (or rely on npm run lint-staged)
+npx lint-staged || {
+  echo "❌ Lint-staged checks failed. Please fix errors before committing."
   exit 1
 }
 
-# Run tests
-echo "🧪 Running unit tests..."
-npm run test || {
-  echo "❌ Tests failed. Please fix failing tests before committing."
-  exit 1
-}
-
-echo "✅ All checks passed!"
+echo "✅ Pre-commit checks passed!"
+echo "💡 Full test suite will run in CI/CD pipeline"
