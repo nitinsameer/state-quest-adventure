@@ -32,10 +32,12 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file('D:/NishaanTech/state-quest-adventure/word-wizard.jks')
-            storePassword 'N#I$G6881'
-            keyAlias 'word-wizard'
-            keyPassword 'N#I$G6881'
+            if (keystorePropertiesFile.exists()) {
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+            }
         }
     }
 
