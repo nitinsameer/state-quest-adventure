@@ -1,11 +1,10 @@
 apply plugin: 'com.android.application'
 
-// Load keystore.properties
-def keystorePropertiesFile = rootProject.file('keystore.properties')
-def keystoreProperties = new Properties()
-if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-}
+// Signing configuration - using environment variables for CI/CD, with fallback to local keystore
+def keystoreFile = System.getenv("KEYSTORE_FILE") ?: file('../../word-wizard.jks').absolutePath
+def keystorePassword = System.getenv("KEYSTORE_PASSWORD") ?: 'N#I\\$G6881'
+def keyAlias = System.getenv("KEY_ALIAS") ?: "word-wizard"
+def keyPassword = System.getenv("KEY_PASSWORD") ?: 'N#I\\$G6881'
 
 android {
     namespace = "com.nishaantech.exploreindia"
@@ -21,7 +20,9 @@ android {
         applicationId "com.nishaantech.exploreindia"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
+        
+        // Use GitHub run number for versionCode in CI, fallback to 1 for local builds
+        versionCode = (System.getenv("GITHUB_RUN_NUMBER") != null) ? System.getenv("GITHUB_RUN_NUMBER").toInteger() : 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
@@ -32,11 +33,17 @@ android {
     }
     signingConfigs {
         release {
-            if (keystorePropertiesFile.exists()) {
-                storeFile file(keystoreProperties['storeFile'])
-                storePassword keystoreProperties['storePassword']
-                keyAlias keystoreProperties['keyAlias']
-                keyPassword keystoreProperties['keyPassword']
+            try {
+                def storeFilePath = keystoreFile
+                if (!new File(storeFilePath).isAbsolute()) {
+                    storeFilePath = rootProject.file(storeFilePath).absolutePath
+                }
+                storeFile file(storeFilePath)
+                storePassword keystorePassword
+                keyAlias keyAlias
+                keyPassword keyPassword
+            } catch (Exception e) {
+                logger.warn("Keystore configuration error: ${e.message}")
             }
         }
     }
@@ -44,8 +51,9 @@ android {
     buildTypes {
         release {
             signingConfig signingConfigs.release
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }
