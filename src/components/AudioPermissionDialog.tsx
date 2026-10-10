@@ -126,42 +126,37 @@ export function AudioPermissionDialog({
       header={{
         icon: "🎵",
         title: headerText,
+        floatingIcon: true,
+        floatingIconGradient: ["from-purple-400", "to-indigo-500"],
       }}
-      headerGradient={["from-blue-500", "to-cyan-400"]}
       buttonsLayout="stack"
       content={[
         {
           type: "text",
           text: isProfileCreation
-            ? "Your India Explorer adventure has fun sounds, music, and voice narration!"
-            : "Your India Explorer adventure has fun sounds and music! 🎵",
+            ? "Make your adventure come alive with sound!"
+            : "Bring your India Explorer adventure to life! 🎵",
         },
         {
-          type: "bullet",
-          emoji: "🎮",
-          text: "Tap Effects / Sound when you find a new state",
-        },
-        {
-          type: "bullet",
-          emoji: "🎵",
-          text: "Chill Music / Relaxing background while exploring",
-        },
-        {
-          type: "bullet",
-          emoji: "🎧",
-          text: "Story Time / Listen to state stories read aloud",
+          type: "badgeGrid",
+          badges: [
+            { emoji: "🎮", label: "Tap Sounds" },
+            { emoji: "🎵", label: "Music" },
+            { emoji: "🎧", label: "Stories" },
+          ],
         },
       ]}
       buttons={[
         {
           label: "No, explore quietly 🔇",
           onClick: handleReject,
-          variant: "secondary",
+          variant: "ghost",
         },
         {
           label: "Yes, turn on sounds! 🔊",
           onClick: handleAccept,
           variant: "primary",
+          customClass: "w-full px-4 py-3 rounded-full bg-gradient-to-r from-green-400 to-emerald-500 text-white font-bold text-sm shadow-lg transition active:scale-95",
         },
       ]}
       footer="You can change this anytime in Profile settings"

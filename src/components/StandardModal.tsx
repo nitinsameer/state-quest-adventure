@@ -29,23 +29,27 @@ export interface StandardModalProps {
     subtitle?: string;
     closeButton?: boolean;
     onClose?: () => void;
+    floatingIcon?: boolean;  // NEW: Enable floating icon mode
+    floatingIconGradient?: [string, string];  // NEW: Custom gradient for floating icon
   };
   
   /** Main content sections */
   content?: Array<{
-    type: "text" | "bullet" | "custom";
+    type: "text" | "bullet" | "custom" | "badgeGrid";  // NEW: Add badgeGrid
     text?: string;
     emoji?: string;
     children?: ReactNode;
     className?: string;
+    badges?: Array<{ emoji: string; label: string }>;  // NEW: for badgeGrid
   }>;
   
   /** Button configuration */
   buttons?: Array<{
     label: string;
     onClick: () => void;
-    variant?: "primary" | "secondary" | "tertiary";
+    variant?: "primary" | "secondary" | "tertiary" | "ghost";  // NEW: Add ghost
     emoji?: string;
+    customClass?: string;  // NEW: Override default classes
   }>;
   
   /** Button layout: "grid" (default, 2 cols) or "stack" (full-width stacked) */
@@ -81,32 +85,61 @@ export function StandardModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in">
-      <div className={`bg-white rounded-3xl shadow-2xl ${maxWidth} w-full overflow-hidden animate-in zoom-in-95 flex flex-col max-h-[90vh]`}>
+      <div className={`bg-white rounded-3xl shadow-2xl ${maxWidth} w-full ${header?.floatingIcon ? '' : 'overflow-hidden'} animate-in zoom-in-95 flex flex-col max-h-[90vh] relative`}>
         
-        {/* Header Section - Optional Gradient Banner */}
+        {/* Header Section - Optional Gradient Banner or Floating Icon */}
         {header && (
-          <div
-            className={`${
-              headerGradient
-                ? `bg-gradient-to-r ${headerGradient[0]} ${headerGradient[1]}`
-                : "bg-gradient-to-r from-blue-400 to-cyan-500"
-            } p-[--padding-lg] flex flex-col items-center text-center relative`}
-          >
-            {header.closeButton && (
-              <button
-                onClick={header.onClose}
-                className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/30 hover:bg-white/50 text-white flex items-center justify-center text-lg transition-all duration-200 z-10"
-                aria-label="Close"
+          <>
+            {header.floatingIcon ? (
+              // Floating Icon Mode - icon hovers above card
+              <>
+                <div className={`absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full flex items-center justify-center text-4xl shadow-2xl border-4 border-white z-20 ${
+                  header.floatingIconGradient
+                    ? `bg-gradient-to-br ${header.floatingIconGradient[0]} ${header.floatingIconGradient[1]}`
+                    : "bg-gradient-to-br from-blue-400 to-cyan-500"
+                }`}>
+                  <span className="animate-pulse">{header.icon}</span>
+                </div>
+                <div className="px-[--padding-lg] pt-14 pb-4 flex flex-col items-center text-center">
+                  {header.closeButton && (
+                    <button
+                      onClick={header.onClose}
+                      className="absolute top-3 right-3 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center text-lg transition-all duration-200 z-10"
+                      aria-label="Close"
+                    >
+                      ✕
+                    </button>
+                  )}
+                  <h2 className="text-2xl font-extrabold text-ink">{header.title}</h2>
+                  {header.subtitle && <p className="text-sm text-muted-foreground mt-1">{header.subtitle}</p>}
+                </div>
+              </>
+            ) : (
+              // Gradient Banner Mode (existing)
+              <div
+                className={`${
+                  headerGradient
+                    ? `bg-gradient-to-r ${headerGradient[0]} ${headerGradient[1]}`
+                    : "bg-gradient-to-r from-blue-400 to-cyan-500"
+                } p-[--padding-lg] flex flex-col items-center text-center relative`}
               >
-                ✕
-              </button>
+                {header.closeButton && (
+                  <button
+                    onClick={header.onClose}
+                    className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/30 hover:bg-white/50 text-white flex items-center justify-center text-lg transition-all duration-200 z-10"
+                    aria-label="Close"
+                  >
+                    ✕
+                  </button>
+                )}
+                <div className="text-5xl mb-[--space-3]">{header.icon}</div>
+                <h2 className="text-2xl font-extrabold text-white">{header.title}</h2>
+                {header.subtitle && (
+                  <p className="text-sm text-white/90 mt-1">{header.subtitle}</p>
+                )}
+              </div>
             )}
-            <div className="text-5xl mb-[--space-3]">{header.icon}</div>
-            <h2 className="text-2xl font-extrabold text-white">{header.title}</h2>
-            {header.subtitle && (
-              <p className="text-sm text-white/90 mt-1">{header.subtitle}</p>
-            )}
-          </div>
+          </>
         )}
 
         {/* Content Area */}
@@ -130,6 +163,20 @@ export function StandardModal({
                   </div>
                 )}
 
+                {item.type === "badgeGrid" && item.badges && (
+                  <div className={`flex flex-wrap gap-2 justify-center ${item.className}`}>
+                    {item.badges.map((badge, badgeIdx) => (
+                      <div
+                        key={badgeIdx}
+                        className="flex items-center gap-1.5 bg-white/80 border border-black/5 rounded-full px-3 py-1.5 text-sm font-bold shadow-sm"
+                      >
+                        <span className="text-base">{badge.emoji}</span>
+                        <span>{badge.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
                 {item.type === "custom" && item.children && (
                   <div className={item.className}>{item.children}</div>
                 )}
@@ -145,7 +192,13 @@ export function StandardModal({
               <div className="space-y-2">
                 <button
                   onClick={buttons[0].onClick}
-                  className="w-full px-[--padding-md] py-[--padding-base] rounded-full bg-gradient-to-r from-blue-400 to-cyan-500 text-white font-bold text-sm shadow-lg transition active:scale-95"
+                  className={buttons[0].customClass || `w-full px-[--padding-md] py-[--padding-base] rounded-full font-bold text-sm shadow-lg transition active:scale-95 ${
+                    buttons[0].variant === "primary" || !buttons[0].variant
+                      ? "bg-gradient-to-r from-blue-400 to-cyan-500 text-white"
+                      : buttons[0].variant === "ghost"
+                        ? "bg-transparent border-2 border-blue-400 text-blue-600 hover:bg-blue-50"
+                        : "bg-blue-100 text-blue-700"
+                  }`}
                 >
                   {buttons[0].emoji && <span className="mr-2">{buttons[0].emoji}</span>}
                   {buttons[0].label}
@@ -157,10 +210,12 @@ export function StandardModal({
               <div className="space-y-2">
                 <button
                   onClick={buttons[0].onClick}
-                  className={`w-full px-4 py-3 rounded-full font-bold text-sm transition active:scale-95 ${
+                  className={buttons[0].customClass || `w-full px-4 py-3 rounded-full font-bold text-sm transition active:scale-95 ${
                     buttons[0].variant === "primary"
                       ? "bg-gradient-to-r from-blue-400 to-cyan-500 text-white shadow-lg"
-                      : "bg-blue-100 text-blue-700"
+                      : buttons[0].variant === "ghost"
+                        ? "bg-transparent border-2 border-current text-gray-600 hover:bg-gray-50"
+                        : "bg-blue-100 text-blue-700"
                   }`}
                 >
                   {buttons[0].emoji && <span className="mr-2">{buttons[0].emoji}</span>}
@@ -168,10 +223,12 @@ export function StandardModal({
                 </button>
                 <button
                   onClick={buttons[1].onClick}
-                  className={`w-full px-4 py-3 rounded-full font-bold text-sm transition active:scale-95 ${
+                  className={buttons[1].customClass || `w-full px-4 py-3 rounded-full font-bold text-sm transition active:scale-95 ${
                     buttons[1].variant === "primary"
                       ? "bg-gradient-to-r from-blue-400 to-cyan-500 text-white shadow-lg"
-                      : "bg-blue-100 text-blue-700"
+                      : buttons[1].variant === "ghost"
+                        ? "bg-transparent border-2 border-current text-gray-600 hover:bg-gray-50"
+                        : "bg-blue-100 text-blue-700"
                   }`}
                 >
                   {buttons[1].emoji && <span className="mr-2">{buttons[1].emoji}</span>}
@@ -184,10 +241,12 @@ export function StandardModal({
               <div className="grid grid-cols-2 gap-[--gap-compact]">
                 <button
                   onClick={buttons[0].onClick}
-                  className={`px-3 py-3 rounded-full font-bold text-xs transition active:scale-95 ${
+                  className={buttons[0].customClass || `px-3 py-3 rounded-full font-bold text-xs transition active:scale-95 ${
                     buttons[0].variant === "primary"
                       ? "bg-gradient-to-r from-blue-400 to-cyan-500 text-white shadow-lg"
-                      : "bg-blue-100 text-blue-700"
+                      : buttons[0].variant === "ghost"
+                        ? "bg-transparent border-2 border-current text-gray-600 hover:bg-gray-50"
+                        : "bg-blue-100 text-blue-700"
                   }`}
                 >
                   {buttons[0].emoji && <span className="mr-1">{buttons[0].emoji}</span>}
@@ -195,10 +254,12 @@ export function StandardModal({
                 </button>
                 <button
                   onClick={buttons[1].onClick}
-                  className={`px-3 py-3 rounded-full font-bold text-xs transition active:scale-95 ${
+                  className={buttons[1].customClass || `px-3 py-3 rounded-full font-bold text-xs transition active:scale-95 ${
                     buttons[1].variant === "primary"
                       ? "bg-gradient-to-r from-blue-400 to-cyan-500 text-white shadow-lg"
-                      : "bg-muted text-muted"
+                      : buttons[1].variant === "ghost"
+                        ? "bg-transparent border-2 border-current text-gray-600 hover:bg-gray-50"
+                        : "bg-muted text-muted"
                   }`}
                 >
                   {buttons[1].emoji && <span className="mr-1">{buttons[1].emoji}</span>}
@@ -213,12 +274,14 @@ export function StandardModal({
                   <button
                     key={idx}
                     onClick={btn.onClick}
-                    className={`w-full px-4 py-3 rounded-full font-bold text-sm transition active:scale-95 ${
+                    className={btn.customClass || `w-full px-4 py-3 rounded-full font-bold text-sm transition active:scale-95 ${
                       btn.variant === "primary"
                         ? "bg-gradient-to-r from-blue-400 to-cyan-500 text-white shadow-lg"
                         : btn.variant === "secondary"
                           ? "bg-blue-100 text-blue-700"
-                          : "bg-muted text-muted"
+                          : btn.variant === "ghost"
+                            ? "bg-transparent border-2 border-current text-gray-600 hover:bg-gray-50"
+                            : "bg-muted text-muted"
                     }`}
                   >
                     {btn.emoji && <span className="mr-2">{btn.emoji}</span>}

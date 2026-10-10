@@ -20,8 +20,6 @@ import { getJourneyMotivationalMessage } from "@/lib/journey-messaging";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { PassportSeedling } from "@/components/PassportSeedling";
 import { AudioSettingRow } from "@/components/AudioSettingToggle";
-import { AudioPermissionDialog } from "@/components/AudioPermissionDialog";
-import { FilePermissionDialog } from "@/components/FilePermissionDialog";
 import { ResetPINDialog } from "@/components/ResetPINDialog";
 import { StatePerformanceBadgesView } from "@/components/state-performance-badges-view";
 import { 
@@ -4146,13 +4144,11 @@ export function ProfileScreen() {
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
   const [isSelectingAvatar, setIsSelectingAvatar] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState<AvatarId>(p.avatar as AvatarId);
-  const [showFilePermissionDialog, setShowFilePermissionDialog] = useState(false);
+  const [showResetPINDialog, setShowResetPINDialog] = useState(false);
   const [hasFileConsent, setHasFileConsent] = useState(() => {
     if (typeof window === "undefined") return false;
     return hasFeatureConsent('file');
   });
-  const [showResetPINDialog, setShowResetPINDialog] = useState(false);
-  const [showAudioPermission, setShowAudioPermission] = useState(false);
   const [hasAudioConsent, setHasAudioConsent] = useState(() => {
     if (typeof window === "undefined") return false;
     return hasFeatureConsent('audio');
@@ -4235,18 +4231,6 @@ export function ProfileScreen() {
     const newName = getAvatarName(avatarId);
     saveProfile({ name: newName, avatar: avatarId, ageBand: p.ageBand });
     setIsSelectingAvatar(false);
-  };
-
-  const handleAudioPermissionAccept = () => {
-    // User clicked "Yes, enable!" - audio consent is granted by dialog
-    // Must close parent state to prevent dialog from re-showing
-    setShowAudioPermission(false);
-  };
-
-  const handleAudioPermissionReject = () => {
-    // User clicked "Not now" - no audio consent
-    // Must close parent state to prevent dialog from re-showing
-    setShowAudioPermission(false);
   };
 
   return (
@@ -4427,116 +4411,66 @@ export function ProfileScreen() {
           )}
         </div>
 
+        {/* ⚙️ Settings Section Header */}
+        <div className="animate-fade-in pt-2" style={{ animationDelay: "195ms" }}>
+          <h3 className="text-sm font-extrabold text-muted-foreground uppercase tracking-wider px-1 mb-2">
+            ⚙️ Settings
+          </h3>
+        </div>
+
         <div className="animate-fade-in" style={{ animationDelay: "200ms" }}>
-          <AudioSettingRow />
+          <SoundToggleRow />
         </div>
 
-        {/* Audio Permission Toggle - for enabling/disabling audio features */}
-        <div className="animate-fade-in" style={{ animationDelay: "205ms" }}>
-          {hasAudioConsent ? (
-            // When permission is granted, show revoke button
-            <button
-              onClick={() => {
-                revokeFeatureConsent('audio');
-                fxTap();
-              }}
-              className="w-full flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-blue-50 to-blue-50 border-2 border-blue-200 hover:border-error hover:bg-error-soft transition"
-            >
-              {/* Left: Icon & Labels */}
-              <div className="flex items-start gap-3">
-                <div className="text-3xl flex-shrink-0">🔊</div>
-                <div className="text-left">
-                  <div className="font-bold text-ink">Audio Stories & Narration</div>
-                  <div className="text-xs text-blue-600 font-semibold">
-                    ✓ Permission granted
-                  </div>
-                </div>
-              </div>
-
-              {/* Right: Revoke Button */}
-              <div className="text-xs font-bold text-error bg-error-soft px-3 py-1.5 rounded-full flex-shrink-0 ml-4">
-                Revoke
-              </div>
-            </button>
-          ) : (
-            // When permission is not granted, show request button
-            <button
-              onClick={() => {
-                fxTap();
-                setShowAudioPermission(true);
-              }}
-              className="w-full flex items-center justify-between p-4 rounded-2xl bg-white border border-muted hover:border-blue hover:bg-blue-soft transition"
-            >
-              {/* Left: Icon & Labels */}
-              <div className="flex items-start gap-3">
-                <div className="text-3xl flex-shrink-0">🔊</div>
-                <div className="text-left">
-                  <div className="font-bold text-ink">Audio Stories & Narration</div>
-                  <div className="text-xs text-gray-600 font-semibold">
-                    🔒 Tap to enable
-                  </div>
-                </div>
-              </div>
-
-              {/* Right: Enable Button */}
-              <div className="text-xs font-bold text-gray-600 bg-gray-100 px-3 py-1.5 rounded-full flex-shrink-0 ml-4">
-                Enable
-              </div>
-            </button>
-          )}
-        </div>
-
-        {/* File Permission Toggle - for saving postcards to photos */}
+        {/* File Permission Card - Simple Toggle */}
         <div className="animate-fade-in" style={{ animationDelay: "210ms" }}>
-          {hasFileConsent ? (
-            // When permission is granted, show revoke button
-            <button
-              onClick={() => {
+          <button
+            type="button"
+            role="switch"
+            aria-checked={hasFileConsent}
+            aria-label="Save pictures permission"
+            onClick={() => {
+              if (hasFileConsent) {
+                // Revoke consent
                 revokeFeatureConsent('file');
                 fxTap();
-              }}
-              className="w-full flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-blue-50 to-blue-50 border-2 border-blue-200 hover:border-error hover:bg-error-soft transition"
-            >
-              {/* Left: Icon & Labels */}
-              <div className="flex items-start gap-3">
-                <div className="text-3xl flex-shrink-0">📸</div>
-                <div className="text-left">
-                  <div className="font-bold text-ink">Save Pictures</div>
-                  <div className="text-xs text-blue-600 font-semibold">
-                    ✓ Permission granted
-                  </div>
-                </div>
+              } else {
+                // Grant consent directly (no dialog)
+                grantFeatureConsent('file');
+                fxTap();
+              }
+            }}
+            className="w-full rounded-2xl bg-white shadow-soft border border-black/5 p-3 flex items-center gap-3 transition active:scale-[0.99]"
+          >
+            <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center text-2xl">
+              📸
+            </div>
+            <div className="flex-1 text-left">
+              <div className="text-display font-extrabold text-[15px] leading-tight">Save Pictures</div>
+              <div className="text-[11px] font-bold">
+                {hasFileConsent ? (
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 border border-green-200">
+                    Active ✓
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200">
+                    Tap to enable
+                  </span>
+                )}
               </div>
-
-              {/* Right: Revoke Button */}
-              <div className="text-xs font-bold text-error bg-error-soft px-3 py-1.5 rounded-full flex-shrink-0 ml-4">
-                Revoke
-              </div>
-            </button>
-          ) : (
-            // When permission is not granted, show grant button
-            <button
-              onClick={() => setShowFilePermissionDialog(true)}
-              className="w-full flex items-center justify-between p-4 rounded-2xl bg-white border border-muted hover:border-muted hover:bg-gray-50 transition"
-            >
-              {/* Left: Icon & Labels */}
-              <div className="flex items-start gap-3">
-                <div className="text-3xl flex-shrink-0">📸</div>
-                <div className="text-left">
-                  <div className="font-bold text-ink">Save Pictures</div>
-                  <div className="text-xs text-muted-foreground">
-                    Ask permission to save
-                  </div>
-                </div>
-              </div>
-
-              {/* Right: Status Indicator */}
-              <div className={`inline-flex h-8 w-14 items-center rounded-full transition-all flex-shrink-0 ml-4 bg-muted`}>
-                <div className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-md transition-transform translate-x-1`} />
-              </div>
-            </button>
-          )}
+            </div>
+            <span className={`h-7 w-12 rounded-full flex items-center px-1 transition ${hasFileConsent ? "gradient-success" : "bg-muted"}`}>
+              <span className={`h-5 w-5 rounded-full bg-white shadow transition-transform ${hasFileConsent ? "translate-x-5" : "translate-x-0"}`} />
+            </span>
+          </button>
         </div>
+        {/* 📊 Progress Section Header */}
+        <div className="animate-fade-in pt-4" style={{ animationDelay: "220ms" }}>
+          <h3 className="text-sm font-extrabold text-muted-foreground uppercase tracking-wider px-1 mb-2">
+            📊 Progress
+          </h3>
+        </div>
+
         <div className="animate-fade-in" style={{ animationDelay: "225ms" }}>
           <Link
             to="/badges"
@@ -4624,20 +4558,6 @@ export function ProfileScreen() {
         </div>
       </div>
 
-      {/* File Permission Dialog - for saving postcards */}
-      <FilePermissionDialog
-        open={showFilePermissionDialog}
-        onAccept={() => {
-          setShowFilePermissionDialog(false);
-          setHasFileConsent(true);
-          fxTap();
-        }}
-        onReject={() => {
-          setShowFilePermissionDialog(false);
-          fxTap();
-        }}
-      />
-
       {/* Reset PIN Dialog - requires parental PIN to reset progress */}
       <ResetPINDialog
         open={showResetPINDialog}
@@ -4648,15 +4568,6 @@ export function ProfileScreen() {
         onCancel={() => {
           setShowResetPINDialog(false);
         }}
-      />
-
-      {/* Audio Permission Dialog - for audio features in profile */}
-      <AudioPermissionDialog
-        open={showAudioPermission}
-        forceShow={true}
-        context="profile-settings"
-        onAccept={handleAudioPermissionAccept}
-        onReject={handleAudioPermissionReject}
       />
     </div>
   );
@@ -4696,8 +4607,6 @@ function SoundToggleRow() {
     }
   };
 
-  // Removed: fileEnabled toggle - now using parental-consent system via hasFeatureConsent('file')
-
   return (
     <div className="space-y-3">
       {/* Sound Effects Toggle - Controls volume/output, not initialization */}
@@ -4709,7 +4618,7 @@ function SoundToggleRow() {
         onClick={toggleSound}
         className="w-full rounded-2xl bg-white shadow-soft border border-black/5 p-3 flex items-center gap-3 transition active:scale-[0.99]"
       >
-        <div className="h-12 w-12 rounded-2xl bg-purple-100 flex items-center justify-center text-2xl">
+        <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center text-2xl">
           🔊
         </div>
         <div className="flex-1 text-left">
@@ -4727,7 +4636,7 @@ function SoundToggleRow() {
         </span>
       </button>
 
-      {/* Audio Permission */}
+      {/* Audio Narration Permission Card - Unified Style */}
       <button
         type="button"
         role="switch"
@@ -4736,13 +4645,21 @@ function SoundToggleRow() {
         onClick={toggleAudio}
         className="w-full rounded-2xl bg-white shadow-soft border border-black/5 p-3 flex items-center gap-3 transition active:scale-[0.99]"
       >
-        <div className="h-12 w-12 rounded-2xl bg-blue-100 flex items-center justify-center text-2xl">
+        <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-purple-100 to-indigo-100 flex items-center justify-center text-2xl">
           🎧
         </div>
         <div className="flex-1 text-left">
           <div className="text-display font-extrabold text-[15px] leading-tight">Audio Narration</div>
-          <div className="text-[11px] font-bold text-muted-foreground">
-            {audioEnabled ? "Stories are read aloud" : "Turn on to hear stories"}
+          <div className="text-[11px] font-bold">
+            {audioEnabled ? (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 border border-green-200">
+                Active ✓
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200">
+                Tap to enable
+              </span>
+            )}
           </div>
         </div>
         <span
@@ -4753,8 +4670,6 @@ function SoundToggleRow() {
           />
         </span>
       </button>
-
-      {/* File Save Permission - Now handled via FilePermissionDialog */}
     </div>
   );
 }

@@ -77,15 +77,32 @@ export function FilePermissionDialog({
   const hasManyDismissals = dismissalCount >= 3;
 
   const contentItems = [
-    !hasManyDismissals && {
-      type: "bullet" as const,
-      emoji: "✨",
-      text: "Your stamp is super cool! / Save it to your photos so you can share it anytime.",
+    {
+      type: "text" as const,
+      text: "Save your state stamps to your photos!",
     },
     !hasManyDismissals && {
-      type: "bullet" as const,
-      emoji: "🔒",
-      text: "It's totally safe. / We only save pictures YOU make. Your photos stay private.",
+      type: "badgeGrid" as const,
+      badges: [
+        { emoji: "🔍", label: "Quick Check" },
+        { emoji: "📲", label: "One Tap" },
+        { emoji: "✅", label: "Done!" },
+      ],
+    },
+    !hasManyDismissals && {
+      type: "custom" as const,
+      className: "bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-4 border border-green-200",
+      children: (
+        <div className="flex items-center gap-2 text-sm font-semibold text-green-700">
+          <span className="text-lg">🔒</span>
+          <span>Your photos stay private</span>
+        </div>
+      ),
+    },
+    !hasManyDismissals && {
+      type: "text" as const,
+      text: "We only save pictures YOU create. Your photos folder stays safe.",
+      className: "text-xs text-muted-foreground",
     },
     hasManyDismissals && {
       type: "custom" as const,
@@ -110,23 +127,25 @@ export function FilePermissionDialog({
       header={{
         icon: "📸",
         title: "Capture Your Moment! 📸",
+        floatingIcon: true,
+        floatingIconGradient: ["from-amber-400", "to-orange-500"],
       }}
-      headerGradient={["from-amber-400", "to-orange-500"]}
       buttonsLayout="stack"
       content={contentItems}
       buttons={[
         {
           label: "Maybe Later",
           onClick: handleAskLater,
-          variant: "secondary",
+          variant: "ghost",
         },
         {
-          label: "Yes, Save it! 📸",
+          label: "Yes, Save My Stamp! 📸",
           onClick: handleAccept,
           variant: "primary",
+          customClass: "w-full px-4 py-3 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 text-white font-bold text-sm shadow-lg transition active:scale-95",
         },
       ]}
-      footer="Always save stamps later from Profile settings"
+      footer="Always enable later from Profile settings"
       maxWidth="max-w-md"
     />
   );
