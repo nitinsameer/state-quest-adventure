@@ -105,7 +105,7 @@ export function JourneyDestinationCard({
 
   return (
     <div
-      className="relative rounded-2xl shadow-elevated-2 overflow-hidden flex flex-col transition-all active:scale-95 h-full"
+      className="relative clay-card clay-white overflow-hidden flex flex-col transition-all active:scale-95 h-full"
       style={{ 
         backgroundColor: cardBgColor,
         padding: "var(--padding-base)"
@@ -160,7 +160,7 @@ export function JourneyDestinationCard({
       <button
         onClick={buttonHandler}
         disabled={isButtonDisabled}
-        className={`w-full py-3 rounded-lg font-bold text-sm transition-all active:scale-95 ${buttonGradientClass} ${buttonTextClass} ${isButtonDisabled ? "opacity-60 cursor-not-allowed" : ""}`}
+        className={`w-full py-3 clay-button ${status === "locked" ? "clay-white" : status === "completed" ? "clay-success" : "clay-saffron"} text-ink transition-all active:scale-95 ${isButtonDisabled ? "opacity-60 cursor-not-allowed" : ""}`}
       >
         {buttonText}
       </button>
