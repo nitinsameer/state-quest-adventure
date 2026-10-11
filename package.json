@@ -19,6 +19,7 @@
     "e2e:report": "playwright show-report",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "validate:android": "node scripts/validate-android-build.mjs"
   },

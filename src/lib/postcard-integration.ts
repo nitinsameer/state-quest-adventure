@@ -28,6 +28,7 @@ function migratePostcardData(
     state: oldData.state,
     badge: oldData.badge,
     stampDate: oldData.stampDate,
+    exportCount: 0,
     // Proposal C: Initialize with "pending" consent to be COPPA-safe
     consentState: "pending",
     consentChangedAt: oldData.generatedAt,

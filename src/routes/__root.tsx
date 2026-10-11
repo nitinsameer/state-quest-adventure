@@ -14,7 +14,6 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { useAndroidBackButton } from "../hooks/useAndroidBackButton";
 import { getJourneyBackHandler } from "../lib/journeyBackHandler";
-import { Toaster } from "@/components/ui/sonner";
 import { UnlockCelebration } from "@/components/UnlockCelebration";
 import { CelebrationPopupProvider } from "@/components/CelebrationPopup";
 import { BottomToastProvider } from "@/components/BottomToast";
@@ -334,15 +333,6 @@ function HydratedApp() {
       const levelName = getLevelName(currentLevel);
       
       // Log level-up event to Firebase
-      try {
-        firebaseEvents.levelUp?.({
-          newLevel: currentLevel,
-          totalXp: progress.xp,
-          ageBand: progress.ageBand,
-        }).catch(() => {});
-      } catch (e) {
-        console.warn("[LevelUp] Firebase event failed", e);
-      }
       
       // Show celebration with confetti via celebration store
       try {
@@ -382,7 +372,7 @@ function HydratedApp() {
   const shouldShowBottomNav = !preAuthRoutes.includes(location.pathname);
 
   // Determine which tab is active based on current pathname
-  const getActiveTab = (): "home" | "map" | "passport" | "badges" | "profile" => {
+  const getActiveTab = (): "home" | "map" | "explorer" | "badges" | "profile" => {
     const path = location.pathname;
     if (path.startsWith("/journey")) return "map";
     if (path.startsWith("/explorer")) return "explorer";

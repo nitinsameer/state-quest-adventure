@@ -55,7 +55,7 @@ export function BadgeUnlockAnimation({
     <>
       {/* Confetti burst on reveal */}
       {confettiTrigger > 0 && (
-        <ConfettiBurst trigger={confettiTrigger} size="large" />
+        <ConfettiBurst trigger={confettiTrigger} size="big" />
       )}
 
       {/* Glowing background for drama */}

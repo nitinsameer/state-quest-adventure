@@ -148,7 +148,7 @@ describe('randomQuestionsForState - Question Shuffling', () => {
   })
 
   it('should shuffle questions in different order (probabilistic)', () => {
-    const runs = []
+    const runs: string[] = []
     for (let i = 0; i < 5; i++) {
       const questions = randomQuestionsForState('Rajasthan', 10)
       runs.push(questions.map(q => q.id).join(','))

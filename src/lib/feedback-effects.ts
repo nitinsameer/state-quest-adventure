@@ -87,7 +87,8 @@ export function vibrate(feedbackType: FeedbackType): void {
     
     // Use Vibration API if available
     if ('vibration' in navigator) {
-      navigator.vibration.vibrate(pattern);
+      const vibration = navigator.vibration as any;
+      vibration.vibrate(pattern);
     }
     // Fallback: Web Haptics API for future support
     else if ('HapticFeedback' in window) {

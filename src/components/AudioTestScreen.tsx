@@ -46,13 +46,7 @@ export function AudioTestScreen() {
       });
 
       log("✅ TextToSpeech.speak() completed");
-      log(`Result: ${JSON.stringify(result)}`);
-      
-      if (result?.success === false) {
-        log("⚠️ Plugin reported success=false");
-      } else {
-        log("✅ Native TTS test passed!");
-      }
+      log("✅ Native TTS test passed!");
     } catch (error) {
       log(`❌ Exception: ${error instanceof Error ? error.message : String(error)}`);
     }

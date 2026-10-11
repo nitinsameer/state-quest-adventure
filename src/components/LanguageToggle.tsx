@@ -36,6 +36,15 @@ const LANGUAGE_DISPLAY_NAMES: Record<LanguageCode, string> = {
   or: "Odia",     // English name for Odia
   bn: "Bengali",  // English name for Bengali
   pa: "Punjabi",  // English name for Punjabi
+  kok: "Konkani", // English name for Konkani
+  as: "Assamese", // English name for Assamese
+  mni: "Manipuri", // English name for Manipuri
+  kha: "Khasi",   // English name for Khasi
+  miz: "Mizoram", // English name for Mizoram
+  hne: "Chhattisgarhi", // English name for Chhattisgarhi
+  ks: "Kashmiri", // English name for Kashmiri
+  lbj: "Ladakhi", // English name for Ladakhi
+  ne: "Nepali",   // English name for Nepali
 };
 
 export function LanguageToggle({

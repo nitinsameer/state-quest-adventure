@@ -78,7 +78,7 @@ export function StateCompletionCelebration({
     <>
       {/* Confetti burst on reveal */}
       {confettiTrigger > 0 && (
-        <ConfettiBurst trigger={confettiTrigger} size="massive" />
+        <ConfettiBurst trigger={confettiTrigger} size="big" />
       )}
 
       {/* Animated glowing background */}

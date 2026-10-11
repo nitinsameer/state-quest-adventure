@@ -6,9 +6,19 @@
 
 import { useState } from "react";
 import { ExpandableCard } from "./ExpandableCard";
-import { getStateContent } from "@/lib/state-content";
+import { getStateContent, type AgeTaggedContent } from "@/lib/state-content";
 import { fxTap, fxWhoosh } from "@/lib/fx";
 import { useGoBack } from "./screens";
+
+// Helper to extract string from string | AgeTaggedContent union
+const extractText = (value: string | AgeTaggedContent): string => {
+  return typeof value === "string" ? value : value.text;
+};
+
+const extractTextArray = (value: string[] | AgeTaggedContent[]): string[] => {
+  if (!value) return [];
+  return value.map(v => typeof v === "string" ? v : v.text);
+};
 
 const CARD_COLORS = [
   { bg: "bg-orange-soft", border: "border-orange-200" }, // Capital
@@ -47,8 +57,23 @@ export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: st
     { id: "funFact", ...content.funFact },
   ];
 
-  const currentCard = cards[activeTab];
+  const currentCard = cards[activeTab]!;
   const colors = CARD_COLORS[activeTab];
+
+  // Guard: ensure currentCard has required properties
+  if (!currentCard || !('title' in currentCard && 'emoji' in currentCard)) {
+    return (
+      <div className="h-full w-full bg-[#F7F5F0] flex flex-col items-center justify-center gap-[--gap-base] p-[--padding-lg]">
+        <div className="text-4xl">❌</div>
+        <div className="text-center">
+          <div className="text-display font-extrabold text-lg">Card unavailable</div>
+          <div className="text-sm text-muted-foreground mt-2">
+            This card could not be loaded. Please try again.
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const handleTabChange = (index: number) => {
     if (index !== activeTab) {
@@ -86,11 +111,11 @@ export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: st
           title={currentCard.title}
           emoji={currentCard.emoji}
           mainText={currentCard.mainText}
-          keyFacts={currentCard.keyFacts}
+          keyFacts={extractTextArray(currentCard.keyFacts)}
           narration={currentCard.narration}
-          coolFacts={currentCard.coolFacts}
-          didYouKnow={currentCard.didYouKnow}
-          tryThis={currentCard.tryThis}
+          coolFacts={currentCard.coolFacts ? extractTextArray(currentCard.coolFacts) : undefined}
+          didYouKnow={currentCard.didYouKnow ? extractText(currentCard.didYouKnow) : undefined}
+          tryThis={currentCard.tryThis ? extractText(currentCard.tryThis) : undefined}
           backgroundColor={colors.bg}
           borderColor={colors.border}
         />
@@ -99,7 +124,9 @@ export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: st
       {/* Card Navigation Tabs */}
       <div className="flex-shrink-0 bg-white/80 backdrop-blur border-t border-black/5 px-[--padding-sm] py-[--padding-base]">
         <div className="flex gap-[--gap-compact] overflow-x-auto pb-1">
-          {cards.map((card, index) => (
+          {cards.map((card, index) => {
+            const safeCard = card as typeof card & { emoji: string };
+            return (
             <button
               key={index}
               onClick={() => handleTabChange(index)}
@@ -109,9 +136,10 @@ export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: st
                   : "bg-white/50 border-2 border-transparent hover:bg-white/70"
               }`}
             >
-              <span className="text-2xl">{card.emoji}</span>
+              <span className="text-2xl">{safeCard.emoji}</span>
             </button>
-          ))}
+            );
+          })}
         </div>
 
         {/* Card Info */}

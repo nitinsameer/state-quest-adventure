@@ -1,9 +1,9 @@
 import { Navigate, Link, useNavigate } from "@tanstack/react-router";
-import { useProgress, levelInfo, statesWithProgress, cardsDone, completedCategoriesCount, learningCardsFor, getLevelName } from "@/lib/progress";
+import { useProgress, levelInfo, statesWithProgress, cardsDone, completedCategoriesCount, getLevelName } from "@/lib/progress";
+import { learningCardsFor } from "@/components/screens";
 import { getUpNext } from "@/lib/passport-helpers";
 import { STATE_ART } from "@/lib/state-art";
 import { fxTap } from "@/lib/fx";
-import { learningCardsFor } from "@/components/screens";
 
 // Background Assets
 import screenBg from "@/assets/home/background/screen-bg.png";
@@ -50,7 +50,7 @@ export function HomeScreen() {
   const allCards = learningCardsFor(current.name, "en", p.ageBand);
   console.log(`[HomeScreen] State: ${current.name}`);
   console.log(`[HomeScreen] allCards.length: ${allCards.length}`);
-  allCards.forEach((card, idx) => {
+  allCards.forEach((card: any, idx: number) => {
     console.log(`[HomeScreen] Card[${idx}]: mainCardIndex=${card.mainCardIndex}`);
   });
   

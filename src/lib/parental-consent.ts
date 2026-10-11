@@ -19,16 +19,9 @@
 
 import { validateConsentStorage, type ConsentRecord } from './localStorage-schema'
 
-export interface ConsentRecord {
-  feature: 'audio' | 'file' | 'analytics'
-  granted: boolean
-  timestamp: number
-  version: number
-}
-
 const CONSENT_STORAGE_KEY = 'india-explorer:parental-consent:v1'
 const CONSENT_VERSION = 1
-const consentListeners = new Set<(feature: 'audio' | 'file') => void>()
+const consentListeners = new Set<(feature: 'audio' | 'file' | 'analytics') => void>()
 
 /**
  * Request consent for a feature (audio, file, or analytics)

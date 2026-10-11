@@ -63,7 +63,7 @@ export function QuizAnswerFeedback({
     <>
       {/* Confetti for correct answers */}
       {isCorrect && confettiTrigger > 0 && (
-        <ConfettiBurst trigger={confettiTrigger} size="massive" />
+        <ConfettiBurst trigger={confettiTrigger} size="big" />
       )}
 
       {/* Full-screen feedback overlay */}

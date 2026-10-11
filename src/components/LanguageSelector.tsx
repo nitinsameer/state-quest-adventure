@@ -19,6 +19,15 @@ const LANGUAGE_DISPLAY_NAMES: Record<LanguageCode, string> = {
   or: "Odia",
   bn: "Bengali",
   pa: "Punjabi",
+  kok: "Konkani",
+  as: "Assamese",
+  mni: "Manipuri",
+  kha: "Khasi",
+  miz: "Mizoram",
+  hne: "Chhattisgarhi",
+  ks: "Kashmiri",
+  lbj: "Ladakhi",
+  ne: "Nepali",
 };
 
 interface LanguageSelectorProps {

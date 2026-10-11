@@ -226,10 +226,16 @@ export function getPerformanceBadgeProgress(
         id,
         { earned: false, progress: 0, max: 1, message: "Not started" },
       ])
-    );
+    ) as Record<StatePerformanceBadgeId, { earned: boolean; progress: number; max: number; message: string }>;
   }
 
-  const result: Record<StatePerformanceBadgeId, { earned: boolean; progress: number; max: number; message: string }> = {};
+  // Initialize all badges with default values
+  const result: Record<StatePerformanceBadgeId, { earned: boolean; progress: number; max: number; message: string }> = Object.fromEntries(
+    getPerformanceBadgeIds().map(id => [
+      id,
+      { earned: false, progress: 0, max: 1, message: "Not started" },
+    ])
+  ) as Record<StatePerformanceBadgeId, { earned: boolean; progress: number; max: number; message: string }>;
 
   // Perfect Quiz
   result["perfect-quiz"] = {

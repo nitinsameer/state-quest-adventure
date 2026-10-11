@@ -33,6 +33,7 @@ export function logError(
   try {
     const errorMessage = error instanceof Error ? error.message : String(error);
     const errorStack = error instanceof Error ? error.stack : undefined;
+    const errorForLogging = error instanceof Error ? error : undefined;
 
     // Log to local logger first (always works)
     appLogger.error(
@@ -46,7 +47,7 @@ export function logError(
         action: context.action,
         ...context.data,
       },
-      error
+      errorForLogging
     );
 
     // Log to debug system

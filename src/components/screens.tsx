@@ -14,7 +14,7 @@ import avatarFarmerHat from "@/assets/avatars/avatar-farmer-hat.png";
 import avatarSportsCap from "@/assets/avatars/avatar-sports-cap.png";
 import avatarGirlFlower from "@/assets/avatars/avatar-girl-flower.png";
 import { STATE_ART, TONE_GRADIENT, preloadStateArt } from "@/lib/state-art";
-import { getStateContent, getCardContent, getCardContentByAge } from "@/lib/state-content";
+import { getStateContent, getCardContent, getCardContentByAge, type AgeTaggedContent } from "@/lib/state-content";
 import { stopTts, playTts, playStateNarration } from "@/lib/tts";
 import { getJourneyMotivationalMessage } from "@/lib/journey-messaging";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
@@ -1569,8 +1569,8 @@ export function JourneyMapScreen() {
       </div>
 
       {/* Clouds decoration below header */}
-      <Cloud className="absolute top-96 left-2 w-24 opacity-90 pointer-events-none animate-fade-in" style={{ animationDelay: "100ms" }} />
-      <Cloud className="absolute top-[500px] right-1 w-20 opacity-85 pointer-events-none animate-fade-in" style={{ animationDelay: "150ms" }} />
+      <Cloud className="absolute top-96 left-2 w-24 opacity-90 pointer-events-none animate-fade-in" />
+      <Cloud className="absolute top-[500px] right-1 w-20 opacity-85 pointer-events-none animate-fade-in" />
 
       {/* Explorable States Map with Regional Organization */}
       <div className="relative flex-1 overflow-y-auto overflow-x-hidden animate-fade-in" style={{ animationDelay: "200ms" }}>
@@ -1629,7 +1629,7 @@ export function JourneyMapScreen() {
                     
                     // Detect in-progress state (partially completed cards)
                     const cardsRead = cardsDone(p, state.name);
-                    const totalCards = INDIA_STATES.find(s => s.name === state.name)?.cards?.length ?? 6;
+                    const totalCards = 6; // IndiaState doesn't have cards property, default to 6
                     const isInProgress = !isDone && cardsRead > 0 && cardsRead < totalCards;
                     
                     // Determine card status
@@ -1707,7 +1707,7 @@ export function JourneyMapScreen() {
                 
                 // Detect in-progress state (partially completed cards)
                 const cardsRead = cardsDone(p, utNode.name);
-                const totalCards = INDIA_STATES.find(s => s.name === utNode.name)?.cards?.length ?? 6;
+                const totalCards = 6; // IndiaState doesn't have cards property, default to 6
                 const isInProgress = !isDone && cardsRead > 0 && cardsRead < totalCards;
                 
                 // Determine card status
@@ -2268,12 +2268,18 @@ export type EnhancedCard = {
   type: "main" | "coolFact" | "didYouKnow" | "tryThis";
   gradient: string;
   chipTone: "orange" | "amber" | "purple" | "green";
-  mainCardIndex?: number; // Track which main card this belongs to (0-5)
+  mainCardIndex: number; // Track which main card this belongs to (0-5)
 };
 
 export function learningCardsFor(stateName?: string, displayLanguage: string = "en", ageBand: string = "8-9"): EnhancedCard[] {
   const state = getState(stateName);
-  const enrichedContent = getStateContent(stateName);
+  const enrichedContent = getStateContent(state.name);
+
+  // Helper to extract text from string | AgeTaggedContent
+  const getText = (value: string | AgeTaggedContent | undefined): string => {
+    if (!value) return "";
+    return typeof value === "string" ? value : value.text;
+  };
   
   // Map of main card definitions
   const mainCardDefinitions = [
@@ -2336,7 +2342,7 @@ export function learningCardsFor(stateName?: string, displayLanguage: string = "
     
     // If enriched content exists and has language variants, get the language-specific version
     // Also filter by age band for age-appropriate content
-    let cardContent = enrichedCard ? getCardContentByAge(stateName, def.enrichedKey, displayLanguage, ageBand) : null;
+    let cardContent = enrichedCard ? getCardContentByAge(state.name, def.enrichedKey, displayLanguage, ageBand) : null;
     
     // Use enriched content if available and in selected language, otherwise fall back to default
     const body = cardContent?.mainText || def.body;
@@ -2365,7 +2371,7 @@ export function learningCardsFor(stateName?: string, displayLanguage: string = "
             title: `Cool Fact #${idx + 1}`,
             icon: "⭐",
             chip: "Cool Fact",
-            body: fact,
+            body: getText(fact),
             type: "coolFact",
             gradient: "gradient-amber",
             chipTone: "amber",
@@ -2381,7 +2387,7 @@ export function learningCardsFor(stateName?: string, displayLanguage: string = "
           title: "Did You Know?",
           icon: "🤔",
           chip: "Did You Know?",
-          body: cardContent.didYouKnow,
+          body: getText(cardContent.didYouKnow),
           type: "didYouKnow",
           gradient: "gradient-purple",
           chipTone: "purple",
@@ -2396,7 +2402,7 @@ export function learningCardsFor(stateName?: string, displayLanguage: string = "
           title: "Try This Activity",
           icon: "🎮",
           chip: "Try This Activity",
-          body: cardContent.tryThis,
+          body: getText(cardContent.tryThis),
           type: "tryThis",
           gradient: "gradient-green",
           chipTone: "green",
@@ -2431,6 +2437,15 @@ const LANGUAGE_NAMES: Record<LanguageCode, string> = {
   or: "Odia",
   bn: "Bengali",
   pa: "Punjabi",
+  kok: "Konkani",
+  as: "Assamese",
+  mni: "Manipuri",
+  kha: "Khasi",
+  miz: "Mizoram",
+  hne: "Chhattisgarhi",
+  ks: "Kashmiri",
+  lbj: "Ladakhi",
+  ne: "Nepali",
 };
 
 export function LearningCardScreen({
@@ -2456,7 +2471,7 @@ export function LearningCardScreen({
   // cardIndexInCategory tracks position within category (0-4 or more)
   const [displayLanguage, setDisplayLanguage] = useState<LanguageCode>(() => {
     // Start with English, will validate based on available languages
-    const available = getAvailableLanguages(stateName);
+    const available = getAvailableLanguages(state.name);
     return (available.includes("en") ? "en" : available[0] ?? "en") as LanguageCode;
   });
   const [mainCardIndex, setMainCardIndex] = useState(cardIndex ?? 0); // Which category (0-5)
@@ -2502,7 +2517,7 @@ export function LearningCardScreen({
     return cards.findIndex(c => c && c.mainCardIndex === currentCard.mainCardIndex && c.kicker === currentCard.kicker && c.title === currentCard.title);
   }, [currentCard, cards]);
   
-  const enrichedContent = getStateContent(stateName);
+  const enrichedContent = getStateContent(state.name);
   
   useEffect(() => {
     preloadStateArt(state.name, nextStateAfter(state.name)?.name);
@@ -2747,9 +2762,9 @@ export function LearningCardScreen({
         </div>
 
         {/* Language Toggle - Left aligned pill style */}
-        {getAvailableLanguages(stateName).length > 1 && (
+        {getAvailableLanguages(state.name).length > 1 && (
           <div className="flex items-center gap-2 bg-white/70 backdrop-blur-sm rounded-full p-1.5 border border-white/50">
-            {getAvailableLanguages(stateName).map((lang) => (
+            {getAvailableLanguages(state.name).map((lang) => (
               <button
                 key={lang}
                 onClick={() => {
@@ -2853,7 +2868,7 @@ export function LearningCardScreen({
         </div>
         <div className="mt-3 bg-white/80 rounded-xl p-3">
           <div className="flex items-center gap-2">
-            <Chip icon={card.icon} tone={card.chipTone}>
+            <Chip icon={card.icon} tone={card.chipTone === "purple" ? "blue" : card.chipTone as any}>
               {card.chip}
             </Chip>
             <Chip icon="📍" tone="blue">
