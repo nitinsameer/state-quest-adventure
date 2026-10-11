@@ -287,7 +287,7 @@ export function StatePostcardScreen({
 
       {/* Postcard Preview */}
       <div className="flex-1 px-5 pt-[--padding-base] pb-1 relative z-10 overflow-y-auto">
-        <div className="w-full rounded-[28px] bg-white shadow-2xl border-4 border-white overflow-hidden animate-in zoom-in-95">
+        <div className="w-full rounded-[28px] clay-card clay-white border-4 border-white overflow-hidden animate-in zoom-in-95">
           {/* Preview Image (Loading or Generated) */}
           <div className="relative bg-muted aspect-[3/4] overflow-hidden flex items-center justify-center">
             {previewUrl ? (
@@ -316,7 +316,7 @@ export function StatePostcardScreen({
           <button
             onClick={handleSaveToPhotos}
             disabled={busy || !previewUrl}
-            className="flex-1 h-12 rounded-2xl bg-white text-ink text-sm font-bold shadow-xl disabled:opacity-60 active:scale-95 transition-transform"
+            className="flex-1 h-12 rounded-2xl clay-button clay-white text-ink text-sm font-bold disabled:opacity-60 active:scale-95 transition-transform"
           >
             {busy ? "Saving..." : "📸 Save"}
           </button>
@@ -324,7 +324,7 @@ export function StatePostcardScreen({
           {/* Secondary: Keep in App */}
           <button
             onClick={handleKeepInApp}
-            className="flex-1 h-12 rounded-2xl bg-blue-100 text-blue-700 text-sm font-bold active:scale-95 transition-transform"
+            className="flex-1 h-12 rounded-2xl clay-button clay-explorer text-ink text-sm font-bold active:scale-95 transition-transform"
           >
             📱 Keep
           </button>
@@ -336,7 +336,7 @@ export function StatePostcardScreen({
             fxTap();
             onHome?.();
           }}
-          className="w-full h-14 rounded-2xl bg-gradient-to-r from-orange-400 to-orange-500 text-white text-display font-extrabold shadow-xl active:scale-95 transition-transform"
+          className="w-full h-14 rounded-2xl clay-button clay-saffron text-ink text-display font-extrabold active:scale-95 transition-transform"
         >
           🏠 Home
         </button>
@@ -346,7 +346,7 @@ export function StatePostcardScreen({
             fxTap();
             onNextState?.();
           }}
-          className="w-full h-12 rounded-xl bg-white/20 backdrop-blur text-white text-display font-bold active:scale-95 transition-transform"
+          className="w-full h-12 rounded-xl clay-button clay-white text-ink text-display font-bold active:scale-95 transition-transform"
         >
           Next State ✈️
         </button>

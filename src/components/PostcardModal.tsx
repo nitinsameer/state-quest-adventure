@@ -208,7 +208,7 @@ export function PostcardModal({
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 h-8 w-8 rounded-full bg-muted flex items-center justify-center text-muted hover:bg-muted"
+          className="absolute top-4 right-4 h-8 w-8 rounded-full clay-button clay-white text-ink flex items-center justify-center"
         >
           ✕
         </button>
@@ -240,7 +240,7 @@ export function PostcardModal({
         </div>
 
         {/* Fun Fact Section */}
-        <div className="bg-saffron-soft rounded-2xl p-[--padding-md] my-[--space-0-5]">
+        <div className="clay-card clay-gold rounded-2xl p-[--padding-md] my-[--space-0-5]">
           <div className="text-xs font-extrabold text-ink uppercase tracking-wider">
             💡 Did You Know?
           </div>
@@ -253,7 +253,7 @@ export function PostcardModal({
         <button
           onClick={handleShare}
           disabled={isSaving}
-          className="w-full h-12 rounded-2xl gradient-saffron text-white font-extrabold flex items-center justify-center gap-[--gap-base] disabled:opacity-60 disabled:cursor-not-allowed transition"
+          className="w-full h-12 rounded-2xl clay-button clay-saffron text-ink font-extrabold flex items-center justify-center gap-[--gap-base] disabled:opacity-60 disabled:cursor-not-allowed transition"
         >
           {isSaving ? (
             <>
@@ -279,7 +279,7 @@ export function PostcardModal({
             onClose();
             navigate({ to: "/home" });
           }}
-          className="w-full h-12 rounded-2xl bg-blue-500 text-white font-extrabold transition-all duration-200 hover:bg-blue-600 active:scale-95"
+          className="w-full h-12 rounded-2xl clay-button clay-explorer text-ink font-extrabold transition-all duration-200 active:scale-95"
         >
           🏠 Home
         </button>
@@ -291,7 +291,7 @@ export function PostcardModal({
             onClose();
             navigate({ to: "/journey" });
           }}
-          className="w-full h-12 rounded-2xl bg-orange-500 text-white font-extrabold transition-all duration-200 hover:bg-orange-600 active:scale-95"
+          className="w-full h-12 rounded-2xl clay-button clay-saffron text-ink font-extrabold transition-all duration-200 active:scale-95"
         >
           🎯 Next State
         </button>
@@ -299,7 +299,7 @@ export function PostcardModal({
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="w-full h-12 rounded-2xl bg-white border-2 border-ink text-ink font-extrabold"
+          className="w-full h-12 rounded-2xl clay-button clay-white text-ink font-extrabold"
         >
           Close
         </button>

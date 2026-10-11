@@ -347,7 +347,7 @@ export function PostcardPreviewModal({
         content={[
           {
             type: "custom",
-            className: "relative bg-muted aspect-[3/4] overflow-hidden rounded-xl -mx-6 -mt-6 mb-[--space-2]",
+            className: "relative clay-card clay-white aspect-[3/4] overflow-hidden rounded-xl -mx-6 -mt-6 mb-[--space-2]",
             children: (
               <div className="relative w-full h-full">
                 {previewUrl ? (
