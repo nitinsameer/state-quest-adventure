@@ -284,7 +284,7 @@ function HeaderBar({
         <button
           onClick={goBack}
           aria-label="Go back"
-          className="h-12 w-12 rounded-full bg-white shadow-soft flex items-center justify-center text-xl"
+          className="h-12 w-12 rounded-full clay-button clay-white flex items-center justify-center text-xl text-ink"
         >
           ‹
         </button>
@@ -639,7 +639,7 @@ export function HomeDashboardScreen() {
         <Cloud className="absolute top-2 right-4 w-14 opacity-40" />
         <div className="flex items-center gap-4 relative mb-3">
           {/* Avatar - Larger and more prominent */}
-          <div className="h-20 w-20 rounded-2xl bg-white p-1.5 shadow-soft flex items-center justify-center overflow-hidden flex-shrink-0" data-testid="profile-avatar">
+          <div className="h-20 w-20 rounded-2xl clay-card clay-white p-1.5 flex items-center justify-center overflow-hidden flex-shrink-0" data-testid="profile-avatar">
             <img src={getAvatarImage(p.avatar)} alt={getAvatarName(p.avatar)} className="w-full h-full object-cover" />
           </div>
           
@@ -655,11 +655,11 @@ export function HomeDashboardScreen() {
           
           {/* Right side: Streak badge */}
           <div className="flex items-center gap-2 flex-shrink-0">
-            <div className={`flex items-center gap-1.5 bg-white/70 rounded-full px-4 py-2.5 backdrop-blur transition-transform duration-1000 shadow-soft`}>
+            <div className={`flex items-center gap-1.5 clay-card clay-white rounded-full px-4 py-2.5 transition-transform duration-1000`}>
               <span className="text-2xl">🔥</span>
               <div className="flex flex-col items-start">
-                <span className="text-white text-h5 font-black leading-none">{p.streak}</span>
-                <span className="text-white text-xs font-bold opacity-90 leading-none">day streak</span>
+                <span className="text-ink text-h5 font-black leading-none">{p.streak}</span>
+                <span className="text-ink text-xs font-bold opacity-90 leading-none">day streak</span>
               </div>
             </div>
           </div>
@@ -670,7 +670,7 @@ export function HomeDashboardScreen() {
       {/* India Journey Meta-Game Card - Separate featured section */}
       <div className={`px-6 pt-5 pb-4 transition-opacity duration-700 ${statsVisible ? "opacity-100" : "opacity-0"}`}>
         <Suspense fallback={
-          <div className="w-full bg-white rounded-3xl shadow-soft p-6 animate-pulse">
+          <div className="w-full clay-card clay-white rounded-3xl p-6 animate-pulse">
             <div className="h-8 bg-muted rounded w-1/3 mb-4" />
             <div className="space-y-3">
               {[1,2,3].map(i => <div key={i} className="h-3 bg-muted rounded" />)}
@@ -831,7 +831,7 @@ export function HomeDashboardScreen() {
         <h2 className="text-display font-bold text-sm text-muted-foreground mb-2">
           Continue your journey
         </h2>
-        <div className="mt-2 rounded-3xl bg-white p-4 shadow-elevated-2 border border-black/5 flex items-center gap-3">
+        <div className="mt-2 rounded-3xl clay-card clay-white p-4 flex items-center gap-3">
           <div className="h-16 w-16 rounded-2xl overflow-hidden flex-shrink-0">
             <img 
               src={STATE_ART[current.name]} 
@@ -864,7 +864,7 @@ export function HomeDashboardScreen() {
             to="/state/$slug/learn"
             params={{ slug: stateSlug(current.name) }}
             onClick={() => fxTap()}
-            className="h-12 px-4 rounded-2xl gradient-saffron text-white text-display font-bold text-sm shadow-glow-warm flex items-center transition-all duration-300 hover:shadow-elevated-hover hover:scale-105 active:scale-95 active:shadow-elevated-2"
+            className="h-12 px-4 rounded-2xl clay-button clay-saffron text-ink text-display font-bold text-sm flex items-center transition-all duration-300 hover:scale-105 active:scale-95"
           >
             Play ▶
           </Link>
@@ -888,7 +888,7 @@ export function HomeDashboardScreen() {
             <button
               key={s.name}
               onClick={() => handleLockedCardTap(s.name)}
-              className={`rounded-3xl bg-white p-3 shadow-elevated-1 border border-black/5 flex flex-col items-center gap-2 transition-all duration-300 overflow-hidden hover:shadow-elevated-2 hover:scale-105 ${
+              className={`rounded-3xl clay-card clay-white p-3 flex flex-col items-center gap-2 transition-all duration-300 overflow-hidden hover:scale-105 ${
                 animateStats ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
               }`}
               style={{ transitionDelay: `${idx * 100}ms` }}
@@ -920,7 +920,7 @@ export function HomeDashboardScreen() {
                   e.stopPropagation();
                   fxTap();
                 }}
-                className="mt-1 px-4 py-2 rounded-lg gradient-saffron text-white text-label font-bold shadow-elevated-1 transition-all duration-200 hover:shadow-glow-warm hover:scale-105 active:scale-95"
+                className="mt-1 px-4 py-2 rounded-lg clay-button clay-saffron text-ink text-label font-bold transition-all duration-200 hover:scale-105 active:scale-95"
                 aria-label={`Start exploring ${s.name}`}
               >
                 Start exploring
@@ -988,14 +988,14 @@ export function HomeDashboardScreen() {
                   <div className="mt-5 space-y-2">
                     <Link
                       to="/journey"
-                      className="w-full h-12 rounded-2xl gradient-saffron text-white font-extrabold flex items-center justify-center shadow-glow-warm hover:shadow-elevated-hover hover:scale-105 transition-all active:scale-95"
+                      className="w-full h-12 rounded-2xl clay-button clay-saffron text-ink font-extrabold flex items-center justify-center hover:scale-105 transition-all active:scale-95"
                       onClick={() => fxTap()}
                     >
                       View Journey Map
                     </Link>
                     <button
                       onClick={() => setShowLockedPreview(null)}
-                      className="w-full h-11 rounded-2xl bg-muted text-muted-dark font-bold shadow-elevated-1 hover:shadow-elevated-2 transition-all active:scale-95"
+                      className="w-full h-11 rounded-2xl clay-button clay-white text-ink font-bold hover:scale-105 transition-all active:scale-95"
                     >
                       Close
                     </button>
@@ -1029,7 +1029,7 @@ function StatCard({
     green: "border-success/25",
   }[tone];
   return (
-    <div className={`rounded-2xl bg-white border ${border} p-3 shadow-soft`}>
+    <div className={`rounded-2xl clay-card clay-white border ${border} p-3`}>
       <div className="text-lg">{icon}</div>
       <div className="text-display text-h2 leading-snug mt-1">
         {value}
