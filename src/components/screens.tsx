@@ -3088,7 +3088,7 @@ export function QuizScreen({
             onClose?.();
           }}
           aria-label="Back to categories"
-          className="h-12 w-12 rounded-full bg-white shadow-soft flex items-center justify-center text-xl flex-shrink-0 hover:bg-explorer-soft transition-colors"
+          className="h-12 w-12 rounded-full clay-button clay-white text-ink flex items-center justify-center text-xl flex-shrink-0"
         >
           ←
         </button>
@@ -3118,7 +3118,7 @@ export function QuizScreen({
       </div>
 
       {/* Status Bar with XP Info - Clean */}
-      <div className="px-5 py-2 bg-white/50 backdrop-blur-sm flex items-center justify-between text-xs">
+      <div className="px-5 py-2 clay-card clay-white flex items-center justify-between text-xs">
         <div className="font-bold text-muted-foreground">
           Total: {correctCount * 20} XP
         </div>
@@ -3134,18 +3134,18 @@ export function QuizScreen({
           alt=""
           className={`w-16 h-16 object-contain ${result === "correct" ? "mascot-cheer" : ""}`}
         />
-        <div className="relative bg-white rounded-2xl shadow-soft px-3 py-2 text-label font-bold">
+        <div className="relative clay-card clay-white px-3 py-2 text-label font-bold">
           {result === "correct"
             ? "Nailed it! 🎉"
             : result === "wrong"
             ? "Good try! Let's move on! 👉"
             : "You've got this! 💪"}
-          <div className="absolute left-0 top-1/2 -translate-x-1 -translate-y-1/2 w-3 h-3 rotate-45 bg-white" />
+          <div className="absolute left-0 top-1/2 -translate-x-1 -translate-y-1/2 w-3 h-3 rotate-45 clay-card clay-white" />
         </div>
         {result === "correct" && (
-          <div className="ml-auto flex items-center gap-1 bg-success/20 rounded-full px-3 py-1 shadow-soft border border-success/30">
+          <div className="ml-auto flex items-center gap-1 clay-card clay-success px-3 py-1">
             <span>⭐</span>
-            <span className="text-display font-extrabold text-sm text-success">+20 XP</span>
+            <span className="text-display font-extrabold text-sm text-ink">+20 XP</span>
           </div>
         )}
       </div>
@@ -3169,14 +3169,14 @@ export function QuizScreen({
             <button
               key={label}
               onClick={() => onSelect(label)}
-              className={`h-16 rounded-2xl px-5 flex items-center justify-between text-h4 text-display shadow-soft border-2 transition-all active:scale-[0.99] hover:scale-[1.02] ${
+              className={`h-16 rounded-2xl px-5 flex items-center justify-between text-h4 text-display transition-all active:scale-[0.99] hover:scale-[1.02] ${
                 isCorrectPick
-                  ? "bg-success/10 border-success text-success"
+                  ? "clay-button clay-success text-ink"
                   : isWrongPick
-                  ? "bg-rose-50 border-rose-500 text-rose-600"
+                  ? "clay-button clay-white text-ink opacity-60"
                   : isSelected
-                  ? "bg-white border-explorer text-explorer shadow-[var(--shadow-glow-blue)]"
-                  : "bg-white border-transparent text-ink"
+                  ? "clay-button clay-explorer text-ink"
+                  : "clay-button clay-white text-ink"
               }`}
             >
               {label}
@@ -3202,12 +3202,12 @@ export function QuizScreen({
         <button
           onClick={result ? onReset : onCheck}
           disabled={!selected}
-          className={`w-full h-14 rounded-2xl text-white text-h4 text-display shadow-[var(--shadow-glow-blue)] disabled:opacity-50 ${
+          className={`w-full h-14 rounded-2xl text-h4 text-display disabled:opacity-50 ${
             result === "correct"
-              ? "bg-success"
+              ? "clay-button clay-success text-ink"
               : result === "wrong"
-              ? "bg-rose-500"
-              : "gradient-explorer"
+              ? "clay-button clay-explorer text-ink"
+              : "clay-button clay-saffron text-ink"
           }`}
         >
           {result === "correct"
@@ -3233,7 +3233,7 @@ export function CorrectAnswerScreen({ stateName, onDismiss }: { stateName?: stri
       {/* Premium Close Button - Top Right */}
       <button
         onClick={onDismiss}
-        className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/30 hover:bg-white/50 text-white flex items-center justify-center text-lg transition-all duration-200 z-10"
+        className="absolute top-3 right-3 clay-button clay-white text-ink w-8 h-8 rounded-full flex items-center justify-center text-lg transition-all duration-200 z-10"
         aria-label="Close"
       >
         ✕
@@ -3257,7 +3257,7 @@ export function CorrectAnswerScreen({ stateName, onDismiss }: { stateName?: stri
       <div className="flex-1 flex flex-col items-center justify-center px-6 relative">
         <div className="relative">
           <div className="absolute inset-0 blur-2xl bg-white/40 rounded-full" />
-          <div className="relative h-32 w-32 rounded-full bg-white flex items-center justify-center shadow-2xl">
+          <div className="relative h-32 w-32 rounded-full clay-card clay-success flex items-center justify-center shadow-2xl">
             <div className="text-6xl">✅</div>
           </div>
         </div>
@@ -3268,11 +3268,11 @@ export function CorrectAnswerScreen({ stateName, onDismiss }: { stateName?: stri
           You got it right — {state.capital} is the capital of {state.name}!
         </p>
 
-        <div className="mt-6 rounded-2xl bg-white/20 backdrop-blur px-5 py-3 flex items-center gap-3 text-white">
+        <div className="mt-6 clay-card clay-gold px-5 py-3 flex items-center gap-3">
           <span className="text-3xl">⭐</span>
           <div>
-            <div className="text-xs font-bold opacity-90">You earned</div>
-            <div className="text-display text-2xl font-extrabold leading-snug">
+            <div className="text-xs font-bold opacity-90 text-ink">You earned</div>
+            <div className="text-display text-2xl font-extrabold leading-snug text-ink">
               +20 XP
             </div>
           </div>
@@ -3280,7 +3280,7 @@ export function CorrectAnswerScreen({ stateName, onDismiss }: { stateName?: stri
       </div>
 
       <div className="p-6 relative">
-        <button className="w-full h-14 rounded-2xl bg-white text-success text-display text-lg font-extrabold shadow-lg animate-pulse active:scale-95 transition-transform">
+        <button className="w-full h-14 clay-button clay-saffron text-ink text-display text-lg font-extrabold animate-pulse active:scale-95 transition-transform">
           Next Question →
         </button>
       </div>
@@ -3398,7 +3398,7 @@ export function StateCompletedScreen({
           fxTap();
           // Close button does nothing - user must choose See Stamp or Replay
         }}
-        className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/30 hover:bg-white/50 text-white flex items-center justify-center text-lg transition-all duration-200 z-10 cursor-not-allowed opacity-50"
+        className="absolute top-3 right-3 w-8 h-8 rounded-full clay-button clay-white text-ink flex items-center justify-center text-lg transition-all duration-200 z-10 cursor-not-allowed opacity-50"
         aria-label="Choose an action"
         disabled
       >
@@ -3461,30 +3461,30 @@ export function StateCompletedScreen({
 
       <div className="mt-8 w-full px-6">
         {/* Postcard Preview Card */}
-        <div className="rounded-3xl bg-white/30 backdrop-blur-xl p-6 text-white text-center border border-white/40 shadow-elevated-2">
-          <div className="text-[11px] font-black uppercase tracking-[0.2em] opacity-90 mb-4">
+        <div className="clay-card clay-gold p-6 text-center">
+          <div className="text-[11px] font-black uppercase tracking-[0.2em] opacity-90 mb-4 text-ink">
             Your Postcard
           </div>
           
           {/* Postcard-style content */}
-          <div className="bg-white/10 rounded-2xl p-4 border border-white/30 mb-4">
-            <div className="text-sm font-bold mb-2">{state.name}</div>
-            <div className="text-[11px] opacity-75">State Complete Badge</div>
+          <div className="clay-card clay-white p-4 mb-4">
+            <div className="text-sm font-bold mb-2 text-ink">{state.name}</div>
+            <div className="text-[11px] opacity-75 text-ink">State Complete Badge</div>
             <div className="text-2xl mt-3 mb-2">🏆</div>
-            <div className="text-[10px] opacity-60">Ready to save & share</div>
+            <div className="text-[10px] opacity-60 text-ink">Ready to save & share</div>
           </div>
 
           {/* XP + Stamp in single row */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="bg-white/15 rounded-2xl p-3 border border-white/20">
+            <div className="clay-card clay-white p-3">
               <div className="text-lg">⭐</div>
-              <div className="text-display text-h5 leading-tight mt-1">+250 XP</div>
-              <div className="text-[9px] opacity-75 mt-2">State Complete</div>
+              <div className="text-display text-h5 leading-tight mt-1 text-ink">+250 XP</div>
+              <div className="text-[9px] opacity-75 mt-2 text-ink">State Complete</div>
             </div>
-            <div className="bg-white/15 rounded-2xl p-3 border border-white/20">
+            <div className="clay-card clay-white p-3">
               <div className="text-lg">📜</div>
-              <div className="text-display text-h5 leading-tight mt-1">Stamp</div>
-              <div className="text-[9px] opacity-75 mt-2">Added</div>
+              <div className="text-display text-h5 leading-tight mt-1 text-ink">Stamp</div>
+              <div className="text-[9px] opacity-75 mt-2 text-ink">Added</div>
             </div>
           </div>
         </div>
@@ -3497,7 +3497,7 @@ export function StateCompletedScreen({
             fxTap();
             onContinue?.();
           }}
-          className="w-full h-14 rounded-2xl bg-gradient-to-r from-orange-400 via-orange-500 to-amber-500 text-white text-display text-lg font-extrabold shadow-glow-warm active:scale-95 transition-all duration-200 hover:shadow-elevated-hover hover:scale-105"
+          className="w-full h-14 clay-button clay-saffron text-ink text-display text-lg font-extrabold active:scale-95 transition-all duration-200"
         >
           🎯 Next State
         </button>
@@ -3508,7 +3508,7 @@ export function StateCompletedScreen({
             fxTap();
             onCreatePostcard?.();
           }}
-          className="w-full h-12 rounded-xl bg-white/40 backdrop-blur border border-white/60 text-white text-display font-bold shadow-elevated-2 active:scale-95 transition-all duration-200 hover:shadow-elevated-hover hover:scale-105 hover:bg-white/50"
+          className="w-full h-12 clay-button clay-white text-ink text-display font-bold active:scale-95 transition-all duration-200"
         >
           📸 Save Postcard
         </button>
