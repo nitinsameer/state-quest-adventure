@@ -219,7 +219,7 @@ export function ParentZoneScreen() {
               <div>
                 <div className="text-sm font-bold text-muted-foreground mb-[--space-0-25]">Overall Progress</div>
                 <div className="flex items-center gap-[--gap-base]">
-                  <div className="flex-1 h-3 bg-muted rounded-full overflow-hidden">
+                  <div className="flex-1 h-3 bg-[oklch(0.9_0.02_260)] rounded-full overflow-hidden">
                     <div
                       className="h-full gradient-saffron"
                       style={{ width: `${(p.completed.length / TOTAL_STATES) * 100}%` }}

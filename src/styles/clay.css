@@ -19,7 +19,8 @@
 :root {
   /* Surfaces */
   --clay-white: oklch(0.99 0.008 85);
-  --clay-saffron: oklch(0.82 0.14 55);
+  --clay-saffron: oklch(0.68 0.20 42);
+  --clay-saffron-soft: oklch(0.82 0.14 55);
   --clay-explorer: oklch(0.84 0.09 240);
   --clay-success: oklch(0.86 0.13 150);
   --clay-gold: oklch(0.9 0.12 90);
@@ -30,12 +31,16 @@
   --clay-dark: rgb(30 41 59 / 0.14);
 
   /* Outer glow colours (match the fills) */
-  --clay-glow-saffron: oklch(0.7 0.17 50 / 0.45);
+  --clay-glow-saffron: oklch(0.62 0.21 38 / 0.6);
+  --clay-glow-saffron-soft: oklch(0.75 0.12 50 / 0.3);
   --clay-glow-explorer: oklch(0.65 0.15 245 / 0.4);
   --clay-glow-success: oklch(0.68 0.16 150 / 0.4);
   --clay-glow-gold: oklch(0.75 0.15 85 / 0.45);
   --clay-glow-gem: oklch(0.62 0.17 295 / 0.4);
   --clay-glow-white: rgb(30 41 59 / 0.18);
+
+  /* Progress bar empty track */
+  --clay-progress-empty: oklch(0.9 0.02 260);
 
   --clay-radius-card: 1.75rem;
   --clay-radius-button: 1.5rem;
@@ -43,13 +48,13 @@
 
 /* ---------- Card ---------- */
 @utility clay-card {
-  background: var(--clay-fill, var(--clay-white));
+  background: #ffffff;
   color: var(--color-ink);
   border: 0;
   border-radius: var(--clay-radius-card);
   box-shadow:
-    inset 6px 6px 12px var(--clay-light),
-    inset -6px -6px 12px var(--clay-dark),
+    inset 4px 4px 8px rgb(255 255 255 / 0.6),
+    inset -4px -4px 8px rgb(30 41 59 / 0.08),
     0 14px 26px -10px var(--clay-glow, var(--clay-glow-white));
 }
 
@@ -66,15 +71,15 @@
   touch-action: manipulation;
   transition: transform 120ms ease;
   box-shadow:
-    inset 5px 5px 10px var(--clay-light),
-    inset -5px -7px 12px var(--clay-dark),
+    inset 5px 5px 10px rgb(255 255 255 / 0.45),
+    inset -5px -7px 12px rgb(130 35 0 / 0.35),
     0 10px 18px -6px var(--clay-glow, var(--clay-glow-saffron));
 
   &:active {
     transform: translateY(3px) scale(0.98);
     box-shadow:
-      inset 4px 4px 8px var(--clay-dark),
-      inset -3px -3px 6px var(--clay-light),
+      inset 4px 4px 8px rgb(130 35 0 / 0.35),
+      inset -3px -3px 6px rgb(255 255 255 / 0.45),
       0 3px 8px -4px var(--clay-glow, var(--clay-glow-saffron));
   }
 
@@ -107,6 +112,47 @@
     0 6px 12px -6px var(--clay-glow, var(--clay-glow-white));
 }
 
+/* ---------- Button Soft (Secondary Actions) ---------- */
+@utility clay-button-soft {
+  background: var(--clay-fill, var(--clay-saffron-soft));
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-weight: 700;
+  border: 0;
+  border-radius: var(--clay-radius-button);
+  min-height: 48px;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform 120ms ease;
+  box-shadow:
+    inset 4px 4px 8px rgb(255 255 255 / 0.5),
+    inset -4px -4px 8px rgb(100 100 100 / 0.12),
+    0 8px 16px -6px var(--clay-glow, var(--clay-glow-saffron-soft));
+
+  &:active {
+    transform: translateY(2px) scale(0.98);
+    box-shadow:
+      inset 3px 3px 6px rgb(100 100 100 / 0.12),
+      inset -2px -2px 4px rgb(255 255 255 / 0.5),
+      0 2px 6px -4px var(--clay-glow, var(--clay-glow-saffron-soft));
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    transform: none;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--color-ink);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
 /* ---------- Input (pressed-in look) ---------- */
 @utility clay-input {
   background: var(--clay-white);
@@ -125,6 +171,11 @@
   }
 }
 
+/* ---------- Progress Bar Empty Track ---------- */
+@utility clay-progress-track {
+  background: var(--clay-progress-empty);
+}
+
 /* ---------- Colour variants ---------- */
 @utility clay-white {
   --clay-fill: var(--clay-white);
@@ -133,6 +184,10 @@
 @utility clay-saffron {
   --clay-fill: var(--clay-saffron);
   --clay-glow: var(--clay-glow-saffron);
+}
+@utility clay-saffron-soft {
+  --clay-fill: var(--clay-saffron-soft);
+  --clay-glow: var(--clay-glow-saffron-soft);
 }
 @utility clay-explorer {
   --clay-fill: var(--clay-explorer);

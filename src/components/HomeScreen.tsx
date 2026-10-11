@@ -157,7 +157,7 @@ export function HomeScreen() {
               <div className="flex-1 min-w-0">
                 <div className="text-caption font-semibold text-orange uppercase">Currently Exploring</div>
                 <h3 className="text-h4 text-muted-dark">{current.name}</h3>
-                <div className="mt-2 h-1.5 bg-muted rounded-full overflow-hidden">
+                <div className="mt-2 h-1.5 bg-[oklch(0.9_0.02_260)] rounded-full overflow-hidden">
                   <div className="h-full bg-gradient-to-r from-orange-400 to-orange-600" style={{ width: `${(currentDone / 6) * 100}%` }} />
                 </div>
                 <div className="text-caption font-semibold text-muted mt-1">{currentDone}/6</div>

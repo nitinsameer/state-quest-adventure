@@ -220,7 +220,7 @@ export function PassportSeedling() {
         <div className="text-sm font-semibold text-slate-600 mt-1">
           {regionProgress} explored {unlockedInRegion.length === regionStates.length && "✨ Region Complete!"}
         </div>
-        <div className="mt-2 h-2 bg-muted rounded-full overflow-hidden">
+        <div className="mt-2 h-2 bg-[oklch(0.9_0.02_260)] rounded-full overflow-hidden">
           <div
             className={`h-full bg-gradient-to-r ${region.gradient} transition-all duration-300`}
             style={{ width: `${(unlockedInRegion.length / regionStates.length) * 100}%` }}

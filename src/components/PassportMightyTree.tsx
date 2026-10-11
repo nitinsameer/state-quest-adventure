@@ -90,7 +90,7 @@ export function PassportMightyTree() {
                   {milestone.current}/{milestone.target}
                 </span>
               </div>
-              <div className="w-full h-3 bg-muted rounded-full overflow-hidden">
+              <div className="w-full h-3 bg-[oklch(0.9_0.02_260)] rounded-full overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-green-400 to-emerald-500 transition-all duration-300"
                   style={{ width: `${milestone.percentage}%` }}

@@ -110,7 +110,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
           <div className="text-xs font-bold text-muted-foreground">
             ⏱️ {timeLeft}s remaining
           </div>
-          <div className="h-1.5 bg-muted rounded-full overflow-hidden mt-[--space-0-25]">
+          <div className="h-1.5 bg-[oklch(0.9_0.02_260)] rounded-full overflow-hidden mt-[--space-0-25]">
             <div
               className="h-full bg-gradient-to-r from-red-400 to-red-600 transition-all"
               style={{ width: `${(timeLeft / 30) * 100}%` }}

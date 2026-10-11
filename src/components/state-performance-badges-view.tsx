@@ -307,7 +307,7 @@ function StateDetailBadgeCard({ state, progress, onSelect }: any) {
 
       {/* Progress Bar */}
       <div className="mt-3 flex items-center gap-2">
-        <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+        <div className="flex-1 h-2 bg-[oklch(0.9_0.02_260)] rounded-full overflow-hidden">
           <div 
             className="h-full bg-gradient-to-r from-orange-400 to-orange-600 transition-all"
             style={{ width: `${(earnedBadges.length / totalBadges) * 100}%` }}

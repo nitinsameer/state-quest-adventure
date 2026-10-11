@@ -782,7 +782,7 @@ function HomeDashboardContent() {
           
           {/* Right side: Streak badge */}
           <div className="flex items-center gap-2 flex-shrink-0">
-            <div className={`flex items-center gap-1.5 clay-card clay-white rounded-full px-4 py-2.5 transition-transform duration-1000`}>
+            <div className={`flex items-center gap-1.5 clay-chip clay-white transition-transform duration-1000`}>
               <span className="text-2xl">🔥</span>
               <div className="flex flex-col items-start">
                 <span className="text-ink text-h5 font-black leading-none">{p.streak}</span>
