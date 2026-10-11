@@ -202,8 +202,8 @@ export function PassportSeedling() {
                 onClick={() => handleRegionChange(key)}
                 className={`px-4 py-2 rounded-full font-extrabold text-sm whitespace-nowrap transition active:scale-95 ${
                   isSelected
-                    ? `bg-gradient-to-r ${reg.gradient} text-white shadow-lg`
-                    : "bg-muted text-muted hover:bg-muted"
+                    ? "clay-button clay-saffron text-ink"
+                    : "clay-button clay-white text-ink"
                 }`}
                 title={`${completed}/${regionStates.length} explored`}
               >
