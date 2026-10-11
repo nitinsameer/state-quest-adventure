@@ -99,23 +99,19 @@ jobs:
           (github.ref == 'refs/heads/main' || inputs.release == true)
         env:
           KS_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-          KS_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          KEY_PASS: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
-          echo "$KS_B64" | base64 -d > android/app/release.jks
-          cat > android/keystore.properties <<EOF
-          storeFile=release.jks
-          storePassword=$KS_PASS
-          keyAlias=$KEY_ALIAS
-          keyPassword=$KEY_PASS
-          EOF
+          echo "$KS_B64" | base64 -d > $RUNNER_TEMP/release.jks
 
       - name: Build signed release (APK + AAB)
         if: >-
           steps.signing.outputs.available == 'true' &&
           (github.ref == 'refs/heads/main' || inputs.release == true)
         working-directory: android
+        env:
+          KEYSTORE_FILE: ${{ runner.temp }}/release.jks
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: ./gradlew assembleRelease bundleRelease --stacktrace
 
       - name: Upload release artifacts
@@ -133,4 +129,4 @@ jobs:
 
       - name: Clean up signing material
         if: always()
-        run: rm -f android/app/release.jks android/keystore.properties
+        run: rm -f $RUNNER_TEMP/release.jks

@@ -110,6 +110,7 @@ yarn.lock
 .#*
 # Test Results & Artifacts
 test-results/
+coverage/
 .last-run.json
 playwright-report/
 e2e-results.json
