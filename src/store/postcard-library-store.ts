@@ -50,7 +50,8 @@ interface PostcardLibraryStore {
     stateName: string,
     badgeId: "monument" | "animal" | "explorer",
     stampDate: string,
-    generatedAt: string
+    generatedAt: string,
+    imageData?: string
   ) => void;
   updatePostcard: (id: string, updates: Partial<LibraryPostcard>) => void;
   deletePostcard: (id: string) => void;
@@ -109,7 +110,7 @@ const createPostcardLibraryStore = (): PostcardLibraryStore => {
     error: null,
 
     // CRUD Operations
-    addPostcard: (stateName, badgeId, stampDate, generatedAt) => {
+    addPostcard: (stateName, badgeId, stampDate, generatedAt, imageData) => {
       usePostcardLibrary.setState((state) => {
         const newPostcard = createLibraryPostcard(
           stateName,
@@ -117,6 +118,9 @@ const createPostcardLibraryStore = (): PostcardLibraryStore => {
           stampDate,
           generatedAt
         );
+        if (imageData) {
+          newPostcard.imageData = imageData;
+        }
         const updatedPostcards = [...state.postcards, newPostcard];
         const updatedMetadata = getLibraryMetadata(updatedPostcards);
 

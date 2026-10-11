@@ -6,7 +6,7 @@
 
 import { useState } from "react";
 
-export type LanguageCode = "en" | "te" | "hi" | "ta" | "gu" | "mr" | "kn" | "ml" | "or" | "bn" | "pa";
+export type LanguageCode = "en" | "te" | "hi" | "ta" | "gu" | "mr" | "kn" | "ml" | "or" | "bn" | "pa" | "kok" | "as" | "mni" | "kha" | "miz" | "hne" | "ks" | "lbj" | "ne";
 
 export interface LanguageToggleProps {
   /** Current selected language */

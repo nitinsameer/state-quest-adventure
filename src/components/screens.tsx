@@ -3324,22 +3324,10 @@ export function StateCompletedScreen({
       if (persist) {
         completeState(state.name);
         
-        // Auto-save postcard
-        const autoSavePostcard = async () => {
+        // Add postcard to library automatically
+        const addPostcardToLibrary = async () => {
           try {
-            if (!hasFeatureConsent("file")) {
-              const hasPermission = await requestStoragePermission();
-              if (hasPermission) {
-                grantFeatureConsent("file");
-              }
-            }
-            
-            const postcard: PostcardData = {
-              state: state.name,
-              stampDate: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short" }).toUpperCase().replace(" ", " · "),
-              badge: "monument",
-            };
-            
+            // Generate postcard and add to library with image data
             const canvas = document.createElement("canvas");
             canvas.width = 900;
             canvas.height = 1200;
@@ -3349,15 +3337,24 @@ export function StateCompletedScreen({
             });
             
             if (blob) {
-              await saveFileToDownloads(blob, `${state.name}-explorer-stamp.png`);
-              console.log(`[StateCompletedScreen] Postcard auto-saved for ${state.name}`);
+              const reader = new FileReader();
+              reader.onloadend = () => {
+                const base64 = (reader.result as string).split(",")[1];
+                const { usePostcardLibrary } = require("@/store/postcard-library-store");
+                const library = usePostcardLibrary.getState();
+                
+                const stampDate = new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short" }).toUpperCase().replace(" ", " · ");
+                library.addPostcard(state.name, "monument", stampDate, new Date().toISOString(), base64);
+                console.log(`[StateCompletedScreen] Postcard added to library for ${state.name}`);
+              };
+              reader.readAsDataURL(blob);
             }
           } catch (err) {
-            console.error("[StateCompletedScreen] Auto-save postcard failed:", err);
+            console.error("[StateCompletedScreen] Failed to add postcard to library:", err);
           }
         };
         
-        autoSavePostcard();
+        addPostcardToLibrary();
         
         // Track performance badges if metrics provided
         if (quizMetrics) {

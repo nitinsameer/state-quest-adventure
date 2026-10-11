@@ -5,14 +5,12 @@ import { getState } from "@/lib/states";
 import { STATE_ART, TONE_GRADIENT, TONE_HEX, preloadStateArt } from "@/lib/state-art";
 import { useProgress, badgesFor, STATE_BADGES, type BadgeId } from "@/lib/progress";
 import { fxTap, fxStamp } from "@/lib/fx";
-import { requestStoragePermission, saveFileToDownloads } from "@/lib/permissions";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { useCelebration } from "@/hooks/useCelebration";
 import { useToast } from "@/hooks/useToast";
-import { hasFeatureConsent, grantFeatureConsent } from "@/lib/parental-consent";
 import { usePostcardLibrary } from "@/store/postcard-library-store";
-import { markPostcardAsExported } from "@/lib/postcard-library";
-import { FilePermissionDialog } from "@/components/FilePermissionDialog";
+import { sharePostcard } from "@/lib/share-postcard";
+import { ResetPINDialog } from "@/components/ResetPINDialog";
 
 const BADGE_EMOJI: Record<BadgeId, string> = {
   monument: "🏛️",
@@ -66,7 +64,8 @@ export function StatePostcardScreen({
   const [burst, setBurst] = useState(0);
   const [busy, setBusy] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [showFilePermissionDialog, setShowFilePermissionDialog] = useState(false);
+  const [showParentGate, setShowParentGate] = useState(false);
+  const [pendingBlob, setPendingBlob] = useState<Blob | null>(null);
   const cheer = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
@@ -207,53 +206,46 @@ export function StatePostcardScreen({
     }
   }
 
-  async function handleSaveToPhotos() {
+  async function handleSaveToPassport() {
     if (busy) return;
-
-    // Check if user has already granted file permission
-    if (!hasFeatureConsent("file")) {
-      fxTap();
-      setShowFilePermissionDialog(true);
-      return;
-    }
-
-    // Permission already granted, proceed to save
-    await proceedWithSave();
-  }
-
-  async function proceedWithSave() {
     setBusy(true);
+
     try {
       const blob = await generatePostcardPreview();
       if (!blob) {
-        toast.error("Couldn't generate stamp", {
+        toast.error("Couldn't generate postcard", {
           subtitle: "Please try again",
         });
         setBusy(false);
         return;
       }
 
-      const filename = `${state.name}-postcard.png`;
-      const success = await saveFileToDownloads(blob, filename);
-
-      if (success) {
+      // Convert blob to base64 for storage
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64 = (reader.result as string).split(",")[1];
         const library = usePostcardLibrary.getState();
-        const postcard = library.postcards.find((p) => p.state === state.name);
-        if (postcard) {
-          const updatedPostcard = markPostcardAsExported(postcard, filename);
-          library.updatePostcard(postcard.id, updatedPostcard);
-        }
+        const now = new Date().toISOString();
+        
+        // Generate a stamp date like "12 · MAR"
+        const date = new Date();
+        const day = date.getDate();
+        const month = date.toLocaleString("en-US", { month: "short" }).toUpperCase();
+        const stampDate = `${day} · ${month}`;
 
-        toast.success("✨ Stamp saved to Photos!", {
-          subtitle: "Check your photos folder",
+        // Determine badge earned
+        const earned = badgesFor(progress, state.name);
+        const badgeId = (earned[earned.length - 1] ?? "explorer") as BadgeId;
+
+        // Add to postcard library with image data
+        library.addPostcard(state.name, badgeId, stampDate, now, base64);
+
+        toast.success("✨ Saved to your Passport!", {
+          subtitle: "View anytime from Explorer",
         });
         setBusy(false);
-      } else {
-        toast.error("Couldn't save stamp", {
-          subtitle: "Please try again",
-        });
-        setBusy(false);
-      }
+      };
+      reader.readAsDataURL(blob);
     } catch (err) {
       console.error("[StatePostcardScreen] Save failed", err);
       toast.error("Something went wrong", {
@@ -263,12 +255,58 @@ export function StatePostcardScreen({
     }
   }
 
-  async function handleKeepInApp() {
+  async function handleSharePostcard() {
+    if (busy) return;
     fxTap();
-    toast.success("📱 Stamp added to your Stamps!", {
-      subtitle: "View anytime from your Stamps tab",
-    });
-    // No auto-navigation - user explicitly chooses Home or Next State
+    
+    // Show parent gate first
+    try {
+      const blob = await generatePostcardPreview();
+      if (blob) {
+        setPendingBlob(blob);
+        setShowParentGate(true);
+      }
+    } catch (err) {
+      console.error("[StatePostcardScreen] Share prep failed", err);
+      toast.error("Couldn't prepare postcard", {
+        subtitle: "Please try again",
+      });
+    }
+  }
+
+  async function proceedWithShare() {
+    if (!pendingBlob) return;
+    setBusy(true);
+
+    try {
+      const filename = `${state.name}-postcard`;
+      const result = await sharePostcard(pendingBlob, filename);
+
+      if (result.ok) {
+        if (result.cancelled) {
+          // User cancelled share sheet, just close
+          setBusy(false);
+        } else {
+          toast.success("✨ Postcard shared!", {
+            subtitle: "Parent can view it now",
+          });
+          setBusy(false);
+        }
+      } else {
+        toast.error("Couldn't share postcard", {
+          subtitle: result.error || "Please try again",
+        });
+        setBusy(false);
+      }
+    } catch (err) {
+      console.error("[StatePostcardScreen] Share failed", err);
+      toast.error("Something went wrong", {
+        subtitle: "Please try again",
+      });
+      setBusy(false);
+    } finally {
+      setPendingBlob(null);
+    }
   }
 
   return (
@@ -310,23 +348,24 @@ export function StatePostcardScreen({
 
       {/* Action Buttons */}
       <div className="p-[--padding-md] pt-2 relative z-10 space-y-2">
-        {/* Row 1: Save to Photos & Keep in App (side by side) */}
+        {/* Row 1: Save to Passport & Share (side by side) */}
         <div className="flex gap-[--gap-compact]">
-          {/* Primary: Save to Photos */}
+          {/* Primary: Save to Passport */}
           <button
-            onClick={handleSaveToPhotos}
+            onClick={handleSaveToPassport}
             disabled={busy || !previewUrl}
             className="flex-1 h-12 rounded-2xl clay-button clay-white text-ink text-sm font-bold disabled:opacity-60 active:scale-95 transition-transform"
           >
-            {busy ? "Saving..." : "📸 Save"}
+            {busy ? "Saving..." : "💾 Save"}
           </button>
 
-          {/* Secondary: Keep in App */}
+          {/* Secondary: Share (Parent-gated) */}
           <button
-            onClick={handleKeepInApp}
-            className="flex-1 h-12 rounded-2xl clay-button clay-explorer text-ink text-sm font-bold active:scale-95 transition-transform"
+            onClick={handleSharePostcard}
+            disabled={busy || !previewUrl}
+            className="flex-1 h-12 rounded-2xl clay-button clay-explorer text-ink text-sm font-bold disabled:opacity-60 active:scale-95 transition-transform"
           >
-            📱 Keep
+            🔗 Share
           </button>
         </div>
 
@@ -352,16 +391,16 @@ export function StatePostcardScreen({
         </button>
       </div>
 
-      {/* File Permission Dialog */}
-      <FilePermissionDialog
-        open={showFilePermissionDialog}
-        onAccept={() => {
-          grantFeatureConsent("file");
-          setShowFilePermissionDialog(false);
-          proceedWithSave();
+      {/* Parent Gate for Share */}
+      <ResetPINDialog
+        open={showParentGate}
+        onConfirm={() => {
+          setShowParentGate(false);
+          proceedWithShare();
         }}
-        onReject={() => {
-          setShowFilePermissionDialog(false);
+        onCancel={() => {
+          setShowParentGate(false);
+          setPendingBlob(null);
         }}
       />
     </div>

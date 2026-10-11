@@ -4,10 +4,9 @@ import { getState } from "@/lib/states";
 import { STATE_ART, TONE_GRADIENT, TONE_HEX } from "@/lib/state-art";
 import { type PostcardData } from "@/lib/progress";
 import { fxTap } from "@/lib/fx";
-import { requestStoragePermission, saveFileToDownloads } from "@/lib/permissions";
-import { hasFeatureConsent, grantFeatureConsent } from "@/lib/parental-consent";
 import { useCelebration } from "@/hooks/useCelebration";
 import { useToast } from "@/hooks/useToast";
+import { usePostcardLibrary } from "@/store/postcard-library-store";
 
 const BADGE_EMOJI: Record<string, string> = {
   monument: "🏛️",
@@ -149,47 +148,40 @@ export function PostcardModal({
   const toast = useToast();
   const [isSaving, setIsSaving] = useState(false);
 
-  const handleShare = async () => {
+  const handleSaveToPassport = async () => {
     setIsSaving(true);
     try {
       fxTap();
       const blob = await generatePostcardBlob(postcard);
       if (!blob) {
-        toast.error("Couldn't generate stamp", {
+        toast.error("Couldn't generate postcard", {
           subtitle: "Please try again",
         });
         setIsSaving(false);
         return;
       }
 
-      // Check if permission was already granted
-      if (!hasFeatureConsent("file")) {
-        // Request permission if not yet granted
-        const hasPermission = await requestStoragePermission();
-        if (!hasPermission) {
-          toast.error("Permission denied", {
-            subtitle: "Enable storage in settings",
-          });
-          setIsSaving(false);
-          return;
-        }
-        // Mark consent as granted
-        grantFeatureConsent("file");
-      }
+      // Convert blob to base64 for storage
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64 = (reader.result as string).split(",")[1];
+        const library = usePostcardLibrary.getState();
+        
+        // Add to postcard library with image data
+        library.addPostcard(postcard.state, postcard.badge, postcard.stampDate, new Date().toISOString(), base64);
 
-      // Permission already granted or just granted - save the file
-      await saveFileToDownloads(blob, `${postcard.state}-explorer-stamp.png`);
-      celebration.success("✨ Stamp saved!", {
-        subtitle: "Check your photos",
-        confetti: true,
-        duration: 3500,
-      });
+        toast.success("✨ Saved to your Passport!", {
+          subtitle: "View anytime from Explorer",
+        });
+        setIsSaving(false);
+        onClose();
+      };
+      reader.readAsDataURL(blob);
     } catch (error) {
-      toast.error("Couldn't save stamp", {
+      toast.error("Couldn't save postcard", {
         subtitle: "Please try again later",
       });
-      console.error("Share failed:", error);
-    } finally {
+      console.error("Save failed:", error);
       setIsSaving(false);
     }
   };
@@ -249,9 +241,9 @@ export function PostcardModal({
           </p>
         </div>
 
-        {/* Share Button */}
+        {/* Save Button */}
         <button
-          onClick={handleShare}
+          onClick={handleSaveToPassport}
           disabled={isSaving}
           className="w-full h-12 rounded-2xl clay-button clay-saffron text-ink font-extrabold flex items-center justify-center gap-[--gap-base] disabled:opacity-60 disabled:cursor-not-allowed transition"
         >
@@ -262,14 +254,14 @@ export function PostcardModal({
             </>
           ) : (
             <>
-              📸 Save to Photos
+              💾 Save to Passport
             </>
           )}
         </button>
 
         {/* Info Text */}
         <p className="text-xs text-center text-ink">
-          Share your achievement or keep it in your explorer stamps! 🎉
+          Keep it in your Passport! 🎉
         </p>
 
         {/* Home Button */}
