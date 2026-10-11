@@ -157,7 +157,17 @@ export function validateAppVersion(raw: string | null): string | null {
 /**
  * POSTCARD LIBRARY - Collection of generated postcards
  * Key: "postcard-library-v1"
+ * 
+ * Postcards are stored with full metadata including base64 image data for in-app persistence.
+ * The imageData field is optional for backward compatibility with postcards saved before the
+ * permission removal. However, new postcards always include imageData as base64 PNG.
  */
+const ConsentHistorySchema = z.object({
+  state: z.enum(['pending', 'accepted', 'declined']),
+  changedAt: z.string().datetime(),
+  reason: z.string().optional(),
+});
+
 export const PostcardLibrarySchema = z.array(
   z.object({
     id: z.string().min(1),
@@ -165,7 +175,24 @@ export const PostcardLibrarySchema = z.array(
     badge: z.enum(['monument', 'animal', 'explorer']),
     stampDate: z.string(),
     generatedAt: z.string().datetime(),
-    imageUrl: z.string().url().optional(),
+    consentState: z.enum(['pending', 'accepted', 'declined']).default('pending'),
+    consentChangedAt: z.string().datetime().optional(),
+    consentHistory: z.array(ConsentHistorySchema).default([]),
+    isExportedToDevice: z.boolean().default(false),
+    exportedAt: z.string().datetime().optional(),
+    exportedFilename: z.string().optional(),
+    exportCount: z.number().int().nonnegative().default(0),
+    location: z.object({
+      stateName: z.string(),
+      coordinates: z.object({
+        latitude: z.number(),
+        longitude: z.number(),
+      }).optional(),
+    }).optional(),
+    displayOrder: z.number().int().nonnegative().default(0),
+    tags: z.array(z.string()).default([]),
+    imageData: z.string().optional(), // Base64 PNG, nullable for backward compat
+    imageUrl: z.string().url().optional(), // Deprecated, kept for backward compat
   })
 );
 
