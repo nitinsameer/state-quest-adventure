@@ -126,7 +126,7 @@ export function StateCompletionCelebration({
               <p className="text-h4 font-black text-primary mb-1">
                 {cardsCompleted}
               </p>
-              <p className="text-body-sm text-muted">Cards Done</p>
+              <p className="text-body-sm text-muted-foreground">Cards Done</p>
             </div>
 
             {/* XP gained */}
@@ -134,13 +134,13 @@ export function StateCompletionCelebration({
               <p className="text-h4 font-black text-yellow-600 mb-1">
                 +{totalXpGained}
               </p>
-              <p className="text-body-sm text-muted">XP Earned</p>
+              <p className="text-body-sm text-muted-foreground">XP Earned</p>
             </div>
           </div>
 
           {/* Badge grid - staggered reveals */}
           <div className="mb-6">
-            <p className="text-body-sm text-muted font-bold mb-3 px-2">
+            <p className="text-body-sm text-muted-foreground font-bold mb-3 px-2">
               Badges Unlocked:
             </p>
             <div className="grid grid-cols-4 gap-3 px-2">

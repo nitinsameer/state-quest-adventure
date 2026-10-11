@@ -59,7 +59,7 @@ export function StatePerformanceBadgeModal({
               fxTap();
               onClose();
             }}
-            className="text-2xl text-muted-light hover:text-muted transition"
+            className="text-2xl text-muted-light hover:text-muted-foreground transition"
           >
             ✕
           </button>
@@ -171,7 +171,7 @@ function BadgeDetailCard({ badgeId, progress }: BadgeDetailCardProps) {
         {/* Badge Info */}
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <h4 className={`text-display font-extrabold ${progress.earned ? "text-orange-900" : "text-muted"}`}>
+            <h4 className={`text-display font-extrabold ${progress.earned ? "text-orange-900" : "text-muted-foreground"}`}>
               {badgeDef.name}
             </h4>
             {progress.earned && <div className="text-lg">✓</div>}
@@ -181,7 +181,7 @@ function BadgeDetailCard({ badgeId, progress }: BadgeDetailCardProps) {
             {badgeDef.description}
           </p>
 
-          <p className="text-xs font-bold text-muted mt-2 mb-2">
+          <p className="text-xs font-bold text-muted-foreground mt-2 mb-2">
             {badgeDef.requirement}
           </p>
 
@@ -194,7 +194,7 @@ function BadgeDetailCard({ badgeId, progress }: BadgeDetailCardProps) {
                   style={{ width: `${Math.min(100, (progress.progress / progress.max) * 100)}%` }}
                 />
               </div>
-              <div className="text-xs font-bold text-muted min-w-fit">
+              <div className="text-xs font-bold text-muted-foreground min-w-fit">
                 {progress.progress}/{progress.max}
               </div>
             </div>

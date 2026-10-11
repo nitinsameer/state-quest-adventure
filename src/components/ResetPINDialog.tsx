@@ -189,7 +189,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
         <button
           onClick={onCancel}
           disabled={isValid || isVerifying}
-          className="w-full h-10 rounded-lg bg-muted text-muted font-extrabold text-sm hover:bg-muted active:scale-95 transition mt-[--space-0-25] disabled:opacity-50"
+          className="w-full h-10 rounded-lg bg-muted text-muted-foreground font-extrabold text-sm hover:bg-muted active:scale-95 transition mt-[--space-0-25] disabled:opacity-50"
         >
           Cancel
         </button>

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, Link } from "@tanstack/react-router";
-import mascot from "@/assets/mascot.png";
+import mascot from "@/assets/mascot.webp";
 import { getState } from "@/lib/states";
 import { STATE_ART, TONE_GRADIENT, TONE_HEX, preloadStateArt } from "@/lib/state-art";
 import { useProgress, badgesFor, STATE_BADGES, type BadgeId } from "@/lib/progress";
@@ -337,7 +337,7 @@ export function StatePostcardScreen({
             ) : (
               <div className="flex flex-col items-center justify-center">
                 <div className="text-5xl mb-2">✨</div>
-                <div className="text-sm font-semibold text-muted">
+                <div className="text-sm font-semibold text-muted-foreground">
                   Creating your postcard...
                 </div>
               </div>

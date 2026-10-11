@@ -313,7 +313,7 @@ export function PostcardPreviewModal({
                   <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-100">
                     <div className="text-center">
                       <div className="text-5xl mb-2">✨</div>
-                      <div className="text-sm font-semibold text-muted">Creating your postcard...</div>
+                      <div className="text-sm font-semibold text-muted-foreground">Creating your postcard...</div>
                     </div>
                   </div>
                 )}

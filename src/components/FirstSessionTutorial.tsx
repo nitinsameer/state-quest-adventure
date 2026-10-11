@@ -11,7 +11,7 @@
 import { useState, useEffect } from "react";
 import { fxTap } from "@/lib/fx";
 import { StandardModal } from "@/components/StandardModal";
-import mascot from "@/assets/mascot.png";
+import mascot from "@/assets/mascot.webp";
 
 export interface FirstSessionTutorialProps {
   onComplete?: () => void;

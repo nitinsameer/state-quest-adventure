@@ -115,21 +115,21 @@ export function HomeScreen() {
           <div className="flex-1 bg-white rounded-2xl shadow-sm p-[--padding-base] text-center">
             <div className="text-2xl mb-1">🗺️</div>
             <div className="text-h5 text-info">{p.completed.length}</div>
-            <div className="text-caption font-semibold text-muted">States</div>
+            <div className="text-caption font-semibold text-muted-foreground">States</div>
           </div>
 
           {/* Badges Card */}
           <div className="flex-1 bg-white rounded-2xl shadow-sm p-[--padding-base] text-center">
             <div className="text-2xl mb-1">🏆</div>
             <div className="text-h5 text-info">0</div>
-            <div className="text-caption font-semibold text-muted">Badges</div>
+            <div className="text-caption font-semibold text-muted-foreground">Badges</div>
           </div>
 
           {/* Stamps Card */}
           <div className="flex-1 bg-white rounded-2xl shadow-sm p-[--padding-base] text-center">
             <div className="text-2xl mb-1">🎫</div>
             <div className="text-h5 text-info">0</div>
-            <div className="text-caption font-semibold text-muted">Stamps</div>
+            <div className="text-caption font-semibold text-muted-foreground">Stamps</div>
           </div>
         </div>
 
@@ -160,7 +160,7 @@ export function HomeScreen() {
                 <div className="mt-2 h-1.5 bg-[oklch(0.9_0.02_260)] rounded-full overflow-hidden">
                   <div className="h-full bg-gradient-to-r from-orange-400 to-orange-600" style={{ width: `${(currentDone / 6) * 100}%` }} />
                 </div>
-                <div className="text-caption font-semibold text-muted mt-1">{currentDone}/6</div>
+                <div className="text-caption font-semibold text-muted-foreground mt-1">{currentDone}/6</div>
               </div>
 
               {/* RIGHT: PLAY BUTTON */}
@@ -202,7 +202,7 @@ export function HomeScreen() {
                   />
                   <h3 className="text-h5 text-muted-dark mb-2">{state.name}</h3>
                   <div className="text-body-sm font-bold text-blue-600">✌️ Open</div>
-                  <div className="text-caption font-semibold text-muted">Start exploring</div>
+                  <div className="text-caption font-semibold text-muted-foreground">Start exploring</div>
                 </button>
               ))}
             </div>

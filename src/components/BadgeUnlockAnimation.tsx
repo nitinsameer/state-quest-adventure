@@ -103,7 +103,7 @@ export function BadgeUnlockAnimation({
 
           {/* Badge description */}
           {badgeDescription && (
-            <p className="text-body text-center text-muted mb-4">
+            <p className="text-body text-center text-muted-foreground mb-4">
               {badgeDescription}
             </p>
           )}

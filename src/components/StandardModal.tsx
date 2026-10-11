@@ -259,7 +259,7 @@ export function StandardModal({
                       ? "bg-gradient-to-r from-blue-400 to-cyan-500 text-white shadow-lg"
                       : buttons[1].variant === "ghost"
                         ? "bg-transparent border-2 border-current text-gray-600 hover:bg-gray-50"
-                        : "bg-muted text-muted"
+                        : "bg-muted text-muted-foreground"
                   }`}
                 >
                   {buttons[1].emoji && <span className="mr-1">{buttons[1].emoji}</span>}
@@ -281,7 +281,7 @@ export function StandardModal({
                           ? "bg-blue-100 text-blue-700"
                           : btn.variant === "ghost"
                             ? "bg-transparent border-2 border-current text-gray-600 hover:bg-gray-50"
-                            : "bg-muted text-muted"
+                            : "bg-muted text-muted-foreground"
                     }`}
                   >
                     {btn.emoji && <span className="mr-2">{btn.emoji}</span>}

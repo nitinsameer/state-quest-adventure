@@ -65,7 +65,7 @@ export function ExpandableCard({
         <div className="flex-1 min-w-0">
           <h3 className="text-display font-bold text-xl leading-snug text-muted-dark">{title}</h3>
           {/* Main Text positioned just above key facts to preserve space */}
-          <p className="text-sm font-semibold text-muted leading-relaxed mt-1.5">{mainText}</p>
+          <p className="text-sm font-semibold text-muted-foreground leading-relaxed mt-1.5">{mainText}</p>
         </div>
       </div>
 
@@ -76,7 +76,7 @@ export function ExpandableCard({
             onClick={handleToggleExpand}
             className="w-full flex items-center justify-between mb-2 p-[--padding-sm] rounded-lg hover:bg-black/5 active:scale-95 transition"
           >
-            <span className="text-xs font-bold text-muted">
+            <span className="text-xs font-bold text-muted-foreground">
               {isExpanded ? "📖 Hide Facts" : "✨ Cool Facts"}
             </span>
             <span className="text-lg transition-transform" style={{ transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)" }}>

@@ -123,7 +123,7 @@ export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }
             <div className="text-center">
               <div className="text-5xl mb-[--space-2]">🎧</div>
               <h3 className="text-xl font-bold text-muted-dark mb-[--space-0-5]">Enable Audio?</h3>
-              <p className="text-sm text-muted mb-[--space-2]">
+              <p className="text-sm text-muted-foreground mb-[--space-2]">
                 Would you like to enable audio to hear this story read aloud?
               </p>
               <div className="flex gap-[--gap-base]">

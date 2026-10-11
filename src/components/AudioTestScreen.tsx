@@ -123,7 +123,7 @@ export function AudioTestScreen() {
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-lg shadow-lg p-[--padding-lg] mb-[--space-2]">
           <h1 className="text-3xl font-bold text-purple-600 mb-[--space-0-5]">🔊 Audio Test Screen</h1>
-          <p className="text-sm text-muted mb-[--space-2]">Developer-only minimal TTS test</p>
+          <p className="text-sm text-muted-foreground mb-[--space-2]">Developer-only minimal TTS test</p>
 
           {/* Buttons */}
           <div className="grid grid-cols-2 gap-[--gap-base] mb-[--space-2]">

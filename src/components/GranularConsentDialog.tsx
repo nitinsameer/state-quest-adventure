@@ -65,7 +65,7 @@ export function GranularConsentDialog({
         <div className="p-[--padding-lg] space-y-[--gap-md] flex-1 overflow-y-auto">
           {/* Current State */}
           <div className="bg-muted-light rounded-2xl p-[--padding-md] border-2 border-muted">
-            <div className="text-xs font-bold text-muted uppercase mb-[--space-0-25]">
+            <div className="text-xs font-bold text-muted-foreground uppercase mb-[--space-0-25]">
               Current Setting
             </div>
             <div className="flex items-center gap-[--gap-base]">
@@ -161,7 +161,7 @@ export function GranularConsentDialog({
           <div className="bg-info-soft rounded-2xl p-[--padding-md] border border-info">
             <div className="flex gap-[--gap-base]">
               <span className="text-lg flex-shrink-0">🔐</span>
-              <div className="text-xs text-muted">
+              <div className="text-xs text-muted-foreground">
                 <strong>You're in control:</strong> You can change your mind anytime. We never share your stamps without your permission.
               </div>
             </div>
@@ -170,7 +170,7 @@ export function GranularConsentDialog({
           {/* Consent History (Optional) */}
           {postcard.consentHistory && postcard.consentHistory.length > 1 && (
             <div className="bg-muted-light rounded-2xl p-[--padding-md]">
-              <div className="text-xs font-bold text-muted uppercase mb-[--space-0-25]">
+              <div className="text-xs font-bold text-muted-foreground uppercase mb-[--space-0-25]">
                 Change History
               </div>
               <div className="space-y-[--space-0-25]">
@@ -201,7 +201,7 @@ export function GranularConsentDialog({
         <div className="border-t border-muted p-[--padding-lg]">
           <button
             onClick={handleClose}
-            className="w-full px-[--padding-md] py-[--padding-base] rounded-xl bg-muted text-muted font-bold text-sm transition active:scale-95"
+            className="w-full px-[--padding-md] py-[--padding-base] rounded-xl bg-muted text-muted-foreground font-bold text-sm transition active:scale-95"
           >
             Close
           </button>

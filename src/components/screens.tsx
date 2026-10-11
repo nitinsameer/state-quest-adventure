@@ -1,6 +1,6 @@
-import mascot from "@/assets/mascot.png";
+import mascot from "@/assets/mascot.webp";
 import airplane from "@/assets/airplane.png";
-import welcomeScreenImage from "@/assets/welcome.png";
+import welcomeScreenImage from "@/assets/welcome.webp";
 import avatarExplorerHat from "@/assets/avatars/avatar-explorer-hat.png";
 import avatarExplorerPink from "@/assets/avatars/avatar-explorer-pink.png";
 import avatarGeekGlasses from "@/assets/avatars/avatar-geek-glasses.png";
@@ -970,7 +970,7 @@ function HomeDashboardContent() {
                   {/* Close button */}
                   <button
                     onClick={() => setShowLockedPreview(null)}
-                    className="absolute top-4 right-4 text-muted-light hover:text-muted text-xl"
+                    className="absolute top-4 right-4 text-muted-light hover:text-muted-foreground text-xl"
                   >
                     ✕
                   </button>
@@ -1187,7 +1187,7 @@ function StateDetailModal({
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 h-8 w-8 rounded-full bg-muted flex items-center justify-center text-muted hover:bg-muted"
+          className="absolute top-4 right-4 h-8 w-8 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:bg-muted"
         >
           ✕
         </button>
@@ -1277,7 +1277,7 @@ function StateDetailModal({
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 h-12 rounded-2xl bg-muted text-display font-extrabold text-muted hover:bg-muted transition"
+            className="flex-1 h-12 rounded-2xl bg-muted text-display font-extrabold text-muted-foreground hover:bg-muted transition"
           >
             Close
           </button>
@@ -3772,7 +3772,7 @@ function BadgeDetailModal({
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 h-8 w-8 rounded-full bg-muted flex items-center justify-center text-muted hover:bg-muted"
+          className="absolute top-4 right-4 h-8 w-8 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:bg-muted"
         >
           ✕
         </button>
@@ -3821,7 +3821,7 @@ function BadgeDetailModal({
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 h-12 rounded-2xl bg-muted text-display font-extrabold text-muted hover:bg-muted transition"
+            className="flex-1 h-12 rounded-2xl bg-muted text-display font-extrabold text-muted-foreground hover:bg-muted transition"
           >
             Close
           </button>
@@ -3933,7 +3933,7 @@ export function BadgesScreen() {
           className={`px-4 py-3 rounded-t-lg font-bold text-sm transition ${
             activeTab === "achievements"
               ? "bg-transparent border-b-2 border-orange text-orange"
-              : "text-muted hover:text-muted-dark"
+              : "text-muted-foreground hover:text-muted-dark"
           }`}
         >
           🏆 Achievement Badges
@@ -3946,7 +3946,7 @@ export function BadgesScreen() {
           className={`px-4 py-3 rounded-t-lg font-bold text-sm transition ${
             activeTab === "states"
               ? "bg-transparent border-b-2 border-orange text-orange"
-              : "text-muted hover:text-muted-dark"
+              : "text-muted-foreground hover:text-muted-dark"
           }`}
         >
           🎖️ State Badges
@@ -4098,7 +4098,7 @@ export function BadgesScreen() {
             {/* Close Button */}
             <button
               onClick={() => setSelectedBadge(null)}
-              className="absolute top-4 right-4 h-10 w-10 rounded-full bg-muted flex items-center justify-center text-muted hover:bg-muted transition"
+              className="absolute top-4 right-4 h-10 w-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:bg-muted transition"
             >
               ✕
             </button>

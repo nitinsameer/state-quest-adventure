@@ -92,7 +92,7 @@ export function LanguageSelector({
               className={`w-full px-[--padding-md] py-[--padding-xs] text-left text-sm font-semibold transition-colors ${
                 lang === currentLanguage
                   ? "bg-info-soft text-blue-600"
-                  : "text-muted hover:bg-muted-light"
+                  : "text-muted-foreground hover:bg-muted-light"
               }`}
             >
               {lang === currentLanguage ? "✓ " : "  "}

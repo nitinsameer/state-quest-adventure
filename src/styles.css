@@ -57,7 +57,7 @@
   --color-muted-bg: var(--muted);                    /* replaces bg-gray-100 */
   --color-muted-bg-light: oklch(0.95 0.01 260);     /* replaces bg-gray-50 */
   --color-text-muted: var(--muted-foreground);      /* replaces text-gray-700 */
-  --color-text-muted-light: oklch(0.6 0.02 260);    /* replaces text-gray-500 */
+  --color-text-muted-light: oklch(0.52 0.03 260);    /* replaces text-gray-500, improved contrast from 3.6:1 to ~5:1 */
   --color-text-muted-dark: oklch(0.22 0.05 260);    /* replaces text-gray-900 */
   --color-border-muted: var(--border);              /* replaces border-gray-200 */
   --color-border-muted-light: oklch(0.95 0.01 260); /* replaces border-gray-100 */
@@ -445,9 +445,7 @@
   background-color: var(--color-muted-bg-light);
 }
 
-@utility text-muted {
-  color: var(--color-text-muted);
-}
+
 
 @utility text-muted-light {
   color: var(--color-text-muted-light);

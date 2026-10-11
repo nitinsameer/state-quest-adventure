@@ -7,7 +7,7 @@ import { STATE_ART } from "@/lib/state-art";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { PostcardModal } from "@/components/PostcardModal";
 import { fxTap, fxConfetti } from "@/lib/fx";
-import mascot from "@/assets/mascot.png";
+import mascot from "@/assets/mascot.webp";
 
 /**
  * My Stamps for Ages 3-5 (Sprout)
@@ -89,7 +89,7 @@ export function PassportSprout() {
 
       {/* States Grid */}
       <div className="px-5 pt-4 pb-2 flex-1 overflow-auto">
-        <div className="text-sm font-bold text-muted mb-3">🌍 Time to Explore!</div>
+        <div className="text-sm font-bold text-muted-foreground mb-3">🌍 Time to Explore!</div>
 
         <div className="grid grid-cols-2 gap-3 mb-4">
           {statesThisPage.map((state) => {
@@ -136,7 +136,7 @@ export function PassportSprout() {
               fxTap();
               setCurrentPage(currentPage - 1);
             }}
-            className="flex-1 h-12 rounded-2xl bg-white border-2 border-muted text-muted font-extrabold text-lg"
+            className="flex-1 h-12 rounded-2xl bg-white border-2 border-muted text-muted-foreground font-extrabold text-lg"
           >
             ← Previous
           </button>

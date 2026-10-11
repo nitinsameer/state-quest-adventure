@@ -86,7 +86,7 @@ export function StatePerformanceBadgesView() {
             setViewMode("grid");
           }}
           className={`px-4 py-2 rounded-t-lg font-bold text-sm transition ${
-            viewMode === "grid" ? "bg-white border-b-2 border-orange text-orange" : "text-muted"
+            viewMode === "grid" ? "bg-white border-b-2 border-orange text-orange" : "text-muted-foreground"
           }`}
         >
           Grid
@@ -97,7 +97,7 @@ export function StatePerformanceBadgesView() {
             setViewMode("card");
           }}
           className={`px-4 py-2 rounded-t-lg font-bold text-sm transition ${
-            viewMode === "card" ? "bg-white border-b-2 border-orange text-orange" : "text-muted"
+            viewMode === "card" ? "bg-white border-b-2 border-orange text-orange" : "text-muted-foreground"
           }`}
         >
           Card
@@ -108,7 +108,7 @@ export function StatePerformanceBadgesView() {
             setViewMode("list");
           }}
           className={`px-4 py-2 rounded-t-lg font-bold text-sm transition ${
-            viewMode === "list" ? "bg-white border-b-2 border-orange text-orange" : "text-muted"
+            viewMode === "list" ? "bg-white border-b-2 border-orange text-orange" : "text-muted-foreground"
           }`}
         >
           List
@@ -189,7 +189,7 @@ export function StatePerformanceBadgesView() {
                     className="rounded-2xl p-3 flex flex-col items-center gap-2 border bg-muted-light border-muted opacity-70"
                   >
                     <div className="text-2xl">🔒</div>
-                    <div className="text-display font-extrabold text-xs text-center leading-tight text-muted">
+                    <div className="text-display font-extrabold text-xs text-center leading-tight text-muted-foreground">
                       {state.name}
                     </div>
                     <div className="text-[10px] font-bold text-muted-foreground">
@@ -226,7 +226,7 @@ export function StatePerformanceBadgesView() {
                     key={state.name}
                     className="flex items-center gap-3 py-2 px-3 rounded-lg"
                   >
-                    <span className="text-display font-extrabold text-sm min-w-[80px] text-muted">
+                    <span className="text-display font-extrabold text-sm min-w-[80px] text-muted-foreground">
                       {state.name}
                     </span>
                     <div className="text-2xl ml-auto">🔒</div>
@@ -313,7 +313,7 @@ function StateDetailBadgeCard({ state, progress, onSelect }: any) {
             style={{ width: `${(earnedBadges.length / totalBadges) * 100}%` }}
           />
         </div>
-        <span className="text-xs font-bold text-muted min-w-fit">
+        <span className="text-xs font-bold text-muted-foreground min-w-fit">
           {Math.round((earnedBadges.length / totalBadges) * 100)}%
         </span>
       </div>

@@ -210,7 +210,7 @@ export function DebugScreen() {
                 </div>
               )}
               {log.stack && (
-                <div className="ml-2 text-muted text-xs mt-1 whitespace-pre-wrap overflow-auto max-h-20">
+                <div className="ml-2 text-muted-foreground text-xs mt-1 whitespace-pre-wrap overflow-auto max-h-20">
                   {log.stack}
                 </div>
               )}

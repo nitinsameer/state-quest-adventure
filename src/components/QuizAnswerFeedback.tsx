@@ -81,7 +81,7 @@ export function QuizAnswerFeedback({
               <h1 className="text-h1 font-bold text-success mb-2 drop-shadow-lg">
                 Correct! 🎉
               </h1>
-              <p className="text-body text-muted mb-4">
+              <p className="text-body text-muted-foreground mb-4">
                 Awesome work!
               </p>
             </div>
@@ -128,7 +128,7 @@ export function QuizAnswerFeedback({
 
               {correctAnswer && (
                 <div className="mb-4 p-4 rounded-2xl bg-warning-soft border-2 border-warning">
-                  <p className="text-body-sm text-muted mb-2">
+                  <p className="text-body-sm text-muted-foreground mb-2">
                     The correct answer is:
                   </p>
                   <p className="text-body font-bold text-warning">
@@ -137,7 +137,7 @@ export function QuizAnswerFeedback({
                 </div>
               )}
 
-              <p className="text-body text-muted mb-2">
+              <p className="text-body text-muted-foreground mb-2">
                 Don't worry, you're learning! 💪
               </p>
               <p className="text-body-sm text-success">
