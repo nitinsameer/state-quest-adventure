@@ -2,6 +2,7 @@
 @source "../src";
 @import "tw-animate-css";
 @import "./styles/tokens.css";
+@import "./styles/clay.css";
 @import "./styles/celebrations.css";
 
 @custom-variant dark (&:is(.dark *));
@@ -119,7 +120,7 @@
   --color-reward-badge: var(--saffron);
   --color-achievement-milestone: var(--success);
 
-  --shadow-soft: 0 10px 30px -12px rgb(30 41 59 / 0.15), 0 4px 10px -4px rgb(30 41 59 / 0.08);
+  --shadow-soft: inset 4px 4px 8px rgb(255 255 255 / 0.7), inset -4px -4px 8px rgb(30 41 59 / 0.08), 0 12px 22px -10px rgb(30 41 59 / 0.2);
   --shadow-pop: 0 14px 0 0 rgb(0 0 0 / 0.08);
   --shadow-glow-orange: 0 12px 30px -8px oklch(0.72 0.19 45 / 0.5);
   --shadow-glow-blue: 0 12px 30px -8px oklch(0.62 0.2 250 / 0.45);
