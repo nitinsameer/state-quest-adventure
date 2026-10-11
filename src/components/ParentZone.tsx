@@ -3,6 +3,7 @@ import { INDIA_STATES } from "@/lib/states";
 import { STATE_ART } from "@/lib/state-art";
 import { useGoBack, BottomNav } from "@/components/screens";
 import { fxTap } from "@/lib/fx";
+import { setPin } from "@/lib/parent-gate";
 import { useState } from "react";
 
 // Local constant to avoid bundler issues
@@ -38,22 +39,26 @@ export function ParentZoneScreen() {
   const daysActive = p.streak || 1;
   const dailyAverage = Math.round((p.xp / daysActive) / 100);
 
-  const handleSavePIN = () => {
+  const handleSavePIN = async () => {
     if (newPIN.length !== 4) {
       alert("PIN must be 4 digits");
       return;
     }
     
     setPinSaveStatus("saving");
-    // Save PIN to localStorage (in production, would be encrypted)
     try {
-      localStorage.setItem("india-explorer:parent-pin:v1", newPIN);
-      setPinSaveStatus("saved");
-      setTimeout(() => {
-        setShowPINSettings(false);
-        setNewPIN("");
+      const success = await setPin(newPIN);
+      if (success) {
+        setPinSaveStatus("saved");
+        setTimeout(() => {
+          setShowPINSettings(false);
+          setNewPIN("");
+          setPinSaveStatus("idle");
+        }, 1500);
+      } else {
+        alert("Failed to save PIN");
         setPinSaveStatus("idle");
-      }, 1500);
+      }
     } catch (e) {
       alert("Failed to save PIN");
       setPinSaveStatus("idle");

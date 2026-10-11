@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { fxTap, fxWrong } from "@/lib/fx";
+import { verifyPin, isGated } from "@/lib/parent-gate";
 
 interface ResetPINDialogProps {
   open: boolean;
@@ -7,13 +8,12 @@ interface ResetPINDialogProps {
   onCancel: () => void;
 }
 
-const DEFAULT_PIN = "1234";
-
 /**
  * Parental PIN Dialog for Reset Confirmation
  * - Shows PIN entry keypad
- * - 4-digit PIN (default: 1234, or custom if set in ParentZone)
+ * - 4-digit PIN (secure PBKDF2-hashed)
  * - 30-second timeout with countdown
+ * - 5-attempt lockout with 5-minute cooldown
  * - Prevents accidental data loss
  */
 export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProps) {
@@ -21,19 +21,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
   const [error, setError] = useState("");
   const [timeLeft, setTimeLeft] = useState(30);
   const [isValid, setIsValid] = useState(false);
-  const [correctPin, setCorrectPin] = useState(DEFAULT_PIN);
-
-  // Load saved PIN on dialog open
-  useEffect(() => {
-    if (open && typeof window !== "undefined") {
-      const savedPin = localStorage.getItem("india-explorer:parent-pin:v1");
-      if (savedPin && savedPin.length === 4) {
-        setCorrectPin(savedPin);
-      } else {
-        setCorrectPin(DEFAULT_PIN);
-      }
-    }
-  }, [open]);
+  const [isVerifying, setIsVerifying] = useState(false);
 
   // Countdown timer
   useEffect(() => {
@@ -58,15 +46,22 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
     return () => clearInterval(timer);
   }, [open, onCancel]);
 
-  const handleKeyPress = (digit: string) => {
-    if (pin.length < 4) {
+  const handleKeyPress = async (digit: string) => {
+    if (pin.length < 4 || isVerifying) {
       const newPin = pin + digit;
       setPin(newPin);
       fxTap();
 
       // Check on 4th digit
       if (newPin.length === 4) {
-        if (newPin === correctPin) {
+        setIsVerifying(true);
+        const result = await verifyPin(newPin);
+        
+        if (result.lockout) {
+          setError(`🔒 Locked. Try again in ${result.remainingMinutes}m`);
+          fxWrong();
+          setPin("");
+        } else if (result.success) {
           setIsValid(true);
           setError("");
           // Auto-confirm after 500ms
@@ -79,6 +74,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
           setPin("");
           setTimeout(() => setError(""), 2000);
         }
+        setIsVerifying(false);
       }
     }
   };
@@ -156,7 +152,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
             <button
               key={digit}
               onClick={() => handleKeyPress(String(digit))}
-              disabled={isValid}
+              disabled={isValid || isVerifying}
               className="h-12 rounded-xl bg-white border-2 border-muted text-display text-lg font-extrabold hover:bg-muted active:scale-95 transition disabled:opacity-50"
             >
               {digit}
@@ -164,7 +160,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
           ))}
           <button
             onClick={() => handleKeyPress("0")}
-            disabled={isValid}
+            disabled={isValid || isVerifying}
             className="col-span-3 h-12 rounded-xl bg-white border-2 border-muted text-display text-lg font-extrabold hover:bg-muted active:scale-95 transition disabled:opacity-50"
           >
             0
@@ -175,14 +171,14 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
         <div className="flex gap-[--gap-base]">
           <button
             onClick={handleBackspace}
-            disabled={isValid}
+            disabled={isValid || isVerifying}
             className="flex-1 h-10 rounded-lg bg-orange-soft text-orange font-extrabold text-sm hover:bg-orange-100 active:scale-95 transition disabled:opacity-50"
           >
             ← Back
           </button>
           <button
             onClick={handleClear}
-            disabled={isValid || pin.length === 0}
+            disabled={isValid || isVerifying || pin.length === 0}
             className="flex-1 h-10 rounded-lg bg-error-soft text-error font-extrabold text-sm hover:bg-red-100 active:scale-95 transition disabled:opacity-50"
           >
             Clear
@@ -192,7 +188,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
         {/* Cancel Button */}
         <button
           onClick={onCancel}
-          disabled={isValid}
+          disabled={isValid || isVerifying}
           className="w-full h-10 rounded-lg bg-muted text-muted font-extrabold text-sm hover:bg-muted active:scale-95 transition mt-[--space-0-25] disabled:opacity-50"
         >
           Cancel
@@ -200,9 +196,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
 
         {/* PIN Info */}
         <div className="text-xs text-muted-foreground text-center mt-[--space-2] p-[--padding-base] bg-info-soft rounded-lg">
-          <span>💡 Default PIN: 1234</span>
-          <br />
-          <span>Change in Parent Zone (Profile)</span>
+          <span>🔐 Secure parent PIN (set in Parent Zone)</span>
         </div>
       </div>
     </div>

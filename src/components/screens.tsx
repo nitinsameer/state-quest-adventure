@@ -4727,7 +4727,7 @@ function ParentZonePlaceholder() {
   const [newPIN, setNewPIN] = useState("");
   const [pinSaveStatus, setPinSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
 
-  const handleSavePIN = () => {
+  const handleSavePIN = async () => {
     if (newPIN.length !== 4) {
       alert("PIN must be 4 digits");
       return;
@@ -4735,13 +4735,19 @@ function ParentZonePlaceholder() {
     
     setPinSaveStatus("saving");
     try {
-      localStorage.setItem("india-explorer:parent-pin:v1", newPIN);
-      setPinSaveStatus("saved");
-      setTimeout(() => {
-        setShowSettings(false);
-        setNewPIN("");
+      const { setPin } = await import("@/lib/parent-gate");
+      const success = await setPin(newPIN);
+      if (success) {
+        setPinSaveStatus("saved");
+        setTimeout(() => {
+          setShowSettings(false);
+          setNewPIN("");
+          setPinSaveStatus("idle");
+        }, 1500);
+      } else {
+        alert("Failed to save PIN");
         setPinSaveStatus("idle");
-      }, 1500);
+      }
     } catch (e) {
       alert("Failed to save PIN");
       setPinSaveStatus("idle");
