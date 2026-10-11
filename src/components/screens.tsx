@@ -552,7 +552,140 @@ function FloatingXPFeedback({ xp, key: feedbackKey }: { xp: number; key: string 
   );
 }
 
+/**
+ * Recently Completed State Celebration Component
+ * Extracted to fix React hooks rule: useEffect cannot be in IIFE
+ */
+function RecentlyCompletedCelebration({
+  p,
+  showCelebrationPopup,
+  onDismiss,
+  navigate,
+}: {
+  p: ReturnType<typeof useProgress>;
+  showCelebrationPopup: boolean;
+  onDismiss: () => void;
+  navigate: ReturnType<typeof useNavigate>;
+}) {
+  const recentState = getRecentlyCompletedState(p);
+  if (!recentState || !showCelebrationPopup) return null;
+
+  const state = INDIA_STATES.find(s => s.name === recentState);
+  if (!state) return null;
+
+  // Calculate XP earned for completing this state
+  const xpEarned = 250; // State completion bonus
+
+  // Auto-dismiss after 3 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onDismiss();
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [recentState, onDismiss]);
+
+  // Play celebration sound on mount
+  useEffect(() => {
+    fxCorrect();
+  }, []);
+
+  const handleDismiss = () => {
+    onDismiss();
+    clearRecentlyCompleted();
+  };
+
+  const handleNextState = () => {
+    fxTap();
+    onDismiss();
+    clearRecentlyCompleted();
+    navigate({ to: "/journey" });
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 animate-fade-in">
+      {/* Backdrop click to close */}
+      <div 
+        className="absolute inset-0"
+        onClick={handleDismiss}
+        aria-label="Close celebration"
+      />
+      
+      {/* Celebration Card */}
+      <div className="relative bg-gradient-to-br from-amber-300 via-orange-400 to-red-500 text-white rounded-3xl p-6 shadow-2xl max-w-sm w-full animate-scale-in border-2 border-amber-200">
+        {/* Prominent Close Button - Top Right */}
+        <button
+          onClick={handleDismiss}
+          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/30 hover:bg-white/50 flex items-center justify-center text-white text-lg transition-all duration-200 z-10"
+          aria-label="Close"
+        >
+          ✕
+        </button>
+
+        <div className="relative z-10 flex flex-col gap-4">
+          {/* Title - Celebration message */}
+          <div className="text-center">
+            <div className="text-lg font-bold opacity-95">🏆 STATE MASTERED! 🏆</div>
+            <div className="text-3xl font-black mt-2 drop-shadow-lg">
+              {recentState}
+            </div>
+          </div>
+
+          {/* Stats Grid - Improved spacing */}
+          <div className="grid grid-cols-3 gap-3 text-center">
+            <div className="bg-white/25 backdrop-blur rounded-xl p-3">
+              <div className="text-sm opacity-90 font-semibold">Badges</div>
+              <div className="text-2xl font-bold mt-1">+3</div>
+            </div>
+            <div className="bg-white/25 backdrop-blur rounded-xl p-3">
+              <div className="text-sm opacity-90 font-semibold">XP</div>
+              <div className="text-2xl font-bold mt-1">+{xpEarned}</div>
+            </div>
+            <div className="bg-white/25 backdrop-blur rounded-xl p-3">
+              <div className="text-sm opacity-90 font-semibold">Stamp</div>
+              <img
+                src={STATE_ART[recentState]}
+                alt={recentState}
+                className="w-10 h-10 object-cover rounded mx-auto mt-1"
+                loading="eager"
+                decoding="auto"
+              />
+            </div>
+          </div>
+
+          {/* Action buttons - Clear hierarchy */}
+          <div className="flex gap-3 mt-2">
+            <button
+              onClick={handleDismiss}
+              className="flex-1 h-11 rounded-xl bg-white/20 backdrop-blur border border-white/40 text-white text-sm font-bold hover:bg-white/30 transition-all duration-200"
+            >
+              Dismiss
+            </button>
+            <button
+              onClick={handleNextState}
+              className="flex-1 h-11 rounded-xl bg-white text-orange-600 text-sm font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 active:scale-95"
+            >
+              Next State →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function HomeDashboardScreen() {
+  const p = useProgress();
+  
+  // Route guard: redirect to welcome if not onboarded (defensive check)
+  if (!p.onboarded) {
+    appLogger.warn('home_dashboard', 'User attempted to access home without onboarding', {});
+    return <Navigate to="/welcome" replace />;
+  }
+  
+  return <HomeDashboardContent />;
+}
+
+function HomeDashboardContent() {
   const p = useProgress();
   const navigate = useNavigate();
   const celebration = useCelebration();
@@ -565,12 +698,6 @@ export function HomeDashboardScreen() {
   const [showTutorial, setShowTutorial] = useState(false);
   // Auto-dismiss celebration popup after 3 seconds
   const [showCelebrationPopup, setShowCelebrationPopup] = useState(true);
-
-  // Route guard: redirect to welcome if not onboarded (defensive check)
-  if (!p.onboarded) {
-    appLogger.warn('home_dashboard', 'User attempted to access home without onboarding', {});
-    return <Navigate to="/welcome" replace />;
-  }
 
   const { level, toNext, pct } = levelInfo(p.xp);
   const postcards = Object.keys(p.postcards).length;
@@ -684,112 +811,12 @@ export function HomeDashboardScreen() {
 
 
       {/* Recently Completed State Celebration - Premium Popup */}
-      {(() => {
-        const recentState = getRecentlyCompletedState(p);
-        if (!recentState || !showCelebrationPopup) return null;
-
-        const state = INDIA_STATES.find(s => s.name === recentState);
-        if (!state) return null;
-
-        // Calculate XP earned for completing this state
-        const xpEarned = 250; // State completion bonus
-
-        // Auto-dismiss after 3 seconds
-        useEffect(() => {
-          const timer = setTimeout(() => {
-            setShowCelebrationPopup(false);
-          }, 3000);
-          return () => clearTimeout(timer);
-        }, [recentState]);
-
-        const handleDismiss = () => {
-          setShowCelebrationPopup(false);
-          clearRecentlyCompleted();
-        };
-
-        const handleNextState = () => {
-          fxTap();
-          setShowCelebrationPopup(false);
-          clearRecentlyCompleted();
-          navigate({ to: "/journey" });
-        };
-
-        // Play celebration sound on mount
-        useEffect(() => {
-          fxCorrect();
-        }, []);
-
-        return (
-          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 animate-fade-in">
-            {/* Backdrop click to close */}
-            <div 
-              className="absolute inset-0"
-              onClick={handleDismiss}
-              aria-label="Close celebration"
-            />
-            
-            {/* Celebration Card */}
-            <div className="relative bg-gradient-to-br from-amber-300 via-orange-400 to-red-500 text-white rounded-3xl p-6 shadow-2xl max-w-sm w-full animate-scale-in border-2 border-amber-200">
-              {/* Prominent Close Button - Top Right */}
-              <button
-                onClick={handleDismiss}
-                className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/30 hover:bg-white/50 flex items-center justify-center text-white text-lg transition-all duration-200 z-10"
-                aria-label="Close"
-              >
-                ✕
-              </button>
-
-              <div className="relative z-10 flex flex-col gap-4">
-                {/* Title - Celebration message */}
-                <div className="text-center">
-                  <div className="text-lg font-bold opacity-95">🏆 STATE MASTERED! 🏆</div>
-                  <div className="text-3xl font-black mt-2 drop-shadow-lg">
-                    {recentState}
-                  </div>
-                </div>
-
-                {/* Stats Grid - Improved spacing */}
-                <div className="grid grid-cols-3 gap-3 text-center">
-                  <div className="bg-white/25 backdrop-blur rounded-xl p-3">
-                    <div className="text-sm opacity-90 font-semibold">Badges</div>
-                    <div className="text-2xl font-bold mt-1">+3</div>
-                  </div>
-                  <div className="bg-white/25 backdrop-blur rounded-xl p-3">
-                    <div className="text-sm opacity-90 font-semibold">XP</div>
-                    <div className="text-2xl font-bold mt-1">+{xpEarned}</div>
-                  </div>
-                  <div className="bg-white/25 backdrop-blur rounded-xl p-3">
-                    <div className="text-sm opacity-90 font-semibold">Stamp</div>
-                    <img
-                      src={STATE_ART[recentState]}
-                      alt={recentState}
-                      className="w-10 h-10 object-cover rounded mx-auto mt-1"
-                      loading="eager"
-                      decoding="auto"
-                    />
-                  </div>
-                </div>
-
-                {/* Action buttons - Clear hierarchy */}
-                <div className="flex gap-3 mt-2">
-                  <button
-                    onClick={handleDismiss}
-                    className="flex-1 h-11 rounded-xl bg-white/20 backdrop-blur border border-white/40 text-white text-sm font-bold hover:bg-white/30 transition-all duration-200"
-                  >
-                    Dismiss
-                  </button>
-                  <button
-                    onClick={handleNextState}
-                    className="flex-1 h-11 rounded-xl bg-white text-orange-600 text-sm font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 active:scale-95"
-                  >
-                    Next State →
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-      })()}
+      <RecentlyCompletedCelebration
+        p={p}
+        showCelebrationPopup={showCelebrationPopup}
+        onDismiss={() => setShowCelebrationPopup(false)}
+        navigate={navigate}
+      />
 
       {/* Stamp Collection Display - HIDDEN: Breaking home screen layout */}
       {(() => {
@@ -2973,12 +3000,27 @@ export function QuizScreen({
 } = {}) {
   const progress = useProgress();
   const states = statesWithProgress(progress);
-  const level = levelInfo(progress.xp);
   
   // Safety check: ensure states data is loaded
   if (!states || states.length === 0) {
     return <LoadingScreen />;
   }
+  
+  return <QuizScreenContent stateName={stateName} onDone={onDone} onClose={onClose} />;
+}
+
+function QuizScreenContent({
+  stateName,
+  onDone,
+  onClose,
+}: { 
+  stateName?: string
+  onDone?: (quizMetrics?: { timeToComplete: number; quizAttempts: number; quizScore: number }) => void
+  onClose?: () => void
+}) {
+  const progress = useProgress();
+  const states = statesWithProgress(progress);
+  const level = levelInfo(progress.xp);
   
   const activeName =
     stateName ??
@@ -4151,6 +4193,18 @@ export function BadgesScreen() {
 
 export function ProfileScreen() {
   const p = useProgress();
+  
+  // Route guard: redirect to welcome if not onboarded (defensive check)
+  if (!p.onboarded) {
+    appLogger.warn('profile_screen', 'User attempted to access profile without onboarding', {});
+    return <Navigate to="/welcome" replace />;
+  }
+  
+  return <ProfileScreenContent />;
+}
+
+function ProfileScreenContent() {
+  const p = useProgress();
   const [isEditing, setIsEditing] = useState(false);
   const [tempName, setTempName] = useState(p.name);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
@@ -4197,13 +4251,7 @@ export function ProfileScreen() {
     { id: "sports-cap" as AvatarId, image: avatarSportsCap },
     { id: "girl-flower" as AvatarId, image: avatarGirlFlower },
   ];
-  
-  // Route guard: redirect to welcome if not onboarded (defensive check)
-  if (!p.onboarded) {
-    appLogger.warn('profile_screen', 'User attempted to access profile without onboarding', {});
-    return <Navigate to="/welcome" replace />;
-  }
-  
+
   const { level } = levelInfo(p.xp);
   const goBack = useGoBack();
   const stampsCollected = Object.keys(p.stamps ?? {}).length;
