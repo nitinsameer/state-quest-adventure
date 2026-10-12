@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
-// Signing configuration - read from environment variables only
-def keystoreFile = System.getenv("KEYSTORE_FILE")
-def keystorePassword = System.getenv("KEYSTORE_PASSWORD")
-def keyAlias = System.getenv("KEY_ALIAS")
-def keyPassword = System.getenv("KEY_PASSWORD")
+def ksFile = System.getenv("KEYSTORE_FILE")
+def ksPassword = System.getenv("KEYSTORE_PASSWORD")
+def ksAlias = System.getenv("KEY_ALIAS")
+def ksKeyPassword = System.getenv("KEY_PASSWORD")
+def hasSigning = ksFile && ksPassword && ksAlias && ksKeyPassword
 
 android {
     namespace = "com.nishaantech.exploreindia"
@@ -33,15 +33,15 @@ android {
     }
     signingConfigs {
         release {
-            if (keystoreFile && keystorePassword && keyAlias && keyPassword) {
-                def storeFilePath = keystoreFile
+            if (hasSigning) {
+                def storeFilePath = ksFile
                 if (!new File(storeFilePath).isAbsolute()) {
                     storeFilePath = rootProject.file(storeFilePath).absolutePath
                 }
                 storeFile file(storeFilePath)
-                storePassword keystorePassword
-                keyAlias keyAlias
-                keyPassword keyPassword
+                storePassword ksPassword
+                keyAlias ksAlias
+                keyPassword ksKeyPassword
             } else {
                 logger.error("Release signing requires: KEYSTORE_FILE, KEYSTORE_PASSWORD, KEY_ALIAS, KEY_PASSWORD environment variables")
             }
@@ -50,7 +50,7 @@ android {
 
     buildTypes {
         release {
-            if (keystoreFile && keystorePassword && keyAlias && keyPassword) {
+            if (hasSigning) {
                 signingConfig signingConfigs.release
             }
             minifyEnabled true
