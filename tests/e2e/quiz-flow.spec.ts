@@ -20,6 +20,8 @@ const VIEWPORTS = [
   { width: 411, height: 891, name: '411x891' },
 ];
 
+test.describe.configure({ mode: 'parallel' });
+
 /**
  * Helper: Initialize app with fresh progress
  */

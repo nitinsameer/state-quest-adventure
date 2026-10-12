@@ -69,10 +69,12 @@ export type Progress = {
   lastPlayedState?: string;
   /** NEW: Per-state performance tracking for performance badges */
   statePerformance?: StatePerformanceData;
-  /** NEW: Pending celebrations queue (persistent until dismissed, shows real XP & badges) */
-  pendingCelebrations?: Array<{ stateName: string; xp: number; badges: string[] }>;
+  /** NEW: Pending celebrations queue (persistent until dismissed, shows real XP & badges & stars) */
+  pendingCelebrations?: Array<{ stateName: string; xp: number; badges: string[]; stars?: '1' | '2' | '3' }>;
   /** NEW: Best stars per state (1, 2, or 3; kept on replay) */
   stars?: Record<string, '1' | '2' | '3'>;
+  /** NEW: Completed categories per state (tracks which categories earned the 25 XP reward) */
+  categoryProgress?: Record<string, string[]>;
 };
 
 export const STATE_BADGES: { id: BadgeId; name: string; xp: number }[] = [
@@ -127,7 +129,7 @@ function defaultProgress(): Progress {
     statePerformance: {},
     pendingCelebrations: [],
     stars: {},
-    statePerformance: {},
+    categoryProgress: {},
   };
 }
 
@@ -221,6 +223,7 @@ function migrateProgressVersion(oldData: any): Progress {
     statePerformance: typeof oldData.statePerformance === 'object' && oldData.statePerformance !== null ? oldData.statePerformance : defaultData.statePerformance,
     pendingCelebrations: Array.isArray(oldData.pendingCelebrations) ? oldData.pendingCelebrations : defaultData.pendingCelebrations,
     stars: typeof oldData.stars === 'object' && oldData.stars !== null ? oldData.stars : defaultData.stars,
+    categoryProgress: typeof oldData.categoryProgress === 'object' && oldData.categoryProgress !== null ? oldData.categoryProgress : defaultData.categoryProgress,
   };
 
   return migrated;
@@ -818,18 +821,67 @@ export function getStatePerformance(p: Progress, stateName: string) {
 }
 
 /**
+ * Calculate stars based on quiz score (percentage of correct answers)
+ * 6+ correct = 3 stars, 4+ = 2 stars, 0-3 = 1 star
+ * Nobody gets stuck on a low score.
+ */
+export function calculateStars(totalCorrect: number, totalQuestions: number): '1' | '2' | '3' {
+  const correctCount = totalCorrect;
+  
+  if (correctCount >= 6) {
+    return '3';
+  } else if (correctCount >= 4) {
+    return '2';
+  } else {
+    return '1';
+  }
+}
+
+/**
+ * Complete a category when all cards are visited
+ * Awards +25 XP once per category (no replay bonus)
+ * Shows a small celebration
+ */
+export function completeCategory(stateName: string, categoryName: string) {
+  set((p) => {
+    // Track completed categories per state
+    if (!p.categoryProgress) {
+      p.categoryProgress = {};
+    }
+    if (!p.categoryProgress[stateName]) {
+      p.categoryProgress[stateName] = [];
+    }
+    
+    // Don't re-award XP for already completed categories
+    if (p.categoryProgress[stateName].includes(categoryName)) {
+      return p;
+    }
+    
+    return {
+      ...p,
+      xp: p.xp + 25,
+      categoryProgress: {
+        ...p.categoryProgress,
+        [stateName]: [...(p.categoryProgress[stateName] ?? []), categoryName],
+      },
+    };
+  });
+}
+
+/**
  * ATOMIC COMPLETION: Finish quiz and complete state in one operation
  * 
  * This function combines:
  * 1. recordStatePerformance (calculate and store badges)
  * 2. completeState (add XP, stamp, postcard)
  * 3. markRecentlyCompleted (queue celebration for home screen)
+ * 4. Store best stars (keep highest, never decrease on replay)
  * 
  * All in a SINGLE set() call to ensure data consistency.
  * Called from QuizScreen when the last answer is confirmed, before navigation.
  * 
  * @param stateName The state that was completed
- * @param metrics Quiz metrics { timeToComplete, quizAttempts, quizScore }
+ * @param metrics Quiz metrics { timeToComplete, quizAttempts, quizScore, correctCount }
  */
 export function finishQuiz(
   stateName: string,
@@ -837,19 +889,44 @@ export function finishQuiz(
     timeToComplete: number;        // in milliseconds
     quizAttempts: number;
     quizScore: number;             // 0-100
+    correctCount?: number;          // number of correct answers (new)
     cardsReplayed?: number;
   },
 ) {
   set((p) => {
-    // Validate state exists and not already completed
+    // Validate state exists
     const stateExists = INDIA_STATES.some(s => s.name === stateName);
-    if (!stateExists || p.completed.includes(stateName)) {
+    if (!stateExists) {
       return p;
     }
 
     // Import here to avoid circular dependency
     const { calculatePerformanceBadges } = require("./state-performance-badges");
 
+    // 1. Calculate stars based on correct count
+    // correctCount is 0-6 for 6 question quiz
+    // 6+ = 3 stars, 4+ = 2 stars, 0-3 = 1 star (nobody stuck on low score)
+    const correctCount = metrics.correctCount ?? 0;
+    const newStars = calculateStars(correctCount, 6);
+    
+    // Keep best stars on replay (never decrease)
+    const currentBestStars = p.stars?.[stateName];
+    const bestStars = currentBestStars 
+      ? (parseInt(currentBestStars) > parseInt(newStars) ? currentBestStars : newStars)
+      : newStars;
+
+    // Check if this is a replay (state already completed)
+    const isReplay = p.completed.includes(stateName);
+    
+    // On replay: do NOT award XP, just update stars if they improved
+    if (isReplay) {
+      return {
+        ...p,
+        stars: { ...p.stars, [stateName]: bestStars },
+      };
+    }
+
+    // First completion: calculate performance badges, award XP
     // 1. Calculate performance badges
     const earnedBadges = calculatePerformanceBadges(
       metrics.timeToComplete,
@@ -918,6 +995,8 @@ export function finishQuiz(
           earnedPerformanceBadges: earnedBadges,
         },
       },
+      // Store stars for this state
+      stars: { ...p.stars, [stateName]: bestStars },
       // Queue pending celebration for Home screen (persistent, no auto-dismiss)
       pendingCelebrations: [
         ...(p.pendingCelebrations ?? []),
@@ -925,6 +1004,7 @@ export function finishQuiz(
           stateName,
           xp: xpReward,
           badges: earnedBadges,
+          stars: newStars,
         },
       ],
     };

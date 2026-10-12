@@ -107,6 +107,7 @@ import {
   clearRecentlyCompleted,
   markRecentlyCompleted,
   dismissPendingCelebration,
+  finishQuiz,
 } from "@/lib/progress";
 
 // Local constant to avoid bundler issues with imported TOTAL_STATES
@@ -3030,7 +3031,7 @@ export function QuizScreen({
   onClose,
 }: { 
   stateName?: string
-  onDone?: (quizMetrics?: { timeToComplete: number; quizAttempts: number; quizScore: number }) => void
+  onDone?: (quizMetrics?: { timeToComplete: number; quizAttempts: number; quizScore: number; correctCount?: number }) => void
   onClose?: () => void
 } = {}) {
   const progress = useProgress();
@@ -3050,7 +3051,7 @@ function QuizScreenContent({
   onClose,
 }: { 
   stateName?: string
-  onDone?: (quizMetrics?: { timeToComplete: number; quizAttempts: number; quizScore: number }) => void
+  onDone?: (quizMetrics?: { timeToComplete: number; quizAttempts: number; quizScore: number; correctCount?: number }) => void
   onClose?: () => void
 }) {
   const progress = useProgress();
@@ -3163,7 +3164,12 @@ function QuizScreenContent({
         timeToComplete: quizDuration,
         quizAttempts: isReplay ? 2 : 1,  // Track real attempt number
         quizScore: scorePercentage,
+        correctCount: totalCorrect,  // NEW: pass correct answer count for star calculation
       };
+      
+      // ATOMIC: Call finishQuiz to complete state, award XP/stars, and queue celebration
+      // This happens before navigation to ensure state is consistent
+      finishQuiz(activeName, quizMetrics);
       
       // Use setTimeout to ensure state is settled before navigation
       setTimeout(() => {
@@ -3225,7 +3231,7 @@ function QuizScreenContent({
       {/* Status Bar with XP Info - Clean */}
       <div className="px-5 py-2 mx-5 clay-card clay-white flex items-center justify-between text-xs">
         <div className="font-bold text-muted-foreground">
-          Total: {correctCount * 20} XP
+          Total: {answeredQuestions.filter(a => a.correct).length * 20} XP
         </div>
         <div className="font-bold text-success">
           +20 per answer
@@ -3410,6 +3416,7 @@ export function StateCompletedScreen({
     timeToComplete: number
     quizAttempts: number
     quizScore: number
+    correctCount?: number
   }
 } = {}) {
   const state = getState(stateName);

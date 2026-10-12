@@ -2,7 +2,7 @@ import { createFileRoute, notFound, redirect, useNavigate } from "@tanstack/reac
 import { QuizScreen } from "@/components/screens";
 import { getStateBySlug } from "@/lib/states";
 import { NotFoundPlace, PlaceError } from "@/components/PlaceFallbacks";
-import { getProgress, cardsDone, CARDS_PER_STATE } from "@/lib/progress";
+import { getProgress, cardsDone, CARDS_PER_STATE, finishQuiz } from "@/lib/progress";
 
 export const Route = createFileRoute("/state/$slug/quiz")({
   loader: ({ params }) => {
@@ -53,7 +53,12 @@ function Quiz() {
       key={slug}
       stateName={name}
       onClose={() => navigate({ to: "/state/$slug/learn", params: { slug } })}
-      onDone={() => navigate({ to: "/state/$slug/complete", params: { slug } })}
+      onDone={(quizMetrics) => {
+        if (quizMetrics) {
+          finishQuiz(name, quizMetrics);
+        }
+        navigate({ to: "/state/$slug/complete", params: { slug } });
+      }}
     />
   );
 }
