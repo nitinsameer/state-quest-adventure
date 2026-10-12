@@ -762,7 +762,7 @@ function HomeDashboardContent() {
     <div className="h-full w-full bg-[#F7F5F0] flex flex-col overflow-hidden" data-testid="home-screen">
 
       {/* Header with fade-in animation - Premium spacing */}
-      <div className={`px-6 pt-4 pb-5 bg-gradient-to-br from-orange-500 via-orange-450 to-orange-600 rounded-b-[32px] relative overflow-hidden transition-opacity duration-500 ${statsVisible ? "opacity-100" : "opacity-0"}`}>
+      <div className={`flex-shrink-0 px-6 pt-4 pb-5 bg-gradient-to-br from-orange-500 via-orange-450 to-orange-600 rounded-b-[32px] relative overflow-hidden transition-opacity duration-500 ${statsVisible ? "opacity-100" : "opacity-0"}`}>
         <Cloud className="absolute top-2 right-4 w-14 opacity-40" />
         <div className="flex items-center gap-4 relative mb-3">
           {/* Avatar - Larger and more prominent */}
@@ -794,6 +794,8 @@ function HomeDashboardContent() {
 
       </div>
 
+      {/* Scrollable content area */}
+      <div className="min-h-0 flex-1 overflow-y-auto">
       {/* India Journey Meta-Game Card - Separate featured section */}
       <div className={`px-6 pt-5 pb-4 transition-opacity duration-700 ${statsVisible ? "opacity-100" : "opacity-0"}`}>
         <Suspense fallback={
@@ -1035,6 +1037,8 @@ function HomeDashboardContent() {
       )}
 
       {/* First Session Tutorial removed from onboarding flow */}
+      </div>
+      {/* End scrollable content area */}
     </div>
   );
 }
