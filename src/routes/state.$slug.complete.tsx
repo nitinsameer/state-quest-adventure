@@ -72,8 +72,8 @@ function Complete() {
       setLastPlayedState(nextState.name);
       navigate({ to: "/state/$slug/learn", params: { slug: nextState.name.toLowerCase().replace(/\s+/g, "-") } });
     } else {
-      // All states completed, go to home
-      navigate({ to: "/home" });
+      // All states completed, go to journey instead of home
+      navigate({ to: "/journey" });
     }
   };
 
