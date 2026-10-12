@@ -1323,7 +1323,6 @@ export function JourneyMapScreen() {
   const states = statesWithProgress(p);
   const [view, setView] = useState<{ screen: "intro" | "hub" | "card" | "quiz"; name: string; cardIndex?: number } | null>(null);
   const [selectedState, setSelectedState] = useState<string | null>(null);
-  const [expandedRegion, setExpandedRegion] = useState<string | null>(REGION_KEYS[0]); // First region expanded by default
   const celebration = useCelebration();
 
   // Detect and celebrate milestones
@@ -1612,8 +1611,8 @@ export function JourneyMapScreen() {
 
       {/* Explorable States Map with Regional Organization */}
       <div className="relative flex-1 overflow-y-auto overflow-x-hidden animate-fade-in" style={{ animationDelay: "200ms" }}>
-        {/* Regional sections with color-coded headers */}
-        <div className="relative w-full space-y-6 py-6" style={{ paddingLeft: 'var(--padding-lg)', paddingRight: 'var(--padding-lg)', paddingBottom: 'calc(64px + 16px + env(safe-area-inset-bottom))' }}>
+        {/* Regional sections - always visible, no collapse */}
+        <div className="relative w-full space-y-6 py-6 px-3 pb-calc" style={{ paddingBottom: 'calc(64px + 16px + env(safe-area-inset-bottom))' }}>
           {REGION_KEYS.map((regionKey, regionIdx) => {
             // Skip union territories region - they're rendered separately below
             if (regionKey === "unionTerritories") return null;
@@ -1621,36 +1620,22 @@ export function JourneyMapScreen() {
             const region = REGIONS[regionKey];
             const regionStates = statesByRegion[regionKey] || [];
             const regionDone = regionStates.filter((s) => s.status === "done").length;
-            const isRegionExpanded = expandedRegion === regionKey;
             
             return (
               <div key={regionKey} className="animate-fade-in" style={{ animationDelay: `${300 + regionIdx * 100}ms` }}>
-                {/* Region Header - Horizontal Pill Style with Premium Shadows */}
-                <button
-                  onClick={() => setExpandedRegion(isRegionExpanded ? null : regionKey)}
-                  className={`w-full rounded-2xl py-2.5 shadow-elevated-1 flex items-center justify-between transition-all hover:shadow-elevated-2 hover:scale-102 active:scale-95 bg-gradient-to-r ${region.gradient} text-white`}
-                  style={{ paddingLeft: 'var(--padding-md)', paddingRight: 'var(--padding-md)', marginBottom: 'var(--gap-base)' }}
+                {/* Region Header - Horizontal Chip Style */}
+                <div
+                  className={`w-full rounded-2xl py-2.5 shadow-elevated-1 flex items-center justify-between transition-all hover:shadow-elevated-2 hover:scale-102 active:scale-95 bg-gradient-to-r ${region.gradient} text-white px-4 mb-4`}
                 >
                   <div className="flex items-center gap-2 flex-1">
                     <span className="text-xl">{region.emoji}</span>
                     <span className="font-bold text-sm text-white">{region.name}</span>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm font-semibold text-white">{regionDone}/{regionStates.length}</span>
-                    <svg 
-                      className={`w-5 h-5 transition-transform text-white ${isRegionExpanded ? "rotate-180" : ""}`}
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                    </svg>
-                  </div>
-                </button>
+                  <span className="text-sm font-semibold text-white">{regionDone}/{regionStates.length}</span>
+                </div>
 
-                {/* States in this region - 2-Column Grid on mobile, 3-col tablet, 4-col desktop */}
-                {isRegionExpanded && (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mb-4" style={{ gap: 'var(--gap-base)' }}>
+                {/* States in this region - 2-Column Grid - Always Visible */}
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-4">
                   {regionStates.map((state, stateIndex) => {
                     const isLocked = state.status === "locked";
                     const isDone = state.status === "done";
@@ -1695,38 +1680,24 @@ export function JourneyMapScreen() {
                     );
                   })}
                 </div>
-                )}
               </div>
             );
           })}
 
           {/* Union Territories section */}
           <div className="animate-fade-in" style={{ animationDelay: "800ms" }}>
-            <button
-              onClick={() => setExpandedRegion(expandedRegion === "unionTerritories" ? null : "unionTerritories")}
-              className="w-full rounded-2xl bg-gradient-to-r from-blue-400 to-purple-500 text-white py-2.5 shadow-elevated-1 flex items-center justify-between transition-all hover:shadow-elevated-2 hover:scale-102 active:scale-95"
-              style={{ paddingLeft: 'var(--padding-md)', paddingRight: 'var(--padding-md)', marginBottom: 'var(--gap-base)' }}
+            <div
+              className="w-full rounded-2xl bg-gradient-to-r from-blue-400 to-purple-500 text-white py-2.5 shadow-elevated-1 flex items-center justify-between transition-all hover:shadow-elevated-2 hover:scale-102 active:scale-95 px-4 mb-4"
             >
               <div className="flex items-center gap-2 flex-1">
                 <span className="text-xl">🏝️</span>
                 <span className="font-bold text-sm text-white">Union Territories</span>
               </div>
-              <div className="flex items-center gap-3">
-                <span className="text-sm font-semibold text-white">{nodes.filter(n => n.isUT && n.status === "done").length}/8</span>
-                <svg 
-                  className={`w-5 h-5 transition-transform text-white ${expandedRegion === "unionTerritories" ? "rotate-180" : ""}`}
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                </svg>
-              </div>
-            </button>
+              <span className="text-sm font-semibold text-white">{nodes.filter(n => n.isUT && n.status === "done").length}/8</span>
+            </div>
 
-            {/* UTs Grid - 3 Column with Premium Styling */}
-            {expandedRegion === "unionTerritories" && (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mb-4" style={{ gap: 'var(--gap-base)' }}>
+            {/* UTs Grid - Always Visible */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-4">
               {nodes.filter(n => n.isUT).map((utNode, utIndex) => {
                 const utState = states.find(s => s.name === utNode.name);
                 if (!utState) return null;
@@ -1773,7 +1744,6 @@ export function JourneyMapScreen() {
                 );
               })}
             </div>
-            )}
           </div>
         </div>
       </div>
