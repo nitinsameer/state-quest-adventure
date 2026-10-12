@@ -168,6 +168,9 @@
   * {
     border-color: var(--color-border);
   }
+  html {
+    font-size: 112.5%;
+  }
   html, body {
     height: 100%;
     background: linear-gradient(180deg, #f7f4ef 0%, #eef2f8 100%);

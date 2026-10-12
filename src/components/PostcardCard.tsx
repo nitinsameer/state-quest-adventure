@@ -35,51 +35,49 @@ export function PostcardCard({
       title={`${destination} postcard`}
     >
       <div className="relative">
-        {/* Postcard container with warm paper-like background */}
-        <div className="relative bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow">
-          {/* Dashed/perforated border effect */}
-          <div className="absolute inset-0 rounded-xl border-2 border-dashed border-amber-300/50 pointer-events-none" />
+        {/* Postcard container */}
+        <div className="relative bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow">
+          {/* Landmark SVG container - full color for all states, padlock badge for locked */}
+          <div className="relative">
+            <div
+              className={`w-full h-32 rounded-lg overflow-hidden mb-3 bg-white shadow-sm transition-opacity duration-300 ${
+                isCollected ? "opacity-100" : "opacity-75"
+              }`}
+            >
+              <img
+                src={landmarkSrc}
+                alt={destination}
+                className="w-full h-full object-cover"
+                onLoad={() => setImageLoaded(true)}
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
 
-          {/* Landmark SVG container */}
-          <div
-            className={`w-full h-32 rounded-lg overflow-hidden mb-3 bg-white shadow-sm transition-opacity duration-300 ${
-              isCollected ? "opacity-100" : "opacity-60"
-            }`}
-          >
-            <img
-              src={landmarkSrc}
-              alt={destination}
-              className="w-full h-full object-cover"
-              onLoad={() => setImageLoaded(true)}
-              loading="lazy"
-              decoding="async"
-            />
-
-            {/* Locked state overlay */}
+            {/* Padlock badge for locked state */}
             {!isCollected && (
-              <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="text-2xl mb-1">🔒</div>
-                  <div className="text-xs font-bold text-white">Locked</div>
-                </div>
+              <div className="absolute top-2 right-2 w-8 h-8 bg-white/90 rounded-full shadow-md flex items-center justify-center border-2 border-slate-800">
+                <span className="text-lg">🔒</span>
               </div>
             )}
           </div>
 
-          {/* State name */}
-          <div className="text-sm font-extrabold text-ink mb-2 line-clamp-2">{destination}</div>
+          {/* State name - centered, larger */}
+          <div className="font-extrabold text-center mb-2 line-clamp-2" style={{ fontSize: 'var(--type-state-name)', fontWeight: 'var(--type-state-name-weight)', color: 'var(--color-ink)' }}>
+            {destination}
+          </div>
 
-          {/* Status badge */}
-          <div className="text-xs font-bold text-muted-dark">
+          {/* Status text */}
+          <div className="text-sm font-bold text-center" style={{ color: isCollected ? 'oklch(0.35 0.1 150)' : 'oklch(0.35 0.1 260)' }}>
             {isCollected ? (
-              <span className="inline-flex items-center gap-1 text-green-700">
+              <span className="inline-flex items-center gap-1">
                 <span>✓</span>
                 <span>Collected</span>
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1 text-amber-700">
-                <span>🔒</span>
-                <span>Explore to earn</span>
+              <span className="inline-flex items-center gap-1">
+                <span>🎫</span>
+                <span>Visit to collect</span>
               </span>
             )}
           </div>

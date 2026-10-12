@@ -67,12 +67,23 @@
   --color-brand-sky: oklch(0.94 0.04 235);        /* Light background */
 
   /* ========================================================================
-     TYPOGRAPHY TOKENS
+     TYPOGRAPHY TOKENS - KID-FRIENDLY TYPE SCALE
      ======================================================================== */
 
   /* Font Families */
   --font-display: "Baloo 2", system-ui, sans-serif;
   --font-sans: "Nunito", system-ui, sans-serif;
+
+  /* Kid-Friendly Type Scale Tokens (child-facing screens) */
+  --type-screen-title: 28px;
+  --type-screen-title-weight: 800;
+  --type-section-heading: 22px;
+  --type-section-heading-weight: 800;
+  --type-state-name: 20px;
+  --type-state-name-weight: 800;
+  --type-body: 16px;
+  --type-body-weight: 700;
+  --type-min: 14px;
 
   /* Font Sizes (in rem, based on 16px root) */
   --font-size-display: 2rem;      /* 32px - h1 */

@@ -124,13 +124,13 @@ export function PassportSeedling() {
 
       {/* Header with title */}
       <div className="px-5 pt-4 pb-2 flex items-center justify-between">
-        <h1 className="text-2xl font-extrabold text-ink">🎫 My Explorer</h1>
+        <h1 style={{ fontSize: 'var(--type-screen-title)', fontWeight: 'var(--type-screen-title-weight)' }} className="text-ink">🎫 My Explorer</h1>
       </div>
 
-      {/* Profile Card - EXPANDED to 140px */}
-      <div className="mx-5 mt-5 p-5 rounded-3xl bg-gradient-to-br from-amber-700 via-amber-800 to-amber-900 text-white shadow-xl">
+      {/* Profile Card - Simplified */}
+      <div className="mx-5 mt-5 p-5 rounded-3xl bg-gradient-to-br from-saffron to-orange-500 text-white shadow-xl">
         {/* ROW 1: Avatar + User Info */}
-        <div className="flex items-center gap-4 mb-4">
+        <div className="flex items-center gap-4 mb-3">
           <div className="h-16 w-16 rounded-2xl bg-white p-1 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-lg">
             <img 
               src={getAvatarImage(progress.avatar)} 
@@ -140,46 +140,13 @@ export function PassportSeedling() {
           </div>
           <div className="flex-1">
             <div className="text-lg font-extrabold">{progress.name}</div>
-            <div className="text-[11px] font-bold opacity-80">🎫 Passport #{generatePassportNumber(progress.avatar, progress.name)}</div>
-            <div className="text-[11px] font-bold opacity-90 mt-1">Age {progress.ageBand}</div>
+            <div className="text-sm font-bold">🎫 {progress.completed.length} of 36 stamps</div>
           </div>
         </div>
 
-        {/* DIVIDER */}
-        <div className="border-t border-white/30 mb-4"></div>
-
-        {/* ROW 2: Stats Row */}
-        <div className="flex justify-between mb-4">
-          <div className="text-center flex-1">
-            <div className="text-2xl">🗺️</div>
-            <div className="text-sm font-extrabold mt-1">{progress.completed.filter(s => {
-              const state = getState(s);
-              return state.kind !== "ut";
-            }).length}/28</div>
-            <div className="text-[10px] opacity-80 font-bold">States</div>
-          </div>
-          <div className="text-center flex-1">
-            <div className="text-2xl">🏝️</div>
-            <div className="text-sm font-extrabold mt-1">{progress.completed.filter(s => {
-              const state = getState(s);
-              return state.kind === "ut";
-            }).length}/8</div>
-            <div className="text-[10px] opacity-80 font-bold">UTs</div>
-          </div>
-          <div className="text-center flex-1">
-            <div className="text-2xl">🏆</div>
-            <div className="text-sm font-extrabold mt-1">{Math.round((progress.completed.length / 36) * 100)}%</div>
-            <div className="text-[10px] opacity-80 font-bold">Complete</div>
-          </div>
-        </div>
-
-        {/* ROW 3: Progress Bar */}
+        {/* ROW 2: Progress Bar */}
         <div>
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-bold opacity-90">Overall Journey</span>
-            <span className="text-[11px] font-extrabold bg-white/20 px-2 py-0.5 rounded-full">{progress.completed.length}/36 regions</span>
-          </div>
-          <div className="h-3 bg-white/30 rounded-full overflow-hidden shadow-inner">
+          <div className="h-2 bg-white/30 rounded-full overflow-hidden shadow-inner">
             <div
               className="h-full bg-gradient-to-r from-yellow-200 via-yellow-100 to-white rounded-full transition-all duration-500"
               style={{ width: `${Math.round((progress.completed.length / 36) * 100)}%` }}
@@ -200,11 +167,12 @@ export function PassportSeedling() {
               <button
                 key={key}
                 onClick={() => handleRegionChange(key)}
-                className={`px-4 py-2 rounded-full font-extrabold text-sm whitespace-nowrap transition active:scale-95 ${
+                className={`px-4 py-3 rounded-full font-extrabold whitespace-nowrap transition active:scale-95 ${
                   isSelected
                     ? "clay-button clay-saffron text-ink"
                     : "clay-button clay-white text-ink"
                 }`}
+                style={{ fontSize: 'var(--type-body)', fontWeight: 'var(--type-body-weight)' }}
                 title={`${completed}/${regionStates.length} explored`}
               >
                 {reg.emoji} {reg.name.split(" ")[0]} {isSelected && completed === regionStates.length && "✓"}
@@ -216,8 +184,8 @@ export function PassportSeedling() {
 
       {/* Region Title & Progress */}
       <div className="px-5 mt-4 mb-2">
-        <div className="text-lg font-extrabold text-slate-900">{region.name}</div>
-        <div className="text-sm font-semibold text-slate-600 mt-1">
+        <div style={{ fontSize: 'var(--type-section-heading)', fontWeight: 'var(--type-section-heading-weight)' }} className="text-slate-900">{region.name}</div>
+        <div className="text-base font-semibold text-slate-600 mt-1">
           {regionProgress} explored {unlockedInRegion.length === regionStates.length && "✨ Region Complete!"}
         </div>
         <div className="mt-2 h-2 bg-[oklch(0.9_0.02_260)] rounded-full overflow-hidden">
@@ -229,7 +197,7 @@ export function PassportSeedling() {
       </div>
 
       {/* States Grid - Using PostcardCard component */}
-      <div className="px-5 pt-2 pb-3 flex-1 overflow-auto">
+      <div className="px-5 pt-2 pb-6 flex-1 overflow-auto" style={{ paddingBottom: 'calc(64px + 16px + env(safe-area-inset-bottom))' }}>
         <div className="grid grid-cols-2 gap-3">
           {regionStates.map((state) => {
             const isCollected = progress.completed.includes(state.name);

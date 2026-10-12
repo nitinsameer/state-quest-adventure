@@ -120,8 +120,8 @@ export function JourneyDestinationCard({
         decoding="async"
       />
 
-      {/* State name */}
-      <div className={`text-sm font-extrabold leading-tight mb-2 line-clamp-2 ${textColorClass}`}>
+      {/* State name - centered, larger */}
+      <div className="text-center font-extrabold leading-tight mb-3 line-clamp-2" style={{ fontSize: 'var(--type-state-name)', fontWeight: 'var(--type-state-name-weight)' }}>
         {stateName}
       </div>
 
@@ -142,7 +142,7 @@ export function JourneyDestinationCard({
 
       {/* In-progress indicator */}
       {isInProgress && (
-        <div className="mb-2 text-xs font-bold opacity-75">
+        <div className="mb-2 text-sm font-bold opacity-75">
           <div className="mb-1">{cardsDone}/{totalCards} adventures</div>
           <div className="h-1.5 bg-black/10 rounded-full overflow-hidden">
             <div
@@ -156,13 +156,33 @@ export function JourneyDestinationCard({
       {/* Spacer to push button to bottom */}
       <div className="flex-1" />
 
-      {/* Single action button - consolidated logic, no duplicates */}
+      {/* Single action button - Play for available/in-progress, Replay for completed, Locked for locked */}
       <button
         onClick={buttonHandler}
         disabled={isButtonDisabled}
-        className={`w-full py-3 clay-button ${status === "locked" ? "clay-white" : status === "completed" ? "clay-success" : "clay-saffron"} text-ink transition-all active:scale-95 ${isButtonDisabled ? "opacity-60 cursor-not-allowed" : ""}`}
+        className={`w-full py-3 clay-button ${status === "locked" ? "clay-white" : status === "completed" ? "clay-success" : "clay-saffron"} text-ink transition-all active:scale-95 flex items-center justify-center gap-2 font-bold ${isButtonDisabled ? "opacity-60 cursor-not-allowed" : ""}`}
       >
-        {buttonText}
+        {status === "locked" ? (
+          <>
+            <span>🔒</span>
+            <span>Locked</span>
+          </>
+        ) : status === "completed" && !isInProgress ? (
+          <>
+            <span>↻</span>
+            <span>Replay</span>
+          </>
+        ) : isInProgress ? (
+          <>
+            <span>▶️</span>
+            <span>Continue</span>
+          </>
+        ) : (
+          <>
+            <span>▶️</span>
+            <span>Play</span>
+          </>
+        )}
       </button>
     </div>
   );

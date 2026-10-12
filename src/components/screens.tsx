@@ -1554,7 +1554,7 @@ export function JourneyMapScreen() {
           </div>
           <div className="flex-1">
             <div className="text-display font-extrabold text-white">India Journey</div>
-            <div className="text-xs font-bold text-white/90 flex items-center gap-2">
+            <div className="text-sm font-bold text-white flex items-center gap-2">
               {p.streak > 0 && (
                 <span className="inline-flex items-center gap-0.5 px-2 py-1 bg-white/30 rounded-full">
                   <span>🔥</span>
@@ -1562,34 +1562,26 @@ export function JourneyMapScreen() {
                 </span>
               )}
               <span>
-                {completedStates}/{totalStates} states & UTs explored
+                {completedStates}/{totalStates} states
               </span>
             </div>
           </div>
         </div>
 
         {/* Progress Bar - inside header */}
-        <div className="mt-4 animate-fade-in" style={{ animationDelay: "50ms" }}>
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-xs font-bold text-white/90">Your Journey Progress</span>
-            <span className="text-xs font-extrabold text-white bg-white/30 px-2 py-0.5 rounded-full">{Math.round((completedStates / totalStates) * 100)}%</span>
-          </div>
-          <div className="h-3 bg-white/30 rounded-full overflow-hidden shadow-inner">
+        <div className="mt-3 animate-fade-in" style={{ animationDelay: "50ms" }}>
+          <div className="h-3 bg-white/30 rounded-full overflow-hidden shadow-inner mb-2">
             <div
               className="h-full bg-gradient-to-r from-yellow-200 via-yellow-100 to-white rounded-full transition-all duration-500"
               style={{ width: `${(completedStates / totalStates) * 100}%` }}
             />
           </div>
-          {/* Progress toward next milestone */}
-          <div className="text-xs font-bold text-white/80 mt-2 space-y-0.5">
+          {/* Single line milestone hint */}
+          <div className="text-sm font-bold text-white">
             {(() => {
               const msg = getJourneyMotivationalMessage(completedStates);
-              return (
-                <>
-                  <div>{msg.line1}</div>
-                  <div>{msg.line2}</div>
-                </>
-              );
+              const milestoneCount = 36 - completedStates;
+              return milestoneCount > 0 ? `${milestoneCount} more to grow your tree` : "🌳 You grew the tree!";
             })()}
           </div>
         </div>
@@ -1602,7 +1594,7 @@ export function JourneyMapScreen() {
       {/* Explorable States Map with Regional Organization */}
       <div className="relative flex-1 overflow-y-auto overflow-x-hidden animate-fade-in" style={{ animationDelay: "200ms" }}>
         {/* Regional sections with color-coded headers */}
-        <div className="relative w-full space-y-6 py-6 pb-32" style={{ paddingLeft: 'var(--padding-lg)', paddingRight: 'var(--padding-lg)' }}>
+        <div className="relative w-full space-y-6 py-6" style={{ paddingLeft: 'var(--padding-lg)', paddingRight: 'var(--padding-lg)', paddingBottom: 'calc(64px + 16px + env(safe-area-inset-bottom))' }}>
           {REGION_KEYS.map((regionKey, regionIdx) => {
             // Skip union territories region - they're rendered separately below
             if (regionKey === "unionTerritories") return null;
@@ -1625,7 +1617,7 @@ export function JourneyMapScreen() {
                     <span className="font-bold text-sm text-white">{region.name}</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="text-xs font-semibold text-white opacity-90">{regionDone}/{regionStates.length}</span>
+                    <span className="text-sm font-semibold text-white">{regionDone}/{regionStates.length}</span>
                     <svg 
                       className={`w-5 h-5 transition-transform text-white ${isRegionExpanded ? "rotate-180" : ""}`}
                       fill="none" 
@@ -1709,7 +1701,7 @@ export function JourneyMapScreen() {
                 <span className="font-bold text-sm text-white">Union Territories</span>
               </div>
               <div className="flex items-center gap-3">
-                <span className="text-xs font-semibold text-white opacity-90">{nodes.filter(n => n.isUT && n.status === "done").length}/8</span>
+                <span className="text-sm font-semibold text-white">{nodes.filter(n => n.isUT && n.status === "done").length}/8</span>
                 <svg 
                   className={`w-5 h-5 transition-transform text-white ${expandedRegion === "unionTerritories" ? "rotate-180" : ""}`}
                   fill="none" 
