@@ -2782,10 +2782,10 @@ export function LearningCardScreen({
                   fxTap();
                   setDisplayLanguage(lang);
                 }}
-                className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
+                className={`px-3 py-1.5 rounded-full text-sm font-bold transition-all ${
                   displayLanguage === lang
-                    ? "bg-info-soft0 text-white shadow-md"
-                    : "bg-white/40 text-ink hover:bg-white/70 font-semibold"
+                    ? "clay-button clay-explorer text-ink shadow-md"
+                    : "bg-white text-ink"
                 }`}
               >
                 {LANGUAGE_NAMES[lang]}
