@@ -169,7 +169,7 @@
     border-color: var(--color-border);
   }
   html {
-    font-size: 112.5%;
+    font-size: 100%;
   }
   html, body {
     height: 100%;
