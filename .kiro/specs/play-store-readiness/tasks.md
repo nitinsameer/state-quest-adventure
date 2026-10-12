@@ -139,7 +139,7 @@ The "Save Postcard" and "Next State" buttons on the celebration screen are curre
 Home popup: from 11.4; shows the real XP, stars and badges.
 VERIFY: a unit test per rule above; Playwright flow from the first card to the postcard reveal with a reload in the middle.
 Depends on: 11.0 to 11.5
-
+    
 ## Task Dependency Graph
 
 ```mermaid

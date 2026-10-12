@@ -211,6 +211,44 @@ export function validatePostcardLibrary(raw: string | null): PostcardLibraryItem
 }
 
 /**
+ * QUIZ PROGRESS - In-progress quiz state to resume after reload
+ * Key: "india-explorer:quiz-progress:v1"
+ * 
+ * Stores the current quiz state per state: question index, answer history, timing.
+ * Entries expire after 7 days. Never sent to analytics.
+ */
+const QuizAnswerSchema = z.object({
+  id: z.string().min(1),
+  correct: z.boolean(),
+});
+
+export const QuizProgressEntrySchema = z.object({
+  index: z.number().int().nonnegative(),
+  correctCount: z.number().int().nonnegative(),
+  answers: z.array(QuizAnswerSchema),
+  startedAt: z.number().int().positive(),
+  updatedAt: z.number().int().positive(),
+});
+
+export type QuizProgressEntry = z.infer<typeof QuizProgressEntrySchema>;
+
+export const QuizProgressSchema = z.record(z.string(), QuizProgressEntrySchema);
+
+export type QuizProgress = z.infer<typeof QuizProgressSchema>;
+
+export function validateQuizProgress(raw: string | null): QuizProgress {
+  if (raw === null) return {};
+  
+  try {
+    const parsed = JSON.parse(raw);
+    return QuizProgressSchema.parse(parsed);
+  } catch (err) {
+    debugError('localStorage-schema', 'Invalid quiz progress data, using empty object', { error: err });
+    return {};
+  }
+}
+
+/**
  * GENERIC STORAGE VALIDATOR
  * Used for data we may not have a specific schema for yet
  */
