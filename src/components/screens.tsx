@@ -4502,34 +4502,6 @@ function ProfileScreenContent() {
             </span>
           </button>
         </div>
-        {/* 📊 Progress Section Header */}
-        <div className="animate-fade-in pt-4" style={{ animationDelay: "220ms" }}>
-          <h3 className="text-sm font-extrabold text-muted-foreground uppercase tracking-wider px-1 mb-2">
-            📊 Progress
-          </h3>
-        </div>
-
-        <div className="animate-fade-in" style={{ animationDelay: "225ms" }}>
-          <Link
-            to="/badges"
-            onClick={() => fxTap()}
-            className="clay-card clay-white p-3 flex items-center gap-3 transition active:scale-[0.99]"
-          >
-            <div className="h-12 w-12 rounded-2xl gradient-gold flex items-center justify-center text-2xl">
-              🏆
-            </div>
-            <div className="flex-1">
-              <div className="text-display font-extrabold text-[15px] leading-tight">
-                Achievements
-              </div>
-              <div className="text-[11px] font-bold text-muted-foreground">
-                {unlockedAchievementBadgeCount(p)}/20 badges earned
-              </div>
-            </div>
-            <div className="text-muted-foreground text-xl">›</div>
-          </Link>
-        </div>
-
         {/* Daily Goals Section */}
         <div className="animate-fade-in" style={{ animationDelay: "250ms" }}>
           {(() => {
