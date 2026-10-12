@@ -242,6 +242,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 function HydratedApp() {
   const { queryClient } = Route.useRouteContext();
   const location = useLocation();
+  const navRef = useRef<HTMLDivElement>(null);
 
   // RULES OF HOOKS: useProgress() is ALWAYS called here, never conditionally
   // This ensures hook count/order is consistent across renders
@@ -249,6 +250,18 @@ function HydratedApp() {
 
   // Pre-auth routes that should NOT show BottomNav
   const preAuthRoutes = ['/', '/welcome', '/create'];
+  
+  // Immersive routes that should NOT show BottomNav (full-screen experiences)
+  const immersiveRoutes = [
+    '/state/quiz',
+    '/state/learn',
+    '/state/card',
+    '/state/complete',
+  ];
+  
+  // Check if current route is immersive (quiz, learning, celebration)
+  const isImmersiveRoute = immersiveRoutes.some(route => location.pathname.includes(route));
+  const shouldShowBottomNav = !preAuthRoutes.includes(location.pathname) && !isImmersiveRoute;
 
   // Initialize and verify Sound toggle state on app load
   useEffect(() => {
@@ -261,6 +274,21 @@ function HydratedApp() {
       localStorage.setItem(SOUND_KEY, "1");
     }
   }, []);
+  
+  // Measure bottom nav height and set as CSS variable
+  useEffect(() => {
+    if (navRef.current && shouldShowBottomNav) {
+      const updateNavHeight = () => {
+        const height = navRef.current?.offsetHeight || 0;
+        const safeAreaBottom = parseInt(getComputedStyle(document.documentElement).getPropertyValue('env(safe-area-inset-bottom)') || '0');
+        document.documentElement.style.setProperty('--nav-h', `${height + safeAreaBottom}px`);
+      };
+      
+      updateNavHeight();
+      window.addEventListener('resize', updateNavHeight);
+      return () => window.removeEventListener('resize', updateNavHeight);
+    }
+  }, [shouldShowBottomNav]);
 
   // Initialize audio consent on app startup
   // Note: Don't check isHydrated() - audio consent is independent of progress hydration
@@ -369,8 +397,6 @@ function HydratedApp() {
   
   appLogger.info('root_component', 'HydratedApp rendering', { pathname: location.pathname });
 
-  const shouldShowBottomNav = !preAuthRoutes.includes(location.pathname);
-
   // Determine which tab is active based on current pathname
   const getActiveTab = (): "home" | "map" | "explorer" | "badges" | "profile" => {
     const path = location.pathname;
@@ -382,9 +408,10 @@ function HydratedApp() {
   };
   
   // Pre-auth routes should use pb-safe only (no extra padding)
-  // Authenticated routes need pb-[80px] to ensure content scrolls above BottomNav
+  // Authenticated routes need bottom padding to ensure content scrolls above BottomNav
+  // Use CSS variable --nav-h for dynamic nav height
   const isPreAuthRoute = preAuthRoutes.includes(location.pathname);
-  const scrollContainerPadding = isPreAuthRoute ? 'pb-safe' : 'pb-[80px]';
+  const scrollContainerPadding = isPreAuthRoute || isImmersiveRoute ? 'pb-safe' : 'pb-[calc(var(--nav-h,80px))]';
 
   // Monitor localStorage for consent changes (from dialog)
   useEffect(() => {
@@ -453,7 +480,7 @@ function HydratedApp() {
       
       {/* Global BottomNav - positioned fixed OUTSIDE flex container to prevent flex layout interference */}
       {shouldShowBottomNav && (
-        <div className="fixed bottom-0 left-0 right-0 z-20 pb-safe">
+        <div ref={navRef} className="fixed bottom-0 left-0 right-0 z-20 bg-[#F7F5F0] pb-[env(safe-area-inset-bottom)]">
           <BottomNav active={getActiveTab()} />
         </div>
       )}

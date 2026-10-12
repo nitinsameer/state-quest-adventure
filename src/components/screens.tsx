@@ -217,7 +217,7 @@ export function BottomNav({
     { id: "profile", icon: "👤", label: "Me", to: "/me" },
   ] as const;
   return (
-    <div className="fixed bottom-0 inset-x-0 z-20" data-testid="bottom-nav" role="navigation">
+    <div className="relative w-full" data-testid="bottom-nav" role="navigation">
       <div className="mx-3 mb-3 rounded-3xl bg-white shadow-[0_8px_24px_-6px_rgba(15,23,42,0.18)] border border-black/5 px-2 py-2 flex items-center justify-between">
         {items.map((i) => {
           const on = i.id === active;
