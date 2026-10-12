@@ -71,6 +71,8 @@ export type Progress = {
   statePerformance?: StatePerformanceData;
   /** NEW: Pending celebrations queue (persistent until dismissed, shows real XP & badges) */
   pendingCelebrations?: Array<{ stateName: string; xp: number; badges: string[] }>;
+  /** NEW: Best stars per state (1, 2, or 3; kept on replay) */
+  stars?: Record<string, '1' | '2' | '3'>;
 };
 
 export const STATE_BADGES: { id: BadgeId; name: string; xp: number }[] = [
@@ -124,6 +126,7 @@ function defaultProgress(): Progress {
     lastPlayedState: undefined,
     statePerformance: {},
     pendingCelebrations: [],
+    stars: {},
     statePerformance: {},
   };
 }

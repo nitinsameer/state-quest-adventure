@@ -72,17 +72,20 @@ const PostcardDataSchema = z.object({
 });
 
 const StatePerformanceSchema = z.object({
-  state: z.string().min(1),
-  cardIndex: z.number().int().nonnegative(),
-  category: z.string(),
-  timeTaken: z.number().nonnegative(),
-  isReplay: z.boolean(),
-  timestamp: z.number().int().positive(),
+  stateName: z.string().min(1),
+  completedAt: z.string().datetime(),
+  timeToComplete: z.number().nonnegative(),
+  quizAttempts: z.number().int().nonnegative(),
+  quizScore: z.number().nonnegative().max(100),
+  cardsRead: z.number().int().nonnegative().max(6),
+  cardsReplayed: z.number().int().nonnegative(),
+  currentStreak: z.number().int().nonnegative(),
+  earnedPerformanceBadges: z.array(z.string()),
 }).optional();
 
 export const ProgressSchema = z.object({
   name: z.string().min(1).max(50),
-  avatar: z.string().emoji().optional(),
+  avatar: z.string().min(1).max(40).optional(), // Avatar ID (e.g., "explorer-hat") or emoji
   ageBand: z.string().regex(/^\d+-\d+$/), // Format: "8-9", "10-12", etc.
   onboarded: z.boolean(),
   xp: z.number().int().nonnegative().max(999999), // Max XP cap to prevent overflow
@@ -98,6 +101,7 @@ export const ProgressSchema = z.object({
   cardVisits: z.record(z.string(), z.record(z.string(), z.array(z.number().int().nonnegative()))).optional(),
   lastPlayedState: z.string().min(1).optional(),
   statePerformance: z.record(z.string(), StatePerformanceSchema).optional(),
+  stars: z.record(z.string(), z.enum(['1', '2', '3'])).optional(), // Best stars per state
 });
 
 export type Progress = z.infer<typeof ProgressSchema>;
