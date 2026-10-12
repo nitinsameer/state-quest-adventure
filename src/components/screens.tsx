@@ -1629,14 +1629,6 @@ export function JourneyMapScreen() {
                   </div>
                 </button>
 
-                {/* Region heading and stats - Shown when expanded */}
-                {isRegionExpanded && (
-                <div className="mb-3 animate-fade-in">
-                  <h3 className="text-h3 text-slate-900 font-extrabold">{region.name}</h3>
-                  <p className="text-sm font-bold text-slate-700">{regionDone} of {regionStates.length} explored</p>
-                </div>
-                )}
-
                 {/* States in this region - 2-Column Grid on mobile, 3-col tablet, 4-col desktop */}
                 {isRegionExpanded && (
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mb-4" style={{ gap: 'var(--gap-base)' }}>
@@ -2878,11 +2870,11 @@ export function LearningCardScreen({
           </div>
         )}
         
-        <div className={`flex-1 rounded-2xl flex items-center justify-center overflow-hidden bg-white`}>
+        <div className={`flex-1 rounded-2xl flex items-center justify-center overflow-hidden bg-white ${!art || card.type !== "main" || card.kicker !== "Places" ? "py-8" : ""}`}>
           {art && card.type === "main" && card.kicker === "Places" ? (
             <img src={art} alt={`${state.name} learning card`} loading="lazy" decoding="async" className="h-full object-contain drop-shadow-xl" />
           ) : (
-            <div className="text-[92px] drop-shadow-xl">{card.icon}</div>
+            <div className="text-[72px] drop-shadow-xl">{card.icon}</div>
           )}
         </div>
         <div className="mt-3 bg-white/80 rounded-xl p-3">
@@ -4681,37 +4673,12 @@ function SoundToggleRow() {
 }
 
 function ProfileStat({ value, label }: { value: string; label: string }) {
-  // Add encouragement messages for "0" stats
-  const getEncouragement = (val: string, lbl: string): string => {
-    if (val === "0") {
-      switch (lbl) {
-        case "XP":
-          return "Ready to start!";
-        case "States":
-          return "Time to explore!";
-        case "Badges":
-          return "Earn in quizzes!";
-        default:
-          return "Keep going!";
-      }
-    }
-    return "";
-  };
-
-  const encouragement = getEncouragement(value, label);
-
   return (
     <div className="flex flex-col items-center py-1">
       <div className="text-display text-xl font-extrabold">{value}</div>
-      {encouragement ? (
-        <div className="text-[9px] font-bold uppercase tracking-wider text-warning leading-tight mt-0.5">
-          {encouragement}
-        </div>
-      ) : (
-        <div className="text-xs font-bold text-muted-foreground">
-          {label}
-        </div>
-      )}
+      <div className="text-xs font-bold text-muted-foreground">
+        {label}
+      </div>
     </div>
   );
 }
