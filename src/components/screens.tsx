@@ -4299,20 +4299,6 @@ function ProfileScreenContent() {
           </button>
           <div className="text-display font-extrabold text-white">Profile</div>
           <div className="flex items-center gap-2">
-            {/* Info button - Tutorial trigger */}
-            <button
-              onClick={() => {
-                fxTap();
-                // Trigger tutorial from profile
-                const showTutorialEvent = new CustomEvent('showTutorial');
-                window.dispatchEvent(showTutorialEvent);
-              }}
-              title="How to play - Learn the basics"
-              aria-label="Info - Learn how to play"
-              className="h-10 w-10 rounded-full bg-white/40 hover:bg-white/60 text-white flex items-center justify-center transition active:scale-90 font-extrabold text-lg"
-            >
-              ℹ
-            </button>
             <button
               onClick={() => {
                 fxTap();
@@ -4587,10 +4573,6 @@ function ProfileScreenContent() {
         </div>
 
         <div className="animate-fade-in" style={{ animationDelay: "300ms" }}>
-          {/* Parent Zone */}
-          <ParentZonePlaceholder />
-        </div>
-        <div className="animate-fade-in" style={{ animationDelay: "350ms" }}>
           <Link
             to="/privacy"
             onClick={() => fxTap()}
