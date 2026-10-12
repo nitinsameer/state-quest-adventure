@@ -624,24 +624,24 @@ function RecentlyCompletedCelebration({
         <div className="relative z-10 flex flex-col gap-4">
           {/* Title - Celebration message */}
           <div className="text-center">
-            <div className="text-lg font-bold opacity-95">🏆 STATE MASTERED! 🏆</div>
-            <div className="text-3xl font-black mt-2 drop-shadow-lg">
+            <div className="text-lg font-bold opacity-95 text-ink">🏆 STATE MASTERED! 🏆</div>
+            <div className="text-3xl font-black mt-2 drop-shadow-lg text-ink">
               {recentState}
             </div>
           </div>
 
           {/* Stats Grid - Improved spacing */}
           <div className="grid grid-cols-3 gap-3 text-center">
-            <div className="bg-white/25 backdrop-blur rounded-xl p-3">
-              <div className="text-sm opacity-90 font-semibold">Badges</div>
-              <div className="text-2xl font-bold mt-1">+3</div>
+            <div className="bg-white/90 backdrop-blur rounded-xl p-3">
+              <div className="text-sm opacity-90 font-semibold text-ink">Badges</div>
+              <div className="text-2xl font-bold mt-1 text-ink">+3</div>
             </div>
-            <div className="bg-white/25 backdrop-blur rounded-xl p-3">
-              <div className="text-sm opacity-90 font-semibold">XP</div>
-              <div className="text-2xl font-bold mt-1">+{xpEarned}</div>
+            <div className="bg-white/90 backdrop-blur rounded-xl p-3">
+              <div className="text-sm opacity-90 font-semibold text-ink">XP</div>
+              <div className="text-2xl font-bold mt-1 text-ink">+{xpEarned}</div>
             </div>
-            <div className="bg-white/25 backdrop-blur rounded-xl p-3">
-              <div className="text-sm opacity-90 font-semibold">Stamp</div>
+            <div className="bg-white/90 backdrop-blur rounded-xl p-3">
+              <div className="text-sm opacity-90 font-semibold text-ink">Stamp</div>
               <img
                 src={STATE_ART[recentState]}
                 alt={recentState}
@@ -656,7 +656,7 @@ function RecentlyCompletedCelebration({
           <div className="flex gap-3 mt-2">
             <button
               onClick={handleDismiss}
-              className="flex-1 h-11 rounded-xl bg-white/20 backdrop-blur border border-white/40 text-white text-sm font-bold hover:bg-white/30 transition-all duration-200"
+              className="flex-1 h-11 rounded-xl clay-button clay-white border border-white/40 text-ink text-sm font-bold hover:bg-white/30 transition-all duration-200"
             >
               Dismiss
             </button>
@@ -3469,10 +3469,10 @@ export function StateCompletedScreen({
       ))}
 
       <div className="mt-10 text-center relative px-6">
-        <div className="text-white/90 text-xs font-black uppercase tracking-[0.3em]">
+        <div className="text-ink text-xs font-black uppercase tracking-[0.3em]">
           State Complete
         </div>
-        <h1 className="text-h1 text-white mt-2 drop-shadow leading-relaxed">
+        <h1 className="text-h1 text-ink mt-2 drop-shadow leading-relaxed">
           {state.name} Cleared!
         </h1>
       </div>
@@ -4061,11 +4061,11 @@ export function BadgesScreen() {
 
                     {/* Progress or Unlocked */}
                     {!badge.unlocked ? (
-                      <div className="text-[10px] font-bold text-muted-foreground mt-1">
+                      <div className="text-[10px] font-bold text-ink mt-1">
                         {badge.progress}/{badge.achievementMax}
                       </div>
                     ) : (
-                      <div className="text-[9px] font-extrabold text-success mt-1 px-2 py-0.5 bg-success-soft rounded-full">
+                      <div className="text-[9px] font-extrabold text-success-foreground mt-1 px-2 py-0.5 bg-success-soft rounded-full border border-success">
                         ✓ Unlocked
                       </div>
                     )}
