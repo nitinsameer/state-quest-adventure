@@ -2,6 +2,7 @@ import { useSyncExternalStore } from "react";
 import { INDIA_STATES, TOTAL_STATES, type IndiaState, type StateStatus } from "./states";
 import { firebaseEvents } from "./firebase-events";
 import type { StatePerformanceData, StatePerformanceMetrics } from "./state-performance-badges";
+import { calculatePerformanceBadges } from "./state-performance-badges";
 import { validateProgress, validateAppVersion, validateRecentlyCompleted } from "./localStorage-schema";
 
 export type BadgeId = "monument" | "animal" | "explorer";
@@ -773,9 +774,6 @@ export function recordStatePerformance(
   cardsReplayed: number = 0,
 ) {
   set((p) => {
-    // Import here to avoid circular dependency
-    const { calculatePerformanceBadges } = require("./state-performance-badges");
-
     // Validate state
     const stateExists = INDIA_STATES.some(s => s.name === stateName);
     if (!stateExists) return p;
@@ -844,16 +842,12 @@ export function calculateStars(totalCorrect: number, totalQuestions: number): '1
  */
 export function completeCategory(stateName: string, categoryName: string) {
   set((p) => {
-    // Track completed categories per state
-    if (!p.categoryProgress) {
-      p.categoryProgress = {};
-    }
-    if (!p.categoryProgress[stateName]) {
-      p.categoryProgress[stateName] = [];
-    }
+    // Get current categoryProgress or initialize
+    const categoryProgress = p.categoryProgress ?? {};
+    const stateCategories = categoryProgress[stateName] ?? [];
     
     // Don't re-award XP for already completed categories
-    if (p.categoryProgress[stateName].includes(categoryName)) {
+    if (stateCategories.includes(categoryName)) {
       return p;
     }
     
@@ -861,8 +855,8 @@ export function completeCategory(stateName: string, categoryName: string) {
       ...p,
       xp: p.xp + 25,
       categoryProgress: {
-        ...p.categoryProgress,
-        [stateName]: [...(p.categoryProgress[stateName] ?? []), categoryName],
+        ...categoryProgress,
+        [stateName]: [...stateCategories, categoryName],
       },
     };
   });
@@ -899,9 +893,6 @@ export function finishQuiz(
     if (!stateExists) {
       return p;
     }
-
-    // Import here to avoid circular dependency
-    const { calculatePerformanceBadges } = require("./state-performance-badges");
 
     // 1. Calculate stars based on correct count
     // correctCount is 0-6 for 6 question quiz
@@ -1004,7 +995,6 @@ export function finishQuiz(
           stateName,
           xp: xpReward,
           badges: earnedBadges,
-          stars: newStars,
         },
       ],
     };
