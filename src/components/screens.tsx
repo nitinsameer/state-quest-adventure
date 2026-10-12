@@ -590,7 +590,7 @@ function RecentlyCompletedCelebration({
   if (!state) return null;
 
   // Get actual earned badges and XP for this state
-  const earnedBadges = p.statePerformance[recentState]?.earnedPerformanceBadges ?? [];
+  const earnedBadges = p.statePerformance?.[recentState]?.earnedPerformanceBadges ?? [];
   const badgeCount = earnedBadges.length;
   const xpEarned = 100; // State completion bonus (matches completeState default)
 

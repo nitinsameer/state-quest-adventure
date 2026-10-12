@@ -249,8 +249,8 @@ function HydratedApp() {
   // This ensures hook count/order is consistent across renders
   const progress = useProgress();
   
-  // Get celebration store setter at top level (hooks must be called before any conditionals)
-  const setCelebration = useCelebrationStore((state) => state.setCelebration);
+  // Get celebration store show method at top level (hooks must be called before any conditionals)
+  const showCelebration = useCelebrationStore((state) => state.show);
 
   // Pre-auth routes that should NOT show BottomNav
   const preAuthRoutes = ['/', '/welcome', '/create'];
@@ -367,7 +367,7 @@ function HydratedApp() {
       // Log level-up event to Firebase
       
       // Show celebration with confetti via celebration store
-      setCelebration({
+      showCelebration({
         title: `🎉 Level ${currentLevel} - ${levelName}!`,
         subtitle: `You're now a "${levelName}"!\nKeep exploring to reach the next milestone! 🚀`,
         icon: "⭐",
@@ -380,7 +380,7 @@ function HydratedApp() {
       
       prevLevelRef.current = currentLevel;
     }
-  }, [progress.xp, progress.onboarded, setCelebration]);
+  }, [progress.xp, progress.onboarded, showCelebration]);
   
   // Get the journey back handler dynamically so it always calls the current one
   const handleAndroidBack = () => {
