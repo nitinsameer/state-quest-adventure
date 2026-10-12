@@ -161,15 +161,96 @@ function persist() {
   }
 }
 
+/**
+ * Migrate progress data when app version changes.
+ * Instead of clearing all data, this attempts to salvage valid fields from old data
+ * and applies safe defaults to missing fields.
+ * 
+ * @param oldData Raw old progress data (may have old schema)
+ * @returns Migrated progress data with all current fields, preserving valid old data
+ */
+function migrateProgressVersion(oldData: any): Progress {
+  const defaultData = defaultProgress();
+  
+  // If oldData is null/undefined, return defaults
+  if (!oldData) {
+    return defaultData;
+  }
+
+  // Backup the raw old data in case we need to investigate corruption
+  try {
+    localStorage.setItem("india-explorer:progress:v2:backup", JSON.stringify(oldData));
+  } catch {
+    // Backup failed - storage issue, continue with migration
+  }
+
+  // Per-field safeParse: validate each field independently
+  // If a field is valid, keep it. If invalid, use the default for that field.
+  const migrated: Progress = {
+    // String fields - simple validation
+    name: typeof oldData.name === 'string' && oldData.name.length > 0 ? oldData.name : defaultData.name,
+    avatar: typeof oldData.avatar === 'string' && oldData.avatar.length > 0 ? oldData.avatar : defaultData.avatar,
+    ageBand: typeof oldData.ageBand === 'string' && /^\d+-\d+$/.test(oldData.ageBand) ? oldData.ageBand : defaultData.ageBand,
+    
+    // Boolean fields
+    onboarded: typeof oldData.onboarded === 'boolean' ? oldData.onboarded : defaultData.onboarded,
+    
+    // Number fields with validation
+    xp: typeof oldData.xp === 'number' && oldData.xp >= 0 && oldData.xp <= 999999 ? oldData.xp : defaultData.xp,
+    streak: typeof oldData.streak === 'number' && oldData.streak >= 0 ? oldData.streak : defaultData.streak,
+    
+    // Date string
+    lastActive: typeof oldData.lastActive === 'string' && /^\d{4}-\d{2}-\d{2}$|^$/.test(oldData.lastActive) ? oldData.lastActive : defaultData.lastActive,
+    
+    // Array fields - validate as arrays of strings
+    completed: Array.isArray(oldData.completed) && oldData.completed.every((s: any) => typeof s === 'string') ? oldData.completed : defaultData.completed,
+    answered: Array.isArray(oldData.answered) && oldData.answered.every((s: any) => typeof s === 'string') ? oldData.answered : defaultData.answered,
+    
+    // Record fields - validate as objects
+    stamps: typeof oldData.stamps === 'object' && oldData.stamps !== null && !Array.isArray(oldData.stamps) ? oldData.stamps : defaultData.stamps,
+    postcards: typeof oldData.postcards === 'object' && oldData.postcards !== null && !Array.isArray(oldData.postcards) ? oldData.postcards : defaultData.postcards,
+    badges: typeof oldData.badges === 'object' && oldData.badges !== null && !Array.isArray(oldData.badges) ? oldData.badges : defaultData.badges,
+    cards: typeof oldData.cards === 'object' && oldData.cards !== null && !Array.isArray(oldData.cards) ? oldData.cards : defaultData.cards,
+    
+    // Optional record fields
+    replayCount: typeof oldData.replayCount === 'object' && oldData.replayCount !== null ? oldData.replayCount : defaultData.replayCount,
+    cardVisits: typeof oldData.cardVisits === 'object' && oldData.cardVisits !== null ? oldData.cardVisits : defaultData.cardVisits,
+    
+    // Optional fields - new in current version
+    lastPlayedState: typeof oldData.lastPlayedState === 'string' ? oldData.lastPlayedState : defaultData.lastPlayedState,
+    statePerformance: typeof oldData.statePerformance === 'object' && oldData.statePerformance !== null ? oldData.statePerformance : defaultData.statePerformance,
+    pendingCelebrations: Array.isArray(oldData.pendingCelebrations) ? oldData.pendingCelebrations : defaultData.pendingCelebrations,
+    stars: typeof oldData.stars === 'object' && oldData.stars !== null ? oldData.stars : defaultData.stars,
+  };
+
+  return migrated;
+}
+
 function hydrate() {
   if (hydrated || typeof window === "undefined") return;
   hydrated = true;
   try {
-    // Check app version in localStorage to clear old data if needed
+    // Check app version in localStorage to migrate old data if needed
     const storedVersion = localStorage.getItem("india-explorer:app-version");
     if (storedVersion !== APP_VERSION) {
-      // Version mismatch - clear old data to prevent stale cache
-      localStorage.clear();
+      // Version mismatch - migrate old data instead of clearing
+      const oldProgressRaw = localStorage.getItem(STORAGE_KEY);
+      
+      if (oldProgressRaw) {
+        try {
+          const oldData = JSON.parse(oldProgressRaw);
+          const migratedData = migrateProgressVersion(oldData);
+          // Save the migrated data and update version
+          current = migratedData;
+          persist();
+        } catch (e) {
+          // Failed to parse old data - fall back to defaults
+          current = defaultProgress();
+          persist();
+        }
+      }
+      
+      // Update version marker
       localStorage.setItem("india-explorer:app-version", APP_VERSION);
       emit();
       return;
@@ -208,18 +289,22 @@ function hydrate() {
       return;
     }
     
+    
     if (storageData) {
       // CRITICAL FIX #1.5: Validate progress data with Zod schema
       const validated = validateProgress(storageData);
       if (validated) {
         current = { ...defaultProgress(), ...migrateProgress(validated) };
       } else {
-        // Corrupted data - fall back to defaults and clear localStorage
+        // Corrupted data - create backup and fall back to defaults
         try {
-          localStorage.removeItem(STORAGE_KEY);
+          const rawData = JSON.parse(storageData);
+          localStorage.setItem("india-explorer:progress:v2:backup", JSON.stringify(rawData));
         } catch {
-          // Ignore removal errors
+          // Couldn't even parse the raw data - skip backup
         }
+        // Fall back to defaults
+        current = defaultProgress();
       }
     }
   } catch (e) {
@@ -231,14 +316,20 @@ function hydrate() {
 /**
  * Migration handler: ensures new fields exist on loaded Progress objects.
  * Handles upgrades from older Progress versions gracefully.
- * @param old Potentially incomplete/old Progress object
- * @returns Migrated Progress object with all required fields
+ * Called after Zod validation to add any missing optional fields.
+ * @param validated Already Zod-validated Progress object
+ * @returns Complete Progress object with all fields
  */
-function migrateProgress(old: any): Partial<Progress> {
+function migrateProgress(validated: any): Progress {
   return {
-    ...old,
-    // Ensure replayCount exists (new field)
-    replayCount: old.replayCount ?? {},
+    ...validated,
+    // Ensure all optional fields exist with safe defaults
+    replayCount: validated.replayCount ?? {},
+    cardVisits: validated.cardVisits ?? {},
+    lastPlayedState: validated.lastPlayedState,
+    statePerformance: validated.statePerformance ?? {},
+    pendingCelebrations: validated.pendingCelebrations ?? [],
+    stars: validated.stars ?? {},
   };
 }
 
