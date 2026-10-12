@@ -27,7 +27,7 @@ export function StatePerformanceBadgesView() {
   const [selectedState, setSelectedState] = useState<string | null>(null);
 
   const totalBadgesEarned = getTotalPerformanceBadgesEarned(progress.statePerformance);
-  const totalPossible = INDIA_STATES.length * 6; // 6 performance badges per state
+  const totalPossible = INDIA_STATES.length * 6; // 6 performance badges per state (correct)
 
   const completedStates = INDIA_STATES.filter(s => progress.completed.includes(s.name));
   const lockedStates = INDIA_STATES.filter(s => !progress.completed.includes(s.name));
@@ -193,7 +193,7 @@ export function StatePerformanceBadgesView() {
                       {state.name}
                     </div>
                     <div className="text-[10px] font-bold text-muted-foreground">
-                      0/9 Badges
+                      0/6 Badges
                     </div>
                   </div>
                 ))}
@@ -253,7 +253,7 @@ export function StatePerformanceBadgesView() {
 /* ========== Grid View Component ========== */
 function StateGridBadgeCard({ state, progress, onSelect }: any) {
   const earnedBadges = getPerformanceBadgesForState(progress.statePerformance, state.name);
-  const totalBadges = 9;
+  const totalBadges = 6; // 6 performance badges per state
 
   return (
     <button
@@ -266,7 +266,7 @@ function StateGridBadgeCard({ state, progress, onSelect }: any) {
       
       {/* Badge Icons Grid */}
       <div className="flex flex-wrap gap-1.5 justify-center">
-        {earnedBadges.slice(0, 9).map((badge: StatePerformanceBadgeId) => (
+        {earnedBadges.slice(0, 6).map((badge: StatePerformanceBadgeId) => (
           <div 
             key={badge}
             className="h-7 w-7 rounded-full bg-gradient-to-br from-yellow-100 to-orange-100 border-2 border-orange-300 flex items-center justify-center text-base"
@@ -288,7 +288,7 @@ function StateGridBadgeCard({ state, progress, onSelect }: any) {
 function StateDetailBadgeCard({ state, progress, onSelect }: any) {
   const earnedBadges = getPerformanceBadgesForState(progress.statePerformance, state.name);
   const availableBadges = getAvailablePerformanceBadges(progress.statePerformance, state.name);
-  const totalBadges = 9;
+  const totalBadges = 6; // 6 performance badges per state
 
   return (
     <button
@@ -300,7 +300,7 @@ function StateDetailBadgeCard({ state, progress, onSelect }: any) {
         <div className="flex-1">
           <h3 className="text-display font-extrabold text-lg text-muted-dark">{state.name}</h3>
           <div className="text-xs font-bold text-muted-foreground mt-1">
-            {earnedBadges.length}/9 Badges
+            {earnedBadges.length}/{totalBadges} Badges
           </div>
         </div>
       </div>
@@ -356,7 +356,7 @@ function StateDetailBadgeCard({ state, progress, onSelect }: any) {
 /* ========== List View Component ========== */
 function StateListBadgeRow({ state, progress, onSelect }: any) {
   const earnedBadges = getPerformanceBadgesForState(progress.statePerformance, state.name);
-  const totalBadges = 9;
+  const totalBadges = 6; // 6 performance badges per state
 
   return (
     <button
