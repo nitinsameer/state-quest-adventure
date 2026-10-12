@@ -3167,7 +3167,7 @@ function QuizScreenContent({
       </div>
 
       {/* Status Bar with XP Info - Clean */}
-      <div className="px-5 py-2 clay-card clay-white flex items-center justify-between text-xs">
+      <div className="px-5 py-2 mx-5 clay-card clay-white flex items-center justify-between text-xs">
         <div className="font-bold text-muted-foreground">
           Total: {correctCount * 20} XP
         </div>
