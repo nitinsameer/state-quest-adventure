@@ -90,7 +90,7 @@ export function LanguageToggle({
     <div className="mt-(--space-0-25) flex items-center justify-center">
       <button
         onClick={handleToggle}
-        className="px-(--padding-lg) py-(--padding-base) rounded-full text-sm font-bold transition-all bg-info-soft0 text-white shadow-md hover:shadow-lg active:scale-95"
+        className="px-(--padding-lg) py-(--padding-base) rounded-full text-sm font-bold transition-all clay-button clay-explorer text-ink shadow-md hover:shadow-lg active:scale-95"
         title={`Switch to ${otherDisplayName}`}
       >
         📖 {currentDisplayName}
