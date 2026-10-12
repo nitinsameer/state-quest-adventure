@@ -573,8 +573,10 @@ function RecentlyCompletedCelebration({
   const state = INDIA_STATES.find(s => s.name === recentState);
   if (!state) return null;
 
-  // Calculate XP earned for completing this state
-  const xpEarned = 250; // State completion bonus
+  // Get actual earned badges and XP for this state
+  const earnedBadges = p.statePerformance[recentState]?.earnedPerformanceBadges ?? [];
+  const badgeCount = earnedBadges.length;
+  const xpEarned = 100; // State completion bonus (matches completeState default)
 
   // Auto-dismiss after 3 seconds
   useEffect(() => {
@@ -630,12 +632,14 @@ function RecentlyCompletedCelebration({
             </div>
           </div>
 
-          {/* Stats Grid - Improved spacing */}
+          {/* Stats Grid - Show earned rewards */}
           <div className="grid grid-cols-3 gap-3 text-center">
-            <div className="bg-white/90 backdrop-blur rounded-xl p-3">
-              <div className="text-sm opacity-90 font-semibold text-ink">Badges</div>
-              <div className="text-2xl font-bold mt-1 text-ink">+3</div>
-            </div>
+            {badgeCount > 0 && (
+              <div className="bg-white/90 backdrop-blur rounded-xl p-3">
+                <div className="text-sm opacity-90 font-semibold text-ink">Badges</div>
+                <div className="text-2xl font-bold mt-1 text-ink">+{badgeCount}</div>
+              </div>
+            )}
             <div className="bg-white/90 backdrop-blur rounded-xl p-3">
               <div className="text-sm opacity-90 font-semibold text-ink">XP</div>
               <div className="text-2xl font-bold mt-1 text-ink">+{xpEarned}</div>
