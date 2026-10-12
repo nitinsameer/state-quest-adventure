@@ -3044,8 +3044,9 @@ function QuizScreenContent({
   const [result, setResult] = useState<"correct" | "wrong" | null>(null);
   const [burst, setBurst] = useState(0);
   const [navigationStarted, setNavigationStarted] = useState(false); // Prevent double navigation
-  const [correctCount, setCorrectCount] = useState(0);
   const [quizStartTime] = useState(Date.now());
+  // Track answers: array of { id, correct } for accurate score calculation
+  const [answeredQuestions, setAnsweredQuestions] = useState<Array<{ id: string; correct: boolean }>>([]);
 
   const answers = question.options;
   const correct = question.correct;
@@ -3065,7 +3066,6 @@ function QuizScreenContent({
       addXP(question.xp, question.id);
       setResult("correct");
       setBurst((n) => n + 1);
-      setCorrectCount((n) => n + 1);
       
       // Track correct answer
       firebaseEvents.quizAnswer({
@@ -3092,26 +3092,36 @@ function QuizScreenContent({
     // Prevent double navigation on last question
     if (navigationStarted) return;
 
+    // Record this answer
+    const isCorrect = selected === correct;
+    const newAnsweredQuestions = [...answeredQuestions, { id: question.id, correct: isCorrect }];
+
     // Always move to next question (or finish if last)
     if (isLastQuestion) {
       setNavigationStarted(true);
       
-      // Track quiz completion
-      const quizDuration = Date.now() - quizStartTime;
-      const scorePercentage = ((correctCount + 1) / questions.length) * 100;
+      // Calculate accurate score from stored answers
+      const totalCorrect = newAnsweredQuestions.filter(a => a.correct).length;
+      const scorePercentage = (totalCorrect / questions.length) * 100;
       
+      const quizDuration = Date.now() - quizStartTime;
+      
+      // Track quiz completion with accurate metrics
       firebaseEvents.quizComplete({
         stateName: activeName,
         questionsAnswered: questions.length,
-        correctAnswers: correctCount + 1, // +1 for current correct answer
+        correctAnswers: totalCorrect,
         scorePercentage,
         timeSpentSeconds: quizDuration / 1000,
       })
       
+      // Check if this is a replay (state already completed)
+      const isReplay = progress.completed.includes(activeName);
+      
       // Pass quiz metrics to completion screen for badge tracking
       const quizMetrics = {
         timeToComplete: quizDuration,
-        quizAttempts: 1, // First attempt (simplified for now)
+        quizAttempts: isReplay ? 2 : 1,  // Track real attempt number
         quizScore: scorePercentage,
       };
       
@@ -3121,9 +3131,12 @@ function QuizScreenContent({
       }, 50);
       return;
     }
+    
+    // Move to next question
     setIndex((i) => i + 1);
     setResult(null);
     setSelected(null);
+    setAnsweredQuestions(newAnsweredQuestions);
   };
 
   return (
