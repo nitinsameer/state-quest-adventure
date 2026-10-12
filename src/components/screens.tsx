@@ -3364,80 +3364,15 @@ export function StateCompletedScreen({
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
   const [burstKey, setBurstKey] = useState(0);
   const [celebrationDone, setCelebrationDone] = useState(false);
-  const [earnedPerformanceBadges, setEarnedPerformanceBadges] = useState<string[]>([]);
-  const progress = useProgress();
-  const celebration = useCelebration();
   
   useEffect(() => {
-    // Only run celebration once per mount
+    // Only run celebration animation once per mount
     if (!celebrationDone) {
       fxConfetti();
       setBurstKey((n) => n + 1);
-      if (persist) {
-        completeState(state.name);
-        
-        // Add postcard to library automatically
-        const addPostcardToLibrary = async () => {
-          try {
-            // Generate postcard and add to library with image data
-            const canvas = document.createElement("canvas");
-            canvas.width = 900;
-            canvas.height = 1200;
-            
-            const blob = await new Promise<Blob | null>(resolve => {
-              canvas.toBlob(resolve, "image/png");
-            });
-            
-            if (blob) {
-              const reader = new FileReader();
-              reader.onloadend = () => {
-                const base64 = (reader.result as string).split(",")[1];
-                const { usePostcardLibrary } = require("@/store/postcard-library-store");
-                const library = usePostcardLibrary.getState();
-                
-                const stampDate = new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short" }).toUpperCase().replace(" ", " · ");
-                library.addPostcard(state.name, "monument", stampDate, new Date().toISOString(), base64);
-                console.log(`[StateCompletedScreen] Postcard added to library for ${state.name}`);
-              };
-              reader.readAsDataURL(blob);
-            }
-          } catch (err) {
-            console.error("[StateCompletedScreen] Failed to add postcard to library:", err);
-          }
-        };
-        
-        addPostcardToLibrary();
-        
-        // Track performance badges if metrics provided
-        if (quizMetrics) {
-          const { recordStatePerformance, getStatePerformance } = require("@/lib/progress");
-          const cardsReplayed = progress.replayCount?.[state.name]
-            ? Object.values(progress.replayCount[state.name]).reduce((sum: number, count: number) => sum + count, 0)
-            : 0;
-          
-          recordStatePerformance(
-            state.name,
-            quizMetrics.timeToComplete,
-            quizMetrics.quizAttempts,
-            quizMetrics.quizScore,
-            cardsReplayed,
-          );
-          
-          // Get the newly earned badges to show celebration
-          setTimeout(() => {
-            const perf = getStatePerformance(progress, state.name);
-            if (perf?.earnedPerformanceBadges) {
-              setEarnedPerformanceBadges(perf.earnedPerformanceBadges);
-            }
-          }, 100);
-        }
-        
-        // Mark as recently completed for home screen celebration
-        markRecentlyCompleted(state.name);
-      }
       setCelebrationDone(true);
     }
-  }, [state.name, persist, celebrationDone, quizMetrics, progress, celebration]);
+  }, [celebrationDone]);
 
   return (
     <div className="h-full w-full bg-gradient-to-b from-yellow-300 via-yellow-200 to-orange-200 relative overflow-hidden flex flex-col items-center">

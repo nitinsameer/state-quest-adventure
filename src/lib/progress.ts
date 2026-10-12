@@ -720,6 +720,116 @@ export function getStatePerformance(p: Progress, stateName: string) {
 }
 
 /**
+ * ATOMIC COMPLETION: Finish quiz and complete state in one operation
+ * 
+ * This function combines:
+ * 1. recordStatePerformance (calculate and store badges)
+ * 2. completeState (add XP, stamp, postcard)
+ * 3. markRecentlyCompleted (queue celebration for home screen)
+ * 
+ * All in a SINGLE set() call to ensure data consistency.
+ * Called from QuizScreen when the last answer is confirmed, before navigation.
+ * 
+ * @param stateName The state that was completed
+ * @param metrics Quiz metrics { timeToComplete, quizAttempts, quizScore }
+ */
+export function finishQuiz(
+  stateName: string,
+  metrics: {
+    timeToComplete: number;        // in milliseconds
+    quizAttempts: number;
+    quizScore: number;             // 0-100
+    cardsReplayed?: number;
+  },
+) {
+  set((p) => {
+    // Validate state exists and not already completed
+    const stateExists = INDIA_STATES.some(s => s.name === stateName);
+    if (!stateExists || p.completed.includes(stateName)) {
+      return p;
+    }
+
+    // Import here to avoid circular dependency
+    const { calculatePerformanceBadges } = require("./state-performance-badges");
+
+    // 1. Calculate performance badges
+    const earnedBadges = calculatePerformanceBadges(
+      metrics.timeToComplete,
+      metrics.quizAttempts,
+      metrics.quizScore,
+      p.cards?.[stateName]?.length ?? 0,
+      metrics.cardsReplayed ?? 0,
+      p.streak,
+    );
+
+    // 2. Prepare postcard data
+    const stampDateStr = stampDate();
+    const generatedAtStr = new Date().toISOString();
+    const earnedQuizBadges = p.badges?.[stateName] ?? [];
+
+    // 3. Record performance metrics and complete state in one atomic update
+    const statePerformance = p.statePerformance ?? {};
+    const xpReward = 100; // State completion bonus
+
+    firebaseEvents.stateCompleted({
+      stateName,
+      totalXp: p.xp + xpReward,
+      totalCards: CARDS_PER_STATE,
+      timeToCompleteSeconds: Math.round(metrics.timeToComplete / 1000),
+      streakAtCompletion: p.streak,
+    });
+
+    // Check if this is first state completion (milestone)
+    if (p.completed.length === 0) {
+      firebaseEvents.firstStateCompleted();
+    }
+
+    // Sync postcard to library (async, doesn't block)
+    import("@/lib/postcard-integration").then(({ syncNewPostcardToLibrary }) => {
+      const badge = earnedQuizBadges[earnedQuizBadges.length - 1] || "explorer";
+      syncNewPostcardToLibrary(stateName, badge, stampDateStr, generatedAtStr);
+    }).catch((err) => {
+      console.error("[finishQuiz] Failed to sync postcard to library", err);
+    });
+
+    // 4. Return atomic update with all state changes
+    const updated: Progress = {
+      ...p,
+      // From completeState
+      xp: p.xp + xpReward,
+      completed: [...p.completed, stateName],
+      stamps: { ...p.stamps, [stateName]: stampDateStr },
+      postcards: {
+        ...p.postcards,
+        [stateName]: generatePostcardData(stateName, earnedQuizBadges),
+      },
+      badges: { ...p.badges, [stateName]: earnedQuizBadges },
+      lastPlayedState: stateName,
+      // From recordStatePerformance
+      statePerformance: {
+        ...statePerformance,
+        [stateName]: {
+          stateName,
+          completedAt: new Date().toISOString(),
+          timeToComplete: metrics.timeToComplete,
+          quizAttempts: metrics.quizAttempts,
+          quizScore: metrics.quizScore,
+          cardsRead: p.cards?.[stateName]?.length ?? 0,
+          cardsReplayed: metrics.cardsReplayed ?? 0,
+          currentStreak: p.streak,
+          earnedPerformanceBadges: earnedBadges,
+        },
+      },
+    };
+
+    return updated;
+  });
+
+  // 5. Mark as recently completed for home screen celebration (separate call, ok)
+  markRecentlyCompleted(stateName);
+}
+
+/**
  * Get all performance badges earned across all states
  */
 export function getTotalPerformanceBadges(p: Progress): number {
