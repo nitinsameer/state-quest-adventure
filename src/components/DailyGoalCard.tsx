@@ -74,12 +74,12 @@ export function DailyGoalCard() {
   };
 
   return (
-    <div className="mt-[--space-2] mb-[--space-2] flex-shrink-0">
-      <div className={`rounded-2xl bg-gradient-to-br ${goalColor} p-[--padding-md] shadow-lg relative overflow-hidden`}>
+    <div className="mt-(--space-2) mb-(--space-2) flex-shrink-0">
+      <div className={`rounded-2xl bg-gradient-to-br ${goalColor} p-(--padding-md) shadow-lg relative overflow-hidden`}>
         {/* Decorative background element */}
         <div className="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full blur-2xl pointer-events-none" />
 
-        <div className="relative z-10 flex items-center justify-between gap-[--gap-base]">
+        <div className="relative z-10 flex items-center justify-between gap-(--gap-base)">
           {/* Left: Goal info (compact) */}
           <div className="flex-1 min-w-0">
             <div className="text-caption text-white/80">{goalLabel}</div>
@@ -105,13 +105,13 @@ export function DailyGoalCard() {
                 to="/state/$slug/learn"
                 params={{ slug: stateSlug(currentState.name) }}
                 onClick={() => fxTap()}
-                className="h-10 px-[--padding-base] rounded-lg bg-white text-display font-extrabold text-xs shadow-lg flex items-center justify-center transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
+                className="h-10 px-(--padding-base) rounded-lg bg-white text-display font-extrabold text-xs shadow-lg flex items-center justify-center transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
               >
                 Play →
               </Link>
             )}
             {goalMet && (
-              <div className="h-10 px-[--padding-base] rounded-lg bg-white/20 border border-white text-white text-display font-extrabold text-xs flex items-center justify-center">
+              <div className="h-10 px-(--padding-base) rounded-lg bg-white/20 border border-white text-white text-display font-extrabold text-xs flex items-center justify-center">
                 ✓ Done
               </div>
             )}

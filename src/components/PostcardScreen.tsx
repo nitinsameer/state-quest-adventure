@@ -314,7 +314,7 @@ export function StatePostcardScreen({
       <ConfettiBurst trigger={burst} size="big" />
 
       {/* Header */}
-      <div className="pt-5 text-center px-[--padding-lg] relative z-10">
+      <div className="pt-5 text-center px-(--padding-lg) relative z-10">
         <div className="text-white/90 text-xs font-bold tracking-wide">
           Your Stamp
         </div>
@@ -324,7 +324,7 @@ export function StatePostcardScreen({
       </div>
 
       {/* Postcard Preview */}
-      <div className="flex-1 px-5 pt-[--padding-base] pb-1 relative z-10 overflow-y-auto">
+      <div className="flex-1 px-5 pt-(--padding-base) pb-1 relative z-10 overflow-y-auto">
         <div className="w-full rounded-[28px] clay-card clay-white border-4 border-white overflow-hidden animate-in zoom-in-95">
           {/* Preview Image (Loading or Generated) */}
           <div className="relative bg-muted aspect-[3/4] overflow-hidden flex items-center justify-center">
@@ -347,9 +347,9 @@ export function StatePostcardScreen({
       </div>
 
       {/* Action Buttons */}
-      <div className="p-[--padding-md] pt-2 relative z-10 space-y-2">
+      <div className="p-(--padding-md) pt-2 relative z-10 space-y-2">
         {/* Row 1: Save to Passport & Share (side by side) */}
-        <div className="flex gap-[--gap-compact]">
+        <div className="flex gap-(--gap-compact)">
           {/* Primary: Save to Passport */}
           <button
             onClick={handleSaveToPassport}

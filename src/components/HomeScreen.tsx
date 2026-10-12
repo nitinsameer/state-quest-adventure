@@ -110,23 +110,23 @@ export function HomeScreen() {
         </div>
 
         {/* STATS CARDS ROW */}
-        <div className="px-[--padding-md] pt-[--space-4] pb-2 flex gap-[--gap-base]">
+        <div className="px-(--padding-md) pt-(--space-4) pb-2 flex gap-(--gap-base)">
           {/* States Card */}
-          <div className="flex-1 bg-white rounded-2xl shadow-sm p-[--padding-base] text-center">
+          <div className="flex-1 bg-white rounded-2xl shadow-sm p-(--padding-base) text-center">
             <div className="text-2xl mb-1">🗺️</div>
             <div className="text-h5 text-info">{p.completed.length}</div>
             <div className="text-caption font-semibold text-muted-foreground">States</div>
           </div>
 
           {/* Badges Card */}
-          <div className="flex-1 bg-white rounded-2xl shadow-sm p-[--padding-base] text-center">
+          <div className="flex-1 bg-white rounded-2xl shadow-sm p-(--padding-base) text-center">
             <div className="text-2xl mb-1">🏆</div>
             <div className="text-h5 text-info">0</div>
             <div className="text-caption font-semibold text-muted-foreground">Badges</div>
           </div>
 
           {/* Stamps Card */}
-          <div className="flex-1 bg-white rounded-2xl shadow-sm p-[--padding-base] text-center">
+          <div className="flex-1 bg-white rounded-2xl shadow-sm p-(--padding-base) text-center">
             <div className="text-2xl mb-1">🎫</div>
             <div className="text-h5 text-info">0</div>
             <div className="text-caption font-semibold text-muted-foreground">Stamps</div>
@@ -134,14 +134,14 @@ export function HomeScreen() {
         </div>
 
         {/* MAIN CONTENT */}
-        <div className="px-[--padding-md] py-[--space-4] space-y-[--space-5]">
+        <div className="px-(--padding-md) py-(--space-4) space-y-(--space-5)">
 
           {/* CONTINUE YOUR JOURNEY */}
           <div>
             <h2 className="text-h3 text-muted-dark mb-3">Continue your journey</h2>
 
             {/* Current State Card with IMAGE */}
-            <div className="bg-white rounded-2xl shadow-sm p-[--padding-md] flex items-center gap-[--gap-loose]">
+            <div className="bg-white rounded-2xl shadow-sm p-(--padding-md) flex items-center gap-(--gap-loose)">
               {/* Left: STATE IMAGE */}
               <div 
                 className="w-20 h-20 rounded-2xl flex-shrink-0"
@@ -166,7 +166,7 @@ export function HomeScreen() {
               {/* RIGHT: PLAY BUTTON */}
               <button 
                 onClick={handlePlayClick}
-                className="h-14 px-[--padding-md] bg-gradient-to-r from-orange-400 to-orange-500 rounded-full text-white font-bold text-sm shadow-md flex items-center justify-center flex-shrink-0"
+                className="h-14 px-(--padding-md) bg-gradient-to-r from-orange-400 to-orange-500 rounded-full text-white font-bold text-sm shadow-md flex items-center justify-center flex-shrink-0"
               >
                 Play →
               </button>
@@ -183,12 +183,12 @@ export function HomeScreen() {
             </div>
 
             {/* Next States Grid */}
-            <div className="grid grid-cols-2 gap-[--gap-base]">
+            <div className="grid grid-cols-2 gap-(--gap-base)">
               {nextStates.map((state) => (
                 <button
                   key={state.name}
                   onClick={() => handleStateClick(state.name)}
-                  className="bg-white rounded-2xl shadow-sm p-[--padding-md] text-center"
+                  className="bg-white rounded-2xl shadow-sm p-(--padding-md) text-center"
                 >
                   {/* State Image */}
                   <div 
@@ -209,34 +209,34 @@ export function HomeScreen() {
           </div>
 
           {/* Spacing for bottom nav */}
-          <div className="h-[--space-1]" />
+          <div className="h-(--space-1)" />
         </div>
       </div>
 
       {/* BOTTOM NAVIGATION - Fixed */}
       <div className="fixed bottom-0 left-0 right-0 z-50 bg-white shadow-2xl rounded-t-3xl border-t border-muted-light">
-        <div className="flex items-center justify-around py-[--padding-base] px-safe">
-          <Link to="/home" onClick={() => fxTap()} className="flex flex-col items-center gap-1 py-[--padding-base] px-[--padding-md] rounded-2xl bg-orange-soft">
+        <div className="flex items-center justify-around py-(--padding-base) px-safe">
+          <Link to="/home" onClick={() => fxTap()} className="flex flex-col items-center gap-1 py-(--padding-base) px-(--padding-md) rounded-2xl bg-orange-soft">
             <img src={navHomeIcon} alt="home" className="w-6 h-6" />
             <span className="text-label text-orange">Home</span>
           </Link>
 
-          <Link to="/journey" onClick={() => fxTap()} className="flex flex-col items-center gap-1 py-[--padding-base] px-[--padding-md]">
+          <Link to="/journey" onClick={() => fxTap()} className="flex flex-col items-center gap-1 py-(--padding-base) px-(--padding-md)">
             <img src={navJourneyIcon} alt="journey" className="w-6 h-6" />
             <span className="text-label text-muted-dark">Journey</span>
           </Link>
 
-          <Link to="/explorer" onClick={() => fxTap()} className="flex flex-col items-center gap-1 py-[--padding-base] px-[--padding-md]">
+          <Link to="/explorer" onClick={() => fxTap()} className="flex flex-col items-center gap-1 py-(--padding-base) px-(--padding-md)">
             <img src={navExplorerIcon} alt="explorer" className="w-6 h-6" />
             <span className="text-label text-muted-dark">Explorer</span>
           </Link>
 
-          <Link to="/badges" onClick={() => fxTap()} className="flex flex-col items-center gap-1 py-[--padding-base] px-[--padding-md]">
+          <Link to="/badges" onClick={() => fxTap()} className="flex flex-col items-center gap-1 py-(--padding-base) px-(--padding-md)">
             <img src={navBadgesIcon} alt="badges" className="w-6 h-6" />
             <span className="text-label text-muted-dark">Badges</span>
           </Link>
 
-          <Link to="/me" onClick={() => fxTap()} className="flex flex-col items-center gap-1 py-[--padding-base] px-[--padding-md]">
+          <Link to="/me" onClick={() => fxTap()} className="flex flex-col items-center gap-1 py-(--padding-base) px-(--padding-md)">
             <img src={navMeIcon} alt="me" className="w-6 h-6" />
             <span className="text-label text-muted-dark">Me</span>
           </Link>

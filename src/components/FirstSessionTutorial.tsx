@@ -101,7 +101,7 @@ export function FirstSessionTutorial({ onComplete, isVisible = true }: FirstSess
         {
           type: "custom",
           children: (
-            <div className="flex items-center gap-[--gap-base] bg-blue-50 rounded-2xl p-[--padding-md] mb-[--space-0-25]">
+            <div className="flex items-center gap-(--gap-base) bg-blue-50 rounded-2xl p-(--padding-md) mb-(--space-0-25)">
               <img src={mascot} alt="Helper mascot" className="w-12 h-12 object-contain flex-shrink-0" />
               <p className="text-sm font-semibold text-blue-900">{current.description}</p>
             </div>
@@ -114,9 +114,9 @@ export function FirstSessionTutorial({ onComplete, isVisible = true }: FirstSess
         })),
         {
           type: "custom",
-          className: "flex gap-[--gap-base] justify-center pt-[--padding-base]",
+          className: "flex gap-(--gap-base) justify-center pt-(--padding-base)",
           children: (
-            <div className="flex gap-[--gap-base] justify-center w-full">
+            <div className="flex gap-(--gap-base) justify-center w-full">
               {steps.map((_, idx) => (
                 <div
                   key={idx}

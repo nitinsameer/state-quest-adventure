@@ -29,6 +29,15 @@ jobs:
       - name: Run typecheck
         run: npm run typecheck
       
+      - name: Check for inert Tailwind v3 syntax
+        run: |
+          if grep -rE "[a-z]-\[--" src; then
+            echo "❌ Found inert Tailwind v3 syntax (property-[--variable])"
+            echo "Use property-(--variable) syntax for Tailwind v4"
+            exit 1
+          fi
+          echo "✅ No inert Tailwind v3 syntax found"
+      
       - name: Run linter
         run: npm run lint
         continue-on-error: true

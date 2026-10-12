@@ -194,7 +194,7 @@ export function PostcardModal({
       onClick={onClose}
     >
       <div
-        className="w-full bg-white rounded-t-3xl p-[--padding-lg] max-h-[90vh] overflow-y-auto flex flex-col gap-[--gap-md] animate-slide-up"
+        className="w-full bg-white rounded-t-3xl p-(--padding-lg) max-h-[90vh] overflow-y-auto flex flex-col gap-(--gap-md) animate-slide-up"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
@@ -210,33 +210,33 @@ export function PostcardModal({
           <h2 className="text-display font-extrabold text-2xl text-ink">
             Achievement Unlocked!
           </h2>
-          <p className="text-sm text-ink mt-[--space-0-25]">
+          <p className="text-sm text-ink mt-(--space-0-25)">
             You completed {state.name}
           </p>
         </div>
 
         {/* Badge Display */}
-        <div className="flex flex-col items-center gap-[--gap-base]">
+        <div className="flex flex-col items-center gap-(--gap-base)">
           <div className="text-6xl">{badgeEmoji}</div>
           <div className="text-center">
             <div className="text-sm font-extrabold text-ink">
               {postcard.badge.toUpperCase()} BADGE
             </div>
-            <div className="text-display font-extrabold text-lg text-ink mt-[--space-0-25]">
+            <div className="text-display font-extrabold text-lg text-ink mt-(--space-0-25)">
               {state.name} Explorer
             </div>
-            <div className="text-xs text-ink mt-[--space-0-25]">
+            <div className="text-xs text-ink mt-(--space-0-25)">
               {postcard.stampDate}
             </div>
           </div>
         </div>
 
         {/* Fun Fact Section */}
-        <div className="clay-card clay-gold rounded-2xl p-[--padding-md] my-[--space-0-5]">
+        <div className="clay-card clay-gold rounded-2xl p-(--padding-md) my-(--space-0-5)">
           <div className="text-xs font-extrabold text-ink uppercase tracking-wider">
             💡 Did You Know?
           </div>
-          <p className="text-sm text-ink mt-[--space-2] leading-relaxed">
+          <p className="text-sm text-ink mt-(--space-2) leading-relaxed">
             {state.funFact}
           </p>
         </div>
@@ -245,7 +245,7 @@ export function PostcardModal({
         <button
           onClick={handleSaveToPassport}
           disabled={isSaving}
-          className="w-full h-12 rounded-2xl clay-button clay-saffron text-ink font-extrabold flex items-center justify-center gap-[--gap-base] disabled:opacity-60 disabled:cursor-not-allowed transition"
+          className="w-full h-12 rounded-2xl clay-button clay-saffron text-ink font-extrabold flex items-center justify-center gap-(--gap-base) disabled:opacity-60 disabled:cursor-not-allowed transition"
         >
           {isSaving ? (
             <>
