@@ -568,6 +568,22 @@ function RecentlyCompletedCelebration({
   navigate: ReturnType<typeof useNavigate>;
 }) {
   const recentState = getRecentlyCompletedState(p);
+  
+  // Auto-dismiss after 3 seconds (hook must be before returns)
+  useEffect(() => {
+    if (!recentState || !showCelebrationPopup) return;
+    const timer = setTimeout(() => {
+      onDismiss();
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [recentState, showCelebrationPopup, onDismiss]);
+
+  // Play celebration sound on mount (hook must be before returns)
+  useEffect(() => {
+    if (!recentState || !showCelebrationPopup) return;
+    fxCorrect();
+  }, [recentState, showCelebrationPopup]);
+  
   if (!recentState || !showCelebrationPopup) return null;
 
   const state = INDIA_STATES.find(s => s.name === recentState);
@@ -577,19 +593,6 @@ function RecentlyCompletedCelebration({
   const earnedBadges = p.statePerformance[recentState]?.earnedPerformanceBadges ?? [];
   const badgeCount = earnedBadges.length;
   const xpEarned = 100; // State completion bonus (matches completeState default)
-
-  // Auto-dismiss after 3 seconds
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      onDismiss();
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, [recentState, onDismiss]);
-
-  // Play celebration sound on mount
-  useEffect(() => {
-    fxCorrect();
-  }, []);
 
   const handleDismiss = () => {
     onDismiss();

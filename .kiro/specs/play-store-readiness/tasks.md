@@ -86,6 +86,60 @@ Fail on horizontal scroll, on any element overlapping the bottom nav, and on axe
 VERIFY: npm run build and npm run test pass; screenshots are saved.
 Depends on: 10.1 to 10.9
 
+ 11. Fix quiz progress, state completion and celebration flow
+Context: a state is only marked complete when the StateCompletedScreen component mounts after the quiz (src/components/screens.tsx ~3366). Quiz progress (question index, correct count) is React state only, so closing the app mid-quiz loses it. recordStatePerformance is never called because src/routes/state.$slug.complete.tsx does not pass quizMetrics, so performance badges never increase. Do the sub-tasks in order, one commit each.
+ 11.0 STOP THE PROGRESS WIPE (do this first, before anything else)
+Root cause (verified by running the app's own validator): ProgressSchema in src/lib/localStorage-schema.ts requires avatar: z.string().emoji(), but the app saves avatar IDs like explorer-hat, turban-red. On the next launch validateProgress fails and hydrate() in src/lib/progress.ts deletes the saved progress and starts from defaults, so cards, XP, quiz XP and completed states are all lost after the app is closed. Everything looks fine inside one session.
+Fix the schema: avatar: z.string().min(1).max(40).optional().
+A second landmine: statePerformance in the schema expects { state, cardIndex, category, timeTaken, isReplay, timestamp } but recordStatePerformance saves { timeToComplete, quizScore, earnedPerformanceBadges, ... }. Make the schema match StatePerformanceMetrics in src/lib/state-performance-badges.ts, or saving performance badges will wipe the progress on the next launch.
+Never delete data because validation failed. On failure, copy the raw value to india-explorer:progress:v2:backup (keep the last one), then salvage every field that validates (use per-field safeParse) and only default the fields that fail.
+Add a round-trip test: for every avatar ID in src/lib/avatar-config.ts and for a progress object produced by real calls (saveProfile, markCard, markCardVisit, addXP, completeState, recordStatePerformance), validateProgress(JSON.parse(localStorage...)) must succeed. Add the same style of test for the other schemas (consent, recently completed, postcard library).
+VERIFY: choose an image avatar, read cards, answer a quiz question, fully close and reopen the app: everything is still there. Test with -Install, never -Reinstall (that erases app data on purpose).
+ 11.1 Persist in-progress quiz state
+Add quiz-progress storage (key india-explorer:quiz-progress:v1, validated with Zod in src/lib/localStorage-schema.ts), per state: { index, correctCount, answers: [{ id, correct }], startedAt, updatedAt }. Save after every Check and every Next. Never send it to analytics.
+On QuizScreen mount, resume at the saved question. Clear it when the quiz finishes. Expire entries after 7 days.
+VERIFY: unit tests for save, resume, clear and expiry; answer 2 questions, reload the page, and the quiz resumes at question 3.
+ 11.2 One atomic completion function
+Add finishQuiz(stateName, metrics) in src/lib/progress.ts that, in a SINGLE set(), completes the state (XP, stamp, postcard data), records performance badges via recordStatePerformance, and queues a pending celebration. Call it from QuizScreen when the last answer is confirmed, before navigating.
+Make StateCompletedScreen display-only: remove completeState, recordStatePerformance and markRecentlyCompleted from its useEffect.
+Remove the require("@/store/postcard-library-store") and require("@/lib/progress") calls in StateCompletedScreen (ESM build: require is not defined). Use normal imports.
+The postcard code there creates a 900x1200 canvas and never draws on it, so a BLANK PNG is saved to the library on every completion. Remove it, or render the real postcard.
+VERIFY: kill the app between the last answer and the celebration screen; on reopening the state is still completed and the badges are recorded.
+Depends on: 11.1
+ 11.3 Fix quiz score maths
+onReset in QuizScreen (~line 3095) computes (correctCount + 1) / questions.length. correctCount already includes the last correct answer, so the score is always inflated by one question (up to 114%). Compute the score from the stored answers. Track real quizAttempts per state (it is hard-coded to 1).
+VERIFY: unit tests for all-correct, all-wrong and last-answer-wrong.
+Depends on: 11.1
+ 11.4 Replace the Home "State Mastered" popup
+The popup (screens.tsx ~560-690) uses a 5-minute localStorage marker, auto-dismisses after 3 seconds, shows typed-in values (+250 XP, +3 badges), and calls hooks after an early return (the react-hooks errors at lines 580 and 588, which can crash Home).
+Replace it with a persistent pending-celebration queue stored in progress: it stays until the child taps a button (no auto-dismiss, no expiry), shows the real XP and badges awarded, and is shown once.
+Fix the hooks-order errors.
+VERIFY: complete a state, wait more than 5 minutes, open Home: the popup is still there until dismissed, then never shows again.
+Depends on: 11.2
+ 11.5 Guard the completion route and the flow after the 6th card
+/state/$slug/complete must redirect to the learning hub when the state is not completed.
+After the 6th card, do not jump silently into the quiz. Show a big friendly screen: "All 6 cards done! Start quiz / Later". "Later" returns to the hub with a pulsing "Take the Quiz!" button.
+From the completion screen, the Android back button goes to the hub, not back into the finished quiz.
+VERIFY: manual test of both paths (start quiz now, and later).
+Depends on: 11.2
+ 11.6 Stop wiping all data on a version change
+hydrate() in src/lib/progress.ts calls localStorage.clear() when APP_VERSION changes, which would erase progress, consent and the parent PIN. Replace it with migrations that keep data.
+VERIFY: a unit test that changes the version and keeps progress.
+ 11.7 End-to-end test
+Playwright: read 6 cards, see the "Start quiz / Later" screen, start the quiz, answer 2 questions, reload, resume at question 3, finish, see the celebration, check that the state is completed, the State Badges count increased, and the Home popup shows once.
+VERIFY: npm run build and npm run test pass.
+Depends on: 11.1 to 11.6
+ 11.8 Rewards and postcard flow (the agreed behaviour)
+Card seen: counts when the child taps Next past it; saved immediately; progress bars move; no XP per card.
+Category (6 per state): complete when all its cards were seen; +25 XP once, a checkmark and a small celebration; saved immediately; reopening resumes at the first unseen card.
+Quiz unlocks at 6/6 categories (the "Start quiz / Later" screen from 11.5). Each answer: +20 XP the first time a question is answered correctly; a wrong answer shows the right one with no penalty; saved after every answer.
+Quiz finished (all questions answered, any score): ONE atomic save of: state completed, +100 XP bonus, stamp, postcard data, 1 to 3 stars (6 or more right = 3 stars, 4 or more = 2 stars, otherwise 1 star), performance badges. Nobody gets stuck on a low score. The quiz can be replayed from the hub; the best stars are kept; no XP is repeated.
+Postcard: created at completion, rendered for real (state illustration, name, stamp, date, stars), never a blank image. Flow: Celebration, then Postcard reveal (automatic, not a hidden secondary button), then Next State. It is saved in the Passport. If the app closes before it is seen, it appears at the next launch. Sharing stays behind the parent gate.
+The "Save Postcard" and "Next State" buttons on the celebration screen are currently hidden under the bottom nav; hide the nav there.
+Home popup: from 11.4; shows the real XP, stars and badges.
+VERIFY: a unit test per rule above; Playwright flow from the first card to the postcard reveal with a reload in the middle.
+Depends on: 11.0 to 11.5
+
 ## Task Dependency Graph
 
 ```mermaid

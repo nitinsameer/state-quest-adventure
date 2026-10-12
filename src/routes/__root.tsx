@@ -26,6 +26,7 @@ import { pauseTts, resumeTts } from "@/lib/tts";
 import { ensureAudioConsentGranted } from "@/lib/parental-consent";
 import { initializeAudioCleanup } from "@/lib/fx";
 import { Capacitor } from "@capacitor/core";
+import { useCelebrationStore } from "@/store/celebrationStore";
 
 // React Error Boundary for catching runtime errors
 // CRITICAL FIX #1.2: Comprehensive error boundary with Crashlytics logging
@@ -247,6 +248,9 @@ function HydratedApp() {
   // RULES OF HOOKS: useProgress() is ALWAYS called here, never conditionally
   // This ensures hook count/order is consistent across renders
   const progress = useProgress();
+  
+  // Get celebration store setter at top level (hooks must be called before any conditionals)
+  const setCelebration = useCelebrationStore((state) => state.setCelebration);
 
   // Pre-auth routes that should NOT show BottomNav
   const preAuthRoutes = ['/', '/welcome', '/create'];
@@ -363,27 +367,20 @@ function HydratedApp() {
       // Log level-up event to Firebase
       
       // Show celebration with confetti via celebration store
-      try {
-        const { useCelebrationStore } = require("@/store/celebrationStore");
-        const setCelebration = useCelebrationStore((state: any) => state.setCelebration);
-        
-        setCelebration({
-          title: `🎉 Level ${currentLevel} - ${levelName}!`,
-          subtitle: `You're now a "${levelName}"!\nKeep exploring to reach the next milestone! 🚀`,
-          icon: "⭐",
-          confetti: true,
-          duration: 3500,
-          type: "success",
-        });
-        
-        console.log(`[LevelUp] Celebration shown for Level ${currentLevel} (${levelName})`);
-      } catch (e) {
-        console.warn("[LevelUp] Could not show celebration", e);
-      }
+      setCelebration({
+        title: `🎉 Level ${currentLevel} - ${levelName}!`,
+        subtitle: `You're now a "${levelName}"!\nKeep exploring to reach the next milestone! 🚀`,
+        icon: "⭐",
+        confetti: true,
+        duration: 3500,
+        type: "success",
+      });
+      
+      console.log(`[LevelUp] Celebration shown for Level ${currentLevel} (${levelName})`);
       
       prevLevelRef.current = currentLevel;
     }
-  }, [progress.xp, progress.onboarded]);
+  }, [progress.xp, progress.onboarded, setCelebration]);
   
   // Get the journey back handler dynamically so it always calls the current one
   const handleAndroidBack = () => {
