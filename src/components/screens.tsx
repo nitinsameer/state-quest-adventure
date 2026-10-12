@@ -1986,6 +1986,9 @@ export function LearningHubScreen({
 
   // Track which categories have been celebrated to avoid duplicate celebrations
   const [celebratedCategories, setCelebratedCategories] = useState<Set<number>>(new Set());
+  
+  // State for showing the "All 6 cards done" decision modal
+  const [showDecisionModal, setShowDecisionModal] = useState(false);
 
   // Category progress tracking - calculate card counts using cardVisits
   const allCards = useMemo(() => {
@@ -2047,23 +2050,12 @@ export function LearningHubScreen({
       setCelebratedCategories(prev => new Set([...prev, 3]));
     }
     
-    // Celebrate at 6/6 (full completion, before quiz)
+    // At 6/6 (full completion, before quiz): show decision modal instead of auto-celebrating
     if (completedCategories === 6 && !celebratedCategories.has(6)) {
-      // All 6 categories completed - celebrate!
-      const categoryNames = ["Capital", "Language", "Famous Food", "Places", "State Animal", "Fun Fact"];
+      // Show the "All 6 cards done! Start quiz / Later" decision modal
+      setShowDecisionModal(true);
       
-      celebration.custom(
-        `${state.name.toUpperCase()} MASTERED!`,
-        "🎓",
-        {
-          subtitle: `You've explored all 6 categories! Ready for the quiz?`,
-          confetti: true,
-          duration: 3500,
-          type: "success",
-        }
-      );
-      
-      // Mark as celebrated
+      // Mark as celebrated so we don't show this again
       setCelebratedCategories(prev => new Set([...prev, 6]));
     }
   }, [completedCategories, celebratedCategories, celebration, state.name]);
@@ -2175,21 +2167,76 @@ export function LearningHubScreen({
         <button
           onClick={() => {
             fxTap();
-            onQuiz?.();
+            // If modal was dismissed with "Later", this will trigger onQuiz when user is ready
+            if (completedCategories === 6 && !showDecisionModal) {
+              onQuiz?.();
+            } else if (completedCategories === 6 && showDecisionModal) {
+              // If modal is showing, the button should be disabled until user makes a choice
+              return;
+            } else {
+              onQuiz?.();
+            }
           }}
-          disabled={completedCategories < 6}
+          disabled={completedCategories < 6 || showDecisionModal}
           className={`w-full h-14 clay-button text-h4 text-display font-extrabold transition-all active:scale-95 ${
-            completedCategories === 6
+            completedCategories === 6 && !showDecisionModal
               ? "clay-success text-ink hover:shadow-lg hover:scale-105 animate-pulse"
               : "clay-white text-ink opacity-40 cursor-not-allowed"
           }`}
         >
-          {completedCategories === 6 
+          {completedCategories === 6 && !showDecisionModal
             ? "✨ Take the Quiz! 🎯" 
             : `🔒 Quiz Locked (${completedCategories}/6 done)`
           }
         </button>
       </div>
+      
+      {/* "All 6 cards done!" Decision Modal */}
+      {showDecisionModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in">
+          <div className="bg-gradient-to-b from-yellow-300 to-orange-200 rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden animate-in zoom-in-95 flex flex-col">
+            {/* Header */}
+            <div className="p-6 text-center">
+              <div className="text-5xl mb-4">🎉</div>
+              <div className="text-ink text-xs font-black uppercase tracking-[0.3em] mb-2">
+                All Done!
+              </div>
+              <h2 className="text-h2 text-ink font-extrabold">
+                All 6 Cards Explored!
+              </h2>
+              <p className="text-ink font-bold mt-3 text-sm">
+                Ready to test your knowledge?
+              </p>
+            </div>
+
+            {/* Buttons */}
+            <div className="p-6 space-y-3 flex flex-col">
+              {/* Start Quiz button */}
+              <button
+                onClick={() => {
+                  fxTap();
+                  setShowDecisionModal(false);
+                  onQuiz?.();
+                }}
+                className="w-full h-14 clay-button clay-success text-ink text-display font-extrabold active:scale-95 transition-all"
+              >
+                ✨ Start Quiz Now
+              </button>
+
+              {/* Later button - with pulsing indicator */}
+              <button
+                onClick={() => {
+                  fxTap();
+                  setShowDecisionModal(false);
+                }}
+                className="w-full h-14 clay-button clay-white text-ink text-display font-bold active:scale-95 transition-all"
+              >
+                ⏰ Ask Me Later
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
