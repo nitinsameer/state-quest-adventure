@@ -1,12 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { getState } from "@/lib/states";
 import { STATE_ART, TONE_GRADIENT, TONE_HEX } from "@/lib/state-art";
 import { type PostcardData } from "@/lib/progress";
 import { fxTap } from "@/lib/fx";
-import { requestStoragePermission, saveFileToDownloads } from "@/lib/permissions";
-import { hasFeatureConsent, grantFeatureConsent } from "@/lib/parental-consent";
 import { useCelebration } from "@/hooks/useCelebration";
 import { useToast } from "@/hooks/useToast";
+import { usePostcardLibrary } from "@/store/postcard-library-store";
 
 const BADGE_EMOJI: Record<string, string> = {
   monument: "🏛️",
@@ -142,52 +142,46 @@ export function PostcardModal({
   postcard: PostcardData;
   onClose: () => void;
 }) {
+  const navigate = useNavigate();
   const state = getState(postcard.state);
   const celebration = useCelebration();
   const toast = useToast();
   const [isSaving, setIsSaving] = useState(false);
 
-  const handleShare = async () => {
+  const handleSaveToPassport = async () => {
     setIsSaving(true);
     try {
       fxTap();
       const blob = await generatePostcardBlob(postcard);
       if (!blob) {
-        toast.error("Couldn't generate stamp", {
+        toast.error("Couldn't generate postcard", {
           subtitle: "Please try again",
         });
         setIsSaving(false);
         return;
       }
 
-      // Check if permission was already granted
-      if (!hasFeatureConsent("file")) {
-        // Request permission if not yet granted
-        const hasPermission = await requestStoragePermission();
-        if (!hasPermission) {
-          toast.error("Permission denied", {
-            subtitle: "Enable storage in settings",
-          });
-          setIsSaving(false);
-          return;
-        }
-        // Mark consent as granted
-        grantFeatureConsent("file");
-      }
+      // Convert blob to base64 for storage
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64 = (reader.result as string).split(",")[1];
+        const library = usePostcardLibrary.getState();
+        
+        // Add to postcard library with image data
+        library.addPostcard(postcard.state, postcard.badge, postcard.stampDate, new Date().toISOString(), base64);
 
-      // Permission already granted or just granted - save the file
-      await saveFileToDownloads(blob, `${postcard.state}-explorer-stamp.png`);
-      celebration.success("✨ Stamp saved!", {
-        subtitle: "Check your photos",
-        confetti: true,
-        duration: 3500,
-      });
+        toast.success("✨ Saved to your Passport!", {
+          subtitle: "View anytime from Explorer",
+        });
+        setIsSaving(false);
+        onClose();
+      };
+      reader.readAsDataURL(blob);
     } catch (error) {
-      toast.error("Couldn't save stamp", {
+      toast.error("Couldn't save postcard", {
         subtitle: "Please try again later",
       });
-      console.error("Share failed:", error);
-    } finally {
+      console.error("Save failed:", error);
       setIsSaving(false);
     }
   };
@@ -200,13 +194,13 @@ export function PostcardModal({
       onClick={onClose}
     >
       <div
-        className="w-full bg-white rounded-t-3xl p-6 max-h-[90vh] overflow-y-auto flex flex-col gap-4 animate-slide-up"
+        className="w-full bg-white rounded-t-3xl p-(--padding-lg) max-h-[90vh] overflow-y-auto flex flex-col gap-(--gap-md) animate-slide-up"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200"
+          className="absolute top-4 right-4 h-8 w-8 rounded-full clay-button clay-white text-ink flex items-center justify-center"
         >
           ✕
         </button>
@@ -216,42 +210,42 @@ export function PostcardModal({
           <h2 className="text-display font-extrabold text-2xl text-ink">
             Achievement Unlocked!
           </h2>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="text-sm text-ink mt-(--space-0-25)">
             You completed {state.name}
           </p>
         </div>
 
         {/* Badge Display */}
-        <div className="flex flex-col items-center gap-3">
+        <div className="flex flex-col items-center gap-(--gap-base)">
           <div className="text-6xl">{badgeEmoji}</div>
           <div className="text-center">
-            <div className="text-sm font-extrabold text-muted-foreground">
+            <div className="text-sm font-extrabold text-ink">
               {postcard.badge.toUpperCase()} BADGE
             </div>
-            <div className="text-display font-extrabold text-lg text-ink mt-1">
+            <div className="text-display font-extrabold text-lg text-ink mt-(--space-0-25)">
               {state.name} Explorer
             </div>
-            <div className="text-xs text-muted-foreground mt-1">
+            <div className="text-xs text-ink mt-(--space-0-25)">
               {postcard.stampDate}
             </div>
           </div>
         </div>
 
         {/* Fun Fact Section */}
-        <div className="bg-saffron-soft rounded-2xl p-4 my-2">
-          <div className="text-xs font-extrabold text-muted-foreground uppercase tracking-wider">
+        <div className="clay-card clay-gold rounded-2xl p-(--padding-md) my-(--space-0-5)">
+          <div className="text-xs font-extrabold text-ink uppercase tracking-wider">
             💡 Did You Know?
           </div>
-          <p className="text-sm text-ink mt-2 leading-relaxed">
+          <p className="text-sm text-ink mt-(--space-2) leading-relaxed">
             {state.funFact}
           </p>
         </div>
 
-        {/* Share Button */}
+        {/* Save Button */}
         <button
-          onClick={handleShare}
+          onClick={handleSaveToPassport}
           disabled={isSaving}
-          className="w-full h-12 rounded-2xl gradient-saffron text-white font-extrabold flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed transition"
+          className="w-full h-12 rounded-2xl clay-button clay-saffron text-ink font-extrabold flex items-center justify-center gap-(--gap-base) disabled:opacity-60 disabled:cursor-not-allowed transition"
         >
           {isSaving ? (
             <>
@@ -260,20 +254,44 @@ export function PostcardModal({
             </>
           ) : (
             <>
-              📸 Save to Photos
+              💾 Save to Passport
             </>
           )}
         </button>
 
         {/* Info Text */}
-        <p className="text-xs text-center text-muted-foreground">
-          Share your achievement or keep it in your explorer stamps! 🎉
+        <p className="text-xs text-center text-ink">
+          Keep it in your Passport! 🎉
         </p>
+
+        {/* Home Button */}
+        <button
+          onClick={() => {
+            fxTap();
+            onClose();
+            navigate({ to: "/home" });
+          }}
+          className="w-full h-12 rounded-2xl clay-button clay-explorer text-ink font-extrabold transition-all duration-200 active:scale-95"
+        >
+          🏠 Home
+        </button>
+
+        {/* Next State Button */}
+        <button
+          onClick={() => {
+            fxTap();
+            onClose();
+            navigate({ to: "/journey" });
+          }}
+          className="w-full h-12 rounded-2xl clay-button clay-saffron text-ink font-extrabold transition-all duration-200 active:scale-95"
+        >
+          🎯 Next State
+        </button>
 
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="w-full h-12 rounded-2xl bg-white border-2 border-ink text-ink font-extrabold"
+          className="w-full h-12 rounded-2xl clay-button clay-white text-ink font-extrabold"
         >
           Close
         </button>
@@ -281,3 +299,4 @@ export function PostcardModal({
     </div>
   );
 }
+

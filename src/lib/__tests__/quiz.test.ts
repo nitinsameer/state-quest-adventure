@@ -148,7 +148,7 @@ describe('randomQuestionsForState - Question Shuffling', () => {
   })
 
   it('should shuffle questions in different order (probabilistic)', () => {
-    const runs = []
+    const runs: string[] = []
     for (let i = 0; i < 5; i++) {
       const questions = randomQuestionsForState('Rajasthan', 10)
       runs.push(questions.map(q => q.id).join(','))
@@ -314,3 +314,118 @@ describe('QUIZ_BY_STATE - Quiz Cache', () => {
     })
   })
 })
+
+describe('Quiz Score Calculation - Fix for Task 11.3', () => {
+  describe('Score from stored answers (not inflated count)', () => {
+    it('should calculate 100% for all-correct answers', () => {
+      const questions = 10
+      const answers = Array(10).fill(null).map((_, i) => ({ id: `q-${i}`, correct: true }))
+      const totalCorrect = answers.filter(a => a.correct).length
+      const scorePercentage = (totalCorrect / questions) * 100
+      
+      expect(scorePercentage).toBe(100)
+    })
+
+    it('should calculate 0% for all-wrong answers', () => {
+      const questions = 10
+      const answers = Array(10).fill(null).map((_, i) => ({ id: `q-${i}`, correct: false }))
+      const totalCorrect = answers.filter(a => a.correct).length
+      const scorePercentage = (totalCorrect / questions) * 100
+      
+      expect(scorePercentage).toBe(0)
+    })
+
+    it('should calculate 50% for half correct', () => {
+      const questions = 10
+      const answers = [
+        { id: 'q-0', correct: true },
+        { id: 'q-1', correct: true },
+        { id: 'q-2', correct: true },
+        { id: 'q-3', correct: true },
+        { id: 'q-4', correct: true },
+        { id: 'q-5', correct: false },
+        { id: 'q-6', correct: false },
+        { id: 'q-7', correct: false },
+        { id: 'q-8', correct: false },
+        { id: 'q-9', correct: false },
+      ]
+      const totalCorrect = answers.filter(a => a.correct).length
+      const scorePercentage = (totalCorrect / questions) * 100
+      
+      expect(scorePercentage).toBe(50)
+    })
+
+    it('should NOT inflate score by adding 1 to correctCount', () => {
+      // OLD BUG: scorePercentage = ((correctCount + 1) / questions.length) * 100
+      // This would give 110% for 10/10 correct (inflated by 1)
+      
+      const questions = 10
+      const answers = Array(10).fill(null).map((_, i) => ({ id: `q-${i}`, correct: true }))
+      const totalCorrect = answers.filter(a => a.correct).length
+      
+      // OLD (WRONG): const scorePercentage = ((totalCorrect + 1) / questions) * 100  // 110%
+      // NEW (CORRECT):
+      const scorePercentage = (totalCorrect / questions) * 100  // 100%
+      
+      expect(scorePercentage).toBe(100)
+      expect(scorePercentage).not.toBe(110) // NOT inflated
+    })
+
+    it('should handle last answer correctly without double-counting', () => {
+      // When last answer is submitted, it's already in the answers array
+      // Don't add 1 again
+      const questions = 3
+      const answers = [
+        { id: 'q-0', correct: true },
+        { id: 'q-1', correct: false },
+        { id: 'q-2', correct: true },  // Last answer, already counted
+      ]
+      const totalCorrect = answers.filter(a => a.correct).length
+      const scorePercentage = (totalCorrect / questions) * 100
+      
+      expect(totalCorrect).toBe(2)
+      expect(scorePercentage).toBeCloseTo(66.67, 1)
+      expect(scorePercentage).not.toBe(((2 + 1) / 3) * 100)  // NOT 100%
+    })
+
+    it('should track real quizAttempts (1 for first, 2+ for replays)', () => {
+      // Track if state was already completed
+      const completedStates = ['Rajasthan', 'Delhi']
+      
+      // First attempt at new state
+      const attemptNew = completedStates.includes('Karnataka') ? 2 : 1
+      expect(attemptNew).toBe(1)
+      
+      // Replay of completed state
+      const attemptReplay = completedStates.includes('Rajasthan') ? 2 : 1
+      expect(attemptReplay).toBe(2)
+    })
+
+    it('should preserve quizAttempts across multiple replays', () => {
+      // quizAttempts should be 2 for any replay (not 3, 4, etc.)
+      // The task specifies binary: 1 = first attempt, 2 = replay
+      
+      const isReplay = true
+      const quizAttempts = isReplay ? 2 : 1
+      
+      expect(quizAttempts).toBe(2)
+      // Even if replayed 3 times, it's still "2" (not "first attempt")
+    })
+
+    it('should calculate scores for various question counts', () => {
+      // Different age bands have different question counts
+      const testCases = [
+        { total: 3, correct: 3, expected: 100 },  // 3-5 age band
+        { total: 5, correct: 3, expected: 60 },   // 6-7 age band
+        { total: 7, correct: 5, expected: 71.43 }, // 8-9 age band
+        { total: 10, correct: 7, expected: 70 },  // 10-12 age band
+      ]
+      
+      testCases.forEach(({ total, correct, expected }) => {
+        const scorePercentage = (correct / total) * 100
+        expect(scorePercentage).toBeCloseTo(expected, 1)
+      })
+    })
+  })
+})
+

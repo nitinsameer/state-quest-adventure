@@ -18,14 +18,14 @@ export function CardProgressBar({
   const percentage = (visitedCount / totalCards) * 100;
 
   return (
-    <div className="mt-3 space-y-1">
+    <div className="mt-(--space-0-5) space-y-(--space-0-25)">
       <div className="h-1.5 rounded-full bg-black/10 overflow-hidden">
         <div
           className="h-full bg-gradient-to-r from-orange-400 to-orange-500 rounded-full transition-all duration-300"
           style={{ width: `${percentage}%` }}
         />
       </div>
-      <div className="text-xs font-bold text-muted-foreground text-center">
+      <div className="text-label text-muted-foreground text-center">
         {visitedCount}/{totalCards} cards
       </div>
     </div>

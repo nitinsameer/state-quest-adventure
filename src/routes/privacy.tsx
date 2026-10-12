@@ -22,11 +22,11 @@ function PrivacyPolicyScreen() {
           <button
             onClick={() => window.history.back()}
             aria-label="Go back"
-            className="h-10 w-10 rounded-full bg-white/25 flex items-center justify-center text-xl"
+            className="h-10 w-10 rounded-full bg-white/25 flex items-center justify-center text-2xl"
           >
             ‹
           </button>
-          <h1 className="text-display text-lg font-extrabold">Privacy Policy</h1>
+          <h1 className="text-h4">Privacy Policy</h1>
           <div className="w-10" />
         </div>
       </div>
@@ -34,31 +34,31 @@ function PrivacyPolicyScreen() {
       {/* Content */}
       <div className="px-5 flex-1 overflow-auto py-6 space-y-6">
         {/* Last Updated */}
-        <div className="text-xs text-muted-foreground">
+        <div className="text-label text-muted-foreground">
           Last updated: September 2026
         </div>
 
         {/* Overview */}
         <section>
-          <h2 className="text-display font-bold text-lg mb-3">Overview</h2>
-          <p className="text-sm text-muted-foreground leading-relaxed">
+          <h2 className="text-h4 mb-3">Overview</h2>
+          <p className="text-body text-muted-foreground leading-relaxed">
             India Explorer ("we," "us," "our," or "the App") is committed to protecting your privacy and your child's privacy. This Privacy Policy explains how we collect, use, and protect information.
           </p>
         </section>
 
         {/* Data Storage */}
         <section>
-          <h2 className="text-display font-bold text-lg mb-3">📱 How We Store Your Data</h2>
+          <h2 className="text-h4 mb-3">📱 How We Store Your Data</h2>
           <div className="bg-white rounded-2xl p-4 border border-black/5 space-y-3">
             <div>
-              <div className="font-bold text-sm text-ink">Device Storage Only</div>
-              <p className="text-xs text-muted-foreground mt-1">
+              <div className="text-body font-bold text-ink">Device Storage Only</div>
+              <p className="text-caption text-muted-foreground mt-1">
                 All progress (levels, badges, stamps, quiz answers) is stored locally on your device only. We do NOT upload this data to our servers.
               </p>
             </div>
             <div className="border-t pt-3">
-              <div className="font-bold text-sm text-ink">No Account Required</div>
-              <p className="text-xs text-muted-foreground mt-1">
+              <div className="text-body font-bold text-ink">No Account Required</div>
+              <p className="text-caption text-muted-foreground mt-1">
                 We don't require usernames, passwords, or email addresses. Your child can play immediately after entering their name and age.
               </p>
             </div>
@@ -67,14 +67,14 @@ function PrivacyPolicyScreen() {
 
         {/* Analytics */}
         <section>
-          <h2 className="text-display font-bold text-lg mb-3">📊 Analytics & Telemetry</h2>
+          <h2 className="text-h4 mb-3">📊 Analytics & Telemetry</h2>
           <div className="bg-blue-50 rounded-2xl p-4 border border-blue-200 space-y-3">
             <div>
-              <div className="font-bold text-sm text-blue-900">Firebase Analytics</div>
-              <p className="text-xs text-blue-800 mt-1">
+              <div className="text-body font-bold text-blue-900">Firebase Analytics</div>
+              <p className="text-caption text-blue-800 mt-1">
                 We use Firebase Analytics (by Google) to understand how the app is used. We collect:
               </p>
-              <ul className="text-xs text-blue-800 mt-2 ml-3 space-y-1">
+              <ul className="text-caption text-blue-800 mt-2 ml-3 space-y-1">
                 <li>• Child's age band (e.g., "8-9")</li>
                 <li>• States explored and quiz performance</li>
                 <li>• Session duration and visit frequency</li>
@@ -82,8 +82,8 @@ function PrivacyPolicyScreen() {
               </ul>
             </div>
             <div className="border-t border-blue-200 pt-3">
-              <div className="font-bold text-sm text-blue-900">Parental Consent</div>
-              <p className="text-xs text-blue-800 mt-1">
+              <div className="text-body font-bold text-blue-900">Parental Consent</div>
+              <p className="text-caption text-blue-800 mt-1">
                 This analytics collection only begins AFTER your child completes onboarding and you see our permission dialogs. You control whether analytics are sent.
               </p>
             </div>
@@ -92,23 +92,23 @@ function PrivacyPolicyScreen() {
 
         {/* Permissions */}
         <section>
-          <h2 className="text-display font-bold text-lg mb-3">🔐 Permissions</h2>
+          <h2 className="text-h4 mb-3">🔐 Permissions</h2>
           <div className="bg-white rounded-2xl p-4 border border-black/5 space-y-3">
             <div>
-              <div className="font-bold text-sm text-ink">Audio Permission</div>
-              <p className="text-xs text-muted-foreground mt-1">
+              <div className="text-body font-bold text-ink">Audio Permission</div>
+              <p className="text-caption text-muted-foreground mt-1">
                 We ask permission to play background music and sound effects. If declined, the app works silently.
               </p>
             </div>
             <div className="border-t pt-3">
-              <div className="font-bold text-sm text-ink">File Storage Permission</div>
-              <p className="text-xs text-muted-foreground mt-1">
+              <div className="text-body font-bold text-ink">File Storage Permission</div>
+              <p className="text-caption text-muted-foreground mt-1">
                 We ask permission to save postcards that your child creates. This allows sharing achievements with family.
               </p>
             </div>
             <div className="border-t pt-3">
-              <div className="font-bold text-sm text-ink">What We DON'T Access</div>
-              <p className="text-xs text-muted-foreground mt-1">
+              <div className="text-body font-bold text-ink">What We DON'T Access</div>
+              <p className="text-caption text-muted-foreground mt-1">
                 We never request or access: camera, microphone, location, contacts, or photos.
               </p>
             </div>
@@ -117,9 +117,9 @@ function PrivacyPolicyScreen() {
 
         {/* Ads & Tracking */}
         <section>
-          <h2 className="text-display font-bold text-lg mb-3">❌ No Ads or Third-Party Tracking</h2>
+          <h2 className="text-h4 mb-3">❌ No Ads or Third-Party Tracking</h2>
           <div className="bg-green-50 rounded-2xl p-4 border border-green-200">
-            <ul className="text-xs text-green-900 space-y-2">
+            <ul className="text-caption text-green-900 space-y-2">
               <li>✓ No advertisements or ad networks</li>
               <li>✓ No third-party trackers (Mixpanel, AppsFlyer, etc.)</li>
               <li>✓ No behavioral profiling or targeting</li>
@@ -130,24 +130,24 @@ function PrivacyPolicyScreen() {
 
         {/* COPPA Compliance */}
         <section>
-          <h2 className="text-display font-bold text-lg mb-3">👪 COPPA & Kids Safety</h2>
-          <p className="text-sm text-muted-foreground leading-relaxed">
+          <h2 className="text-h4 mb-3">👪 COPPA & Kids Safety</h2>
+          <p className="text-body text-muted-foreground leading-relaxed">
             India Explorer complies with the Children's Online Privacy Protection Act (COPPA). We ask for parental consent before collecting age-targeted information. We do not allow social sharing, in-app messaging, or user-generated content that could expose children to inappropriate material.
           </p>
         </section>
 
         {/* Data Deletion */}
         <section>
-          <h2 className="text-display font-bold text-lg mb-3">🗑️ Data Deletion</h2>
-          <p className="text-sm text-muted-foreground leading-relaxed">
+          <h2 className="text-h4 mb-3">🗑️ Data Deletion</h2>
+          <p className="text-body text-muted-foreground leading-relaxed">
             You can delete all progress at any time by going to Settings → Parent Zone → Reset all progress. This permanently erases all locally stored data.
           </p>
         </section>
 
         {/* Contact */}
         <section>
-          <h2 className="text-display font-bold text-lg mb-3">📧 Questions?</h2>
-          <p className="text-sm text-muted-foreground leading-relaxed">
+          <h2 className="text-h4 mb-3">📧 Questions?</h2>
+          <p className="text-body text-muted-foreground leading-relaxed">
             If you have questions about this privacy policy, contact us through the feedback option in the app.
           </p>
         </section>

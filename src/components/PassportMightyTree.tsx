@@ -41,7 +41,7 @@ export function PassportMightyTree() {
   };
 
   return (
-    <div className="w-full h-full bg-gradient-to-b from-blue-50 to-white flex flex-col overflow-hidden">
+    <div className="w-full h-full bg-gradient-to-b from-info-soft to-white flex flex-col overflow-hidden">
       <ConfettiBurst trigger={burst} size="big" />
 
       {/* Postcard Modal - shown on same screen */}
@@ -81,16 +81,16 @@ export function PassportMightyTree() {
 
         {/* Milestones/Goals */}
         <div className="space-y-2">
-          <div className="px-1 text-sm font-bold text-gray-700">🎯 Milestones</div>
+          <div className="px-1 text-sm font-bold text-muted-foreground">🎯 Milestones</div>
           {milestones.map((milestone) => (
-            <div key={milestone.id} className="p-3 rounded-2xl bg-white border-2 border-gray-200 shadow-sm">
+            <div key={milestone.id} className="p-3 rounded-2xl bg-white border-2 border-muted shadow-sm">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-extrabold text-gray-800">{milestone.label}</span>
-                <span className="text-xs font-bold text-gray-600">
+                <span className="text-sm font-extrabold text-muted-dark">{milestone.label}</span>
+                <span className="text-xs font-bold text-muted-foreground">
                   {milestone.current}/{milestone.target}
                 </span>
               </div>
-              <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+              <div className="w-full h-3 bg-[oklch(0.9_0.02_260)] rounded-full overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-green-400 to-emerald-500 transition-all duration-300"
                   style={{ width: `${milestone.percentage}%` }}
@@ -102,14 +102,14 @@ export function PassportMightyTree() {
 
         {/* Activity */}
         <div className="space-y-2">
-          <div className="px-1 text-sm font-bold text-gray-700">📊 Activity</div>
-          <div className="p-3 rounded-2xl bg-white border-2 border-gray-200 shadow-sm space-y-2">
+          <div className="px-1 text-sm font-bold text-muted-foreground">📊 Activity</div>
+          <div className="p-3 rounded-2xl bg-white border-2 border-muted shadow-sm space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-gray-700">This week:</span>
+              <span className="text-muted-foreground">This week:</span>
               <span className="font-extrabold">3 states</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-gray-700">Last played:</span>
+              <span className="text-muted-foreground">Last played:</span>
               <span className="font-extrabold">Yesterday</span>
             </div>
           </div>
@@ -117,7 +117,7 @@ export function PassportMightyTree() {
 
         {/* Recently Played */}
         <div className="space-y-2">
-          <div className="px-1 text-sm font-bold text-gray-700">⏱️ Recently Played</div>
+          <div className="px-1 text-sm font-bold text-muted-foreground">⏱️ Recently Played</div>
           <div className="space-y-1">
             {progress.completed.slice(0, 3).map((stateName) => {
               const state = INDIA_STATES.find((s) => s.name === stateName);
@@ -126,7 +126,7 @@ export function PassportMightyTree() {
                 <button
                   key={stateName}
                   onClick={() => handleStateClick(stateName.toLowerCase().replace(/\s+/g, "-"), true)}
-                  className="w-full p-2 rounded-xl bg-gradient-to-r from-blue-100 to-purple-100 text-gray-800 text-sm font-semibold hover:shadow-md active:scale-95 transition text-left flex items-center gap-2"
+                  className="w-full p-2 rounded-xl bg-gradient-to-r from-blue-100 to-purple-100 text-muted-dark text-sm font-semibold hover:shadow-md active:scale-95 transition text-left flex items-center gap-2"
                 >
                   <img
                     src={STATE_ART[stateName]}
@@ -145,7 +145,7 @@ export function PassportMightyTree() {
 
         {/* States Grid */}
         <div className="space-y-2 pb-2">
-          <div className="px-1 text-sm font-bold text-gray-700">📍 All 36 States</div>
+          <div className="px-1 text-sm font-bold text-muted-foreground">📍 All 36 States</div>
           <div className="grid grid-cols-4 gap-2">
             {INDIA_STATES.map((state) => {
               const isUnlocked = progress.completed.includes(state.name);
@@ -156,8 +156,8 @@ export function PassportMightyTree() {
                   onClick={() => handleStateClick(slug, isUnlocked)}
                   className={`aspect-square rounded-lg flex flex-col items-center justify-center gap-0.5 transition transform text-xs font-bold ${
                     isUnlocked
-                      ? "bg-gradient-to-br from-yellow-300 to-amber-400 text-amber-900 shadow-md hover:shadow-lg active:scale-95"
-                      : "bg-gray-300 text-[color:var(--color-state-disabled-text)] opacity-40 hover:opacity-60 active:scale-95"
+                      ? "bg-gradient-to-br from-yellow-300 to-amber-400 text-warning shadow-md hover:shadow-lg active:scale-95"
+                      : "bg-muted text-muted-foreground opacity-30 hover:opacity-50 active:scale-95"
                   }`}
                 >
                   <img
@@ -167,7 +167,7 @@ export function PassportMightyTree() {
                     loading="lazy"
                     decoding="async"
                   />
-                  <div className="text-[8px] leading-tight text-center">{state.short}</div>
+                  <div className="text-[8px] leading-tight text-center">{state.name}</div>
                 </button>
               );
             })}
@@ -187,3 +187,4 @@ export function PassportMightyTree() {
     </div>
   );
 }
+

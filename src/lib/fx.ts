@@ -4,6 +4,7 @@ import { Haptics, ImpactStyle } from "@capacitor/haptics";
 import { initAudioMixer, getEffectsGain, getAmbientGain } from "./audio-mixer";
 import { debugLog, debugError } from "./debug";
 import { hasFeatureConsent } from "./parental-consent";
+import { validateSoundToggle } from "./localStorage-schema";
 
 // Sound + haptics FX using Web Audio API, navigator.vibrate, and Capacitor Haptics.
 // On native (Android/iOS), uses Capacitor.Haptics for richer haptic feedback.
@@ -50,24 +51,26 @@ function hydrateSound() {
   soundHydrated = true;
   try {
     // Sound toggle (separate from audio narration which is controlled by parental consent)
+    // CRITICAL FIX #1.5: Validate sound toggle with Zod schema
     const raw = localStorage.getItem(SOUND_KEY);
-    if (raw !== null) {
-      soundOn = raw === "1";
-    } else {
-      soundOn = true; // Default: sound effects ENABLED (Proposal: default-enabled audio)
-      // Initialize localStorage with default value
-      localStorage.setItem(SOUND_KEY, "1");
+    const validated = validateSoundToggle(raw);
+    soundOn = validated === "1";
+    
+    // If raw was null or invalid, ensure we persist the valid default
+    if (raw !== validated) {
+      localStorage.setItem(SOUND_KEY, validated);
     }
     
     debugLog("fx", "Sound toggle hydrated from storage", {
       key: SOUND_KEY,
       storedValue: raw,
+      validated: validated,
       hydrated: soundOn,
-      default: true,
     });
   } catch (err) {
     /* storage unavailable */
-    debugError("fx", "Failed to hydrate Sound toggle from localStorage", err);
+    soundOn = true; // Default to ON
+    debugError("fx", "Failed to hydrate Sound toggle from localStorage, using default", err);
   }
   for (const l of soundListeners) l();
 }
@@ -121,66 +124,81 @@ let ctx: AudioContext | null = null;
 const activeSoundNodes = new Set<{ osc?: OscillatorNode; gain: GainNode }>();
 
 /**
- * FIX #4: Cleanup AudioContext to prevent memory leaks
- * Called when app pauses/resumes or is destroyed
- * Safe to call multiple times
+ * Clean up the global AudioContext and all associated nodes
+ * Called on app unload/destroy to prevent memory leaks
+ * This must be called before the app is destroyed
  */
-export function cleanupAudioContext(): void {
-  console.log("[AUDIO CLEANUP] Cleaning up audio context");
-  
-  // Stop ambient music first
-  stopAmbientMusic();
-  
-  // Stop all active sound effects
+export function cleanupAudioContext() {
+  // Stop all active sounds
   stopAllActiveSounds();
   
-  // Close AudioContext if it exists
+  // Stop ambient music
+  stopAmbientMusic();
+  
+  // Close the AudioContext
   if (ctx) {
     try {
-      // Disconnect all nodes before closing
-      if (ctx.state !== "closed") {
-        // Give pending sounds time to fade
-        setTimeout(() => {
-          if (ctx && ctx.state !== "closed") {
-            ctx.close().catch((err) => {
-              console.error("[AUDIO CLEANUP] Error closing AudioContext:", err);
-            });
-          }
-          ctx = null;
-        }, 100);
+      // Ensure we're not suspended before closing
+      if (ctx.state === "suspended") {
+        void ctx.resume().catch(() => {
+          // Ignore if can't resume
+        });
       }
-    } catch (err) {
-      console.error("[AUDIO CLEANUP] Error during AudioContext cleanup:", err);
+      
+      // Close the context to free all resources
+      void ctx.close();
+      console.log("[AUDIO DEBUG] ✓ AudioContext closed successfully");
+      debugLog("fx", "AudioContext closed and resources freed");
+    } catch (error) {
+      console.log("[AUDIO DEBUG] ✗ Error closing AudioContext:", error);
+      debugError("fx", "Error closing AudioContext", error);
+    } finally {
       ctx = null;
     }
   }
-  
-  // Clear ambient audio elements
-  if (ambientAudioElement) {
-    ambientAudioElement.pause();
-    ambientAudioElement.src = "";
-    ambientAudioElement = null;
-  }
-  
-  if (ambientOscillator) {
-    try {
-      ambientOscillator.stop();
-    } catch {
-      // Already stopped
-    }
-    ambientOscillator = null;
-  }
-  
-  if (localAmbientGain) {
-    localAmbientGain = null;
-  }
-  
-  console.log("[AUDIO CLEANUP] Audio cleanup complete");
 }
 
 /**
+ * Initialize audio cleanup handlers for the application
+ * Should be called once during app initialization (in Root component)
+ * Sets up beforeunload listener to properly close AudioContext
+ */
+export function initializeAudioCleanup() {
+  if (typeof window === "undefined") return;
+  
+  // Add cleanup on page unload
+  const handleUnload = () => {
+    cleanupAudioContext();
+  };
+  
+  window.addEventListener("beforeunload", handleUnload);
+  
+  // Also cleanup when visibility changes (user leaves tab)
+  const handleVisibilityChange = () => {
+    if (document.hidden) {
+      console.log("[AUDIO DEBUG] Page hidden - stopping audio");
+      stopAllActiveSounds();
+      stopAmbientMusic();
+    }
+  };
+  
+  document.addEventListener("visibilitychange", handleVisibilityChange);
+  
+  // Cleanup on app destroy (for SPA navigation or manual destroy)
+  // Expose a manual cleanup function if needed
+  (window as any).__cleanupAudio = cleanupAudioContext;
+  
+  console.log("[AUDIO DEBUG] Audio cleanup handlers initialized");
+  debugLog("fx", "Audio cleanup handlers initialized on window unload");
+  
+  return () => {
+    window.removeEventListener("beforeunload", handleUnload);
+    document.removeEventListener("visibilitychange", handleVisibilityChange);
+  };
+}
+/**
  * Stop all currently playing sound effects immediately
- * Called when user disables audio toggle
+ * Called when user disables audio toggle or on cleanup
  */
 function stopAllActiveSounds() {
   const a = ac();
@@ -191,11 +209,7 @@ function stopAllActiveSounds() {
       if (node.osc) {
         // Cancel scheduled frequency/gain changes and stop immediately
         node.osc.frequency.cancelScheduledValues(a.currentTime);
-        try {
-          node.osc.stop(a.currentTime);
-        } catch {
-          // Already stopped
-        }
+        node.osc.stop(a.currentTime);
       }
       // Fade out gain immediately to silence
       node.gain.gain.cancelScheduledValues(a.currentTime);
@@ -577,8 +591,7 @@ function startAmbientTone() {
   const lfoGain = a.createGain();
   lfoGain.gain.setValueAtTime(0.008, a.currentTime);
 
-  lfo.connect(lfoGain);
-  lfoGain.connect(localAmbientGain.gain);
+  lfo.connect(localAmbientGain.gain);
 
   // Connect signal chain
   ambientOscillator.connect(filter);
@@ -604,64 +617,54 @@ function stopAmbientMusic() {
 
   // Stop audio element if playing
   if (ambientAudioElement) {
-    const startTime = Date.now();
-    const fadeOutDuration = 500;
-    const fadeInterval = setInterval(() => {
-      if (!ambientAudioElement) {
-        clearInterval(fadeInterval);
-        return;
-      }
-      const elapsed = Date.now() - startTime;
-      const progress = Math.min(elapsed / fadeOutDuration, 1);
-      ambientAudioElement.volume = 0.15 * (1 - progress);
-      if (progress >= 1) {
-        clearInterval(fadeInterval);
-        try {
+    try {
+      const startTime = Date.now();
+      const fadeOutDuration = 500;
+      const fadeInterval = setInterval(() => {
+        if (!ambientAudioElement) {
+          clearInterval(fadeInterval);
+          return;
+        }
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / fadeOutDuration, 1);
+        ambientAudioElement.volume = 0.15 * (1 - progress);
+        if (progress >= 1) {
+          clearInterval(fadeInterval);
           ambientAudioElement.pause();
           ambientAudioElement.currentTime = 0;
-        } catch {
-          // Already paused
+          // Cleanup audio element reference
+          ambientAudioElement = null;
         }
-      }
-    }, 50);
+      }, 50);
+    } catch (error) {
+      console.log("[Ambient] Error stopping audio element:", error);
+      ambientAudioElement = null;
+    }
   }
 
-  // Stop oscillator and LFO if playing
+  // Stop oscillator if playing
   if (ambientOscillator && localAmbientGain) {
-    const a = ac();
-    if (a) {
-      try {
+    try {
+      const a = ac();
+      if (a) {
         localAmbientGain.gain.exponentialRampToValueAtTime(
           0.0001,
           a.currentTime + 0.5
         );
-        
-        // FIX #4: Properly disconnect and stop all ambient nodes
         setTimeout(() => {
           try {
-            if (ambientOscillator) {
-              ambientOscillator.stop();
-              ambientOscillator.disconnect();
-            }
+            ambientOscillator?.stop();
           } catch {
-            // Already stopped
+            // Ignore if already stopped
           }
           ambientOscillator = null;
-          
-          try {
-            if (localAmbientGain) {
-              localAmbientGain.disconnect();
-            }
-          } catch {
-            // Already disconnected
-          }
           localAmbientGain = null;
         }, 550);
-      } catch (err) {
-        console.error("[Ambient] Error stopping oscillator:", err);
-        ambientOscillator = null;
-        localAmbientGain = null;
       }
+    } catch (error) {
+      console.log("[Ambient] Error stopping oscillator:", error);
+      ambientOscillator = null;
+      localAmbientGain = null;
     }
   }
 }

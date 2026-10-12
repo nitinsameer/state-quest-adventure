@@ -118,24 +118,24 @@ export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }
     <div className="w-full">
       {/* Permission Prompt Modal */}
       {showPermissionPrompt && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl p-6 max-w-sm shadow-2xl animate-in fade-in scale-in">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-(--padding-base)">
+          <div className="bg-white rounded-3xl p-(--padding-lg) max-w-sm shadow-2xl animate-in fade-in scale-in">
             <div className="text-center">
-              <div className="text-5xl mb-4">🎧</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Enable Audio?</h3>
-              <p className="text-sm text-gray-700 mb-6">
+              <div className="text-5xl mb-(--space-2)">🎧</div>
+              <h3 className="text-xl font-bold text-muted-dark mb-(--space-0-5)">Enable Audio?</h3>
+              <p className="text-sm text-muted-foreground mb-(--space-2)">
                 Would you like to enable audio to hear this story read aloud?
               </p>
-              <div className="flex gap-3">
+              <div className="flex gap-(--gap-base)">
                 <button
                   onClick={() => setShowPermissionPrompt(false)}
-                  className="flex-1 px-4 py-3 rounded-xl bg-gray-200 text-gray-900 font-bold transition active:scale-95"
+                  className="flex-1 px-(--padding-md) py-(--padding-base) rounded-xl bg-muted text-muted-dark font-bold transition active:scale-95"
                 >
                   Not Now
                 </button>
                 <button
                   onClick={handleEnableAudio}
-                  className="flex-1 px-4 py-3 rounded-xl bg-gradient-to-r from-blue-400 to-cyan-500 text-white font-bold transition active:scale-95"
+                  className="flex-1 px-(--padding-md) py-(--padding-base) rounded-xl bg-gradient-to-r from-blue-400 to-cyan-500 text-white font-bold transition active:scale-95"
                 >
                   Enable Audio
                 </button>
@@ -146,8 +146,8 @@ export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }
       )}
 
       {/* Narration Player Card */}
-      <div className="mt-3 p-3 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl border-2 border-blue-200">
-        <div className="flex items-center gap-2">
+      <div className="mt-(--space-0-5) p-(--padding-base) bg-gradient-to-r from-info-soft to-cyan-50 rounded-2xl border-2 border-info">
+        <div className="flex items-center gap-(--gap-base)">
           {/* Play Button */}
           <button
             onClick={handlePlayClick}
@@ -168,9 +168,9 @@ export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }
             <div className="text-xs font-bold text-blue-600 uppercase tracking-wide">
               🎧 Listen to Story
             </div>
-            <div className="text-sm font-bold text-blue-900 mt-0.5">{title}</div>
+            <div className="text-sm font-bold text-info mt-(--space-0-25)">{title}</div>
             {audioNarrationEnabled ? (
-              <div className="text-xs text-blue-700 mt-1">
+              <div className="text-xs text-blue-700 mt-(--space-0-25)">
                 {isCurrentPlaying ? "🎵 Playing... tap to stop" : "Tap play to hear! 👂"}
               </div>
             ) : (
@@ -186,11 +186,12 @@ export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }
 
         {/* Progress Bar (simplified) */}
         {isCurrentPlaying && (
-          <div className="mt-3 w-full bg-blue-200 h-1.5 rounded-full overflow-hidden">
-            <div className="bg-gradient-to-r from-blue-500 to-cyan-500 h-full animate-pulse" style={{ width: "60%" }} />
+          <div className="mt-(--space-0-5) w-full bg-blue-200 h-1.5 rounded-full overflow-hidden">
+            <div className="bg-gradient-to-r from-info-soft0 to-cyan-500 h-full animate-pulse" style={{ width: "60%" }} />
           </div>
         )}
       </div>
     </div>
   );
 }
+

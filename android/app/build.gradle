@@ -1,11 +1,10 @@
 apply plugin: 'com.android.application'
 
-// Load keystore.properties
-def keystorePropertiesFile = rootProject.file('keystore.properties')
-def keystoreProperties = new Properties()
-if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-}
+def ksFile = System.getenv("KEYSTORE_FILE")
+def ksPassword = System.getenv("KEYSTORE_PASSWORD")
+def ksAlias = System.getenv("KEY_ALIAS")
+def ksKeyPassword = System.getenv("KEY_PASSWORD")
+def hasSigning = ksFile && ksPassword && ksAlias && ksKeyPassword
 
 android {
     namespace = "com.nishaantech.exploreindia"
@@ -21,7 +20,9 @@ android {
         applicationId "com.nishaantech.exploreindia"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
+        
+        // Use GitHub run number for versionCode in CI, fallback to 1 for local builds
+        versionCode = (System.getenv("GITHUB_RUN_NUMBER") != null) ? System.getenv("GITHUB_RUN_NUMBER").toInteger() : 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
@@ -32,18 +33,29 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file('D:/NishaanTech/state-quest-adventure/word-wizard.jks')
-            storePassword 'N#I$G6881'
-            keyAlias 'word-wizard'
-            keyPassword 'N#I$G6881'
+            if (hasSigning) {
+                def storeFilePath = ksFile
+                if (!new File(storeFilePath).isAbsolute()) {
+                    storeFilePath = rootProject.file(storeFilePath).absolutePath
+                }
+                storeFile file(storeFilePath)
+                storePassword ksPassword
+                keyAlias ksAlias
+                keyPassword ksKeyPassword
+            } else {
+                logger.error("Release signing requires: KEYSTORE_FILE, KEYSTORE_PASSWORD, KEY_ALIAS, KEY_PASSWORD environment variables")
+            }
         }
     }
 
     buildTypes {
         release {
-            signingConfig signingConfigs.release
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            if (hasSigning) {
+                signingConfig signingConfigs.release
+            }
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }

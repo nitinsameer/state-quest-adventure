@@ -27,6 +27,10 @@ export default defineConfig({
   vite: {
     // Use relative paths for Capacitor WebView (doesn't support absolute /assets)
     base: './',
+    resolve: {
+      // Use native Vite tsconfigPaths resolution (replaces vite-tsconfig-paths plugin)
+      tsconfigPaths: true,
+    },
     build: {
       // FIX #36: Production minification enabled by default (Vite optimizes for production)
       // Assets will be minified, tree-shaken, and optimized automatically

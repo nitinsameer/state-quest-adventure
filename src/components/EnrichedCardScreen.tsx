@@ -6,15 +6,25 @@
 
 import { useState } from "react";
 import { ExpandableCard } from "./ExpandableCard";
-import { getStateContent } from "@/lib/state-content";
+import { getStateContent, type AgeTaggedContent } from "@/lib/state-content";
 import { fxTap, fxWhoosh } from "@/lib/fx";
 import { useGoBack } from "./screens";
 
+// Helper to extract string from string | AgeTaggedContent union
+const extractText = (value: string | AgeTaggedContent): string => {
+  return typeof value === "string" ? value : value.text;
+};
+
+const extractTextArray = (value: string[] | AgeTaggedContent[]): string[] => {
+  if (!value) return [];
+  return value.map(v => typeof v === "string" ? v : v.text);
+};
+
 const CARD_COLORS = [
-  { bg: "bg-orange-50", border: "border-orange-200" }, // Capital
-  { bg: "bg-blue-50", border: "border-blue-200" }, // Language
+  { bg: "bg-orange-soft", border: "border-orange-200" }, // Capital
+  { bg: "bg-info-soft", border: "border-info" }, // Language
   { bg: "bg-yellow-50", border: "border-yellow-200" }, // Food
-  { bg: "bg-green-50", border: "border-green-200" }, // Places
+  { bg: "bg-success-soft", border: "border-success" }, // Places
   { bg: "bg-rose-50", border: "border-rose-200" }, // Animal
   { bg: "bg-indigo-50", border: "border-indigo-200" }, // Fun Fact
 ];
@@ -26,7 +36,7 @@ export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: st
 
   if (!content) {
     return (
-      <div className="h-full w-full bg-[#F7F5F0] flex flex-col items-center justify-center gap-4 p-6">
+      <div className="h-full w-full bg-[#F7F5F0] flex flex-col items-center justify-center gap-(--gap-base) p-(--padding-lg)">
         <div className="text-4xl">🏜️</div>
         <div className="text-center">
           <div className="text-display font-extrabold text-lg">Coming Soon!</div>
@@ -47,8 +57,23 @@ export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: st
     { id: "funFact", ...content.funFact },
   ];
 
-  const currentCard = cards[activeTab];
+  const currentCard = cards[activeTab]!;
   const colors = CARD_COLORS[activeTab];
+
+  // Guard: ensure currentCard has required properties
+  if (!currentCard || !('title' in currentCard && 'emoji' in currentCard)) {
+    return (
+      <div className="h-full w-full bg-[#F7F5F0] flex flex-col items-center justify-center gap-(--gap-base) p-(--padding-lg)">
+        <div className="text-4xl">❌</div>
+        <div className="text-center">
+          <div className="text-display font-extrabold text-lg">Card unavailable</div>
+          <div className="text-sm text-muted-foreground mt-2">
+            This card could not be loaded. Please try again.
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const handleTabChange = (index: number) => {
     if (index !== activeTab) {
@@ -60,7 +85,7 @@ export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: st
   return (
     <div className="h-full w-full bg-[#F7F5F0] flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="relative gradient-explorer px-5 pt-4 pb-4 rounded-b-[36px] flex-shrink-0">
+      <div className="relative gradient-explorer px-5 pt-(--padding-base) pb-(--padding-base) rounded-b-[36px] flex-shrink-0">
         <div className="flex items-center justify-between">
           <button
             onClick={() => {
@@ -68,7 +93,7 @@ export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: st
               goBack();
             }}
             aria-label="Go back"
-            className="h-10 w-10 rounded-full bg-white/20 text-[color:var(--color-text-inverted)] flex items-center justify-center hover:bg-white/30 transition"
+            className="h-10 w-10 rounded-full bg-white/20 text-white flex items-center justify-center"
           >
             ‹
           </button>
@@ -80,45 +105,49 @@ export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: st
       </div>
 
       {/* Card Display Area */}
-      <div className="flex-1 overflow-y-auto px-5 py-4">
+      <div className="flex-1 overflow-y-auto px-5 py-(--padding-md)">
         <ExpandableCard
           cardId={`${stateName}-${currentCard.id}`}
           title={currentCard.title}
           emoji={currentCard.emoji}
           mainText={currentCard.mainText}
-          keyFacts={currentCard.keyFacts}
+          keyFacts={extractTextArray(currentCard.keyFacts)}
           narration={currentCard.narration}
-          coolFacts={currentCard.coolFacts}
-          didYouKnow={currentCard.didYouKnow}
-          tryThis={currentCard.tryThis}
+          coolFacts={currentCard.coolFacts ? extractTextArray(currentCard.coolFacts) : undefined}
+          didYouKnow={currentCard.didYouKnow ? extractText(currentCard.didYouKnow) : undefined}
+          tryThis={currentCard.tryThis ? extractText(currentCard.tryThis) : undefined}
           backgroundColor={colors.bg}
           borderColor={colors.border}
         />
       </div>
 
       {/* Card Navigation Tabs */}
-      <div className="flex-shrink-0 bg-white/80 backdrop-blur border-t border-black/5 px-2 py-3">
-        <div className="flex gap-1.5 overflow-x-auto pb-1">
-          {cards.map((card, index) => (
+      <div className="flex-shrink-0 bg-white/80 backdrop-blur border-t border-black/5 px-(--padding-sm) py-(--padding-base)">
+        <div className="flex gap-(--gap-compact) overflow-x-auto pb-1">
+          {cards.map((card, index) => {
+            const safeCard = card as typeof card & { emoji: string };
+            return (
             <button
               key={index}
               onClick={() => handleTabChange(index)}
-              className={`flex-shrink-0 h-14 px-3 rounded-2xl transition-all font-extrabold text-display text-sm ${
+              className={`flex-shrink-0 h-14 px-(--padding-sm) rounded-2xl transition-all font-extrabold text-display text-sm ${
                 activeTab === index
                   ? `${CARD_COLORS[index].bg} border-2 ${CARD_COLORS[index].border} shadow-md scale-105`
                   : "bg-white/50 border-2 border-transparent hover:bg-white/70"
               }`}
             >
-              <span className="text-2xl">{card.emoji}</span>
+              <span className="text-2xl">{safeCard.emoji}</span>
             </button>
-          ))}
+            );
+          })}
         </div>
 
         {/* Card Info */}
-        <div className="px-3 mt-2 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+        <div className="px-(--padding-sm) mt-(--space-3) text-xs font-bold text-muted-foreground uppercase tracking-wider">
           {activeTab + 1} of {cards.length} • {currentCard.title.split(" ")[0]}
         </div>
       </div>
     </div>
   );
 }
+

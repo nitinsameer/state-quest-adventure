@@ -1,5 +1,26 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ParentZoneScreen } from "@/components/ParentZone";
+import { ParentGate } from "@/components/ParentGate";
+import { useState } from "react";
+import { clearGateSession } from "@/lib/parent-gate";
+
+function ParentRouteComponent() {
+  const [verified, setVerified] = useState(false);
+
+  if (!verified) {
+    return (
+      <ParentGate
+        onVerified={() => setVerified(true)}
+        onCancel={() => {
+          clearGateSession();
+          window.history.back();
+        }}
+      />
+    );
+  }
+
+  return <ParentZoneScreen />;
+}
 
 export const Route = createFileRoute("/parent")({
   head: () => ({
@@ -16,5 +37,5 @@ export const Route = createFileRoute("/parent")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: ParentZoneScreen,
+  component: ParentRouteComponent,
 });

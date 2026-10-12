@@ -70,6 +70,9 @@ export type LibraryPostcard = {
   // Metadata for filtering and sorting
   displayOrder: number; // For sorting in library
   tags: string[]; // e.g., ["beach", "endangered-animal", "cultural"]
+
+  // Image data (base64 PNG for in-app storage)
+  imageData?: string; // PNG as base64 string, nullable for backward compat
 };
 
 /**

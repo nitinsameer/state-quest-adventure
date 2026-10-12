@@ -55,6 +55,8 @@ function CelebrationModal({ config }: { config: CelebrationConfig }) {
           icon: config.icon,
           title: config.title,
           subtitle: config.subtitle,
+          closeButton: config.showCloseButton,
+          onClose: handleDismiss,
         }}
         buttons={buttons}
         footer={footer}

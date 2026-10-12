@@ -2,6 +2,7 @@
 @source "../src";
 @import "tw-animate-css";
 @import "./styles/tokens.css";
+@import "./styles/clay.css";
 @import "./styles/celebrations.css";
 
 @custom-variant dark (&:is(.dark *));
@@ -49,6 +50,44 @@
   --color-ink: var(--ink);
   --color-sky: var(--sky);
 
+  /* === SEMANTIC COLOR ALIASES FOR TAILWIND UTILITIES === */
+  /* These map hardcoded colors to design tokens for consistency */
+  
+  /* Muted/Gray replacements */
+  --color-muted-bg: var(--muted);                    /* replaces bg-gray-100 */
+  --color-muted-bg-light: oklch(0.95 0.01 260);     /* replaces bg-gray-50 */
+  --color-text-muted: var(--muted-foreground);      /* replaces text-gray-700 */
+  --color-text-muted-light: oklch(0.52 0.03 260);    /* replaces text-gray-500, improved contrast from 3.6:1 to ~5:1 */
+  --color-text-muted-dark: oklch(0.22 0.05 260);    /* replaces text-gray-900 */
+  --color-border-muted: var(--border);              /* replaces border-gray-200 */
+  --color-border-muted-light: oklch(0.95 0.01 260); /* replaces border-gray-100 */
+
+  /* Feedback state backgrounds */
+  --color-bg-warning-soft: oklch(0.95 0.06 55);     /* replaces bg-amber-50 */
+  --color-bg-success-soft: oklch(0.95 0.06 150);    /* replaces bg-green-50 */
+  --color-bg-error-soft: oklch(0.96 0.08 27);       /* replaces bg-red-50 */
+  --color-bg-info-soft: oklch(0.95 0.05 250);       /* replaces bg-blue-50 */
+  
+  /* Feedback state text */
+  --color-text-warning: oklch(0.35 0.1 45);         /* replaces text-amber-900 */
+  --color-text-warning-light: oklch(0.5 0.08 50);   /* replaces text-amber-800 */
+  --color-text-success: oklch(0.35 0.1 150);        /* replaces text-green-900 */
+  --color-text-error: oklch(0.35 0.1 27);           /* replaces text-red-900 */
+  --color-text-info: oklch(0.35 0.1 250);           /* replaces text-blue-900 */
+
+  /* Feedback state borders */
+  --color-border-warning: oklch(0.75 0.16 50);      /* replaces border-amber-200 */
+  --color-border-success: oklch(0.72 0.19 150);     /* replaces border-green-200 */
+  --color-border-error: oklch(0.62 0.24 27);        /* replaces border-red-200 */
+  --color-border-info: oklch(0.62 0.2 250);         /* replaces border-blue-200 */
+  --color-border-purple: oklch(0.75 0.1 280);       /* replaces border-purple-200 */
+
+  /* Brand feedback variants */
+  --color-bg-orange-soft: oklch(0.95 0.06 55);      /* replaces bg-orange-50 */
+  --color-text-orange: oklch(0.35 0.1 45);          /* replaces text-orange-600 */
+  --color-border-orange: oklch(0.75 0.16 50);       /* replaces border-orange-400 */
+  --color-bg-purple-soft: oklch(0.96 0.05 280);     /* replaces bg-purple-50 */
+
   /* Semantic Text Colors */
   --color-text-primary: var(--ink);
   --color-text-secondary: var(--muted-foreground);
@@ -81,7 +120,7 @@
   --color-reward-badge: var(--saffron);
   --color-achievement-milestone: var(--success);
 
-  --shadow-soft: 0 10px 30px -12px rgb(30 41 59 / 0.15), 0 4px 10px -4px rgb(30 41 59 / 0.08);
+  --shadow-soft: inset 4px 4px 8px rgb(255 255 255 / 0.7), inset -4px -4px 8px rgb(30 41 59 / 0.08), 0 12px 22px -10px rgb(30 41 59 / 0.2);
   --shadow-pop: 0 14px 0 0 rgb(0 0 0 / 0.08);
   --shadow-glow-orange: 0 12px 30px -8px oklch(0.72 0.19 45 / 0.5);
   --shadow-glow-blue: 0 12px 30px -8px oklch(0.62 0.2 250 / 0.45);
@@ -103,7 +142,7 @@
   --secondary: oklch(0.62 0.2 250);
   --secondary-foreground: oklch(1 0 0);
   --muted: oklch(0.97 0.01 260);
-  --muted-foreground: oklch(0.45 0.04 260); /* Darkened from oklch(0.5 0.03 260) for 4.5:1 contrast (was 2.1:1) */
+  --muted-foreground: oklch(0.5 0.03 260);
   --accent: oklch(0.95 0.05 85);
   --accent-foreground: oklch(0.35 0.1 60);
   --destructive: oklch(0.62 0.24 27);
@@ -129,6 +168,9 @@
   * {
     border-color: var(--color-border);
   }
+  html {
+    font-size: 100%;
+  }
   html, body {
     height: 100%;
     background: linear-gradient(180deg, #f7f4ef 0%, #eef2f8 100%);
@@ -142,6 +184,222 @@
     font-family: var(--font-display);
     letter-spacing: -0.01em;
   }
+}
+
+/* Phase 4.5: Spacing & Layout Grid System - Component Spacing Utilities */
+
+@utility card {
+  padding: var(--padding-md);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  background: white;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-base);
+}
+
+@utility card-sm {
+  padding: var(--padding-base);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  background: white;
+  gap: var(--gap-compact);
+}
+
+@utility card-lg {
+  padding: var(--padding-lg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  background: white;
+  gap: var(--gap-loose);
+}
+
+@utility btn-spacing {
+  padding: var(--padding-base) var(--padding-md);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-base);
+  min-height: var(--touch-target-min);
+}
+
+@utility btn-spacing-sm {
+  padding: var(--padding-xs) var(--padding-sm);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-compact);
+  min-height: 40px;
+}
+
+@utility btn-spacing-lg {
+  padding: var(--padding-md) var(--padding-lg);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-base);
+  min-height: var(--touch-target-min);
+}
+
+@utility form-group {
+  margin-bottom: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-compact);
+}
+
+@utility form-label {
+  font-weight: 700;
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--gap-compact);
+  display: block;
+}
+
+@utility form-hint {
+  margin-top: var(--gap-compact);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+@utility list-base {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-base);
+}
+
+@utility list-compact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-compact);
+}
+
+@utility list-loose {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-loose);
+}
+
+@utility grid-base {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--gap-base);
+}
+
+@utility grid-compact {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--gap-compact);
+}
+
+@utility grid-loose {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--gap-loose);
+}
+
+@utility section-spacing {
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-4);
+  padding: var(--padding-lg);
+}
+
+@utility section-spacing-tight {
+  margin-top: var(--space-2);
+  margin-bottom: var(--space-2);
+  padding: var(--padding-md);
+}
+
+@utility section-spacing-loose {
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-6);
+  padding: var(--padding-lg);
+}
+
+/* Typography Utility Classes - Phase 4.4 */
+
+/* Display Sizes (Headers) */
+@utility text-h1 {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+@utility text-h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+@utility text-h3 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.375;
+  letter-spacing: -0.01em;
+}
+
+@utility text-h4 {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.375;
+  letter-spacing: -0.01em;
+}
+
+@utility text-h5 {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 0em;
+}
+
+/* Body Text Sizes */
+@utility text-body-lg {
+  font-family: var(--font-sans);
+  font-size: 1.125rem;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0em;
+}
+
+@utility text-body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0em;
+}
+
+@utility text-body-sm {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0em;
+}
+
+@utility text-label {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.375;
+  letter-spacing: 0.025em;
+}
+
+@utility text-caption {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0em;
 }
 
 @utility text-display {
@@ -177,6 +435,110 @@
 }
 @utility gradient-sky {
   background-image: linear-gradient(180deg, #cfe6ff 0%, #eaf4ff 60%, #ffffff 100%);
+}
+
+/* === SEMANTIC COLOR UTILITIES (Token-based) === */
+/* These replace hardcoded Tailwind colors with design tokens */
+
+@utility bg-muted {
+  background-color: var(--color-muted-bg);
+}
+
+@utility bg-muted-light {
+  background-color: var(--color-muted-bg-light);
+}
+
+
+
+@utility text-muted-light {
+  color: var(--color-text-muted-light);
+}
+
+@utility text-muted-dark {
+  color: var(--color-text-muted-dark);
+}
+
+@utility border-muted {
+  border-color: var(--color-border-muted);
+}
+
+@utility border-muted-light {
+  border-color: var(--color-border-muted-light);
+}
+
+/* Feedback state backgrounds */
+@utility bg-warning-soft {
+  background-color: var(--color-bg-warning-soft);
+}
+
+@utility bg-success-soft {
+  background-color: var(--color-bg-success-soft);
+}
+
+@utility bg-error-soft {
+  background-color: var(--color-bg-error-soft);
+}
+
+@utility bg-info-soft {
+  background-color: var(--color-bg-info-soft);
+}
+
+@utility bg-orange-soft {
+  background-color: var(--color-bg-orange-soft);
+}
+
+@utility bg-purple-soft {
+  background-color: var(--color-bg-purple-soft);
+}
+
+/* Feedback state text */
+@utility text-warning {
+  color: var(--color-text-warning);
+}
+
+@utility text-warning-light {
+  color: var(--color-text-warning-light);
+}
+
+@utility text-success {
+  color: var(--color-text-success);
+}
+
+@utility text-error {
+  color: var(--color-text-error);
+}
+
+@utility text-info {
+  color: var(--color-text-info);
+}
+
+@utility text-orange {
+  color: var(--color-text-orange);
+}
+
+/* Feedback state borders */
+@utility border-warning {
+  border-color: var(--color-border-warning);
+}
+
+@utility border-success {
+  border-color: var(--color-border-success);
+}
+
+@utility border-error {
+  border-color: var(--color-border-error);
+}
+
+@utility border-info {
+  border-color: var(--color-border-info);
+}
+
+@utility border-orange {
+  border-color: var(--color-border-orange);
+}
+
+@utility border-purple {
+  border-color: var(--color-border-purple);
 }
 
 @utility line-clamp-ellipsis-2 {
@@ -336,6 +698,170 @@
   animation: slide-down 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/* === PREMIUM SHADOW HIERARCHY SYSTEM === */
+/* Consistent elevation levels for polished UI */
+
+/* Level 1: Subtle shadows for hover states and subtle elevation */
+.shadow-elevated-1 {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* Level 2: Standard shadows for cards and components */
+.shadow-elevated-2 {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* Level 3: Strong shadows for prominent cards and modals */
+.shadow-elevated-3 {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+}
+
+/* Level 4: Very strong shadows for overlays and top-layer elements */
+.shadow-elevated-4 {
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.20);
+}
+
+/* Hover state shadow - for interactive feedback */
+.shadow-elevated-hover {
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+}
+
+/* Active/pressed state shadow - for feedback on interaction */
+.shadow-elevated-active {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* Glow effect for special CTAs - warm glow */
+.shadow-glow-warm {
+  box-shadow: 0 8px 24px rgba(255, 140, 60, 0.25), 0 4px 12px rgba(255, 100, 0, 0.15);
+}
+
+/* Glow effect for special CTAs - success glow */
+.shadow-glow-success {
+  box-shadow: 0 8px 24px rgba(34, 197, 94, 0.25), 0 4px 12px rgba(22, 163, 74, 0.15);
+}
+
+/* === PHASE 2: DOPAMINE ANIMATION SYSTEM === */
+/* High-engagement animations for kids app */
+
+/* POP-IN: Used for badge unlocks, rewards, celebrations */
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) rotate(-10deg);
+  }
+  50% {
+    transform: scale(1.1) rotate(5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+/* SLIDE-UP: Used for content sections, modals */
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* WIGGLE: Used for incorrect quiz answers (gentle, not harsh) */
+@keyframes wiggle {
+  0%, 100% { transform: translateX(-2px) rotate(-1deg); }
+  25% { transform: translateX(2px) rotate(1deg); }
+  50% { transform: translateX(-2px) rotate(-1deg); }
+  75% { transform: translateX(2px) rotate(1deg); }
+}
+
+/* JIGGLE: Used for try-again feedback (encouraging) */
+@keyframes jiggle {
+  0%, 100% { transform: rotate(-1deg) scale(1); }
+  25% { transform: rotate(1deg) scale(1.02); }
+  50% { transform: rotate(-1deg) scale(1); }
+  75% { transform: rotate(1deg) scale(1.02); }
+}
+
+/* FLOAT-UP: Used for XP popups, rewards floating away */
+@keyframes float-up {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(-15deg);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-60px) scale(1.2) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-120px) scale(0.5) rotate(15deg);
+  }
+}
+
+/* BOUNCE-SCALE: Used for celebration items (stars, emojis) */
+@keyframes bounce-scale {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+/* FADE-IN: Smooth entrance */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* SUCCESS-PULSE: Quick pulse on success */
+@keyframes success-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Utility classes for animations */
+.animate-pop-in {
+  animation: pop-in 600ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-slide-up {
+  animation: slide-up 400ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-wiggle {
+  animation: wiggle 300ms ease-in-out;
+}
+
+.animate-jiggle {
+  animation: jiggle 400ms ease-in-out;
+}
+
+.animate-float-up {
+  animation: float-up 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  pointer-events: none;
+}
+
+.animate-bounce-scale {
+  animation: bounce-scale 600ms cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
+
+.animate-fade-in {
+  animation: fade-in 300ms ease-out forwards;
+}
+
+.animate-success-pulse {
+  animation: success-pulse 500ms ease-in-out;
+}
+
+/* Stagger delays for sequential animations */
+.animate-delay-100 { animation-delay: 100ms; }
+.animate-delay-200 { animation-delay: 200ms; }
+.animate-delay-300 { animation-delay: 300ms; }
+.animate-delay-400 { animation-delay: 400ms; }
+.animate-delay-500 { animation-delay: 500ms; }
+
 @media (prefers-reduced-motion: reduce) {
   .mascot-cheer,
   .confetti-fall,
@@ -343,7 +869,14 @@
   .animate-slide-up,
   .animate-bounce-gentle,
   .animate-shimmer-path,
-  .animate-slide-down {
+  .animate-slide-down,
+  .animate-pop-in,
+  .animate-wiggle,
+  .animate-jiggle,
+  .animate-float-up,
+  .animate-bounce-scale,
+  .animate-fade-in,
+  .animate-success-pulse {
     animation: none;
   }
 }

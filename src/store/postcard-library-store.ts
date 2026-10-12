@@ -23,6 +23,7 @@ import {
   getExportablePostcards,
   getPostcardStats,
 } from "@/lib/postcard-library";
+import { validatePostcardLibrary } from "@/lib/localStorage-schema";
 
 export type PostcardLibrarySortBy = "date-newest" | "date-oldest" | "state-asc" | "state-desc";
 
@@ -49,7 +50,8 @@ interface PostcardLibraryStore {
     stateName: string,
     badgeId: "monument" | "animal" | "explorer",
     stampDate: string,
-    generatedAt: string
+    generatedAt: string,
+    imageData?: string
   ) => void;
   updatePostcard: (id: string, updates: Partial<LibraryPostcard>) => void;
   deletePostcard: (id: string) => void;
@@ -86,12 +88,16 @@ const createPostcardLibraryStore = (): PostcardLibraryStore => {
   if (typeof localStorage !== "undefined") {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        initialPostcards = JSON.parse(stored);
+      // CRITICAL FIX #1.5: Validate postcard library with Zod schema
+      const validated = validatePostcardLibrary(stored);
+      if (validated.length > 0) {
+        initialPostcards = validated;
         initialMetadata = getLibraryMetadata(initialPostcards);
       }
     } catch (err) {
-      console.error("[PostcardLibraryStore] Failed to load from storage", err);
+      // Validation failed - start fresh
+      initialPostcards = [];
+      initialMetadata = getLibraryMetadata([]);
     }
   }
 
@@ -104,7 +110,7 @@ const createPostcardLibraryStore = (): PostcardLibraryStore => {
     error: null,
 
     // CRUD Operations
-    addPostcard: (stateName, badgeId, stampDate, generatedAt) => {
+    addPostcard: (stateName, badgeId, stampDate, generatedAt, imageData) => {
       usePostcardLibrary.setState((state) => {
         const newPostcard = createLibraryPostcard(
           stateName,
@@ -112,6 +118,9 @@ const createPostcardLibraryStore = (): PostcardLibraryStore => {
           stampDate,
           generatedAt
         );
+        if (imageData) {
+          newPostcard.imageData = imageData;
+        }
         const updatedPostcards = [...state.postcards, newPostcard];
         const updatedMetadata = getLibraryMetadata(updatedPostcards);
 
@@ -255,11 +264,12 @@ const createPostcardLibraryStore = (): PostcardLibraryStore => {
         usePostcardLibrary.setState({ isLoading: true, error: null });
         const stored = localStorage.getItem(STORAGE_KEY);
 
-        if (stored) {
-          const postcards = JSON.parse(stored);
-          const metadata = getLibraryMetadata(postcards);
+        // CRITICAL FIX #1.5: Validate postcard library with Zod schema
+        const validated = validatePostcardLibrary(stored);
+        if (validated.length > 0) {
+          const metadata = getLibraryMetadata(validated);
           usePostcardLibrary.setState({
-            postcards,
+            postcards: validated,
             metadata,
             isLoading: false,
           });
@@ -271,7 +281,6 @@ const createPostcardLibraryStore = (): PostcardLibraryStore => {
           error: "Failed to load postcard library",
           isLoading: false,
         });
-        console.error("[PostcardLibraryStore] Failed to load from storage", err);
       }
     },
 

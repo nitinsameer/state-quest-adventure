@@ -22,7 +22,7 @@ export interface AudioPermissionDialogProps {
   onReject?: () => void;
   open?: boolean;
   forceShow?: boolean; // Force show regardless of previous state
-  context?: "profile-creation" | "first-load"; // Where dialog is shown from
+  context?: "profile-creation" | "profile-settings" | "first-load"; // Where dialog is shown from
 }
 
 export function AudioPermissionDialog({
@@ -36,15 +36,16 @@ export function AudioPermissionDialog({
   const progress = useProgress();
 
   // For profile-creation context: sync parent's 'open' prop to internal state
+  // For profile-settings context: also sync parent's 'open' prop
   // This allows parent to control when dialog shows
   useEffect(() => {
     if (!isHydrated()) {
       return;
     }
 
-    if (context === "profile-creation") {
-      // Parent controls visibility via 'open' prop
-      // Sync parent prop to internal state
+    // For both profile-creation AND profile-settings contexts,
+    // sync the parent's open prop to internal state
+    if (context === "profile-creation" || context === "profile-settings") {
       setIsOpen(open);
       return;
     }
@@ -57,10 +58,10 @@ export function AudioPermissionDialog({
       return;
     }
 
-    // CRITICAL: Never auto-show in profile-creation context
-    // Profile creation dialog should ONLY show when explicitly triggered by parent
+    // CRITICAL: Never auto-show in profile-creation or profile-settings context
+    // These contexts should ONLY show when explicitly triggered by parent
     // via showAudioPermission state, not via auto-detection
-    if (context === "profile-creation") {
+    if (context === "profile-creation" || context === "profile-settings") {
       return;
     }
 
@@ -76,7 +77,7 @@ export function AudioPermissionDialog({
       debugLog("audio-permission", "Ready to show", { context, forceShow });
       setIsOpen(true);
       
-      // Mark as seen (unless in profile-creation context with forceShow)
+      // Mark as seen (unless in profile contexts with forceShow)
       if (context === "first-load" || !forceShow) {
         localStorage.setItem("india-explorer:audio-permission-shown:v1", "1");
       }
@@ -115,7 +116,7 @@ export function AudioPermissionDialog({
 
   const isProfileCreation = context === "profile-creation";
   const headerText = isProfileCreation 
-    ? "Let's add some fun to your adventure! 🎵" 
+    ? "Your adventure just got better! 🎵" 
     : "Can we play sounds?";
 
   return (
@@ -123,51 +124,42 @@ export function AudioPermissionDialog({
       open={isOpen}
       onClose={handleReject}
       header={{
-        icon: "🔊",
+        icon: "🎵",
         title: headerText,
+        floatingIcon: true,
+        floatingIconGradient: ["from-purple-400", "to-indigo-500"],
       }}
-      headerGradient={["from-green-400", "to-emerald-500"]}
+      buttonsLayout="stack"
       content={[
         {
           type: "text",
           text: isProfileCreation
-            ? "Your India Explorer adventure has fun sounds, music, and voice narration!"
-            : "Your India Explorer adventure has fun sounds and music! 🎵",
+            ? "Make your adventure come alive with sound!"
+            : "Bring your India Explorer adventure to life! 🎵",
         },
         {
-          type: "bullet",
-          emoji: "🎮",
-          text: "Game sounds when you tap",
-        },
-        {
-          type: "bullet",
-          emoji: "🎵",
-          text: "Calm background music",
-        },
-        {
-          type: "bullet",
-          emoji: "🎧",
-          text: "Stories read to you",
-        },
-        {
-          type: "custom",
-          className: "text-xs text-muted-foreground text-center italic py-2",
-          children: <p>Parents: You can turn sound on/off anytime in settings</p>,
+          type: "badgeGrid",
+          badges: [
+            { emoji: "🎮", label: "Tap Sounds" },
+            { emoji: "🎵", label: "Music" },
+            { emoji: "🎧", label: "Stories" },
+          ],
         },
       ]}
       buttons={[
         {
-          label: isProfileCreation ? "Not now 🔇" : "No thanks 🔇",
+          label: "No, explore quietly 🔇",
           onClick: handleReject,
-          variant: "secondary",
+          variant: "ghost",
         },
         {
-          label: isProfileCreation ? "Yes, enable! 🔊" : "Yes please! 🔊",
+          label: "Yes, turn on sounds! 🔊",
           onClick: handleAccept,
           variant: "primary",
+          customClass: "w-full px-4 py-3 rounded-full bg-gradient-to-r from-green-400 to-emerald-500 text-white font-bold text-sm shadow-lg transition active:scale-95",
         },
       ]}
-      footer="No microphone access. We only play sounds."
+      footer="You can change this anytime in Profile settings"
       maxWidth="max-w-md"
     />
   );

@@ -32,8 +32,8 @@ export function ExpandableCard({
   coolFacts,
   didYouKnow,
   tryThis,
-  backgroundColor = "bg-blue-50",
-  borderColor = "border-blue-200",
+  backgroundColor = "bg-info-soft",
+  borderColor = "border-info",
 }: ExpandableCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [visibleFactsCount, setVisibleFactsCount] = useState(3);
@@ -58,25 +58,25 @@ export function ExpandableCard({
   const hasExpandedDetails = coolFacts || didYouKnow || tryThis;
 
   return (
-    <div className={`w-full ${backgroundColor} rounded-2xl border-2 ${borderColor} p-4 transition-all duration-300 shadow-soft`}>
+    <div className={`w-full ${backgroundColor} rounded-2xl border-2 ${borderColor} p-(--padding-md) transition-all duration-300 shadow-soft`}>
       {/* Header with Main Text moved here */}
-      <div className="flex items-start gap-3 mb-3">
+      <div className="flex items-start gap-(--gap-base) mb-(--space-3)">
         <div className="text-3xl flex-shrink-0">{emoji}</div>
         <div className="flex-1 min-w-0">
-          <h3 className="text-display font-bold text-xl leading-snug text-gray-900">{title}</h3>
+          <h3 className="text-display font-bold text-xl leading-snug text-muted-dark">{title}</h3>
           {/* Main Text positioned just above key facts to preserve space */}
-          <p className="text-sm font-semibold text-gray-700 leading-relaxed mt-1.5">{mainText}</p>
+          <p className="text-sm font-semibold text-muted-foreground leading-relaxed mt-1.5">{mainText}</p>
         </div>
       </div>
 
       {/* Key Facts Section */}
       {keyFacts.length > 0 && (
-        <div className="mb-3">
+        <div className="mb-(--space-3)">
           <button
             onClick={handleToggleExpand}
-            className="w-full flex items-center justify-between mb-2 p-2 rounded-lg hover:bg-black/5 active:scale-95 transition"
+            className="w-full flex items-center justify-between mb-2 p-(--padding-sm) rounded-lg hover:bg-black/5 active:scale-95 transition"
           >
-            <span className="text-xs font-bold text-gray-700">
+            <span className="text-xs font-bold text-muted-foreground">
               {isExpanded ? "📖 Hide Facts" : "✨ Cool Facts"}
             </span>
             <span className="text-lg transition-transform" style={{ transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)" }}>
@@ -89,7 +89,7 @@ export function ExpandableCard({
               {keyFacts.slice(0, visibleFactsCount).map((fact, index) => (
                 <div
                   key={index}
-                  className="text-xs font-semibold text-gray-800 bg-white/60 p-2 rounded-lg border-l-3 border-blue-400 animate-fadeIn"
+                  className="text-xs font-semibold text-muted-dark bg-white/60 p-(--padding-sm) rounded-lg border-l-3 border-info animate-fadeIn"
                 >
                   {fact}
                 </div>
@@ -98,7 +98,7 @@ export function ExpandableCard({
               {hasMoreFacts && (
                 <button
                   onClick={handleShowMore}
-                  className="w-full mt-2 py-2 px-3 bg-blue-100 hover:bg-blue-200 rounded-lg text-xs font-bold text-blue-700 active:scale-95 transition"
+                  className="w-full mt-2 py-(--padding-sm) px-(--padding-base) bg-blue-100 hover:bg-blue-200 rounded-lg text-xs font-bold text-blue-700 active:scale-95 transition"
                 >
                   + Show {Math.min(3, keyFacts.length - visibleFactsCount)} More Facts ⭐
                 </button>
@@ -110,13 +110,13 @@ export function ExpandableCard({
 
       {/* Expanded Details Section */}
       {hasExpandedDetails && (
-        <div className="mb-3 space-y-2">
+        <div className="mb-(--space-3) space-y-2">
           {/* Cool Facts Detail */}
           {coolFacts && coolFacts.length > 0 && (
             <div className="overflow-hidden">
               <button
                 onClick={() => handleToggleDetail(0)}
-                className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-black/5 active:scale-95 transition bg-amber-50 border border-amber-200"
+                className="w-full flex items-center justify-between p-(--padding-sm) rounded-lg hover:bg-black/5 active:scale-95 transition bg-warning-soft border border-warning"
               >
                 <span className="text-xs font-bold text-amber-700">
                   ⭐ More Amazing Facts
@@ -131,7 +131,7 @@ export function ExpandableCard({
                   {coolFacts.map((fact, index) => (
                     <div
                       key={index}
-                      className="text-xs font-semibold text-gray-800 bg-amber-50 p-2 rounded-lg border-l-3 border-amber-400"
+                      className="text-xs font-semibold text-muted-dark bg-warning-soft p-(--padding-sm) rounded-lg border-l-3 border-amber-400"
                     >
                       {fact}
                     </div>
@@ -146,7 +146,7 @@ export function ExpandableCard({
             <div className="overflow-hidden">
               <button
                 onClick={() => handleToggleDetail(1)}
-                className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-black/5 active:scale-95 transition bg-purple-50 border border-purple-200"
+                className="w-full flex items-center justify-between p-(--padding-sm) rounded-lg hover:bg-black/5 active:scale-95 transition bg-purple-soft border border-purple"
               >
                 <span className="text-xs font-bold text-purple-700">
                   🤔 Did You Know?
@@ -157,7 +157,7 @@ export function ExpandableCard({
               </button>
 
               {expandedDetailIndex === 1 && (
-                <div className="mt-2 bg-purple-50 p-3 rounded-lg border-2 border-purple-300 animate-fadeIn">
+                <div className="mt-2 bg-purple-soft p-(--padding-base) rounded-lg border-2 border-purple-300 animate-fadeIn">
                   <p className="text-xs font-bold text-purple-900 leading-relaxed">
                     {didYouKnow}
                   </p>
@@ -171,7 +171,7 @@ export function ExpandableCard({
             <div className="overflow-hidden">
               <button
                 onClick={() => handleToggleDetail(2)}
-                className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-black/5 active:scale-95 transition bg-green-50 border border-green-200"
+                className="w-full flex items-center justify-between p-(--padding-sm) rounded-lg hover:bg-black/5 active:scale-95 transition bg-success-soft border border-success"
               >
                 <span className="text-xs font-bold text-green-700">
                   🎮 Try This Activity
@@ -182,8 +182,8 @@ export function ExpandableCard({
               </button>
 
               {expandedDetailIndex === 2 && (
-                <div className="mt-2 bg-green-50 p-3 rounded-lg border-2 border-green-300 animate-fadeIn">
-                  <p className="text-xs font-bold text-green-900 leading-relaxed">
+                <div className="mt-2 bg-success-soft p-(--padding-base) rounded-lg border-2 border-green-300 animate-fadeIn">
+                  <p className="text-xs font-bold text-success leading-relaxed">
                     {tryThis}
                   </p>
                 </div>
@@ -224,3 +224,4 @@ if (typeof window !== "undefined") {
   `;
   document.head.appendChild(style);
 }
+

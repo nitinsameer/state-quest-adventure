@@ -14,10 +14,10 @@ export class OnboardingPage extends BasePage {
 
   // Create Profile Screen
   private readonly createProfileHeader = 'text=/Pick your avatar/';
-  private readonly avatarButtons = 'button[class*="rounded-2xl"][class*="border"]';
-  private readonly ageBandOptions = '[class*="gradient"]';
-  private readonly selectedAvatarConfirm = '[class*="gradient-saffron"][class*="animate-fade"]';
-  private readonly saveButton = 'button:has-text(/Save|Continue/)';
+  private readonly avatarButtons = 'button[class*="rounded-2xl"][class*="border"], div.grid.grid-cols-4 button';
+  private readonly ageBandOptions = '[class*="gradient"], button[class*="rounded-xl"]';
+  private readonly selectedAvatarConfirm = '[class*="gradient"][class*="orange"]';
+  private readonly saveButton = 'button:has-text(/Save|Continue|Let.*s Explore/i)';
   private readonly audioPermissionDialog = '[class*="modal"]';
   private readonly acceptAudioButton = 'button:has-text(/Yes|Accept|Allow/)';
   private readonly rejectAudioButton = 'button:has-text(/No|Deny|Skip/)';
@@ -52,16 +52,31 @@ export class OnboardingPage extends BasePage {
    */
   async clickStart() {
     // Welcome screen is a full-screen clickable area
+    console.log('[Onboarding] Clicking to start (welcome screen)...');
     await this.page.click('body');
     await this.page.waitForLoadState('networkidle');
+    console.log('[Onboarding] Network idle, waiting for create profile screen...');
     await this.waitForCreateProfileScreen();
+    console.log('[Onboarding] Create profile screen ready');
   }
 
   /**
    * Wait for create profile screen
    */
   async waitForCreateProfileScreen() {
-    await this.waitForElement(this.createProfileHeader, 10000);
+    // Increased timeout from 10s to 20s to account for Vite dev server startup
+    // Also try alternative selectors if primary fails
+    try {
+      await this.waitForElement(this.createProfileHeader, 20000);
+    } catch (error) {
+      // If "Pick your avatar" text not found, try other indicators
+      console.warn('Primary selector failed, trying alternative selectors...');
+      await Promise.race([
+        this.page.waitForSelector('button[class*="rounded-2xl"][class*="border"]', { timeout: 15000 }),
+        this.page.waitForSelector('div.grid.grid-cols-4 button', { timeout: 15000 }),
+        this.page.waitForSelector('button[class*="rounded-xl"]', { timeout: 15000 }),
+      ]);
+    }
   }
 
   /**

@@ -3,6 +3,20 @@
  * Maps avatar IDs to display information
  */
 
+// Import all avatar images
+import avatarExplorerHat from "@/assets/avatars/avatar-explorer-hat.png";
+import avatarExplorerPink from "@/assets/avatars/avatar-explorer-pink.png";
+import avatarGeekGlasses from "@/assets/avatars/avatar-geek-glasses.png";
+import avatarGirlPeace from "@/assets/avatars/avatar-girl-peace.png";
+import avatarTurbanRed from "@/assets/avatars/avatar-turban-red.png";
+import avatarGirlEarring from "@/assets/avatars/avatar-girl-earring.png";
+import avatarBoySmi from "@/assets/avatars/avatar-boy-smile.png";
+import avatarGirlTikka from "@/assets/avatars/avatar-girl-tikka.png";
+import avatarSkiGoggles from "@/assets/avatars/avatar-ski-goggles.png";
+import avatarFarmerHat from "@/assets/avatars/avatar-farmer-hat.png";
+import avatarSportsCap from "@/assets/avatars/avatar-sports-cap.png";
+import avatarGirlFlower from "@/assets/avatars/avatar-girl-flower.png";
+
 export type AvatarId = 
   | "explorer-hat"
   | "explorer-pink"
@@ -119,4 +133,40 @@ export function getAvatarImageModule(id: AvatarId): string {
   // Avatar images are imported in screens.tsx
   // This returns a placeholder - actual image must be passed from screens.tsx
   return AVATAR_CONFIG[id]?.name || "Explorer";
+}
+
+/**
+ * Avatar image map for quick lookup
+ */
+const AVATAR_IMAGE_MAP: Record<AvatarId, string> = {
+  "explorer-hat": avatarExplorerHat,
+  "explorer-pink": avatarExplorerPink,
+  "geek-glasses": avatarGeekGlasses,
+  "girl-peace": avatarGirlPeace,
+  "turban-red": avatarTurbanRed,
+  "girl-earring": avatarGirlEarring,
+  "boy-smile": avatarBoySmi,
+  "girl-tikka": avatarGirlTikka,
+  "ski-goggles": avatarSkiGoggles,
+  "farmer-hat": avatarFarmerHat,
+  "sports-cap": avatarSportsCap,
+  "girl-flower": avatarGirlFlower,
+};
+
+/**
+ * Get avatar image by ID
+ * Returns the imported image module or default
+ */
+export function getAvatarImage(avatarId: string): string {
+  if (!avatarId) return avatarExplorerHat;
+  return AVATAR_IMAGE_MAP[avatarId as AvatarId] || avatarExplorerHat;
+}
+
+/**
+ * Get avatar name for a given avatar ID
+ * Returns the character name from config
+ */
+export function getAvatarName(avatarId: string): string {
+  if (!avatarId) return "Explorer";
+  return AVATAR_CONFIG[avatarId as AvatarId]?.name || "Explorer";
 }

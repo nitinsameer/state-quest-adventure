@@ -108,3 +108,70 @@ yarn.lock
 *.swo
 *~
 .#*
+# Test Results & Artifacts
+test-results/
+coverage/
+.last-run.json
+playwright-report/
+e2e-results.json
+e2e-results.xml
+e2e-full-results.txt
+e2e_test_results.txt
+final-e2e-results.txt
+edge_single_test.txt
+single_test_diagnostic.txt
+
+# Playwright Config
+playwright.config.ts
+playwright.config.edge.ts
+
+# Screenshots
+*.png
+home-screen.png
+
+# Build Outputs
+dist/
+build/
+build-full.txt
+rebuild-log.txt
+
+# Lovable Config
+.lovable/
+
+# Kiro Agent Artifacts & Workflow Outputs
+.agents/
+
+# Working Directories & Temporary Files
+DOCUMENT/
+SCRIPT/
+*.old
+app-response.html
+test-app.js
+test-app.mjs
+test-assets.mjs
+test-resources.mjs
+fix-paths.mjs
+
+# APK & Build Verification Artifacts
+apk_extract/
+temp_apk/
+app-release.zip
+build-errors.txt
+full-errors.txt
+logcat_output.txt
+ui_dump.xml
+view_hierarchy.xml
+
+# Documentation & Audit Files
+ARCHITECTURE-ENFORCEMENT.md
+MOBILE_TESTING_GUIDE.md
+PHASE_1_AUDIT_COMPLETE.md
+PHASE_2_TESTING_PLAN.md
+docs/
+
+# Static Server Files
+serve-dist.mjs
+serve-static.mjs
+
+# Build Output Logs
+build-output.txt

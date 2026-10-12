@@ -34,25 +34,25 @@ function ToastNotification({ config }: { config: ToastConfig }) {
 
   return (
     <div
-      className={`fixed bottom-6 left-4 right-4 max-w-md mx-auto transform transition-all duration-200 ${
+      className={`fixed bottom-6 left-4 right-4 max-w-md mx-auto transform transition-all duration-300 ${
         isExiting ? "translate-y-full opacity-0" : "translate-y-0 opacity-100"
       }`}
       role="status"
       aria-live="polite"
     >
       <div
-        className={`bg-gradient-to-r ${colors[config.type]} rounded-2xl shadow-lg p-4 flex items-center gap-3 text-white`}
+        className={`bg-gradient-to-r ${colors[config.type]} rounded-2xl shadow-elevated-3 border border-white/20 p-4 flex items-center gap-3 text-white backdrop-blur-sm`}
       >
-        <span className="text-xl flex-shrink-0">{config.icon}</span>
+        <span className="text-2xl flex-shrink-0 drop-shadow">{config.icon}</span>
         <div className="flex-1 min-w-0">
-          <p className="font-semibold text-sm leading-tight">{config.message}</p>
+          <p className="font-bold text-sm leading-tight drop-shadow">{config.message}</p>
           {config.subtitle && (
-            <p className="text-xs opacity-90 leading-tight mt-1">{config.subtitle}</p>
+            <p className="text-xs opacity-90 leading-tight mt-1 drop-shadow">{config.subtitle}</p>
           )}
         </div>
         <button
           onClick={handleDismiss}
-          className="flex-shrink-0 text-lg hover:opacity-80 active:scale-110 transition-transform"
+          className="flex-shrink-0 text-xl hover:opacity-80 active:scale-90 transition-all duration-200 drop-shadow"
           aria-label="Dismiss"
         >
           ✕

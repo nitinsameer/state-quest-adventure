@@ -6,7 +6,7 @@
 
 import { useState } from "react";
 
-export type LanguageCode = "en" | "te" | "hi" | "ta" | "gu" | "mr" | "kn" | "ml" | "or" | "bn" | "pa";
+export type LanguageCode = "en" | "te" | "hi" | "ta" | "gu" | "mr" | "kn" | "ml" | "or" | "bn" | "pa" | "kok" | "as" | "mni" | "kha" | "miz" | "hne" | "ks" | "lbj" | "ne";
 
 export interface LanguageToggleProps {
   /** Current selected language */
@@ -36,6 +36,15 @@ const LANGUAGE_DISPLAY_NAMES: Record<LanguageCode, string> = {
   or: "Odia",     // English name for Odia
   bn: "Bengali",  // English name for Bengali
   pa: "Punjabi",  // English name for Punjabi
+  kok: "Konkani", // English name for Konkani
+  as: "Assamese", // English name for Assamese
+  mni: "Manipuri", // English name for Manipuri
+  kha: "Khasi",   // English name for Khasi
+  miz: "Mizoram", // English name for Mizoram
+  hne: "Chhattisgarhi", // English name for Chhattisgarhi
+  ks: "Kashmiri", // English name for Kashmiri
+  lbj: "Ladakhi", // English name for Ladakhi
+  ne: "Nepali",   // English name for Nepali
 };
 
 export function LanguageToggle({
@@ -67,7 +76,7 @@ export function LanguageToggle({
     return (
       <button
         onClick={handleToggle}
-        className="h-10 w-10 rounded-full bg-white shadow-soft flex items-center justify-center text-lg transition-all active:scale-95 hover:shadow-md border border-blue-200"
+        className="h-10 w-10 rounded-full bg-white shadow-soft flex items-center justify-center text-lg transition-all active:scale-95 hover:shadow-md border border-info"
         title={`Switch to ${otherDisplayName}`}
       >
         {currentLanguage === "en" ? "📖" : "🌐"}
@@ -78,10 +87,10 @@ export function LanguageToggle({
   // Single toggle chip - shows ONLY the current active language
   // Click to switch to the other language (acts like a toggle/switch)
   return (
-    <div className="mt-2 flex items-center justify-center">
+    <div className="mt-(--space-0-25) flex items-center justify-center">
       <button
         onClick={handleToggle}
-        className="px-5 py-2 rounded-full text-sm font-bold transition-all bg-blue-500 text-white shadow-md hover:shadow-lg active:scale-95"
+        className="px-(--padding-lg) py-(--padding-base) rounded-full text-sm font-bold transition-all clay-button clay-explorer text-ink shadow-md hover:shadow-lg active:scale-95"
         title={`Switch to ${otherDisplayName}`}
       >
         📖 {currentDisplayName}
@@ -89,3 +98,4 @@ export function LanguageToggle({
     </div>
   );
 }
+

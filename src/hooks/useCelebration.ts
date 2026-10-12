@@ -86,7 +86,7 @@ export function useCelebration() {
     /**
      * Custom celebration with full control
      */
-    custom: (title: string, icon: string, options?: { subtitle?: string; type?: "success" | "error" | "info"; confetti?: boolean; duration?: number; action?: { label: string; onClick: () => void } }) => {
+    custom: (title: string, icon: string, options?: { subtitle?: string; type?: "success" | "error" | "info"; confetti?: boolean; duration?: number; action?: { label: string; onClick: () => void }; showCloseButton?: boolean }) => {
       show({
         type: options?.type ?? "info",
         title,
@@ -95,6 +95,7 @@ export function useCelebration() {
         confetti: options?.confetti,
         duration: options?.duration,
         action: options?.action,
+        showCloseButton: options?.showCloseButton,
       });
     },
 

@@ -240,6 +240,11 @@ class Logger {
   }
 
   private loadFromStorage() {
+    // CRITICAL FIX: Only access localStorage in browser context (not SSR/Node.js)
+    if (typeof window === 'undefined') {
+      return; // SSR - no localStorage available
+    }
+    
     try {
       const stored = localStorage.getItem(this.STORAGE_KEY);
       if (stored) {

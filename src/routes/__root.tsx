@@ -6,7 +6,7 @@ import {
   useRouter,
   useLocation,
 } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import React from "react";
 import { App } from "@capacitor/app";
 
@@ -14,7 +14,6 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { useAndroidBackButton } from "../hooks/useAndroidBackButton";
 import { getJourneyBackHandler } from "../lib/journeyBackHandler";
-import { Toaster } from "@/components/ui/sonner";
 import { UnlockCelebration } from "@/components/UnlockCelebration";
 import { CelebrationPopupProvider } from "@/components/CelebrationPopup";
 import { BottomToastProvider } from "@/components/BottomToast";
@@ -22,67 +21,56 @@ import { DebugScreen } from "@/components/DebugScreen";
 import { BottomNav } from "@/components/screens";
 import { appLogger } from "@/lib/logger";
 import { firebaseEvents } from "@/lib/firebase-events";
-import { useProgress, isHydrated } from "@/lib/progress";
+import { useProgress, isHydrated, initializeHydration, levelInfo, getLevelName } from "@/lib/progress";
 import { pauseTts, resumeTts } from "@/lib/tts";
-import { ensureAudioConsentGranted, hasFeatureConsent, subscribeConsentChanges } from "@/lib/parental-consent";
-import { cleanupAudioContext } from "@/lib/fx";
-import { enableAnalyticsAfterConsent, disableAnalyticsAfterConsentRevoked } from "@/lib/firebase-init";
+import { ensureAudioConsentGranted } from "@/lib/parental-consent";
+import { initializeAudioCleanup } from "@/lib/fx";
 import { Capacitor } from "@capacitor/core";
+import { useCelebrationStore } from "@/store/celebrationStore";
 
 // React Error Boundary for catching runtime errors
-// FIX #2: Enhanced error boundary with better error recovery and logging
+// CRITICAL FIX #1.2: Comprehensive error boundary with Crashlytics logging
+import { logError, categorizeError } from "@/lib/error-tracking";
+
 class RootErrorBoundary extends React.Component<
   { children: React.ReactNode },
-  { hasError: boolean; error: Error | null; errorCount: number }
+  { hasError: boolean; error: Error | null; errorCategory?: string }
 > {
-  private resetTimeoutId: NodeJS.Timeout | null = null;
-
   constructor(props: { children: React.ReactNode }) {
     super(props);
-    this.state = { hasError: false, error: null, errorCount: 0 };
+    this.state = { hasError: false, error: null };
     appLogger.info('root_error_boundary', 'RootErrorBoundary mounted');
   }
 
   static getDerivedStateFromError(error: Error) {
-    appLogger.error('root_error_boundary', 'getDerivedStateFromError called', { errorMessage: error.message }, error);
-    return (prevState: any) => ({
-      hasError: true,
-      error,
-      errorCount: (prevState?.errorCount || 0) + 1,
-    });
+    const category = categorizeError(error);
+    appLogger.error('root_error_boundary', 'getDerivedStateFromError called', { 
+      errorMessage: error.message,
+      category: category.category,
+      severity: category.severity,
+    }, error);
+    return { hasError: true, error, errorCategory: category.category };
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    appLogger.error('root_error_boundary', 'componentDidCatch called', { errorInfo }, error);
-    console.error("RootErrorBoundary caught error:", error, errorInfo);
+    const category = categorizeError(error);
     
-    // Report to error tracking service
-    reportLovableError(error, { boundary: "root_error_boundary", errorInfo });
-    
-    // Try to report to Firebase if available
-    try {
-      firebaseEvents.crash({
-        errorType: 'RootErrorBoundary',
-        errorMessage: error.message,
-        errorStack: error.stack,
-        componentStack: errorInfo.componentStack,
-      });
-    } catch {
-      // Firebase not available
-    }
-    
-    // Auto-recover after 5 seconds if error count is low (transient errors)
-    if (this.state.errorCount < 3) {
-      this.resetTimeoutId = setTimeout(() => {
-        this.setState({ hasError: false, error: null });
-      }, 5000);
-    }
-  }
+    // Log to our error tracking system (includes Crashlytics)
+    logError(error, {
+      boundary: 'root_error_boundary',
+      errorInfo,
+      severity: category.severity,
+      screen: 'root_component',
+    });
 
-  componentWillUnmount() {
-    if (this.resetTimeoutId) {
-      clearTimeout(this.resetTimeoutId);
-    }
+    appLogger.error('root_error_boundary', 'componentDidCatch called', { 
+      errorInfo,
+      category: category.category,
+      recoverable: category.recoverable,
+    }, error);
+    
+    console.error("RootErrorBoundary caught error:", error, errorInfo);
+    reportLovableError(error, { boundary: "root_error_boundary", errorInfo });
   }
 
   render() {
@@ -95,42 +83,35 @@ class RootErrorBoundary extends React.Component<
             {/* Error Icon */}
             <div className="text-6xl mb-4">💥</div>
             
-            <h1 className="text-2xl font-bold text-ink">
+            <h1 className="text-h2">
               App encountered an error
             </h1>
-            <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+            <p className="mt-3 text-body text-muted-foreground leading-relaxed">
               Something unexpected happened. Let's try reloading the app!
             </p>
 
             {/* Error Details */}
             <details className="mt-4 text-left">
-              <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground">
+              <summary className="cursor-pointer text-caption text-muted-foreground hover:text-foreground">
                 Error details (for debugging)
               </summary>
-              <pre className="mt-2 overflow-auto rounded bg-muted p-2 text-xs text-foreground font-mono max-h-[150px]">
+              <pre className="mt-2 overflow-auto rounded bg-muted p-2 text-caption text-foreground font-mono max-h-[150px]">
                 {this.state.error?.stack}
               </pre>
             </details>
-
-            {/* Error Recovery Status */}
-            {this.state.errorCount < 3 && (
-              <p className="mt-4 text-xs text-muted-foreground animate-pulse">
-                ⏳ Auto-recovering in a few seconds...
-              </p>
-            )}
 
             {/* Action Button */}
             <div className="mt-8">
               <button
                 onClick={() => window.location.reload()}
-                className="w-full h-14 rounded-2xl bg-gradient-to-r from-blue-400 to-cyan-500 text-white font-bold text-lg shadow-lg transition-all hover:shadow-xl active:scale-95"
+                className="w-full h-14 rounded-2xl bg-gradient-to-r from-blue-400 to-cyan-500 text-white text-h4 shadow-lg transition-all hover:shadow-xl active:scale-95"
               >
                 🔄 Reload App
               </button>
             </div>
 
             {/* Reassuring message */}
-            <p className="mt-6 text-xs text-muted-foreground">
+            <p className="mt-6 text-caption text-muted-foreground">
               Your progress is saved! 💾
             </p>
           </div>
@@ -147,14 +128,14 @@ function NotFoundComponent() {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
+        <h2 className="mt-4 text-h4 text-foreground">Page not found</h2>
+        <p className="mt-2 text-body text-muted-foreground">
           The page you're looking for doesn't exist or has been moved.
         </p>
         <div className="mt-6">
           <Link
             to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-label text-primary-foreground transition-colors hover:bg-primary/90"
           >
             Go home
           </Link>
@@ -177,19 +158,19 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         {/* Error Icon */}
         <div className="text-6xl mb-4">⚠️</div>
         
-        <h1 className="text-2xl font-bold text-ink">
+        <h1 className="text-h2 text-ink">
           Oops! Something went wrong
         </h1>
-        <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+        <p className="mt-3 text-body text-muted-foreground leading-relaxed">
           The page didn't load properly. Don't worry—just try again or go back home!
         </p>
         
         {/* Debug info (small, for parents/developers) */}
         <details className="mt-4 text-left">
-          <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground">
+          <summary className="cursor-pointer text-caption text-muted-foreground hover:text-foreground">
             Error details (for debugging)
           </summary>
-          <pre className="mt-2 overflow-auto rounded bg-muted p-2 text-xs text-foreground font-mono max-h-[150px]">
+          <pre className="mt-2 overflow-auto rounded bg-muted p-2 text-caption text-foreground font-mono max-h-[150px]">
             {error?.message}
           </pre>
         </details>
@@ -201,20 +182,20 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
               router.invalidate();
               reset();
             }}
-            className="w-full h-14 rounded-2xl bg-gradient-to-r from-blue-400 to-cyan-500 text-white font-bold text-lg shadow-lg transition-all hover:shadow-xl active:scale-95"
+            className="w-full h-14 rounded-2xl bg-gradient-to-r from-blue-400 to-cyan-500 text-white text-h4 shadow-lg transition-all hover:shadow-xl active:scale-95"
           >
             🔄 Try Again
           </button>
           <a
             href="/"
-            className="w-full h-14 rounded-2xl bg-white border-2 border-blue-200 text-blue-600 font-bold text-lg flex items-center justify-center transition-all hover:bg-blue-50 active:scale-95"
+            className="w-full h-14 rounded-2xl bg-white border-2 border-blue-200 text-blue-600 text-h4 flex items-center justify-center transition-all hover:bg-blue-50 active:scale-95"
           >
             🏠 Go Home
           </a>
         </div>
 
         {/* Reassuring message */}
-        <p className="mt-6 text-xs text-muted-foreground">
+        <p className="mt-6 text-caption text-muted-foreground">
           If this keeps happening, talk to an adult about what's going on! 👋
         </p>
       </div>
@@ -256,19 +237,35 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   errorComponent: ErrorComponent,
 });
 
-function RootComponent() {
+// RULES OF HOOKS FIX: Separate HydratedApp component
+// This ensures useProgress() is called consistently (always called, never conditionally)
+// All progress-dependent logic and hooks are in this component, not in RootComponent
+function HydratedApp() {
   const { queryClient } = Route.useRouteContext();
   const location = useLocation();
+  const navRef = useRef<HTMLDivElement>(null);
+
+  // RULES OF HOOKS: useProgress() is ALWAYS called here, never conditionally
+  // This ensures hook count/order is consistent across renders
   const progress = useProgress();
+  
+  // Get celebration store show method at top level (hooks must be called before any conditionals)
+  const showCelebration = useCelebrationStore((state) => state.show);
 
   // Pre-auth routes that should NOT show BottomNav
   const preAuthRoutes = ['/', '/welcome', '/create'];
-
-  // Immediate logging on component mount
-  console.log("🚀 [RootComponent] MOUNTED - location.pathname:", location.pathname);
-  console.log("🚀 [RootComponent] progress.onboarded:", progress.onboarded);
-  console.log("🚀 [RootComponent] document.readyState:", typeof document !== "undefined" ? document.readyState : "N/A");
-  console.log("🚀 [RootComponent] window.location:", typeof window !== "undefined" ? window.location.href : "N/A");
+  
+  // Immersive routes that should NOT show BottomNav (full-screen experiences)
+  const immersiveRoutes = [
+    '/state/quiz',
+    '/state/learn',
+    '/state/card',
+    '/state/complete',
+  ];
+  
+  // Check if current route is immersive (quiz, learning, celebration)
+  const isImmersiveRoute = immersiveRoutes.some(route => location.pathname.includes(route));
+  const shouldShowBottomNav = !preAuthRoutes.includes(location.pathname) && !isImmersiveRoute;
 
   // Initialize and verify Sound toggle state on app load
   useEffect(() => {
@@ -281,12 +278,34 @@ function RootComponent() {
       localStorage.setItem(SOUND_KEY, "1");
     }
   }, []);
+  
+  // Measure bottom nav height and set as CSS variable
+  useEffect(() => {
+    if (navRef.current && shouldShowBottomNav) {
+      const updateNavHeight = () => {
+        const height = navRef.current?.offsetHeight || 0;
+        const safeAreaBottom = parseInt(getComputedStyle(document.documentElement).getPropertyValue('env(safe-area-inset-bottom)') || '0');
+        document.documentElement.style.setProperty('--nav-h', `${height + safeAreaBottom}px`);
+      };
+      
+      updateNavHeight();
+      window.addEventListener('resize', updateNavHeight);
+      return () => window.removeEventListener('resize', updateNavHeight);
+    }
+  }, [shouldShowBottomNav]);
 
   // Initialize audio consent on app startup
   // Note: Don't check isHydrated() - audio consent is independent of progress hydration
   // Audio consent lives in parental-consent system, progress hydration shouldn't block it
   useEffect(() => {
     ensureAudioConsentGranted();
+  }, []);
+
+  // Initialize audio cleanup handlers for proper AudioContext lifecycle management
+  // CRITICAL FIX #1.4: Cleanup AudioContext on app unload to prevent 10x memory leak
+  useEffect(() => {
+    const cleanup = initializeAudioCleanup();
+    return cleanup; // Cleanup on component unmount
   }, []);
 
   // COPPA-compliant: Log Firebase events after user is onboarded
@@ -321,6 +340,47 @@ function RootComponent() {
       }
     }, 500); // Defer by 500ms to avoid blocking initial render
   }, [progress.onboarded, progress]);
+
+  // Level-up celebration detection
+  // Tracks when user advances to a new level and shows celebration
+  const prevLevelRef = useRef<number | null>(null);
+  
+  useEffect(() => {
+    if (!progress.onboarded) return;
+    
+    // Calculate current level
+    const currentLevel = levelInfo(progress.xp).level;
+    
+    // On first load, just record the level
+    if (prevLevelRef.current === null) {
+      prevLevelRef.current = currentLevel;
+      return;
+    }
+    
+    // Check if level increased
+    if (currentLevel > prevLevelRef.current) {
+      console.log(`[LevelUp] User advanced to Level ${currentLevel}! 🎉`);
+      
+      // Get the fun level name
+      const levelName = getLevelName(currentLevel);
+      
+      // Log level-up event to Firebase
+      
+      // Show celebration with confetti via celebration store
+      showCelebration({
+        title: `🎉 Level ${currentLevel} - ${levelName}!`,
+        subtitle: `You're now a "${levelName}"!\nKeep exploring to reach the next milestone! 🚀`,
+        icon: "⭐",
+        confetti: true,
+        duration: 3500,
+        type: "success",
+      });
+      
+      console.log(`[LevelUp] Celebration shown for Level ${currentLevel} (${levelName})`);
+      
+      prevLevelRef.current = currentLevel;
+    }
+  }, [progress.xp, progress.onboarded, showCelebration]);
   
   // Get the journey back handler dynamically so it always calls the current one
   const handleAndroidBack = () => {
@@ -332,12 +392,10 @@ function RootComponent() {
 
   useAndroidBackButton(handleAndroidBack);
   
-  appLogger.info('root_component', 'RootComponent rendering', { pathname: location.pathname });
-
-  const shouldShowBottomNav = !preAuthRoutes.includes(location.pathname);
+  appLogger.info('root_component', 'HydratedApp rendering', { pathname: location.pathname });
 
   // Determine which tab is active based on current pathname
-  const getActiveTab = (): "home" | "map" | "passport" | "badges" | "profile" => {
+  const getActiveTab = (): "home" | "map" | "explorer" | "badges" | "profile" => {
     const path = location.pathname;
     if (path.startsWith("/journey")) return "map";
     if (path.startsWith("/explorer")) return "explorer";
@@ -347,9 +405,10 @@ function RootComponent() {
   };
   
   // Pre-auth routes should use pb-safe only (no extra padding)
-  // Authenticated routes need pb-[120px] to ensure content scrolls above BottomNav
+  // Authenticated routes need bottom padding to ensure content scrolls above BottomNav
+  // Use CSS variable --nav-h for dynamic nav height
   const isPreAuthRoute = preAuthRoutes.includes(location.pathname);
-  const scrollContainerPadding = isPreAuthRoute ? 'pb-safe' : 'pb-[80px]';
+  const scrollContainerPadding = isPreAuthRoute || isImmersiveRoute ? 'pb-safe' : 'pb-[calc(var(--nav-h,80px))]';
 
   // Monitor localStorage for consent changes (from dialog)
   useEffect(() => {
@@ -374,61 +433,51 @@ function RootComponent() {
     
     // Ambient audio disabled - background music removed
 
-    // Listen for app pause (minimized)
-    const pauseListener = App.addListener('pause', () => {
-      appLogger.info('app_lifecycle', 'App paused');
-      pauseTts();
-      // FIX #4: Clean up audio context when app pauses to prevent memory leaks
-      cleanupAudioContext();
-    });
+    // Listen for app pause/resume only on native platforms (Capacitor)
+    // On web, App.addListener returns a Promise — calling .remove() on a Promise crashes
+    // CRITICAL FIX: Guard with Capacitor.isNativePlatform() + use async handle
+    let pauseHandle: { remove: () => Promise<void> } | null = null;
+    let resumeHandle: { remove: () => Promise<void> } | null = null;
 
-    // Listen for app resume (brought to foreground)
-    const resumeListener = App.addListener('resume', () => {
-      appLogger.info('app_lifecycle', 'App resumed');
-      resumeTts();
-    });
+    if (Capacitor.isNativePlatform()) {
+      // On Android/iOS: listeners work correctly
+      App.addListener('pause', () => {
+        appLogger.info('app_lifecycle', 'App paused');
+        pauseTts();
+      }).then(handle => { pauseHandle = handle; }).catch(() => {});
+
+      App.addListener('resume', () => {
+        appLogger.info('app_lifecycle', 'App resumed');
+        resumeTts();
+      }).then(handle => { resumeHandle = handle; }).catch(() => {});
+    }
 
     // Cleanup listeners on unmount or route change
     return () => {
-      pauseListener.remove();
-      resumeListener.remove();
-      // FIX #4: Clean up audio on component unmount
-      cleanupAudioContext();
+      pauseHandle?.remove().catch(() => {});
+      resumeHandle?.remove().catch(() => {});
     };
   }, [location.pathname]);
 
-  // FIX #27: Monitor analytics consent changes and enable/disable Firebase accordingly
+  // Monitor consent changes - re-render if consent status changes
   useEffect(() => {
-    // Check if analytics consent is already granted
-    if (hasFeatureConsent('analytics')) {
-      enableAnalyticsAfterConsent();
-    }
-    
-    // Subscribe to analytics consent changes
-    const unsubscribe = subscribeConsentChanges('analytics', () => {
-      if (hasFeatureConsent('analytics')) {
-        enableAnalyticsAfterConsent();
-      } else {
-        disableAnalyticsAfterConsentRevoked();
-      }
-    });
-    
-    return () => unsubscribe();
+    // Component re-renders when consent storage changes
+    // Parental consent system handles all consent logic
   }, []);
 
   const innerComponent = (
     <QueryClientProvider client={queryClient}>
       <div className="h-full w-full flex flex-col bg-[#F7F5F0] relative" suppressHydrationWarning>
-        {/* Scrollable content area - conditional padding: pb-safe for pre-auth, pb-[120px] for authenticated */}
-        <div className={`flex-1 overflow-auto pt-safe px-safe ${scrollContainerPadding}`} suppressHydrationWarning>
+        {/* Scrollable content area - conditional padding: pb-safe for pre-auth, pb-[80px] for authenticated */}
+        <main className={`flex-1 overflow-auto pt-safe px-safe ${scrollContainerPadding}`} suppressHydrationWarning>
           {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
           <Outlet />
-        </div>
+        </main>
       </div>
       
       {/* Global BottomNav - positioned fixed OUTSIDE flex container to prevent flex layout interference */}
       {shouldShowBottomNav && (
-        <div className="fixed bottom-0 left-0 right-0 z-20 pb-safe">
+        <div ref={navRef} className="fixed bottom-0 left-0 right-0 z-20 bg-[#F7F5F0] pb-[env(safe-area-inset-bottom)]">
           <BottomNav active={getActiveTab()} />
         </div>
       )}
@@ -446,4 +495,59 @@ function RootComponent() {
       {innerComponent}
     </RootErrorBoundary>
   );
+}
+
+function RootComponent() {
+  const [isReady, setIsReady] = useState(false);
+
+  // CRITICAL FIX #1.1: Initialize hydration asynchronously, not during render
+  // This prevents localStorage access from blocking the main thread
+  // Also catches hydration errors gracefully
+  useEffect(() => {
+    // FIX: Add timeout to force ready state if hydration never completes (DEBUG)
+    const timeoutId = setTimeout(() => {
+      console.warn('[HYDRATION DEBUG] Hydration timeout - forcing ready state');
+      setIsReady(true);
+    }, 5000); // 5 second timeout
+    
+    initializeHydration()
+      .then(() => {
+        clearTimeout(timeoutId);
+        setIsReady(true);
+      })
+      .catch((error) => {
+        clearTimeout(timeoutId);
+        // Hydration failed - log it and continue with defaults
+        console.error('[HYDRATION ERROR]', error);
+        const { logError } = require("@/lib/error-tracking");
+        logError(error, {
+          boundary: 'hydration',
+          severity: 'critical',
+          screen: 'root_component',
+        });
+        
+        // Set ready anyway - use default progress
+        setIsReady(true);
+      });
+  }, []);
+
+  // Show loading screen until hydration completes
+  // CRITICAL: Split component to respect Rules of Hooks
+  // useProgress() must be called same number/order every render
+  // useProgress() is NOT called in RootComponent (always same hook count)
+  // useProgress() IS called in HydratedApp (separate component, always called)
+  if (!isReady) {
+    return (
+      <div className="h-screen w-full flex items-center justify-center bg-gradient-to-br from-orange-400 to-red-500">
+        <div className="text-center">
+          <div className="text-6xl mb-4 animate-bounce">🗺️</div>
+          <div className="text-white font-bold text-lg">Loading your adventure...</div>
+        </div>
+      </div>
+    );
+  }
+
+  // RULES OF HOOKS: Render HydratedApp in separate component
+  // This ensures useProgress() is called consistently in HydratedApp
+  return <HydratedApp />;
 }

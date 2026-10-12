@@ -1,12 +1,23 @@
-import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, notFound, useNavigate, redirect } from "@tanstack/react-router";
 import { StateCompletedScreen } from "@/components/screens";
 import { getStateBySlug } from "@/lib/states";
-import { NotFoundPlace, PlaceError } from "@/components/PlaceFallbacks";
+import { statesWithProgress, setLastPlayedState, getProgress } from "@/lib/progress";
+import { useProgress } from "@/lib/progress";
+import { useAndroidBackButton } from "@/hooks/useAndroidBackButton";
+import { PlaceError, NotFoundPlace } from "@/components/PlaceFallbacks";
 
 export const Route = createFileRoute("/state/$slug/complete")({
   loader: ({ params }) => {
     const state = getStateBySlug(params.slug);
     if (!state) throw notFound();
+    
+    // GUARD: Check that state is actually completed
+    const progress = getProgress();
+    if (!progress.completed.includes(state.name)) {
+      console.warn("[CompleteRoute] Guard check failed, redirecting — state not completed");
+      throw redirect({ to: "/state/$slug/learn", params: { slug: params.slug } });
+    }
+    
     return { name: state.name };
   },
   head: ({ loaderData }) => {
@@ -40,16 +51,39 @@ function Complete() {
   const { slug } = Route.useParams();
   const { name } = Route.useLoaderData();
   const navigate = useNavigate();
+  const progress = useProgress();
+  
+  // Android back button: navigate to learning hub, not back into quiz
+  useAndroidBackButton(() => {
+    goToReplay();
+  });
   
   const goToPostcard = () => navigate({ to: "/state/$slug/postcard", params: { slug } });
-  const goToUnlock = () => navigate({ to: "/state/$slug/unlock", params: { slug } });
+  const goToReplay = () => navigate({ to: "/state/$slug/learn", params: { slug } });
+  
+  // Navigate to next uncompleted state
+  const goToNextState = () => {
+    const states = statesWithProgress(progress);
+    // Find next uncompleted state after current
+    const currentIndex = states.findIndex(s => s.name === name);
+    const nextState = states.slice(currentIndex + 1).find(s => s.status !== "done");
+    
+    if (nextState) {
+      setLastPlayedState(nextState.name);
+      navigate({ to: "/state/$slug/learn", params: { slug: nextState.name.toLowerCase().replace(/\s+/g, "-") } });
+    } else {
+      // All states completed, go to home
+      navigate({ to: "/home" });
+    }
+  };
 
   return (
     <StateCompletedScreen 
       key={slug} 
       stateName={name} 
+      onContinue={goToNextState}
       onCreatePostcard={goToPostcard}
-      onContinue={goToUnlock}
+      onReplay={goToReplay}
     />
   );
 }

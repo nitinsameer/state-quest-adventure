@@ -1,14 +1,12 @@
 /**
  * PostcardPreviewModal - Uses StandardModal for consistent design
  * 
- * Auto-shows postcard preview after quiz completion with three CTAs:
- * 1. "Save to Photos" - triggers FilePermissionDialog (kid-friendly), then saves
- * 2. "Keep in App Only" - stores postcard data locally, no file export
- * 3. "Later" - dismisses modal, user can access from Passport tab anytime
+ * Auto-shows postcard preview after quiz completion with two CTAs:
+ * 1. "Save to Passport" - stores postcard data locally in app
+ * 2. "Later" - dismisses modal, user can access from Passport tab anytime
  * 
  * Kid-friendly UX: Clear preview of what's being saved, simple language
- * 
- * Integration: Uses FilePermissionDialog (StandardModal-based) for granular permission request
+ * No storage permission prompts (COPPA-compliant)
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -16,12 +14,8 @@ import { getState } from "@/lib/states";
 import { STATE_ART, TONE_GRADIENT, TONE_HEX, preloadStateArt } from "@/lib/state-art";
 import { useProgress, badgesFor, STATE_BADGES, type BadgeId } from "@/lib/progress";
 import { fxTap } from "@/lib/fx";
-import { requestStoragePermission, saveFileToDownloads } from "@/lib/permissions";
 import { useToast } from "@/hooks/useToast";
-import { FilePermissionDialog } from "@/components/FilePermissionDialog";
-import { hasFeatureConsent } from "@/lib/parental-consent";
 import { usePostcardLibrary } from "@/store/postcard-library-store";
-import { markPostcardAsExported } from "@/lib/postcard-library";
 import { StandardModal } from "@/components/StandardModal";
 
 const BADGE_EMOJI: Record<BadgeId, string> = {
@@ -193,7 +187,6 @@ export function PostcardPreviewModal({
   const [isOpen, setIsOpen] = useState(open);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-  const [showPermissionDialog, setShowPermissionDialog] = useState(false);
   const toast = useToast();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -225,40 +218,13 @@ export function PostcardPreviewModal({
     };
   }, [isOpen, stateName]);
 
-  const handleSaveToPhotos = async () => {
+  const handleSaveToPassport = async () => {
     if (isSaving) return;
     
-    // Check if user has granted file permission
-    if (!hasFeatureConsent('file')) {
-      console.log("[POSTCARD] File permission not granted, showing permission dialog");
-      setIsSaving(true);
-      fxTap();
-      setShowPermissionDialog(true);
-      return;
-    }
-    
-    // Permission already granted, proceed directly to save
-    console.log("[POSTCARD] File permission already granted, proceeding to save");
     setIsSaving(true);
     fxTap();
-    await handlePermissionAccepted();
-  };
 
-  const handlePermissionAccepted = async () => {
     try {
-      // Request actual Android storage permission first
-      console.log("[POSTCARD] Requesting storage permission before saving");
-      const permissionGranted = await requestStoragePermission();
-      console.log("[POSTCARD] Storage permission result:", { permissionGranted });
-      
-      if (!permissionGranted) {
-        toast.error("Storage permission needed", {
-          subtitle: "Please enable storage access in settings",
-        });
-        setIsSaving(false);
-        return;
-      }
-      
       // Generate full postcard blob
       const blob = await generatePostcardPreview(stateName);
       if (!blob) {
@@ -269,54 +235,41 @@ export function PostcardPreviewModal({
         return;
       }
 
-      // Save to device
-      const filename = `${stateName}-postcard.png`;
-      const success = await saveFileToDownloads(blob, filename);
-
-      if (success) {
-        // Mark postcard as exported in library
+      // Convert blob to base64 for storage
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64 = (reader.result as string).split(",")[1];
         const library = usePostcardLibrary.getState();
-        const postcard = library.postcards.find((p) => p.state === stateName);
-        if (postcard) {
-          const updatedPostcard = markPostcardAsExported(postcard, filename);
-          library.updatePostcard(postcard.id, updatedPostcard);
-          console.log("[POSTCARD] Export tracking updated for", stateName);
-        }
+        const now = new Date().toISOString();
         
-        toast.success("Postcard saved!", {
-          subtitle: "Check your photos folder",
+        // Generate a stamp date like "12 · MAR"
+        const date = new Date();
+        const day = date.getDate();
+        const month = date.toLocaleString("en-US", { month: "short" }).toUpperCase();
+        const stampDate = `${day} · ${month}`;
+
+        // Determine badge earned
+        const earned = badgesFor({ stamps: {}, postcards: {}, achievements: {} } as any, stateName || "");
+        const badgeId = (earned[0] ?? "explorer") as BadgeId;
+
+        // Add to postcard library with image data
+        library.addPostcard(stateName || "", badgeId, stampDate, now, base64);
+
+        toast.success("✨ Saved to your Passport!", {
+          subtitle: "View anytime from Explorer",
         });
+        setIsSaving(false);
         onSave?.();
         handleClose();
-      } else {
-        toast.error("Couldn't save postcard", {
-          subtitle: "Please try again",
-        });
-      }
+      };
+      reader.readAsDataURL(blob);
     } catch (err) {
       console.error("[PostcardPreviewModal] Save failed", err);
       toast.error("Something went wrong", {
         subtitle: "Please try again",
       });
-    } finally {
       setIsSaving(false);
     }
-  };
-
-  const handlePermissionRejected = () => {
-    toast.info("No problem!", {
-      subtitle: "You can try again anytime",
-    });
-    setIsSaving(false);
-  };
-
-  const handleKeepInApp = () => {
-    fxTap();
-    toast.success("Postcard saved in app!", {
-      subtitle: "View anytime from your Passport",
-    });
-    onSave?.();
-    handleClose();
   };
 
   const handleLater = () => {
@@ -347,7 +300,7 @@ export function PostcardPreviewModal({
         content={[
           {
             type: "custom",
-            className: "relative bg-gray-100 aspect-[3/4] overflow-hidden rounded-xl -mx-6 -mt-6 mb-4",
+            className: "relative clay-card clay-white aspect-[3/4] overflow-hidden rounded-xl -mx-6 -mt-6 mb-(--space-2)",
             children: (
               <div className="relative w-full h-full">
                 {previewUrl ? (
@@ -360,7 +313,7 @@ export function PostcardPreviewModal({
                   <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-100">
                     <div className="text-center">
                       <div className="text-5xl mb-2">✨</div>
-                      <div className="text-sm font-semibold text-gray-600">Creating your postcard...</div>
+                      <div className="text-sm font-semibold text-muted-foreground">Creating your postcard...</div>
                     </div>
                   </div>
                 )}
@@ -370,14 +323,9 @@ export function PostcardPreviewModal({
         ]}
         buttons={[
           {
-            label: isSaving ? "Saving..." : "📸 Save to Photos",
-            onClick: handleSaveToPhotos,
+            label: isSaving ? "Saving..." : "💾 Save to Passport",
+            onClick: handleSaveToPassport,
             variant: "primary",
-          },
-          {
-            label: "📱 Keep in App",
-            onClick: handleKeepInApp,
-            variant: "secondary",
           },
           {
             label: "⏰ Later",
@@ -388,13 +336,7 @@ export function PostcardPreviewModal({
         maxWidth="max-w-md"
         contentClassName="!space-y-0"
       />
-
-      {/* Kid-friendly permission dialog shown on-demand */}
-      <FilePermissionDialog
-        open={showPermissionDialog}
-        onAccept={handlePermissionAccepted}
-        onReject={handlePermissionRejected}
-      />
     </>
   );
 }
+

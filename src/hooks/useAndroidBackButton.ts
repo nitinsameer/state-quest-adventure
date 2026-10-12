@@ -22,33 +22,41 @@ export function useAndroidBackButton(onJourneyBack?: () => void) {
       return;
     }
 
-    const backButtonListener = App.addListener("backButton", async () => {
-      const currentPath = router.state.location.pathname;
+    let unlistener: (() => void) | null = null;
 
-      // Exit app on home/welcome/root screens
-      if (currentPath === "/" || currentPath === "/home" || currentPath === "/welcome") {
-        await App.exitApp();
-        return;
-      }
+    const setupListener = async () => {
+      const listenerHandle = await App.addListener("backButton", async () => {
+        const currentPath = router.state.location.pathname;
 
-      // Journey-specific: handle internal state navigation before route history
-      if (currentPath === "/journey" && onJourneyBack) {
-        onJourneyBack();
-        return; // Exit here - let onJourneyBack decide what to do
-      }
+        // Exit app on home/welcome/root screens
+        if (currentPath === "/" || currentPath === "/home" || currentPath === "/welcome") {
+          await App.exitApp();
+          return;
+        }
 
-      // For all other routes: navigate back through browser history
-      // This works because TanStack Router tracks history for all route changes
-      if (router.history.length > 1) {
-        router.history.back();
-      } else {
-        // Fallback: if no history, go to home
-        router.navigate({ to: "/home" });
-      }
-    });
+        // Journey-specific: handle internal state navigation before route history
+        if (currentPath === "/journey" && onJourneyBack) {
+          onJourneyBack();
+          return; // Exit here - let onJourneyBack decide what to do
+        }
+
+        // For all other routes: navigate back through browser history
+        // This works because TanStack Router tracks history for all route changes
+        if (router.history.length > 1) {
+          router.history.back();
+        } else {
+          // Fallback: if no history, go to home
+          router.navigate({ to: "/home" });
+        }
+      });
+
+      unlistener = () => listenerHandle.remove();
+    };
+
+    setupListener();
 
     return () => {
-      backButtonListener.remove();
+      unlistener?.();
     };
   }, [router, onJourneyBack]);
 }
