@@ -106,6 +106,7 @@ import {
   getRecentlyCompletedState,
   clearRecentlyCompleted,
   markRecentlyCompleted,
+  dismissPendingCelebration,
 } from "@/lib/progress";
 
 // Local constant to avoid bundler issues with imported TOTAL_STATES
@@ -567,42 +568,34 @@ function RecentlyCompletedCelebration({
   onDismiss: () => void;
   navigate: ReturnType<typeof useNavigate>;
 }) {
-  const recentState = getRecentlyCompletedState(p);
+  // Read from pending celebrations (persistent, no auto-dismiss, no expiry)
+  const pendingCelebration = p.pendingCelebrations?.[0];
   
-  // Auto-dismiss after 3 seconds (hook must be before returns)
+  // Play celebration sound on mount
   useEffect(() => {
-    if (!recentState || !showCelebrationPopup) return;
-    const timer = setTimeout(() => {
-      onDismiss();
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, [recentState, showCelebrationPopup, onDismiss]);
-
-  // Play celebration sound on mount (hook must be before returns)
-  useEffect(() => {
-    if (!recentState || !showCelebrationPopup) return;
-    fxCorrect();
-  }, [recentState, showCelebrationPopup]);
+    if (pendingCelebration) {
+      fxCorrect();
+    }
+  }, [pendingCelebration]);
   
-  if (!recentState || !showCelebrationPopup) return null;
+  if (!showCelebrationPopup || !pendingCelebration) return null;
 
-  const state = INDIA_STATES.find(s => s.name === recentState);
+  const { stateName, xp, badges } = pendingCelebration;
+  const state = INDIA_STATES.find(s => s.name === stateName);
   if (!state) return null;
 
-  // Get actual earned badges and XP for this state
-  const earnedBadges = p.statePerformance?.[recentState]?.earnedPerformanceBadges ?? [];
-  const badgeCount = earnedBadges.length;
-  const xpEarned = 100; // State completion bonus (matches completeState default)
-
   const handleDismiss = () => {
+    fxTap();
     onDismiss();
-    clearRecentlyCompleted();
+    // Remove from pending celebrations when dismissed
+    dismissPendingCelebration();
   };
 
   const handleNextState = () => {
     fxTap();
     onDismiss();
-    clearRecentlyCompleted();
+    // Remove from pending celebrations when proceeding
+    dismissPendingCelebration();
     navigate({ to: "/journey" });
   };
 
@@ -631,27 +624,27 @@ function RecentlyCompletedCelebration({
           <div className="text-center">
             <div className="text-lg font-bold opacity-95 text-ink">🏆 STATE MASTERED! 🏆</div>
             <div className="text-3xl font-black mt-2 drop-shadow-lg text-ink">
-              {recentState}
+              {stateName}
             </div>
           </div>
 
-          {/* Stats Grid - Show earned rewards */}
+          {/* Stats Grid - Show earned rewards (real values) */}
           <div className="grid grid-cols-3 gap-3 text-center">
-            {badgeCount > 0 && (
+            {badges.length > 0 && (
               <div className="bg-white/90 backdrop-blur rounded-xl p-3">
                 <div className="text-sm opacity-90 font-semibold text-ink">Badges</div>
-                <div className="text-2xl font-bold mt-1 text-ink">+{badgeCount}</div>
+                <div className="text-2xl font-bold mt-1 text-ink">+{badges.length}</div>
               </div>
             )}
             <div className="bg-white/90 backdrop-blur rounded-xl p-3">
               <div className="text-sm opacity-90 font-semibold text-ink">XP</div>
-              <div className="text-2xl font-bold mt-1 text-ink">+{xpEarned}</div>
+              <div className="text-2xl font-bold mt-1 text-ink">+{xp}</div>
             </div>
             <div className="bg-white/90 backdrop-blur rounded-xl p-3">
               <div className="text-sm opacity-90 font-semibold text-ink">Stamp</div>
               <img
-                src={STATE_ART[recentState]}
-                alt={recentState}
+                src={STATE_ART[stateName]}
+                alt={stateName}
                 className="w-10 h-10 object-cover rounded mx-auto mt-1"
                 loading="eager"
                 decoding="auto"

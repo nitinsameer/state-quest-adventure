@@ -69,6 +69,8 @@ export type Progress = {
   lastPlayedState?: string;
   /** NEW: Per-state performance tracking for performance badges */
   statePerformance?: StatePerformanceData;
+  /** NEW: Pending celebrations queue (persistent until dismissed, shows real XP & badges) */
+  pendingCelebrations?: Array<{ stateName: string; xp: number; badges: string[] }>;
 };
 
 export const STATE_BADGES: { id: BadgeId; name: string; xp: number }[] = [
@@ -120,6 +122,8 @@ function defaultProgress(): Progress {
     replayCount: {},
     cardVisits: {},
     lastPlayedState: undefined,
+    statePerformance: {},
+    pendingCelebrations: [],
     statePerformance: {},
   };
 }
@@ -820,13 +824,19 @@ export function finishQuiz(
           earnedPerformanceBadges: earnedBadges,
         },
       },
+      // Queue pending celebration for Home screen (persistent, no auto-dismiss)
+      pendingCelebrations: [
+        ...(p.pendingCelebrations ?? []),
+        {
+          stateName,
+          xp: xpReward,
+          badges: earnedBadges,
+        },
+      ],
     };
 
     return updated;
   });
-
-  // 5. Mark as recently completed for home screen celebration (separate call, ok)
-  markRecentlyCompleted(stateName);
 }
 
 /**
@@ -1686,6 +1696,20 @@ export function clearRecentlyCompleted() {
   } catch {
     // Storage error - fail silently
   }
+}
+
+/**
+ * Remove the first pending celebration from the queue (called when dismissed)
+ */
+export function dismissPendingCelebration() {
+  set((p) => {
+    if (!p.pendingCelebrations?.length) return p;
+    
+    return {
+      ...p,
+      pendingCelebrations: p.pendingCelebrations.slice(1),
+    };
+  });
 }
 
 
