@@ -173,7 +173,7 @@ export function ExpandableCard({
                 onClick={() => handleToggleDetail(2)}
                 className="w-full flex items-center justify-between p-(--padding-sm) rounded-lg hover:bg-black/5 active:scale-95 transition bg-success-soft border border-success"
               >
-                <span className="text-xs font-bold text-green-700">
+                <span className="text-xs font-bold text-success">
                   🎮 Try This Activity
                 </span>
                 <span className="text-lg transition-transform" style={{ transform: expandedDetailIndex === 2 ? "rotate(180deg)" : "rotate(0deg)" }}>

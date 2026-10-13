@@ -170,7 +170,7 @@ export function ParentGate({ onVerified, onCancel }: ParentGateProps) {
                 : "Recover PIN",
         closeButton: false,
         floatingIcon: true,
-        floatingIconGradient: ["from-blue-500", "to-cyan-600"],
+        floatingIconGradient: ["from-accent-1", "to-accent-1"],
       }}
       onClose={onCancel}
       maxWidth="max-w-sm"
@@ -219,7 +219,7 @@ export function ParentGate({ onVerified, onCancel }: ParentGateProps) {
 
             <button
               onClick={handleForgotPin}
-              className="w-full text-xs text-blue-600 hover:underline"
+              className="w-full text-xs text-accent-1 hover:underline"
             >
               Forgot PIN?
             </button>

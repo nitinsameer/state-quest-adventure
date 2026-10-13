@@ -87,7 +87,7 @@ export function StateCompletionCelebration({
           stage === 'reveal' ? 'opacity-100' : 'opacity-0'
         }`}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-400/40 via-pink-400/20 to-blue-400/30 blur-3xl" />
+        <div className="absolute inset-0 bg-accent-2-soft blur-3xl" />
       </div>
 
       {/* Main celebration card */}

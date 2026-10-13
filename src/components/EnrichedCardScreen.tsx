@@ -21,7 +21,7 @@ const extractTextArray = (value: string[] | AgeTaggedContent[]): string[] => {
 };
 
 const CARD_COLORS = [
-  { bg: "bg-orange-soft", border: "border-orange-200" }, // Capital
+  { bg: "bg-action-primary/10", border: "border-action-primary" }, // Capital
   { bg: "bg-info-soft", border: "border-info" }, // Language
   { bg: "bg-accent-2-soft", border: "border-accent-2" }, // Food
   { bg: "bg-success-soft", border: "border-success" }, // Places
@@ -36,7 +36,7 @@ export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: st
 
   if (!content) {
     return (
-      <div className="h-full w-full bg-[#F7F5F0] flex flex-col items-center justify-center gap-(--gap-base) p-(--padding-lg)">
+      <div className="h-full w-full bg-page flex flex-col items-center justify-center gap-(--gap-base) p-(--padding-lg)">
         <div className="text-4xl">🏜️</div>
         <div className="text-center">
           <div className="text-display font-extrabold text-lg">Coming Soon!</div>
@@ -63,7 +63,7 @@ export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: st
   // Guard: ensure currentCard has required properties
   if (!currentCard || !('title' in currentCard && 'emoji' in currentCard)) {
     return (
-      <div className="h-full w-full bg-[#F7F5F0] flex flex-col items-center justify-center gap-(--gap-base) p-(--padding-lg)">
+      <div className="h-full w-full bg-page flex flex-col items-center justify-center gap-(--gap-base) p-(--padding-lg)">
         <div className="text-4xl">❌</div>
         <div className="text-center">
           <div className="text-display font-extrabold text-lg">Card unavailable</div>
@@ -83,7 +83,7 @@ export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: st
   };
 
   return (
-    <div className="h-full w-full bg-[#F7F5F0] flex flex-col overflow-hidden">
+    <div className="h-full w-full bg-page flex flex-col overflow-hidden">
       {/* Header */}
       <div className="relative gradient-explorer px-5 pt-(--padding-base) pb-(--padding-base) rounded-b-[36px] flex-shrink-0">
         <div className="flex items-center justify-between">

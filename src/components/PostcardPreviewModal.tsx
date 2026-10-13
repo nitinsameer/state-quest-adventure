@@ -314,7 +314,7 @@ export function PostcardPreviewModal({
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-100">
+                  <div className="w-full h-full flex items-center justify-center bg-accent-1-soft">
                     <div className="text-center">
                       <div className="text-5xl mb-2">âœ¨</div>
                       <div className="text-sm font-semibold text-muted-foreground">Creating your postcard...</div>

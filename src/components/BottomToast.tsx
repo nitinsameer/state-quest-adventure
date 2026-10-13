@@ -26,10 +26,10 @@ function ToastNotification({ config }: { config: ToastConfig }) {
   };
 
   const colors = {
-    error: "from-error to-error-dark",
-    info: "from-info to-info-dark",
-    success: "from-success to-success-dark",
-    warning: "from-warning to-warning-dark",
+    error: "bg-fb-error",
+    info: "bg-fb-info",
+    success: "bg-fb-success",
+    warning: "bg-fb-warning",
   };
 
   return (
@@ -41,7 +41,7 @@ function ToastNotification({ config }: { config: ToastConfig }) {
       aria-live="polite"
     >
       <div
-        className={`bg-gradient-to-r ${colors[config.type]} rounded-2xl shadow-elevated-3 border border-white/20 p-4 flex items-center gap-3 text-white backdrop-blur-sm`}
+        className={`${colors[config.type]} rounded-2xl shadow-elevated-3 border border-white/20 p-4 flex items-center gap-3 text-white backdrop-blur-sm`}
       >
         <span className="text-2xl flex-shrink-0 drop-shadow">{config.icon}</span>
         <div className="flex-1 min-w-0">

@@ -55,13 +55,13 @@ export function IndiaProgressMap() {
           <div className="flex items-center gap-2">
             <span className="text-xl">🇮🇳</span>
             <div>
-              <h3 className="text-base font-black text-slate-900">India Journey</h3>
-              <p className="text-xs text-slate-500 font-semibold">{p.completed.length} / 36 states explored</p>
+              <h3 className="text-base font-black text-text-primary">India Journey</h3>
+              <p className="text-xs text-text-secondary font-semibold">{p.completed.length} / 36 states explored</p>
             </div>
           </div>
           <button
             onClick={handleStartExploring}
-            className="flex items-center gap-1.5 bg-blue-100 hover:bg-blue-200 text-blue-600 px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 active:scale-95"
+            className="flex items-center gap-1.5 bg-accent-1-soft hover:bg-accent-1-soft/80 text-accent-1 px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 active:scale-95"
           >
             <span>🚀</span>
             <span>Start exploring!</span>
@@ -70,7 +70,7 @@ export function IndiaProgressMap() {
 
         {/* Main progress bar */}
         <div className="mb-4">
-          <div className="h-2.5 bg-slate-200 rounded-full overflow-hidden">
+          <div className="h-2.5 bg-surface-sunken rounded-full overflow-hidden">
             <div
               className="h-full bg-gradient-to-r from-saffron-500 to-orange-500 transition-all duration-1500 ease-out rounded-full"
               style={{ width: `${completionPercentage}%` }}
@@ -91,10 +91,10 @@ export function IndiaProgressMap() {
                 <div
                   className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-500 ${
                     reached
-                      ? "bg-gradient-to-br from-saffron-400 to-orange-500 text-white shadow-md"
+                      ? "bg-action-primary text-white shadow-md"
                       : isNearby
-                        ? "bg-slate-300 text-slate-600 shadow-lg"
-                        : "bg-slate-200 text-slate-500"
+                        ? "bg-surface-sunken text-text-secondary shadow-lg"
+                        : "bg-surface-sunken text-text-muted"
                   }`}
                   style={{
                     transform: isNearby && !reached ? "scale(1.1)" : "scale(1)",
@@ -103,7 +103,7 @@ export function IndiaProgressMap() {
                   {milestone.emoji}
                 </div>
                 {/* Label */}
-                <span className="text-xs font-bold text-slate-600 text-center">{milestone.label}</span>
+                <span className="text-xs font-bold text-text-secondary text-center">{milestone.label}</span>
               </div>
             );
           })}
@@ -111,7 +111,7 @@ export function IndiaProgressMap() {
 
         {/* Motivational message */}
         <div className="text-center">
-          <p className="text-sm font-semibold text-slate-700">{getMotivationalMessage()}</p>
+          <p className="text-sm font-semibold text-text-primary">{getMotivationalMessage()}</p>
         </div>
       </div>
     </div>

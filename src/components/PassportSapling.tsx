@@ -40,7 +40,7 @@ export function PassportSapling() {
   };
 
   return (
-    <div className="w-full h-full bg-gradient-to-b from-info-soft to-white flex flex-col overflow-hidden">
+    <div className="w-full h-full bg-accent-1-soft flex flex-col overflow-hidden">
       <ConfettiBurst trigger={burst} size="big" />
 
       {/* Postcard Modal - shown on same screen */}

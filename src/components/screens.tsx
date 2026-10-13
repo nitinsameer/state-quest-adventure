@@ -468,7 +468,7 @@ export function CreateProfileScreen() {
 
         {/* Age Selection with Vibrant Colors & Emojis */}
         <div className="mt-6 mb-1">
-          <label className="text-base font-black text-gray-800">
+          <label className="text-base font-black text-text-primary">
             ðŸŽ‚ How old are you?
           </label>
           <div className="mt-3 space-y-2">
@@ -482,13 +482,13 @@ export function CreateProfileScreen() {
                   className={`w-full h-14 rounded-xl flex items-center justify-between px-4 font-bold transition-all duration-300 transform ${
                     isSelected
                       ? `bg-gradient-to-r ${band.gradient} text-white shadow-elevated-2 scale-100 border-2 border-white`
-                      : "bg-white border-2 border-gray-300 text-gray-700 hover:border-gray-400 hover:shadow-elevated-1"
+                      : "bg-surface-card border-2 border-surface-sunken text-text-primary hover:border-surface-sunken hover:shadow-elevated-1"
                   }`}
                 >
                   <span className="text-3xl">{band.emoji}</span>
                   <div className="flex-1 text-center">
                     <div className="text-sm font-black">{band.value}</div>
-                    <div className={`text-xs transition-colors ${isSelected ? "text-white/90" : "text-gray-600"}`}>
+                    <div className={`text-xs transition-colors ${isSelected ? "text-white/90" : "text-text-secondary"}`}>
                       {band.label}
                     </div>
                   </div>
@@ -530,7 +530,7 @@ export function CreateProfileScreen() {
 function FloatingXPFeedback({ xp, key: feedbackKey }: { xp: number; key: string }) {
   return (
     <div
-      className="fixed pointer-events-none z-50 text-h4 text-yellow-500 drop-shadow-lg animate-ping-rise"
+      className="fixed pointer-events-none z-50 text-h4 text-accent-2 drop-shadow-lg animate-ping-rise"
       style={{
         left: "50%",
         top: "50%",
@@ -624,7 +624,7 @@ function RecentlyCompletedCelebration({
       />
       
       {/* Celebration Card */}
-      <div className="relative bg-gradient-to-br from-amber-300 via-orange-400 to-red-500 text-white rounded-3xl p-6 shadow-2xl max-w-sm w-full animate-scale-in border-2 border-amber-200">
+      <div className="relative bg-action-primary text-white rounded-3xl p-6 shadow-2xl max-w-sm w-full animate-scale-in border-2 border-action-primary">
         {/* Prominent Close Button - Top Right */}
         <button
           onClick={handleDismiss}
@@ -677,7 +677,7 @@ function RecentlyCompletedCelebration({
             </button>
             <button
               onClick={handleNextState}
-              className="flex-1 h-11 rounded-xl bg-white text-orange-600 text-sm font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 active:scale-95"
+              className="flex-1 h-11 rounded-xl bg-surface-card text-action-primary text-sm font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 active:scale-95"
             >
               Next State â†’
             </button>
@@ -1080,7 +1080,7 @@ function StatCard({
       <div className="text-display text-h2 leading-snug mt-1">
         {value}
       </div>
-      <div className="text-label text-slate-700">
+      <div className="text-label text-text-secondary">
         {label}
       </div>
     </div>
@@ -1103,9 +1103,9 @@ function StatCardEnhanced({
   tone: "orange" | "gold" | "green";
 }) {
   const bgGradient = {
-    orange: "bg-gradient-to-br from-saffron/20 to-orange-100/10",
-    gold: "bg-gradient-to-br from-yellow-200/25 to-yellow-100/15",
-    green: "bg-gradient-to-br from-success/20 to-emerald-100/10",
+    orange: "bg-action-primary/10",
+    gold: "bg-accent-2-soft/20",
+    green: "bg-success/10",
   }[tone];
 
   const borderColor = {
@@ -1116,7 +1116,7 @@ function StatCardEnhanced({
 
   const numberColor = {
     orange: "text-saffron",
-    gold: "text-yellow-600",
+    gold: "text-accent-2",
     green: "text-success",
   }[tone];
 
@@ -1218,7 +1218,7 @@ function StateDetailModal({
               isDone
                 ? "gradient-saffron shadow-lg"
                 : isLocked
-                ? "bg-gradient-to-br from-gray-200 to-gray-300 opacity-60"
+                ? "bg-surface-sunken opacity-60"
                 : "gradient-saffron shadow-lg"
             }`}
           >
@@ -1228,14 +1228,14 @@ function StateDetailModal({
           <h2 className="text-h2 text-ink">
             {stateName}
           </h2>
-          <p className="text-sm text-slate-600 mt-1">
+          <p className="text-sm text-text-secondary mt-1">
             {state.isUT ? "Union Territory" : "State"} Â· {stateData.capital}
           </p>
         </div>
 
         {/* Sneak Peek Preview for Locked States */}
         {isLocked && (
-          <div className="rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-warning p-4 space-y-3">
+          <div className="rounded-2xl bg-action-primary/5 border-2 border-warning p-4 space-y-3">
             <p className="text-h5 text-warning flex items-center gap-2">
               ðŸ‘€ Sneak Peek Preview
             </p>
@@ -1243,20 +1243,20 @@ function StateDetailModal({
               <div className="flex items-start gap-2">
                 <span className="text-2xl flex-shrink-0">{stateData.animal}</span>
                 <div>
-                  <p className="text-body font-bold text-slate-800">State Animal</p>
-                  <p className="text-slate-700">{stateData.animalName}</p>
+                  <p className="text-body font-bold text-text-primary">State Animal</p>
+                  <p className="text-text-secondary">{stateData.animalName}</p>
                 </div>
               </div>
               <div className="flex items-start gap-2">
                 <span className="text-2xl flex-shrink-0">{stateData.monument}</span>
                 <div>
-                  <p className="text-body font-bold text-slate-800">Famous Monument</p>
-                  <p className="text-slate-700">{stateData.monumentName}</p>
+                  <p className="text-body font-bold text-text-primary">Famous Monument</p>
+                  <p className="text-text-secondary">{stateData.monumentName}</p>
                 </div>
               </div>
               <div className="pt-2 border-t border-warning">
                 <p className="text-xs font-bold text-warning mb-1">Fun Fact</p>
-                <p className="text-slate-700 italic">{stateData.funFact}</p>
+                <p className="text-text-secondary italic">{stateData.funFact}</p>
               </div>
             </div>
           </div>
@@ -1268,7 +1268,7 @@ function StateDetailModal({
             <p className="text-h5 text-warning mb-2">
               ðŸ” Locked
             </p>
-            <p className="text-body text-orange-700">
+            <p className="text-body text-action-primary">
               Complete the previous state to unlock this adventure!
             </p>
           </div>
@@ -1286,7 +1286,7 @@ function StateDetailModal({
             <p className="text-h5 text-info mb-2">
               â–¶ In Progress
             </p>
-            <p className="text-body text-blue-800">
+            <p className="text-body text-accent-1">
               Complete 3 cards and take the quiz to unlock the next state!
             </p>
           </div>
@@ -1591,7 +1591,7 @@ export function JourneyMapScreen() {
         <div className="mt-3 animate-fade-in" style={{ animationDelay: "50ms" }}>
           <div className="h-3 bg-white/30 rounded-full overflow-hidden shadow-inner mb-2">
             <div
-              className="h-full bg-gradient-to-r from-yellow-200 via-yellow-100 to-white rounded-full transition-all duration-500"
+              className="h-full bg-accent-2-soft rounded-full transition-all duration-500"
               style={{ width: `${(completedStates / totalStates) * 100}%` }}
             />
           </div>
@@ -1653,10 +1653,10 @@ export function JourneyMapScreen() {
             
             return (
               <div className="mb-4 animate-fade-in">
-                <div style={{ fontSize: 'var(--type-section-heading)', fontWeight: 'var(--type-section-heading-weight)' }} className="text-slate-900">
+                <div style={{ fontSize: 'var(--type-section-heading)', fontWeight: 'var(--type-section-heading-weight)' }} className="text-text-primary">
                   {region.name}
                 </div>
-                <div className="text-base font-semibold text-slate-600 mt-1">
+                <div className="text-base font-semibold text-text-secondary mt-1">
                   {regionDone}/{regionStates.length} explored {regionDone === regionStates.length && "âœ¨ Region Complete!"}
                 </div>
                 <div className="mt-2 h-2 bg-[oklch(0.9_0.02_260)] rounded-full overflow-hidden">
@@ -2155,7 +2155,7 @@ export function LearningHubScreen({
       {/* "All 6 cards done!" Decision Modal */}
       {showDecisionModal && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in">
-          <div className="bg-gradient-to-b from-yellow-300 to-orange-200 rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden animate-in zoom-in-95 flex flex-col">
+          <div className="bg-action-primary rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden animate-in zoom-in-95 flex flex-col">
             {/* Header */}
             <div className="p-6 text-center">
               <div className="text-5xl mb-4">ðŸŽ‰</div>
@@ -2588,7 +2588,7 @@ export function LearningCardScreen({
         <div className="text-center">
           <div className="text-5xl mb-3">âš ï¸</div>
           <h1 className="text-h4 text-ink mb-2">Card content unavailable</h1>
-          <p className="text-sm text-slate-700 mb-4">Please try again or go back</p>
+          <p className="text-sm text-text-secondary mb-4">Please try again or go back</p>
           <button
             onClick={() => window.history.back()}
             className="ui-button ui-accent-2 text-ink px-4 py-2 font-bold"
@@ -2842,9 +2842,9 @@ export function LearningCardScreen({
           }}
           className={`h-9 px-3 rounded-full shadow-soft flex items-center justify-center gap-2 text-label transition-all active:scale-95 whitespace-nowrap ${
             playingCardIndex === currentCardIndex
-              ? "bg-gradient-to-br from-orange-400 to-red-500 text-white shadow-lg animate-pulse"
+              ? "bg-action-primary text-white shadow-lg animate-pulse"
               : hasFeatureConsent('audio')
-                ? "bg-info-soft text-blue-600 hover:shadow-md border border-info"
+                ? "bg-accent-1-soft text-accent-1 hover:shadow-md border border-accent-1"
                 : "bg-muted text-muted-light border border-muted cursor-not-allowed"
           }`}
           title={hasFeatureConsent('audio') ? "Play card content" : "Enable audio in settings to listen"}
@@ -2870,7 +2870,7 @@ export function LearningCardScreen({
 
         {/* Replay indicator - shown when user is replaying a card */}
         {isReplaying && (
-          <div className="mb-3 p-3 bg-gradient-to-r from-purple-soft to-info-soft rounded-xl flex items-center gap-2 shadow-sm border border-purple">
+          <div className="mb-3 p-3 bg-accent-2-soft rounded-xl flex items-center gap-2 shadow-sm border border-accent-2">
             <span className="text-lg">ðŸ“–</span>
             <div className="flex-1">
               <p className="text-xs font-bold text-purple-900">Replaying this card</p>
@@ -2912,7 +2912,7 @@ export function LearningCardScreen({
 
         {/* Mastery badge for replayed cards */}
         {isReplaying && replayCount > 0 && (
-          <div className="mt-3 px-3 py-2 bg-gradient-to-r from-amber-100 to-orange-100 rounded-lg text-center border border-amber-300">
+          <div className="mt-3 px-3 py-2 bg-accent-2-soft rounded-lg text-center border border-accent-2">
             <p className="text-xs font-bold text-warning">â­ Mastered! Replayed {replayCount}x</p>
           </div>
         )}
@@ -2940,7 +2940,7 @@ export function LearningCardScreen({
             <div className="text-center">
               <div className="text-5xl mb-3">ðŸŽ§</div>
               <h3 className="text-display text-xl font-extrabold text-ink">Enable Audio?</h3>
-              <p className="text-sm text-slate-700 mt-2">
+              <p className="text-sm text-text-secondary mt-2">
                 Turn on audio to hear the stories read aloud! ðŸŽµ
               </p>
             </div>
@@ -2962,7 +2962,7 @@ export function LearningCardScreen({
                   fxTap();
                   setShowAudioPermissionPrompt(false);
                 }}
-                className="flex-1 h-12 rounded-xl bg-slate-200 text-slate-800 font-bold text-sm"
+                className="flex-1 h-12 rounded-xl bg-surface-sunken text-text-primary font-bold text-sm"
               >
                 Maybe Later
               </button>
@@ -2972,7 +2972,7 @@ export function LearningCardScreen({
                   fxTap();
                   setShowAudioPermissionPrompt(false);
                 }}
-                className="flex-1 h-12 rounded-xl bg-gradient-to-r from-blue-400 to-info-soft0 text-white font-bold text-sm flex items-center justify-center"
+                className="flex-1 h-12 rounded-xl bg-accent-1 text-white font-bold text-sm flex items-center justify-center"
               >
                 Go to Settings
               </Link>
@@ -3572,7 +3572,7 @@ function BadgeDetailModal({
             className={`h-20 w-20 rounded-full flex items-center justify-center text-5xl mb-4 ${
               badge.done
                 ? "gradient-saffron shadow-lg"
-                : "bg-gradient-to-br from-gray-200 to-gray-300 opacity-60"
+                : "bg-surface-sunken opacity-60"
             }`}
           >
             {badge.done ? badge.icon : "ðŸ”’"}
@@ -3599,7 +3599,7 @@ function BadgeDetailModal({
           <p className="text-h5 text-info mb-1">
             Badge Type
           </p>
-          <p className="text-body text-blue-800">
+          <p className="text-body text-accent-1">
             {badge.name === "Monument" && "ðŸ›ï¸ Learn about famous landmarks"}
             {badge.name === "Animal" && "ðŸ¦ Discover local wildlife"}
             {badge.name === "Explorer" && "ðŸŽ–ï¸ Master all cards in this state"}
@@ -3620,7 +3620,7 @@ function BadgeDetailModal({
                 fxConfetti();
                 onClose();
               }}
-              className="flex-1 h-12 rounded-2xl bg-gradient-to-r from-green-400 to-success-soft0 text-display font-extrabold text-white shadow-lg hover:shadow-xl transition"
+              className="flex-1 h-12 rounded-2xl bg-success text-display font-extrabold text-white shadow-lg hover:shadow-xl transition"
             >
               ðŸŽ‰ Celebrate!
             </button>
@@ -4087,11 +4087,11 @@ function ProfileScreenContent() {
               <div className="text-display font-extrabold text-[15px] leading-tight">Save Pictures</div>
               <div className="text-[11px] font-bold">
                 {hasFileConsent ? (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 border border-green-200">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-success/10 text-success border border-success">
                     Active âœ“
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-sunken text-text-secondary border border-surface-sunken">
                     Tap to enable
                   </span>
                 )}
@@ -4332,14 +4332,14 @@ function ParentZonePlaceholder() {
         }}
         className="w-full flex items-center gap-3 hover:opacity-80 transition"
       >
-        <div className="h-12 w-12 rounded-2xl bg-blue-200 flex items-center justify-center text-2xl flex-shrink-0">
+        <div className="h-12 w-12 rounded-2xl bg-accent-1 flex items-center justify-center text-2xl flex-shrink-0">
           ðŸ‘¨â€ðŸ‘©â€ðŸ‘§
         </div>
         <div className="flex-1 text-left">
           <div className="text-display font-extrabold text-[15px] leading-tight text-info">
             Parent Zone
           </div>
-          <div className="text-[11px] font-bold text-blue-700">
+          <div className="text-[11px] font-bold text-accent-1">
             Tap to configure PIN & parental settings
           </div>
         </div>
@@ -4361,7 +4361,7 @@ function ParentZonePlaceholder() {
               placeholder="Enter 4-digit PIN"
               className="w-full h-10 rounded-lg border-2 border-info px-3 font-extrabold text-center text-lg tracking-widest text-info"
             />
-            <div className="text-[10px] text-blue-700 mt-1">
+            <div className="text-[10px] text-accent-1 mt-1">
               ðŸ’¡ Used to reset progress. Default: 1234
             </div>
           </div>
@@ -4371,7 +4371,7 @@ function ParentZonePlaceholder() {
             className={`w-full h-10 rounded-lg font-bold text-sm transition text-white ${
               pinSaveStatus === "saved"
                 ? "bg-success-soft0"
-                : "bg-blue-600 disabled:opacity-50 hover:bg-blue-700"
+                : "bg-accent-1 disabled:opacity-50 hover:bg-accent-1/90"
             }`}
           >
             {pinSaveStatus === "saved" ? "âœ“ PIN Saved" : pinSaveStatus === "saving" ? "Saving..." : "Save PIN"}

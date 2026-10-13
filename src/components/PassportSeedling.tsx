@@ -103,7 +103,7 @@ export function PassportSeedling() {
   };
 
   return (
-    <div className="w-full h-full bg-gradient-to-b from-info-soft to-white flex flex-col overflow-hidden">
+    <div className="w-full h-full bg-accent-1-soft flex flex-col overflow-hidden">
       <ConfettiBurst trigger={burst} size="big" />
 
       {/* Postcard Modal - shown on same screen */}
@@ -148,7 +148,7 @@ export function PassportSeedling() {
         <div>
           <div className="h-2 bg-white/30 rounded-full overflow-hidden shadow-inner">
             <div
-              className="h-full bg-gradient-to-r from-yellow-200 via-yellow-100 to-white rounded-full transition-all duration-500"
+              className="h-full bg-accent-2-soft rounded-full transition-all duration-500"
               style={{ width: `${Math.round((progress.completed.length / 36) * 100)}%` }}
             />
           </div>

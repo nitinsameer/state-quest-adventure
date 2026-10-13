@@ -188,7 +188,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
           </button>
           <a
             href="/"
-            className="w-full h-14 rounded-2xl bg-white border-2 border-blue-200 text-blue-600 text-h4 flex items-center justify-center transition-all hover:bg-blue-50 active:scale-95"
+            className="w-full h-14 rounded-2xl bg-surface-card border-2 border-accent-1 text-accent-1 text-h4 flex items-center justify-center transition-all hover:bg-accent-1-soft active:scale-95"
           >
             🏠 Go Home
           </a>

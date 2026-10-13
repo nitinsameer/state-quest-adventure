@@ -68,22 +68,22 @@ function PrivacyPolicyScreen() {
         {/* Analytics */}
         <section>
           <h2 className="text-h4 mb-3">📊 Analytics & Telemetry</h2>
-          <div className="bg-blue-50 rounded-2xl p-4 border border-blue-200 space-y-3">
+          <div className="bg-accent-1-soft rounded-2xl p-4 border border-accent-1 space-y-3">
             <div>
-              <div className="text-body font-bold text-blue-900">Firebase Analytics</div>
-              <p className="text-caption text-blue-800 mt-1">
+              <div className="text-body font-bold text-accent-1">Firebase Analytics</div>
+              <p className="text-caption text-accent-1 mt-1">
                 We use Firebase Analytics (by Google) to understand how the app is used. We collect:
               </p>
-              <ul className="text-caption text-blue-800 mt-2 ml-3 space-y-1">
+              <ul className="text-caption text-accent-1 mt-2 ml-3 space-y-1">
                 <li>• Child's age band (e.g., "8-9")</li>
                 <li>• States explored and quiz performance</li>
                 <li>• Session duration and visit frequency</li>
                 <li>• Crash reports (for stability)</li>
               </ul>
             </div>
-            <div className="border-t border-blue-200 pt-3">
-              <div className="text-body font-bold text-blue-900">Parental Consent</div>
-              <p className="text-caption text-blue-800 mt-1">
+            <div className="border-t border-accent-1 pt-3">
+              <div className="text-body font-bold text-accent-1">Parental Consent</div>
+              <p className="text-caption text-accent-1 mt-1">
                 This analytics collection only begins AFTER your child completes onboarding and you see our permission dialogs. You control whether analytics are sent.
               </p>
             </div>
@@ -118,8 +118,8 @@ function PrivacyPolicyScreen() {
         {/* Ads & Tracking */}
         <section>
           <h2 className="text-h4 mb-3">❌ No Ads or Third-Party Tracking</h2>
-          <div className="bg-green-50 rounded-2xl p-4 border border-green-200">
-            <ul className="text-caption text-green-900 space-y-2">
+          <div className="bg-success-soft rounded-2xl p-4 border border-success">
+            <ul className="text-caption text-success space-y-2">
               <li>✓ No advertisements or ad networks</li>
               <li>✓ No third-party trackers (Mixpanel, AppsFlyer, etc.)</li>
               <li>✓ No behavioral profiling or targeting</li>

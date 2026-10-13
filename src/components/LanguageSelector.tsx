@@ -61,7 +61,7 @@ export function LanguageSelector({
   // Single language only - show as plain text
   if (!isBilingual) {
     return (
-      <div className="px-(--padding-base) py-(--padding-xs) rounded-2xl bg-white/80 text-sm font-semibold text-blue-600">
+      <div className="px-(--padding-base) py-(--padding-xs) rounded-2xl bg-surface-card/80 text-sm font-semibold text-accent-1">
         {currentDisplayName}
       </div>
     );
@@ -72,7 +72,7 @@ export function LanguageSelector({
     <div ref={containerRef} className="relative">
       <button
         onClick={() => setShowDropdown(!showDropdown)}
-        className="px-(--padding-base) py-(--padding-xs) rounded-2xl bg-white/80 flex items-center gap-(--gap-xs) text-sm font-semibold text-blue-600 hover:bg-white/90 transition-all active:scale-95"
+        className="px-(--padding-base) py-(--padding-xs) rounded-2xl bg-surface-card/80 flex items-center gap-(--gap-xs) text-sm font-semibold text-accent-1 hover:bg-surface-card/90 transition-all active:scale-95"
         title="Switch language"
       >
         <span>{currentDisplayName}</span>
@@ -91,7 +91,7 @@ export function LanguageSelector({
               }}
               className={`w-full px-(--padding-md) py-(--padding-xs) text-left text-sm font-semibold transition-colors ${
                 lang === currentLanguage
-                  ? "bg-info-soft text-blue-600"
+                  ? "bg-accent-1-soft text-accent-1"
                   : "text-muted-foreground hover:bg-muted-light"
               }`}
             >
