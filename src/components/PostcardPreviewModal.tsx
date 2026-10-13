@@ -17,6 +17,7 @@ import { fxTap } from "@/lib/fx";
 import { useToast } from "@/hooks/useToast";
 import { usePostcardLibrary } from "@/store/postcard-library-store";
 import { StandardModal } from "@/components/StandardModal";
+import { readTokenAsHex } from "@/lib/theme-tokens";
 
 const BADGE_EMOJI: Record<BadgeId, string> = {
   monument: "ðŸ›ï¸",
@@ -71,7 +72,7 @@ async function generatePostcardPreview(stateName?: string): Promise<Blob | null>
   c.fillRect(0, 0, W, H);
 
   // inner card
-  c.fillStyle = "#ffffff";
+  c.fillStyle = readTokenAsHex('--surface-card');
   roundRect(c, 50, 50, W - 100, H - 100, 48);
   c.fill();
 
@@ -86,16 +87,19 @@ async function generatePostcardPreview(stateName?: string): Promise<Blob | null>
   c.fillRect(50, 50, W - 100, 330);
   c.restore();
 
-  c.fillStyle = "rgba(255,255,255,0.92)";
+  c.fillStyle = readTokenAsHex('--text-on-header');
+  c.globalAlpha = 0.92;
   c.font = "bold 30px system-ui, sans-serif";
   c.textAlign = "center";
   c.fillText("GREETINGS FROM", W / 2, 150);
-  c.fillStyle = "#ffffff";
+  c.globalAlpha = 1;
+  c.fillStyle = readTokenAsHex('--text-on-header');
   c.font = "bold 74px system-ui, sans-serif";
   c.fillText(state.name.toUpperCase(), W / 2, 235);
   c.font = "bold 30px system-ui, sans-serif";
-  c.fillStyle = "rgba(255,255,255,0.92)";
+  c.globalAlpha = 0.92;
   c.fillText(state.nickname, W / 2, 295);
+  c.globalAlpha = 1;
 
   // artwork
   c.imageSmoothingEnabled = true;
@@ -137,15 +141,15 @@ async function generatePostcardPreview(stateName?: string): Promise<Blob | null>
   );
   const badge = STATE_BADGES.find((b) => b.id === earned[0]) ?? STATE_BADGES[0];
   
-  c.fillStyle = "#F6F3EC";
+  c.fillStyle = readTokenAsHex('--accent-6-soft');
   roundRect(c, 120, 830, W - 240, 110, 40);
   c.fill();
-  c.fillStyle = "#1E293B";
+  c.fillStyle = readTokenAsHex('--text-primary');
   c.font = "bold 40px system-ui, sans-serif";
   c.fillText(`${BADGE_EMOJI[badge.id]}  ${badge.name} Badge Earned`, W / 2, 900);
 
   // fun fact
-  c.fillStyle = "#475569";
+  c.fillStyle = readTokenAsHex('--text-secondary');
   c.font = "30px system-ui, sans-serif";
   const words = state.funFact.split(" ");
   let line = "";
@@ -162,7 +166,7 @@ async function generatePostcardPreview(stateName?: string): Promise<Blob | null>
   }
   if (line) c.fillText(line, W / 2, y);
 
-  c.fillStyle = "#94A3B8";
+  c.fillStyle = readTokenAsHex('--text-muted');
   c.font = "bold 26px system-ui, sans-serif";
   c.fillText("India Explorer", W / 2, H - 100);
 

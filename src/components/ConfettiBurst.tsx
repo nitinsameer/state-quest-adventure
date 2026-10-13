@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
+import { readTokenAsHex } from "@/lib/theme-tokens";
 
-const COLORS = ["#FF7A1A", "#2E7DFF", "#22C55E", "#F5B301", "#ffffff"];
+function getConfettiColors(): string[] {
+  return [
+    readTokenAsHex('--accent-1'),      // Saffron
+    readTokenAsHex('--accent-2'),      // Explorer blue
+    readTokenAsHex('--accent-3'),      // Success green
+    readTokenAsHex('--accent-4'),      // Gold
+    readTokenAsHex('--surface-card'),  // White
+  ];
+}
 
 type Piece = {
   id: number;
@@ -13,12 +22,13 @@ type Piece = {
 };
 
 function makePieces(seed: number, count: number): Piece[] {
+  const colors = getConfettiColors();
   return Array.from({ length: count }).map((_, i) => ({
     id: seed * 1000 + i,
     left: (i * 37 + seed * 13) % 100,
     delay: ((i * 17) % 8) / 20,
     duration: 1.1 + ((i * 7) % 10) / 10,
-    color: COLORS[(i + seed) % COLORS.length],
+    color: colors[(i + seed) % colors.length],
     size: 5 + (i % 4) * 2,
     rotate: (i * 31) % 360,
   }));

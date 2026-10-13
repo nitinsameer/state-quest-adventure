@@ -7,6 +7,7 @@ import { fxTap } from "@/lib/fx";
 import { useCelebration } from "@/hooks/useCelebration";
 import { useToast } from "@/hooks/useToast";
 import { usePostcardLibrary } from "@/store/postcard-library-store";
+import { readTokenAsHex } from "@/lib/theme-tokens";
 
 const BADGE_EMOJI: Record<string, string> = {
   monument: "ðŸ›ï¸",
@@ -60,7 +61,7 @@ async function generatePostcardBlob(postcard: PostcardData): Promise<Blob | null
   c.fillRect(0, 0, W, H);
 
   // inner card
-  c.fillStyle = "#ffffff";
+  c.fillStyle = readTokenAsHex('--surface-card');
   roundRect(c, 50, 50, W - 100, H - 100, 48);
   c.fill();
 
@@ -75,16 +76,18 @@ async function generatePostcardBlob(postcard: PostcardData): Promise<Blob | null
   c.fillRect(50, 50, W - 100, 330);
   c.restore();
 
-  c.fillStyle = "rgba(255,255,255,0.92)";
+  c.fillStyle = readTokenAsHex('--text-on-header');
+  c.globalAlpha = 0.92;
   c.font = "bold 30px system-ui, sans-serif";
   c.textAlign = "center";
   c.fillText("EXPLORER PASSPORT", W / 2, 120);
 
-  c.fillStyle = "rgba(255,255,255,0.78)";
+  c.globalAlpha = 0.78;
   c.font = "22px system-ui, sans-serif";
   c.fillText("State Completed", W / 2, 165);
 
   // state name
+  c.globalAlpha = 1;
   c.fillStyle = from;
   c.font = "bold 48px system-ui, sans-serif";
   c.fillText(state.name, W / 2, 280);
@@ -110,11 +113,11 @@ async function generatePostcardBlob(postcard: PostcardData): Promise<Blob | null
   }
 
   // badge section
-  c.fillStyle = "#f5e6c8";
+  c.fillStyle = readTokenAsHex('--accent-6-soft');
   roundRect(c, 100, 700, W - 200, 140, 16);
   c.fill();
 
-  c.fillStyle = "#333";
+  c.fillStyle = readTokenAsHex('--text-primary');
   c.font = "bold 18px system-ui, sans-serif";
   c.textAlign = "center";
   c.fillText("Badge Earned", W / 2, 735);
@@ -124,11 +127,13 @@ async function generatePostcardBlob(postcard: PostcardData): Promise<Blob | null
   c.fillText(badgeEmoji, W / 2, 800);
 
   // footer
-  c.fillStyle = "rgba(0,0,0,0.3)";
+  c.globalAlpha = 0.3;
+  c.fillStyle = readTokenAsHex('--text-primary');
   c.font = "14px system-ui, sans-serif";
   c.textAlign = "center";
   c.fillText("India Explorer", W / 2, 1080);
   c.fillText(`Completed on ${postcard.stampDate}`, W / 2, 1110);
+  c.globalAlpha = 1;
 
   return new Promise((resolve) => {
     canvas.toBlob(resolve, "image/png");
