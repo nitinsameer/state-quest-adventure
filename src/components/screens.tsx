@@ -1323,6 +1323,7 @@ export function JourneyMapScreen() {
   const states = statesWithProgress(p);
   const [view, setView] = useState<{ screen: "intro" | "hub" | "card" | "quiz"; name: string; cardIndex?: number } | null>(null);
   const [selectedState, setSelectedState] = useState<string | null>(null);
+  const [expandedRegion, setExpandedRegion] = useState<keyof typeof REGIONS>("north");
   const celebration = useCelebration();
 
   // Detect and celebrate milestones
@@ -1610,141 +1611,116 @@ export function JourneyMapScreen() {
       <Cloud className="absolute top-[500px] right-1 w-20 opacity-85 pointer-events-none animate-fade-in" />
 
       {/* Explorable States Map with Regional Organization */}
-      <div className="relative flex-1 overflow-y-auto overflow-x-hidden animate-fade-in" style={{ animationDelay: "200ms" }}>
-        {/* Regional sections - always visible, no collapse */}
-        <div className="relative w-full space-y-6 py-6 px-3 pb-calc" style={{ paddingBottom: 'calc(64px + 16px + env(safe-area-inset-bottom))' }}>
-          {REGION_KEYS.map((regionKey, regionIdx) => {
-            // Skip union territories region - they're rendered separately below
-            if (regionKey === "unionTerritories") return null;
-            
-            const region = REGIONS[regionKey];
-            const regionStates = statesByRegion[regionKey] || [];
+      <div className="relative flex-1 flex flex-col overflow-hidden animate-fade-in" style={{ animationDelay: "200ms" }}>
+        {/* Region Chips - Horizontal Scrollable */}
+        <div className="px-4 pt-4 pb-2 overflow-x-auto sticky top-0 z-20 bg-gradient-to-b from-sky-100 to-transparent">
+          <div className="flex gap-2 pb-2 min-w-min">
+            {REGION_KEYS.map((regionKey) => {
+              const region = REGIONS[regionKey];
+              const regionStates = statesByRegion[regionKey] || [];
+              const regionDone = regionStates.filter((s) => s.status === "done").length;
+              const isSelected = regionKey === expandedRegion;
+              
+              return (
+                <button
+                  key={regionKey}
+                  onClick={() => {
+                    fxTap();
+                    setExpandedRegion(regionKey);
+                  }}
+                  className={`px-4 py-3 rounded-full font-extrabold whitespace-nowrap transition active:scale-95 ${
+                    isSelected
+                      ? "clay-button clay-saffron text-ink"
+                      : "clay-button clay-white text-ink"
+                  }`}
+                  style={{ fontSize: 'var(--type-body)', fontWeight: 'var(--type-body-weight)' }}
+                  title={`${regionDone}/${regionStates.length} explored`}
+                >
+                  {region.emoji} {region.name.split(" ")[0]} {isSelected && regionDone === regionStates.length && "✓"}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Expanded Region Content - Scrollable */}
+        <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 pt-4 pb-4" style={{ paddingBottom: 'calc(64px + 16px + env(safe-area-inset-bottom))' }}>
+          {/* Region Info Header */}
+          {(() => {
+            const region = REGIONS[expandedRegion];
+            const regionStates = statesByRegion[expandedRegion] || [];
             const regionDone = regionStates.filter((s) => s.status === "done").length;
             
             return (
-              <div key={regionKey} className="animate-fade-in" style={{ animationDelay: `${300 + regionIdx * 100}ms` }}>
-                {/* Region Header - Horizontal Chip Style */}
-                <div
-                  className={`w-full rounded-2xl py-2.5 shadow-elevated-1 flex items-center justify-between transition-all hover:shadow-elevated-2 hover:scale-102 active:scale-95 bg-gradient-to-r ${region.gradient} text-white px-4 mb-4`}
-                >
-                  <div className="flex items-center gap-2 flex-1">
-                    <span className="text-xl">{region.emoji}</span>
-                    <span className="font-bold text-sm text-white">{region.name}</span>
-                  </div>
-                  <span className="text-sm font-semibold text-white">{regionDone}/{regionStates.length}</span>
+              <div className="mb-4 animate-fade-in">
+                <div style={{ fontSize: 'var(--type-section-heading)', fontWeight: 'var(--type-section-heading-weight)' }} className="text-slate-900">
+                  {region.name}
                 </div>
-
-                {/* States in this region - 2-Column Grid - Always Visible */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-4">
-                  {regionStates.map((state, stateIndex) => {
-                    const isLocked = state.status === "locked";
-                    const isDone = state.status === "done";
-                    const isCurrent = state.status === "current";
-                    const isAvailable = state.status === "available";
-                    
-                    // Detect in-progress state (partially completed cards)
-                    const cardsRead = cardsDone(p, state.name);
-                    const totalCards = 6; // IndiaState doesn't have cards property, default to 6
-                    const isInProgress = !isDone && cardsRead > 0 && cardsRead < totalCards;
-                    
-                    // Determine card status
-                    let cardStatus: "available" | "completed" | "locked" = "available";
-                    if (isDone) {
-                      cardStatus = "completed";
-                    } else if (isLocked) {
-                      cardStatus = "locked";
-                    } else if (isAvailable || isCurrent || isInProgress) {
-                      cardStatus = "available";
-                    }
-                    
-                    return (
-                      <JourneyDestinationCard
-                        key={state.name}
-                        stateName={state.name}
-                        status={cardStatus}
-                        cardIndex={stateIndex}
-                        isInProgress={isInProgress}
-                        cardsDone={cardsRead}
-                        totalCards={totalCards}
-                        onStart={() => {
-                          fxTap();
-                          if (!isLocked) {
-                            setView({ screen: "intro", name: state.name });
-                          }
-                        }}
-                        onReplay={() => {
-                          fxTap();
-                          setView({ screen: "intro", name: state.name });
-                        }}
-                      />
-                    );
-                  })}
+                <div className="text-base font-semibold text-slate-600 mt-1">
+                  {regionDone}/{regionStates.length} explored {regionDone === regionStates.length && "✨ Region Complete!"}
+                </div>
+                <div className="mt-2 h-2 bg-[oklch(0.9_0.02_260)] rounded-full overflow-hidden">
+                  <div
+                    className={`h-full bg-gradient-to-r ${region.gradient} transition-all duration-300`}
+                    style={{ width: `${(regionDone / regionStates.length) * 100}%` }}
+                  />
                 </div>
               </div>
             );
-          })}
+          })()}
 
-          {/* Union Territories section */}
-          <div className="animate-fade-in" style={{ animationDelay: "800ms" }}>
-            <div
-              className="w-full rounded-2xl bg-gradient-to-r from-blue-400 to-purple-500 text-white py-2.5 shadow-elevated-1 flex items-center justify-between transition-all hover:shadow-elevated-2 hover:scale-102 active:scale-95 px-4 mb-4"
-            >
-              <div className="flex items-center gap-2 flex-1">
-                <span className="text-xl">🏝️</span>
-                <span className="font-bold text-sm text-white">Union Territories</span>
+          {/* States in selected region - 2-Column Grid */}
+          {(() => {
+            const regionStates = statesByRegion[expandedRegion] || [];
+            
+            return (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 animate-fade-in">
+                {regionStates.map((state, stateIndex) => {
+                  const isLocked = state.status === "locked";
+                  const isDone = state.status === "done";
+                  const isCurrent = state.status === "current";
+                  const isAvailable = state.status === "available";
+                  
+                  // Detect in-progress state (partially completed cards)
+                  const cardsRead = cardsDone(p, state.name);
+                  const totalCards = 6; // IndiaState doesn't have cards property, default to 6
+                  const isInProgress = !isDone && cardsRead > 0 && cardsRead < totalCards;
+                  
+                  // Determine card status
+                  let cardStatus: "available" | "completed" | "locked" = "available";
+                  if (isDone) {
+                    cardStatus = "completed";
+                  } else if (isLocked) {
+                    cardStatus = "locked";
+                  } else if (isAvailable || isCurrent || isInProgress) {
+                    cardStatus = "available";
+                  }
+                  
+                  return (
+                    <JourneyDestinationCard
+                      key={state.name}
+                      stateName={state.name}
+                      status={cardStatus}
+                      cardIndex={stateIndex}
+                      isInProgress={isInProgress}
+                      cardsDone={cardsRead}
+                      totalCards={totalCards}
+                      onStart={() => {
+                        fxTap();
+                        if (!isLocked) {
+                          setView({ screen: "intro", name: state.name });
+                        }
+                      }}
+                      onReplay={() => {
+                        fxTap();
+                        setView({ screen: "intro", name: state.name });
+                      }}
+                    />
+                  );
+                })}
               </div>
-              <span className="text-sm font-semibold text-white">{nodes.filter(n => n.isUT && n.status === "done").length}/8</span>
-            </div>
-
-            {/* UTs Grid - Always Visible */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-4">
-              {nodes.filter(n => n.isUT).map((utNode, utIndex) => {
-                const utState = states.find(s => s.name === utNode.name);
-                if (!utState) return null;
-                const isLocked = utNode.status === "locked";
-                const isDone = utNode.status === "done";
-                const isCurrent = utNode.status === "current";
-                const isAvailable = utNode.status === "available";
-                
-                // Detect in-progress state (partially completed cards)
-                const cardsRead = cardsDone(p, utNode.name);
-                const totalCards = 6; // IndiaState doesn't have cards property, default to 6
-                const isInProgress = !isDone && cardsRead > 0 && cardsRead < totalCards;
-                
-                // Determine card status
-                let cardStatus: "available" | "completed" | "locked" = "available";
-                if (isDone) {
-                  cardStatus = "completed";
-                } else if (isLocked) {
-                  cardStatus = "locked";
-                } else if (isAvailable || isCurrent || isInProgress) {
-                  cardStatus = "available";
-                }
-                
-                return (
-                  <JourneyDestinationCard
-                    key={utNode.name}
-                    stateName={utNode.name}
-                    status={cardStatus}
-                    cardIndex={utIndex}
-                    isInProgress={isInProgress}
-                    cardsDone={cardsRead}
-                    totalCards={totalCards}
-                    onStart={() => {
-                      fxTap();
-                      if (!isLocked) {
-                        setView({ screen: "intro", name: utNode.name });
-                      }
-                    }}
-                    onReplay={() => {
-                      fxTap();
-                      setView({ screen: "intro", name: utNode.name });
-                    }}
-                  />
-                );
-              })}
-            </div>
-          </div>
+            );
+          })()}
         </div>
       </div>
 
