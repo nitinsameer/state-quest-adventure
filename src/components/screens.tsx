@@ -3785,9 +3785,7 @@ function BadgeDetailModal({
 
 export function BadgesScreen() {
   const progress = useProgress();
-  const [selectedBadge, setSelectedBadge] = useState<AchievementBadge | null>(null);
   const [activeTab, setActiveTab] = useState<"achievements" | "states">("achievements");
-  const unlockedCount = unlockedAchievementBadgeCount(progress);
   const celebration = useCelebration();
   const toastStore = useToastStore();
 
@@ -3819,47 +3817,14 @@ export function BadgesScreen() {
     });
   }, [progress, celebration]);
 
-  const tierConfig = {
-    seedling: { 
-      icon: "🌱", 
-      label: "Seedling", 
-      gradient: "gradient-saffron",
-      bgTone: "saffron-soft",
-      borderTone: "border-saffron/30",
-    },
-    growing: { 
-      icon: "🌿", 
-      label: "Growing", 
-      gradient: "gradient-success",
-      bgTone: "success-soft",
-      borderTone: "border-success/30",
-    },
-    mighty: { 
-      icon: "🌳", 
-      label: "Mighty", 
-      gradient: "gradient-explorer",
-      bgTone: "explorer-soft",
-      borderTone: "border-explorer/30",
-    },
-    elite: { 
-      icon: "🌲", 
-      label: "Elite", 
-      gradient: "gradient-gold",
-      bgTone: "gold-soft",
-      borderTone: "border-gold/30",
-    },
-  };
+  const allBadges = achievementBadgesFor(progress);
+  const unlockedCount = allBadges.filter((b) => b.unlocked).length;
 
-  const tiers: AchievementBadgeTier[] = ["seedling", "growing", "mighty", "elite"];
-
-  const getTierConfig = (tier: AchievementBadgeTier) => {
-    return tierConfig[tier];
-  };
-
-  const getBadgeBackgroundColor = (tier: AchievementBadgeTier, unlocked: boolean) => {
-    if (!unlocked) return "bg-muted-light";
-    const config = getTierConfig(tier);
-    return `bg-${config.bgTone}`;
+  // Helper to generate progress stars (e.g. ⭐⭐☆)
+  const getProgressStars = (progress: number, max: number): string => {
+    const filledCount = Math.min(Math.ceil((progress / max) * 3), 3);
+    const stars = "⭐".repeat(filledCount) + "☆".repeat(3 - filledCount);
+    return stars;
   };
 
   return (
@@ -3897,230 +3862,79 @@ export function BadgesScreen() {
       {/* Achievement Badges View */}
       {activeTab === "achievements" && (
         <>
-      {/* Combined Header - Avatar + Name + Badge Stats (120px) */}
-      <div className="px-5 pt-3 pb-4 gradient-explorer rounded-b-[32px] relative overflow-hidden animate-fade-in">
-        <Cloud className="absolute top-2 right-4 w-14 opacity-40 pointer-events-none" />
-        
-        {/* PART A: Avatar + Name (flex items-center gap-3) */}
-        <div className="flex items-center gap-3 relative z-10">
-          <div className="h-14 w-14 rounded-2xl clay-card clay-white p-1 flex items-center justify-center overflow-hidden flex-shrink-0">
-            <img src={getAvatarImage(progress.avatar)} alt={getAvatarName(progress.avatar)} className="w-full h-full object-cover" />
-          </div>
-          <div className="flex-1 text-white">
-            <div className="text-h4 text-display leading-tight">
-              {progress.name}
-            </div>
-            <div className="text-xs font-bold text-white/80">Achievement Collection</div>
-          </div>
-        </div>
-
-        {/* PART B: Badge Stats (mt-3, bg-white/15 backdrop-blur p-3) */}
-        <div className="mt-3 rounded-2xl bg-white/15 backdrop-blur p-4 relative transition-all duration-700 animate-fade-in" style={{ animationDelay: "100ms" }}>
-          <div className="flex items-center justify-between text-white gap-3">
-            <div>
-              <div className="text-xs font-bold opacity-90 uppercase tracking-wide">Achievements</div>
-              <div className="text-display text-2xl font-extrabold mt-1">
-                {unlockedCount}<span className="text-lg opacity-80 ml-1">/ 20</span>
+          {/* Header with Avatar + Celebration Tone */}
+          <div className="px-5 pt-3 pb-4 gradient-gold rounded-b-[32px] relative overflow-hidden animate-fade-in">
+            <Cloud className="absolute top-2 right-4 w-14 opacity-40 pointer-events-none" />
+            
+            <div className="flex items-center gap-3 relative z-10">
+              <div className="h-14 w-14 rounded-2xl clay-card clay-white p-1 flex items-center justify-center overflow-hidden flex-shrink-0">
+                <img src={getAvatarImage(progress.avatar)} alt={getAvatarName(progress.avatar)} className="w-full h-full object-cover" />
               </div>
-            </div>
-            <div className="flex-1 flex flex-col gap-1.5">
-              <div className="text-xs font-extrabold opacity-90">
-                {Math.round((unlockedCount / 20) * 100)}% Unlocked
-              </div>
-              <div className="h-2.5 bg-white/30 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-yellow-200 via-yellow-100 to-white rounded-full transition-all duration-500"
-                  style={{ width: `${(unlockedCount / 20) * 100}%` }}
-                />
-              </div>
-            </div>
-            <div className="text-4xl">🏆</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Tiers */}
-      <div className="px-5 flex-1 overflow-auto space-y-4 pb-4 pt-4">
-        {tiers.map((tier, tierIdx) => {
-          const badges = achievementBadgesForTier(progress, tier);
-          const config = getTierConfig(tier);
-          const tierUnlocked = badges.filter((b) => b.unlocked).length;
-
-          return (
-            <div key={tier} className="animate-fade-in" style={{ animationDelay: `${tierIdx * 100}ms` }}>
-              {/* Tier Header */}
-              <div className="clay-card clay-white p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="text-4xl">{config.icon}</div>
-                    <div>
-                      <div className="text-display font-extrabold text-lg text-ink">{config.label}</div>
-                      <div className="text-xs font-bold text-muted-foreground">{tierUnlocked}/{badges.length} badges unlocked</div>
-                    </div>
-                  </div>
-                  <div className="flex gap-1.5 items-center">
-                    {badges.map((_, idx) => (
-                      <div
-                        key={idx}
-                        className={`h-2 w-2 rounded-full transition-all ${
-                          idx < tierUnlocked
-                            ? config.gradient.split("-")[1] === "saffron" ? "bg-saffron" 
-                            : config.gradient.split("-")[1] === "success" ? "bg-success"
-                            : config.gradient.split("-")[1] === "explorer" ? "bg-explorer"
-                            : "bg-gold"
-                            : "bg-muted"
-                        }`}
-                      />
-                    ))}
-                  </div>
+              <div className="flex-1 text-white">
+                <div className="text-h4 text-display leading-tight">
+                  {progress.name}
+                </div>
+                <div className="text-xs font-bold text-white/80">
+                  🎉 {unlockedCount} Amazing Badges Collected!
                 </div>
               </div>
+            </div>
+          </div>
 
-              {/* Badge Grid */}
-              <div className="grid grid-cols-2 gap-3 mt-3">
-                {badges.map((badge, badgeIdx) => (
-                  <button
-                    key={badge.id}
-                    onClick={() => {
-                      fxTap();
-                      setSelectedBadge(badge);
-                    }}
-                    className={`clay-card p-3 flex flex-col items-center gap-2.5 transition-transform active:scale-95 ${
-                      badge.unlocked
-                        ? "clay-gold"
-                        : "clay-white opacity-70 hover:opacity-85"
-                    }`}
-                    style={{ animationDelay: `${badgeIdx * 50}ms` }}
-                  >
-                    {/* Badge Icon */}
-                    <div className={`text-5xl transition-transform ${
-                      badge.unlocked ? "scale-100" : "scale-75 opacity-60"
-                    }`}>
-                      {badge.icon}
-                    </div>
+          {/* Badges Grid - Kid-friendly celebration layout */}
+          <div className="px-5 flex-1 overflow-auto pb-4 pt-4">
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+              {allBadges.map((badge, idx) => (
+                <div
+                  key={badge.id}
+                  className={`rounded-3xl p-4 flex flex-col items-center gap-3 text-center transition-transform active:scale-95 animate-fade-in ${
+                    badge.unlocked
+                      ? "clay-gold shadow-md"
+                      : "clay-white opacity-60"
+                  }`}
+                  style={{ animationDelay: `${idx * 30}ms` }}
+                >
+                  {/* Badge Emoji - Large and Prominent */}
+                  <div className={`text-6xl ${badge.unlocked ? "" : "opacity-50"}`}>
+                    {badge.icon}
+                  </div>
 
-                    {/* Badge Name */}
-                    <div className={`text-display text-xs font-extrabold text-center leading-tight max-w-[70px] ${
-                      badge.unlocked 
-                        ? "text-ink"
-                        : "text-muted-foreground"
-                    }`}>
-                      {badge.name}
-                    </div>
+                  {/* Badge Name - Bold Uppercase */}
+                  <div className={`text-sm font-extrabold uppercase leading-tight tracking-wide ${
+                    badge.unlocked ? "text-ink" : "text-muted-foreground"
+                  }`}>
+                    {badge.name}
+                  </div>
 
-                    {/* Progress or Unlocked */}
-                    {!badge.unlocked ? (
-                      <div className="text-[10px] font-bold text-ink mt-1">
-                        {badge.progress}/{badge.achievementMax}
+                  {/* Badge Description - Simple 1-2 lines */}
+                  <div className={`text-xs leading-snug ${
+                    badge.unlocked ? "text-ink/80" : "text-muted-foreground"
+                  }`}>
+                    {badge.description}
+                  </div>
+
+                  {/* Status - Kid Friendly */}
+                  <div className="mt-1 pt-3 border-t border-white/20 w-full">
+                    {badge.unlocked ? (
+                      <div className="flex flex-col gap-1">
+                        <div className="text-lg font-extrabold">✓ You Did It!</div>
+                        <div className="text-[11px] font-bold text-ink/70">
+                          {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                        </div>
                       </div>
                     ) : (
-                      <div className="text-[9px] font-extrabold text-success-foreground mt-1 px-2 py-0.5 bg-success-soft rounded-full border border-success">
-                        ✓ Unlocked
+                      <div className="flex flex-col gap-2">
+                        <div className="text-xl">{getProgressStars(badge.progress, badge.achievementMax)}</div>
+                        <div className="text-[11px] font-bold text-muted-foreground">
+                          Keep going! 🌟
+                        </div>
                       </div>
                     )}
-                  </button>
-                ))}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Badge Detail Modal */}
-      {selectedBadge && (
-        <div
-          className="fixed inset-0 bg-black/50 z-50 flex items-end animate-fade-in"
-          onClick={() => setSelectedBadge(null)}
-        >
-          <div
-            className="w-full bg-white rounded-t-3xl p-6 flex flex-col gap-4 animate-slide-up shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Close Button */}
-            <button
-              onClick={() => setSelectedBadge(null)}
-              className="absolute top-4 right-4 h-10 w-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:bg-muted transition"
-            >
-              ✕
-            </button>
-
-            {/* Badge Display */}
-            <div className="flex flex-col items-center pt-4">
-              <div className={`h-24 w-24 rounded-full flex items-center justify-center text-5xl ${
-                selectedBadge.unlocked
-                  ? getTierConfig(selectedBadge.tier).gradient
-                  : "bg-muted"
-              } shadow-lg`}>
-                {selectedBadge.icon}
-              </div>
-
-              <h2 className="text-h2 text-ink mt-4">
-                {selectedBadge.name}
-              </h2>
-              <p className="text-xs font-bold text-muted-foreground mt-1 uppercase tracking-wider">
-                {selectedBadge.tier} Tier Badge
-              </p>
-            </div>
-
-            {/* Description */}
-            <div className="rounded-2xl bg-info-soft border border-info p-4">
-              <p className="text-body text-info leading-relaxed">
-                {selectedBadge.description}
-              </p>
-            </div>
-
-            {/* Progress or Success */}
-            {!selectedBadge.unlocked ? (
-              <div className="rounded-2xl bg-saffron-soft border border-saffron/30 p-4">
-                <div className="text-xs font-extrabold text-saffron uppercase tracking-wider mb-3">
-                  📈 Unlock Progress
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="flex-1 h-2.5 rounded-full bg-white border border-saffron/20 overflow-hidden">
-                    <div
-                      className="h-full gradient-saffron rounded-full transition-all duration-500"
-                      style={{ width: `${(selectedBadge.progress / selectedBadge.achievementMax) * 100}%` }}
-                    />
                   </div>
-                  <span className="text-xs font-extrabold text-saffron whitespace-nowrap">
-                    {selectedBadge.progress}/{selectedBadge.achievementMax}
-                  </span>
                 </div>
-              </div>
-            ) : (
-              <div className="rounded-2xl bg-success-soft border border-success/30 p-4">
-                <div className="text-xs font-extrabold text-success uppercase tracking-wider">
-                  ✨ Unlocked
-                </div>
-                <p className="text-label text-success mt-2">
-                  🎉 Amazing achievement! Keep exploring!
-                </p>
-              </div>
-            )}
-
-            {/* Action Buttons */}
-            <div className="flex gap-3 mt-2">
-              <button
-                onClick={() => setSelectedBadge(null)}
-                className="flex-1 h-12 rounded-2xl bg-muted text-display font-extrabold text-muted-dark active:scale-95 transition"
-              >
-                Close
-              </button>
-              {selectedBadge.unlocked && (
-                <button
-                  onClick={() => {
-                    fxConfetti();
-                    setSelectedBadge(null);
-                  }}
-                  className="flex-1 h-12 rounded-2xl gradient-gold text-display font-extrabold text-white shadow-lg active:scale-95 transition"
-                >
-                  🎉 Celebrate!
-                </button>
-              )}
+              ))}
             </div>
           </div>
-        </div>
-      )}
         </>
       )}
 
