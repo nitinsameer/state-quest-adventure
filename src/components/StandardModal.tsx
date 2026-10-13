@@ -84,8 +84,8 @@ export function StandardModal({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in">
-      <div className={`bg-white rounded-3xl shadow-2xl ${maxWidth} w-full ${header?.floatingIcon ? '' : 'overflow-hidden'} animate-in zoom-in-95 flex flex-col max-h-[90vh] relative`}>
+    <div className="fixed inset-0 z-50 ui-scrim flex items-center justify-center p-4 animate-in fade-in">
+      <div className={`ui-modal ${maxWidth} w-full ${header?.floatingIcon ? '' : 'overflow-hidden'} animate-in zoom-in-95 flex flex-col max-h-[90vh] relative`}>
         
         {/* Header Section - Optional Gradient Banner or Floating Icon */}
         {header && (

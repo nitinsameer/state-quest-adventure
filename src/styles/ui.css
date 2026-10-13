@@ -120,9 +120,97 @@
   }
 }
 
-/* ---------- Progress Bar Empty Track ---------- */
+/* ---------- Progress Bar Track & Fill ---------- */
 @utility ui-progress-track {
   background: var(--progress-track);
+}
+
+@utility ui-progress-fill {
+  background: var(--progress-fill);
+  border-radius: var(--radius-lg);
+}
+
+/* ---------- Header ---------- */
+@utility ui-header {
+  background: var(--bg-header);
+  color: var(--text-on-header);
+}
+
+/* ---------- Navigation Bar ---------- */
+@utility ui-nav {
+  background: var(--surface-card);
+  border-top: 1px solid var(--border-color);
+  box-shadow: var(--shadow-raised);
+}
+
+@utility ui-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  border-radius: var(--radius-card);
+  transition: all var(--transition-fast);
+}
+
+@utility ui-nav-item-active {
+  background: var(--accent-fill-soft);
+  color: var(--accent-ink);
+}
+
+/* ---------- Modal ---------- */
+@utility ui-modal {
+  background: var(--surface-card);
+  border-radius: var(--radius-modal);
+  box-shadow: var(--shadow-raised);
+}
+
+@utility ui-scrim {
+  background: var(--bg-overlay);
+  backdrop-filter: var(--blur-overlay);
+}
+
+/* ---------- Toggle ---------- */
+@utility ui-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+@utility ui-toggle-active {
+  color: var(--action-primary);
+}
+
+/* ---------- Badge ---------- */
+@utility ui-badge {
+  background: var(--accent-fill);
+  color: var(--accent-ink);
+  border-radius: var(--radius-chip);
+  padding: 0.25rem 0.75rem;
+  font-weight: 700;
+  font-size: 0.875rem;
+  display: inline-block;
+}
+
+/* ---------- Tab ---------- */
+@utility ui-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-button);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  background: var(--surface-raised);
+  color: var(--text-secondary);
+}
+
+@utility ui-tab-active {
+  background: var(--action-primary);
+  color: var(--text-on-primary);
+  border-bottom: 3px solid var(--action-primary);
 }
 
 /* ---------- Accent colour variants ---------- */

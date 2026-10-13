@@ -221,7 +221,7 @@ export function BottomNav({
   ] as const;
   return (
     <div className="relative w-full" data-testid="bottom-nav" role="navigation">
-      <div className="mx-3 mb-3 rounded-3xl bg-white shadow-[0_8px_24px_-6px_rgba(15,23,42,0.18)] border border-black/5 px-2 py-2 flex items-center justify-between">
+      <div className="mx-3 mb-3 ui-nav rounded-3xl px-2 py-2 flex items-center justify-between">
         {items.map((i) => {
           const on = i.id === active;
           return (
@@ -231,14 +231,14 @@ export function BottomNav({
               onClick={() => fxTap()}
               aria-label={i.label}
               data-testid={`nav-${i.id}`}
-              className={`flex-1 flex flex-col items-center gap-0.5 py-1.5 rounded-2xl transition active:scale-95 ${
-                on ? "bg-saffron-soft" : ""
+              className={`flex-1 ui-nav-item ${
+                on ? "ui-nav-item-active" : ""
               }`}
             >
               <span className="text-2xl leading-none">{i.icon}</span>
               <span
                 className={`text-label ${
-                  on ? "text-saffron" : "text-muted-foreground"
+                  on ? "" : "text-muted-foreground"
                 }`}
               >
                 {i.label}
