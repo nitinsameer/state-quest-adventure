@@ -2048,7 +2048,7 @@ export function LearningHubScreen({
   });
 
   return (
-    <div className="h-full w-full bg-[#F7F5F0] flex flex-col">
+    <div className="h-full w-full bg-surface-card flex flex-col">
       <div className={`px-5 pt-3 pb-4 ${grad} rounded-b-[32px] relative`}>
         {/* Breadcrumb Navigation Context */}
         <div className="mb-2 flex items-center gap-1 text-white text-xs font-bold px-12">
@@ -2269,7 +2269,7 @@ function HubCard({
         </div>
       )}
       {done && (
-        <div className="absolute top-2 right-2 h-8 w-8 rounded-full bg-gradient-to-br from-success to-emerald-600 text-white flex items-center justify-center text-h5 font-black shadow-lg animate-bounce">
+        <div className="absolute top-2 right-2 h-8 w-8 rounded-full bg-gradient-to-br from-fb-success-bg to-fb-success-bg text-white flex items-center justify-center text-h5 font-black shadow-lg animate-bounce">
           âœ“
         </div>
       )}
@@ -2757,16 +2757,16 @@ export function LearningCardScreen({
   };
 
   return (
-    <div className="h-full w-full bg-[#FDF7EF] flex flex-col">
+    <div className="h-full w-full bg-surface-card flex flex-col">
       {/* Top Bar: Close + Progress + Language + Listen */}
-      <div className="px-5 pt-3 pb-3 flex items-center gap-2 bg-white/40 backdrop-blur-sm">
+      <div className="px-5 pt-3 pb-3 flex items-center gap-2 bg-surface-overlay/40 backdrop-blur-sm">
         <button
           onClick={() => {
             fxTap();
             onClose?.();
           }}
           aria-label="Close learning card"
-          className="h-12 w-12 rounded-full bg-white shadow-soft flex items-center justify-center text-h4"
+          className="h-12 w-12 rounded-full bg-surface-card shadow-soft flex items-center justify-center text-h4"
         >
           âœ•
         </button>
@@ -2776,7 +2776,7 @@ export function LearningCardScreen({
           <div className="text-display font-extrabold text-saffron whitespace-nowrap">
             {cardIndexInCategory + 1}/{cardsInCurrentCategory.length}
           </div>
-          <div className="h-2 rounded-full bg-white overflow-hidden shadow-inner flex-1">
+          <div className="h-2 rounded-full bg-surface-card overflow-hidden shadow-inner flex-1">
             <div
               className={`h-full ${grad} transition-all`}
               style={{ width: `${((cardIndexInCategory + 1) / cardsInCurrentCategory.length) * 100}%` }}
@@ -2786,7 +2786,7 @@ export function LearningCardScreen({
 
         {/* Language Toggle - Left aligned pill style */}
         {getAvailableLanguages(state.name).length > 1 && (
-          <div className="flex items-center gap-2 bg-white/70 backdrop-blur-sm rounded-full p-1.5 border border-white/50">
+          <div className="flex items-center gap-2 bg-surface-raised backdrop-blur-sm rounded-full p-1.5 border border-surface-raised/50">
             {getAvailableLanguages(state.name).map((lang) => (
               <button
                 key={lang}
@@ -2797,7 +2797,7 @@ export function LearningCardScreen({
                 className={`px-3 py-1.5 rounded-full text-sm font-bold transition-all ${
                   displayLanguage === lang
                     ? "ui-button ui-accent-2 text-ink shadow-md"
-                    : "bg-white text-ink"
+                    : "bg-surface-card text-ink"
                 }`}
               >
                 {LANGUAGE_NAMES[lang]}
@@ -2882,14 +2882,14 @@ export function LearningCardScreen({
           </div>
         )}
         
-        <div className={`flex-1 rounded-2xl flex items-center justify-center overflow-hidden bg-white ${!art || card.type !== "main" || card.kicker !== "Places" ? "py-8" : ""}`}>
+        <div className={`flex-1 rounded-2xl flex items-center justify-center overflow-hidden bg-surface-card ${!art || card.type !== "main" || card.kicker !== "Places" ? "py-8" : ""}`}>
           {art && card.type === "main" && card.kicker === "Places" ? (
             <img src={art} alt={`${state.name} learning card`} loading="lazy" decoding="async" className="h-full object-contain drop-shadow-xl" />
           ) : (
             <div className="text-[72px] drop-shadow-xl">{card.icon}</div>
           )}
         </div>
-        <div className="mt-3 bg-white/80 rounded-xl p-3">
+        <div className="mt-3 bg-surface-raised rounded-xl p-3">
           <div className="flex items-center gap-2">
             <Chip icon={card.icon} tone={card.chipTone === "purple" ? "blue" : card.chipTone as any}>
               {card.chip}
@@ -2936,7 +2936,7 @@ export function LearningCardScreen({
       {/* Audio Permission Prompt */}
       {showAudioPermissionPrompt && (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 space-y-4 animate-in zoom-in-95">
+          <div className="bg-surface-card rounded-3xl shadow-2xl max-w-sm w-full p-6 space-y-4 animate-in zoom-in-95">
             <div className="text-center">
               <div className="text-5xl mb-3">ðŸŽ§</div>
               <h3 className="text-display text-xl font-extrabold text-ink">Enable Audio?</h3>
@@ -3146,7 +3146,7 @@ function QuizScreenContent({
   };
 
   return (
-    <div className="h-full w-full bg-explorer-soft flex flex-col relative">
+    <div className="h-full w-full bg-surface-card flex flex-col relative">
       <ConfettiBurst trigger={burst} size="small" />
       
       {/* REDESIGNED TOP BAR - Clean & Minimal */}
@@ -3167,11 +3167,11 @@ function QuizScreenContent({
         {/* Progress Blocks - Color coded (Green=Correct, Red=Wrong, Blue=Current) */}
         <div className="flex-1 flex items-center gap-1 ml-1">
           {questions.map((q, i) => {
-            let bgColor = "bg-white"; // Not answered yet
+            let bgColor = "bg-surface-raised"; // Not answered yet
             if (i < index) {
-              bgColor = "bg-success"; // Default to correct (will be overridden below)
+              bgColor = "bg-fb-success-bg"; // Correct answer
             } else if (i === index) {
-              bgColor = "bg-explorer"; // Current question
+              bgColor = "bg-accent-2"; // Current question
             }
             return (
               <div
@@ -3254,9 +3254,9 @@ function QuizScreenContent({
               <span
                 className={`h-8 w-8 rounded-full flex items-center justify-center text-sm ${
                   isCorrectPick
-                    ? "bg-success text-white"
+                    ? "bg-fb-success-bg text-white"
                     : isWrongPick
-                    ? "bg-rose-500 text-white"
+                    ? "bg-fb-error-bg text-white"
                     : isSelected
                     ? "gradient-explorer text-white"
                     : "bg-muted text-muted-foreground"
