@@ -85,7 +85,7 @@ export function StandardModal({
 
   return (
     <div className="fixed inset-0 z-50 ui-scrim flex items-center justify-center p-4 animate-in fade-in">
-      <div className={`ui-modal ${maxWidth} w-full ${header?.floatingIcon ? '' : 'overflow-hidden'} animate-in zoom-in-95 flex flex-col max-h-[90vh] relative`}>
+      <div className={`rounded-[var(--radius-modal)] shadow-[var(--shadow-raised)] bg-surface-card ${maxWidth} w-full ${header?.floatingIcon ? '' : 'overflow-hidden'} animate-in zoom-in-95 flex flex-col max-h-[90vh] relative`}>
         
         {/* Header Section - Optional Gradient Banner or Floating Icon */}
         {header && (
@@ -93,14 +93,14 @@ export function StandardModal({
             {header.floatingIcon ? (
               // Floating Icon Mode - icon hovers above card
               <>
-                <div className={`absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full flex items-center justify-center text-4xl shadow-2xl border-4 border-white z-20 ${
+                <div className={`absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full flex items-center justify-center text-4xl shadow-[var(--shadow-raised)] border-4 border-surface-card z-20 ${
                   header.floatingIconGradient
                     ? `bg-gradient-to-br ${header.floatingIconGradient[0]} ${header.floatingIconGradient[1]}`
                     : "bg-header"
                 }`}>
                   <span className="animate-pulse">{header.icon}</span>
                 </div>
-                <div className="px-(--padding-lg) pt-14 pb-4 flex flex-col items-center text-center">
+                      <div className="bg-surface-card px-(--padding-lg) pt-14 pb-4 flex flex-col items-center text-center">
                   {header.closeButton && (
                     <button
                       onClick={header.onClose}
@@ -133,9 +133,9 @@ export function StandardModal({
                   </button>
                 )}
                 <div className="text-5xl mb-(--space-3)">{header.icon}</div>
-                <h2 className="text-2xl font-extrabold text-white">{header.title}</h2>
+                <h2 className="text-2xl font-extrabold text-text-on-header">{header.title}</h2>
                 {header.subtitle && (
-                  <p className="text-sm text-white/90 mt-1">{header.subtitle}</p>
+                  <p className="text-sm text-text-on-header/90 mt-1">{header.subtitle}</p>
                 )}
               </div>
             )}
@@ -150,7 +150,7 @@ export function StandardModal({
             content?.map((item, idx) => (
               <div key={idx}>
                 {item.type === "text" && (
-                  <p className={`text-sm text-ink/80 leading-relaxed ${item.className}`}>
+                  <p className={`text-sm text-text-primary/80 leading-relaxed ${item.className}`}>
                     {item.emoji && <span className="mr-2">{item.emoji}</span>}
                     {item.text}
                   </p>
@@ -159,7 +159,7 @@ export function StandardModal({
                 {item.type === "bullet" && (
                   <div className={`flex items-start gap-(--gap-compact) ${item.className}`}>
                     <span className="text-lg flex-shrink-0 mt-0.5">{item.emoji || "•"}</span>
-                    <p className="text-sm text-ink/80 leading-relaxed pt-0.5">{item.text}</p>
+                    <p className="text-sm text-text-primary/80 leading-relaxed pt-0.5">{item.text}</p>
                   </div>
                 )}
 
@@ -168,10 +168,10 @@ export function StandardModal({
                     {item.badges.map((badge, badgeIdx) => (
                       <div
                         key={badgeIdx}
-                        className="flex items-center gap-1.5 bg-white/80 border border-black/5 rounded-full px-3 py-1.5 text-sm font-bold shadow-sm"
+                        className="flex items-center gap-1.5 bg-surface-card border border-black/5 rounded-full px-3 py-1.5 text-sm font-bold shadow-sm"
                       >
                         <span className="text-base">{badge.emoji}</span>
-                        <span>{badge.label}</span>
+                        <span className="text-text-primary">{badge.label}</span>
                       </div>
                     ))}
                   </div>
@@ -187,7 +187,7 @@ export function StandardModal({
 
         {/* Buttons Section */}
         {buttons.length > 0 && (
-          <div className="border-t border-muted p-(--padding-lg) flex-shrink-0">
+          <div className="border-t border-[var(--border-color)] p-(--padding-lg) flex-shrink-0">
             {buttons.length === 1 && (
               <div className="space-y-2">
                 <button
@@ -295,7 +295,7 @@ export function StandardModal({
 
         {/* Footer Note */}
         {footer && (
-          <div className="bg-info-soft px-(--padding-lg) py-(--padding-base) text-center border-t border-muted-light">
+          <div className="bg-[var(--surface-subtle)] px-(--padding-lg) py-(--padding-base) text-center border-t border-[var(--border-default)]">
             <p className="text-xs text-muted-foreground leading-relaxed">
               {footer}
             </p>

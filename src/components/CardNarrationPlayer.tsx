@@ -119,23 +119,23 @@ export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }
       {/* Permission Prompt Modal */}
       {showPermissionPrompt && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-(--padding-base)">
-          <div className="bg-white rounded-3xl p-(--padding-lg) max-w-sm shadow-2xl animate-in fade-in scale-in">
+          <div className="bg-surface-card rounded-3xl p-(--padding-lg) max-w-sm shadow-2xl animate-in fade-in scale-in">
             <div className="text-center">
               <div className="text-5xl mb-(--space-2)">🎧</div>
-              <h3 className="text-xl font-bold text-muted-dark mb-(--space-0-5)">Enable Audio?</h3>
-              <p className="text-sm text-muted-foreground mb-(--space-2)">
+              <h3 className="text-xl font-bold text-text-primary mb-(--space-0-5)">Enable Audio?</h3>
+              <p className="text-sm text-text-muted mb-(--space-2)">
                 Would you like to enable audio to hear this story read aloud?
               </p>
               <div className="flex gap-(--gap-base)">
                 <button
                   onClick={() => setShowPermissionPrompt(false)}
-                  className="flex-1 px-(--padding-md) py-(--padding-base) rounded-xl bg-muted text-muted-dark font-bold transition active:scale-95"
+                  className="flex-1 px-(--padding-md) py-(--padding-base) rounded-xl bg-surface-muted text-text-muted font-bold transition active:scale-95"
                 >
                   Not Now
                 </button>
                 <button
                   onClick={handleEnableAudio}
-                  className="flex-1 px-(--padding-md) py-(--padding-base) rounded-xl bg-gradient-to-r from-blue-400 to-cyan-500 text-white font-bold transition active:scale-95"
+                  className="flex-1 px-(--padding-md) py-(--padding-base) rounded-xl bg-action-primary-bg text-text-on-primary font-bold transition active:scale-95"
                 >
                   Enable Audio
                 </button>
@@ -146,17 +146,17 @@ export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }
       )}
 
       {/* Narration Player Card */}
-      <div className="mt-(--space-0-5) p-(--padding-base) bg-gradient-to-r from-info-soft to-cyan-50 rounded-2xl border-2 border-info">
+      <div className="mt-(--space-0-5) p-(--padding-base) bg-action-info-bg rounded-2xl border-2 border-action-info-border">
         <div className="flex items-center gap-(--gap-base)">
           {/* Play Button */}
           <button
             onClick={handlePlayClick}
             className={`h-12 w-12 rounded-full flex items-center justify-center text-2xl transition-transform active:scale-95 flex-shrink-0 ${
               isCurrentPlaying
-                ? "bg-gradient-to-br from-orange-400 to-red-500 text-white shadow-lg animate-pulse"
+                ? "bg-action-warning-bg text-text-on-primary shadow-lg animate-pulse"
                 : audioNarrationEnabled
-                  ? "bg-gradient-to-br from-blue-400 to-cyan-500 text-white shadow-md hover:shadow-lg"
-                  : "bg-blue-300 text-white shadow-md hover:shadow-lg"
+                  ? "bg-action-primary-bg text-text-on-primary shadow-md hover:shadow-lg"
+                  : "bg-action-primary-bg/50 text-text-on-primary shadow-md hover:shadow-lg"
             }`}
             title={isCurrentPlaying ? "Stop narration" : audioNarrationEnabled ? "Play narration" : "Enable audio to play narration"}
           >
@@ -165,16 +165,16 @@ export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }
 
           {/* Info Section */}
           <div className="flex-1 min-w-0">
-            <div className="text-xs font-bold text-blue-600 uppercase tracking-wide">
+            <div className="text-xs font-bold text-action-primary-bg uppercase tracking-wide">
               🎧 Listen to Story
             </div>
-            <div className="text-sm font-bold text-info mt-(--space-0-25)">{title}</div>
+            <div className="text-sm font-bold text-action-primary-bg mt-(--space-0-25)">{title}</div>
             {audioNarrationEnabled ? (
-              <div className="text-xs text-blue-700 mt-(--space-0-25)">
+              <div className="text-xs text-action-primary-bg mt-(--space-0-25)">
                 {isCurrentPlaying ? "🎵 Playing... tap to stop" : "Tap play to hear! 👂"}
               </div>
             ) : (
-              <div className="text-xs text-blue-600 font-semibold mt-1">📢 Tap to enable audio</div>
+              <div className="text-xs text-action-primary-bg font-semibold mt-1">📢 Tap to enable audio</div>
             )}
           </div>
 
@@ -186,8 +186,8 @@ export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }
 
         {/* Progress Bar (simplified) */}
         {isCurrentPlaying && (
-          <div className="mt-(--space-0-5) w-full bg-blue-200 h-1.5 rounded-full overflow-hidden">
-            <div className="bg-gradient-to-r from-info-soft0 to-cyan-500 h-full animate-pulse" style={{ width: "60%" }} />
+          <div className="mt-(--space-0-5) w-full bg-action-info-bg/50 h-1.5 rounded-full overflow-hidden">
+            <div className="bg-action-primary-bg h-full animate-pulse" style={{ width: "60%" }} />
           </div>
         )}
       </div>

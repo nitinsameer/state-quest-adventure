@@ -106,9 +106,9 @@ export function ParentZoneScreen() {
   };
 
   return (
-    <div className="h-full w-full bg-[#F7F5F0] flex flex-col overflow-hidden">
+    <div className="h-full w-full bg-surface-raised flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="px-(--padding-base) pt-(--space-0-25) pb-(--space-2) gradient-explorer rounded-b-[32px] text-white">
+      <div className="px-(--padding-base) pt-(--space-0-25) pb-(--space-2) gradient-explorer rounded-b-[32px] text-text-on-header">
         <div className="flex items-center justify-between">
           <button
             onClick={goBack}
@@ -144,8 +144,8 @@ export function ParentZoneScreen() {
             onClick={() => setActiveTab(tab.key as any)}
             className={`px-(--padding-md) py-(--space-0-25) font-bold text-sm transition whitespace-nowrap border-b-2 ${
               activeTab === tab.key
-                ? "text-explorer border-explorer"
-                : "text-muted-foreground border-transparent hover:text-explorer"
+                ? "text-action-primary-bg border-action-primary-bg"
+                : "text-text-muted border-transparent hover:text-action-primary-bg"
             }`}
           >
             {tab.icon} {tab.label}
@@ -158,26 +158,26 @@ export function ParentZoneScreen() {
         {/* OVERVIEW TAB */}
         {activeTab === "overview" && (
           <div className="space-y-(--space-2)">
-            <div className="text-display font-extrabold text-sm text-muted-foreground uppercase">
+            <div className="text-display font-extrabold text-sm text-text-muted uppercase">
               Quick Stats
             </div>
             <div className="grid grid-cols-2 gap-(--gap-base)">
               {stats.map((s) => (
-                <div key={s.label} className="rounded-3xl bg-white p-(--padding-base) shadow-soft border border-black/5">
+                <div key={s.label} className="rounded-3xl bg-surface-card p-(--padding-base) shadow-[var(--shadow-card)] border border-black/5">
                   <div className="text-2xl">{s.icon}</div>
                   <div className="text-display text-lg font-extrabold mt-(--space-0-25)">{s.value}</div>
-                  <div className="text-[10px] font-bold text-muted-foreground leading-tight">{s.label}</div>
+                  <div className="text-[10px] font-bold text-text-muted leading-tight">{s.label}</div>
                 </div>
               ))}
             </div>
 
             <div className="mt-(--space-4)">
-              <div className="text-display font-extrabold text-sm text-muted-foreground uppercase">
+              <div className="text-display font-extrabold text-sm text-text-muted uppercase">
                 Currently learning
               </div>
-              <div className="mt-(--space-2) rounded-3xl bg-white p-(--padding-md) shadow-soft border border-black/5 space-y-(--space-0-25)">
+              <div className="mt-(--space-2) rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-black/5 space-y-(--space-0-25)">
                 {inProgress.length === 0 ? (
-                  <div className="text-sm font-semibold text-muted-foreground">
+                  <div className="text-sm font-semibold text-text-muted">
                     No lessons in progress right now.
                   </div>
                 ) : (
@@ -192,14 +192,14 @@ export function ParentZoneScreen() {
                       />
                       <div className="flex-1">
                         <div className="text-display font-extrabold text-sm">{s.name}</div>
-                        <div className="h-1.5 mt-(--space-0-25) rounded-full bg-muted overflow-hidden">
+                        <div className="h-1.5 mt-(--space-0-25) rounded-full bg-text-muted overflow-hidden">
                           <div
                             className="h-full gradient-explorer"
                             style={{ width: `${(cardsDone(p, s.name) / CARDS_PER_STATE) * 100}%` }}
                           />
                         </div>
                       </div>
-                      <span className="text-[11px] font-extrabold text-muted-foreground">
+                      <span className="text-[11px] font-extrabold text-text-muted">
                         {cardsDone(p, s.name)}/{CARDS_PER_STATE}
                       </span>
                     </div>
@@ -213,13 +213,13 @@ export function ParentZoneScreen() {
         {/* ANALYTICS TAB */}
         {activeTab === "analytics" && (
           <div className="space-y-(--space-2)">
-            <div className="text-display font-extrabold text-sm text-muted-foreground uppercase">
+            <div className="text-display font-extrabold text-sm text-text-muted uppercase">
               Engagement Metrics
             </div>
             
-            <div className="rounded-3xl bg-white p-(--padding-md) shadow-soft border border-black/5 space-y-(--space-2)">
+            <div className="rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-black/5 space-y-(--space-2)">
               <div>
-                <div className="text-sm font-bold text-muted-foreground mb-(--space-0-25)">Overall Progress</div>
+                <div className="text-sm font-bold text-text-muted mb-(--space-0-25)">Overall Progress</div>
                 <div className="flex items-center gap-(--gap-base)">
                   <div className="flex-1 h-3 bg-[oklch(0.9_0.02_260)] rounded-full overflow-hidden">
                     <div
@@ -227,23 +227,23 @@ export function ParentZoneScreen() {
                       style={{ width: `${(p.completed.length / TOTAL_STATES) * 100}%` }}
                     />
                   </div>
-                  <span className="text-sm font-extrabold text-explorer">
+                  <span className="text-sm font-extrabold text-action-primary-bg">
                     {p.completed.length}/{TOTAL_STATES}
                   </span>
                 </div>
               </div>
 
               <div>
-                <div className="text-sm font-bold text-muted-foreground mb-(--space-0-25)">
+                <div className="text-sm font-bold text-text-muted mb-(--space-0-25)">
                   Daily Average XP
                 </div>
-                <div className="text-display text-2xl font-extrabold text-explorer">
+                <div className="text-display text-2xl font-extrabold text-action-primary-bg">
                   {dailyAverage * 100} XP/day
                 </div>
               </div>
 
               <div>
-                <div className="text-sm font-bold text-muted-foreground mb-(--space-0-25)">
+                <div className="text-sm font-bold text-text-muted mb-(--space-0-25)">
                   Estimated Hours Played
                 </div>
                 <div className="text-display text-2xl font-extrabold text-success">
@@ -252,7 +252,7 @@ export function ParentZoneScreen() {
               </div>
 
               <div>
-                <div className="text-sm font-bold text-muted-foreground mb-(--space-0-25)">
+                <div className="text-sm font-bold text-text-muted mb-(--space-0-25)">
                   Days Active
                 </div>
                 <div className="text-display text-2xl font-extrabold text-orange-500">
@@ -261,9 +261,9 @@ export function ParentZoneScreen() {
               </div>
             </div>
 
-            <div className="rounded-3xl bg-info-soft border border-info p-(--padding-md)">
-              <div className="text-sm font-bold text-info mb-(--space-0-5)">💡 Insights</div>
-              <div className="text-xs text-blue-800 leading-relaxed">
+            <div className="rounded-3xl bg-[var(--surface-subtle)] border border-[var(--border-default)] p-(--padding-md)">
+              <div className="text-sm font-bold text-text-primary mb-(--space-0-5)">💡 Insights</div>
+              <div className="text-xs text-text-secondary leading-relaxed">
                 {estimatedHours < 5 ? "Great balance! Your child is learning at a healthy pace." : "Your child is very engaged! Consider encouraging breaks."}
               </div>
             </div>
@@ -277,15 +277,15 @@ export function ParentZoneScreen() {
               Parental Controls
             </div>
 
-            <div className="rounded-3xl bg-white p-(--padding-md) shadow-soft border border-black/5">
+            <div className="rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-black/5">
               <div className="flex items-center justify-between mb-(--space-0-25)">
                 <div>
-                  <div className="text-sm font-bold text-ink">Parental PIN</div>
-                  <div className="text-xs text-muted-foreground">Protect sensitive settings</div>
+                  <div className="text-sm font-bold text-text-primary">Parental PIN</div>
+                  <div className="text-xs text-text-muted">Protect sensitive settings</div>
                 </div>
                 <button
                   onClick={() => setShowPINSettings(!showPINSettings)}
-                  className="px-3 py-1 rounded-lg bg-explorer text-white text-xs font-bold"
+                  className="px-3 py-1 rounded-lg bg-action-primary-bg text-text-on-primary text-xs font-bold"
                 >
                   {showPINSettings ? "Hide" : "Edit"}
                 </button>
@@ -299,15 +299,15 @@ export function ParentZoneScreen() {
                     value={newPIN}
                     onChange={(e) => setNewPIN(e.target.value.replace(/\D/g, ""))}
                     placeholder="Enter 4-digit PIN"
-                    className="w-full h-10 rounded-lg border-2 border-muted px-3 font-extrabold text-center text-lg tracking-widest"
+                    className="w-full h-10 rounded-lg border-2 border-[var(--border-color)] px-3 font-extrabold text-center text-lg tracking-widest"
                   />
                   <button
                     onClick={handleSavePIN}
                     disabled={newPIN.length !== 4 || pinSaveStatus === "saving"}
                     className={`w-full h-10 rounded-lg font-bold text-sm transition ${
                       pinSaveStatus === "saved"
-                        ? "bg-green-400 text-white"
-                        : "bg-explorer text-white disabled:opacity-50"
+                        ? "bg-success text-white"
+                        : "bg-action-primary-bg text-text-on-primary disabled:opacity-50"
                     }`}
                   >
                     {pinSaveStatus === "saved" ? "✓ Saved" : pinSaveStatus === "saving" ? "Saving..." : "Save PIN"}
@@ -316,31 +316,31 @@ export function ParentZoneScreen() {
               )}
             </div>
 
-            <div className="rounded-3xl bg-white p-(--padding-md) shadow-soft border border-black/5">
+            <div className="rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-black/5">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-sm font-bold text-ink">Audio</div>
-                  <div className="text-xs text-muted-foreground">Sound effects & narration</div>
+                  <div className="text-sm font-bold text-text-primary">Audio</div>
+                  <div className="text-xs text-text-muted">Sound effects & narration</div>
                 </div>
                 <input type="checkbox" defaultChecked className="h-5 w-5" disabled />
               </div>
             </div>
 
-            <div className="rounded-3xl bg-white p-(--padding-md) shadow-soft border border-black/5">
+            <div className="rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-black/5">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-sm font-bold text-ink">File Storage</div>
-                  <div className="text-xs text-muted-foreground">Save postcards</div>
+                  <div className="text-sm font-bold text-text-primary">File Storage</div>
+                  <div className="text-xs text-text-muted">Save postcards</div>
                 </div>
                 <input type="checkbox" defaultChecked className="h-5 w-5" disabled />
               </div>
             </div>
 
-            <div className="rounded-3xl bg-white p-(--padding-md) shadow-soft border border-black/5">
+            <div className="rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-black/5">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-sm font-bold text-ink">Include child's name on shared postcards</div>
-                  <div className="text-xs text-muted-foreground">When sharing, add child's name to image</div>
+                  <div className="text-sm font-bold text-text-primary">Include child's name on shared postcards</div>
+                  <div className="text-xs text-text-muted">When sharing, add child's name to image</div>
                 </div>
                 <input
                   type="checkbox"
@@ -361,27 +361,27 @@ export function ParentZoneScreen() {
         {/* EXPORT TAB */}
         {activeTab === "export" && (
           <div className="space-y-(--space-2)">
-            <div className="text-display font-extrabold text-sm text-muted-foreground uppercase">
+            <div className="text-display font-extrabold text-sm text-text-muted uppercase">
               Data Export
             </div>
 
             <div className="rounded-3xl bg-info-soft border border-info p-(--padding-md)">
-              <div className="text-sm font-bold text-info mb-(--space-0-5)">📋 About Export</div>
-              <div className="text-xs text-blue-800 leading-relaxed">
+              <div className="text-sm font-bold text-text-on-primary mb-(--space-0-5)">📋 About Export</div>
+              <div className="text-xs text-text-on-primary/90 leading-relaxed">
                 Download your child's progress as a CSV file. Useful for school reports or tracking learning over time.
               </div>
             </div>
 
             <button
               onClick={handleExportData}
-              className="w-full h-12 rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-white font-extrabold text-sm shadow-lg hover:shadow-xl active:scale-95 transition"
+              className="w-full h-12 rounded-2xl bg-action-success-bg text-text-on-primary font-extrabold text-sm shadow-lg hover:shadow-xl active:scale-95 transition"
             >
               💾 Download Progress Report
             </button>
 
-            <div className="rounded-3xl bg-white p-(--padding-md) shadow-soft border border-black/5 space-y-(--space-0-5)">
-              <div className="text-sm font-bold text-ink">What's included:</div>
-              <ul className="text-xs text-muted-foreground space-y-(--space-0-25)">
+            <div className="rounded-3xl bg-surface-card p-(--padding-md) shadow-soft border border-black/5 space-y-(--space-0-5)">
+              <div className="text-sm font-bold text-text-primary">What's included:</div>
+              <ul className="text-xs text-text-muted space-y-(--space-0-25)">
                 <li>✓ Summary stats (XP, badges, states)</li>
                 <li>✓ States in progress with completion %</li>
                 <li>✓ All completed states list</li>
@@ -394,16 +394,16 @@ export function ParentZoneScreen() {
 
       {/* Data & Privacy Section - Always visible */}
       <div className="px-(--padding-base) pb-(--space-2) border-t border-black/5 pt-(--space-2)">
-        <div className="text-display font-extrabold text-sm uppercase tracking-wider text-muted-foreground">
+        <div className="text-display font-extrabold text-sm uppercase tracking-wider text-text-muted">
           Data & Privacy
         </div>
-        <div className="mt-(--space-0-5) rounded-3xl bg-white p-(--padding-md) shadow-soft border border-black/5">
-          <p className="text-sm font-semibold text-muted-foreground">
+        <div className="mt-(--space-0-5) rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-black/5">
+          <p className="text-sm font-semibold text-text-muted">
             All progress is stored only on this device. No account, no ads, and nothing is uploaded.
           </p>
           <a
             href="/privacy"
-            className="inline-block mt-(--space-0-5) text-xs font-bold text-explorer hover:underline"
+            className="inline-block mt-(--space-0-5) text-xs font-bold text-action-primary-bg hover:underline"
           >
             Read our Privacy Policy →
           </a>
@@ -415,13 +415,13 @@ export function ParentZoneScreen() {
                   resetProgress();
                   setConfirm(false);
                 }}
-                className="flex-1 h-12 rounded-2xl bg-error-soft0 text-white text-display font-extrabold"
+                className="flex-1 h-12 rounded-2xl bg-[var(--fb-error-bg)] text-white text-display font-extrabold"
               >
                 Yes, erase everything
               </button>
               <button
                 onClick={() => setConfirm(false)}
-                className="flex-1 h-12 rounded-2xl bg-muted text-display font-extrabold text-muted-foreground"
+                className="flex-1 h-12 rounded-2xl bg-[var(--surface-muted)] text-display font-extrabold text-primary"
               >
                 Cancel
               </button>
@@ -432,7 +432,7 @@ export function ParentZoneScreen() {
                 fxTap();
                 setConfirm(true);
               }}
-              className="mt-(--space-0-25) w-full h-12 rounded-2xl bg-error-soft text-error text-display font-extrabold"
+              className="mt-(--space-0-25) w-full h-12 rounded-2xl bg-[var(--fb-error-soft)] text-[var(--fb-error-fg)] text-display font-extrabold"
             >
               Reset all progress
             </button>

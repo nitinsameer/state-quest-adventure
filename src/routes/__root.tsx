@@ -463,7 +463,7 @@ function HydratedApp() {
 
   const innerComponent = (
     <QueryClientProvider client={queryClient}>
-      <div className="h-full w-full flex flex-col bg-[#F7F5F0] relative" suppressHydrationWarning>
+      <div className="h-full w-full flex flex-col bg-surface-raised relative" suppressHydrationWarning>
         {/* Scrollable content area - conditional padding: pb-safe for pre-auth, pb-[80px] for authenticated */}
         <main className={`flex-1 overflow-auto pt-safe px-safe ${scrollContainerPadding}`} suppressHydrationWarning>
           {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
@@ -473,7 +473,7 @@ function HydratedApp() {
       
       {/* Global BottomNav - positioned fixed OUTSIDE flex container to prevent flex layout interference */}
       {shouldShowBottomNav && (
-        <div ref={navRef} className="fixed bottom-0 left-0 right-0 z-20 bg-[#F7F5F0] pb-[env(safe-area-inset-bottom)]">
+        <div ref={navRef} className="fixed bottom-0 left-0 right-0 z-20 bg-surface-raised pb-[env(safe-area-inset-bottom)]">
           <BottomNav active={getActiveTab()} />
         </div>
       )}
@@ -534,10 +534,10 @@ function RootComponent() {
   // useProgress() IS called in HydratedApp (separate component, always called)
   if (!isReady) {
     return (
-      <div className="h-screen w-full flex items-center justify-center bg-gradient-to-br from-orange-400 to-red-500">
+      <div className="h-screen w-full flex items-center justify-center bg-gradient-to-br from-action-primary-bg to-action-primary-bg/80">
         <div className="text-center">
           <div className="text-6xl mb-4 animate-bounce">🗺️</div>
-          <div className="text-white font-bold text-lg">Loading your adventure...</div>
+          <div className="text-text-on-primary font-bold text-lg">Loading your adventure...</div>
         </div>
       </div>
     );

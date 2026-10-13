@@ -99,35 +99,35 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
         {/* Header */}
         <div className="text-center mb-(--space-4)">
           <div className="text-4xl mb-(--space-0-5)">🔐</div>
-          <h2 className="text-display text-xl font-extrabold text-ink">Parent PIN Required</h2>
-          <p className="text-sm text-muted-foreground mt-(--space-0-5)">
+          <h2 className="text-display text-xl font-extrabold text-text-primary">Parent PIN Required</h2>
+          <p className="text-sm text-text-muted mt-(--space-0-5)">
             This will erase all progress. Enter the parental PIN to confirm.
           </p>
         </div>
 
         {/* Timer */}
         <div className="text-center mb-(--space-2)">
-          <div className="text-xs font-bold text-muted-foreground">
+          <div className="text-xs font-bold text-text-muted">
             ⏱️ {timeLeft}s remaining
           </div>
           <div className="h-1.5 bg-[oklch(0.9_0.02_260)] rounded-full overflow-hidden mt-(--space-0-25)">
             <div
-              className="h-full bg-gradient-to-r from-red-400 to-red-600 transition-all"
+              className="h-full bg-action-error-bg transition-all"
               style={{ width: `${(timeLeft / 30) * 100}%` }}
             />
           </div>
         </div>
 
         {/* PIN Input Display */}
-        <div className="bg-muted rounded-2xl p-(--padding-md) mb-(--space-2)">
+        <div className="bg-surface-sunken rounded-2xl p-(--padding-md) mb-(--space-2)">
           <div className="flex justify-center gap-(--gap-base)">
             {[0, 1, 2, 3].map((i) => (
               <div
                 key={i}
                 className={`h-12 w-12 rounded-lg flex items-center justify-center font-extrabold text-lg transition ${
                   i < pin.length
-                    ? "bg-gradient-to-br from-blue-400 to-blue-600 text-white"
-                    : "bg-white border-2 border-muted text-muted-light"
+                    ? "bg-action-primary-bg text-text-on-primary"
+                    : "bg-surface-card border-2 border-border-color text-text-muted"
                 }`}
               >
                 {i < pin.length ? "●" : "○"}
@@ -135,12 +135,12 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
             ))}
           </div>
           {error && (
-            <div className="text-center text-sm font-bold text-error mt-(--space-0-25)">
+            <div className="text-center text-sm font-bold text-action-error-fg mt-(--space-0-25)">
               {error}
             </div>
           )}
           {isValid && (
-            <div className="text-center text-sm font-bold text-green-600 mt-(--space-0-25)">
+            <div className="text-center text-sm font-bold text-action-success-fg mt-(--space-0-25)">
               ✓ PIN correct, resetting...
             </div>
           )}
@@ -153,7 +153,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
               key={digit}
               onClick={() => handleKeyPress(String(digit))}
               disabled={isValid || isVerifying}
-              className="h-12 rounded-xl bg-white border-2 border-muted text-display text-lg font-extrabold hover:bg-muted active:scale-95 transition disabled:opacity-50"
+              className="h-12 rounded-xl bg-surface-card border-2 border-border-color text-text-primary text-lg font-extrabold hover:bg-surface-raised active:scale-95 transition disabled:opacity-50"
             >
               {digit}
             </button>
@@ -161,7 +161,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
           <button
             onClick={() => handleKeyPress("0")}
             disabled={isValid || isVerifying}
-            className="col-span-3 h-12 rounded-xl bg-white border-2 border-muted text-display text-lg font-extrabold hover:bg-muted active:scale-95 transition disabled:opacity-50"
+            className="col-span-3 h-12 rounded-xl bg-surface-card border-2 border-border-color text-text-primary text-lg font-extrabold hover:bg-surface-raised active:scale-95 transition disabled:opacity-50"
           >
             0
           </button>
@@ -172,14 +172,14 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
           <button
             onClick={handleBackspace}
             disabled={isValid || isVerifying}
-            className="flex-1 h-10 rounded-lg bg-orange-soft text-orange font-extrabold text-sm hover:bg-orange-100 active:scale-95 transition disabled:opacity-50"
+            className="flex-1 h-10 rounded-lg bg-action-warning-bg text-text-on-primary font-extrabold text-sm hover:opacity-90 active:scale-95 transition disabled:opacity-50"
           >
             ← Back
           </button>
           <button
             onClick={handleClear}
             disabled={isValid || isVerifying || pin.length === 0}
-            className="flex-1 h-10 rounded-lg bg-error-soft text-error font-extrabold text-sm hover:bg-red-100 active:scale-95 transition disabled:opacity-50"
+            className="flex-1 h-10 rounded-lg bg-action-error-bg text-text-on-primary font-extrabold text-sm hover:opacity-90 active:scale-95 transition disabled:opacity-50"
           >
             Clear
           </button>
@@ -189,13 +189,13 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
         <button
           onClick={onCancel}
           disabled={isValid || isVerifying}
-          className="w-full h-10 rounded-lg bg-muted text-muted-foreground font-extrabold text-sm hover:bg-muted active:scale-95 transition mt-(--space-0-25) disabled:opacity-50"
+          className="w-full h-10 rounded-lg bg-surface-muted text-text-muted font-extrabold text-sm hover:bg-surface-raised active:scale-95 transition mt-(--space-0-25) disabled:opacity-50"
         >
           Cancel
         </button>
 
         {/* PIN Info */}
-        <div className="text-xs text-muted-foreground text-center mt-(--space-2) p-(--padding-base) bg-info-soft rounded-lg">
+        <div className="text-xs text-text-muted text-center mt-(--space-2) p-(--padding-base) bg-action-info-bg rounded-lg">
           <span>🔐 Secure parent PIN (set in Parent Zone)</span>
         </div>
       </div>
