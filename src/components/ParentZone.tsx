@@ -4,6 +4,7 @@ import { STATE_ART } from "@/lib/state-art";
 import { useGoBack, BottomNav } from "@/components/screens";
 import { fxTap } from "@/lib/fx";
 import { setPin } from "@/lib/parent-gate";
+import { getParentZoneSettings, setParentZoneSetting } from "@/lib/parent-zone-settings";
 import { useState } from "react";
 
 // Local constant to avoid bundler issues
@@ -18,6 +19,7 @@ export function ParentZoneScreen() {
   const [newPIN, setNewPIN] = useState("");
   const [pinSaveStatus, setPinSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
   const [activeTab, setActiveTab] = useState<"overview" | "analytics" | "controls" | "export">("overview");
+  const [postcardNameSharing, setPostcardNameSharing] = useState(getParentZoneSettings().postcardNameSharing ?? false);
   const unlocked = unlockedCount(p);
   const inProgress = INDIA_STATES.filter(
     (s) => !p.completed.includes(s.name) && cardsDone(p, s.name) > 0,
@@ -331,6 +333,26 @@ export function ParentZoneScreen() {
                   <div className="text-xs text-muted-foreground">Save postcards</div>
                 </div>
                 <input type="checkbox" defaultChecked className="h-5 w-5" disabled />
+              </div>
+            </div>
+
+            <div className="rounded-3xl bg-white p-(--padding-md) shadow-soft border border-black/5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-sm font-bold text-ink">Include child's name on shared postcards</div>
+                  <div className="text-xs text-muted-foreground">When sharing, add child's name to image</div>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={postcardNameSharing}
+                  onChange={(e) => {
+                    fxTap();
+                    const newValue = e.target.checked;
+                    setPostcardNameSharing(newValue);
+                    setParentZoneSetting('postcardNameSharing', newValue);
+                  }}
+                  className="h-5 w-5 cursor-pointer"
+                />
               </div>
             </div>
           </div>
