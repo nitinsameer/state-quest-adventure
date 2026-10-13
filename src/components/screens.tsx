@@ -2591,7 +2591,7 @@ export function LearningCardScreen({
           <p className="text-sm text-slate-700 mb-4">Please try again or go back</p>
           <button
             onClick={() => window.history.back()}
-            className="px-4 py-2 rounded-lg bg-info-soft0 text-white font-bold"
+            className="clay-button clay-explorer text-ink px-4 py-2 font-bold"
           >
             Go Back
           </button>
