@@ -98,7 +98,7 @@ export function ExpandableCard({
               {hasMoreFacts && (
                 <button
                   onClick={handleShowMore}
-                  className="w-full mt-2 py-(--padding-sm) px-(--padding-base) bg-blue-100 hover:bg-blue-200 rounded-lg text-xs font-bold text-blue-700 active:scale-95 transition"
+                  className="w-full mt-2 py-(--padding-sm) px-(--padding-base) bg-accent-1-soft hover:bg-accent-1-soft/70 rounded-lg text-xs font-bold text-accent-1 active:scale-95 transition"
                 >
                   + Show {Math.min(3, keyFacts.length - visibleFactsCount)} More Facts ⭐
                 </button>

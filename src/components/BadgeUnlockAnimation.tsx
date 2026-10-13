@@ -64,7 +64,7 @@ export function BadgeUnlockAnimation({
           stage === 'reveal' ? 'opacity-100' : 'opacity-0'
         }`}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/30 to-orange-500/20 blur-3xl" />
+        <div className="absolute inset-0 bg-accent-2-soft/30 blur-3xl" />
       </div>
 
       {/* Badge reveal card */}

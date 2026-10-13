@@ -60,7 +60,7 @@ export function FirstSessionTutorial({ onComplete, isVisible = true }: FirstSess
         { emoji: "👉", text: "Swipe or tap to move to the next card" },
         { emoji: "⭐", text: "Each card gives you 10 XP" },
       ],
-      gradient: ["from-blue-400", "to-cyan-500"] as [string, string],
+      gradient: ["bg-accent-1", "bg-accent-1"] as [string, string],
     },
     {
       title: "Take Quizzes & Earn XP",
@@ -71,7 +71,7 @@ export function FirstSessionTutorial({ onComplete, isVisible = true }: FirstSess
         { emoji: "💪", text: "You've got this! It's okay to learn" },
         { emoji: "🎉", text: "Finish the quiz to complete the state" },
       ],
-      gradient: ["from-purple-400", "to-pink-500"] as [string, string],
+      gradient: ["bg-accent-2", "bg-accent-2"] as [string, string],
     },
     {
       title: "Unlock New States",
@@ -82,7 +82,7 @@ export function FirstSessionTutorial({ onComplete, isVisible = true }: FirstSess
         { emoji: "🔥", text: "Build a daily streak" },
         { emoji: "🏅", text: "Earn special badges" },
       ],
-      gradient: ["from-green-400", "to-emerald-500"] as [string, string],
+      gradient: ["bg-success", "bg-success"] as [string, string],
     },
   ];
 
@@ -101,9 +101,9 @@ export function FirstSessionTutorial({ onComplete, isVisible = true }: FirstSess
         {
           type: "custom",
           children: (
-            <div className="flex items-center gap-(--gap-base) bg-blue-50 rounded-2xl p-(--padding-md) mb-(--space-0-25)">
+            <div className="flex items-center gap-(--gap-base) bg-accent-1-soft rounded-2xl p-(--padding-md) mb-(--space-0-25)">
               <img src={mascot} alt="Helper mascot" className="w-12 h-12 object-contain flex-shrink-0" />
-              <p className="text-sm font-semibold text-blue-900">{current.description}</p>
+              <p className="text-sm font-semibold text-accent-1-dark">{current.description}</p>
             </div>
           ),
         },

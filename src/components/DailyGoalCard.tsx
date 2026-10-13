@@ -36,15 +36,15 @@ export function DailyGoalCard() {
   if (completedStates < 4) {
     dailyGoal = 1;
     goalLabel = "Beginner Path";
-    goalColor = "from-blue-400 to-blue-600";
+    goalColor = "bg-accent-1";
   } else if (completedStates < 10) {
     dailyGoal = 2;
     goalLabel = "Intermediate Path";
-    goalColor = "from-purple-400 to-purple-600";
+    goalColor = "bg-accent-2";
   } else {
     dailyGoal = 3;
     goalLabel = "Advanced Path";
-    goalColor = "from-orange-400 to-orange-600";
+    goalColor = "bg-action-primary";
   }
 
   // Calculate progress toward today's goal
@@ -75,7 +75,7 @@ export function DailyGoalCard() {
 
   return (
     <div className="mt-(--space-2) mb-(--space-2) flex-shrink-0">
-      <div className={`rounded-2xl bg-gradient-to-br ${goalColor} p-(--padding-md) shadow-lg relative overflow-hidden`}>
+      <div className={`rounded-2xl ${goalColor} p-(--padding-md) shadow-lg relative overflow-hidden`}>
         {/* Decorative background element */}
         <div className="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full blur-2xl pointer-events-none" />
 

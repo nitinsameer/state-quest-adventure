@@ -23,10 +23,10 @@ const extractTextArray = (value: string[] | AgeTaggedContent[]): string[] => {
 const CARD_COLORS = [
   { bg: "bg-orange-soft", border: "border-orange-200" }, // Capital
   { bg: "bg-info-soft", border: "border-info" }, // Language
-  { bg: "bg-yellow-50", border: "border-yellow-200" }, // Food
+  { bg: "bg-accent-2-soft", border: "border-accent-2" }, // Food
   { bg: "bg-success-soft", border: "border-success" }, // Places
-  { bg: "bg-rose-50", border: "border-rose-200" }, // Animal
-  { bg: "bg-indigo-50", border: "border-indigo-200" }, // Fun Fact
+  { bg: "bg-accent-1-soft", border: "border-accent-1" }, // Animal
+  { bg: "bg-accent-3-soft", border: "border-accent-3" }, // Fun Fact
 ];
 
 export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: string } = {}) {
@@ -93,11 +93,11 @@ export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: st
               goBack();
             }}
             aria-label="Go back"
-            className="h-10 w-10 rounded-full bg-white/20 text-white flex items-center justify-center"
+            className="h-10 w-10 rounded-full bg-surface-card/20 text-text-on-primary flex items-center justify-center"
           >
             ‹
           </button>
-          <div className="text-display font-extrabold text-white text-center flex-1">
+          <div className="text-display font-extrabold text-text-on-header text-center flex-1">
             {stateName} 🎓
           </div>
           <div className="h-10 w-10" /> {/* Spacer */}
@@ -122,7 +122,7 @@ export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: st
       </div>
 
       {/* Card Navigation Tabs */}
-      <div className="flex-shrink-0 bg-white/80 backdrop-blur border-t border-black/5 px-(--padding-sm) py-(--padding-base)">
+      <div className="flex-shrink-0 bg-surface-card/80 backdrop-blur border-t border-border-subtle px-(--padding-sm) py-(--padding-base)">
         <div className="flex gap-(--gap-compact) overflow-x-auto pb-1">
           {cards.map((card, index) => {
             const safeCard = card as typeof card & { emoji: string };
@@ -133,7 +133,7 @@ export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: st
               className={`flex-shrink-0 h-14 px-(--padding-sm) rounded-2xl transition-all font-extrabold text-display text-sm ${
                 activeTab === index
                   ? `${CARD_COLORS[index].bg} border-2 ${CARD_COLORS[index].border} shadow-md scale-105`
-                  : "bg-white/50 border-2 border-transparent hover:bg-white/70"
+                  : "bg-surface-card/50 border-2 border-transparent hover:bg-surface-card/70"
               }`}
             >
               <span className="text-2xl">{safeCard.emoji}</span>

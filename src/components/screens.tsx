@@ -383,10 +383,10 @@ export function CreateProfileScreen() {
 
   // Age bands with milestone emoji and vibrant gradient
   const ageBands = [
-    { value: "3-5", emoji: "ðŸŒ±", label: "Sprout", gradient: "from-pink-400 to-rose-500" },
-    { value: "6-7", emoji: "ðŸŒ¿", label: "Seedling", gradient: "from-violet-400 to-purple-500" },
-    { value: "8-9", emoji: "ðŸŒ³", label: "Sapling", gradient: "from-emerald-400 to-teal-500" },
-    { value: "10-12", emoji: "ðŸŒ²", label: "Mighty Tree", gradient: "from-amber-400 to-orange-500" },
+    { value: "3-5", emoji: "ðŸŒ±", label: "Sprout", gradient: "bg-accent-2" },
+    { value: "6-7", emoji: "ðŸŒ¿", label: "Seedling", gradient: "bg-accent-1" },
+    { value: "8-9", emoji: "ðŸŒ³", label: "Sapling", gradient: "bg-success" },
+    { value: "10-12", emoji: "ðŸŒ²", label: "Mighty Tree", gradient: "bg-action-primary" },
   ];
 
   const handleAgeSelect = (value: string, index: number) => {
@@ -411,10 +411,10 @@ export function CreateProfileScreen() {
   };
 
   return (
-    <div className="w-full bg-gradient-to-b from-info-soft to-white flex flex-col select-none touch-none" style={{ touchAction: 'pan-y' }}>
+    <div className="w-full bg-accent-1-soft flex flex-col select-none touch-none" style={{ touchAction: 'pan-y' }}>
       <div className="px-5 flex-1 overflow-auto">
         {/* Step 1: Avatar Selection */}
-        <div className="rounded-3xl bg-gradient-to-br from-blue-500 via-blue-450 to-blue-600 p-7 text-white relative overflow-hidden shadow-elevated-2 min-h-[140px] flex flex-col justify-center">
+        <div className="rounded-3xl bg-accent-1 p-7 text-white relative overflow-hidden shadow-elevated-2 min-h-[140px] flex flex-col justify-center">
           <Cloud className="absolute -top-5 right-3 w-20 opacity-25" />
           <div className="relative z-10">
             <div className="text-3xl font-black leading-normal">
@@ -456,7 +456,7 @@ export function CreateProfileScreen() {
           const selectedAvatar = avatarImages.find(a => a.id === avatar);
           const avatarName = getAvatarName(avatar);
           return selectedAvatar ? (
-            <div className="mt-4 rounded-2xl bg-gradient-to-r from-orange-400 to-orange-500 p-4 text-white animate-fade-in flex items-center gap-4 shadow-elevated-2">
+            <div className="mt-4 rounded-2xl bg-action-primary p-4 text-white animate-fade-in flex items-center gap-4 shadow-elevated-2">
               <img src={selectedAvatar.image} alt={avatarName} className="w-20 h-20 rounded-full border-3 border-white shadow-elevated-2 flex-shrink-0" />
               <div>
                 <div className="text-xs opacity-90 font-semibold">Your explorer!</div>
@@ -510,7 +510,7 @@ export function CreateProfileScreen() {
       <div className="p-4 pb-safe bg-white border-t border-gray-200">
         <button
           onClick={handleProfileSave}
-          className={`w-full h-12 rounded-xl bg-gradient-to-r from-green-500 to-green-600 text-white text-sm font-black shadow-elevated-2 transition-all duration-300 transform ${
+          className={`w-full h-12 rounded-xl bg-success text-white text-sm font-black shadow-elevated-2 transition-all duration-300 transform ${
             saved ? "scale-95 opacity-80" : "hover:shadow-elevated-3 hover:scale-102 active:scale-95"
           }`}
         >

@@ -79,7 +79,7 @@ export function HomeScreen() {
       <div className="flex-1 overflow-y-auto overflow-x-hidden pt-safe pb-safe">
         
         {/* HEADER SECTION - Orange gradient with character */}
-        <div className="flex-shrink-0 bg-gradient-to-br from-orange-400 to-orange-500 px-5 pt-6 pb-8 rounded-b-3xl text-text-on-header">
+        <div className="flex-shrink-0 bg-header px-5 pt-6 pb-8 rounded-b-3xl text-text-on-header">
           {/* Top Row: Character + Streak & Coins */}
           <div className="flex items-start justify-between mb-4">
             {/* Left: Character Avatar Circle */}

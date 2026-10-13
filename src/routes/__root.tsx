@@ -78,7 +78,7 @@ class RootErrorBoundary extends React.Component<
     
     if (this.state.hasError) {
       return (
-        <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-blue-50 to-white px-4">
+        <div className="flex min-h-screen items-center justify-center bg-accent-1-soft px-4">
           <div className="max-w-md text-center">
             {/* Error Icon */}
             <div className="text-6xl mb-4">💥</div>
@@ -104,7 +104,7 @@ class RootErrorBoundary extends React.Component<
             <div className="mt-8">
               <button
                 onClick={() => window.location.reload()}
-                className="w-full h-14 rounded-2xl bg-gradient-to-r from-blue-400 to-cyan-500 text-white text-h4 shadow-lg transition-all hover:shadow-xl active:scale-95"
+                className="w-full h-14 rounded-2xl bg-accent-1 text-white text-h4 shadow-lg transition-all hover:shadow-xl active:scale-95"
               >
                 🔄 Reload App
               </button>
@@ -153,7 +153,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   }, [error]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-blue-50 to-white px-4">
+    <div className="flex min-h-screen items-center justify-center bg-accent-1-soft px-4">
       <div className="max-w-md text-center">
         {/* Error Icon */}
         <div className="text-6xl mb-4">⚠️</div>
@@ -182,7 +182,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
               router.invalidate();
               reset();
             }}
-            className="w-full h-14 rounded-2xl bg-gradient-to-r from-blue-400 to-cyan-500 text-white text-h4 shadow-lg transition-all hover:shadow-xl active:scale-95"
+            className="w-full h-14 rounded-2xl bg-accent-1 text-white text-h4 shadow-lg transition-all hover:shadow-xl active:scale-95"
           >
             🔄 Try Again
           </button>

@@ -26,10 +26,10 @@ function ToastNotification({ config }: { config: ToastConfig }) {
   };
 
   const colors = {
-    error: "from-red-500 to-red-600",
-    info: "from-blue-500 to-blue-600",
-    success: "from-green-500 to-green-600",
-    warning: "from-yellow-500 to-yellow-600",
+    error: "from-error to-error-dark",
+    info: "from-info to-info-dark",
+    success: "from-success to-success-dark",
+    warning: "from-warning to-warning-dark",
   };
 
   return (
