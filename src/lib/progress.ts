@@ -1960,6 +1960,25 @@ export function clearRecentlyCompleted() {
 }
 
 /**
+ * Update the step of the current pending celebration (for ceremony navigation)
+ */
+export function updateCeremonyStep(step: number) {
+  set((p) => {
+    if (!p.pendingCelebrations?.length) return p;
+    
+    const updated = [...p.pendingCelebrations];
+    if (updated[0].type === 'full') {
+      updated[0] = { ...updated[0], step };
+    }
+    
+    return {
+      ...p,
+      pendingCelebrations: updated,
+    };
+  });
+}
+
+/**
  * Remove the first pending celebration from the queue (called when dismissed)
  */
 export function dismissPendingCelebration() {

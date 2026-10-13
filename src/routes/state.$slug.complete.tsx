@@ -1,5 +1,5 @@
 import { createFileRoute, notFound, useNavigate, redirect } from "@tanstack/react-router";
-import { StateCompletedScreen } from "@/components/screens";
+import { QuizCeremony } from "@/components/ceremony/QuizCeremony";
 import { getStateBySlug } from "@/lib/states";
 import { statesWithProgress, setLastPlayedState, getProgress } from "@/lib/progress";
 import { useProgress } from "@/lib/progress";
@@ -53,6 +53,13 @@ function Complete() {
   const navigate = useNavigate();
   const progress = useProgress();
   
+  // Guard: If no pending celebration, redirect to learn
+  if (!progress.pendingCelebrations?.length) {
+    // Navigate away if ceremony is not in progress
+    navigate({ to: "/state/$slug/learn", params: { slug } });
+    return null;
+  }
+  
   // Android back button: navigate to learning hub, not back into quiz
   useAndroidBackButton(() => {
     goToReplay();
@@ -78,12 +85,6 @@ function Complete() {
   };
 
   return (
-    <StateCompletedScreen 
-      key={slug} 
-      stateName={name} 
-      onContinue={goToNextState}
-      onCreatePostcard={goToPostcard}
-      onReplay={goToReplay}
-    />
+    <QuizCeremony />
   );
 }
