@@ -112,7 +112,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
           </div>
           <div className="h-1.5 bg-progress-track rounded-full overflow-hidden mt-(--space-0-25)">
             <div
-              className="h-full bg-action-error-bg transition-all"
+              className="h-full bg-fb-error-bg transition-all"
               style={{ width: `${(timeLeft / 30) * 100}%` }}
             />
           </div>
@@ -135,7 +135,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
             ))}
           </div>
           {error && (
-            <div className="text-center text-sm font-bold text-action-error-fg mt-(--space-0-25)">
+            <div className="text-center text-sm font-bold text-fb-error-fg mt-(--space-0-25)">
               {error}
             </div>
           )}
@@ -172,14 +172,14 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
           <button
             onClick={handleBackspace}
             disabled={isValid || isVerifying}
-            className="flex-1 h-10 rounded-lg bg-action-warning-bg text-text-on-primary font-extrabold text-sm hover:opacity-90 active:scale-95 transition disabled:opacity-50"
+            className="flex-1 h-10 rounded-lg bg-fb-warning-bg text-text-on-primary font-extrabold text-sm hover:opacity-90 active:scale-95 transition disabled:opacity-50"
           >
             ← Back
           </button>
           <button
             onClick={handleClear}
             disabled={isValid || isVerifying || pin.length === 0}
-            className="flex-1 h-10 rounded-lg bg-action-error-bg text-text-on-primary font-extrabold text-sm hover:opacity-90 active:scale-95 transition disabled:opacity-50"
+            className="flex-1 h-10 rounded-lg bg-fb-error-bg text-text-on-primary font-extrabold text-sm hover:opacity-90 active:scale-95 transition disabled:opacity-50"
           >
             Clear
           </button>
@@ -195,7 +195,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
         </button>
 
         {/* PIN Info */}
-        <div className="text-xs text-text-muted text-center mt-(--space-2) p-(--padding-base) bg-action-info-bg rounded-lg">
+        <div className="text-xs text-text-muted text-center mt-(--space-2) p-(--padding-base) bg-fb-info-bg rounded-lg">
           <span>🔐 Secure parent PIN (set in Parent Zone)</span>
         </div>
       </div>

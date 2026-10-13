@@ -415,7 +415,7 @@ export function ParentZoneScreen() {
                   resetProgress();
                   setConfirm(false);
                 }}
-                className="flex-1 h-12 rounded-2xl bg-[var(--fb-error-bg)] text-white text-display font-extrabold"
+                className="flex-1 h-12 rounded-2xl bg-fb-error-bg text-text-on-primary font-extrabold"
               >
                 Yes, erase everything
               </button>

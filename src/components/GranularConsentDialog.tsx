@@ -121,8 +121,8 @@ export function GranularConsentDialog({
               onClick={() => handleConsentChange("declined")}
               className={`w-full p-(--padding-md) rounded-2xl border-2 transition text-left ${
                 postcard.consentState === "declined"
-                  ? "bg-action-error-bg border-action-error-bg"
-                  : "bg-surface-card border-border-color hover:border-action-error-bg"
+                  ? "bg-fb-error-bg border-fb-error-bg"
+                  : "bg-surface-card border-border-color hover:border-fb-error-bg"
               }`}
             >
               <div className="flex items-start gap-(--gap-base)">
@@ -141,8 +141,8 @@ export function GranularConsentDialog({
               onClick={() => handleConsentChange("pending")}
               className={`w-full p-(--padding-md) rounded-2xl border-2 transition text-left ${
                 postcard.consentState === "pending"
-                  ? "bg-action-warning-bg border-action-warning-bg"
-                  : "bg-surface-card border-border-color hover:border-action-warning-bg"
+                  ? "bg-fb-warning-bg border-fb-warning-bg"
+                  : "bg-surface-card border-border-color hover:border-fb-warning-bg"
               }`}
             >
               <div className="flex items-start gap-(--gap-base)">
@@ -158,7 +158,7 @@ export function GranularConsentDialog({
           </div>
 
           {/* Privacy Note */}
-          <div className="bg-action-info-bg rounded-2xl p-(--padding-md) border border-action-info-border">
+          <div className="bg-fb-info-bg rounded-2xl p-(--padding-md) border border-fb-info-border">
             <div className="flex gap-(--gap-base)">
               <span className="text-lg flex-shrink-0">🔐</span>
               <div className="text-xs text-text-on-primary">

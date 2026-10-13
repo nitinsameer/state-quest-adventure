@@ -146,14 +146,14 @@ export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }
       )}
 
       {/* Narration Player Card */}
-      <div className="mt-(--space-0-5) p-(--padding-base) bg-action-info-bg rounded-2xl border-2 border-action-info-border">
+      <div className="mt-(--space-0-5) p-(--padding-base) bg-fb-info-bg rounded-2xl border-2 border-fb-info-border">
         <div className="flex items-center gap-(--gap-base)">
           {/* Play Button */}
           <button
             onClick={handlePlayClick}
             className={`h-12 w-12 rounded-full flex items-center justify-center text-2xl transition-transform active:scale-95 flex-shrink-0 ${
               isCurrentPlaying
-                ? "bg-action-warning-bg text-text-on-primary shadow-lg animate-pulse"
+                ? "bg-fb-warning-bg text-text-on-primary shadow-lg animate-pulse"
                 : audioNarrationEnabled
                   ? "bg-action-primary-bg text-text-on-primary shadow-md hover:shadow-lg"
                   : "bg-action-primary-bg/50 text-text-on-primary shadow-md hover:shadow-lg"
@@ -186,7 +186,7 @@ export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }
 
         {/* Progress Bar (simplified) */}
         {isCurrentPlaying && (
-          <div className="mt-(--space-0-5) w-full bg-action-info-bg/50 h-1.5 rounded-full overflow-hidden">
+          <div className="mt-(--space-0-5) w-full bg-fb-info-bg/50 h-1.5 rounded-full overflow-hidden">
             <div className="bg-action-primary-bg h-full animate-pulse" style={{ width: "60%" }} />
           </div>
         )}
