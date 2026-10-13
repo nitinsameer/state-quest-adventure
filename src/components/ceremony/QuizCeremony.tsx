@@ -4,7 +4,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { getState, type IndiaState } from '@/lib/states';
 import { STATE_ART, TONE_GRADIENT } from '@/lib/state-art';
 import { ConfettiBurst } from '@/components/ConfettiBurst';
-import { fxTap, fxCorrect } from '@/lib/fx';
+import { fxTap, fxCorrect, fxStamp } from '@/lib/fx';
 import { playTts } from '@/lib/tts';
 import { hasFeatureConsent } from '@/lib/parental-consent';
 import mascot from '@/assets/mascot.webp';
@@ -19,6 +19,7 @@ import mascot from '@/assets/mascot.webp';
 export function QuizCeremony() {
   const progress = useProgress();
   const navigate = useNavigate();
+  const [stampedState, setStampedState] = useState(false);
 
   // Get the first pending celebration (current ceremony)
   const ceremony = progress.pendingCelebrations?.[0] as PendingCelebration | undefined;
@@ -29,6 +30,11 @@ export function QuizCeremony() {
       navigate({ to: "/" });
     }
   }, [ceremony, navigate]);
+
+  // Reset stampedState when step changes
+  useEffect(() => {
+    setStampedState(false);
+  }, [ceremony?.step]);
 
   // If no ceremony, render nothing (will navigate away)
   if (!ceremony || ceremony.type !== 'full') {
@@ -108,7 +114,15 @@ export function QuizCeremony() {
           {step === 0 && <StepResult ceremony={ceremony} state={state} art={art} />}
 
           {/* Step 1: Stamp */}
-          {step === 1 && <StepStamp ceremony={ceremony} state={state} />}
+          {step === 1 && (
+            <StepStamp 
+              ceremony={ceremony} 
+              state={state} 
+              art={art}
+              stamped={stampedState}
+              onStamped={() => setStampedState(true)}
+            />
+          )}
 
           {/* Step 2: Postcard */}
           {step === 2 && <StepPostcard ceremony={ceremony} state={state} />}
@@ -120,14 +134,32 @@ export function QuizCeremony() {
 
       {/* BOTTOM BUTTON */}
       <div className="px-6 pb-6 pt-4 bg-[#F7F5F0]">
-        {step < 3 ? (
+        {step === 0 && (
           <button
             onClick={advanceStep}
             className="w-full h-14 clay-button clay-saffron text-ink font-display font-bold text-lg rounded-3xl transition-all active:scale-95"
           >
             Next →
           </button>
-        ) : (
+        )}
+        {step === 1 && (
+          <button
+            onClick={advanceStep}
+            disabled={!stampedState}
+            className="w-full h-14 clay-button clay-saffron text-ink font-display font-bold text-lg rounded-3xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Next →
+          </button>
+        )}
+        {step === 2 && (
+          <button
+            onClick={advanceStep}
+            className="w-full h-14 clay-button clay-saffron text-ink font-display font-bold text-lg rounded-3xl transition-all active:scale-95"
+          >
+            Next →
+          </button>
+        )}
+        {step === 3 && (
           <button
             onClick={handleFinish}
             className="w-full h-14 clay-button clay-saffron text-ink font-display font-bold text-lg rounded-3xl transition-all active:scale-95"
@@ -146,6 +178,8 @@ interface StepProps {
   ceremony: PendingCelebration & { type: 'full' };
   state: IndiaState;
   art?: string;
+  stamped?: boolean;
+  onStamped?: () => void;
 }
 
 /**
@@ -333,44 +367,160 @@ function StepResult({ ceremony, state, art }: StepProps) {
 }
 
 /**
- * Step 1: Stamp - Tap to stamp (placeholder)
+ * Step 2: Stamp - Passport card with tappable stamp target
+ * 
+ * - Shows state art and name in a ring
+ * - Tap to stamp: plays animation (transform only), fxStamp, haptic, shows count
+ * - Auto-stamp after 4 seconds if no tap
+ * - Respects prefers-reduced-motion
  */
-function StepStamp({ ceremony, state }: StepProps) {
-  const [stamped, setStamped] = useState(false);
-  const stampNumber = ceremony.stampDate; // Will be used later
+function StepStamp({ ceremony, state, art, stamped = false, onStamped }: StepProps) {
+  const progress = useProgress();
+  const [stampScale, setStampScale] = useState(1);
+  const [stampRotation, setStampRotation] = useState(0);
+  const prefersReducedMotion = useRef(false);
+  const autoStampTimer = useRef<NodeJS.Timeout | null>(null);
+
+  // Check for prefers-reduced-motion
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      prefersReducedMotion.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+  }, []);
+
+  // Tap handler: play animation and mark as stamped
+  const handleStampTap = () => {
+    if (stamped) return;
+
+    // Clear auto-stamp timer if it was set
+    if (autoStampTimer.current) {
+      clearTimeout(autoStampTimer.current);
+      autoStampTimer.current = null;
+    }
+
+    // Play effects
+    fxStamp();
+    if (typeof window !== 'undefined' && 'vibrate' in navigator) {
+      navigator.vibrate(50);
+    }
+
+    // Animate stamp if not reduced motion
+    if (!prefersReducedMotion.current) {
+      // Quick scale-up and rotate for visual feedback
+      setStampScale(1.15);
+      setStampRotation(12);
+      setTimeout(() => {
+        setStampScale(1);
+        setStampRotation(0);
+      }, 300);
+    }
+
+    // Mark as stamped after animation completes
+    setTimeout(() => {
+      onStamped?.();
+    }, prefersReducedMotion.current ? 0 : 300);
+  };
+
+  // Auto-stamp after 4 seconds if not tapped
+  useEffect(() => {
+    if (stamped || prefersReducedMotion.current) return;
+
+    autoStampTimer.current = setTimeout(() => {
+      // Trigger stamp without user tap
+      fxStamp();
+      if (typeof window !== 'undefined' && 'vibrate' in navigator) {
+        navigator.vibrate(50);
+      }
+      onStamped?.();
+    }, 4000);
+
+    return () => {
+      if (autoStampTimer.current) {
+        clearTimeout(autoStampTimer.current);
+      }
+    };
+  }, [stamped]);
+
+  // If reduced motion, stamp immediately on mount
+  useEffect(() => {
+    if (prefersReducedMotion.current && !stamped) {
+      onStamped?.();
+    }
+  }, []);
+
+  // Calculate stamp count (number of completed states)
+  const stampCount = progress.completed.length;
 
   return (
-    <div className="space-y-6 text-center">
-      <h2 className="font-display text-2xl font-bold text-ink">Stamp Time!</h2>
+    <div className="space-y-6">
+      <h2 className="font-display text-2xl font-bold text-ink text-center">Add to Your Passport</h2>
 
-      {/* Stamp target */}
-      <div className="flex justify-center py-6">
-        <button
-          onClick={() => {
-            if (!stamped) {
-              setStamped(true);
-              fxTap();
-            }
-          }}
-          disabled={stamped}
-          className="w-32 h-32 rounded-full clay-button clay-saffron text-5xl transition-transform active:scale-95 flex items-center justify-center"
-          aria-label="Tap to stamp"
-        >
-          🔖
-        </button>
+      {/* PASSPORT CARD - clay-card with state art and name ring */}
+      <div className="clay-card clay-white p-6 rounded-2xl space-y-4">
+        {/* State art */}
+        {art && (
+          <div className="flex justify-center mb-3">
+            <img
+              src={art}
+              alt={state.name}
+              className="w-24 h-24 object-cover rounded-lg"
+            />
+          </div>
+        )}
+
+        {/* STAMP TARGET - Ring with state name and stamp */}
+        <div className="flex justify-center py-6">
+          <button
+            onClick={handleStampTap}
+            disabled={stamped}
+            className="relative w-32 h-32 rounded-full transition-all active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[--color-saffron]"
+            style={{
+              transform: `scale(${stampScale}) rotate(${stampRotation}deg)`,
+              transitionDuration: prefersReducedMotion.current ? '0ms' : '300ms',
+            } as React.CSSProperties}
+            aria-label="Tap to stamp"
+            aria-pressed={stamped}
+          >
+            {/* Ring background with gradient using CSS token */}
+            <div className="absolute inset-0 rounded-full clay-chip clay-saffron flex items-center justify-center border-4 border-ink/10">
+              {/* Inner content: state name and art */}
+              <div className="flex flex-col items-center justify-center gap-1">
+                <div className="text-sm font-bold text-ink text-center leading-tight max-w-[80px]">
+                  {state.name}
+                </div>
+                {art && (
+                  <img
+                    src={art}
+                    alt=""
+                    className="w-12 h-12 object-cover rounded"
+                  />
+                )}
+              </div>
+            </div>
+
+            {/* Stamp emoji overlay (top-right) */}
+            <div className="absolute -top-1 -right-1 text-3xl">🔖</div>
+          </button>
+        </div>
+
+        {/* Stamp date */}
+        <div className="text-center">
+          <p className="text-sm text-ink/70 font-medium">{ceremony.stampDate}</p>
+        </div>
       </div>
 
-      {stamped && (
-        <p className="text-body text-ink font-bold">
-          Stamp {ceremony.stampDate} collected! ✓
-        </p>
-      )}
-
-      {!stamped && (
-        <p className="text-body text-ink/60 text-sm">
-          Tap the stamp to add it to your passport
-        </p>
-      )}
+      {/* Status text */}
+      <div className="text-center">
+        {stamped ? (
+          <p className="text-body text-ink font-bold">
+            Stamp {stampCount} of 36 collected! ✓
+          </p>
+        ) : (
+          <p className="text-body text-ink/60 text-sm">
+            Tap the stamp to add it to your passport
+          </p>
+        )}
+      </div>
     </div>
   );
 }
