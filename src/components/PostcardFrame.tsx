@@ -11,7 +11,7 @@ interface PostcardFrameProps {
 
 /**
  * PostcardFrame component - displays postcard as a physical postcard within a rectangle frame
- * Used in StateCompletedScreen to show the earned postcard
+ * Used in QuizCeremony to show the earned postcard
  *
  * Layout:
  * - White background with rounded corners, shadow, padding

@@ -6,7 +6,6 @@ import {
   LearningCardScreen,
   QuizScreen,
   CorrectAnswerScreen,
-  StateCompletedScreen,
   StateUnlockScreen,
 } from "@/components/screens";
 import { INDIA_STATES } from "@/lib/states";
@@ -81,9 +80,7 @@ export function AllStatesSection() {
         <PhoneFrame label="Correct Answer" sublabel={`${active} · +20 XP`}>
           <CorrectAnswerScreen key={active} stateName={active} />
         </PhoneFrame>
-        <PhoneFrame label="State Completed" sublabel={`${active} · stamp`}>
-          <StateCompletedScreen key={active} stateName={active} persist={false} />
-        </PhoneFrame>
+
         <PhoneFrame label="State Unlock" sublabel={active}>
           <StateUnlockScreen key={active} stateName={active} />
         </PhoneFrame>
