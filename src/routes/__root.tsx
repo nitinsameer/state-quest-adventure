@@ -256,15 +256,11 @@ function HydratedApp() {
   const preAuthRoutes = ['/', '/welcome', '/create'];
   
   // Immersive routes that should NOT show BottomNav (full-screen experiences)
-  const immersiveRoutes = [
-    '/state/quiz',
-    '/state/learn',
-    '/state/card',
-    '/state/complete',
-  ];
+  // Uses regex to match /state/<slug>/quiz, /state/<slug>/learn, etc.
+  const immersiveRoutePattern = /^\/state\/[^/]+\/(quiz|learn|card|cards|complete|postcard|unlock)(\/|$)/;
   
   // Check if current route is immersive (quiz, learning, celebration)
-  const isImmersiveRoute = immersiveRoutes.some(route => location.pathname.includes(route));
+  const isImmersiveRoute = immersiveRoutePattern.test(location.pathname);
   const shouldShowBottomNav = !preAuthRoutes.includes(location.pathname) && !isImmersiveRoute;
 
   // Initialize and verify Sound toggle state on app load
