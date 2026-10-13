@@ -13,7 +13,7 @@
 
 import { useEffect, useState } from 'react';
 import { ConfettiBurst } from './ConfettiBurst';
-import { triggerFeedback } from '../lib/feedback-effects';
+import { fxCorrect, fxWrong } from '../lib/fx';
 
 interface QuizAnswerFeedbackProps {
   isCorrect: boolean;
@@ -51,9 +51,9 @@ export function QuizAnswerFeedback({
   // Haptic feedback and sound effects
   useEffect(() => {
     if (isCorrect) {
-      triggerFeedback('success');
+      fxCorrect();
     } else {
-      triggerFeedback('tryAgain');
+      fxWrong();
     }
   }, [isCorrect]);
 

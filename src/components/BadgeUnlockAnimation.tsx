@@ -12,7 +12,7 @@
 
 import { useEffect, useState } from 'react';
 import { ConfettiBurst } from './ConfettiBurst';
-import { triggerFeedback } from '../lib/feedback-effects';
+import { fxStamp, vibrate } from '../lib/fx';
 
 interface BadgeUnlockAnimationProps {
   badgeName: string;
@@ -45,7 +45,7 @@ export function BadgeUnlockAnimation({
     setTimeout(() => setConfettiTrigger(1), 600);
 
     // Trigger unlock feedback
-    setTimeout(() => triggerFeedback('unlock'), 600);
+    setTimeout(() => fxStamp(), 600);
 
     // Complete animation after 2.5 seconds
     setTimeout(onComplete, 2500);

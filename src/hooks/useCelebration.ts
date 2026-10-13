@@ -1,5 +1,5 @@
 import { useCelebrationStore } from "@/store/celebrationStore";
-import { playAchievementSound, playSuccessSound, areSoundsEnabled } from "@/lib/celebration-sounds";
+import { fxCorrect, fxConfetti, isSoundOn } from "@/lib/fx";
 
 /**
  * Hook to trigger celebration popups throughout the app
@@ -28,8 +28,8 @@ export function useCelebration() {
       });
       
       // Play success sound if enabled
-      if (areSoundsEnabled()) {
-        playSuccessSound();
+      if (isSoundOn()) {
+        fxCorrect();
       }
     },
 
@@ -78,8 +78,8 @@ export function useCelebration() {
       });
       
       // Play achievement sound if enabled
-      if (areSoundsEnabled()) {
-        playAchievementSound();
+      if (isSoundOn()) {
+        fxConfetti();
       }
     },
 

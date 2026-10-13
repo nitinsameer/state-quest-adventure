@@ -132,9 +132,6 @@ export function cleanupAudioContext() {
   // Stop all active sounds
   stopAllActiveSounds();
   
-  // Stop ambient music
-  stopAmbientMusic();
-  
   // Close the AudioContext
   if (ctx) {
     try {
@@ -178,7 +175,6 @@ export function initializeAudioCleanup() {
     if (document.hidden) {
       console.log("[AUDIO DEBUG] Page hidden - stopping audio");
       stopAllActiveSounds();
-      stopAmbientMusic();
     }
   };
   
@@ -368,15 +364,18 @@ function noise(dur = 0.25, gain = 0.15, delay = 0) {
   // Only output sound if Sound toggle is ON
   if (!shouldPlaySound()) return;
   
+  // Optimize: cap noise duration to 0.3s max for performance
+  const maxNoiseDur = Math.min(dur, 0.3);
+  
   const t0 = a.currentTime + delay;
-  const buf = a.createBuffer(1, Math.floor(a.sampleRate * dur), a.sampleRate);
+  const buf = a.createBuffer(1, Math.floor(a.sampleRate * maxNoiseDur), a.sampleRate);
   const data = buf.getChannelData(0);
   for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / data.length);
   const src = a.createBufferSource();
   src.buffer = buf;
   const g = a.createGain();
   g.gain.setValueAtTime(gain, t0);
-  g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + maxNoiseDur);
   
   // Track this sound for immediate cutoff when audio is disabled
   const soundNode = { gain: g };
@@ -391,7 +390,7 @@ function noise(dur = 0.25, gain = 0.15, delay = 0) {
   // Remove from active set after sound finishes
   setTimeout(() => {
     activeSoundNodes.delete(soundNode);
-  }, (dur + delay) * 1000);
+  }, (maxNoiseDur + delay) * 1000);
 }
 
 function vibrate(pattern: number | number[]) {
@@ -461,211 +460,4 @@ export function fxWhoosh() {
 
 /* ---------- ambient background music ---------- */
 
-let ambientAudioElement: HTMLAudioElement | null = null;
-let ambientOscillator: OscillatorNode | null = null;
-let localAmbientGain: GainNode | null = null;
-let ambientRunning = false;
-let musicFileExists = true;
-
-function startAmbientMusic() {
-  if (ambientRunning) {
-    console.log("[Ambient] Already running, skipping");
-    return;
-  }
-  ambientRunning = true;
-
-  if (typeof window === "undefined") {
-    console.log("[Ambient] Window not defined, aborting");
-    return;
-  }
-
-  // Try to load music file first
-  if (musicFileExists && !ambientAudioElement) {
-    console.log("[Ambient] Creating audio element for file: ./ambient-music.mp3");
-    ambientAudioElement = new Audio();
-    
-    // Use /assets/ path for Capacitor (Capacitor serves from localhost://)
-    // or direct /ambient-music.mp3 for web
-    ambientAudioElement.src = "./ambient-music.mp3";
-    ambientAudioElement.loop = true;
-    ambientAudioElement.volume = 0;
-    ambientAudioElement.crossOrigin = "anonymous";
-
-    console.log("[Ambient] Audio element created, src:", ambientAudioElement.src);
-
-    ambientAudioElement.addEventListener(
-      "error",
-      (e) => {
-        console.error(
-          "[Ambient] Load error:",
-          e.type,
-          "Network state:",
-          ambientAudioElement?.networkState,
-          "Ready state:",
-          ambientAudioElement?.readyState
-        );
-        musicFileExists = false;
-        ambientAudioElement = null;
-        console.log("[Ambient] Falling back to generated tone");
-        startAmbientTone();
-      },
-      { once: true }
-    );
-
-    ambientAudioElement.addEventListener(
-      "canplay",
-      () => {
-        console.log("[Ambient] Audio ready to play, currentTime:", ambientAudioElement?.currentTime);
-        if (!ambientAudioElement || !ambientRunning) {
-          console.log("[Ambient] Audio element or ambientRunning is null, aborting play");
-          return;
-        }
-        
-        // Fade in to 0.15 volume over 1.5s
-        ambientAudioElement.volume = 0;
-        ambientAudioElement.play().catch((err) => {
-          console.error("[Ambient] Play error:", err.message);
-          musicFileExists = false;
-          ambientAudioElement = null;
-          startAmbientTone();
-        });
-
-        const startTime = Date.now();
-        const fadeInDuration = 1500;
-        const fadeInterval = setInterval(() => {
-          if (!ambientAudioElement || !ambientRunning) {
-            clearInterval(fadeInterval);
-            return;
-          }
-          const elapsed = Date.now() - startTime;
-          const progress = Math.min(elapsed / fadeInDuration, 1);
-          ambientAudioElement.volume = 0.15 * progress;
-          if (progress >= 1) {
-            clearInterval(fadeInterval);
-            console.log("[Ambient] Music playing at full volume, duration:", ambientAudioElement.duration);
-          }
-        }, 50);
-      },
-      { once: true }
-    );
-
-    console.log("[Ambient] Calling load()");
-    ambientAudioElement.load();
-
-    // Fallback timeout: if canplay doesn't fire in 3s, fallback to tone
-    setTimeout(() => {
-      if (musicFileExists && ambientAudioElement && ambientAudioElement.readyState < 2) {
-        console.warn("[Ambient] Timeout waiting for canplay, falling back to tone. ReadyState:", ambientAudioElement.readyState);
-        musicFileExists = false;
-        ambientAudioElement = null;
-        startAmbientTone();
-      }
-    }, 3000);
-  } else if (!musicFileExists) {
-    console.log("[Ambient] Music file marked as not existing, starting tone");
-    startAmbientTone();
-  }
-}
-
-function startAmbientTone() {
-  const a = ac();
-  if (!a) return;
-
-  // Fallback: Subtle ambient pad (low frequency drone with slow LFO modulation)
-  // This creates a gentle, loopable ambient sound
-  ambientOscillator = a.createOscillator();
-  ambientOscillator.type = "sine";
-  ambientOscillator.frequency.setValueAtTime(55, a.currentTime); // Low A note (very warm)
-
-  const filter = a.createBiquadFilter();
-  filter.type = "lowpass";
-  filter.frequency.setValueAtTime(80, a.currentTime); // Keep only low frequencies to reduce harshness
-
-  localAmbientGain = a.createGain();
-  localAmbientGain.gain.setValueAtTime(0.08, a.currentTime);
-
-  // Slow LFO modulation (0.5 Hz swell) for organic warmth
-  const lfo = a.createOscillator();
-  lfo.type = "sine";
-  lfo.frequency.setValueAtTime(0.5, a.currentTime);
-  const lfoGain = a.createGain();
-  lfoGain.gain.setValueAtTime(0.008, a.currentTime);
-
-  lfo.connect(localAmbientGain.gain);
-
-  // Connect signal chain
-  ambientOscillator.connect(filter);
-  filter.connect(localAmbientGain);
-
-  // Route through mixer if available, else direct to destination
-  const ambientMixGain = getAmbientGain();
-  if (ambientMixGain) {
-    localAmbientGain.connect(ambientMixGain);
-  } else {
-    localAmbientGain.connect(a.destination);
-  }
-
-  ambientOscillator.start();
-  lfo.start();
-
-  console.log("[Ambient] Started fallback generated ambient tone");
-}
-
-function stopAmbientMusic() {
-  if (!ambientRunning) return;
-  ambientRunning = false;
-
-  // Stop audio element if playing
-  if (ambientAudioElement) {
-    try {
-      const startTime = Date.now();
-      const fadeOutDuration = 500;
-      const fadeInterval = setInterval(() => {
-        if (!ambientAudioElement) {
-          clearInterval(fadeInterval);
-          return;
-        }
-        const elapsed = Date.now() - startTime;
-        const progress = Math.min(elapsed / fadeOutDuration, 1);
-        ambientAudioElement.volume = 0.15 * (1 - progress);
-        if (progress >= 1) {
-          clearInterval(fadeInterval);
-          ambientAudioElement.pause();
-          ambientAudioElement.currentTime = 0;
-          // Cleanup audio element reference
-          ambientAudioElement = null;
-        }
-      }, 50);
-    } catch (error) {
-      console.log("[Ambient] Error stopping audio element:", error);
-      ambientAudioElement = null;
-    }
-  }
-
-  // Stop oscillator if playing
-  if (ambientOscillator && localAmbientGain) {
-    try {
-      const a = ac();
-      if (a) {
-        localAmbientGain.gain.exponentialRampToValueAtTime(
-          0.0001,
-          a.currentTime + 0.5
-        );
-        setTimeout(() => {
-          try {
-            ambientOscillator?.stop();
-          } catch {
-            // Ignore if already stopped
-          }
-          ambientOscillator = null;
-          localAmbientGain = null;
-        }, 550);
-      }
-    } catch (error) {
-      console.log("[Ambient] Error stopping oscillator:", error);
-      ambientOscillator = null;
-      localAmbientGain = null;
-    }
-  }
-}
-// startAmbient and stopAmbient removed - ambient music globally disabled
+// Ambient music disabled globally - implementation removed to reduce bundle size and improve startup performance
