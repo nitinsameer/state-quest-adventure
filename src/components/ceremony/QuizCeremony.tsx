@@ -1,7 +1,7 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { useProgress, dismissPendingCelebration, updateCeremonyStep, type PendingCelebration } from '@/lib/progress';
 import { useNavigate } from '@tanstack/react-router';
-import { getState, REGIONS, REGION_KEYS, type IndiaState } from '@/lib/states';
+import { getState, type IndiaState } from '@/lib/states';
 import { STATE_ART, TONE_GRADIENT } from '@/lib/state-art';
 import { ConfettiBurst } from '@/components/ConfettiBurst';
 import { fxTap } from '@/lib/fx';
