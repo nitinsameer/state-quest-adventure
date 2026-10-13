@@ -4247,18 +4247,7 @@ function ProfileScreenContent() {
             ‹
           </button>
           <div className="text-display font-extrabold text-white">Profile</div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => {
-                fxTap();
-                setShowResetPINDialog(true);
-              }}
-              title="Reset progress (requires PIN)"
-              className="h-10 w-10 rounded-full bg-white/40 hover:bg-white/60 text-white flex items-center justify-center transition active:scale-90 font-extrabold text-lg"
-            >
-              ⟲
-            </button>
-          </div>
+          <div className="w-10" /> {/* Spacer for alignment */}
         </div>
         <div className="flex flex-col items-center mt-4">
           <div className="relative animate-bounce" style={{ animationDelay: "0ms" }}>
