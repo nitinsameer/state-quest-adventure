@@ -238,7 +238,7 @@ export function BottomNav({
               <span className="text-2xl leading-none">{i.icon}</span>
               <span
                 className={`text-label ${
-                  on ? "" : "text-muted-foreground"
+                  on ? "" : "text-text-secondary"
                 }`}
               >
                 {i.label}
@@ -872,7 +872,7 @@ function HomeDashboardContent() {
 
       {/* Continue journey - with pulse on play button */}
       <div className="px-5 mt-5 mb-4 flex-shrink-0">
-        <h2 className="text-display font-bold text-sm text-muted-foreground mb-2">
+        <h2 className="text-display font-bold text-sm text-text-secondary mb-2">
           Continue your journey
         </h2>
         <div className="mt-2 rounded-3xl ui-card ui-accent-1-soft p-4 flex items-center gap-3">
@@ -899,7 +899,7 @@ function HomeDashboardContent() {
                   style={{ width: `${(currentDone / CARDS_PER_STATE) * 100}%` }}
                 />
               </div>
-              <span className="text-label text-muted-foreground">
+              <span className="text-label text-text-secondary">
                 {currentDone}/{CARDS_PER_STATE}
               </span>
             </div>
@@ -920,7 +920,7 @@ function HomeDashboardContent() {
       {/* Up next - with interactive locked cards */}
       <div className="px-5 mt-5 mb-6 flex-shrink-0">
         <div className="flex items-center justify-between mb-2">
-          <h2 className="text-display font-bold text-sm text-muted-foreground">
+          <h2 className="text-display font-bold text-sm text-text-secondary">
             Up next
           </h2>
           <Link to="/journey" className="text-xs font-extrabold text-explorer" aria-label="View all states">
@@ -987,7 +987,7 @@ function HomeDashboardContent() {
                   {/* Close button */}
                   <button
                     onClick={() => setShowLockedPreview(null)}
-                    className="absolute top-4 right-4 text-muted-light hover:text-muted-foreground text-xl"
+                    className="absolute top-4 right-4 text-muted-light hover:text-text-secondary text-xl"
                   >
                     âœ•
                   </button>
@@ -1164,7 +1164,7 @@ function MiniStateCard({
         />
       </div>
       <div className="mt-2 text-display font-extrabold text-sm">{name}</div>
-      <div className="text-[10px] font-bold text-muted-foreground">
+      <div className="text-[10px] font-bold text-text-secondary">
         {locked ? "ðŸ”’ Locked" : "Unlocked"}
       </div>
     </div>
@@ -1206,7 +1206,7 @@ function StateDetailModal({
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 h-8 w-8 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:bg-muted"
+          className="absolute top-4 right-4 h-8 w-8 rounded-full bg-muted flex items-center justify-center text-text-secondary hover:bg-muted"
         >
           âœ•
         </button>
@@ -1296,7 +1296,7 @@ function StateDetailModal({
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 h-12 rounded-2xl bg-muted text-display font-extrabold text-muted-foreground hover:bg-muted transition"
+            className="flex-1 h-12 rounded-2xl bg-muted text-display font-extrabold text-text-secondary hover:bg-muted transition"
           >
             Close
           </button>
@@ -1847,7 +1847,7 @@ export function StateIntroScreen({
         <h1 className="text-h1 leading-snug mt-1">
           {state.name}
         </h1>
-        <div className="text-body text-muted-foreground mt-1">
+        <div className="text-body text-text-secondary mt-1">
           <img
             src={STATE_ART[state.name]}
             alt={state.name}
@@ -2259,11 +2259,11 @@ function HubCard({
       <div className="text-h5 text-display mt-1 leading-tight">
         {title}
       </div>
-      <div className="text-xs font-bold text-muted-foreground">{sub}</div>
+      <div className="text-xs font-bold text-text-secondary">{sub}</div>
       {/* Category-scoped progress counter */}
       {categoryCardsTotal !== undefined && categoryCardsRead !== undefined && (
         <div className={`mt-2 text-xs font-bold ${
-          done ? "text-success" : "text-muted-foreground"
+          done ? "text-success" : "text-text-secondary"
         }`}>
           {categoryCardsRead}/{categoryCardsTotal}{done && " âœ“"}
         </div>
@@ -3190,7 +3190,7 @@ function QuizScreenContent({
 
       {/* Status Bar with XP Info - Clean */}
       <div className="px-5 py-2 mx-5 ui-card ui-accent-1-soft flex items-center justify-between text-xs">
-        <div className="font-bold text-muted-foreground">
+        <div className="font-bold text-text-secondary">
           Total: {answeredQuestions.filter(a => a.correct).length * 20} XP
         </div>
         <div className="font-bold text-success">
@@ -3259,7 +3259,7 @@ function QuizScreenContent({
                     ? "bg-fb-error-bg text-white"
                     : isSelected
                     ? "gradient-explorer text-white"
-                    : "bg-muted text-muted-foreground"
+                    : "bg-muted text-text-secondary"
                 }`}
               >
                 {isCorrectPick ? "âœ“" : isWrongPick ? "âœ•" : isSelected ? "âœ“" : ""}
@@ -3472,7 +3472,7 @@ function Stamp({
   }[tone];
   if (!filled) {
     return (
-      <div className="aspect-square rounded-2xl border-2 border-dashed border-muted-foreground/30 flex flex-col items-center justify-center text-muted-foreground">
+      <div className="aspect-square rounded-2xl border-2 border-dashed border-muted-foreground/30 flex flex-col items-center justify-center text-text-secondary">
         <div className="text-3xl opacity-40">ðŸ”’</div>
         <div className="text-[11px] font-extrabold mt-1">{name}</div>
       </div>
@@ -3561,7 +3561,7 @@ function BadgeDetailModal({
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 h-8 w-8 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:bg-muted"
+          className="absolute top-4 right-4 h-8 w-8 rounded-full bg-muted flex items-center justify-center text-text-secondary hover:bg-muted"
         >
           âœ•
         </button>
@@ -3581,7 +3581,7 @@ function BadgeDetailModal({
           <h2 className="text-display text-2xl font-extrabold text-ink">
             {badge.name}
           </h2>
-          <p className="text-sm text-muted-foreground mt-1">{state}</p>
+          <p className="text-sm text-text-secondary mt-1">{state}</p>
         </div>
 
         {/* Unlock Information */}
@@ -3610,7 +3610,7 @@ function BadgeDetailModal({
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 h-12 rounded-2xl bg-muted text-display font-extrabold text-muted-foreground hover:bg-muted transition"
+            className="flex-1 h-12 rounded-2xl bg-muted text-display font-extrabold text-text-secondary hover:bg-muted transition"
           >
             Close
           </button>
@@ -3687,7 +3687,7 @@ export function BadgesScreen() {
           className={`px-4 py-3 rounded-t-lg font-bold text-sm transition ${
             activeTab === "achievements"
               ? "bg-transparent border-b-2 border-orange text-orange"
-              : "text-muted-foreground hover:text-muted-dark"
+              : "text-text-secondary hover:text-muted-dark"
           }`}
         >
           ðŸ† Achievement Badges
@@ -3700,7 +3700,7 @@ export function BadgesScreen() {
           className={`px-4 py-3 rounded-t-lg font-bold text-sm transition ${
             activeTab === "states"
               ? "bg-transparent border-b-2 border-orange text-orange"
-              : "text-muted-foreground hover:text-muted-dark"
+              : "text-text-secondary hover:text-muted-dark"
           }`}
         >
           ðŸŽ–ï¸ State Badges
@@ -3749,14 +3749,14 @@ export function BadgesScreen() {
 
                   {/* Badge Name - Bold Uppercase */}
                   <div className={`text-sm font-extrabold uppercase leading-tight tracking-wide ${
-                    badge.unlocked ? "text-ink" : "text-muted-foreground"
+                    badge.unlocked ? "text-ink" : "text-text-secondary"
                   }`}>
                     {badge.name}
                   </div>
 
                   {/* Badge Description - Simple 1-2 lines */}
                   <div className={`text-xs leading-snug ${
-                    badge.unlocked ? "text-ink/80" : "text-muted-foreground"
+                    badge.unlocked ? "text-ink/80" : "text-text-secondary"
                   }`}>
                     {badge.description}
                   </div>
@@ -3773,7 +3773,7 @@ export function BadgesScreen() {
                     ) : (
                       <div className="flex flex-col gap-2">
                         <div className="text-xl">{getProgressStars(badge.progress, badge.achievementMax)}</div>
-                        <div className="text-[11px] font-bold text-muted-foreground">
+                        <div className="text-[11px] font-bold text-text-secondary">
                           Keep going! ðŸŒŸ
                         </div>
                       </div>
@@ -3897,7 +3897,7 @@ function ProfileScreenContent() {
   };
 
   return (
-    <div className="h-full w-full bg-[#F7F5F0] flex flex-col">
+    <div className="h-full w-full bg-bg-page flex flex-col">
       <div className="relative gradient-explorer px-5 pt-4 pb-14 rounded-b-[36px] animate-fade-in">
         <Cloud className="absolute top-2 right-2 w-16 opacity-40" />
         <div className="flex items-center justify-between">
@@ -3913,7 +3913,7 @@ function ProfileScreenContent() {
         </div>
         <div className="flex flex-col items-center mt-4">
           <div className="relative animate-bounce" style={{ animationDelay: "0ms" }}>
-            <div className="h-24 w-24 rounded-3xl bg-white p-2 shadow-xl flex items-center justify-center text-5xl overflow-hidden">
+            <div className="h-24 w-24 rounded-3xl bg-surface-card p-2 shadow-xl flex items-center justify-center text-5xl overflow-hidden">
               <img 
                 src={getAvatarImage(p.avatar)} 
                 alt={getAvatarName(p.avatar)}
@@ -3938,7 +3938,7 @@ function ProfileScreenContent() {
                 }}
                 placeholder="Enter name"
                 maxLength={20}
-                className="h-12 rounded-xl bg-white text-center text-display text-lg font-extrabold text-ink outline-none border-2 border-white"
+                className="h-12 rounded-xl bg-surface-card text-center text-display text-lg font-extrabold text-text-primary outline-none border-2 border-border-color"
               />
               <div className="flex gap-2">
                 <button
@@ -4014,11 +4014,11 @@ function ProfileScreenContent() {
               <div className="text-display font-extrabold text-[15px] leading-tight">
                 Change Avatar
               </div>
-              <div className="text-[11px] font-bold text-muted-foreground">
+              <div className="text-[11px] font-bold text-text-secondary">
                 {getAvatarName(p.avatar)} Â· Tap to select
               </div>
             </div>
-            <div className="text-muted-foreground text-xl">{isSelectingAvatar ? 'âœ•' : 'â€º'}</div>
+            <div className="text-text-secondary text-xl">{isSelectingAvatar ? 'âœ•' : 'â€º'}</div>
           </button>
 
           {/* Avatar Selection Grid */}
@@ -4051,7 +4051,7 @@ function ProfileScreenContent() {
 
         {/* âš™ï¸ Settings Section Header */}
         <div className="animate-fade-in pt-2" style={{ animationDelay: "195ms" }}>
-          <h3 className="text-sm font-extrabold text-muted-foreground uppercase tracking-wider px-1 mb-2">
+          <h3 className="text-sm font-extrabold text-text-secondary uppercase tracking-wider px-1 mb-2">
             âš™ï¸ Settings
           </h3>
         </div>
@@ -4080,7 +4080,7 @@ function ProfileScreenContent() {
             }}
             className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
           >
-            <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center text-2xl">
+            <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-accent-5-soft to-accent-5 flex items-center justify-center text-2xl">
               ðŸ“¸
             </div>
             <div className="flex-1 text-left">
@@ -4122,7 +4122,7 @@ function ProfileScreenContent() {
                     <div className="text-display font-extrabold text-[15px] leading-tight">
                       Daily Goals
                     </div>
-                    <div className="text-[11px] font-bold text-muted-foreground">
+                    <div className="text-[11px] font-bold text-text-secondary">
                       ðŸ”¥ {p.streak} day streak
                     </div>
                   </div>
@@ -4157,9 +4157,9 @@ function ProfileScreenContent() {
               <div className="text-display font-extrabold text-[15px] leading-tight">
                 Privacy Policy
               </div>
-              <div className="text-[11px] font-bold text-muted-foreground">How we handle your data</div>
+              <div className="text-[11px] font-bold text-text-secondary">How we handle your data</div>
             </div>
-            <div className="text-muted-foreground text-xl">â€º</div>
+            <div className="text-text-secondary text-xl">â€º</div>
           </Link>
         </div>
       </div>
@@ -4224,12 +4224,12 @@ function SoundToggleRow() {
         onClick={toggleSound}
         className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
       >
-        <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center text-2xl">
+        <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-accent-5-soft to-accent-5 flex items-center justify-center text-2xl">
           ðŸ”Š
         </div>
         <div className="flex-1 text-left">
           <div className="text-display font-extrabold text-[15px] leading-tight">Sound Effects</div>
-          <div className="text-[11px] font-bold text-muted-foreground">
+          <div className="text-[11px] font-bold text-text-secondary">
             {soundOn ? "Sound & vibrations enabled" : "Sound & vibrations muted"}
           </div>
         </div>
@@ -4251,7 +4251,7 @@ function SoundToggleRow() {
         onClick={toggleAudio}
         className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
       >
-        <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-purple-100 to-indigo-100 flex items-center justify-center text-2xl">
+        <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-accent-5-soft to-accent-5 flex items-center justify-center text-2xl">
           ðŸŽ§
         </div>
         <div className="flex-1 text-left">
@@ -4284,7 +4284,7 @@ function ProfileStat({ value, label }: { value: string; label: string }) {
   return (
     <div className="flex flex-col items-center py-1">
       <div className="text-display text-xl font-extrabold">{value}</div>
-      <div className="text-xs font-bold text-muted-foreground">
+      <div className="text-xs font-bold text-text-secondary">
         {label}
       </div>
     </div>
@@ -4425,9 +4425,9 @@ function RowLink({
         <div className="text-display font-extrabold text-[15px] leading-tight">
           {title}
         </div>
-        <div className="text-[11px] font-bold text-muted-foreground">{sub}</div>
+        <div className="text-[11px] font-bold text-text-secondary">{sub}</div>
       </div>
-      <div className="text-muted-foreground text-xl">â€º</div>
+      <div className="text-text-secondary text-xl">â€º</div>
     </Link>
   );
 }
@@ -4438,11 +4438,11 @@ export function AchievementsScreen() {
   const unlocked = items.filter((a) => a.done).length;
 
   return (
-    <div className="h-full w-full bg-[#F7F5F0] flex flex-col">
+    <div className="h-full w-full bg-bg-page flex flex-col">
       <HeaderBar title="Achievements" />
       <div className="px-5 pb-3">
         <div className="ui-card ui-accent-1-soft px-4 py-3 flex items-center justify-between">
-          <div className="text-[12px] font-extrabold text-muted-foreground uppercase tracking-wider">
+          <div className="text-[12px] font-extrabold text-text-secondary uppercase tracking-wider">
             Unlocked
           </div>
           <div className="text-display font-extrabold text-[16px]">
@@ -4485,7 +4485,7 @@ export function AchievementsScreen() {
                   </span>
                 )}
               </div>
-              <div className="text-[11px] font-bold text-muted-foreground">
+              <div className="text-[11px] font-bold text-text-secondary">
                 {a.sub}
               </div>
               {!a.done && "prog" in a && (
@@ -4504,7 +4504,7 @@ export function AchievementsScreen() {
                       style={{ width: `${(a.prog / a.max) * 100}%` }}
                     />
                   </div>
-                  <span className="text-[11px] font-extrabold text-muted-foreground">
+                  <span className="text-[11px] font-extrabold text-text-secondary">
                     {a.prog}/{a.max}
                   </span>
                 </div>
@@ -4536,7 +4536,7 @@ export function LoadingScreen() {
       </div>
       <div className="mt-8 text-center">
         <div className="text-display text-h2 font-bold">Flying to Gujaratâ€¦</div>
-        <div className="text-body text-muted-foreground mt-1">
+        <div className="text-body text-text-secondary mt-1">
           Packing camel snacks ðŸª
         </div>
       </div>
@@ -4559,7 +4559,7 @@ export function EmptyStateScreen() {
         <h2 className="text-display text-2xl font-extrabold mt-4">
           No explorer friends yet!
         </h2>
-        <p className="mt-2 text-body text-muted-foreground max-w-[260px]">
+        <p className="mt-2 text-body text-text-secondary max-w-[260px]">
           Invite a friend to join your adventure and travel across India
           together.
         </p>

@@ -30,7 +30,7 @@ export function StatePerformanceBadgesView() {
   const lockedStates = INDIA_STATES.filter(s => !progress.completed.includes(s.name));
 
   return (
-    <div className="h-full w-full bg-[#F7F5F0] flex flex-col">
+    <div className="h-full w-full bg-bg-page flex flex-col">
       {/* Header - Kid-friendly celebration style */}
       <div className="px-5 pt-3 pb-4 gradient-gold rounded-b-[32px] relative overflow-hidden">
         <div className="absolute top-2 right-4 text-5xl opacity-40 pointer-events-none">â˜ï¸</div>
@@ -55,7 +55,7 @@ export function StatePerformanceBadgesView() {
         {/* Completed States */}
         {completedStates.length > 0 && (
           <div>
-            <h2 className="text-display font-extrabold text-lg mb-4 text-muted-dark">
+            <h2 className="text-display font-extrabold text-lg mb-4 text-text-primary">
               âœ“ Completed ({completedStates.length})
             </h2>
             
@@ -78,7 +78,7 @@ export function StatePerformanceBadgesView() {
         {/* Locked States */}
         {lockedStates.length > 0 && (
           <div>
-            <h2 className="text-display font-extrabold text-lg mb-4 text-muted-dark">
+            <h2 className="text-display font-extrabold text-lg mb-4 text-text-primary">
               ðŸ”’ Not Started ({lockedStates.length})
             </h2>
             
@@ -86,13 +86,13 @@ export function StatePerformanceBadgesView() {
               {lockedStates.map(state => (
                 <div
                   key={state.name}
-                  className="rounded-2xl p-4 bg-white shadow-soft border border-black/5"
+                  className="rounded-2xl p-4 bg-surface-card shadow-soft border border-border-subtle"
                 >
                   <div className="flex items-center gap-4">
                     <div className="text-4xl">ðŸ”’</div>
                     <div className="flex-1">
-                      <h3 className="text-display font-extrabold text-muted-dark">{state.name}</h3>
-                      <p className="text-xs font-bold text-muted-foreground mt-1">Not yet started</p>
+                      <h3 className="text-display font-extrabold text-text-primary">{state.name}</h3>
+                      <p className="text-xs font-bold text-text-secondary mt-1">Not yet started</p>
                     </div>
                   </div>
                 </div>
@@ -128,7 +128,7 @@ function StateDetailBadgeCard({ state, progress, onSelect }: any) {
       {/* State Name */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1">
-          <h3 className="text-display font-extrabold text-lg text-muted-dark">{state.name}</h3>
+          <h3 className="text-display font-extrabold text-lg text-text-primary">{state.name}</h3>
         </div>
       </div>
 
@@ -138,7 +138,7 @@ function StateDetailBadgeCard({ state, progress, onSelect }: any) {
         {earnedBadges.map((badge: StatePerformanceBadgeId) => (
           <div 
             key={badge}
-            className="h-8 w-8 rounded-full bg-gradient-to-br from-yellow-100 to-orange-100 border-2 border-orange-300 flex items-center justify-center text-base flex-shrink-0"
+            className="h-8 w-8 rounded-full bg-gradient-to-br from-accent-1-soft to-action-primary-bg border-2 border-action-primary-bg flex items-center justify-center text-base flex-shrink-0"
             title={STATE_PERFORMANCE_BADGE_DEFS[badge]?.name}
           >
             {getPerformanceBadgeIcon(badge)}
@@ -149,7 +149,7 @@ function StateDetailBadgeCard({ state, progress, onSelect }: any) {
         {availableBadges.map((badge: StatePerformanceBadgeId) => (
           <div 
             key={badge}
-            className="h-8 w-8 rounded-full bg-muted border-2 border-muted flex items-center justify-center text-xs opacity-50 flex-shrink-0 relative"
+            className="h-8 w-8 rounded-full bg-text-muted border-2 border-text-muted flex items-center justify-center text-xs opacity-50 flex-shrink-0 relative"
             title={`${STATE_PERFORMANCE_BADGE_DEFS[badge]?.name}`}
           >
             <span className="absolute text-[10px]">ðŸ”’</span>
@@ -158,7 +158,7 @@ function StateDetailBadgeCard({ state, progress, onSelect }: any) {
       </div>
 
       {/* Kid-friendly copy */}
-      <div className="mt-3 text-xs font-bold text-orange">
+      <div className="mt-3 text-xs font-bold text-action-primary-bg">
         Keep exploring! ðŸŒŸ
       </div>
     </button>
