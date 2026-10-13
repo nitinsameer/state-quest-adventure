@@ -22,6 +22,14 @@ interface StatePerformanceBadgeModalProps {
   onClose: () => void;
 }
 
+// Helper to generate progress stars (e.g ⭐⭐☆)
+const getProgressStars = (progress: number, max: number): string => {
+  if (max === 0) return "";
+  const filledCount = Math.min(Math.ceil((progress / max) * 3), 3);
+  const stars = "⭐".repeat(filledCount) + "☆".repeat(3 - filledCount);
+  return stars;
+};
+
 export function StatePerformanceBadgeModal({
   stateName,
   progress,
@@ -50,9 +58,6 @@ export function StatePerformanceBadgeModal({
             <h2 className="text-display font-extrabold text-2xl text-muted-dark">
               {stateName} Badges
             </h2>
-            <p className="text-xs font-bold text-muted-foreground mt-1">
-              {earnedBadges.length}/9 Badges Earned
-            </p>
           </div>
           <button
             onClick={() => {
@@ -65,41 +70,13 @@ export function StatePerformanceBadgeModal({
           </button>
         </div>
 
-        {/* Metrics Summary */}
-        {metrics && (
-          <div className="grid grid-cols-2 gap-3 p-3 bg-orange-soft rounded-2xl border border-orange-200">
-            <div>
-              <div className="text-xs font-bold text-muted-foreground">Quiz Score</div>
-              <div className="text-2xl font-extrabold text-orange mt-1">
-                {metrics.quizScore}%
-              </div>
-            </div>
-            <div>
-              <div className="text-xs font-bold text-muted-foreground">Time Taken</div>
-              <div className="text-2xl font-extrabold text-orange mt-1">
-                {Math.round(metrics.timeToComplete / 60000)}m
-              </div>
-            </div>
-            <div>
-              <div className="text-xs font-bold text-muted-foreground">Cards Read</div>
-              <div className="text-2xl font-extrabold text-orange mt-1">
-                {metrics.cardsRead}/6
-              </div>
-            </div>
-            <div>
-              <div className="text-xs font-bold text-muted-foreground">Quiz Attempts</div>
-              <div className="text-2xl font-extrabold text-orange mt-1">
-                {metrics.quizAttempts}
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Metrics Summary - REMOVED */}
 
         {/* Earned Badges */}
         {earnedBadges.length > 0 && (
           <div>
             <h3 className="text-display font-extrabold text-lg mb-3 text-muted-dark">
-              ✓ Earned Badges ({earnedBadges.length})
+              ✓ You Did It!
             </h3>
             <div className="space-y-3">
               {earnedBadges.map(badgeId => (
@@ -113,11 +90,11 @@ export function StatePerformanceBadgeModal({
           </div>
         )}
 
-        {/* Available Badges */}
+        {/* Locked Badges */}
         {availableBadges.length > 0 && (
           <div>
             <h3 className="text-display font-extrabold text-lg mb-3 text-muted-dark">
-              ⏳ Available Badges ({availableBadges.length})
+              Keep Exploring! 🌟
             </h3>
             <div className="space-y-3">
               {availableBadges.map(badgeId => (
@@ -137,7 +114,7 @@ export function StatePerformanceBadgeModal({
             fxTap();
             onClose();
           }}
-          className="mt-4 w-full py-3 rounded-2xl bg-orange-soft0 text-white font-bold text-lg transition active:scale-95"
+          className="mt-4 w-full h-11 rounded-2xl clay-button clay-white text-ink font-bold transition active:scale-95"
         >
           Close
         </button>
@@ -158,54 +135,43 @@ function BadgeDetailCard({ badgeId, progress }: BadgeDetailCardProps) {
     <div
       className={`rounded-2xl p-4 border-2 transition ${
         progress.earned
-          ? "bg-gradient-to-r from-yellow-50 to-orange-50 border-orange-300"
-          : "bg-muted-light border-muted"
+          ? "clay-card clay-gold shadow-md border-orange-300"
+          : "clay-card clay-white border-muted opacity-60"
       }`}
     >
       <div className="flex items-start gap-4">
         {/* Badge Icon */}
-        <div className={`text-4xl ${!progress.earned && "opacity-50"}`}>
+        <div className={`text-4xl flex-shrink-0 ${!progress.earned && "opacity-50"}`}>
           {getPerformanceBadgeIcon(badgeId)}
         </div>
 
         {/* Badge Info */}
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <h4 className={`text-display font-extrabold ${progress.earned ? "text-orange-900" : "text-muted-foreground"}`}>
+            <h4 className={`text-display font-extrabold text-lg ${progress.earned ? "text-ink" : "text-muted-foreground"}`}>
               {badgeDef.name}
             </h4>
-            {progress.earned && <div className="text-lg">✓</div>}
           </div>
 
           <p className="text-xs font-bold text-muted-foreground mt-1">
             {badgeDef.description}
           </p>
 
-          <p className="text-xs font-bold text-muted-foreground mt-2 mb-2">
-            {badgeDef.requirement}
-          </p>
-
-          {/* Progress Bar */}
-          {!progress.earned && (
-            <div className="flex items-center gap-2">
-              <div className="flex-1 h-2 bg-[oklch(0.9_0.02_260)] rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-orange-400 to-orange-600 transition-all"
-                  style={{ width: `${Math.min(100, (progress.progress / progress.max) * 100)}%` }}
-                />
+          {/* Status Section */}
+          <div className="mt-3 pt-3 border-t border-white/20">
+            {progress.earned ? (
+              <div className="flex flex-col gap-1">
+                <div className="text-lg font-extrabold text-ink">✓ You Did It!</div>
               </div>
-              <div className="text-xs font-bold text-muted-foreground min-w-fit">
-                {progress.progress}/{progress.max}
+            ) : (
+              <div className="flex flex-col gap-2">
+                <div className="text-lg">{getProgressStars(progress.progress, progress.max)}</div>
+                <div className="text-[11px] font-bold text-muted-foreground">
+                  Keep going! 🌟
+                </div>
               </div>
-            </div>
-          )}
-
-          {/* Message */}
-          <p className={`text-xs font-bold mt-2 ${
-            progress.earned ? "text-green-600" : "text-orange"
-          }`}>
-            {progress.message}
-          </p>
+            )}
+          </div>
         </div>
       </div>
     </div>

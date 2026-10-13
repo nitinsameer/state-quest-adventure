@@ -31,46 +31,19 @@ export function StatePerformanceBadgesView() {
 
   return (
     <div className="h-full w-full bg-[#F7F5F0] flex flex-col">
-      {/* Header */}
-      <div className="px-5 pt-3 pb-4 gradient-explorer rounded-b-[32px] relative overflow-hidden">
+      {/* Header - Kid-friendly celebration style */}
+      <div className="px-5 pt-3 pb-4 gradient-gold rounded-b-[32px] relative overflow-hidden">
         <div className="absolute top-2 right-4 text-5xl opacity-40 pointer-events-none">☁️</div>
         
         <div className="flex items-center gap-3 relative z-10">
-          <div className="h-14 w-14 rounded-2xl bg-white shadow-soft p-1 flex items-center justify-center overflow-hidden flex-shrink-0">
+          <div className="h-14 w-14 rounded-2xl clay-card clay-white p-1 flex items-center justify-center overflow-hidden flex-shrink-0">
             <img src={getAvatarImage(progress.avatar)} alt={getAvatarName(progress.avatar)} className="w-full h-full object-cover" />
           </div>
           <div className="flex-1 text-white">
             <div className="text-display text-lg font-bold leading-tight">
-              State Badges
+              {progress.name}
             </div>
-            <div className="text-xs font-bold text-white/80">Performance Collection</div>
-          </div>
-        </div>
-
-        {/* Stats */}
-        <div className="mt-3 rounded-2xl bg-white/15 backdrop-blur p-4">
-          <div className="flex items-center justify-between text-white gap-3">
-            <div>
-              <div className="text-xs font-bold opacity-90 uppercase tracking-wide">States Explored</div>
-              <div className="text-display text-2xl font-extrabold mt-1">
-                {completedStates.length}<span className="text-lg opacity-80 ml-1">/ 36</span>
-              </div>
-              <div className="text-xs font-bold opacity-90 mt-1">
-                {totalBadgesEarned}/{totalPossible} Badges
-              </div>
-            </div>
-            
-            <div className="flex-1 flex flex-col gap-1.5">
-              <div className="text-xs font-extrabold opacity-90">Progress</div>
-              <div className="h-2.5 bg-white/30 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-yellow-200 to-white rounded-full transition-all duration-500"
-                  style={{ width: `${totalPossible > 0 ? (totalBadgesEarned / totalPossible) * 100 : 0}%` }}
-                />
-              </div>
-            </div>
-            
-            <div className="text-4xl">🎖️</div>
+            <div className="text-xs font-bold text-white/80">🎉 {totalBadgesEarned} Amazing State Badges!</div>
           </div>
         </div>
       </div>
@@ -150,62 +123,44 @@ function StateDetailBadgeCard({ state, progress, onSelect }: any) {
   return (
     <button
       onClick={onSelect}
-      className="rounded-2xl p-4 bg-white shadow-soft border border-black/5 text-left hover:shadow-md transition active:scale-[0.99]"
+      className="rounded-2xl p-4 clay-card clay-white text-left hover:shadow-md transition active:scale-[0.99]"
     >
-      {/* State Name and Badge Count */}
+      {/* State Name */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1">
           <h3 className="text-display font-extrabold text-lg text-muted-dark">{state.name}</h3>
-          <div className="text-xs font-bold text-muted-foreground mt-1">
-            {earnedBadges.length}/{totalBadges} Badges
-          </div>
         </div>
       </div>
 
-      {/* Progress Bar */}
-      <div className="mt-3 flex items-center gap-2">
-        <div className="flex-1 h-2 bg-[oklch(0.9_0.02_260)] rounded-full overflow-hidden">
-          <div 
-            className="h-full bg-gradient-to-r from-orange-400 to-orange-600 transition-all"
-            style={{ width: `${(earnedBadges.length / totalBadges) * 100}%` }}
-          />
-        </div>
-        <span className="text-xs font-bold text-muted-foreground min-w-fit">
-          {Math.round((earnedBadges.length / totalBadges) * 100)}%
-        </span>
-      </div>
-
-      {/* All Badge Icons (Earned + Available) */}
-      <div className="mt-3 flex gap-2 flex-wrap items-center">
-        {/* Earned badges - colored */}
+      {/* All Badge Icons (Earned + Locked) */}
+      <div className="mt-4 flex gap-2 flex-wrap items-center">
+        {/* Earned badges - colored circles */}
         {earnedBadges.map((badge: StatePerformanceBadgeId) => (
           <div 
             key={badge}
-            className="h-7 w-7 rounded-full bg-gradient-to-br from-yellow-100 to-orange-100 border-2 border-orange-300 flex items-center justify-center text-base flex-shrink-0"
+            className="h-8 w-8 rounded-full bg-gradient-to-br from-yellow-100 to-orange-100 border-2 border-orange-300 flex items-center justify-center text-base flex-shrink-0"
             title={STATE_PERFORMANCE_BADGE_DEFS[badge]?.name}
           >
             {getPerformanceBadgeIcon(badge)}
           </div>
         ))}
         
-        {/* Available badges - grayed out */}
-        {availableBadges.slice(0, 3).map((badge: StatePerformanceBadgeId) => (
+        {/* Locked badges - greyed with lock icon */}
+        {availableBadges.map((badge: StatePerformanceBadgeId) => (
           <div 
             key={badge}
-            className="h-7 w-7 rounded-full bg-muted border-2 border-muted flex items-center justify-center text-base opacity-40 flex-shrink-0"
-            title={`${STATE_PERFORMANCE_BADGE_DEFS[badge]?.name} - Not yet earned`}
+            className="h-8 w-8 rounded-full bg-muted border-2 border-muted flex items-center justify-center text-xs opacity-50 flex-shrink-0 relative"
+            title={`${STATE_PERFORMANCE_BADGE_DEFS[badge]?.name}`}
           >
-            {getPerformanceBadgeIcon(badge)}
+            <span className="absolute text-[10px]">🔒</span>
           </div>
         ))}
       </div>
 
-      {/* Action Text */}
-      {earnedBadges.length < totalBadges && (
-        <div className="mt-3 text-xs font-bold text-orange">
-          {availableBadges.length} badges available • Replay to earn more
-        </div>
-      )}
+      {/* Kid-friendly copy */}
+      <div className="mt-3 text-xs font-bold text-orange">
+        Keep exploring! 🌟
+      </div>
     </button>
   );
 }
