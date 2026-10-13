@@ -83,6 +83,52 @@ const StatePerformanceSchema = z.object({
   earnedPerformanceBadges: z.array(z.string()),
 }).optional();
 
+/**
+ * PENDING CELEBRATION - Extended data for ceremony UI (Task 12.2)
+ * Stores all data needed to render the 4-step ceremony:
+ * 1. Result (stars, XP, level-up)
+ * 2. Stamp (state name, count)
+ * 3. Postcard (state art, sticker choice)
+ * 4. What's Next (region progress, next state)
+ */
+const PendingCelebrationSchema = z.object({
+  stateName: z.string().min(1),
+  stars: z.enum(['1', '2', '3']),
+  correctCount: z.number().int().nonnegative().max(6),
+  totalQuestions: z.number().int().positive().max(6),
+  quizXp: z.number().int().nonnegative(), // Sum of +20 per first-time correct
+  bonusXp: z.number().int().nonnegative(), // Always 100
+  stampDate: z.string(), // Formatted like "12 · MAR"
+  earnedBadgeIds: z.array(z.enum(['monument', 'animal', 'explorer'])),
+  regionKey: z.string().min(1), // e.g., "north", "south"
+  regionDone: z.number().int().nonnegative().max(8), // How many states in region are done
+  regionTotal: z.number().int().positive().max(8), // Total states in this region
+  streak: z.number().int().nonnegative().max(9999),
+  leveledUp: z.boolean(),
+  levelName: z.string().optional(), // New level name if leveledUp
+  step: z.number().int().min(0).max(3), // Current ceremony step (0-3)
+  sticker: z.string().optional(), // Selected postcard sticker (emoji)
+  type: z.enum(['full', 'stars-improved']).default('full'), // Celebration type
+});
+
+/**
+ * STARS IMPROVED CELEBRATION - Shorter celebration for replay improvements (Task 12.2)
+ * Shown when user replays and improves their stars (but gets no XP)
+ */
+const StarsImprovedCelebrationSchema = z.object({
+  stateName: z.string().min(1),
+  oldStars: z.enum(['1', '2', '3']),
+  newStars: z.enum(['1', '2', '3']),
+  stampDate: z.string(),
+  step: z.number().int().min(0).max(3).default(0),
+  type: z.literal('stars-improved'),
+});
+
+const AnyPendingCelebrationSchema = z.union([
+  PendingCelebrationSchema,
+  StarsImprovedCelebrationSchema,
+]);
+
 export const ProgressSchema = z.object({
   name: z.string().min(1).max(50),
   avatar: z.string().min(1).max(40).optional(), // Avatar ID (e.g., "explorer-hat") or emoji
@@ -102,6 +148,7 @@ export const ProgressSchema = z.object({
   lastPlayedState: z.string().min(1).optional(),
   statePerformance: z.record(z.string(), StatePerformanceSchema).optional(),
   stars: z.record(z.string(), z.enum(['1', '2', '3'])).optional(), // Best stars per state
+  pendingCelebrations: z.array(AnyPendingCelebrationSchema).optional(),
 });
 
 export type Progress = z.infer<typeof ProgressSchema>;

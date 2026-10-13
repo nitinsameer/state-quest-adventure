@@ -171,6 +171,31 @@ export function getWeeklyStats(progress: Progress, today: Date = new Date()): { 
 }
 
 /**
+ * Find which region a state belongs to
+ * @param stateName Name of the state to find
+ * @returns Object with regionKey and region data, or null if not found
+ */
+export function findRegionForState(stateName: string): { regionKey: keyof typeof REGIONS; region: typeof REGIONS[keyof typeof REGIONS] } | null {
+  for (const [key, region] of Object.entries(REGIONS)) {
+    if (region.states.some(s => s.name === stateName)) {
+      return { regionKey: key as keyof typeof REGIONS, region };
+    }
+  }
+  return null;
+}
+
+/**
+ * Count how many states in a region are completed
+ * @param regionKey The region key (e.g., "north", "south")
+ * @param completedStates Array of completed state names
+ * @returns Number of completed states in this region
+ */
+export function countRegionCompleted(regionKey: keyof typeof REGIONS, completedStates: string[]): number {
+  const region = REGIONS[regionKey];
+  return region.states.filter(s => completedStates.includes(s.name)).length;
+}
+
+/**
  * Get "Up Next" states for a given current state
  * Shows states from the same region first, then moves to next region when region is complete
  * @param currentStateName Name of the current state

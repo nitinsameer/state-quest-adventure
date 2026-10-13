@@ -7,6 +7,35 @@ import { validateProgress, validateAppVersion, validateRecentlyCompleted } from 
 
 export type BadgeId = "monument" | "animal" | "explorer";
 
+export type PendingCelebration = 
+  | {
+      type: 'full';
+      stateName: string;
+      stars: '1' | '2' | '3';
+      correctCount: number;
+      totalQuestions: number;
+      quizXp: number;
+      bonusXp: number;
+      stampDate: string;
+      earnedBadgeIds: BadgeId[];
+      regionKey: string;
+      regionDone: number;
+      regionTotal: number;
+      streak: number;
+      leveledUp: boolean;
+      levelName?: string;
+      step: number;
+      sticker?: string;
+    }
+  | {
+      type: 'stars-improved';
+      stateName: string;
+      oldStars: '1' | '2' | '3';
+      newStars: '1' | '2' | '3';
+      stampDate: string;
+      step: number;
+    };
+
 /** Achievement-based badge system - 20 badges across 4 tiers */
 export type AchievementBadgeId = 
   // Tier 1: Seedling
@@ -70,8 +99,8 @@ export type Progress = {
   lastPlayedState?: string;
   /** NEW: Per-state performance tracking for performance badges */
   statePerformance?: StatePerformanceData;
-  /** NEW: Pending celebrations queue (persistent until dismissed, shows real XP & badges & stars) */
-  pendingCelebrations?: Array<{ stateName: string; xp: number; badges: string[]; stars?: '1' | '2' | '3' }>;
+  /** NEW: Pending celebrations queue with full ceremony data (Task 12.2) */
+  pendingCelebrations?: PendingCelebration[];
   /** NEW: Best stars per state (1, 2, or 3; kept on replay) */
   stars?: Record<string, '1' | '2' | '3'>;
   /** NEW: Completed categories per state (tracks which categories earned the 25 XP reward) */
@@ -909,8 +938,26 @@ export function finishQuiz(
     // Check if this is a replay (state already completed)
     const isReplay = p.completed.includes(stateName);
     
-    // On replay: do NOT award XP, just update stars if they improved
+    // On replay: handle stars-improved case
     if (isReplay) {
+      // If stars improved, queue a stars-improved celebration
+      if (parseInt(newStars) > parseInt(currentBestStars || '0')) {
+        return {
+          ...p,
+          stars: { ...p.stars, [stateName]: bestStars },
+          pendingCelebrations: [
+            ...(p.pendingCelebrations ?? []),
+            {
+              type: 'stars-improved',
+              stateName,
+              oldStars: currentBestStars || ('1' as const),
+              newStars: bestStars,
+              stampDate: stampDate(),
+              step: 0,
+            },
+          ],
+        };
+      }
       return {
         ...p,
         stars: { ...p.stars, [stateName]: bestStars },
@@ -936,6 +983,9 @@ export function finishQuiz(
     // 3. Record performance metrics and complete state in one atomic update
     const statePerformance = p.statePerformance ?? {};
     const xpReward = 100; // State completion bonus
+    
+    // 4. Calculate quiz XP (20 per first-time correct answer)
+    const quizXp = correctCount * 20;
 
     firebaseEvents.stateCompleted({
       stateName,
@@ -958,7 +1008,41 @@ export function finishQuiz(
       console.error("[finishQuiz] Failed to sync postcard to library", err);
     });
 
-    // 4. Return atomic update with all state changes
+    // 5. Determine region info (inline helpers to avoid circular import)
+    // Find which region a state belongs to
+    let regionKey = 'north';
+    let regionTotal = 6;
+    
+    // Check all known regions (from passport-helpers REGIONS)
+    const REGION_MAPPINGS: Record<string, { states: string[]; total: number }> = {
+      north: { states: ['Punjab', 'Haryana', 'Himachal Pradesh', 'Uttarakhand', 'Uttar Pradesh', 'Rajasthan'], total: 6 },
+      south: { states: ['Andhra Pradesh', 'Telangana', 'Karnataka', 'Kerala', 'Tamil Nadu'], total: 5 },
+      east: { states: ['West Bengal', 'Odisha', 'Bihar', 'Jharkhand'], total: 4 },
+      central: { states: ['Madhya Pradesh', 'Chhattisgarh'], total: 2 },
+      west: { states: ['Gujarat', 'Maharashtra', 'Goa'], total: 3 },
+      northeast: { states: ['Assam', 'Arunachal Pradesh', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Sikkim', 'Tripura'], total: 8 },
+      unionTerritories: { states: ['Delhi', 'Jammu & Kashmir', 'Ladakh', 'Chandigarh', 'Puducherry', 'Andaman & Nicobar Islands', 'Lakshadweep', 'Dadra & Nagar Haveli and Daman & Diu'], total: 8 },
+    };
+    
+    for (const [key, region] of Object.entries(REGION_MAPPINGS)) {
+      if (region.states.includes(stateName)) {
+        regionKey = key;
+        regionTotal = region.total;
+        break;
+      }
+    }
+    
+    // Count completed states in this region
+    const regionInfo = REGION_MAPPINGS[regionKey];
+    const regionDone = regionInfo.states.filter(s => [...p.completed, stateName].includes(s)).length;
+
+    // 6. Check if leveled up (reuse existing level logic)
+    const oldLevel = levelInfo(p.xp).level;
+    const newLevel = levelInfo(p.xp + xpReward).level;
+    const leveledUp = newLevel > oldLevel;
+    const levelName = leveledUp ? getLevelName(newLevel) : undefined;
+
+    // 7. Return atomic update with all state changes
     const updated: Progress = {
       ...p,
       // From completeState
@@ -988,13 +1072,26 @@ export function finishQuiz(
       },
       // Store stars for this state
       stars: { ...p.stars, [stateName]: bestStars },
-      // Queue pending celebration for Home screen (persistent, no auto-dismiss)
+      // Queue extended pending celebration for ceremony
       pendingCelebrations: [
         ...(p.pendingCelebrations ?? []),
         {
+          type: 'full',
           stateName,
-          xp: xpReward,
-          badges: earnedBadges,
+          stars: bestStars,
+          correctCount,
+          totalQuestions: 6,
+          quizXp,
+          bonusXp: xpReward,
+          stampDate: stampDateStr,
+          earnedBadgeIds: earnedQuizBadges,
+          regionKey: regionKey as string,
+          regionDone,
+          regionTotal,
+          streak: p.streak,
+          leveledUp,
+          levelName,
+          step: 0,
         },
       ],
     };

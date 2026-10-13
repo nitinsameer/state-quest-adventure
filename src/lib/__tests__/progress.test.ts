@@ -726,7 +726,7 @@ describe('Task 11.8: Star Calculation & Quiz Completion', () => {
       expect(p.pendingCelebrations).toBeDefined()
       expect(p.pendingCelebrations.length).toBeGreaterThan(0)
       expect(p.pendingCelebrations[0].stateName).toBe('Rajasthan')
-      expect(p.pendingCelebrations[0].xp).toBe(100)
+      expect(p.pendingCelebrations[0].bonusXp).toBe(100)
     }
   })
 })
