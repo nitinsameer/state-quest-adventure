@@ -12,7 +12,7 @@
 
 import { useEffect, useState } from 'react';
 import { ConfettiBurst } from './ConfettiBurst';
-import { fxStamp, vibrate } from '../lib/fx';
+import { fxStamp } from '../lib/fx';
 
 interface BadgeUnlockAnimationProps {
   badgeName: string;
