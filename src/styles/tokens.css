@@ -8,7 +8,7 @@
  * WCAG A large text (18pt+): 3:1 minimum contrast.
  */
 
-:root {
+:root, [data-theme="clay"] {
   /* ========================================================================
      COLOR TOKENS - Semantic (WCAG AA Compliant)
      ======================================================================== */
@@ -258,6 +258,119 @@
   --container-md: 28rem;    /* 448px */
   --container-lg: 32rem;    /* 512px */
   --container-xl: 36rem;    /* 576px */
+
+  /* ========================================================================
+     THEME CONTRACT TOKENS (Theme System Foundation)
+     ======================================================================== */
+
+  /* Page */
+  --bg-page: linear-gradient(180deg, #f7f4ef 0%, #eef2f8 100%);
+  --bg-header: linear-gradient(135deg, oklch(0.82 0.16 50) 0%, oklch(0.68 0.21 40) 100%);
+  --bg-nav: oklch(1 0 0);
+  --nav-active-bg: oklch(0.95 0.06 55);
+
+  /* Surfaces */
+  --surface-card: oklch(1 0 0);
+  --surface-raised: oklch(0.99 0.005 260);
+  --surface-sunken: oklch(0.9 0.02 260);
+  --surface-overlay: rgba(0, 0, 0, 0.5);
+  --scrim: rgba(0, 0, 0, 0.5);
+
+  /* Text */
+  --text-primary: oklch(0.22 0.05 260);
+  --text-secondary: oklch(0.45 0.04 260);
+  --text-muted: oklch(0.6 0.02 260);
+  --text-on-header: oklch(1 0 0);
+  --text-on-primary: oklch(1 0 0);
+  --text-link: oklch(0.62 0.2 250);
+
+  /* Actions */
+  --action-primary-bg: oklch(0.74 0.19 45);
+  --action-primary-fg: oklch(1 0 0);
+  --action-secondary-bg: oklch(0.95 0.06 55);
+  --action-secondary-fg: oklch(0.22 0.05 260);
+  --action-success-bg: oklch(0.72 0.19 150);
+  --action-success-fg: oklch(1 0 0);
+  --action-disabled-bg: oklch(0.97 0.01 260);
+  --action-disabled-fg: oklch(0.65 0.02 260);
+
+  /* Accents (6 regional/topic colours) */
+  --accent-1: oklch(0.74 0.19 45);
+  --accent-1-soft: oklch(0.95 0.06 55);
+  --accent-1-ink: oklch(0.22 0.05 260);
+  --accent-2: oklch(0.62 0.2 250);
+  --accent-2-soft: oklch(0.95 0.05 250);
+  --accent-2-ink: oklch(1 0 0);
+  --accent-3: oklch(0.72 0.19 150);
+  --accent-3-soft: oklch(0.95 0.06 150);
+  --accent-3-ink: oklch(1 0 0);
+  --accent-4: oklch(0.82 0.17 85);
+  --accent-4-soft: oklch(0.96 0.08 90);
+  --accent-4-ink: oklch(0.22 0.05 260);
+  --accent-5: oklch(0.62 0.24 290);
+  --accent-5-soft: oklch(0.96 0.05 280);
+  --accent-5-ink: oklch(1 0 0);
+  --accent-6: oklch(0.95 0.06 55);
+  --accent-6-soft: oklch(0.98 0.02 55);
+  --accent-6-ink: oklch(0.22 0.05 260);
+
+  /* Feedback */
+  --fb-success-bg: oklch(0.95 0.06 150);
+  --fb-success-fg: oklch(0.35 0.1 150);
+  --fb-success-border: oklch(0.72 0.19 150);
+  --fb-warning-bg: oklch(0.95 0.06 55);
+  --fb-warning-fg: oklch(0.35 0.1 45);
+  --fb-warning-border: oklch(0.75 0.16 50);
+  --fb-error-bg: oklch(0.96 0.08 27);
+  --fb-error-fg: oklch(0.35 0.1 27);
+  --fb-error-border: oklch(0.62 0.24 27);
+  --fb-info-bg: oklch(0.95 0.05 250);
+  --fb-info-fg: oklch(0.35 0.1 250);
+  --fb-info-border: oklch(0.62 0.2 250);
+
+  /* Progress */
+  --progress-track: oklch(0.9 0.02 260);
+  --progress-fill: oklch(0.74 0.19 45);
+  --progress-fill-2: oklch(0.62 0.2 250);
+
+  /* Border */
+  --border-color: oklch(0.92 0.015 260);
+  --border-width: 0;
+  --border-strong: oklch(0.7 0.04 260);
+
+  /* Effects */
+  --shadow-card: inset 4px 4px 8px rgb(255 255 255 / 0.6), inset -4px -4px 8px rgb(30 41 59 / 0.08), 0 14px 26px -10px var(--scrim);
+  --shadow-raised: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-button: inset 5px 5px 10px rgb(255 255 255 / 0.45), inset -5px -7px 12px rgb(130 35 0 / 0.35), 0 10px 18px -6px oklch(0.62 0.21 38 / 0.6);
+  --shadow-pressed: inset 4px 4px 8px rgb(130 35 0 / 0.35), inset -3px -3px 6px rgb(255 255 255 / 0.45), 0 3px 8px -4px oklch(0.62 0.21 38 / 0.6);
+  --shadow-inset: inset 5px 5px 10px rgb(30 41 59 / 0.14), inset -4px -4px 8px rgb(255 255 255 / 0.75);
+  --blur-surface: 0;
+  --glow: oklch(0.62 0.21 38 / 0.6);
+
+  /* Shape */
+  --radius-card: 1.75rem;
+  --radius-button: 1.5rem;
+  --radius-chip: 9999px;
+  --radius-input: 1.25rem;
+  --radius-modal: 1.75rem;
+
+  /* Type (already defined above, but included in contract) */
+  --letter-spacing-display: -0.01em;
+
+  /* Motion */
+  --press-offset: 0;
+  --press-scale: 0.98;
+  --transition-fast: 120ms ease;
+
+  /* Media */
+  --illustration-plate: oklch(1 0 0);
+  --confetti-colors: oklch(0.74 0.19 45), oklch(0.62 0.2 250), oklch(0.72 0.19 150), oklch(0.82 0.17 85), oklch(0.62 0.24 290);
+
+  /* System */
+  --statusbar-style: dark;
+  --statusbar-bg: oklch(1 0 0);
+  --meta-theme-color: oklch(0.74 0.19 45);
+  --is-dark: 0;
 }
 
 /* =========================================================================

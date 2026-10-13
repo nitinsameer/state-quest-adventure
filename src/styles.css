@@ -2,15 +2,12 @@
 @source "../src";
 @import "tw-animate-css";
 @import "./styles/tokens.css";
-@import "./styles/clay.css";
+@import "./styles/ui.css";
 @import "./styles/celebrations.css";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-display: "Baloo 2", system-ui, sans-serif;
-  --font-sans: "Nunito", system-ui, sans-serif;
-
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -49,6 +46,82 @@
   --color-gold-soft: var(--gold-soft);
   --color-ink: var(--ink);
   --color-sky: var(--sky);
+
+  /* === THEME TOKEN MAPPINGS FOR TAILWIND UTILITIES === */
+
+  /* Page */
+  --color-bg-page: var(--bg-page);
+  --color-bg-header: var(--bg-header);
+  --color-bg-nav: var(--bg-nav);
+  --color-nav-active-bg: var(--nav-active-bg);
+
+  /* Surfaces */
+  --color-surface-card: var(--surface-card);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-surface-overlay: var(--surface-overlay);
+  --color-scrim: var(--scrim);
+
+  /* Text */
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-text-on-header: var(--text-on-header);
+  --color-text-on-primary: var(--text-on-primary);
+  --color-text-link: var(--text-link);
+
+  /* Actions */
+  --color-action-primary-bg: var(--action-primary-bg);
+  --color-action-primary-fg: var(--action-primary-fg);
+  --color-action-secondary-bg: var(--action-secondary-bg);
+  --color-action-secondary-fg: var(--action-secondary-fg);
+  --color-action-success-bg: var(--action-success-bg);
+  --color-action-success-fg: var(--action-success-fg);
+  --color-action-disabled-bg: var(--action-disabled-bg);
+  --color-action-disabled-fg: var(--action-disabled-fg);
+
+  /* Accents */
+  --color-accent-1: var(--accent-1);
+  --color-accent-1-soft: var(--accent-1-soft);
+  --color-accent-1-ink: var(--accent-1-ink);
+  --color-accent-2: var(--accent-2);
+  --color-accent-2-soft: var(--accent-2-soft);
+  --color-accent-2-ink: var(--accent-2-ink);
+  --color-accent-3: var(--accent-3);
+  --color-accent-3-soft: var(--accent-3-soft);
+  --color-accent-3-ink: var(--accent-3-ink);
+  --color-accent-4: var(--accent-4);
+  --color-accent-4-soft: var(--accent-4-soft);
+  --color-accent-4-ink: var(--accent-4-ink);
+  --color-accent-5: var(--accent-5);
+  --color-accent-5-soft: var(--accent-5-soft);
+  --color-accent-5-ink: var(--accent-5-ink);
+  --color-accent-6: var(--accent-6);
+  --color-accent-6-soft: var(--accent-6-soft);
+  --color-accent-6-ink: var(--accent-6-ink);
+
+  /* Feedback */
+  --color-fb-success-bg: var(--fb-success-bg);
+  --color-fb-success-fg: var(--fb-success-fg);
+  --color-fb-success-border: var(--fb-success-border);
+  --color-fb-warning-bg: var(--fb-warning-bg);
+  --color-fb-warning-fg: var(--fb-warning-fg);
+  --color-fb-warning-border: var(--fb-warning-border);
+  --color-fb-error-bg: var(--fb-error-bg);
+  --color-fb-error-fg: var(--fb-error-fg);
+  --color-fb-error-border: var(--fb-error-border);
+  --color-fb-info-bg: var(--fb-info-bg);
+  --color-fb-info-fg: var(--fb-info-fg);
+  --color-fb-info-border: var(--fb-info-border);
+
+  /* Progress */
+  --color-progress-track: var(--progress-track);
+  --color-progress-fill: var(--progress-fill);
+  --color-progress-fill-2: var(--progress-fill-2);
+
+  /* Border */
+  --color-border-default: var(--border-color);
+  --color-border-strong: var(--border-strong);
 
   /* === SEMANTIC COLOR ALIASES FOR TAILWIND UTILITIES === */
   /* These map hardcoded colors to design tokens for consistency */
@@ -150,18 +223,6 @@
   --border: oklch(0.92 0.015 260);
   --input: oklch(0.92 0.015 260);
   --ring: oklch(0.72 0.19 45);
-
-  /* Brand palette */
-  --saffron: oklch(0.74 0.19 45);           /* #FF7A1A ~ saffron */
-  --saffron-soft: oklch(0.95 0.06 55);
-  --explorer: oklch(0.62 0.2 250);          /* explorer blue */
-  --explorer-soft: oklch(0.95 0.05 250);
-  --success: oklch(0.72 0.19 150);          /* success green */
-  --success-soft: oklch(0.95 0.06 150);
-  --gold: oklch(0.82 0.17 85);              /* reward gold */
-  --gold-soft: oklch(0.96 0.08 90);
-  --ink: oklch(0.22 0.05 260);
-  --sky: oklch(0.94 0.04 235);
 }
 
 @layer base {
@@ -173,7 +234,7 @@
   }
   html, body {
     height: 100%;
-    background: linear-gradient(180deg, #f7f4ef 0%, #eef2f8 100%);
+    background: var(--bg-page);
     color: var(--color-ink);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
