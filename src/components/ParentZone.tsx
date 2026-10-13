@@ -113,14 +113,14 @@ export function ParentZoneScreen() {
           <button
             onClick={goBack}
             aria-label="Go back"
-            className="h-10 w-10 rounded-full bg-white/25 flex items-center justify-center text-xl"
+            className="h-10 w-10 rounded-full bg-text-on-header/25 flex items-center justify-center text-xl"
           >
             ‹
           </button>
           <h1 className="text-display text-lg font-extrabold">Parent Controls</h1>
           <div className="w-10" />
         </div>
-        <div className="mt-(--space-0-25) rounded-2xl bg-white/15 p-(--padding-base)">
+        <div className="mt-(--space-0-25) rounded-2xl bg-text-on-header/15 p-(--padding-base)">
           <div className="text-xs font-bold opacity-90">Learner</div>
           <div className="text-display text-xl font-extrabold">
             {p.avatar} {p.name}
@@ -246,7 +246,7 @@ export function ParentZoneScreen() {
                 <div className="text-sm font-bold text-text-muted mb-(--space-0-25)">
                   Estimated Hours Played
                 </div>
-                <div className="text-display text-2xl font-extrabold text-success">
+                <div className="text-display text-2xl font-extrabold text-fb-success-fg">
                   ~{estimatedHours}h
                 </div>
               </div>
@@ -255,7 +255,7 @@ export function ParentZoneScreen() {
                 <div className="text-sm font-bold text-text-muted mb-(--space-0-25)">
                   Days Active
                 </div>
-                <div className="text-display text-2xl font-extrabold text-orange-500">
+                <div className="text-display text-2xl font-extrabold text-action-primary-fg">
                   {daysActive} days
                 </div>
               </div>
@@ -306,7 +306,7 @@ export function ParentZoneScreen() {
                     disabled={newPIN.length !== 4 || pinSaveStatus === "saving"}
                     className={`w-full h-10 rounded-lg font-bold text-sm transition ${
                       pinSaveStatus === "saved"
-                        ? "bg-success text-white"
+                        ? "bg-fb-success-bg text-text-on-primary"
                         : "bg-action-primary-bg text-text-on-primary disabled:opacity-50"
                     }`}
                   >
