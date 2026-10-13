@@ -774,10 +774,10 @@ function HomeDashboardContent() {
   };
 
   return (
-    <div className="h-full w-full bg-[#F7F5F0] flex flex-col overflow-hidden" data-testid="home-screen">
+    <div className="h-full w-full bg-bg-page flex flex-col overflow-hidden" data-testid="home-screen">
 
       {/* Header with fade-in animation - Premium spacing */}
-      <div className={`flex-shrink-0 px-6 pt-4 pb-5 bg-gradient-to-br from-orange-500 via-orange-450 to-orange-600 rounded-b-[32px] relative overflow-hidden transition-opacity duration-500 ${statsVisible ? "opacity-100" : "opacity-0"}`}>
+      <div className={`flex-shrink-0 px-6 pt-4 pb-5 bg-bg-header rounded-b-[32px] relative overflow-hidden transition-opacity duration-500 ${statsVisible ? "opacity-100" : "opacity-0"}`}>
         <Cloud className="absolute top-2 right-4 w-14 opacity-40" />
         <div className="flex items-center gap-4 relative mb-3">
           {/* Avatar - Larger and more prominent */}
@@ -787,7 +787,7 @@ function HomeDashboardContent() {
           
           <div className="flex-1 min-w-0">
             {/* Greeting - Single line, cleaner */}
-            <div className="text-white">
+            <div className="text-text-on-header">
               <div className="text-h4 text-display leading-tight">
                 Namaste, {(p?.name?.split(" ")[0] || "Explorer")}! ðŸ‘‹
               </div>
@@ -848,7 +848,7 @@ function HomeDashboardContent() {
         
         return (
           <div className="px-5 mt-5 animate-fade-in">
-            <div className="rounded-2xl bg-gradient-to-r from-orange-400 to-red-500 text-white p-4 shadow-elevated-2 transition-all hover:shadow-elevated-3 border border-orange-200/30">
+            <div className="rounded-2xl bg-warning-soft text-warning p-4 shadow-elevated-2 transition-all hover:shadow-elevated-3 border border-warning">
               <div className="flex items-start gap-3">
                 <div className="text-2xl flex-shrink-0">ðŸš¨</div>
                 <div className="flex-1 min-w-0">
@@ -858,7 +858,7 @@ function HomeDashboardContent() {
                 </div>
                 <button
                   onClick={() => setDismissStreakWarning(true)}
-                  className="text-white opacity-70 hover:opacity-100 text-xl flex-shrink-0 transition-all duration-200"
+                  className="text-warning opacity-70 hover:opacity-100 text-xl flex-shrink-0 transition-all duration-200"
                 >
                   âœ•
                 </button>
@@ -977,7 +977,7 @@ function HomeDashboardContent() {
       {/* Locked Card Preview Modal */}
       {showLockedPreview && (
         <div className="fixed inset-0 bg-black/50 flex items-end justify-center z-50 p-4 animate-fade-in">
-          <div className="w-full max-w-sm bg-white rounded-3xl shadow-2xl p-6 max-h-[80vh] overflow-y-auto animate-slide-up">
+          <div className="w-full max-w-sm bg-surface-card rounded-3xl shadow-2xl p-6 max-h-[80vh] overflow-y-auto animate-slide-up">
             {(() => {
               const state = journey.find((s) => s.name === showLockedPreview);
               if (!state) return null;
@@ -993,7 +993,7 @@ function HomeDashboardContent() {
                   </button>
 
                   {/* State preview */}
-                  <div className={`rounded-2xl gradient-saffron text-white p-4 text-center mb-4`}>
+                  <div className={`rounded-2xl gradient-saffron text-text-on-primary p-4 text-center mb-4`}>
                     <div className="w-20 h-20 mx-auto mb-2 rounded-lg overflow-hidden">
                       <img 
                         src={STATE_ART[state.name]} 
@@ -1008,8 +1008,8 @@ function HomeDashboardContent() {
                   {/* State facts */}
                   <div className="space-y-3">
                     <div className="p-4 rounded-2xl bg-orange-soft border-l-4 border-orange shadow-elevated-1 hover:shadow-elevated-2 transition-all">
-                      <div className="text-label text-orange-900 uppercase tracking-wider font-bold">ðŸ›ï¸ Monument</div>
-                      <div className="text-body text-orange-800 mt-2 font-semibold">{state.monumentName}</div>
+                      <div className="text-label text-orange uppercase tracking-wider font-bold">ðŸ›ï¸ Monument</div>
+                      <div className="text-body text-orange mt-2 font-semibold">{state.monumentName}</div>
                     </div>
 
                     <div className="p-4 rounded-2xl bg-success-soft border-l-4 border-success shadow-elevated-1 hover:shadow-elevated-2 transition-all">
@@ -1019,12 +1019,12 @@ function HomeDashboardContent() {
 
                     <div className="p-4 rounded-2xl bg-info-soft border-l-4 border-info shadow-elevated-1 hover:shadow-elevated-2 transition-all">
                       <div className="text-label text-info uppercase tracking-wider font-bold">ðŸ’¡ Fun Fact</div>
-                      <div className="text-body text-blue-800 mt-2 font-semibold">{state.funFact}</div>
+                      <div className="text-body text-info mt-2 font-semibold">{state.funFact}</div>
                     </div>
 
                     <div className="p-4 rounded-2xl bg-purple-soft border-l-4 border-purple shadow-elevated-1 hover:shadow-elevated-2 transition-all">
-                      <div className="text-label text-purple-900 uppercase tracking-wider font-bold">ðŸ”“ Unlock Path</div>
-                      <div className="text-body text-purple-800 mt-2 font-semibold">{getUnlockRequirement(state.name)}</div>
+                      <div className="text-label text-muted-dark uppercase tracking-wider font-bold">ðŸ”“ Unlock Path</div>
+                      <div className="text-body text-muted-dark mt-2 font-semibold">{getUnlockRequirement(state.name)}</div>
                     </div>
                   </div>
 
