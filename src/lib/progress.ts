@@ -17,7 +17,7 @@ export type PendingCelebration =
       quizXp: number;
       bonusXp: number;
       stampDate: string;
-      earnedBadgeIds: BadgeId[];
+      earnedBadgeIds: (BadgeId | string)[]; // Can be state badges OR achievement badges like "region-master-north"
       regionKey: string;
       regionDone: number;
       regionTotal: number;
@@ -41,7 +41,7 @@ export type AchievementBadgeId =
   // Tier 1: Seedling
   | "explorers-awakening" | "reader" | "quiz-starter" | "stamp-collector" | "fired-up"
   // Tier 2: Growing
-  | "five-explorer" | "knowledge-keeper" | "quiz-master" | "artist" | "week-warrior" | "regional-champ"
+  | "five-explorer" | "knowledge-keeper" | "quiz-master" | "artist" | "week-warrior" | "regional-champ" | "region-master"
   // Tier 3: Mighty
   | "ten-champion" | "master-reader" | "quiz-legend" | "unstoppable" | "postcard-master"
   // Tier 4: Elite
@@ -1036,13 +1036,27 @@ export function finishQuiz(
     const regionInfo = REGION_MAPPINGS[regionKey];
     const regionDone = regionInfo.states.filter(s => [...p.completed, stateName].includes(s)).length;
 
-    // 6. Check if leveled up (reuse existing level logic)
+    // 6. Build list of badges to display in ceremony (state badges + achievement badges like region-master)
+    // earnedQuizBadges only contains state badges (monument, animal, explorer)
+    const ceremonyBadgeIds: (BadgeId | string)[] = [...earnedQuizBadges];
+    
+    // Check if Region Master badge should be awarded (Task 12.8)
+    // Award if: region just completed AND badge not already earned
+    const regionMasterBadgeId = `region-master-${regionKey}`;
+    const hasRegionMasterBadge = p.badges?.['_achievements']?.some((id: any) => id === regionMasterBadgeId) ?? false;
+    
+    if (regionDone === regionTotal && !hasRegionMasterBadge) {
+      // Add to ceremony display badges (but don't modify earnedQuizBadges which is state-only)
+      ceremonyBadgeIds.push(regionMasterBadgeId);
+    }
+
+    // 7. Check if leveled up (reuse existing level logic)
     const oldLevel = levelInfo(p.xp).level;
     const newLevel = levelInfo(p.xp + xpReward).level;
     const leveledUp = newLevel > oldLevel;
     const levelName = leveledUp ? getLevelName(newLevel) : undefined;
 
-    // 7. Return atomic update with all state changes
+    // 8. Return atomic update with all state changes
     const updated: Progress = {
       ...p,
       // From completeState
@@ -1072,7 +1086,7 @@ export function finishQuiz(
       },
       // Store stars for this state
       stars: { ...p.stars, [stateName]: bestStars },
-      // Queue extended pending celebration for ceremony
+      // Queue extended pending celebration for ceremony (with CEREMONY badges, not just state badges)
       pendingCelebrations: [
         ...(p.pendingCelebrations ?? []),
         {
@@ -1084,7 +1098,7 @@ export function finishQuiz(
           quizXp,
           bonusXp: xpReward,
           stampDate: stampDateStr,
-          earnedBadgeIds: earnedQuizBadges,
+          earnedBadgeIds: ceremonyBadgeIds as any, // Include achievement badges for display
           regionKey: regionKey as string,
           regionDone,
           regionTotal,
@@ -1709,6 +1723,16 @@ const ACHIEVEMENT_BADGES: AchievementBadgeDef[] = [
     icon: "🌍",
     name: "Regional Champ",
     description: "Completed 1 full region.",
+    achievementId: "regional-expert",
+    achievementMax: 1,
+    toneColor: "green",
+  },
+  {
+    id: "region-master",
+    tier: "growing",
+    icon: "👑",
+    name: "Region Master",
+    description: "Completed an entire region in one streak.",
     achievementId: "regional-expert",
     achievementMax: 1,
     toneColor: "green",

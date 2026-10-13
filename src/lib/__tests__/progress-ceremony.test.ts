@@ -532,4 +532,147 @@ describe('Task 12.2: Save Ceremony Data - Extended Pending Celebration', () => {
       expect(validated?.pendingCelebrations![0].step).toBe(3)
     })
   })
+
+  describe('Task 12.8: Region Master Badge - Award when region is complete', () => {
+    
+    it('should award region-master-north badge when all 6 north states completed', () => {
+      // Complete all 6 north region states one by one
+      const northStates = ['Punjab', 'Haryana', 'Himachal Pradesh', 'Uttarakhand', 'Uttar Pradesh', 'Rajasthan']
+      
+      northStates.forEach((stateName, index) => {
+        finishQuiz(stateName, {
+          timeToComplete: 60000,
+          quizAttempts: 1,
+          quizScore: 100,
+          correctCount: 6,
+        })
+
+        const stored = localStorage.getItem('india-explorer:progress:v2')
+        const p = JSON.parse(stored!)
+        const ceremony = p.pendingCelebrations[p.pendingCelebrations.length - 1]
+        
+        // On the last state (6th), region should be complete
+        if (index === 5) {
+          // The badge should be in earnedBadgeIds
+          expect(ceremony.earnedBadgeIds).toContain('region-master-north')
+        } else {
+          // Earlier states should not have the badge yet
+          expect(ceremony.earnedBadgeIds).not.toContain('region-master-north')
+        }
+      })
+    })
+
+    it('should award region-master-south badge when all 5 south states completed', () => {
+      const southStates = ['Andhra Pradesh', 'Telangana', 'Karnataka', 'Kerala', 'Tamil Nadu']
+      
+      southStates.forEach((stateName, index) => {
+        finishQuiz(stateName, {
+          timeToComplete: 60000,
+          quizAttempts: 1,
+          quizScore: 100,
+          correctCount: 6,
+        })
+
+        const stored = localStorage.getItem('india-explorer:progress:v2')
+        const p = JSON.parse(stored!)
+        const ceremony = p.pendingCelebrations[p.pendingCelebrations.length - 1]
+        
+        if (index === 4) {
+          expect(ceremony.earnedBadgeIds).toContain('region-master-south')
+        } else {
+          expect(ceremony.earnedBadgeIds).not.toContain('region-master-south')
+        }
+      })
+    })
+
+    it('should be idempotent: replay a state in completed region does NOT re-award badge', () => {
+      // Complete all north states
+      const northStates = ['Punjab', 'Haryana', 'Himachal Pradesh', 'Uttarakhand', 'Uttar Pradesh', 'Rajasthan']
+      
+      northStates.forEach((stateName) => {
+        finishQuiz(stateName, {
+          timeToComplete: 60000,
+          quizAttempts: 1,
+          quizScore: 100,
+          correctCount: 6,
+        })
+      })
+
+      let stored = localStorage.getItem('india-explorer:progress:v2')
+      let p = JSON.parse(stored!)
+      
+      // Verify badge was awarded
+      const lastCeremony = p.pendingCelebrations[p.pendingCelebrations.length - 1]
+      expect(lastCeremony.earnedBadgeIds).toContain('region-master-north')
+      
+      // Now replay Punjab
+      finishQuiz('Punjab', {
+        timeToComplete: 60000,
+        quizAttempts: 2,
+        quizScore: 100,
+        correctCount: 6,
+      })
+
+      stored = localStorage.getItem('india-explorer:progress:v2')
+      p = JSON.parse(stored!)
+      
+      // The stars-improved celebration should NOT include the region-master badge
+      // (Note: stars-improved celebrations don't have earnedBadgeIds, just older type)
+      // If we're still getting full ceremonies, check the last full one
+      const ceremonies = p.pendingCelebrations.filter((c: any) => c.type === 'full')
+      const ceremoniesToCounts = celebrations => {
+        let count = 0
+        celebrations.forEach((c: any) => {
+          if (c.earnedBadgeIds?.includes('region-master-north')) {
+            count++
+          }
+        })
+        return count
+      }
+      
+      expect(ceremoniesToCounts(ceremonies)).toBe(1) // Should only appear once
+    })
+
+    it('should pass Zod validation with region-master badge', () => {
+      // Complete all north states
+      const northStates = ['Punjab', 'Haryana', 'Himachal Pradesh', 'Uttarakhand', 'Uttar Pradesh', 'Rajasthan']
+      
+      northStates.forEach((stateName) => {
+        finishQuiz(stateName, {
+          timeToComplete: 60000,
+          quizAttempts: 1,
+          quizScore: 100,
+          correctCount: 6,
+        })
+      })
+
+      const stored = localStorage.getItem('india-explorer:progress:v2')
+      const validated = validateProgress(stored!)
+      
+      expect(validated).not.toBeNull()
+      
+      // Find the last full celebration
+      const lastFullCeremony = validated?.pendingCelebrations?.findLast((c: any) => c.type === 'full')
+      expect(lastFullCeremony).toBeDefined()
+      expect(lastFullCeremony?.earnedBadgeIds).toContain('region-master-north')
+    })
+
+    it('should award different badges for different regions (not mix them)', () => {
+      // Complete a south state
+      finishQuiz('Tamil Nadu', {
+        timeToComplete: 60000,
+        quizAttempts: 1,
+        quizScore: 100,
+        correctCount: 6,
+      })
+
+      let stored = localStorage.getItem('india-explorer:progress:v2')
+      let p = JSON.parse(stored!)
+      const southCeremony = p.pendingCelebrations[0]
+      
+      // Should NOT have north badge
+      expect(southCeremony.earnedBadgeIds).not.toContain('region-master-north')
+      expect(southCeremony.regionKey).toBe('south')
+    })
+  })
 })

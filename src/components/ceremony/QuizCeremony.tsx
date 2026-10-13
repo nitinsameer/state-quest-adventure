@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useProgress, dismissPendingCelebration, updateCeremonyStep, type PendingCelebration } from '@/lib/progress';
 import { useNavigate } from '@tanstack/react-router';
-import { getState, type IndiaState } from '@/lib/states';
+import { getState, type IndiaState, nextStateAfter } from '@/lib/states';
 import { STATE_ART, TONE_GRADIENT } from '@/lib/state-art';
 import { ConfettiBurst } from '@/components/ConfettiBurst';
 import { fxTap, fxCorrect, fxStamp } from '@/lib/fx';
@@ -134,7 +134,7 @@ export function QuizCeremony() {
       </div>
 
       {/* BOTTOM BUTTON */}
-      <div className="px-6 pb-6 pt-4 bg-[#F7F5F0]">
+      <div className="px-6 pb-6 pt-4 bg-[#F7F5F0] space-y-3">
         {step === 0 && (
           <button
             onClick={advanceStep}
@@ -161,12 +161,48 @@ export function QuizCeremony() {
           </button>
         )}
         {step === 3 && (
-          <button
-            onClick={handleFinish}
-            className="w-full h-14 clay-button clay-saffron text-ink font-display font-bold text-lg rounded-3xl transition-all active:scale-95"
-          >
-            All Done!
-          </button>
+          <>
+            {/* Primary: Next State */}
+            <button
+              onClick={() => {
+                fxTap();
+                dismissPendingCelebration();
+                const nextState = nextStateAfter(ceremony.stateName);
+                if (nextState) {
+                  navigate({ to: `/state/${nextState.short}/welcome` });
+                }
+              }}
+              className="w-full h-14 clay-button clay-saffron text-ink font-display font-bold text-lg rounded-3xl transition-all active:scale-95"
+            >
+              Next State →
+            </button>
+
+            {/* Secondary: Replay button (only if stars < 3) */}
+            {parseInt(ceremony.stars) < 3 && (
+              <button
+                onClick={() => {
+                  fxTap();
+                  dismissPendingCelebration();
+                  navigate({ to: `/state/${state.short}/quiz` });
+                }}
+                className="w-full h-12 clay-button clay-button-soft text-ink font-bold text-base rounded-3xl transition-all active:scale-95"
+              >
+                Play again for ⭐⭐⭐
+              </button>
+            )}
+
+            {/* Text-style: Home button */}
+            <button
+              onClick={() => {
+                fxTap();
+                dismissPendingCelebration();
+                navigate({ to: "/" });
+              }}
+              className="w-full h-12 text-ink font-bold text-base rounded-3xl transition-all active:scale-95 hover:bg-ink/5"
+            >
+              Home
+            </button>
+          </>
         )}
       </div>
     </div>
@@ -690,42 +726,124 @@ if (typeof window !== 'undefined' && !document.querySelector('style[data-postcar
 }
 
 /**
- * Step 3: What's Next - Show next state and region progress
+ * Step 4: What's Next - Show region progress, next state, and action buttons
+ * 
+ * REGION CARD: Shows region name, dots for states (filled/empty), streak, and "Done" count
+ * NEXT STATE: Art and name from nextStateAfter()
+ * REGION MASTER: If regionDone === regionTotal, show success banner
+ * BUTTONS: Next State (primary), Replay for 3 stars (secondary, if stars < 3), Home (text)
  */
 function StepWhatsNext({ ceremony, state }: StepProps) {
+  const navigate = useNavigate();
+  
+  // Get the next state
+  const nextState = nextStateAfter(state.name);
+  const nextStateArt = nextState ? STATE_ART[nextState.name] : undefined;
+
+  /**
+   * Handle "Next State" button: go to next state's welcome screen
+   */
+  const handleNextState = () => {
+    fxTap();
+    dismissPendingCelebration();
+    if (nextState) {
+      navigate({ to: `/state/${nextState.short}/welcome` });
+    }
+  };
+
+  /**
+   * Handle "Play again for 3 stars" button: go back to quiz
+   */
+  const handleReplay = () => {
+    fxTap();
+    dismissPendingCelebration();
+    navigate({ to: `/state/${state.short}/quiz` });
+  };
+
+  /**
+   * Handle "Home" button: go to home screen
+   */
+  const handleHome = () => {
+    fxTap();
+    dismissPendingCelebration();
+    navigate({ to: "/" });
+  };
+
+  // Determine if region is complete
+  const isRegionComplete = ceremony.regionDone === ceremony.regionTotal;
+
   return (
-    <div className="space-y-6 text-center">
-      <h2 className="font-display text-2xl font-bold text-ink">What's Next?</h2>
+    <div className="space-y-6">
+      <h2 className="font-display text-2xl font-bold text-ink text-center">What's Next?</h2>
 
-      {/* Region progress */}
-      <div className="clay-chip clay-explorer px-4 py-3 text-center">
-        <p className="text-sm font-bold text-ink">
-          {ceremony.regionKey} Region: {ceremony.regionDone} of {ceremony.regionTotal}
-        </p>
-      </div>
-
-      {/* Streak */}
-      {ceremony.streak > 0 && (
-        <div className="clay-chip clay-gold px-4 py-3 text-center">
-          <p className="text-sm font-bold text-ink">
-            🔥 {ceremony.streak}-day streak
-          </p>
+      {/* REGION MASTER BANNER - appears only when region just completed */}
+      {isRegionComplete && (
+        <div className="clay-card clay-success px-6 py-4 rounded-2xl border-2 border-green-200/50 animate-bounce">
+          <div className="flex items-center justify-center gap-2">
+            <span className="text-3xl">👑</span>
+            <div className="text-center">
+              <div className="text-sm font-bold text-ink">Region Master!</div>
+              <div className="text-xs font-semibold text-ink/80">You've completed the region!</div>
+            </div>
+          </div>
         </div>
       )}
 
-      {/* Next state (placeholder) */}
-      <div className="clay-card clay-white border-2 border-ink/10 p-4 rounded-2xl">
-        <div className="text-5xl mb-2">🗺️</div>
-        <p className="text-sm text-ink font-bold">Next State</p>
-        <p className="text-xs text-ink/60 mt-1">Ready to explore?</p>
+      {/* REGION CARD - Shows dots, name, done count, streak */}
+      <div className="clay-card clay-white p-5 rounded-2xl space-y-4">
+        <div>
+          <p className="text-center text-sm font-bold text-ink mb-2">
+            {ceremony.regionKey.charAt(0).toUpperCase() + ceremony.regionKey.slice(1)} Region
+          </p>
+          {/* State dots: one per state, filled or empty */}
+          <div className="flex justify-center gap-2 flex-wrap">
+            {Array.from({ length: ceremony.regionTotal }).map((_, i) => (
+              <div
+                key={i}
+                className={`w-2.5 h-2.5 rounded-full transition-all ${
+                  i < ceremony.regionDone ? 'clay-chip' : 'bg-ink/20'
+                }`}
+                role="progressbar"
+                aria-valuenow={i < ceremony.regionDone ? 1 : 0}
+                aria-valuemax={1}
+                aria-label={i < ceremony.regionDone ? 'completed state' : 'incomplete state'}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Done count */}
+        <p className="text-center text-sm font-semibold text-ink">
+          Done: {ceremony.regionDone} of {ceremony.regionTotal}
+        </p>
+
+        {/* Streak flame */}
+        {ceremony.streak > 0 && (
+          <div className="flex items-center justify-center gap-2">
+            <span className="text-lg">🔥</span>
+            <p className="text-sm font-bold text-ink">{ceremony.streak}-day streak</p>
+          </div>
+        )}
       </div>
 
-      {/* Replay button if not 3 stars */}
-      {parseInt(ceremony.stars) < 3 && (
-        <button className="w-full clay-button clay-button-soft text-ink py-3 rounded-2xl text-sm font-bold transition-all active:scale-95">
-          Play again for ⭐⭐⭐
-        </button>
+      {/* NEXT STATE TILE - Show art, name, ready prompt */}
+      {nextState && (
+        <div className="clay-card clay-white p-4 rounded-2xl space-y-3 border-2 border-ink/10">
+          <div className="text-center">
+            <p className="text-xs uppercase font-bold text-ink/60 mb-2">Ready to explore?</p>
+            <p className="text-lg font-display font-bold text-ink mb-3">{nextState.name}</p>
+            {nextStateArt && (
+              <img
+                src={nextStateArt}
+                alt={nextState.name}
+                className="w-20 h-20 object-cover rounded-lg mx-auto"
+              />
+            )}
+          </div>
+        </div>
       )}
+
+      {/* ACTION BUTTONS - placed outside card to fill bottom */}
     </div>
   );
 }
