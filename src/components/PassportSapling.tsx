@@ -52,14 +52,14 @@ export function PassportSapling() {
       )}
 
       {/* Header */}
-      <div className="px-5 pt-4 pb-3 bg-gradient-to-r from-blue-400 to-purple-400 text-white rounded-b-3xl shadow-lg">
+      <div className="px-5 pt-4 pb-3 bg-bg-header text-text-on-header rounded-b-3xl shadow-lg">
         <div className="text-2xl font-extrabold">My Passport 📖</div>
       </div>
 
       {/* Profile & Stats */}
       <div className="mx-5 mt-4 space-y-3">
         {/* Profile Card */}
-        <div className="p-4 rounded-3xl bg-gradient-to-br from-amber-700 to-amber-900 text-white shadow-lg">
+        <div className="p-4 rounded-3xl bg-accent-1 text-text-on-primary shadow-lg">
           <div className="flex items-center gap-3 mb-2">
             <div className="text-4xl">{progress.avatar}</div>
             <div>
@@ -77,11 +77,11 @@ export function PassportSapling() {
 
         {/* Streak & Engagement */}
         <div className="grid grid-cols-2 gap-2">
-          <div className="p-3 rounded-2xl bg-gradient-to-br from-orange-400 to-red-500 text-white shadow-md">
+          <div className="p-3 rounded-2xl bg-accent-1 text-text-on-primary shadow-md">
             <div className="text-2xl">🔥</div>
             <div className="text-xs font-extrabold mt-1">{streak}-day streak!</div>
           </div>
-          <div className="p-3 rounded-2xl bg-gradient-to-br from-blue-400 to-cyan-500 text-white shadow-md">
+          <div className="p-3 rounded-2xl bg-accent-2 text-text-on-primary shadow-md">
             <div className="text-2xl">⭐</div>
             <div className="text-xs font-extrabold mt-1">{xpToNextLevel} XP to next level</div>
           </div>
@@ -90,7 +90,7 @@ export function PassportSapling() {
 
       {/* States Grid */}
       <div className="px-5 pt-4 pb-2 flex-1 overflow-auto">
-        <div className="text-sm font-bold text-muted-foreground mb-2">All 36 States</div>
+        <div className="text-sm font-bold text-text-secondary mb-2">All 36 States</div>
 
         <div className="grid grid-cols-4 gap-2">
           {INDIA_STATES.map((state) => {
@@ -102,8 +102,8 @@ export function PassportSapling() {
                 onClick={() => handleStateClick(slug, isUnlocked)}
                 className={`aspect-square rounded-lg flex flex-col items-center justify-center gap-1 transition transform text-xs font-bold ${
                   isUnlocked
-                    ? "bg-gradient-to-br from-yellow-300 to-amber-400 text-warning shadow-md hover:shadow-lg active:scale-95"
-                    : "bg-muted text-muted-foreground opacity-40 hover:opacity-60 active:scale-95"
+                    ? "bg-accent-4 text-accent-4-ink shadow-md hover:shadow-lg active:scale-95"
+                    : "bg-surface-sunken text-text-secondary opacity-40 hover:opacity-60 active:scale-95"
                 }`}
               >
                 <img
@@ -124,7 +124,7 @@ export function PassportSapling() {
       <div className="px-5 pb-4">
         <button
           onClick={() => navigate({ to: "/home" })}
-          className="w-full h-12 rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-white font-extrabold shadow-lg"
+          className="w-full h-12 rounded-2xl bg-accent-3 text-text-on-primary font-extrabold shadow-lg"
         >
           Back Home 🏠
         </button>

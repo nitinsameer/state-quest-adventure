@@ -53,14 +53,14 @@ export function PassportMightyTree() {
       )}
 
       {/* Header */}
-      <div className="px-5 pt-4 pb-3 bg-gradient-to-r from-blue-400 to-purple-400 text-white rounded-b-3xl shadow-lg">
+      <div className="px-5 pt-4 pb-3 bg-bg-header text-text-on-header rounded-b-3xl shadow-lg">
         <div className="text-2xl font-extrabold">My Stamps 🎫</div>
       </div>
 
       {/* Profile & Detailed Stats */}
       <div className="mx-5 mt-4 space-y-3 overflow-y-auto flex-1">
         {/* Profile Card */}
-        <div className="p-4 rounded-3xl bg-gradient-to-br from-amber-700 to-amber-900 text-white shadow-lg sticky top-0">
+        <div className="p-4 rounded-3xl bg-accent-1 text-text-on-primary shadow-lg sticky top-0">
           <div className="flex items-center gap-3 mb-2">
             <div className="text-4xl">{progress.avatar}</div>
             <div className="flex-1">
@@ -81,18 +81,18 @@ export function PassportMightyTree() {
 
         {/* Milestones/Goals */}
         <div className="space-y-2">
-          <div className="px-1 text-sm font-bold text-muted-foreground">🎯 Milestones</div>
+          <div className="px-1 text-sm font-bold text-text-secondary">🎯 Milestones</div>
           {milestones.map((milestone) => (
-            <div key={milestone.id} className="p-3 rounded-2xl bg-white border-2 border-muted shadow-sm">
+            <div key={milestone.id} className="p-3 rounded-2xl bg-surface-card border-2 border-border-color shadow-sm">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-extrabold text-muted-dark">{milestone.label}</span>
-                <span className="text-xs font-bold text-muted-foreground">
+                <span className="text-sm font-extrabold text-text-primary">{milestone.label}</span>
+                <span className="text-xs font-bold text-text-secondary">
                   {milestone.current}/{milestone.target}
                 </span>
               </div>
-              <div className="w-full h-3 bg-[oklch(0.9_0.02_260)] rounded-full overflow-hidden">
+              <div className="w-full h-3 bg-surface-sunken rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-green-400 to-emerald-500 transition-all duration-300"
+                  className="h-full bg-gradient-to-r from-accent-3 to-accent-3 transition-all duration-300"
                   style={{ width: `${milestone.percentage}%` }}
                 />
               </div>
@@ -102,22 +102,22 @@ export function PassportMightyTree() {
 
         {/* Activity */}
         <div className="space-y-2">
-          <div className="px-1 text-sm font-bold text-muted-foreground">📊 Activity</div>
-          <div className="p-3 rounded-2xl bg-white border-2 border-muted shadow-sm space-y-2">
+          <div className="px-1 text-sm font-bold text-text-secondary">📊 Activity</div>
+          <div className="p-3 rounded-2xl bg-surface-card border-2 border-border-color shadow-sm space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">This week:</span>
-              <span className="font-extrabold">3 states</span>
+              <span className="text-text-secondary">This week:</span>
+              <span className="font-extrabold text-text-primary">3 states</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Last played:</span>
-              <span className="font-extrabold">Yesterday</span>
+              <span className="text-text-secondary">Last played:</span>
+              <span className="font-extrabold text-text-primary">Yesterday</span>
             </div>
           </div>
         </div>
 
         {/* Recently Played */}
         <div className="space-y-2">
-          <div className="px-1 text-sm font-bold text-muted-foreground">⏱️ Recently Played</div>
+          <div className="px-1 text-sm font-bold text-text-secondary">⏱️ Recently Played</div>
           <div className="space-y-1">
             {progress.completed.slice(0, 3).map((stateName) => {
               const state = INDIA_STATES.find((s) => s.name === stateName);
@@ -126,7 +126,7 @@ export function PassportMightyTree() {
                 <button
                   key={stateName}
                   onClick={() => handleStateClick(stateName.toLowerCase().replace(/\s+/g, "-"), true)}
-                  className="w-full p-2 rounded-xl bg-gradient-to-r from-blue-100 to-purple-100 text-muted-dark text-sm font-semibold hover:shadow-md active:scale-95 transition text-left flex items-center gap-2"
+                  className="w-full p-2 rounded-xl bg-accent-2-soft text-accent-2-ink text-sm font-semibold hover:shadow-md active:scale-95 transition text-left flex items-center gap-2"
                 >
                   <img
                     src={STATE_ART[stateName]}
@@ -145,7 +145,7 @@ export function PassportMightyTree() {
 
         {/* States Grid */}
         <div className="space-y-2 pb-2">
-          <div className="px-1 text-sm font-bold text-muted-foreground">📍 All 36 States</div>
+          <div className="px-1 text-sm font-bold text-text-secondary">📍 All 36 States</div>
           <div className="grid grid-cols-4 gap-2">
             {INDIA_STATES.map((state) => {
               const isUnlocked = progress.completed.includes(state.name);
@@ -156,8 +156,8 @@ export function PassportMightyTree() {
                   onClick={() => handleStateClick(slug, isUnlocked)}
                   className={`aspect-square rounded-lg flex flex-col items-center justify-center gap-0.5 transition transform text-xs font-bold ${
                     isUnlocked
-                      ? "bg-gradient-to-br from-yellow-300 to-amber-400 text-warning shadow-md hover:shadow-lg active:scale-95"
-                      : "bg-muted text-muted-foreground opacity-30 hover:opacity-50 active:scale-95"
+                      ? "bg-accent-4 text-accent-4-ink shadow-md hover:shadow-lg active:scale-95"
+                      : "bg-surface-sunken text-text-secondary opacity-30 hover:opacity-50 active:scale-95"
                   }`}
                 >
                   <img
@@ -179,7 +179,7 @@ export function PassportMightyTree() {
       <div className="px-5 pb-4">
         <button
           onClick={() => navigate({ to: "/home" })}
-          className="w-full h-12 rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-white font-extrabold shadow-lg"
+          className="w-full h-12 rounded-2xl bg-accent-3 text-text-on-primary font-extrabold shadow-lg"
         >
           Back Home 🏠
         </button>

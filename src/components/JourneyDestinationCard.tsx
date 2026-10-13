@@ -160,7 +160,7 @@ export function JourneyDestinationCard({
       <button
         onClick={buttonHandler}
         disabled={isButtonDisabled}
-        className={`w-full py-3 ui-button ${status === "locked" ? "ui-accent-1-soft" : status === "completed" ? "ui-accent-3" : "ui-accent-1"} text-ink transition-all active:scale-95 flex items-center justify-center gap-2 font-bold ${isButtonDisabled ? "opacity-60 cursor-not-allowed" : ""}`}
+        className={`w-full py-3 ui-button ${status === "locked" ? "ui-accent-1-soft" : status === "completed" ? "ui-accent-3" : "ui-accent-1"} transition-all active:scale-95 flex items-center justify-center gap-2 font-bold ${isButtonDisabled ? "opacity-60 cursor-not-allowed" : ""}`}
       >
         {status === "locked" ? (
           <>

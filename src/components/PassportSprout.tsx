@@ -57,12 +57,12 @@ export function PassportSprout() {
       )}
 
       {/* Header */}
-      <div className="px-5 pt-4 pb-3 bg-gradient-to-r from-blue-400 to-purple-400 text-white rounded-b-3xl shadow-lg">
+      <div className="px-5 pt-4 pb-3 bg-bg-header text-text-on-header rounded-b-3xl shadow-lg">
         <div className="text-2xl font-extrabold">My Stamps 🎫</div>
       </div>
 
       {/* Profile Card */}
-      <div className="mx-5 mt-4 p-4 rounded-3xl bg-gradient-to-br from-amber-700 to-amber-900 text-white shadow-lg">
+      <div className="mx-5 mt-4 p-4 rounded-3xl bg-accent-1 text-text-on-primary shadow-lg">
         <div className="flex items-center gap-3 mb-3">
           <div className="text-5xl">{progress.avatar}</div>
           <div>
@@ -79,7 +79,7 @@ export function PassportSprout() {
               <div
                 key={i}
                 className={`flex-1 h-3 rounded-full transition-all ${
-                  i < filledSegments ? "bg-green-400" : "bg-white/30"
+                  i < filledSegments ? "bg-accent-3" : "bg-white/30"
                 }`}
               />
             ))}
@@ -100,8 +100,8 @@ export function PassportSprout() {
                 onClick={() => handleStateClick(state.name)}
                 className={`aspect-square rounded-2xl flex flex-col items-center justify-center gap-2 transition transform ${
                   isUnlocked
-                    ? "bg-gradient-to-br from-yellow-300 to-amber-400 shadow-lg hover:scale-105 active:scale-95"
-                    : "bg-muted hover:bg-muted active:scale-95"
+                    ? "bg-accent-4 shadow-lg hover:scale-105 active:scale-95"
+                    : "bg-surface-sunken hover:bg-surface-sunken active:scale-95"
                 }`}
               >
                 <img
@@ -120,8 +120,8 @@ export function PassportSprout() {
 
         {/* Locked State Encouragement */}
         {statesThisPage.some((s) => !progress.completed.includes(s.name)) && (
-          <div className="bg-purple-soft border-2 border-purple rounded-2xl p-3 text-center">
-            <div className="text-sm font-bold text-purple-700">
+          <div className="bg-accent-5-soft border-2 border-accent-5 rounded-2xl p-3 text-center">
+            <div className="text-sm font-bold text-accent-5-ink">
               🌟 Complete quizzes to unlock more!
             </div>
           </div>
@@ -136,7 +136,7 @@ export function PassportSprout() {
               fxTap();
               setCurrentPage(currentPage - 1);
             }}
-            className="flex-1 h-12 rounded-2xl bg-white border-2 border-muted text-muted-foreground font-extrabold text-lg"
+            className="flex-1 h-12 rounded-2xl bg-surface-card border-2 border-border-color text-text-secondary font-extrabold text-lg"
           >
             ← Previous
           </button>
@@ -147,7 +147,7 @@ export function PassportSprout() {
               fxTap();
               setCurrentPage(currentPage + 1);
             }}
-            className="flex-1 h-12 rounded-2xl bg-gradient-to-r from-blue-400 to-purple-400 text-white font-extrabold text-lg shadow-lg"
+            className="flex-1 h-12 rounded-2xl bg-accent-2 text-text-on-primary font-extrabold text-lg shadow-lg"
           >
             Next States →
           </button>
@@ -155,7 +155,7 @@ export function PassportSprout() {
         {!hasNextPage && currentPage === 0 && (
           <button
             onClick={() => navigate({ to: "/home" })}
-            className="flex-1 h-12 rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-white font-extrabold text-lg shadow-lg"
+            className="flex-1 h-12 rounded-2xl bg-accent-3 text-text-on-primary font-extrabold text-lg shadow-lg"
           >
             Back Home 🏠
           </button>

@@ -31,16 +31,16 @@ export function PostcardCard({
   return (
     <button
       onClick={handleClick}
-      className="w-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 rounded-xl transition-transform active:scale-95"
+      className="w-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-2 rounded-xl transition-transform active:scale-95"
       title={`${destination} postcard`}
     >
       <div className="relative">
         {/* Postcard container */}
-        <div className="relative bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow">
+        <div className="relative bg-surface-card rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow">
           {/* Landmark SVG container - full color for all states, padlock badge for locked */}
           <div className="relative">
             <div
-              className={`w-full h-32 rounded-lg overflow-hidden mb-3 bg-white shadow-sm transition-opacity duration-300 ${
+              className={`w-full h-32 rounded-lg overflow-hidden mb-3 bg-surface-card shadow-sm transition-opacity duration-300 ${
                 isCollected ? "opacity-100" : "opacity-75"
               }`}
             >
