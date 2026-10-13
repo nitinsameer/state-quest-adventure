@@ -19,11 +19,8 @@ import { fxTap } from "@/lib/fx";
 import { getAvatarImage, getAvatarName } from "@/lib/avatar-config";
 import { StatePerformanceBadgeModal } from "./state-performance-badge-modal";
 
-type ViewMode = "grid" | "card" | "list";
-
 export function StatePerformanceBadgesView() {
   const progress = useProgress();
-  const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [selectedState, setSelectedState] = useState<string | null>(null);
 
   const totalBadgesEarned = getTotalPerformanceBadgesEarned(progress.statePerformance);
@@ -78,44 +75,9 @@ export function StatePerformanceBadgesView() {
         </div>
       </div>
 
-      {/* View Mode Toggle */}
-      <div className="px-5 pt-4 flex gap-2 border-b border-muted">
-        <button
-          onClick={() => {
-            fxTap();
-            setViewMode("grid");
-          }}
-          className={`px-4 py-2 rounded-t-lg font-bold text-sm transition ${
-            viewMode === "grid" ? "bg-white border-b-2 border-orange text-orange" : "text-muted-foreground"
-          }`}
-        >
-          Grid
-        </button>
-        <button
-          onClick={() => {
-            fxTap();
-            setViewMode("card");
-          }}
-          className={`px-4 py-2 rounded-t-lg font-bold text-sm transition ${
-            viewMode === "card" ? "bg-white border-b-2 border-orange text-orange" : "text-muted-foreground"
-          }`}
-        >
-          Card
-        </button>
-        <button
-          onClick={() => {
-            fxTap();
-            setViewMode("list");
-          }}
-          className={`px-4 py-2 rounded-t-lg font-bold text-sm transition ${
-            viewMode === "list" ? "bg-white border-b-2 border-orange text-orange" : "text-muted-foreground"
-          }`}
-        >
-          List
-        </button>
-      </div>
+      {/* View Mode Toggle - REMOVED */}
 
-      {/* Content */}
+      {/* Content - Card View Only */}
       <div className="flex-1 overflow-auto px-5 py-4 space-y-6">
         {/* Completed States */}
         {completedStates.length > 0 && (
@@ -124,53 +86,19 @@ export function StatePerformanceBadgesView() {
               ✓ Completed ({completedStates.length})
             </h2>
             
-            {viewMode === "grid" && (
-              <div className="grid grid-cols-2 gap-3">
-                {completedStates.map(state => (
-                  <StateGridBadgeCard
-                    key={state.name}
-                    state={state}
-                    progress={progress}
-                    onSelect={() => {
-                      fxTap();
-                      setSelectedState(state.name);
-                    }}
-                  />
-                ))}
-              </div>
-            )}
-
-            {viewMode === "card" && (
-              <div className="space-y-4">
-                {completedStates.map(state => (
-                  <StateDetailBadgeCard
-                    key={state.name}
-                    state={state}
-                    progress={progress}
-                    onSelect={() => {
-                      fxTap();
-                      setSelectedState(state.name);
-                    }}
-                  />
-                ))}
-              </div>
-            )}
-
-            {viewMode === "list" && (
-              <div className="space-y-2">
-                {completedStates.map(state => (
-                  <StateListBadgeRow
-                    key={state.name}
-                    state={state}
-                    progress={progress}
-                    onSelect={() => {
-                      fxTap();
-                      setSelectedState(state.name);
-                    }}
-                  />
-                ))}
-              </div>
-            )}
+            <div className="space-y-4">
+              {completedStates.map(state => (
+                <StateDetailBadgeCard
+                  key={state.name}
+                  state={state}
+                  progress={progress}
+                  onSelect={() => {
+                    fxTap();
+                    setSelectedState(state.name);
+                  }}
+                />
+              ))}
+            </div>
           </div>
         )}
 
@@ -181,59 +109,22 @@ export function StatePerformanceBadgesView() {
               🔒 Not Started ({lockedStates.length})
             </h2>
             
-            {viewMode === "grid" && (
-              <div className="grid grid-cols-2 gap-3">
-                {lockedStates.map(state => (
-                  <div
-                    key={state.name}
-                    className="rounded-2xl p-3 flex flex-col items-center gap-2 border bg-muted-light border-muted opacity-70"
-                  >
-                    <div className="text-2xl">🔒</div>
-                    <div className="text-display font-extrabold text-xs text-center leading-tight text-muted-foreground">
-                      {state.name}
-                    </div>
-                    <div className="text-[10px] font-bold text-muted-foreground">
-                      0/6 Badges
+            <div className="space-y-4">
+              {lockedStates.map(state => (
+                <div
+                  key={state.name}
+                  className="rounded-2xl p-4 bg-white shadow-soft border border-black/5"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="text-4xl">🔒</div>
+                    <div className="flex-1">
+                      <h3 className="text-display font-extrabold text-muted-dark">{state.name}</h3>
+                      <p className="text-xs font-bold text-muted-foreground mt-1">Not yet started</p>
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
-
-            {viewMode === "card" && (
-              <div className="space-y-4">
-                {lockedStates.map(state => (
-                  <div
-                    key={state.name}
-                    className="rounded-2xl p-4 bg-white shadow-soft border border-black/5"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="text-4xl">🔒</div>
-                      <div className="flex-1">
-                        <h3 className="text-display font-extrabold text-muted-dark">{state.name}</h3>
-                        <p className="text-xs font-bold text-muted-foreground mt-1">Not yet started</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {viewMode === "list" && (
-              <div className="space-y-2">
-                {lockedStates.map(state => (
-                  <div
-                    key={state.name}
-                    className="flex items-center gap-3 py-2 px-3 rounded-lg"
-                  >
-                    <span className="text-display font-extrabold text-sm min-w-[80px] text-muted-foreground">
-                      {state.name}
-                    </span>
-                    <div className="text-2xl ml-auto">🔒</div>
-                  </div>
-                ))}
-              </div>
-            )}
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>
@@ -250,41 +141,7 @@ export function StatePerformanceBadgesView() {
   );
 }
 
-/* ========== Grid View Component ========== */
-function StateGridBadgeCard({ state, progress, onSelect }: any) {
-  const earnedBadges = getPerformanceBadgesForState(progress.statePerformance, state.name);
-  const totalBadges = 6; // 6 performance badges per state
-
-  return (
-    <button
-      onClick={onSelect}
-      className="rounded-2xl p-4 flex flex-col items-center gap-3 border bg-white shadow-soft border-black/5 hover:shadow-md transition active:scale-95"
-    >
-      <div className="text-display font-extrabold text-sm text-center leading-tight text-muted-dark">
-        {state.name}
-      </div>
-      
-      {/* Badge Icons Grid */}
-      <div className="flex flex-wrap gap-1.5 justify-center">
-        {earnedBadges.slice(0, 6).map((badge: StatePerformanceBadgeId) => (
-          <div 
-            key={badge}
-            className="h-7 w-7 rounded-full bg-gradient-to-br from-yellow-100 to-orange-100 border-2 border-orange-300 flex items-center justify-center text-base"
-            title={STATE_PERFORMANCE_BADGE_DEFS[badge]?.name}
-          >
-            {getPerformanceBadgeIcon(badge)}
-          </div>
-        ))}
-      </div>
-      
-      <div className="text-[10px] font-bold text-muted-foreground">
-        {earnedBadges.length}/{totalBadges} Badges
-      </div>
-    </button>
-  );
-}
-
-/* ========== Card View Component ========== */
+/* ========== Card View Component (Only View) ========== */
 function StateDetailBadgeCard({ state, progress, onSelect }: any) {
   const earnedBadges = getPerformanceBadgesForState(progress.statePerformance, state.name);
   const availableBadges = getAvailablePerformanceBadges(progress.statePerformance, state.name);
@@ -353,31 +210,4 @@ function StateDetailBadgeCard({ state, progress, onSelect }: any) {
   );
 }
 
-/* ========== List View Component ========== */
-function StateListBadgeRow({ state, progress, onSelect }: any) {
-  const earnedBadges = getPerformanceBadgesForState(progress.statePerformance, state.name);
-  const totalBadges = 6; // 6 performance badges per state
-
-  return (
-    <button
-      onClick={onSelect}
-      className="flex items-center gap-4 py-3 px-4 rounded-xl hover:bg-muted-light transition active:scale-95 bg-white border border-black/5 shadow-soft"
-    >
-      {/* State Name */}
-      <span className="text-display font-extrabold text-sm flex-shrink-0 text-muted-dark min-w-[120px]">
-        {state.name}
-      </span>
-      
-      {/* Badge Count */}
-      <div className="text-xs font-bold text-muted-foreground min-w-fit">
-        {earnedBadges.length}/{totalBadges}
-      </div>
-      
-      {/* Lock Icon (for not started) */}
-      <div className="ml-auto text-xl flex-shrink-0">
-        🏆
-      </div>
-    </button>
-  );
-}
 

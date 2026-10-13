@@ -32,6 +32,7 @@ import { LanguageToggle, type LanguageCode } from "@/components/LanguageToggle";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { PostcardModal } from "@/components/PostcardModal";
 import { PostcardPreviewModal } from "@/components/PostcardPreviewModal";
+import { PostcardFrame } from "@/components/PostcardFrame";
 import { CardProgressBar } from "@/components/CardProgressBar";
 import { JourneyDestinationCard } from "@/components/JourneyDestinationCard";
 
@@ -558,6 +559,9 @@ function FloatingXPFeedback({ xp, key: feedbackKey }: { xp: number; key: string 
  * Recently Completed State Celebration Component
  * Extracted to fix React hooks rule: useEffect cannot be in IIFE
  */
+// Session-based storage for shown celebrations (prevents duplicate popups on navigation)
+const shownCelebrationsRef = { current: new Set<string>() };
+
 function RecentlyCompletedCelebration({
   p,
   showCelebrationPopup,
@@ -579,7 +583,13 @@ function RecentlyCompletedCelebration({
     }
   }, [pendingCelebration]);
   
+  // Check if this celebration has already been shown in this session
   if (!showCelebrationPopup || !pendingCelebration) return null;
+
+  const celebrationId = `${pendingCelebration.stateName}_${pendingCelebration.xp}`;
+  
+  // If already shown in this session, don't show again
+  if (shownCelebrationsRef.current.has(celebrationId)) return null;
 
   const { stateName, xp, badges } = pendingCelebration;
   const state = INDIA_STATES.find(s => s.name === stateName);
@@ -587,6 +597,8 @@ function RecentlyCompletedCelebration({
 
   const handleDismiss = () => {
     fxTap();
+    // Mark as shown in session to prevent duplicate displays
+    shownCelebrationsRef.current.add(celebrationId);
     onDismiss();
     // Remove from pending celebrations when dismissed
     dismissPendingCelebration();
@@ -594,6 +606,8 @@ function RecentlyCompletedCelebration({
 
   const handleNextState = () => {
     fxTap();
+    // Mark as shown in session to prevent duplicate displays
+    shownCelebrationsRef.current.add(celebrationId);
     onDismiss();
     // Remove from pending celebrations when proceeding
     dismissPendingCelebration();
@@ -1309,7 +1323,6 @@ export function JourneyMapScreen() {
   const states = statesWithProgress(p);
   const [view, setView] = useState<{ screen: "intro" | "hub" | "card" | "quiz"; name: string; cardIndex?: number } | null>(null);
   const [selectedState, setSelectedState] = useState<string | null>(null);
-  const [expandedRegion, setExpandedRegion] = useState<string | null>(REGION_KEYS[0]); // First region expanded by default
   const celebration = useCelebration();
 
   // Detect and celebrate milestones
@@ -1598,8 +1611,8 @@ export function JourneyMapScreen() {
 
       {/* Explorable States Map with Regional Organization */}
       <div className="relative flex-1 overflow-y-auto overflow-x-hidden animate-fade-in" style={{ animationDelay: "200ms" }}>
-        {/* Regional sections with color-coded headers */}
-        <div className="relative w-full space-y-6 py-6" style={{ paddingLeft: 'var(--padding-lg)', paddingRight: 'var(--padding-lg)', paddingBottom: 'calc(64px + 16px + env(safe-area-inset-bottom))' }}>
+        {/* Regional sections - always visible, no collapse */}
+        <div className="relative w-full space-y-6 py-6 px-3 pb-calc" style={{ paddingBottom: 'calc(64px + 16px + env(safe-area-inset-bottom))' }}>
           {REGION_KEYS.map((regionKey, regionIdx) => {
             // Skip union territories region - they're rendered separately below
             if (regionKey === "unionTerritories") return null;
@@ -1607,36 +1620,22 @@ export function JourneyMapScreen() {
             const region = REGIONS[regionKey];
             const regionStates = statesByRegion[regionKey] || [];
             const regionDone = regionStates.filter((s) => s.status === "done").length;
-            const isRegionExpanded = expandedRegion === regionKey;
             
             return (
               <div key={regionKey} className="animate-fade-in" style={{ animationDelay: `${300 + regionIdx * 100}ms` }}>
-                {/* Region Header - Horizontal Pill Style with Premium Shadows */}
-                <button
-                  onClick={() => setExpandedRegion(isRegionExpanded ? null : regionKey)}
-                  className={`w-full rounded-2xl py-2.5 shadow-elevated-1 flex items-center justify-between transition-all hover:shadow-elevated-2 hover:scale-102 active:scale-95 bg-gradient-to-r ${region.gradient} text-white`}
-                  style={{ paddingLeft: 'var(--padding-md)', paddingRight: 'var(--padding-md)', marginBottom: 'var(--gap-base)' }}
+                {/* Region Header - Horizontal Chip Style */}
+                <div
+                  className={`w-full rounded-2xl py-2.5 shadow-elevated-1 flex items-center justify-between transition-all hover:shadow-elevated-2 hover:scale-102 active:scale-95 bg-gradient-to-r ${region.gradient} text-white px-4 mb-4`}
                 >
                   <div className="flex items-center gap-2 flex-1">
                     <span className="text-xl">{region.emoji}</span>
                     <span className="font-bold text-sm text-white">{region.name}</span>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm font-semibold text-white">{regionDone}/{regionStates.length}</span>
-                    <svg 
-                      className={`w-5 h-5 transition-transform text-white ${isRegionExpanded ? "rotate-180" : ""}`}
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                    </svg>
-                  </div>
-                </button>
+                  <span className="text-sm font-semibold text-white">{regionDone}/{regionStates.length}</span>
+                </div>
 
-                {/* States in this region - 2-Column Grid on mobile, 3-col tablet, 4-col desktop */}
-                {isRegionExpanded && (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mb-4" style={{ gap: 'var(--gap-base)' }}>
+                {/* States in this region - 2-Column Grid - Always Visible */}
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-4">
                   {regionStates.map((state, stateIndex) => {
                     const isLocked = state.status === "locked";
                     const isDone = state.status === "done";
@@ -1681,38 +1680,24 @@ export function JourneyMapScreen() {
                     );
                   })}
                 </div>
-                )}
               </div>
             );
           })}
 
           {/* Union Territories section */}
           <div className="animate-fade-in" style={{ animationDelay: "800ms" }}>
-            <button
-              onClick={() => setExpandedRegion(expandedRegion === "unionTerritories" ? null : "unionTerritories")}
-              className="w-full rounded-2xl bg-gradient-to-r from-blue-400 to-purple-500 text-white py-2.5 shadow-elevated-1 flex items-center justify-between transition-all hover:shadow-elevated-2 hover:scale-102 active:scale-95"
-              style={{ paddingLeft: 'var(--padding-md)', paddingRight: 'var(--padding-md)', marginBottom: 'var(--gap-base)' }}
+            <div
+              className="w-full rounded-2xl bg-gradient-to-r from-blue-400 to-purple-500 text-white py-2.5 shadow-elevated-1 flex items-center justify-between transition-all hover:shadow-elevated-2 hover:scale-102 active:scale-95 px-4 mb-4"
             >
               <div className="flex items-center gap-2 flex-1">
                 <span className="text-xl">🏝️</span>
                 <span className="font-bold text-sm text-white">Union Territories</span>
               </div>
-              <div className="flex items-center gap-3">
-                <span className="text-sm font-semibold text-white">{nodes.filter(n => n.isUT && n.status === "done").length}/8</span>
-                <svg 
-                  className={`w-5 h-5 transition-transform text-white ${expandedRegion === "unionTerritories" ? "rotate-180" : ""}`}
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                </svg>
-              </div>
-            </button>
+              <span className="text-sm font-semibold text-white">{nodes.filter(n => n.isUT && n.status === "done").length}/8</span>
+            </div>
 
-            {/* UTs Grid - 3 Column with Premium Styling */}
-            {expandedRegion === "unionTerritories" && (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mb-4" style={{ gap: 'var(--gap-base)' }}>
+            {/* UTs Grid - Always Visible */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-4">
               {nodes.filter(n => n.isUT).map((utNode, utIndex) => {
                 const utState = states.find(s => s.name === utNode.name);
                 if (!utState) return null;
@@ -1759,7 +1744,6 @@ export function JourneyMapScreen() {
                 );
               })}
             </div>
-            )}
           </div>
         </div>
       </div>
@@ -3419,6 +3403,7 @@ export function StateCompletedScreen({
     correctCount?: number
   }
 } = {}) {
+  const navigate = useNavigate();
   const state = getState(stateName);
   const art = STATE_ART[state.name];
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
@@ -3435,127 +3420,117 @@ export function StateCompletedScreen({
   }, [celebrationDone]);
 
   return (
-    <div className="h-full w-full bg-gradient-to-b from-yellow-300 via-yellow-200 to-orange-200 relative overflow-hidden flex flex-col items-center">
-      {/* Premium Close Button - Top Right */}
-      <button
-        onClick={() => {
-          fxTap();
-          // Close button does nothing - user must choose See Stamp or Replay
-        }}
-        className="absolute top-3 right-3 w-8 h-8 rounded-full clay-button clay-white text-ink flex items-center justify-center text-lg transition-all duration-200 z-10 cursor-not-allowed opacity-50"
-        aria-label="Choose an action"
-        disabled
-      >
-        ✕
-      </button>
-
-      <ConfettiBurst trigger={burstKey} size="big" />
-      {Array.from({ length: 12 }).map((_, i) => (
-        <div
-          key={i}
-          className="absolute rounded-sm pointer-events-none"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            width: 6 + (i % 4) * 2,
-            height: 12 + (i % 3) * 3,
-            background: ["#FF7A1A", "#2E7DFF", "#fff", "#22C55E", "#F5B301"][i % 5],
-            transform: `rotate(${i * 15}deg)`,
-            opacity: 0.6,
-          }}
-        />
-      ))}
-
-      <div className="mt-10 text-center relative px-6">
-        <div className="text-ink text-xs font-black uppercase tracking-[0.3em]">
-          State Complete
-        </div>
-        <h1 className="text-h1 text-ink mt-2 drop-shadow leading-relaxed">
-          {state.name} Cleared!
-        </h1>
-      </div>
-
-      <div className="mt-8 relative">
-        <div className="absolute inset-0 blur-3xl bg-white/40 rounded-full" />
-        <div className="relative h-48 w-48 rounded-full bg-white flex items-center justify-center shadow-2xl border-8 border-white">
-          <div className={`h-full w-full rounded-full ${grad} flex flex-col items-center justify-center text-white px-2`}>
-            {art ? (
-              <img src={art} alt="" loading="lazy" decoding="async" className="h-20 object-contain drop-shadow" />
-            ) : (
-              <img
-                src={STATE_ART[state.name]}
-                alt={state.name}
-                className="h-20 object-contain drop-shadow rounded"
-                loading="lazy"
-                decoding="async"
-              />
-            )}
-            <div className="text-display font-extrabold text-sm mt-1 text-center leading-tight uppercase">
-              {state.name}
-            </div>
-            <div className="text-[9px] font-bold opacity-90">EXPLORER · LVL 1</div>
+    <div className="h-full w-full bg-gradient-to-b from-yellow-300 via-yellow-200 to-orange-200 relative flex flex-col overflow-y-auto">
+      {/* Header with close button */}
+      <div className="flex items-center justify-between p-4 sticky top-0 z-10 bg-gradient-to-b from-yellow-300 to-yellow-200">
+        <div className="text-center flex-1">
+          <div className="text-ink text-xs font-black uppercase tracking-[0.3em]">
+            STATE COMPLETE
           </div>
         </div>
-        <img
-          src={mascot}
-          alt=""
-          className="absolute -left-14 bottom-0 w-24 h-24 object-contain mascot-cheer drop-shadow"
-        />
+        <button
+          onClick={() => {
+            fxTap();
+            navigate({ to: "/" });
+          }}
+          className="w-8 h-8 rounded-full clay-button clay-white text-ink flex items-center justify-center text-lg transition-all duration-200 hover:shadow-lg active:scale-95"
+          aria-label="Go home"
+        >
+          ✕
+        </button>
       </div>
 
-      <div className="mt-8 w-full px-6">
-        {/* Postcard Preview Card */}
-        <div className="clay-card clay-gold p-6 text-center">
-          <div className="text-[11px] font-black uppercase tracking-[0.2em] opacity-90 mb-4 text-ink">
+      {/* Content wrapper - scrollable */}
+      <div className="flex-1 flex flex-col items-center px-6 pt-6 pb-8 space-y-6">
+        <ConfettiBurst trigger={burstKey} size="big" />
+        {Array.from({ length: 12 }).map((_, i) => (
+          <div
+            key={i}
+            className="absolute rounded-sm pointer-events-none"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              width: 6 + (i % 4) * 2,
+              height: 12 + (i % 3) * 3,
+              background: ["#FF7A1A", "#2E7DFF", "#fff", "#22C55E", "#F5B301"][i % 5],
+              transform: `rotate(${i * 15}deg)`,
+              opacity: 0.6,
+            }}
+          />
+        ))}
+
+        {/* Celebration Card - State illustration circle */}
+        <div className="relative pt-4">
+          <div className="absolute inset-0 blur-3xl bg-white/40 rounded-full" />
+          <div className="relative h-40 w-40 rounded-full bg-white flex items-center justify-center shadow-2xl border-8 border-white">
+            <div className={`h-full w-full rounded-full ${grad} flex flex-col items-center justify-center text-white px-2`}>
+              {art ? (
+                <img src={art} alt="" loading="lazy" decoding="async" className="h-16 object-contain drop-shadow" />
+              ) : (
+                <img
+                  src={STATE_ART[state.name]}
+                  alt={state.name}
+                  className="h-16 object-contain drop-shadow rounded"
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
+              <div className="text-display font-extrabold text-sm mt-1 text-center leading-tight uppercase">
+                {state.name}
+              </div>
+              <div className="text-[9px] font-bold opacity-90">LEVEL 1</div>
+            </div>
+          </div>
+          <img
+            src={mascot}
+            alt=""
+            className="absolute -left-12 bottom-0 w-20 h-20 object-contain mascot-cheer drop-shadow"
+          />
+        </div>
+
+        {/* YOUR POSTCARD section */}
+        <div className="w-full">
+          <h2 className="text-ink text-xs font-black uppercase tracking-[0.2em] text-center mb-4">
             Your Postcard
-          </div>
-          
-          {/* Postcard-style content */}
-          <div className="clay-card clay-white p-4 mb-4">
-            <div className="text-sm font-bold mb-2 text-ink">{state.name}</div>
-            <div className="text-[11px] opacity-75 text-ink">State Complete Badge</div>
-            <div className="text-2xl mt-3 mb-2">🏆</div>
-            <div className="text-[10px] opacity-60 text-ink">Ready to save & share</div>
-          </div>
-
-          {/* XP + Stamp in single row */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="clay-card clay-white p-3">
-              <div className="text-lg">⭐</div>
-              <div className="text-display text-h5 leading-tight mt-1 text-ink">+250 XP</div>
-              <div className="text-[9px] opacity-75 mt-2 text-ink">State Complete</div>
-            </div>
-            <div className="clay-card clay-white p-3">
-              <div className="text-lg">📜</div>
-              <div className="text-display text-h5 leading-tight mt-1 text-ink">Stamp</div>
-              <div className="text-[9px] opacity-75 mt-2 text-ink">Added</div>
-            </div>
-          </div>
+          </h2>
+          <PostcardFrame stateName={state.name} />
         </div>
-      </div>
 
-      <div className="mt-auto p-6 w-full space-y-3">
-        {/* Primary CTA: Next State */}
-        <button
-          onClick={() => {
-            fxTap();
-            onContinue?.();
-          }}
-          className="w-full h-14 clay-button clay-saffron text-ink text-display text-lg font-extrabold active:scale-95 transition-all duration-200"
-        >
-          🎯 Next State
-        </button>
+        {/* Action Buttons - 3 only: Replay, Next State, Home */}
+        <div className="w-full space-y-3 pt-4">
+          {/* Replay Quiz - Blue */}
+          <button
+            onClick={() => {
+              fxTap();
+              onReplay?.();
+            }}
+            className="w-full h-14 clay-button clay-blue text-white text-display text-lg font-extrabold active:scale-95 transition-all duration-200"
+          >
+            🔄 Replay Quiz
+          </button>
 
-        {/* Secondary CTA: View Postcard */}
-        <button
-          onClick={() => {
-            fxTap();
-            onCreatePostcard?.();
-          }}
-          className="w-full h-12 clay-button clay-white text-ink text-display font-bold active:scale-95 transition-all duration-200"
-        >
-          📸 Save Postcard
-        </button>
+          {/* Next State - Green */}
+          <button
+            onClick={() => {
+              fxTap();
+              onContinue?.();
+            }}
+            className="w-full h-14 clay-button clay-green text-white text-display text-lg font-extrabold active:scale-95 transition-all duration-200"
+          >
+            🎯 Next State
+          </button>
+
+          {/* Home - Neutral */}
+          <button
+            onClick={() => {
+              fxTap();
+              navigate({ to: "/" });
+            }}
+            className="w-full h-14 clay-button clay-white text-ink text-display text-lg font-extrabold active:scale-95 transition-all duration-200"
+          >
+            🏠 Home
+          </button>
+        </div>
       </div>
     </div>
   );

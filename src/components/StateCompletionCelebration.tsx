@@ -13,7 +13,7 @@
 
 import { useEffect, useState } from 'react';
 import { ConfettiBurst } from './ConfettiBurst';
-import { triggerFeedback } from '../lib/feedback-effects';
+import { fxConfetti } from '../lib/fx';
 
 interface Badge {
   id: string;
@@ -58,7 +58,7 @@ export function StateCompletionCelebration({
     setTimeout(() => setConfettiTrigger(1), 700);
 
     // Trigger achievement feedback
-    setTimeout(() => triggerFeedback('achievement'), 700);
+    setTimeout(() => fxConfetti(), 700);
 
     // Stagger badge reveals (starting at reveal stage)
     const revealed = new Set<string>();
