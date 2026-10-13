@@ -95,7 +95,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 backdrop-blur-sm">
-      <div className="bg-white rounded-3xl p-(--padding-lg) w-[90%] max-w-sm shadow-2xl">
+      <div className="bg-surface-card rounded-3xl p-(--padding-lg) w-[90%] max-w-sm shadow-2xl">
         {/* Header */}
         <div className="text-center mb-(--space-4)">
           <div className="text-4xl mb-(--space-0-5)">🔐</div>
@@ -110,7 +110,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
           <div className="text-xs font-bold text-text-muted">
             ⏱️ {timeLeft}s remaining
           </div>
-          <div className="h-1.5 bg-[oklch(0.9_0.02_260)] rounded-full overflow-hidden mt-(--space-0-25)">
+          <div className="h-1.5 bg-progress-track rounded-full overflow-hidden mt-(--space-0-25)">
             <div
               className="h-full bg-action-error-bg transition-all"
               style={{ width: `${(timeLeft / 30) * 100}%` }}
@@ -189,7 +189,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
         <button
           onClick={onCancel}
           disabled={isValid || isVerifying}
-          className="w-full h-10 rounded-lg bg-surface-muted text-text-muted font-extrabold text-sm hover:bg-surface-raised active:scale-95 transition mt-(--space-0-25) disabled:opacity-50"
+          className="w-full h-10 rounded-lg bg-surface-raised text-text-muted font-extrabold text-sm hover:bg-surface-raised active:scale-95 transition mt-(--space-0-25) disabled:opacity-50"
         >
           Cancel
         </button>

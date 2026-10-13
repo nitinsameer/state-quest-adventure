@@ -52,7 +52,7 @@ export function GranularConsentDialog({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm p-4 animate-in fade-in">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden animate-in zoom-in-95 flex flex-col max-h-[90vh]">
+      <div className="bg-surface-card rounded-3xl shadow-2xl max-w-md w-full overflow-hidden animate-in zoom-in-95 flex flex-col max-h-[90vh]">
         {/* Header */}
         <div className="bg-gradient-to-r from-action-primary-bg to-action-primary-bg p-(--padding-lg) text-text-on-primary">
           <h2 className="text-2xl font-extrabold mb-(--space-0-25)">🔒 Stamp Privacy</h2>
@@ -64,8 +64,8 @@ export function GranularConsentDialog({
         {/* Content */}
         <div className="p-(--padding-lg) space-y-(--gap-md) flex-1 overflow-y-auto">
           {/* Current State */}
-          <div className="bg-muted-light rounded-2xl p-(--padding-md) border-2 border-muted">
-            <div className="text-xs font-bold text-muted-foreground uppercase mb-(--space-0-25)">
+          <div className="bg-surface-raised rounded-2xl p-(--padding-md) border-2 border-border-color">
+            <div className="text-xs font-bold text-text-muted uppercase mb-(--space-0-25)">
               Current Setting
             </div>
             <div className="flex items-center gap-(--gap-base)">
@@ -201,7 +201,7 @@ export function GranularConsentDialog({
         <div className="border-t border-border-color p-(--padding-lg)">
           <button
             onClick={handleClose}
-            className="w-full px-(--padding-md) py-(--padding-base) rounded-xl bg-surface-muted text-text-muted font-bold text-sm transition active:scale-95"
+            className="w-full px-(--padding-md) py-(--padding-base) rounded-xl bg-surface-raised text-text-muted font-bold text-sm transition active:scale-95"
           >
             Close
           </button>
