@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { getState } from "@/lib/states";
 import { STATE_ART, TONE_GRADIENT, TONE_HEX } from "@/lib/state-art";
@@ -9,9 +9,9 @@ import { useToast } from "@/hooks/useToast";
 import { usePostcardLibrary } from "@/store/postcard-library-store";
 
 const BADGE_EMOJI: Record<string, string> = {
-  monument: "🏛️",
-  animal: "🐾",
-  explorer: "🎖️",
+  monument: "ðŸ›ï¸",
+  animal: "ðŸ¾",
+  explorer: "ðŸŽ–ï¸",
 };
 
 function roundRect(
@@ -119,7 +119,7 @@ async function generatePostcardBlob(postcard: PostcardData): Promise<Blob | null
   c.textAlign = "center";
   c.fillText("Badge Earned", W / 2, 735);
 
-  const badgeEmoji = BADGE_EMOJI[postcard.badge] || "🎖️";
+  const badgeEmoji = BADGE_EMOJI[postcard.badge] || "ðŸŽ–ï¸";
   c.font = "60px system-ui";
   c.fillText(badgeEmoji, W / 2, 800);
 
@@ -170,7 +170,7 @@ export function PostcardModal({
         // Add to postcard library with image data
         library.addPostcard(postcard.state, postcard.badge, postcard.stampDate, new Date().toISOString(), base64);
 
-        toast.success("✨ Saved to your Passport!", {
+        toast.success("âœ¨ Saved to your Passport!", {
           subtitle: "View anytime from Explorer",
         });
         setIsSaving(false);
@@ -186,7 +186,7 @@ export function PostcardModal({
     }
   };
 
-  const badgeEmoji = BADGE_EMOJI[postcard.badge] || "🎖️";
+  const badgeEmoji = BADGE_EMOJI[postcard.badge] || "ðŸŽ–ï¸";
 
   return (
     <div
@@ -200,9 +200,9 @@ export function PostcardModal({
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 h-8 w-8 rounded-full clay-button clay-white text-ink flex items-center justify-center"
+          className="absolute top-4 right-4 h-8 w-8 rounded-full ui-button ui-accent-1-soft text-ink flex items-center justify-center"
         >
-          ✕
+          âœ•
         </button>
 
         {/* Header */}
@@ -232,9 +232,9 @@ export function PostcardModal({
         </div>
 
         {/* Fun Fact Section */}
-        <div className="clay-card clay-gold rounded-2xl p-(--padding-md) my-(--space-0-5)">
+        <div className="ui-card ui-accent-4 rounded-2xl p-(--padding-md) my-(--space-0-5)">
           <div className="text-xs font-extrabold text-ink uppercase tracking-wider">
-            💡 Did You Know?
+            ðŸ’¡ Did You Know?
           </div>
           <p className="text-sm text-ink mt-(--space-2) leading-relaxed">
             {state.funFact}
@@ -245,23 +245,23 @@ export function PostcardModal({
         <button
           onClick={handleSaveToPassport}
           disabled={isSaving}
-          className="w-full h-12 rounded-2xl clay-button clay-saffron text-ink font-extrabold flex items-center justify-center gap-(--gap-base) disabled:opacity-60 disabled:cursor-not-allowed transition"
+          className="w-full h-12 rounded-2xl ui-button ui-accent-1 text-ink font-extrabold flex items-center justify-center gap-(--gap-base) disabled:opacity-60 disabled:cursor-not-allowed transition"
         >
           {isSaving ? (
             <>
-              <span className="animate-spin">⏳</span>
+              <span className="animate-spin">â³</span>
               Saving...
             </>
           ) : (
             <>
-              💾 Save to Passport
+              ðŸ’¾ Save to Passport
             </>
           )}
         </button>
 
         {/* Info Text */}
         <p className="text-xs text-center text-ink">
-          Keep it in your Passport! 🎉
+          Keep it in your Passport! ðŸŽ‰
         </p>
 
         {/* Home Button */}
@@ -271,9 +271,9 @@ export function PostcardModal({
             onClose();
             navigate({ to: "/home" });
           }}
-          className="w-full h-12 rounded-2xl clay-button clay-explorer text-ink font-extrabold transition-all duration-200 active:scale-95"
+          className="w-full h-12 rounded-2xl ui-button ui-accent-2 text-ink font-extrabold transition-all duration-200 active:scale-95"
         >
-          🏠 Home
+          ðŸ  Home
         </button>
 
         {/* Next State Button */}
@@ -283,15 +283,15 @@ export function PostcardModal({
             onClose();
             navigate({ to: "/journey" });
           }}
-          className="w-full h-12 rounded-2xl clay-button clay-saffron text-ink font-extrabold transition-all duration-200 active:scale-95"
+          className="w-full h-12 rounded-2xl ui-button ui-accent-1 text-ink font-extrabold transition-all duration-200 active:scale-95"
         >
-          🎯 Next State
+          ðŸŽ¯ Next State
         </button>
 
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="w-full h-12 rounded-2xl clay-button clay-white text-ink font-extrabold"
+          className="w-full h-12 rounded-2xl ui-button ui-accent-1-soft text-ink font-extrabold"
         >
           Close
         </button>
@@ -299,4 +299,5 @@ export function PostcardModal({
     </div>
   );
 }
+
 

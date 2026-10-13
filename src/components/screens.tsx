@@ -1,4 +1,4 @@
-import mascot from "@/assets/mascot.webp";
+﻿import mascot from "@/assets/mascot.webp";
 import airplane from "@/assets/airplane.png";
 import welcomeScreenImage from "@/assets/welcome.webp";
 import avatarExplorerHat from "@/assets/avatars/avatar-explorer-hat.png";
@@ -213,11 +213,11 @@ export function BottomNav({
   active: "home" | "map" | "explorer" | "badges" | "profile";
 }) {
   const items = [
-    { id: "home", icon: "🏠", label: "Home", to: "/home" },
-    { id: "map", icon: "🗺️", label: "Journey", to: "/journey" },
-    { id: "explorer", icon: "🔍", label: "Explore", to: "/explorer" },
-    { id: "badges", icon: "🏅", label: "Badges", to: "/badges" },
-    { id: "profile", icon: "👤", label: "Me", to: "/me" },
+    { id: "home", icon: "ðŸ ", label: "Home", to: "/home" },
+    { id: "map", icon: "ðŸ—ºï¸", label: "Journey", to: "/journey" },
+    { id: "explorer", icon: "ðŸ”", label: "Explore", to: "/explorer" },
+    { id: "badges", icon: "ðŸ…", label: "Badges", to: "/badges" },
+    { id: "profile", icon: "ðŸ‘¤", label: "Me", to: "/me" },
   ] as const;
   return (
     <div className="relative w-full" data-testid="bottom-nav" role="navigation">
@@ -287,9 +287,9 @@ function HeaderBar({
         <button
           onClick={goBack}
           aria-label="Go back"
-          className="h-12 w-12 rounded-full clay-button clay-white flex items-center justify-center text-xl text-ink"
+          className="h-12 w-12 rounded-full ui-button ui-accent-1-soft flex items-center justify-center text-xl text-ink"
         >
-          ‹
+          â€¹
         </button>
       ) : (
         <div className="w-10" />
@@ -331,7 +331,7 @@ export function SplashScreen() {
         <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
         <span className="h-2 w-2 rounded-full bg-white/60" />
         <span className="h-2 w-2 rounded-full bg-white/40" />
-        <span className="ml-2">Loading adventure…</span>
+        <span className="ml-2">Loading adventureâ€¦</span>
       </div>
     </div>
   );
@@ -383,10 +383,10 @@ export function CreateProfileScreen() {
 
   // Age bands with milestone emoji and vibrant gradient
   const ageBands = [
-    { value: "3-5", emoji: "🌱", label: "Sprout", gradient: "from-pink-400 to-rose-500" },
-    { value: "6-7", emoji: "🌿", label: "Seedling", gradient: "from-violet-400 to-purple-500" },
-    { value: "8-9", emoji: "🌳", label: "Sapling", gradient: "from-emerald-400 to-teal-500" },
-    { value: "10-12", emoji: "🌲", label: "Mighty Tree", gradient: "from-amber-400 to-orange-500" },
+    { value: "3-5", emoji: "ðŸŒ±", label: "Sprout", gradient: "from-pink-400 to-rose-500" },
+    { value: "6-7", emoji: "ðŸŒ¿", label: "Seedling", gradient: "from-violet-400 to-purple-500" },
+    { value: "8-9", emoji: "ðŸŒ³", label: "Sapling", gradient: "from-emerald-400 to-teal-500" },
+    { value: "10-12", emoji: "ðŸŒ²", label: "Mighty Tree", gradient: "from-amber-400 to-orange-500" },
   ];
 
   const handleAgeSelect = (value: string, index: number) => {
@@ -469,7 +469,7 @@ export function CreateProfileScreen() {
         {/* Age Selection with Vibrant Colors & Emojis */}
         <div className="mt-6 mb-1">
           <label className="text-base font-black text-gray-800">
-            🎂 How old are you?
+            ðŸŽ‚ How old are you?
           </label>
           <div className="mt-3 space-y-2">
             {ageBands.map((band, idx) => {
@@ -493,7 +493,7 @@ export function CreateProfileScreen() {
                     </div>
                   </div>
                   {isSelected && (
-                    <div className="text-2xl">⭐</div>
+                    <div className="text-2xl">â­</div>
                   )}
                 </button>
               );
@@ -514,7 +514,7 @@ export function CreateProfileScreen() {
             saved ? "scale-95 opacity-80" : "hover:shadow-elevated-3 hover:scale-102 active:scale-95"
           }`}
         >
-          {saved ? "🎉 Saved ✓" : "Continue → Let's Explore!"}
+          {saved ? "ðŸŽ‰ Saved âœ“" : "Continue â†’ Let's Explore!"}
         </button>
       </div>
 
@@ -550,7 +550,7 @@ function FloatingXPFeedback({ xp, key: feedbackKey }: { xp: number; key: string 
           }
         }
       `}</style>
-      +{xp} XP ✨
+      +{xp} XP âœ¨
     </div>
   );
 }
@@ -631,13 +631,13 @@ function RecentlyCompletedCelebration({
           className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/30 hover:bg-white/50 flex items-center justify-center text-white text-lg transition-all duration-200 z-10"
           aria-label="Close"
         >
-          ✕
+          âœ•
         </button>
 
         <div className="relative z-10 flex flex-col gap-4">
           {/* Title - Celebration message */}
           <div className="text-center">
-            <div className="text-lg font-bold opacity-95 text-ink">🏆 STATE MASTERED! 🏆</div>
+            <div className="text-lg font-bold opacity-95 text-ink">ðŸ† STATE MASTERED! ðŸ†</div>
             <div className="text-3xl font-black mt-2 drop-shadow-lg text-ink">
               {stateName}
             </div>
@@ -671,7 +671,7 @@ function RecentlyCompletedCelebration({
           <div className="flex gap-3 mt-2">
             <button
               onClick={handleDismiss}
-              className="flex-1 h-11 rounded-xl clay-button clay-white border border-white/40 text-ink text-sm font-bold hover:bg-white/30 transition-all duration-200"
+              className="flex-1 h-11 rounded-xl ui-button ui-accent-1-soft border border-white/40 text-ink text-sm font-bold hover:bg-white/30 transition-all duration-200"
             >
               Dismiss
             </button>
@@ -679,7 +679,7 @@ function RecentlyCompletedCelebration({
               onClick={handleNextState}
               className="flex-1 h-11 rounded-xl bg-white text-orange-600 text-sm font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 active:scale-95"
             >
-              Next State →
+              Next State â†’
             </button>
           </div>
         </div>
@@ -732,7 +732,7 @@ function HomeDashboardContent() {
         setTimeout(() => {
           celebration.custom(
             message,
-            "🔥",
+            "ðŸ”¥",
             {
               subtitle: `Keep up this amazing momentum!`,
               confetti: true,
@@ -770,7 +770,7 @@ function HomeDashboardContent() {
 
   const getUnlockRequirement = (stateName: string): string => {
     // All states unlocked from day 1 - free exploration mode
-    return "🌍 All states open - explore freely!";
+    return "ðŸŒ All states open - explore freely!";
   };
 
   return (
@@ -781,7 +781,7 @@ function HomeDashboardContent() {
         <Cloud className="absolute top-2 right-4 w-14 opacity-40" />
         <div className="flex items-center gap-4 relative mb-3">
           {/* Avatar - Larger and more prominent */}
-          <div className="h-20 w-20 rounded-2xl clay-card clay-white p-1.5 flex items-center justify-center overflow-hidden flex-shrink-0" data-testid="profile-avatar">
+          <div className="h-20 w-20 rounded-2xl ui-card ui-accent-1-soft p-1.5 flex items-center justify-center overflow-hidden flex-shrink-0" data-testid="profile-avatar">
             <img src={getAvatarImage(p.avatar)} alt={getAvatarName(p.avatar)} className="w-full h-full object-cover" />
           </div>
           
@@ -789,16 +789,16 @@ function HomeDashboardContent() {
             {/* Greeting - Single line, cleaner */}
             <div className="text-white">
               <div className="text-h4 text-display leading-tight">
-                Namaste, {(p?.name?.split(" ")[0] || "Explorer")}! 👋
+                Namaste, {(p?.name?.split(" ")[0] || "Explorer")}! ðŸ‘‹
               </div>
-              <div className="text-body-sm opacity-95 mt-1">Level {level} · Explorer</div>
+              <div className="text-body-sm opacity-95 mt-1">Level {level} Â· Explorer</div>
             </div>
           </div>
           
           {/* Right side: Streak badge */}
           <div className="flex items-center gap-2 flex-shrink-0">
-            <div className={`flex items-center gap-1.5 clay-chip clay-white transition-transform duration-1000`}>
-              <span className="text-2xl">🔥</span>
+            <div className={`flex items-center gap-1.5 ui-chip ui-accent-1-soft transition-transform duration-1000`}>
+              <span className="text-2xl">ðŸ”¥</span>
               <div className="flex flex-col items-start">
                 <span className="text-ink text-h5 font-black leading-none">{p.streak}</span>
                 <span className="text-ink text-xs font-bold opacity-90 leading-none">day streak</span>
@@ -814,7 +814,7 @@ function HomeDashboardContent() {
       {/* India Journey Meta-Game Card - Separate featured section */}
       <div className={`px-6 pt-5 pb-4 transition-opacity duration-700 ${statsVisible ? "opacity-100" : "opacity-0"}`}>
         <Suspense fallback={
-          <div className="w-full clay-card clay-white rounded-3xl p-6 animate-pulse">
+          <div className="w-full ui-card ui-accent-1-soft rounded-3xl p-6 animate-pulse">
             <div className="h-8 bg-muted rounded w-1/3 mb-4" />
             <div className="space-y-3">
               {[1,2,3].map(i => <div key={i} className="h-3 bg-muted rounded" />)}
@@ -850,17 +850,17 @@ function HomeDashboardContent() {
           <div className="px-5 mt-5 animate-fade-in">
             <div className="rounded-2xl bg-gradient-to-r from-orange-400 to-red-500 text-white p-4 shadow-elevated-2 transition-all hover:shadow-elevated-3 border border-orange-200/30">
               <div className="flex items-start gap-3">
-                <div className="text-2xl flex-shrink-0">🚨</div>
+                <div className="text-2xl flex-shrink-0">ðŸš¨</div>
                 <div className="flex-1 min-w-0">
                   <div className="text-body font-bold">Your streak is at risk!</div>
                   <div className="text-caption mt-1 opacity-90">Last played {streakStatus.hoursSinceActive} hours ago</div>
-                  <div className="text-caption mt-1">Come back within 12 hours to keep your 🔥 {p.streak} day streak!</div>
+                  <div className="text-caption mt-1">Come back within 12 hours to keep your ðŸ”¥ {p.streak} day streak!</div>
                 </div>
                 <button
                   onClick={() => setDismissStreakWarning(true)}
                   className="text-white opacity-70 hover:opacity-100 text-xl flex-shrink-0 transition-all duration-200"
                 >
-                  ✕
+                  âœ•
                 </button>
               </div>
             </div>
@@ -875,7 +875,7 @@ function HomeDashboardContent() {
         <h2 className="text-display font-bold text-sm text-muted-foreground mb-2">
           Continue your journey
         </h2>
-        <div className="mt-2 rounded-3xl clay-card clay-white p-4 flex items-center gap-3">
+        <div className="mt-2 rounded-3xl ui-card ui-accent-1-soft p-4 flex items-center gap-3">
           <div className="h-16 w-16 rounded-2xl overflow-hidden flex-shrink-0">
             <img 
               src={STATE_ART[current.name]} 
@@ -908,9 +908,9 @@ function HomeDashboardContent() {
             to="/state/$slug/learn"
             params={{ slug: stateSlug(current.name) }}
             onClick={() => fxTap()}
-            className="h-12 px-4 rounded-2xl clay-button clay-saffron text-ink text-display font-bold text-sm flex items-center transition-all duration-300 hover:scale-105 active:scale-95"
+            className="h-12 px-4 rounded-2xl ui-button ui-accent-1 text-ink text-display font-bold text-sm flex items-center transition-all duration-300 hover:scale-105 active:scale-95"
           >
-            Play ▶
+            Play â–¶
           </Link>
         </div>
       </div>
@@ -932,7 +932,7 @@ function HomeDashboardContent() {
             <button
               key={s.name}
               onClick={() => handleLockedCardTap(s.name)}
-              className={`rounded-3xl clay-card clay-white p-3 flex flex-col items-center gap-2 transition-all duration-300 overflow-hidden hover:scale-105 ${
+              className={`rounded-3xl ui-card ui-accent-1-soft p-3 flex flex-col items-center gap-2 transition-all duration-300 overflow-hidden hover:scale-105 ${
                 animateStats ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
               }`}
               style={{ transitionDelay: `${idx * 100}ms` }}
@@ -964,7 +964,7 @@ function HomeDashboardContent() {
                   e.stopPropagation();
                   fxTap();
                 }}
-                className="mt-1 px-4 py-2 rounded-lg clay-button clay-saffron text-ink text-label font-bold transition-all duration-200 hover:scale-105 active:scale-95"
+                className="mt-1 px-4 py-2 rounded-lg ui-button ui-accent-1 text-ink text-label font-bold transition-all duration-200 hover:scale-105 active:scale-95"
                 aria-label={`Start exploring ${s.name}`}
               >
                 Start exploring
@@ -989,7 +989,7 @@ function HomeDashboardContent() {
                     onClick={() => setShowLockedPreview(null)}
                     className="absolute top-4 right-4 text-muted-light hover:text-muted-foreground text-xl"
                   >
-                    ✕
+                    âœ•
                   </button>
 
                   {/* State preview */}
@@ -1008,22 +1008,22 @@ function HomeDashboardContent() {
                   {/* State facts */}
                   <div className="space-y-3">
                     <div className="p-4 rounded-2xl bg-orange-soft border-l-4 border-orange shadow-elevated-1 hover:shadow-elevated-2 transition-all">
-                      <div className="text-label text-orange-900 uppercase tracking-wider font-bold">🏛️ Monument</div>
+                      <div className="text-label text-orange-900 uppercase tracking-wider font-bold">ðŸ›ï¸ Monument</div>
                       <div className="text-body text-orange-800 mt-2 font-semibold">{state.monumentName}</div>
                     </div>
 
                     <div className="p-4 rounded-2xl bg-success-soft border-l-4 border-success shadow-elevated-1 hover:shadow-elevated-2 transition-all">
-                      <div className="text-label text-success uppercase tracking-wider font-bold">🦁 Wildlife</div>
+                      <div className="text-label text-success uppercase tracking-wider font-bold">ðŸ¦ Wildlife</div>
                       <div className="text-body text-success mt-2 font-semibold">{state.animalName}</div>
                     </div>
 
                     <div className="p-4 rounded-2xl bg-info-soft border-l-4 border-info shadow-elevated-1 hover:shadow-elevated-2 transition-all">
-                      <div className="text-label text-info uppercase tracking-wider font-bold">💡 Fun Fact</div>
+                      <div className="text-label text-info uppercase tracking-wider font-bold">ðŸ’¡ Fun Fact</div>
                       <div className="text-body text-blue-800 mt-2 font-semibold">{state.funFact}</div>
                     </div>
 
                     <div className="p-4 rounded-2xl bg-purple-soft border-l-4 border-purple shadow-elevated-1 hover:shadow-elevated-2 transition-all">
-                      <div className="text-label text-purple-900 uppercase tracking-wider font-bold">🔓 Unlock Path</div>
+                      <div className="text-label text-purple-900 uppercase tracking-wider font-bold">ðŸ”“ Unlock Path</div>
                       <div className="text-body text-purple-800 mt-2 font-semibold">{getUnlockRequirement(state.name)}</div>
                     </div>
                   </div>
@@ -1032,14 +1032,14 @@ function HomeDashboardContent() {
                   <div className="mt-5 space-y-2">
                     <Link
                       to="/journey"
-                      className="w-full h-12 rounded-2xl clay-button clay-saffron text-ink font-extrabold flex items-center justify-center hover:scale-105 transition-all active:scale-95"
+                      className="w-full h-12 rounded-2xl ui-button ui-accent-1 text-ink font-extrabold flex items-center justify-center hover:scale-105 transition-all active:scale-95"
                       onClick={() => fxTap()}
                     >
                       View Journey Map
                     </Link>
                     <button
                       onClick={() => setShowLockedPreview(null)}
-                      className="w-full h-11 rounded-2xl clay-button clay-white text-ink font-bold hover:scale-105 transition-all active:scale-95"
+                      className="w-full h-11 rounded-2xl ui-button ui-accent-1-soft text-ink font-bold hover:scale-105 transition-all active:scale-95"
                     >
                       Close
                     </button>
@@ -1075,7 +1075,7 @@ function StatCard({
     green: "border-success/25",
   }[tone];
   return (
-    <div className={`rounded-2xl clay-card clay-white border ${border} p-3`}>
+    <div className={`rounded-2xl ui-card ui-accent-1-soft border ${border} p-3`}>
       <div className="text-lg">{icon}</div>
       <div className="text-display text-h2 leading-snug mt-1">
         {value}
@@ -1165,7 +1165,7 @@ function MiniStateCard({
       </div>
       <div className="mt-2 text-display font-extrabold text-sm">{name}</div>
       <div className="text-[10px] font-bold text-muted-foreground">
-        {locked ? "🔒 Locked" : "Unlocked"}
+        {locked ? "ðŸ”’ Locked" : "Unlocked"}
       </div>
     </div>
   );
@@ -1208,7 +1208,7 @@ function StateDetailModal({
           onClick={onClose}
           className="absolute top-4 right-4 h-8 w-8 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:bg-muted"
         >
-          ✕
+          âœ•
         </button>
 
         {/* State Display */}
@@ -1229,7 +1229,7 @@ function StateDetailModal({
             {stateName}
           </h2>
           <p className="text-sm text-slate-600 mt-1">
-            {state.isUT ? "Union Territory" : "State"} · {stateData.capital}
+            {state.isUT ? "Union Territory" : "State"} Â· {stateData.capital}
           </p>
         </div>
 
@@ -1237,7 +1237,7 @@ function StateDetailModal({
         {isLocked && (
           <div className="rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-warning p-4 space-y-3">
             <p className="text-h5 text-warning flex items-center gap-2">
-              👀 Sneak Peek Preview
+              ðŸ‘€ Sneak Peek Preview
             </p>
             <div className="space-y-2 text-sm">
               <div className="flex items-start gap-2">
@@ -1266,7 +1266,7 @@ function StateDetailModal({
         {isLocked ? (
           <div className="rounded-2xl bg-warning-soft border-2 border-warning p-4">
             <p className="text-h5 text-warning mb-2">
-              🔐 Locked
+              ðŸ” Locked
             </p>
             <p className="text-body text-orange-700">
               Complete the previous state to unlock this adventure!
@@ -1275,7 +1275,7 @@ function StateDetailModal({
         ) : isDone ? (
           <div className="rounded-2xl bg-success-soft border-2 border-success p-4">
             <p className="text-h5 text-success mb-2">
-              ✓ Completed
+              âœ“ Completed
             </p>
             <p className="text-body text-success">
               You've earned all badges for this state!
@@ -1284,7 +1284,7 @@ function StateDetailModal({
         ) : (
           <div className="roundepppd-2xl bg-info-soft border-2 border-info p-4">
             <p className="text-h5 text-info mb-2">
-              ▶ In Progress
+              â–¶ In Progress
             </p>
             <p className="text-body text-blue-800">
               Complete 3 cards and take the quiz to unlock the next state!
@@ -1308,7 +1308,7 @@ function StateDetailModal({
               }}
               className="flex-1 h-12 rounded-2xl bg-gradient-to-r from-saffron-400 to-saffron-500 text-display font-extrabold text-white shadow-lg hover:shadow-xl transition"
             >
-              {isDone ? "🎖️ Review" : "▶ Play"}
+              {isDone ? "ðŸŽ–ï¸ Review" : "â–¶ Play"}
             </button>
           )}
         </div>
@@ -1334,10 +1334,10 @@ export function JourneyMapScreen() {
 
     // Check for milestone achievements
     const milestones = [
-      { threshold: 25, emoji: "🎯", message: "Quarter Way There! 25% Complete!" },
-      { threshold: 50, emoji: "🌎", message: "Halfway Around India! 50% Complete!" },
-      { threshold: 75, emoji: "🏁", message: "Almost Complete! 75% Explored!" },
-      { threshold: 100, emoji: "👑", message: "India Master! 100% Complete!" },
+      { threshold: 25, emoji: "ðŸŽ¯", message: "Quarter Way There! 25% Complete!" },
+      { threshold: 50, emoji: "ðŸŒŽ", message: "Halfway Around India! 50% Complete!" },
+      { threshold: 75, emoji: "ðŸ", message: "Almost Complete! 75% Explored!" },
+      { threshold: 100, emoji: "ðŸ‘‘", message: "India Master! 100% Complete!" },
     ];
 
     // Track which milestones have been celebrated in localStorage
@@ -1374,7 +1374,7 @@ export function JourneyMapScreen() {
     const handleBack = () => {
       appLogger.info('journey_map_screen', 'handleJourneyBack called, current view:', view?.screen);
       
-      // Navigate back within internal views: card → hub → intro → map
+      // Navigate back within internal views: card â†’ hub â†’ intro â†’ map
       if (view?.screen === "card" || view?.screen === "quiz") {
         // From card or quiz, go back to hub
         appLogger.info('journey_map_screen', 'Back from card/quiz to hub');
@@ -1552,7 +1552,7 @@ export function JourneyMapScreen() {
         }}
         onDone={() => {
           appLogger.info('journey_map_screen', 'QuizScreen onDone clicked');
-          // Navigate to completion screen which will show postcard → unlock → explorer
+          // Navigate to completion screen which will show postcard â†’ unlock â†’ explorer
           const slug = view.name.toLowerCase().replace(/\s+/g, "-");
           navigate({ to: "/state/$slug/complete", params: { slug } });
         }}
@@ -1568,7 +1568,7 @@ export function JourneyMapScreen() {
         
         {/* Journey Info */}
         <div className="flex items-center gap-3 relative z-10">
-          <div className="h-11 w-11 rounded-2xl clay-card clay-white p-1 flex items-center justify-center overflow-hidden">
+          <div className="h-11 w-11 rounded-2xl ui-card ui-accent-1-soft p-1 flex items-center justify-center overflow-hidden">
             <img src={getAvatarImage(p.avatar)} alt={getAvatarName(p.avatar)} className="w-full h-full object-cover" />
           </div>
           <div className="flex-1">
@@ -1576,7 +1576,7 @@ export function JourneyMapScreen() {
             <div className="text-sm font-bold text-white flex items-center gap-2">
               {p.streak > 0 && (
                 <span className="inline-flex items-center gap-0.5 px-2 py-1 bg-white/30 rounded-full">
-                  <span>🔥</span>
+                  <span>ðŸ”¥</span>
                   <span className="font-extrabold">{p.streak}-day streak!</span>
                 </span>
               )}
@@ -1600,7 +1600,7 @@ export function JourneyMapScreen() {
             {(() => {
               const msg = getJourneyMotivationalMessage(completedStates);
               const milestoneCount = 36 - completedStates;
-              return milestoneCount > 0 ? `${milestoneCount} more to grow your tree` : "🌳 You grew the tree!";
+              return milestoneCount > 0 ? `${milestoneCount} more to grow your tree` : "ðŸŒ³ You grew the tree!";
             })()}
           </div>
         </div>
@@ -1630,13 +1630,13 @@ export function JourneyMapScreen() {
                   }}
                   className={`px-4 py-3 rounded-full font-extrabold whitespace-nowrap transition active:scale-95 ${
                     isSelected
-                      ? "clay-button clay-saffron text-ink"
-                      : "clay-button clay-white text-ink"
+                      ? "ui-button ui-accent-1 text-ink"
+                      : "ui-button ui-accent-1-soft text-ink"
                   }`}
                   style={{ fontSize: 'var(--type-body)', fontWeight: 'var(--type-body-weight)' }}
                   title={`${regionDone}/${regionStates.length} explored`}
                 >
-                  {region.emoji} {region.name.split(" ")[0]} {isSelected && regionDone === regionStates.length && "✓"}
+                  {region.emoji} {region.name.split(" ")[0]} {isSelected && regionDone === regionStates.length && "âœ“"}
                 </button>
               );
             })}
@@ -1657,7 +1657,7 @@ export function JourneyMapScreen() {
                   {region.name}
                 </div>
                 <div className="text-base font-semibold text-slate-600 mt-1">
-                  {regionDone}/{regionStates.length} explored {regionDone === regionStates.length && "✨ Region Complete!"}
+                  {regionDone}/{regionStates.length} explored {regionDone === regionStates.length && "âœ¨ Region Complete!"}
                 </div>
                 <div className="mt-2 h-2 bg-[oklch(0.9_0.02_260)] rounded-full overflow-hidden">
                   <div
@@ -1783,7 +1783,7 @@ export function StateIntroScreen({
         {/* Breadcrumb Navigation */}
         <div className="absolute top-3 left-16 flex items-center gap-1 text-white text-xs font-bold">
           <span className="opacity-75">Journey</span>
-          <span className="opacity-50">›</span>
+          <span className="opacity-50">â€º</span>
           {currentRegion && (
             <>
               <img
@@ -1794,7 +1794,7 @@ export function StateIntroScreen({
                 decoding="async"
               />
               <span className="opacity-75">{currentRegion.name}</span>
-              <span className="opacity-50">›</span>
+              <span className="opacity-50">â€º</span>
             </>
           )}
           <img
@@ -1817,7 +1817,7 @@ export function StateIntroScreen({
           }}
           className="absolute top-3 left-4 h-12 w-12 rounded-full bg-white/25 backdrop-blur flex items-center justify-center text-white text-xl"
         >
-          ‹
+          â€¹
         </button>
         <div className="absolute top-4 right-4 flex items-center gap-1.5 bg-white/25 backdrop-blur rounded-full px-3 py-1.5 text-white text-xs font-extrabold">
           State {stateIndex(state.name) + 1} of {TOTAL_STATES}
@@ -1859,9 +1859,9 @@ export function StateIntroScreen({
         </div>
 
         <div className="mt-5 grid grid-cols-2 gap-3">
-          <IntroFact label="Capital" value={state.capital} icon="🏛️" />
-          <IntroFact label="Language" value={state.language} icon="🗣️" />
-          <IntroFact label="Population" value={state.population} icon="👥" />
+          <IntroFact label="Capital" value={state.capital} icon="ðŸ›ï¸" />
+          <IntroFact label="Language" value={state.language} icon="ðŸ—£ï¸" />
+          <IntroFact label="Population" value={state.population} icon="ðŸ‘¥" />
           <IntroFact label="Animal" value={state.animalName} icon={state.animal} />
         </div>
 
@@ -1871,9 +1871,9 @@ export function StateIntroScreen({
             fxTap();
             onContinue?.();
           }}
-          className="mt-6 w-full h-14 clay-button clay-saffron text-ink text-h4 text-display"
+          className="mt-6 w-full h-14 ui-button ui-accent-1 text-ink text-h4 text-display"
         >
-          Start Exploring! ✈️
+          Start Exploring! âœˆï¸
         </button>
       </div>
     </div>
@@ -1891,7 +1891,7 @@ function IntroFact({
   icon: string;
 }) {
   return (
-    <div className="clay-card clay-white p-3">
+    <div className="ui-card ui-accent-1-soft p-3">
       <div className="text-2xl">{icon}</div>
       <div className="text-label text-ink">
         {label}
@@ -1998,10 +1998,10 @@ export function LearningHubScreen({
     // Celebrate at 3/6 (halfway milestone)
     if (completedCategories === 3 && !celebratedCategories.has(3)) {
       celebration.custom(
-        `Halfway there! 🌟`,
-        "🏃‍♂️",
+        `Halfway there! ðŸŒŸ`,
+        "ðŸƒâ€â™‚ï¸",
         {
-          subtitle: `3/6 categories explored! Keep up the momentum 💨`,
+          subtitle: `3/6 categories explored! Keep up the momentum ðŸ’¨`,
           confetti: true,
           duration: 2500,
           type: "success",
@@ -2023,12 +2023,12 @@ export function LearningHubScreen({
 
   // Track completion per category - all cards must be read
   const cards = [
-    { icon: "🏛️", title: "Capital", sub: state.capital, tone: "orange" as const },
-    { icon: "🗣️", title: "Language", sub: state.language, tone: "blue" as const },
-    { icon: "🍛", title: "Famous Food", sub: state.food, tone: "gold" as const },
+    { icon: "ðŸ›ï¸", title: "Capital", sub: state.capital, tone: "orange" as const },
+    { icon: "ðŸ—£ï¸", title: "Language", sub: state.language, tone: "blue" as const },
+    { icon: "ðŸ›", title: "Famous Food", sub: state.food, tone: "gold" as const },
     { icon: state.monument, title: "Places", sub: state.monumentName, tone: "green" as const },
     { icon: state.animal, title: "State Animal", sub: state.animalName, tone: "orange" as const },
-    { icon: "💡", title: "Fun Fact", sub: state.funFact, tone: "blue" as const },
+    { icon: "ðŸ’¡", title: "Fun Fact", sub: state.funFact, tone: "blue" as const },
   ].map((c, i) => {
     // Category is complete only if ALL cards in it are read
     const isCategoryComplete = cardCounts[i].total > 0 && 
@@ -2053,7 +2053,7 @@ export function LearningHubScreen({
         {/* Breadcrumb Navigation Context */}
         <div className="mb-2 flex items-center gap-1 text-white text-xs font-bold px-12">
           <span className="opacity-75">Journey</span>
-          <span className="opacity-50">›</span>
+          <span className="opacity-50">â€º</span>
           {currentRegion && (
             <>
               <img
@@ -2064,7 +2064,7 @@ export function LearningHubScreen({
                 decoding="async"
               />
               <span className="opacity-75">{currentRegion.name}</span>
-              <span className="opacity-50">›</span>
+              <span className="opacity-50">â€º</span>
             </>
           )}
           <img
@@ -2088,7 +2088,7 @@ export function LearningHubScreen({
             }}
             className="h-12 w-12 rounded-full bg-white/25 flex items-center justify-center text-white text-xl"
           >
-            ‹
+            â€¹
           </button>
           <div className="flex-1 text-white">
             <div className="text-xs font-bold text-white/90">
@@ -2097,12 +2097,12 @@ export function LearningHubScreen({
             <div className="text-display text-xl font-extrabold">{state.name}</div>
             {progress.streak > 0 && (
               <div className="text-xs font-bold text-white/80 mt-0.5">
-                🔥 Day {progress.streak} streak
+                ðŸ”¥ Day {progress.streak} streak
               </div>
             )}
           </div>
           <div className="flex items-center gap-1 text-white text-display font-extrabold">
-            <span>⭐</span> {completedCategories * XP_PER_CARD}
+            <span>â­</span> {completedCategories * XP_PER_CARD}
           </div>
         </div>
 
@@ -2139,15 +2139,15 @@ export function LearningHubScreen({
             }
           }}
           disabled={completedCategories < 6 || showDecisionModal}
-          className={`w-full h-14 clay-button text-h4 text-display font-extrabold transition-all active:scale-95 ${
+          className={`w-full h-14 ui-button text-h4 text-display font-extrabold transition-all active:scale-95 ${
             completedCategories === 6 && !showDecisionModal
-              ? "clay-success text-ink hover:shadow-lg hover:scale-105 animate-pulse"
-              : "clay-white text-ink opacity-40 cursor-not-allowed"
+              ? "ui-accent-3 text-ink hover:shadow-lg hover:scale-105 animate-pulse"
+              : "ui-accent-1-soft text-ink opacity-40 cursor-not-allowed"
           }`}
         >
           {completedCategories === 6 && !showDecisionModal
-            ? "✨ Take the Quiz! 🎯" 
-            : `🔒 Quiz Locked (${completedCategories}/6 done)`
+            ? "âœ¨ Take the Quiz! ðŸŽ¯" 
+            : `ðŸ”’ Quiz Locked (${completedCategories}/6 done)`
           }
         </button>
       </div>
@@ -2158,7 +2158,7 @@ export function LearningHubScreen({
           <div className="bg-gradient-to-b from-yellow-300 to-orange-200 rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden animate-in zoom-in-95 flex flex-col">
             {/* Header */}
             <div className="p-6 text-center">
-              <div className="text-5xl mb-4">🎉</div>
+              <div className="text-5xl mb-4">ðŸŽ‰</div>
               <div className="text-ink text-xs font-black uppercase tracking-[0.3em] mb-2">
                 All Done!
               </div>
@@ -2179,9 +2179,9 @@ export function LearningHubScreen({
                   setShowDecisionModal(false);
                   onQuiz?.();
                 }}
-                className="w-full h-14 clay-button clay-success text-ink text-display font-extrabold active:scale-95 transition-all"
+                className="w-full h-14 ui-button ui-accent-3 text-ink text-display font-extrabold active:scale-95 transition-all"
               >
-                ✨ Start Quiz Now
+                âœ¨ Start Quiz Now
               </button>
 
               {/* Later button - with pulsing indicator */}
@@ -2190,9 +2190,9 @@ export function LearningHubScreen({
                   fxTap();
                   setShowDecisionModal(false);
                 }}
-                className="w-full h-14 clay-button clay-white text-ink text-display font-bold active:scale-95 transition-all"
+                className="w-full h-14 ui-button ui-accent-1-soft text-ink text-display font-bold active:scale-95 transition-all"
               >
-                ⏰ Ask Me Later
+                â° Ask Me Later
               </button>
             </div>
           </div>
@@ -2251,7 +2251,7 @@ function HubCard({
         fxTap();
         onOpen?.();
       }}
-      className={`relative text-left clay-card ${locked ? "clay-white opacity-70 pointer-events-none cursor-not-allowed" : done ? "clay-success" : "clay-white"} p-4 border-2 transition active:scale-[0.98] ${
+      className={`relative text-left ui-card ${locked ? "ui-accent-1-soft opacity-70 pointer-events-none cursor-not-allowed" : done ? "ui-accent-3" : "ui-accent-1-soft"} p-4 border-2 transition active:scale-[0.98] ${
         active ? ring : "border-transparent"
       }`}
     >
@@ -2265,17 +2265,17 @@ function HubCard({
         <div className={`mt-2 text-xs font-bold ${
           done ? "text-success" : "text-muted-foreground"
         }`}>
-          {categoryCardsRead}/{categoryCardsTotal}{done && " ✓"}
+          {categoryCardsRead}/{categoryCardsTotal}{done && " âœ“"}
         </div>
       )}
       {done && (
         <div className="absolute top-2 right-2 h-8 w-8 rounded-full bg-gradient-to-br from-success to-emerald-600 text-white flex items-center justify-center text-h5 font-black shadow-lg animate-bounce">
-          ✓
+          âœ“
         </div>
       )}
       {locked && (
         <div className="absolute top-2 right-2 h-7 w-7 rounded-full bg-black/50 text-white flex items-center justify-center text-xs">
-          🔒
+          ðŸ”’
         </div>
       )}
     </button>
@@ -2309,7 +2309,7 @@ export function learningCardsFor(stateName?: string, displayLanguage: string = "
     {
       kicker: "Capital",
       title: state.capital,
-      icon: "🏛️",
+      icon: "ðŸ›ï¸",
       chip: "Capital City",
       body: `${state.capital} is the capital city of ${state.name}. It is where the state's government works from.`,
       enrichedKey: "capital" as const,
@@ -2317,7 +2317,7 @@ export function learningCardsFor(stateName?: string, displayLanguage: string = "
     {
       kicker: "Language",
       title: state.language,
-      icon: "🗣️",
+      icon: "ðŸ—£ï¸",
       chip: "Language",
       body: `People in ${state.name} mostly speak ${state.language}. Try saying hello in it!`,
       enrichedKey: "language" as const,
@@ -2325,7 +2325,7 @@ export function learningCardsFor(stateName?: string, displayLanguage: string = "
     {
       kicker: "Famous Food",
       title: state.food,
-      icon: "🍛",
+      icon: "ðŸ›",
       chip: "Food",
       body: `${state.food} is a favourite dish of ${state.name}. Yum!`,
       enrichedKey: "food" as const,
@@ -2349,7 +2349,7 @@ export function learningCardsFor(stateName?: string, displayLanguage: string = "
     {
       kicker: "Fun Fact",
       title: "Did you know?",
-      icon: "💡",
+      icon: "ðŸ’¡",
       chip: "Fun Fact",
       body: state.funFact,
       enrichedKey: "funFact" as const,
@@ -2392,7 +2392,7 @@ export function learningCardsFor(stateName?: string, displayLanguage: string = "
           allCards.push({
             kicker: "Cool Fact",
             title: `Cool Fact #${idx + 1}`,
-            icon: "⭐",
+            icon: "â­",
             chip: "Cool Fact",
             body: getText(fact),
             type: "coolFact",
@@ -2408,7 +2408,7 @@ export function learningCardsFor(stateName?: string, displayLanguage: string = "
         allCards.push({
           kicker: "Trivia",
           title: "Did You Know?",
-          icon: "🤔",
+          icon: "ðŸ¤”",
           chip: "Did You Know?",
           body: getText(cardContent.didYouKnow),
           type: "didYouKnow",
@@ -2423,7 +2423,7 @@ export function learningCardsFor(stateName?: string, displayLanguage: string = "
         allCards.push({
           kicker: "Activity",
           title: "Try This Activity",
-          icon: "🎮",
+          icon: "ðŸŽ®",
           chip: "Try This Activity",
           body: getText(cardContent.tryThis),
           type: "tryThis",
@@ -2586,12 +2586,12 @@ export function LearningCardScreen({
     return (
       <div className="w-full h-screen flex items-center justify-center bg-gradient-to-b from-info-soft to-white">
         <div className="text-center">
-          <div className="text-5xl mb-3">⚠️</div>
+          <div className="text-5xl mb-3">âš ï¸</div>
           <h1 className="text-h4 text-ink mb-2">Card content unavailable</h1>
           <p className="text-sm text-slate-700 mb-4">Please try again or go back</p>
           <button
             onClick={() => window.history.back()}
-            className="clay-button clay-explorer text-ink px-4 py-2 font-bold"
+            className="ui-button ui-accent-2 text-ink px-4 py-2 font-bold"
           >
             Go Back
           </button>
@@ -2661,9 +2661,9 @@ export function LearningCardScreen({
         // DISABLED FOR NOW - PHASE 2: Card learning celebration
         // celebration.custom(
         //   `${currentCard.kicker} card learned!`,
-        //   "📚",
+        //   "ðŸ“š",
         //   {
-        //     subtitle: `+${XP_PER_CARD} XP earned • ${cardIndexInCategory + 1}/${cardsInCurrentCategory.length} cards in ${currentCard.kicker}`,
+        //     subtitle: `+${XP_PER_CARD} XP earned â€¢ ${cardIndexInCategory + 1}/${cardsInCurrentCategory.length} cards in ${currentCard.kicker}`,
         //     confetti: true,
         //     duration: 2000,
         //     type: "success",
@@ -2691,9 +2691,9 @@ export function LearningCardScreen({
         // DISABLED FOR NOW - PHASE 2: Card learning celebration
         // celebration.custom(
         //   `${currentCard.kicker} card learned!`,
-        //   "📚",
+        //   "ðŸ“š",
         //   {
-        //     subtitle: `+${XP_PER_CARD} XP earned • ${currentCard.kicker} category complete! 🎓`,
+        //     subtitle: `+${XP_PER_CARD} XP earned â€¢ ${currentCard.kicker} category complete! ðŸŽ“`,
         //     confetti: true,
         //     duration: 2000,
         //     type: "success",
@@ -2734,9 +2734,9 @@ export function LearningCardScreen({
       // Previously showed: +75 XP for 3 sub-cards, but only 25 was awarded
       celebration.custom(
         `${categoryName} mastered!`,
-        "🌟",
+        "ðŸŒŸ",
         {
-          subtitle: `+${XP_PER_CARD} XP earned • ${mainCardIdx + 1}/6 categories mastered`,
+          subtitle: `+${XP_PER_CARD} XP earned â€¢ ${mainCardIdx + 1}/6 categories mastered`,
           confetti: true,
           duration: 2500,
           type: "success",
@@ -2768,7 +2768,7 @@ export function LearningCardScreen({
           aria-label="Close learning card"
           className="h-12 w-12 rounded-full bg-white shadow-soft flex items-center justify-center text-h4"
         >
-          ✕
+          âœ•
         </button>
 
         {/* Card counter and progress bar */}
@@ -2796,7 +2796,7 @@ export function LearningCardScreen({
                 }}
                 className={`px-3 py-1.5 rounded-full text-sm font-bold transition-all ${
                   displayLanguage === lang
-                    ? "clay-button clay-explorer text-ink shadow-md"
+                    ? "ui-button ui-accent-2 text-ink shadow-md"
                     : "bg-white text-ink"
                 }`}
               >
@@ -2849,13 +2849,13 @@ export function LearningCardScreen({
           }`}
           title={hasFeatureConsent('audio') ? "Play card content" : "Enable audio in settings to listen"}
         >
-          {playingCardIndex === currentCardIndex ? "⏸" : "🔊"} Listen
+          {playingCardIndex === currentCardIndex ? "â¸" : "ðŸ”Š"} Listen
         </button>
       </div>
 
       <div className="px-5 mt-3">
         <div className="text-xs font-black uppercase tracking-wider text-saffron">
-          {state.name} · {card.kicker}
+          {state.name} Â· {card.kicker}
         </div>
         <h2 className="text-display text-2xl font-extrabold leading-tight mt-1">
           {card.title}
@@ -2863,7 +2863,7 @@ export function LearningCardScreen({
       </div>
 
       <div 
-        className="mx-5 mt-4 clay-card clay-white p-4 flex-1 flex flex-col relative overflow-hidden"
+        className="mx-5 mt-4 ui-card ui-accent-1-soft p-4 flex-1 flex flex-col relative overflow-hidden"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
@@ -2871,14 +2871,14 @@ export function LearningCardScreen({
         {/* Replay indicator - shown when user is replaying a card */}
         {isReplaying && (
           <div className="mb-3 p-3 bg-gradient-to-r from-purple-soft to-info-soft rounded-xl flex items-center gap-2 shadow-sm border border-purple">
-            <span className="text-lg">📖</span>
+            <span className="text-lg">ðŸ“–</span>
             <div className="flex-1">
               <p className="text-xs font-bold text-purple-900">Replaying this card</p>
               <p className="text-xs text-purple-700 font-medium">
-                You've mastered this! Keep practicing ✨
+                You've mastered this! Keep practicing âœ¨
               </p>
             </div>
-            <span className="text-2xl">✨</span>
+            <span className="text-2xl">âœ¨</span>
           </div>
         )}
         
@@ -2894,7 +2894,7 @@ export function LearningCardScreen({
             <Chip icon={card.icon} tone={card.chipTone === "purple" ? "blue" : card.chipTone as any}>
               {card.chip}
             </Chip>
-            <Chip icon="📍" tone="blue">
+            <Chip icon="ðŸ“" tone="blue">
               {state.name}
             </Chip>
           </div>
@@ -2906,14 +2906,14 @@ export function LearningCardScreen({
         {/* Swipe hint for non-last cards */}
         {!isLast && !isLastInMainCardSection && (
           <div className="mt-3 text-center text-xs font-semibold text-ink/50">
-            ← Swipe or tap Next →
+            â† Swipe or tap Next â†’
           </div>
         )}
 
         {/* Mastery badge for replayed cards */}
         {isReplaying && replayCount > 0 && (
           <div className="mt-3 px-3 py-2 bg-gradient-to-r from-amber-100 to-orange-100 rounded-lg text-center border border-amber-300">
-            <p className="text-xs font-bold text-warning">⭐ Mastered! Replayed {replayCount}x</p>
+            <p className="text-xs font-bold text-warning">â­ Mastered! Replayed {replayCount}x</p>
           </div>
         )}
       </div>
@@ -2927,9 +2927,9 @@ export function LearningCardScreen({
               handleNext();
             }
           }}
-          className="w-full h-14 clay-button clay-saffron text-ink text-h4 text-display"
+          className="w-full h-14 ui-button ui-accent-1 text-ink text-h4 text-display"
         >
-          {isLastInMainCardSection ? (currentMainCardIndex === 5 ? "Take the Quiz! 🎯" : "Done! Back to Cards") : isReplaying ? "Replay Complete ✨" : "Got it! Next →"}
+          {isLastInMainCardSection ? (currentMainCardIndex === 5 ? "Take the Quiz! ðŸŽ¯" : "Done! Back to Cards") : isReplaying ? "Replay Complete âœ¨" : "Got it! Next â†’"}
         </button>
       </div>
 
@@ -2938,20 +2938,20 @@ export function LearningCardScreen({
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 space-y-4 animate-in zoom-in-95">
             <div className="text-center">
-              <div className="text-5xl mb-3">🎧</div>
+              <div className="text-5xl mb-3">ðŸŽ§</div>
               <h3 className="text-display text-xl font-extrabold text-ink">Enable Audio?</h3>
               <p className="text-sm text-slate-700 mt-2">
-                Turn on audio to hear the stories read aloud! 🎵
+                Turn on audio to hear the stories read aloud! ðŸŽµ
               </p>
             </div>
 
             <div className="bg-info-soft rounded-2xl p-4 space-y-2 text-sm">
               <div className="flex gap-2">
-                <span>🎧</span>
+                <span>ðŸŽ§</span>
                 <span className="font-semibold text-info">Stories read aloud</span>
               </div>
               <div className="flex gap-2">
-                <span>🌍</span>
+                <span>ðŸŒ</span>
                 <span className="font-semibold text-info">Available in multiple languages</span>
               </div>
             </div>
@@ -3159,9 +3159,9 @@ function QuizScreenContent({
             onClose?.();
           }}
           aria-label="Back to categories"
-          className="h-12 w-12 rounded-full clay-button clay-white text-ink flex items-center justify-center text-xl flex-shrink-0"
+          className="h-12 w-12 rounded-full ui-button ui-accent-1-soft text-ink flex items-center justify-center text-xl flex-shrink-0"
         >
-          ←
+          â†
         </button>
         
         {/* Progress Blocks - Color coded (Green=Correct, Red=Wrong, Blue=Current) */}
@@ -3189,7 +3189,7 @@ function QuizScreenContent({
       </div>
 
       {/* Status Bar with XP Info - Clean */}
-      <div className="px-5 py-2 mx-5 clay-card clay-white flex items-center justify-between text-xs">
+      <div className="px-5 py-2 mx-5 ui-card ui-accent-1-soft flex items-center justify-between text-xs">
         <div className="font-bold text-muted-foreground">
           Total: {answeredQuestions.filter(a => a.correct).length * 20} XP
         </div>
@@ -3205,17 +3205,17 @@ function QuizScreenContent({
           alt=""
           className={`w-16 h-16 object-contain ${result === "correct" ? "mascot-cheer" : ""}`}
         />
-        <div className="relative clay-card clay-white px-3 py-2 text-label font-bold">
+        <div className="relative ui-card ui-accent-1-soft px-3 py-2 text-label font-bold">
           {result === "correct"
-            ? "Nailed it! 🎉"
+            ? "Nailed it! ðŸŽ‰"
             : result === "wrong"
-            ? "Good try! Let's move on! 👉"
-            : "You've got this! 💪"}
-          <div className="absolute left-0 top-1/2 -translate-x-1 -translate-y-1/2 w-3 h-3 rotate-45 clay-card clay-white" />
+            ? "Good try! Let's move on! ðŸ‘‰"
+            : "You've got this! ðŸ’ª"}
+          <div className="absolute left-0 top-1/2 -translate-x-1 -translate-y-1/2 w-3 h-3 rotate-45 ui-card ui-accent-1-soft" />
         </div>
         {result === "correct" && (
-          <div className="ml-auto flex items-center gap-1 clay-card clay-success px-3 py-1">
-            <span>⭐</span>
+          <div className="ml-auto flex items-center gap-1 ui-card ui-accent-3 px-3 py-1">
+            <span>â­</span>
             <span className="text-display font-extrabold text-sm text-ink">+20 XP</span>
           </div>
         )}
@@ -3242,12 +3242,12 @@ function QuizScreenContent({
               onClick={() => onSelect(label)}
               className={`h-16 rounded-2xl px-5 flex items-center justify-between text-h4 text-display transition-all active:scale-[0.99] hover:scale-[1.02] ${
                 isCorrectPick
-                  ? "clay-button clay-success text-ink"
+                  ? "ui-button ui-accent-3 text-ink"
                   : isWrongPick
-                  ? "clay-button clay-white text-ink opacity-60"
+                  ? "ui-button ui-accent-1-soft text-ink opacity-60"
                   : isSelected
-                  ? "clay-button clay-explorer text-ink"
-                  : "clay-button clay-white text-ink"
+                  ? "ui-button ui-accent-2 text-ink"
+                  : "ui-button ui-accent-1-soft text-ink"
               }`}
             >
               {label}
@@ -3262,7 +3262,7 @@ function QuizScreenContent({
                     : "bg-muted text-muted-foreground"
                 }`}
               >
-                {isCorrectPick ? "✓" : isWrongPick ? "✕" : isSelected ? "✓" : ""}
+                {isCorrectPick ? "âœ“" : isWrongPick ? "âœ•" : isSelected ? "âœ“" : ""}
               </span>
             </button>
           );
@@ -3275,20 +3275,20 @@ function QuizScreenContent({
           disabled={!selected}
           className={`w-full h-14 rounded-2xl text-h4 text-display disabled:opacity-50 ${
             result === "correct"
-              ? "clay-button clay-success text-ink"
+              ? "ui-button ui-accent-3 text-ink"
               : result === "wrong"
-              ? "clay-button clay-explorer text-ink"
-              : "clay-button clay-saffron text-ink"
+              ? "ui-button ui-accent-2 text-ink"
+              : "ui-button ui-accent-1 text-ink"
           }`}
         >
           {result === "correct"
             ? isLastQuestion
-              ? "Finish Quiz 🎉"
-              : "Next Question →"
+              ? "Finish Quiz ðŸŽ‰"
+              : "Next Question â†’"
             : result === "wrong"
             ? isLastQuestion
-              ? "Finish Quiz 🎉"
-              : "Next Question →"
+              ? "Finish Quiz ðŸŽ‰"
+              : "Next Question â†’"
             : "Check Answer"}
         </button>
       </div>
@@ -3304,10 +3304,10 @@ export function CorrectAnswerScreen({ stateName, onDismiss }: { stateName?: stri
       {/* Premium Close Button - Top Right */}
       <button
         onClick={onDismiss}
-        className="absolute top-3 right-3 clay-button clay-white text-ink w-8 h-8 rounded-full flex items-center justify-center text-lg transition-all duration-200 z-10"
+        className="absolute top-3 right-3 ui-button ui-accent-1-soft text-ink w-8 h-8 rounded-full flex items-center justify-center text-lg transition-all duration-200 z-10"
         aria-label="Close"
       >
-        ✕
+        âœ•
       </button>
 
       {/* confetti dots */}
@@ -3328,19 +3328,19 @@ export function CorrectAnswerScreen({ stateName, onDismiss }: { stateName?: stri
       <div className="flex-1 flex flex-col items-center justify-center px-6 relative">
         <div className="relative">
           <div className="absolute inset-0 blur-2xl bg-white/40 rounded-full" />
-          <div className="relative h-32 w-32 rounded-full clay-card clay-success flex items-center justify-center shadow-2xl">
-            <div className="text-6xl">✅</div>
+          <div className="relative h-32 w-32 rounded-full ui-card ui-accent-3 flex items-center justify-center shadow-2xl">
+            <div className="text-6xl">âœ…</div>
           </div>
         </div>
         <h1 className="mt-6 text-h1 text-white text-center leading-relaxed">
           Awesome!
         </h1>
         <p className="mt-2 text-white/95 font-bold text-center">
-          You got it right — {state.capital} is the capital of {state.name}!
+          You got it right â€” {state.capital} is the capital of {state.name}!
         </p>
 
-        <div className="mt-6 clay-card clay-gold px-5 py-3 flex items-center gap-3">
-          <span className="text-3xl">⭐</span>
+        <div className="mt-6 ui-card ui-accent-4 px-5 py-3 flex items-center gap-3">
+          <span className="text-3xl">â­</span>
           <div>
             <div className="text-xs font-bold opacity-90 text-ink">You earned</div>
             <div className="text-display text-2xl font-extrabold leading-snug text-ink">
@@ -3351,8 +3351,8 @@ export function CorrectAnswerScreen({ stateName, onDismiss }: { stateName?: stri
       </div>
 
       <div className="p-6 relative">
-        <button className="w-full h-14 clay-button clay-saffron text-ink text-display text-lg font-extrabold animate-pulse active:scale-95 transition-transform">
-          Next Question →
+        <button className="w-full h-14 ui-button ui-accent-1 text-ink text-display text-lg font-extrabold animate-pulse active:scale-95 transition-transform">
+          Next Question â†’
         </button>
       </div>
     </div>
@@ -3364,7 +3364,7 @@ export function StateUnlockScreen({
   stateName,
   onContinue,
 }: { stateName?: string; onContinue?: () => void } = {}) {
-  const state = stateName ? getState(stateName) : (INDIA_STATES && INDIA_STATES.length > 1 ? INDIA_STATES[1] : INDIA_STATES[0] || { name: "India", emoji: "🇮🇳", nickname: "Incredible India" });
+  const state = stateName ? getState(stateName) : (INDIA_STATES && INDIA_STATES.length > 1 ? INDIA_STATES[1] : INDIA_STATES[0] || { name: "India", emoji: "ðŸ‡®ðŸ‡³", nickname: "Incredible India" });
   const art = STATE_ART[state.name];
 
   // PHASE 1b: Play sound effect when state unlocks
@@ -3383,7 +3383,7 @@ export function StateUnlockScreen({
         className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/30 hover:bg-white/50 text-white flex items-center justify-center text-lg transition-all duration-200 z-10"
         aria-label="Close"
       >
-        ✕
+        âœ•
       </button>
 
       <Cloud className="absolute top-10 left-2 w-28 opacity-90" />
@@ -3433,9 +3433,9 @@ export function StateUnlockScreen({
             fxTap();
             onContinue?.();
           }}
-          className="w-full h-14 clay-button clay-saffron text-ink text-display text-lg font-extrabold"
+          className="w-full h-14 ui-button ui-accent-1 text-ink text-display text-lg font-extrabold"
         >
-          Continue Adventure ✈️
+          Continue Adventure âœˆï¸
         </button>
       </div>
 
@@ -3473,7 +3473,7 @@ function Stamp({
   if (!filled) {
     return (
       <div className="aspect-square rounded-2xl border-2 border-dashed border-muted-foreground/30 flex flex-col items-center justify-center text-muted-foreground">
-        <div className="text-3xl opacity-40">🔒</div>
+        <div className="text-3xl opacity-40">ðŸ”’</div>
         <div className="text-[11px] font-extrabold mt-1">{name}</div>
       </div>
     );
@@ -3507,7 +3507,7 @@ function Stamp({
         className="absolute -top-1 -right-1 text-xs font-bold rotate-12 px-1.5 py-0.5 rounded"
         style={{ background: color, color: "white" }}
       >
-        ✓
+        âœ“
       </div>
     </button>
   );
@@ -3563,7 +3563,7 @@ function BadgeDetailModal({
           onClick={onClose}
           className="absolute top-4 right-4 h-8 w-8 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:bg-muted"
         >
-          ✕
+          âœ•
         </button>
 
         {/* Badge Display */}
@@ -3575,7 +3575,7 @@ function BadgeDetailModal({
                 : "bg-gradient-to-br from-gray-200 to-gray-300 opacity-60"
             }`}
           >
-            {badge.done ? badge.icon : "🔒"}
+            {badge.done ? badge.icon : "ðŸ”’"}
           </div>
 
           <h2 className="text-display text-2xl font-extrabold text-ink">
@@ -3600,9 +3600,9 @@ function BadgeDetailModal({
             Badge Type
           </p>
           <p className="text-body text-blue-800">
-            {badge.name === "Monument" && "🏛️ Learn about famous landmarks"}
-            {badge.name === "Animal" && "🦁 Discover local wildlife"}
-            {badge.name === "Explorer" && "🎖️ Master all cards in this state"}
+            {badge.name === "Monument" && "ðŸ›ï¸ Learn about famous landmarks"}
+            {badge.name === "Animal" && "ðŸ¦ Discover local wildlife"}
+            {badge.name === "Explorer" && "ðŸŽ–ï¸ Master all cards in this state"}
           </p>
         </div>
 
@@ -3622,7 +3622,7 @@ function BadgeDetailModal({
               }}
               className="flex-1 h-12 rounded-2xl bg-gradient-to-r from-green-400 to-success-soft0 text-display font-extrabold text-white shadow-lg hover:shadow-xl transition"
             >
-              🎉 Celebrate!
+              ðŸŽ‰ Celebrate!
             </button>
           )}
         </div>
@@ -3668,10 +3668,10 @@ export function BadgesScreen() {
   const allBadges = achievementBadgesFor(progress);
   const unlockedCount = allBadges.filter((b) => b.unlocked).length;
 
-  // Helper to generate progress stars (e.g. ⭐⭐☆)
+  // Helper to generate progress stars (e.g. â­â­â˜†)
   const getProgressStars = (progress: number, max: number): string => {
     const filledCount = Math.min(Math.ceil((progress / max) * 3), 3);
-    const stars = "⭐".repeat(filledCount) + "☆".repeat(3 - filledCount);
+    const stars = "â­".repeat(filledCount) + "â˜†".repeat(3 - filledCount);
     return stars;
   };
 
@@ -3690,7 +3690,7 @@ export function BadgesScreen() {
               : "text-muted-foreground hover:text-muted-dark"
           }`}
         >
-          🏆 Achievement Badges
+          ðŸ† Achievement Badges
         </button>
         <button
           onClick={() => {
@@ -3703,7 +3703,7 @@ export function BadgesScreen() {
               : "text-muted-foreground hover:text-muted-dark"
           }`}
         >
-          🎖️ State Badges
+          ðŸŽ–ï¸ State Badges
         </button>
       </div>
 
@@ -3715,7 +3715,7 @@ export function BadgesScreen() {
             <Cloud className="absolute top-2 right-4 w-14 opacity-40 pointer-events-none" />
             
             <div className="flex items-center gap-3 relative z-10">
-              <div className="h-14 w-14 rounded-2xl clay-card clay-white p-1 flex items-center justify-center overflow-hidden flex-shrink-0">
+              <div className="h-14 w-14 rounded-2xl ui-card ui-accent-1-soft p-1 flex items-center justify-center overflow-hidden flex-shrink-0">
                 <img src={getAvatarImage(progress.avatar)} alt={getAvatarName(progress.avatar)} className="w-full h-full object-cover" />
               </div>
               <div className="flex-1 text-white">
@@ -3723,7 +3723,7 @@ export function BadgesScreen() {
                   {progress.name}
                 </div>
                 <div className="text-xs font-bold text-white/80">
-                  🎉 {unlockedCount} Amazing Badges Collected!
+                  ðŸŽ‰ {unlockedCount} Amazing Badges Collected!
                 </div>
               </div>
             </div>
@@ -3737,8 +3737,8 @@ export function BadgesScreen() {
                   key={badge.id}
                   className={`rounded-3xl p-4 flex flex-col items-center gap-3 text-center transition-transform active:scale-95 animate-fade-in ${
                     badge.unlocked
-                      ? "clay-gold shadow-md"
-                      : "clay-white opacity-60"
+                      ? "ui-accent-4 shadow-md"
+                      : "ui-accent-1-soft opacity-60"
                   }`}
                   style={{ animationDelay: `${idx * 30}ms` }}
                 >
@@ -3765,7 +3765,7 @@ export function BadgesScreen() {
                   <div className="mt-1 pt-3 border-t border-white/20 w-full">
                     {badge.unlocked ? (
                       <div className="flex flex-col gap-1">
-                        <div className="text-lg font-extrabold">✓ You Did It!</div>
+                        <div className="text-lg font-extrabold">âœ“ You Did It!</div>
                         <div className="text-[11px] font-bold text-ink/70">
                           {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                         </div>
@@ -3774,7 +3774,7 @@ export function BadgesScreen() {
                       <div className="flex flex-col gap-2">
                         <div className="text-xl">{getProgressStars(badge.progress, badge.achievementMax)}</div>
                         <div className="text-[11px] font-bold text-muted-foreground">
-                          Keep going! 🌟
+                          Keep going! ðŸŒŸ
                         </div>
                       </div>
                     )}
@@ -3906,7 +3906,7 @@ function ProfileScreenContent() {
             aria-label="Go back"
             className="h-10 w-10 rounded-full bg-white/20 text-white flex items-center justify-center"
           >
-            ‹
+            â€¹
           </button>
           <div className="text-display font-extrabold text-white">Profile</div>
           <div className="w-10" /> {/* Spacer for alignment */}
@@ -3952,7 +3952,7 @@ function ProfileScreenContent() {
                         : "bg-white/80 hover:bg-white"
                   }`}
                 >
-                  {saveStatus === "saved" ? "✓ Saved" : saveStatus === "saving" ? "Saving..." : "Save"}
+                  {saveStatus === "saved" ? "âœ“ Saved" : saveStatus === "saving" ? "Saving..." : "Save"}
                 </button>
                 <button
                   onClick={handleCancelEdit}
@@ -3977,11 +3977,11 @@ function ProfileScreenContent() {
                   className="h-8 w-8 rounded-lg bg-white/20 hover:bg-white/30 text-white flex items-center justify-center text-sm transition"
                   title="Edit name"
                 >
-                  ✏️
+                  âœï¸
                 </button>
               </div>
               <div className="text-white/90 text-xs font-extrabold uppercase tracking-widest">
-                Junior Explorer · Age {p.ageBand}
+                Junior Explorer Â· Age {p.ageBand}
               </div>
             </div>
           )}
@@ -3989,7 +3989,7 @@ function ProfileScreenContent() {
       </div>
 
       <div className="px-5 -mt-6 relative z-10 animate-fade-in" style={{ animationDelay: "150ms" }}>
-        <div className="clay-card clay-white p-4 grid grid-cols-3 divide-x divide-black/5">
+        <div className="ui-card ui-accent-1-soft p-4 grid grid-cols-3 divide-x divide-black/5">
           <ProfileStat value={p.xp.toLocaleString()} label="XP" />
           <ProfileStat value={String(p.completed.length)} label="States" />
           <ProfileStat value={String(badgeCount(p))} label="Badges" />
@@ -4005,25 +4005,25 @@ function ProfileScreenContent() {
               fxTap();
               setIsSelectingAvatar(!isSelectingAvatar);
             }}
-            className="w-full clay-card clay-white p-3 flex items-center gap-3 transition active:scale-[0.99]"
+            className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
           >
             <div className="h-12 w-12 rounded-2xl gradient-saffron flex items-center justify-center text-2xl">
-              🎭
+              ðŸŽ­
             </div>
             <div className="flex-1 text-left">
               <div className="text-display font-extrabold text-[15px] leading-tight">
                 Change Avatar
               </div>
               <div className="text-[11px] font-bold text-muted-foreground">
-                {getAvatarName(p.avatar)} · Tap to select
+                {getAvatarName(p.avatar)} Â· Tap to select
               </div>
             </div>
-            <div className="text-muted-foreground text-xl">{isSelectingAvatar ? '✕' : '›'}</div>
+            <div className="text-muted-foreground text-xl">{isSelectingAvatar ? 'âœ•' : 'â€º'}</div>
           </button>
 
           {/* Avatar Selection Grid */}
           {isSelectingAvatar && (
-            <div className="mt-3 clay-card clay-white p-4 animate-fade-in">
+            <div className="mt-3 ui-card ui-accent-1-soft p-4 animate-fade-in">
               <div className="grid grid-cols-4 gap-2">
                 {avatarImages.map((a) => (
                   <button
@@ -4049,10 +4049,10 @@ function ProfileScreenContent() {
           )}
         </div>
 
-        {/* ⚙️ Settings Section Header */}
+        {/* âš™ï¸ Settings Section Header */}
         <div className="animate-fade-in pt-2" style={{ animationDelay: "195ms" }}>
           <h3 className="text-sm font-extrabold text-muted-foreground uppercase tracking-wider px-1 mb-2">
-            ⚙️ Settings
+            âš™ï¸ Settings
           </h3>
         </div>
 
@@ -4078,17 +4078,17 @@ function ProfileScreenContent() {
                 fxTap();
               }
             }}
-            className="w-full clay-card clay-white p-3 flex items-center gap-3 transition active:scale-[0.99]"
+            className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
           >
             <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center text-2xl">
-              📸
+              ðŸ“¸
             </div>
             <div className="flex-1 text-left">
               <div className="text-display font-extrabold text-[15px] leading-tight">Save Pictures</div>
               <div className="text-[11px] font-bold">
                 {hasFileConsent ? (
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 border border-green-200">
-                    Active ✓
+                    Active âœ“
                   </span>
                 ) : (
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200">
@@ -4112,32 +4112,32 @@ function ProfileScreenContent() {
             const daysUntilNext = nextMilestone - p.streak;
 
             return (
-              <div className="clay-card clay-white p-3 flex flex-col gap-2 transition">
+              <div className="ui-card ui-accent-1-soft p-3 flex flex-col gap-2 transition">
                 {/* Header Row */}
                 <div className="flex items-center gap-3">
                   <div className="h-12 w-12 rounded-2xl gradient-success flex items-center justify-center text-2xl">
-                    🎯
+                    ðŸŽ¯
                   </div>
                   <div className="flex-1">
                     <div className="text-display font-extrabold text-[15px] leading-tight">
                       Daily Goals
                     </div>
                     <div className="text-[11px] font-bold text-muted-foreground">
-                      🔥 {p.streak} day streak
+                      ðŸ”¥ {p.streak} day streak
                     </div>
                   </div>
                 </div>
 
                 {/* Daily Challenge */}
                 <div className="ml-15 text-[13px] font-extrabold text-ink">
-                  📍 {dailyGoalText}
+                  ðŸ“ {dailyGoalText}
                 </div>
 
                 {/* Next Reward */}
                 <div className="ml-15 text-[11px] font-bold text-warning">
                   {daysUntilNext === 0 
-                    ? "🎁 Claim your milestone reward!" 
-                    : `🎁 ${daysUntilNext} day${daysUntilNext !== 1 ? 's' : ''} until ${nextMilestone}-day bonus!`}
+                    ? "ðŸŽ Claim your milestone reward!" 
+                    : `ðŸŽ ${daysUntilNext} day${daysUntilNext !== 1 ? 's' : ''} until ${nextMilestone}-day bonus!`}
                 </div>
               </div>
             );
@@ -4148,10 +4148,10 @@ function ProfileScreenContent() {
           <Link
             to="/privacy"
             onClick={() => fxTap()}
-            className="clay-card clay-white p-3 flex items-center gap-3 transition active:scale-[0.99]"
+            className="ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
           >
             <div className="h-12 w-12 rounded-2xl gradient-explorer flex items-center justify-center text-2xl">
-              🔒
+              ðŸ”’
             </div>
             <div className="flex-1">
               <div className="text-display font-extrabold text-[15px] leading-tight">
@@ -4159,7 +4159,7 @@ function ProfileScreenContent() {
               </div>
               <div className="text-[11px] font-bold text-muted-foreground">How we handle your data</div>
             </div>
-            <div className="text-muted-foreground text-xl">›</div>
+            <div className="text-muted-foreground text-xl">â€º</div>
           </Link>
         </div>
       </div>
@@ -4222,10 +4222,10 @@ function SoundToggleRow() {
         aria-checked={soundOn}
         aria-label="Sound effects volume"
         onClick={toggleSound}
-        className="w-full clay-card clay-white p-3 flex items-center gap-3 transition active:scale-[0.99]"
+        className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
       >
         <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center text-2xl">
-          🔊
+          ðŸ”Š
         </div>
         <div className="flex-1 text-left">
           <div className="text-display font-extrabold text-[15px] leading-tight">Sound Effects</div>
@@ -4249,17 +4249,17 @@ function SoundToggleRow() {
         aria-checked={audioEnabled}
         aria-label="Audio narration permission"
         onClick={toggleAudio}
-        className="w-full clay-card clay-white p-3 flex items-center gap-3 transition active:scale-[0.99]"
+        className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
       >
         <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-purple-100 to-indigo-100 flex items-center justify-center text-2xl">
-          🎧
+          ðŸŽ§
         </div>
         <div className="flex-1 text-left">
           <div className="text-display font-extrabold text-[15px] leading-tight">Audio Narration</div>
           <div className="text-[11px] font-bold">
             {audioEnabled ? (
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 border border-green-200">
-                Active ✓
+                Active âœ“
               </span>
             ) : (
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200">
@@ -4333,7 +4333,7 @@ function ParentZonePlaceholder() {
         className="w-full flex items-center gap-3 hover:opacity-80 transition"
       >
         <div className="h-12 w-12 rounded-2xl bg-blue-200 flex items-center justify-center text-2xl flex-shrink-0">
-          👨‍👩‍👧
+          ðŸ‘¨â€ðŸ‘©â€ðŸ‘§
         </div>
         <div className="flex-1 text-left">
           <div className="text-display font-extrabold text-[15px] leading-tight text-info">
@@ -4343,7 +4343,7 @@ function ParentZonePlaceholder() {
             Tap to configure PIN & parental settings
           </div>
         </div>
-        <div className="text-info text-lg">{showSettings ? '▼' : '›'}</div>
+        <div className="text-info text-lg">{showSettings ? 'â–¼' : 'â€º'}</div>
       </button>
 
       {/* PIN Settings Panel */}
@@ -4362,7 +4362,7 @@ function ParentZonePlaceholder() {
               className="w-full h-10 rounded-lg border-2 border-info px-3 font-extrabold text-center text-lg tracking-widest text-info"
             />
             <div className="text-[10px] text-blue-700 mt-1">
-              💡 Used to reset progress. Default: 1234
+              ðŸ’¡ Used to reset progress. Default: 1234
             </div>
           </div>
           <button
@@ -4374,7 +4374,7 @@ function ParentZonePlaceholder() {
                 : "bg-blue-600 disabled:opacity-50 hover:bg-blue-700"
             }`}
           >
-            {pinSaveStatus === "saved" ? "✓ PIN Saved" : pinSaveStatus === "saving" ? "Saving..." : "Save PIN"}
+            {pinSaveStatus === "saved" ? "âœ“ PIN Saved" : pinSaveStatus === "saving" ? "Saving..." : "Save PIN"}
           </button>
           <button
             onClick={() => {
@@ -4416,7 +4416,7 @@ function RowLink({
     <Link
       to={to}
       onClick={() => fxTap()}
-      className="clay-card clay-white p-3 flex items-center gap-3 transition active:scale-[0.99]"
+      className="ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
     >
       <div className={`h-12 w-12 rounded-2xl ${bg} flex items-center justify-center text-2xl`}>
         {icon}
@@ -4427,7 +4427,7 @@ function RowLink({
         </div>
         <div className="text-[11px] font-bold text-muted-foreground">{sub}</div>
       </div>
-      <div className="text-muted-foreground text-xl">›</div>
+      <div className="text-muted-foreground text-xl">â€º</div>
     </Link>
   );
 }
@@ -4441,7 +4441,7 @@ export function AchievementsScreen() {
     <div className="h-full w-full bg-[#F7F5F0] flex flex-col">
       <HeaderBar title="Achievements" />
       <div className="px-5 pb-3">
-        <div className="clay-card clay-white px-4 py-3 flex items-center justify-between">
+        <div className="ui-card ui-accent-1-soft px-4 py-3 flex items-center justify-between">
           <div className="text-[12px] font-extrabold text-muted-foreground uppercase tracking-wider">
             Unlocked
           </div>
@@ -4455,8 +4455,8 @@ export function AchievementsScreen() {
 
           <div
             key={a.title}
-            className={`clay-card p-4 flex items-center gap-3 ${
-              a.done ? "clay-gold" : "clay-white"
+            className={`ui-card p-4 flex items-center gap-3 ${
+              a.done ? "ui-accent-4" : "ui-accent-1-soft"
             }`}
           >
             <div
@@ -4535,9 +4535,9 @@ export function LoadingScreen() {
         />
       </div>
       <div className="mt-8 text-center">
-        <div className="text-display text-h2 font-bold">Flying to Gujarat…</div>
+        <div className="text-display text-h2 font-bold">Flying to Gujaratâ€¦</div>
         <div className="text-body text-muted-foreground mt-1">
-          Packing camel snacks 🐪
+          Packing camel snacks ðŸª
         </div>
       </div>
       <div className="mt-6 w-56 h-2 rounded-full bg-white/70 overflow-hidden">
@@ -4564,7 +4564,7 @@ export function EmptyStateScreen() {
           together.
         </p>
         <button className="mt-6 h-14 px-6 rounded-2xl gradient-saffron text-white text-display text-lg font-extrabold shadow-[var(--shadow-glow-orange)]">
-          Invite a Friend ✨
+          Invite a Friend âœ¨
         </button>
         <button className="mt-2 h-12 px-6 rounded-2xl bg-muted text-ink text-display font-extrabold">
           Maybe later
@@ -4573,5 +4573,6 @@ export function EmptyStateScreen() {
     </div>
   );
 }
+
 
 

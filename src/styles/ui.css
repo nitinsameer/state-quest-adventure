@@ -1,0 +1,182 @@
+/**
+ * Themeable UI Component Utilities (Token-Driven)
+ *
+ * All styling is delegated to CSS custom properties (tokens) for full theme support.
+ * No hardcoded colours, shadows, radii, or motion values.
+ *
+ * Import AFTER tokens.css in src/styles.css:
+ *   @import "./styles/ui.css";
+ *
+ * Usage:
+ *   <div class="ui-card">...</div>
+ *   <button class="ui-button ui-accent-1">Play</button>
+ *   <input class="ui-input" />
+ */
+
+/* ---------- Card ---------- */
+@utility ui-card {
+  background: var(--surface-card);
+  color: var(--text-primary);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+
+/* ---------- Button (Primary) ---------- */
+@utility ui-button {
+  background: var(--action-primary-bg);
+  color: var(--action-primary-fg);
+  font-family: var(--font-display);
+  font-weight: 700;
+  border: 0;
+  border-radius: var(--radius-button);
+  min-height: 48px; /* kid-friendly touch target */
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform var(--transition-fast);
+  box-shadow: var(--shadow-button);
+
+  &:active {
+    transform: translateY(var(--press-offset)) scale(var(--press-scale));
+    box-shadow: var(--shadow-pressed);
+  }
+
+  &:disabled {
+    background: var(--action-disabled-bg);
+    color: var(--action-disabled-fg);
+    opacity: 0.55;
+    transform: none;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--text-primary);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+/* ---------- Chip / Badge ---------- */
+@utility ui-chip {
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  border-radius: var(--radius-chip);
+  padding: 0.25rem 0.75rem;
+  font-weight: 700;
+  box-shadow: var(--shadow-raised);
+}
+
+/* ---------- Button Soft (Secondary Actions) ---------- */
+@utility ui-button-soft {
+  background: var(--action-secondary-bg);
+  color: var(--action-secondary-fg);
+  font-family: var(--font-display);
+  font-weight: 700;
+  border: 0;
+  border-radius: var(--radius-button);
+  min-height: 48px;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform var(--transition-fast);
+  box-shadow: var(--shadow-raised);
+
+  &:active {
+    transform: translateY(var(--press-offset)) scale(var(--press-scale));
+    box-shadow: var(--shadow-inset);
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    transform: none;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--text-primary);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+/* ---------- Input (pressed-in look) ---------- */
+@utility ui-input {
+  background: var(--surface-sunken);
+  color: var(--text-primary);
+  border: 0;
+  border-radius: var(--radius-input);
+  min-height: 48px;
+  padding: 0.5rem 1rem;
+  box-shadow: var(--shadow-inset);
+
+  &:focus-visible {
+    outline: 3px solid var(--text-primary);
+    outline-offset: 2px;
+  }
+}
+
+/* ---------- Progress Bar Empty Track ---------- */
+@utility ui-progress-track {
+  background: var(--progress-track);
+}
+
+/* ---------- Accent colour variants ---------- */
+@utility ui-accent-1 {
+  --accent-fill: var(--accent-1);
+  --accent-fill-soft: var(--accent-1-soft);
+  --accent-ink: var(--accent-1-ink);
+}
+@utility ui-accent-1-soft {
+  --accent-fill: var(--accent-1-soft);
+  --accent-ink: var(--accent-1-ink);
+}
+@utility ui-accent-2 {
+  --accent-fill: var(--accent-2);
+  --accent-fill-soft: var(--accent-2-soft);
+  --accent-ink: var(--accent-2-ink);
+}
+@utility ui-accent-2-soft {
+  --accent-fill: var(--accent-2-soft);
+  --accent-ink: var(--accent-2-ink);
+}
+@utility ui-accent-3 {
+  --accent-fill: var(--accent-3);
+  --accent-fill-soft: var(--accent-3-soft);
+  --accent-ink: var(--accent-3-ink);
+}
+@utility ui-accent-3-soft {
+  --accent-fill: var(--accent-3-soft);
+  --accent-ink: var(--accent-3-ink);
+}
+@utility ui-accent-4 {
+  --accent-fill: var(--accent-4);
+  --accent-fill-soft: var(--accent-4-soft);
+  --accent-ink: var(--accent-4-ink);
+}
+@utility ui-accent-4-soft {
+  --accent-fill: var(--accent-4-soft);
+  --accent-ink: var(--accent-4-ink);
+}
+@utility ui-accent-5 {
+  --accent-fill: var(--accent-5);
+  --accent-fill-soft: var(--accent-5-soft);
+  --accent-ink: var(--accent-5-ink);
+}
+@utility ui-accent-5-soft {
+  --accent-fill: var(--accent-5-soft);
+  --accent-ink: var(--accent-5-ink);
+}
+@utility ui-accent-6 {
+  --accent-fill: var(--accent-6);
+  --accent-fill-soft: var(--accent-6-soft);
+  --accent-ink: var(--accent-6-ink);
+}
+@utility ui-accent-6-soft {
+  --accent-fill: var(--accent-6-soft);
+  --accent-ink: var(--accent-6-ink);
+}

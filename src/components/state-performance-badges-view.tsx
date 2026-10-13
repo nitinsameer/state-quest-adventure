@@ -1,4 +1,4 @@
-/**
+﻿/**
  * State Performance Badges View
  * Shows badges earned for each individual state
  */
@@ -33,17 +33,17 @@ export function StatePerformanceBadgesView() {
     <div className="h-full w-full bg-[#F7F5F0] flex flex-col">
       {/* Header - Kid-friendly celebration style */}
       <div className="px-5 pt-3 pb-4 gradient-gold rounded-b-[32px] relative overflow-hidden">
-        <div className="absolute top-2 right-4 text-5xl opacity-40 pointer-events-none">☁️</div>
+        <div className="absolute top-2 right-4 text-5xl opacity-40 pointer-events-none">â˜ï¸</div>
         
         <div className="flex items-center gap-3 relative z-10">
-          <div className="h-14 w-14 rounded-2xl clay-card clay-white p-1 flex items-center justify-center overflow-hidden flex-shrink-0">
+          <div className="h-14 w-14 rounded-2xl ui-card ui-accent-1-soft p-1 flex items-center justify-center overflow-hidden flex-shrink-0">
             <img src={getAvatarImage(progress.avatar)} alt={getAvatarName(progress.avatar)} className="w-full h-full object-cover" />
           </div>
           <div className="flex-1 text-white">
             <div className="text-display text-lg font-bold leading-tight">
               {progress.name}
             </div>
-            <div className="text-xs font-bold text-white/80">🎉 {totalBadgesEarned} Amazing State Badges!</div>
+            <div className="text-xs font-bold text-white/80">ðŸŽ‰ {totalBadgesEarned} Amazing State Badges!</div>
           </div>
         </div>
       </div>
@@ -56,7 +56,7 @@ export function StatePerformanceBadgesView() {
         {completedStates.length > 0 && (
           <div>
             <h2 className="text-display font-extrabold text-lg mb-4 text-muted-dark">
-              ✓ Completed ({completedStates.length})
+              âœ“ Completed ({completedStates.length})
             </h2>
             
             <div className="space-y-4">
@@ -79,7 +79,7 @@ export function StatePerformanceBadgesView() {
         {lockedStates.length > 0 && (
           <div>
             <h2 className="text-display font-extrabold text-lg mb-4 text-muted-dark">
-              🔒 Not Started ({lockedStates.length})
+              ðŸ”’ Not Started ({lockedStates.length})
             </h2>
             
             <div className="space-y-4">
@@ -89,7 +89,7 @@ export function StatePerformanceBadgesView() {
                   className="rounded-2xl p-4 bg-white shadow-soft border border-black/5"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="text-4xl">🔒</div>
+                    <div className="text-4xl">ðŸ”’</div>
                     <div className="flex-1">
                       <h3 className="text-display font-extrabold text-muted-dark">{state.name}</h3>
                       <p className="text-xs font-bold text-muted-foreground mt-1">Not yet started</p>
@@ -123,7 +123,7 @@ function StateDetailBadgeCard({ state, progress, onSelect }: any) {
   return (
     <button
       onClick={onSelect}
-      className="rounded-2xl p-4 clay-card clay-white text-left hover:shadow-md transition active:scale-[0.99]"
+      className="rounded-2xl p-4 ui-card ui-accent-1-soft text-left hover:shadow-md transition active:scale-[0.99]"
     >
       {/* State Name */}
       <div className="flex items-start justify-between gap-3">
@@ -152,17 +152,18 @@ function StateDetailBadgeCard({ state, progress, onSelect }: any) {
             className="h-8 w-8 rounded-full bg-muted border-2 border-muted flex items-center justify-center text-xs opacity-50 flex-shrink-0 relative"
             title={`${STATE_PERFORMANCE_BADGE_DEFS[badge]?.name}`}
           >
-            <span className="absolute text-[10px]">🔒</span>
+            <span className="absolute text-[10px]">ðŸ”’</span>
           </div>
         ))}
       </div>
 
       {/* Kid-friendly copy */}
       <div className="mt-3 text-xs font-bold text-orange">
-        Keep exploring! 🌟
+        Keep exploring! ðŸŒŸ
       </div>
     </button>
   );
 }
+
 
 

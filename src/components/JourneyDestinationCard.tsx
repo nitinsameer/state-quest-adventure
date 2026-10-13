@@ -1,4 +1,4 @@
-import { STATE_ART } from "@/lib/state-art";
+﻿import { STATE_ART } from "@/lib/state-art";
 import { getState } from "@/lib/states";
 import { fxTap } from "@/lib/fx";
 
@@ -87,25 +87,25 @@ export function JourneyDestinationCard({
   };
 
   // Determine button text and handler based on state
-  let buttonText = "Start Exploring ›";
+  let buttonText = "Start Exploring â€º";
   let buttonHandler = handleStartClick;
   let isButtonDisabled = false;
   
   if (status === "completed" && !isInProgress) {
-    buttonText = "Replay ↻";
+    buttonText = "Replay â†»";
     buttonHandler = handleReplayClick;
   } else if (status === "locked") {
-    buttonText = "🔒 Locked";
+    buttonText = "ðŸ”’ Locked";
     isButtonDisabled = true;
     buttonHandler = () => {};
   } else if (isInProgress) {
-    buttonText = "Continue ›";
+    buttonText = "Continue â€º";
     buttonHandler = handleStartClick;
   }
 
   return (
     <div
-      className="relative clay-card clay-white overflow-hidden flex flex-col transition-all active:scale-95 h-full"
+      className="relative ui-card ui-accent-1-soft overflow-hidden flex flex-col transition-all active:scale-95 h-full"
       style={{ 
         backgroundColor: cardBgColor,
         padding: "var(--padding-base)"
@@ -128,7 +128,7 @@ export function JourneyDestinationCard({
       {/* Status indicator */}
       {status === "locked" && (
         <div className="mb-2 flex items-center gap-1 text-sm font-bold text-slate-700">
-          <span>🔒</span>
+          <span>ðŸ”’</span>
           <span>Locked</span>
         </div>
       )}
@@ -136,7 +136,7 @@ export function JourneyDestinationCard({
       {/* Checkmark overlay badge for completed states */}
       {status === "completed" && (
         <div className="absolute top-2 right-2 w-10 h-10 rounded-full bg-success/80 shadow-lg flex items-center justify-center backdrop-blur-sm">
-          <span className="text-white text-lg font-bold leading-none">✓</span>
+          <span className="text-white text-lg font-bold leading-none">âœ“</span>
         </div>
       )}
 
@@ -160,26 +160,26 @@ export function JourneyDestinationCard({
       <button
         onClick={buttonHandler}
         disabled={isButtonDisabled}
-        className={`w-full py-3 clay-button ${status === "locked" ? "clay-white" : status === "completed" ? "clay-success" : "clay-saffron"} text-ink transition-all active:scale-95 flex items-center justify-center gap-2 font-bold ${isButtonDisabled ? "opacity-60 cursor-not-allowed" : ""}`}
+        className={`w-full py-3 ui-button ${status === "locked" ? "ui-accent-1-soft" : status === "completed" ? "ui-accent-3" : "ui-accent-1"} text-ink transition-all active:scale-95 flex items-center justify-center gap-2 font-bold ${isButtonDisabled ? "opacity-60 cursor-not-allowed" : ""}`}
       >
         {status === "locked" ? (
           <>
-            <span>🔒</span>
+            <span>ðŸ”’</span>
             <span>Locked</span>
           </>
         ) : status === "completed" && !isInProgress ? (
           <>
-            <span>↻</span>
+            <span>â†»</span>
             <span>Replay</span>
           </>
         ) : isInProgress ? (
           <>
-            <span>▶️</span>
+            <span>â–¶ï¸</span>
             <span>Continue</span>
           </>
         ) : (
           <>
-            <span>▶️</span>
+            <span>â–¶ï¸</span>
             <span>Play</span>
           </>
         )}
@@ -187,3 +187,4 @@ export function JourneyDestinationCard({
     </div>
   );
 }
+

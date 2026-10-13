@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import { useNavigate, Link } from "@tanstack/react-router";
 import mascot from "@/assets/mascot.webp";
 import { getState } from "@/lib/states";
@@ -13,9 +13,9 @@ import { sharePostcard } from "@/lib/share-postcard";
 import { ResetPINDialog } from "@/components/ResetPINDialog";
 
 const BADGE_EMOJI: Record<BadgeId, string> = {
-  monument: "🏛️",
-  animal: "🐾",
-  explorer: "🎖️",
+  monument: "ðŸ›ï¸",
+  animal: "ðŸ¾",
+  explorer: "ðŸŽ–ï¸",
 };
 
 function loadImage(src: string): Promise<HTMLImageElement> {
@@ -227,11 +227,11 @@ export function StatePostcardScreen({
         const library = usePostcardLibrary.getState();
         const now = new Date().toISOString();
         
-        // Generate a stamp date like "12 · MAR"
+        // Generate a stamp date like "12 Â· MAR"
         const date = new Date();
         const day = date.getDate();
         const month = date.toLocaleString("en-US", { month: "short" }).toUpperCase();
-        const stampDate = `${day} · ${month}`;
+        const stampDate = `${day} Â· ${month}`;
 
         // Determine badge earned
         const earned = badgesFor(progress, state.name);
@@ -240,7 +240,7 @@ export function StatePostcardScreen({
         // Add to postcard library with image data
         library.addPostcard(state.name, badgeId, stampDate, now, base64);
 
-        toast.success("✨ Saved to your Passport!", {
+        toast.success("âœ¨ Saved to your Passport!", {
           subtitle: "View anytime from Explorer",
         });
         setBusy(false);
@@ -287,7 +287,7 @@ export function StatePostcardScreen({
           // User cancelled share sheet, just close
           setBusy(false);
         } else {
-          toast.success("✨ Postcard shared!", {
+          toast.success("âœ¨ Postcard shared!", {
             subtitle: "Parent can view it now",
           });
           setBusy(false);
@@ -319,13 +319,13 @@ export function StatePostcardScreen({
           Your Stamp
         </div>
         <div className="text-white text-xs font-semibold mt-1">
-          Show your friends you beat {state.name}! 🎫
+          Show your friends you beat {state.name}! ðŸŽ«
         </div>
       </div>
 
       {/* Postcard Preview */}
       <div className="flex-1 px-5 pt-(--padding-base) pb-1 relative z-10 overflow-y-auto">
-        <div className="w-full rounded-[28px] clay-card clay-white border-4 border-white overflow-hidden animate-in zoom-in-95">
+        <div className="w-full rounded-[28px] ui-card ui-accent-1-soft border-4 border-white overflow-hidden animate-in zoom-in-95">
           {/* Preview Image (Loading or Generated) */}
           <div className="relative bg-muted aspect-[3/4] overflow-hidden flex items-center justify-center">
             {previewUrl ? (
@@ -336,7 +336,7 @@ export function StatePostcardScreen({
               />
             ) : (
               <div className="flex flex-col items-center justify-center">
-                <div className="text-5xl mb-2">✨</div>
+                <div className="text-5xl mb-2">âœ¨</div>
                 <div className="text-sm font-semibold text-muted-foreground">
                   Creating your postcard...
                 </div>
@@ -354,18 +354,18 @@ export function StatePostcardScreen({
           <button
             onClick={handleSaveToPassport}
             disabled={busy || !previewUrl}
-            className="flex-1 h-12 rounded-2xl clay-button clay-white text-ink text-sm font-bold disabled:opacity-60 active:scale-95 transition-transform"
+            className="flex-1 h-12 rounded-2xl ui-button ui-accent-1-soft text-ink text-sm font-bold disabled:opacity-60 active:scale-95 transition-transform"
           >
-            {busy ? "Saving..." : "💾 Save"}
+            {busy ? "Saving..." : "ðŸ’¾ Save"}
           </button>
 
           {/* Secondary: Share (Parent-gated) */}
           <button
             onClick={handleSharePostcard}
             disabled={busy || !previewUrl}
-            className="flex-1 h-12 rounded-2xl clay-button clay-explorer text-ink text-sm font-bold disabled:opacity-60 active:scale-95 transition-transform"
+            className="flex-1 h-12 rounded-2xl ui-button ui-accent-2 text-ink text-sm font-bold disabled:opacity-60 active:scale-95 transition-transform"
           >
-            🔗 Share
+            ðŸ”— Share
           </button>
         </div>
 
@@ -375,9 +375,9 @@ export function StatePostcardScreen({
             fxTap();
             onHome?.();
           }}
-          className="w-full h-14 rounded-2xl clay-button clay-saffron text-ink text-display font-extrabold active:scale-95 transition-transform"
+          className="w-full h-14 rounded-2xl ui-button ui-accent-1 text-ink text-display font-extrabold active:scale-95 transition-transform"
         >
-          🏠 Home
+          ðŸ  Home
         </button>
 
         <button
@@ -385,9 +385,9 @@ export function StatePostcardScreen({
             fxTap();
             onNextState?.();
           }}
-          className="w-full h-12 rounded-xl clay-button clay-white text-ink text-display font-bold active:scale-95 transition-transform"
+          className="w-full h-12 rounded-xl ui-button ui-accent-1-soft text-ink text-display font-bold active:scale-95 transition-transform"
         >
-          Next State ✈️
+          Next State âœˆï¸
         </button>
       </div>
 
@@ -406,4 +406,5 @@ export function StatePostcardScreen({
     </div>
   );
 }
+
 

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * State Performance Badge Detail Modal
  * Shows detailed info about all badges for a specific state
  */
@@ -22,11 +22,11 @@ interface StatePerformanceBadgeModalProps {
   onClose: () => void;
 }
 
-// Helper to generate progress stars (e.g ⭐⭐☆)
+// Helper to generate progress stars (e.g â­â­â˜†)
 const getProgressStars = (progress: number, max: number): string => {
   if (max === 0) return "";
   const filledCount = Math.min(Math.ceil((progress / max) * 3), 3);
-  const stars = "⭐".repeat(filledCount) + "☆".repeat(3 - filledCount);
+  const stars = "â­".repeat(filledCount) + "â˜†".repeat(3 - filledCount);
   return stars;
 };
 
@@ -66,7 +66,7 @@ export function StatePerformanceBadgeModal({
             }}
             className="text-2xl text-muted-light hover:text-muted-foreground transition"
           >
-            ✕
+            âœ•
           </button>
         </div>
 
@@ -76,7 +76,7 @@ export function StatePerformanceBadgeModal({
         {earnedBadges.length > 0 && (
           <div>
             <h3 className="text-display font-extrabold text-lg mb-3 text-muted-dark">
-              ✓ You Did It!
+              âœ“ You Did It!
             </h3>
             <div className="space-y-3">
               {earnedBadges.map(badgeId => (
@@ -94,7 +94,7 @@ export function StatePerformanceBadgeModal({
         {availableBadges.length > 0 && (
           <div>
             <h3 className="text-display font-extrabold text-lg mb-3 text-muted-dark">
-              Keep Exploring! 🌟
+              Keep Exploring! ðŸŒŸ
             </h3>
             <div className="space-y-3">
               {availableBadges.map(badgeId => (
@@ -114,7 +114,7 @@ export function StatePerformanceBadgeModal({
             fxTap();
             onClose();
           }}
-          className="mt-4 w-full h-11 rounded-2xl clay-button clay-white text-ink font-bold transition active:scale-95"
+          className="mt-4 w-full h-11 rounded-2xl ui-button ui-accent-1-soft text-ink font-bold transition active:scale-95"
         >
           Close
         </button>
@@ -135,8 +135,8 @@ function BadgeDetailCard({ badgeId, progress }: BadgeDetailCardProps) {
     <div
       className={`rounded-2xl p-4 border-2 transition ${
         progress.earned
-          ? "clay-card clay-gold shadow-md border-orange-300"
-          : "clay-card clay-white border-muted opacity-60"
+          ? "ui-card ui-accent-4 shadow-md border-orange-300"
+          : "ui-card ui-accent-1-soft border-muted opacity-60"
       }`}
     >
       <div className="flex items-start gap-4">
@@ -161,13 +161,13 @@ function BadgeDetailCard({ badgeId, progress }: BadgeDetailCardProps) {
           <div className="mt-3 pt-3 border-t border-white/20">
             {progress.earned ? (
               <div className="flex flex-col gap-1">
-                <div className="text-lg font-extrabold text-ink">✓ You Did It!</div>
+                <div className="text-lg font-extrabold text-ink">âœ“ You Did It!</div>
               </div>
             ) : (
               <div className="flex flex-col gap-2">
                 <div className="text-lg">{getProgressStars(progress.progress, progress.max)}</div>
                 <div className="text-[11px] font-bold text-muted-foreground">
-                  Keep going! 🌟
+                  Keep going! ðŸŒŸ
                 </div>
               </div>
             )}
@@ -177,4 +177,5 @@ function BadgeDetailCard({ badgeId, progress }: BadgeDetailCardProps) {
     </div>
   );
 }
+
 

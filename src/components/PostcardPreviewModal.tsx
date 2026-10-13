@@ -1,4 +1,4 @@
-/**
+﻿/**
  * PostcardPreviewModal - Uses StandardModal for consistent design
  * 
  * Auto-shows postcard preview after quiz completion with two CTAs:
@@ -19,9 +19,9 @@ import { usePostcardLibrary } from "@/store/postcard-library-store";
 import { StandardModal } from "@/components/StandardModal";
 
 const BADGE_EMOJI: Record<BadgeId, string> = {
-  monument: "🏛️",
-  animal: "🐾",
-  explorer: "🎖️",
+  monument: "ðŸ›ï¸",
+  animal: "ðŸ¾",
+  explorer: "ðŸŽ–ï¸",
 };
 
 function loadImage(src: string): Promise<HTMLImageElement> {
@@ -242,11 +242,11 @@ export function PostcardPreviewModal({
         const library = usePostcardLibrary.getState();
         const now = new Date().toISOString();
         
-        // Generate a stamp date like "12 · MAR"
+        // Generate a stamp date like "12 Â· MAR"
         const date = new Date();
         const day = date.getDate();
         const month = date.toLocaleString("en-US", { month: "short" }).toUpperCase();
-        const stampDate = `${day} · ${month}`;
+        const stampDate = `${day} Â· ${month}`;
 
         // Determine badge earned
         const earned = badgesFor({ stamps: {}, postcards: {}, achievements: {} } as any, stateName || "");
@@ -255,7 +255,7 @@ export function PostcardPreviewModal({
         // Add to postcard library with image data
         library.addPostcard(stateName || "", badgeId, stampDate, now, base64);
 
-        toast.success("✨ Saved to your Passport!", {
+        toast.success("âœ¨ Saved to your Passport!", {
           subtitle: "View anytime from Explorer",
         });
         setIsSaving(false);
@@ -292,7 +292,7 @@ export function PostcardPreviewModal({
         open={isOpen}
         onClose={handleClose}
         header={{
-          icon: "✨",
+          icon: "âœ¨",
           title: "Your Postcard's Ready!",
           subtitle: "What would you like to do?",
         }}
@@ -300,7 +300,7 @@ export function PostcardPreviewModal({
         content={[
           {
             type: "custom",
-            className: "relative clay-card clay-white aspect-[3/4] overflow-hidden rounded-xl -mx-6 -mt-6 mb-(--space-2)",
+            className: "relative ui-card ui-accent-1-soft aspect-[3/4] overflow-hidden rounded-xl -mx-6 -mt-6 mb-(--space-2)",
             children: (
               <div className="relative w-full h-full">
                 {previewUrl ? (
@@ -312,7 +312,7 @@ export function PostcardPreviewModal({
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-100">
                     <div className="text-center">
-                      <div className="text-5xl mb-2">✨</div>
+                      <div className="text-5xl mb-2">âœ¨</div>
                       <div className="text-sm font-semibold text-muted-foreground">Creating your postcard...</div>
                     </div>
                   </div>
@@ -323,12 +323,12 @@ export function PostcardPreviewModal({
         ]}
         buttons={[
           {
-            label: isSaving ? "Saving..." : "💾 Save to Passport",
+            label: isSaving ? "Saving..." : "ðŸ’¾ Save to Passport",
             onClick: handleSaveToPassport,
             variant: "primary",
           },
           {
-            label: "⏰ Later",
+            label: "â° Later",
             onClick: handleLater,
             variant: "tertiary",
           },
@@ -339,4 +339,5 @@ export function PostcardPreviewModal({
     </>
   );
 }
+
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useProgress, type PostcardData } from "@/lib/progress";
 import { REGIONS, REGION_KEYS, getProgressPercentage } from "@/lib/passport-helpers";
@@ -124,7 +124,7 @@ export function PassportSeedling() {
 
       {/* Header with title */}
       <div className="px-5 pt-4 pb-2 flex items-center justify-between">
-        <h1 style={{ fontSize: 'var(--type-screen-title)', fontWeight: 'var(--type-screen-title-weight)' }} className="text-ink">🎫 My Explorer</h1>
+        <h1 style={{ fontSize: 'var(--type-screen-title)', fontWeight: 'var(--type-screen-title-weight)' }} className="text-ink">ðŸŽ« My Explorer</h1>
       </div>
 
       {/* Profile Card - Simplified */}
@@ -140,7 +140,7 @@ export function PassportSeedling() {
           </div>
           <div className="flex-1">
             <div className="text-lg font-extrabold">{progress.name}</div>
-            <div className="text-sm font-bold">🎫 {progress.completed.length} of 36 stamps</div>
+            <div className="text-sm font-bold">ðŸŽ« {progress.completed.length} of 36 stamps</div>
           </div>
         </div>
 
@@ -169,13 +169,13 @@ export function PassportSeedling() {
                 onClick={() => handleRegionChange(key)}
                 className={`px-4 py-3 rounded-full font-extrabold whitespace-nowrap transition active:scale-95 ${
                   isSelected
-                    ? "clay-button clay-saffron text-ink"
-                    : "clay-button clay-white text-ink"
+                    ? "ui-button ui-accent-1 text-ink"
+                    : "ui-button ui-accent-1-soft text-ink"
                 }`}
                 style={{ fontSize: 'var(--type-body)', fontWeight: 'var(--type-body-weight)' }}
                 title={`${completed}/${regionStates.length} explored`}
               >
-                {reg.emoji} {reg.name.split(" ")[0]} {isSelected && completed === regionStates.length && "✓"}
+                {reg.emoji} {reg.name.split(" ")[0]} {isSelected && completed === regionStates.length && "âœ“"}
               </button>
             );
           })}
@@ -186,7 +186,7 @@ export function PassportSeedling() {
       <div className="px-5 mt-4 mb-2">
         <div style={{ fontSize: 'var(--type-section-heading)', fontWeight: 'var(--type-section-heading-weight)' }} className="text-slate-900">{region.name}</div>
         <div className="text-base font-semibold text-slate-600 mt-1">
-          {regionProgress} explored {unlockedInRegion.length === regionStates.length && "✨ Region Complete!"}
+          {regionProgress} explored {unlockedInRegion.length === regionStates.length && "âœ¨ Region Complete!"}
         </div>
         <div className="mt-2 h-2 bg-[oklch(0.9_0.02_260)] rounded-full overflow-hidden">
           <div
@@ -217,4 +217,5 @@ export function PassportSeedling() {
     </div>
   );
 }
+
 

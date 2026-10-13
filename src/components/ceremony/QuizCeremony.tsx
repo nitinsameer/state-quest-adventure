@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+﻿import { useEffect, useState, useRef } from 'react';
 import { useProgress, dismissPendingCelebration, updateCeremonyStep, type PendingCelebration } from '@/lib/progress';
 import { useNavigate } from '@tanstack/react-router';
 import { getState, type IndiaState, nextStateAfter } from '@/lib/states';
@@ -88,7 +88,7 @@ export function QuizCeremony() {
             className="text-white text-xs font-bold opacity-75 hover:opacity-100 transition-opacity active:scale-95"
             aria-label="Skip to results"
           >
-            Skip ↓
+            Skip â†“
           </button>
         </div>
 
@@ -98,7 +98,7 @@ export function QuizCeremony() {
             <div
               key={i}
               className={`h-2 rounded-full transition-all ${
-                i === step ? 'w-6 clay-chip' : 'w-2 clay-chip opacity-40'
+                i === step ? 'w-6 ui-chip' : 'w-2 ui-chip opacity-40'
               }`}
               role="progressbar"
               aria-valuenow={i === step ? 1 : 0}
@@ -110,7 +110,7 @@ export function QuizCeremony() {
 
       {/* CONTENT AREA */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-6 overflow-y-auto">
-        <div className="clay-card clay-white w-full max-w-sm p-6 rounded-2xl">
+        <div className="ui-card ui-accent-1-soft w-full max-w-sm p-6 rounded-2xl">
           {/* Step 0: Result */}
           {step === 0 && <StepResult ceremony={ceremony} state={state} art={art} />}
 
@@ -138,26 +138,26 @@ export function QuizCeremony() {
         {step === 0 && (
           <button
             onClick={advanceStep}
-            className="w-full h-14 clay-button clay-saffron text-ink font-display font-bold text-lg rounded-3xl transition-all active:scale-95"
+            className="w-full h-14 ui-button ui-accent-1 text-ink font-display font-bold text-lg rounded-3xl transition-all active:scale-95"
           >
-            Next →
+            Next â†’
           </button>
         )}
         {step === 1 && (
           <button
             onClick={advanceStep}
             disabled={!stampedState}
-            className="w-full h-14 clay-button clay-saffron text-ink font-display font-bold text-lg rounded-3xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full h-14 ui-button ui-accent-1 text-ink font-display font-bold text-lg rounded-3xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Next →
+            Next â†’
           </button>
         )}
         {step === 2 && (
           <button
             onClick={advanceStep}
-            className="w-full h-14 clay-button clay-saffron text-ink font-display font-bold text-lg rounded-3xl transition-all active:scale-95"
+            className="w-full h-14 ui-button ui-accent-1 text-ink font-display font-bold text-lg rounded-3xl transition-all active:scale-95"
           >
-            Next →
+            Next â†’
           </button>
         )}
         {step === 3 && (
@@ -172,9 +172,9 @@ export function QuizCeremony() {
                   navigate({ to: `/state/${nextState.short}/welcome` });
                 }
               }}
-              className="w-full h-14 clay-button clay-saffron text-ink font-display font-bold text-lg rounded-3xl transition-all active:scale-95"
+              className="w-full h-14 ui-button ui-accent-1 text-ink font-display font-bold text-lg rounded-3xl transition-all active:scale-95"
             >
-              Next State →
+              Next State â†’
             </button>
 
             {/* Secondary: Replay button (only if stars < 3) */}
@@ -185,9 +185,9 @@ export function QuizCeremony() {
                   dismissPendingCelebration();
                   navigate({ to: `/state/${state.short}/quiz` });
                 }}
-                className="w-full h-12 clay-button clay-button-soft text-ink font-bold text-base rounded-3xl transition-all active:scale-95"
+                className="w-full h-12 ui-button ui-button-soft text-ink font-bold text-base rounded-3xl transition-all active:scale-95"
               >
-                Play again for ⭐⭐⭐
+                Play again for â­â­â­
               </button>
             )}
 
@@ -333,7 +333,7 @@ function StepResult({ ceremony, state, art }: StepProps) {
             aria-valuemax={1}
             aria-label={i < filledStars ? 'earned star' : 'empty star'}
           >
-            {i < filledStars ? '⭐' : '☆'}
+            {i < filledStars ? 'â­' : 'â˜†'}
           </div>
         ))}
       </div>
@@ -346,10 +346,10 @@ function StepResult({ ceremony, state, art }: StepProps) {
       {/* XP CHIPS - Appear after stars with animation */}
       {xpChipsShown && (
         <div className="space-y-3 animate-fade-in">
-          <div className="clay-chip clay-gold px-4 py-3 text-center">
+          <div className="ui-chip ui-accent-4 px-4 py-3 text-center">
             <div className="text-sm font-bold text-ink">+{ceremony.quizXp} XP quiz</div>
           </div>
-          <div className="clay-chip clay-gold px-4 py-3 text-center">
+          <div className="ui-chip ui-accent-4 px-4 py-3 text-center">
             <div className="text-sm font-bold text-ink">+{ceremony.bonusXp} XP state bonus</div>
           </div>
 
@@ -366,15 +366,15 @@ function StepResult({ ceremony, state, art }: StepProps) {
               />
             </div>
             <div className="text-xs text-ink/60 font-medium text-center">
-              Level {currentLevel} · Explorer
+              Level {currentLevel} Â· Explorer
             </div>
           </div>
 
           {/* LEVEL UP BANNER */}
           {ceremony.leveledUp && (
-            <div className="clay-card clay-success px-4 py-3 rounded-2xl border-2 border-green-200/50">
+            <div className="ui-card ui-accent-3 px-4 py-3 rounded-2xl border-2 border-green-200/50">
               <div className="text-center">
-                <div className="text-sm font-bold text-ink">🎉 New level!</div>
+                <div className="text-sm font-bold text-ink">ðŸŽ‰ New level!</div>
                 <div className="text-xs font-semibold text-ink/80 mt-1">{ceremony.levelName}</div>
               </div>
             </div>
@@ -390,12 +390,12 @@ function StepResult({ ceremony, state, art }: StepProps) {
             alt="Mascot"
             className="w-16 h-16 object-contain flex-shrink-0 mascot-cheer"
           />
-          <div className="relative clay-card clay-white px-4 py-3 rounded-2xl flex-1">
+          <div className="relative ui-card ui-accent-1-soft px-4 py-3 rounded-2xl flex-1">
             <p className="text-sm font-semibold text-ink leading-snug">
               {mascotSpeechRef.current}
             </p>
             {/* Tail pointer */}
-            <div className="absolute -left-2 bottom-4 w-3 h-3 clay-card clay-white rounded-full transform rotate-45" />
+            <div className="absolute -left-2 bottom-4 w-3 h-3 ui-card ui-accent-1-soft rounded-full transform rotate-45" />
           </div>
         </div>
       )}
@@ -492,8 +492,8 @@ function StepStamp({ ceremony, state, art, stamped = false, onStamped }: StepPro
     <div className="space-y-6">
       <h2 className="font-display text-2xl font-bold text-ink text-center">Add to Your Passport</h2>
 
-      {/* PASSPORT CARD - clay-card with state art and name ring */}
-      <div className="clay-card clay-white p-6 rounded-2xl space-y-4">
+      {/* PASSPORT CARD - ui-card with state art and name ring */}
+      <div className="ui-card ui-accent-1-soft p-6 rounded-2xl space-y-4">
         {/* State art */}
         {art && (
           <div className="flex justify-center mb-3">
@@ -519,7 +519,7 @@ function StepStamp({ ceremony, state, art, stamped = false, onStamped }: StepPro
             aria-pressed={stamped}
           >
             {/* Ring background with gradient using CSS token */}
-            <div className="absolute inset-0 rounded-full clay-chip clay-saffron flex items-center justify-center border-4 border-ink/10">
+            <div className="absolute inset-0 rounded-full ui-chip ui-accent-1 flex items-center justify-center border-4 border-ink/10">
               {/* Inner content: state name and art */}
               <div className="flex flex-col items-center justify-center gap-1">
                 <div className="text-sm font-bold text-ink text-center leading-tight max-w-[80px]">
@@ -536,7 +536,7 @@ function StepStamp({ ceremony, state, art, stamped = false, onStamped }: StepPro
             </div>
 
             {/* Stamp emoji overlay (top-right) */}
-            <div className="absolute -top-1 -right-1 text-3xl">🔖</div>
+            <div className="absolute -top-1 -right-1 text-3xl">ðŸ”–</div>
           </button>
         </div>
 
@@ -550,7 +550,7 @@ function StepStamp({ ceremony, state, art, stamped = false, onStamped }: StepPro
       <div className="text-center">
         {stamped ? (
           <p className="text-body text-ink font-bold">
-            Stamp {stampCount} of 36 collected! ✓
+            Stamp {stampCount} of 36 collected! âœ“
           </p>
         ) : (
           <p className="text-body text-ink/60 text-sm">
@@ -578,7 +578,7 @@ function StepPostcard({ ceremony, state }: StepProps) {
   const prefersReducedMotion = useRef(false);
 
   // Fixed emoji list: face-savouring-food, national-park, party-popper
-  const STICKER_OPTIONS = ['😋', '🏞️', '🎉'];
+  const STICKER_OPTIONS = ['ðŸ˜‹', 'ðŸžï¸', 'ðŸŽ‰'];
 
   // Check for prefers-reduced-motion
   useEffect(() => {
@@ -687,9 +687,9 @@ function StepPostcard({ ceremony, state }: StepProps) {
 
       {/* STATUS: SAVED */}
       {showSaveStatus && (
-        <div className="clay-card clay-success px-4 py-3 rounded-2xl animate-fade-in">
+        <div className="ui-card ui-accent-3 px-4 py-3 rounded-2xl animate-fade-in">
           <div className="flex items-center justify-center gap-2">
-            <span className="text-xl">✓</span>
+            <span className="text-xl">âœ“</span>
             <span className="text-sm font-bold text-ink">Saved in your Passport</span>
           </div>
         </div>
@@ -698,9 +698,9 @@ function StepPostcard({ ceremony, state }: StepProps) {
       {/* SHARE BUTTON - Secondary, soft style */}
       <button
         onClick={handleShare}
-        className="w-full h-12 clay-button clay-button-soft text-ink font-bold text-base rounded-3xl transition-all active:scale-95"
+        className="w-full h-12 ui-button ui-button-soft text-ink font-bold text-base rounded-3xl transition-all active:scale-95"
       >
-        📤 Share
+        ðŸ“¤ Share
       </button>
     </div>
   );
@@ -778,9 +778,9 @@ function StepWhatsNext({ ceremony, state }: StepProps) {
 
       {/* REGION MASTER BANNER - appears only when region just completed */}
       {isRegionComplete && (
-        <div className="clay-card clay-success px-6 py-4 rounded-2xl border-2 border-green-200/50 animate-bounce">
+        <div className="ui-card ui-accent-3 px-6 py-4 rounded-2xl border-2 border-green-200/50 animate-bounce">
           <div className="flex items-center justify-center gap-2">
-            <span className="text-3xl">👑</span>
+            <span className="text-3xl">ðŸ‘‘</span>
             <div className="text-center">
               <div className="text-sm font-bold text-ink">Region Master!</div>
               <div className="text-xs font-semibold text-ink/80">You've completed the region!</div>
@@ -790,7 +790,7 @@ function StepWhatsNext({ ceremony, state }: StepProps) {
       )}
 
       {/* REGION CARD - Shows dots, name, done count, streak */}
-      <div className="clay-card clay-white p-5 rounded-2xl space-y-4">
+      <div className="ui-card ui-accent-1-soft p-5 rounded-2xl space-y-4">
         <div>
           <p className="text-center text-sm font-bold text-ink mb-2">
             {ceremony.regionKey.charAt(0).toUpperCase() + ceremony.regionKey.slice(1)} Region
@@ -801,7 +801,7 @@ function StepWhatsNext({ ceremony, state }: StepProps) {
               <div
                 key={i}
                 className={`w-2.5 h-2.5 rounded-full transition-all ${
-                  i < ceremony.regionDone ? 'clay-chip' : 'bg-ink/20'
+                  i < ceremony.regionDone ? 'ui-chip' : 'bg-ink/20'
                 }`}
                 role="progressbar"
                 aria-valuenow={i < ceremony.regionDone ? 1 : 0}
@@ -820,7 +820,7 @@ function StepWhatsNext({ ceremony, state }: StepProps) {
         {/* Streak flame */}
         {ceremony.streak > 0 && (
           <div className="flex items-center justify-center gap-2">
-            <span className="text-lg">🔥</span>
+            <span className="text-lg">ðŸ”¥</span>
             <p className="text-sm font-bold text-ink">{ceremony.streak}-day streak</p>
           </div>
         )}
@@ -828,7 +828,7 @@ function StepWhatsNext({ ceremony, state }: StepProps) {
 
       {/* NEXT STATE TILE - Show art, name, ready prompt */}
       {nextState && (
-        <div className="clay-card clay-white p-4 rounded-2xl space-y-3 border-2 border-ink/10">
+        <div className="ui-card ui-accent-1-soft p-4 rounded-2xl space-y-3 border-2 border-ink/10">
           <div className="text-center">
             <p className="text-xs uppercase font-bold text-ink/60 mb-2">Ready to explore?</p>
             <p className="text-lg font-display font-bold text-ink mb-3">{nextState.name}</p>
@@ -847,3 +847,4 @@ function StepWhatsNext({ ceremony, state }: StepProps) {
     </div>
   );
 }
+
