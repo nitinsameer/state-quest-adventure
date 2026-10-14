@@ -33,7 +33,7 @@ interface StateCompletionCelebrationProps {
 
 export function StateCompletionCelebration({
   stateName,
-  stateEmoji = '🗺️',
+  stateEmoji = '{EMOJI.nav.map}',
   badges,
   totalXpGained,
   cardsCompleted,

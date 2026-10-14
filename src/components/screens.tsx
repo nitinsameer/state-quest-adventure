@@ -1865,7 +1865,7 @@ export function StateIntroScreen({
 
         <div className="mt-5 grid grid-cols-2 gap-3">
           <IntroFact label="Capital" value={state.capital} icon="🏆›️" />
-          <IntroFact label="Language" value={state.language} icon="🏆—£️" />
+          <IntroFact label="Language" value={state.language} icon="🗣️" />
           <IntroFact label="Population" value={state.population} icon="🏆‘¥" />
           <IntroFact label="Animal" value={state.animalName} icon={state.animal} />
         </div>
@@ -2029,7 +2029,7 @@ export function LearningHubScreen({
   // Track completion per category - all cards must be read
   const cards = [
     { icon: "🏆›️", title: "Capital", sub: state.capital, tone: "orange" as const },
-    { icon: "🏆—£️", title: "Language", sub: state.language, tone: "blue" as const },
+    { icon: "🗣️", title: "Language", sub: state.language, tone: "blue" as const },
     { icon: "🏆›", title: "Famous Food", sub: state.food, tone: "gold" as const },
     { icon: state.monument, title: "Places", sub: state.monumentName, tone: "green" as const },
     { icon: state.animal, title: "State Animal", sub: state.animalName, tone: "orange" as const },
@@ -2151,7 +2151,7 @@ export function LearningHubScreen({
           }`}
         >
           {completedCategories === 6 && !showDecisionModal
-            ? "${EMOJI.action.sparkle} Take the Quiz! 🎯" 
+            ? "${EMOJI.action.sparkle} Take the Quiz! {EMOJI.milestone.twentyFive}" 
             : `🏆”’ Quiz Locked (${completedCategories}/6 done)`
           }
         </button>
@@ -2322,7 +2322,7 @@ export function learningCardsFor(stateName?: string, displayLanguage: string = "
     {
       kicker: "Language",
       title: state.language,
-      icon: "🏆—£️",
+      icon: "🗣️",
       chip: "Language",
       body: `People in ${state.name} mostly speak ${state.language}. Try saying hello in it!`,
       enrichedKey: "language" as const,
@@ -2934,7 +2934,7 @@ export function LearningCardScreen({
           }}
           className="w-full h-14 ui-button ui-accent-1 text-ink text-h4 text-display"
         >
-          {isLastInMainCardSection ? (currentMainCardIndex === 5 ? "Take the Quiz! 🎯" : "Done! Back to Cards") : isReplaying ? "Replay Complete ${EMOJI.action.sparkle}" : "Got it! Next â†’"}
+          {isLastInMainCardSection ? (currentMainCardIndex === 5 ? "Take the Quiz! {EMOJI.milestone.twentyFive}" : "Done! Back to Cards") : isReplaying ? "Replay Complete ${EMOJI.action.sparkle}" : "Got it! Next â†’"}
         </button>
       </div>
 

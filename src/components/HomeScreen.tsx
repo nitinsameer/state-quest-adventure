@@ -114,7 +114,7 @@ export function HomeScreen() {
         <div className="px-(--padding-md) pt-(--space-4) pb-2 flex gap-(--gap-base)">
           {/* States Card */}
           <div className="flex-1 bg-surface-card rounded-2xl shadow-sm p-(--padding-base) text-center">
-            <div className="text-2xl mb-1">🗺️</div>
+            <div className="text-2xl mb-1">{EMOJI.nav.map}</div>
             <div className="text-h5 text-text-primary">{p.completed.length}</div>
             <div className="text-caption font-semibold text-text-secondary">States</div>
           </div>

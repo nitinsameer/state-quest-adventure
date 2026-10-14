@@ -1,5 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { fxTap } from "@/lib/fx";
+import { EMOJI } from "@/constants/emoji";
 
 interface LockedPostcardModalProps {
   destination: string;
@@ -49,7 +50,7 @@ export function LockedPostcardModal({ destination, onClose }: LockedPostcardModa
             onClick={handleExplore}
             className="w-full py-3 px-4 rounded-xl font-extrabold text-white bg-accent-1 shadow-lg hover:shadow-xl transition-all active:scale-95"
           >
-            🗺️ Explore State
+            {EMOJI.nav.map} Explore State
           </button>
           <button
             onClick={onClose}

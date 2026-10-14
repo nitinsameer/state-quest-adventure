@@ -183,7 +183,7 @@ export function UnlockCelebration() {
         const names = ids
           .map((id) => `${BADGE_ICON[id]} ${STATE_BADGES.find((b) => b.id === id)?.name ?? id}`)
           .join(" · ");
-        lines.push(`🏅 ${state}: ${names}`);
+        lines.push(`{EMOJI.achievement.badge} ${state}: ${names}`);
       }
     }
 
@@ -209,7 +209,7 @@ export function UnlockCelebration() {
       confetti: true,
       duration: 4500,
       action: {
-        label: "Awesome! 🎉",
+        label: `Awesome! ${EMOJI.action.celebrate}`,
         onClick: () => {
           // Auto-dismissed by celebration system
         }

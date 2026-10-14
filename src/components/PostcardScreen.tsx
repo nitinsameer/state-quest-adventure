@@ -15,7 +15,7 @@ import { readTokenAsHex, subscribeThemeChange } from "@/lib/theme-tokens";
 import { EMOJI } from "@/constants/emoji";
 
 const BADGE_EMOJI: Record<BadgeId, string> = {
-  monument: "🛖️",
+  monument: "{EMOJI.achievement.monument}",
   animal: "�x�¾",
   explorer: "🎖️",
 };
@@ -393,7 +393,7 @@ export function StatePostcardScreen({
           }}
           className="w-full h-14 rounded-2xl ui-button ui-accent-1 text-ink text-display font-extrabold active:scale-95 transition-transform"
         >
-          �x🏠 Home
+          {EMOJI.nav.home} Home
         </button>
 
         <button
