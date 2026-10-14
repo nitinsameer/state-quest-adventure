@@ -19,9 +19,6 @@ export interface StandardModalProps {
   /** Called when modal should close */
   onClose?: () => void;
   
-  /** Gradient colors for header: [from, to] */
-  headerGradient?: [string, string];
-  
   /** Header content (icon + title) */
   header?: {
     icon: ReactNode;
@@ -29,8 +26,7 @@ export interface StandardModalProps {
     subtitle?: string;
     closeButton?: boolean;
     onClose?: () => void;
-    floatingIcon?: boolean;  // NEW: Enable floating icon mode
-    floatingIconGradient?: [string, string];  // NEW: Custom gradient for floating icon
+    floatingIcon?: boolean;  // Enable floating icon mode (uses bg-header token)
   };
   
   /** Main content sections */
@@ -71,7 +67,6 @@ export interface StandardModalProps {
 export function StandardModal({
   open = true,
   onClose,
-  headerGradient,
   header,
   content,
   buttons = [],
@@ -93,11 +88,7 @@ export function StandardModal({
             {header.floatingIcon ? (
               // Floating Icon Mode - icon hovers above card
               <>
-                <div className={`absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full flex items-center justify-center text-4xl shadow-[var(--shadow-raised)] border-4 border-surface-card z-20 ${
-                  header.floatingIconGradient
-                    ? `bg-gradient-to-br ${header.floatingIconGradient[0]} ${header.floatingIconGradient[1]}`
-                    : "bg-header"
-                }`}>
+                <div className={`absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full flex items-center justify-center text-4xl shadow-[var(--shadow-raised)] border-4 border-surface-card z-20 bg-header`}>
                   <span className="animate-pulse">{header.icon}</span>
                 </div>
                       <div className="bg-surface-card px-(--padding-lg) pt-14 pb-4 flex flex-col items-center text-center">
@@ -117,11 +108,7 @@ export function StandardModal({
             ) : (
               // Gradient Banner Mode (existing)
               <div
-                className={`${
-                  headerGradient
-                    ? `bg-gradient-to-r ${headerGradient[0]} ${headerGradient[1]}`
-                    : "bg-header"
-                } p-(--padding-lg) flex flex-col items-center text-center relative`}
+                className={`bg-header p-(--padding-lg) flex flex-col items-center text-center relative`}
               >
                 {header.closeButton && (
                   <button

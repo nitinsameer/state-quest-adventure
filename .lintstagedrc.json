@@ -1,4 +1,4 @@
 {
-  "*.{ts,tsx,js,jsx}": ["eslint --fix"],
+  "*.{ts,tsx,js,jsx}": ["eslint --fix", "npm run check-theme-tokens"],
   "*.{ts,tsx,js,jsx,json,md}": ["prettier --write"]
 }

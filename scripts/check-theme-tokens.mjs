@@ -13,10 +13,13 @@ const BASELINE_FILE = join(WORKSPACE, 'scripts', 'theme-token-baseline.json');
 const ALLOWLIST = [
   'src/styles/tokens.css',
   'src/styles/index.css',
+  'src/styles.css',  // Allow comments documenting palette color mappings
   'tailwind.config',
   'scripts/',
   '.agents/',
   'node_modules/',
+  'src/components/DebugScreen.tsx',  // Dev-only, excluded from token enforcement
+  'src/components/AudioTestScreen.tsx',  // Dev-only, excluded from token enforcement
 ];
 
 // Patterns that indicate hardcoded colors (NOT semantic tokens)

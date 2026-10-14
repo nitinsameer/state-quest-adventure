@@ -79,7 +79,7 @@ export function PassportSprout() {
               <div
                 key={i}
                 className={`flex-1 h-3 rounded-full transition-all ${
-                  i < filledSegments ? "bg-accent-3" : "bg-white/30"
+                  i < filledSegments ? "bg-accent-3" : "bg-surface-card/30"
                 }`}
               />
             ))}

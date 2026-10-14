@@ -101,7 +101,7 @@ export function StateCompletionCelebration({
         >
           {/* Glowing border */}
           <div
-            className={`absolute inset-0 rounded-3xl border-4 border-purple-500 transition-all duration-300 ${
+            className={`absolute inset-0 rounded-3xl border-4 border-accent-1 transition-all duration-300 ${
               stage === 'celebrate' ? 'animate-pulse' : ''
             }`}
           />

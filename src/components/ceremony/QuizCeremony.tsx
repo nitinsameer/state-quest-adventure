@@ -78,14 +78,14 @@ export function QuizCeremony() {
       <div className={`px-5 pt-3 pb-4 ${grad} rounded-b-[32px] relative`}>
         <div className="flex items-center justify-between">
           <div className="text-center flex-1">
-            <div className="text-white text-sm font-black uppercase tracking-widest opacity-90">
+            <div className="text-on-header text-sm font-black uppercase tracking-widest opacity-90">
               Step {step + 1} of 4
             </div>
           </div>
           {/* Skip button - top right */}
           <button
             onClick={handleSkip}
-            className="text-white text-xs font-bold opacity-75 hover:opacity-100 transition-opacity active:scale-95"
+            className="text-on-header text-xs font-bold opacity-75 hover:opacity-100 transition-opacity active:scale-95"
             aria-label="Skip to results"
           >
             Skip â†“
@@ -361,7 +361,7 @@ function StepResult({ ceremony, state, art }: StepProps) {
                 style={{ width: `${(xpInCurrentLevel / nextLevelXp) * 100}%` }}
               />
               <div
-                className="absolute top-0 h-1 rounded-full bg-white/70 transition-all duration-1000 ease-out"
+                className="absolute top-0 h-1 rounded-full bg-default/70 transition-all duration-1000 ease-out"
                 style={{ width: `${(xpInCurrentLevel / nextLevelXp) * 100 * 0.9}%`, left: '5%' }}
               />
             </div>

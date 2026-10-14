@@ -127,7 +127,6 @@ export function AudioPermissionDialog({
         icon: "🎵",
         title: headerText,
         floatingIcon: true,
-        floatingIconGradient: ["bg-accent-2", "bg-accent-2"],
       }}
       buttonsLayout="stack"
       content={[
@@ -156,7 +155,7 @@ export function AudioPermissionDialog({
           label: "Yes, turn on sounds! 🔊",
           onClick: handleAccept,
           variant: "primary",
-          customClass: "w-full px-4 py-3 rounded-full bg-success text-white font-bold text-sm shadow-lg transition active:scale-95",
+          customClass: "w-full px-4 py-3 rounded-full bg-success text-on-header font-bold text-sm shadow-lg transition active:scale-95",
         },
       ]}
       footer="You can change this anytime in Profile settings"

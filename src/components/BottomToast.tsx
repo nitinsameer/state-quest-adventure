@@ -41,7 +41,7 @@ function ToastNotification({ config }: { config: ToastConfig }) {
       aria-live="polite"
     >
       <div
-        className={`${colors[config.type]} rounded-2xl shadow-elevated-3 border border-white/20 p-4 flex items-center gap-3 text-white backdrop-blur-sm`}
+        className={`${colors[config.type]} rounded-2xl shadow-elevated-3 border border-default/20 p-4 flex items-center gap-3 text-on-header backdrop-blur-sm`}
       >
         <span className="text-2xl flex-shrink-0 drop-shadow">{config.icon}</span>
         <div className="flex-1 min-w-0">

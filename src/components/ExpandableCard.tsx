@@ -74,7 +74,7 @@ export function ExpandableCard({
         <div className="mb-(--space-3)">
           <button
             onClick={handleToggleExpand}
-            className="w-full flex items-center justify-between mb-2 p-(--padding-sm) rounded-lg hover:bg-black/5 active:scale-95 transition"
+            className="w-full flex items-center justify-between mb-2 p-(--padding-sm) rounded-lg hover:bg-surface-sunken active:scale-95 transition"
           >
             <span className="text-xs font-bold text-muted-foreground">
               {isExpanded ? "📖 Hide Facts" : "✨ Cool Facts"}
@@ -89,7 +89,7 @@ export function ExpandableCard({
               {keyFacts.slice(0, visibleFactsCount).map((fact, index) => (
                 <div
                   key={index}
-                  className="text-xs font-semibold text-muted-dark bg-white/60 p-(--padding-sm) rounded-lg border-l-3 border-info animate-fadeIn"
+                  className="text-xs font-semibold text-muted-dark bg-surface-card/60 p-(--padding-sm) rounded-lg border-l-3 border-info animate-fadeIn"
                 >
                   {fact}
                 </div>
@@ -116,7 +116,7 @@ export function ExpandableCard({
             <div className="overflow-hidden">
               <button
                 onClick={() => handleToggleDetail(0)}
-                className="w-full flex items-center justify-between p-(--padding-sm) rounded-lg hover:bg-black/5 active:scale-95 transition bg-warning-soft border border-warning"
+                className="w-full flex items-center justify-between p-(--padding-sm) rounded-lg hover:bg-surface-sunken active:scale-95 transition bg-warning-soft border border-warning"
               >
                 <span className="text-xs font-bold text-warning">
                   ⭐ More Amazing Facts
@@ -146,7 +146,7 @@ export function ExpandableCard({
             <div className="overflow-hidden">
               <button
                 onClick={() => handleToggleDetail(1)}
-                className="w-full flex items-center justify-between p-(--padding-sm) rounded-lg hover:bg-black/5 active:scale-95 transition bg-accent-5-soft border border-accent-5"
+                className="w-full flex items-center justify-between p-(--padding-sm) rounded-lg hover:bg-surface-sunken active:scale-95 transition bg-accent-5-soft border border-accent-5"
               >
                 <span className="text-xs font-bold text-accent-5">
                   🤔 Did You Know?
@@ -171,7 +171,7 @@ export function ExpandableCard({
             <div className="overflow-hidden">
               <button
                 onClick={() => handleToggleDetail(2)}
-                className="w-full flex items-center justify-between p-(--padding-sm) rounded-lg hover:bg-black/5 active:scale-95 transition bg-success-soft border border-success"
+                className="w-full flex items-center justify-between p-(--padding-sm) rounded-lg hover:bg-surface-sunken active:scale-95 transition bg-success-soft border border-success"
               >
                 <span className="text-xs font-bold text-success">
                   🎮 Try This Activity

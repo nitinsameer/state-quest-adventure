@@ -70,7 +70,7 @@ export function BadgeUnlockAnimation({
       {/* Badge reveal card */}
       <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
         <div
-          className={`relative z-10 rounded-3xl bg-white shadow-2xl p-8 max-w-sm mx-4 transition-all duration-500 ${
+          className={`relative z-10 rounded-3xl bg-surface-card shadow-2xl p-8 max-w-sm mx-4 transition-all duration-500 ${
             stage === 'intro'
               ? 'scale-0 opacity-0 rotate-180'
               : 'scale-100 opacity-100 rotate-0'

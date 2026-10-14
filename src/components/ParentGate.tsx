@@ -170,7 +170,6 @@ export function ParentGate({ onVerified, onCancel }: ParentGateProps) {
                 : "Recover PIN",
         closeButton: false,
         floatingIcon: true,
-        floatingIconGradient: ["from-accent-1", "to-accent-1"],
       }}
       onClose={onCancel}
       maxWidth="max-w-sm"

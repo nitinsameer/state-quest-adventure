@@ -56,13 +56,13 @@ export function JourneyDestinationCard({
   let cardBgColor = toneBackgrounds[state.tone] || toneBackgrounds.orange;
   let textColorClass = "text-text-primary";
   let buttonGradientClass = toneGradients[state.tone] || "gradient-saffron";
-  let buttonTextClass = "text-white";
+  let buttonTextClass = "text-on-header";
   
   if (status === "completed") {
     cardBgColor = toneBackgrounds[state.tone] || toneBackgrounds.orange;
     textColorClass = "text-text-primary";
     buttonGradientClass = toneGradients[state.tone] || "gradient-saffron";
-    buttonTextClass = "text-white";
+    buttonTextClass = "text-on-header";
   } else if (status === "locked") {
     cardBgColor = "#F0F0F0";
     textColorClass = "text-text-secondary";
@@ -136,7 +136,7 @@ export function JourneyDestinationCard({
       {/* Checkmark overlay badge for completed states */}
       {status === "completed" && (
         <div className="absolute top-2 right-2 w-10 h-10 rounded-full bg-success/80 shadow-lg flex items-center justify-center backdrop-blur-sm">
-          <span className="text-white text-lg font-bold leading-none">âœ“</span>
+          <span className="text-on-header text-lg font-bold leading-none">âœ“</span>
         </div>
       )}
 
@@ -144,9 +144,9 @@ export function JourneyDestinationCard({
       {isInProgress && (
         <div className="mb-2 text-sm font-bold opacity-75">
           <div className="mb-1">{cardsDone}/{totalCards} adventures</div>
-          <div className="h-1.5 bg-black/10 rounded-full overflow-hidden">
+          <div className="h-1.5 bg-surface-muted rounded-full overflow-hidden">
             <div
-              className="h-full bg-black/30 rounded-full transition-all"
+              className="h-full bg-surface-muted/70 rounded-full transition-all"
               style={{ width: `${Math.round((cardsDone / totalCards) * 100)}%` }}
             />
           </div>

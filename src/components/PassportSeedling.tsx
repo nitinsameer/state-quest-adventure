@@ -128,10 +128,10 @@ export function PassportSeedling() {
       </div>
 
       {/* Profile Card - Simplified */}
-      <div className="mx-5 mt-5 p-5 rounded-3xl bg-accent-1 text-white shadow-xl">
+      <div className="mx-5 mt-5 p-5 rounded-3xl bg-accent-1 text-on-header shadow-xl">
         {/* ROW 1: Avatar + User Info */}
         <div className="flex items-center gap-4 mb-3">
-          <div className="h-16 w-16 rounded-2xl bg-white p-1 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-lg">
+          <div className="h-16 w-16 rounded-2xl bg-surface-card p-1 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-lg">
             <img 
               src={getAvatarImage(progress.avatar)} 
               alt={getAvatarName(progress.avatar)}
@@ -146,7 +146,7 @@ export function PassportSeedling() {
 
         {/* ROW 2: Progress Bar */}
         <div>
-          <div className="h-2 bg-white/30 rounded-full overflow-hidden shadow-inner">
+          <div className="h-2 bg-surface-card/30 rounded-full overflow-hidden shadow-inner">
             <div
               className="h-full bg-accent-2-soft rounded-full transition-all duration-500"
               style={{ width: `${Math.round((progress.completed.length / 36) * 100)}%` }}

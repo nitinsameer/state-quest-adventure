@@ -60,7 +60,7 @@ export function FirstSessionTutorial({ onComplete, isVisible = true }: FirstSess
         { emoji: "👉", text: "Swipe or tap to move to the next card" },
         { emoji: "⭐", text: "Each card gives you 10 XP" },
       ],
-      gradient: ["bg-accent-1", "bg-accent-1"] as [string, string],
+      gradient: undefined,
     },
     {
       title: "Take Quizzes & Earn XP",
@@ -71,7 +71,7 @@ export function FirstSessionTutorial({ onComplete, isVisible = true }: FirstSess
         { emoji: "💪", text: "You've got this! It's okay to learn" },
         { emoji: "🎉", text: "Finish the quiz to complete the state" },
       ],
-      gradient: ["bg-accent-2", "bg-accent-2"] as [string, string],
+      gradient: undefined,
     },
     {
       title: "Unlock New States",
@@ -82,7 +82,7 @@ export function FirstSessionTutorial({ onComplete, isVisible = true }: FirstSess
         { emoji: "🔥", text: "Build a daily streak" },
         { emoji: "🏅", text: "Earn special badges" },
       ],
-      gradient: ["bg-success", "bg-success"] as [string, string],
+      gradient: undefined,
     },
   ];
 
@@ -96,7 +96,6 @@ export function FirstSessionTutorial({ onComplete, isVisible = true }: FirstSess
         icon: current.emoji,
         title: current.title,
       }}
-      headerGradient={current.gradient}
       content={[
         {
           type: "custom",

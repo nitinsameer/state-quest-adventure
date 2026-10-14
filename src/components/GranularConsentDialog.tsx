@@ -51,7 +51,7 @@ export function GranularConsentDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm p-4 animate-in fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-scrim backdrop-blur-sm p-4 animate-in fade-in">
       <div className="bg-surface-card rounded-3xl shadow-2xl max-w-md w-full overflow-hidden animate-in zoom-in-95 flex flex-col max-h-[90vh]">
         {/* Header */}
         <div className="bg-bg-header p-(--padding-lg) text-text-on-primary">
