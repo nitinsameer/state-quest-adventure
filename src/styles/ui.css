@@ -154,8 +154,8 @@
 }
 
 @utility ui-nav-item-active {
-  background: var(--accent-fill-soft);
-  color: var(--accent-ink);
+  background: var(--accent-1-soft);
+  color: var(--accent-1-ink);
 }
 
 /* ---------- Modal ---------- */
@@ -179,13 +179,13 @@
 }
 
 @utility ui-toggle-active {
-  color: var(--action-primary);
+  color: var(--action-primary-bg);
 }
 
 /* ---------- Badge ---------- */
 @utility ui-badge {
-  background: var(--accent-fill);
-  color: var(--accent-ink);
+  background: var(--accent-1);
+  color: var(--accent-1-ink);
   border-radius: var(--radius-chip);
   padding: 0.25rem 0.75rem;
   font-weight: 700;
@@ -208,9 +208,9 @@
 }
 
 @utility ui-tab-active {
-  background: var(--action-primary);
-  color: var(--text-on-primary);
-  border-bottom: 3px solid var(--action-primary);
+  background: var(--action-primary-bg);
+  color: var(--action-primary-fg);
+  border-bottom: 3px solid var(--action-primary-bg);
 }
 
 /* ---------- Accent colour variants ---------- */

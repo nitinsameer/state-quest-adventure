@@ -90,7 +90,7 @@ test.describe('Learning Hub & Card Reading', () => {
       await page.waitForTimeout(300);
     }
 
-    // Check XP was awarded (expected: 25 XP per card × 6 = 150)
+    // Check XP was awarded (expected: 25 XP per card � 6 = 150)
     // Note: XP might update after navigation back to home
     await home.goto();
     const finalXP = await home.getXPValue();

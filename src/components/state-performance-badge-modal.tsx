@@ -22,11 +22,11 @@ interface StatePerformanceBadgeModalProps {
   onClose: () => void;
 }
 
-// Helper to generate progress stars (e.g ⭐⭐â˜†)
+// Helper to generate progress stars (e.g ⭐⭐��†)
 const getProgressStars = (progress: number, max: number): string => {
   if (max === 0) return "";
   const filledCount = Math.min(Math.ceil((progress / max) * 3), 3);
-  const stars = "⭐".repeat(filledCount) + "â˜†".repeat(3 - filledCount);
+  const stars = "⭐".repeat(filledCount) + "��†".repeat(3 - filledCount);
   return stars;
 };
 
@@ -66,7 +66,7 @@ export function StatePerformanceBadgeModal({
             }}
             className="text-2xl text-muted-light hover:text-muted-foreground transition"
           >
-            âœ•
+            �S•
           </button>
         </div>
 
@@ -76,7 +76,7 @@ export function StatePerformanceBadgeModal({
         {earnedBadges.length > 0 && (
           <div>
             <h3 className="text-display font-extrabold text-lg mb-3 text-muted-dark">
-              âœ“ You Did It!
+              �S“ You Did It!
             </h3>
             <div className="space-y-3">
               {earnedBadges.map(badgeId => (
@@ -161,7 +161,7 @@ function BadgeDetailCard({ badgeId, progress }: BadgeDetailCardProps) {
           <div className="mt-3 pt-3 border-t border-white/20">
             {progress.earned ? (
               <div className="flex flex-col gap-1">
-                <div className="text-lg font-extrabold text-ink">âœ“ You Did It!</div>
+                <div className="text-lg font-extrabold text-ink">�S“ You Did It!</div>
               </div>
             ) : (
               <div className="flex flex-col gap-2">

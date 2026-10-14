@@ -40,7 +40,7 @@ describe('Task 12.2: Save Ceremony Data - Extended Pending Celebration', () => {
       expect(celebration.stars).toBe('3')
       expect(celebration.correctCount).toBe(6)
       expect(celebration.totalQuestions).toBe(6)
-      expect(celebration.quizXp).toBe(120) // 6 correct × 20
+      expect(celebration.quizXp).toBe(120) // 6 correct � 20
       expect(celebration.bonusXp).toBe(100)
       expect(celebration.stampDate).toBeDefined()
       expect(celebration.earnedBadgeIds).toBeDefined()
@@ -65,7 +65,7 @@ describe('Task 12.2: Save Ceremony Data - Extended Pending Celebration', () => {
       const p = JSON.parse(stored!)
       const celebration = p.pendingCelebrations[0]
       
-      expect(celebration.quizXp).toBe(80) // 4 × 20
+      expect(celebration.quizXp).toBe(80) // 4 � 20
     })
 
     it('should set bonusXp to 100 always', () => {
@@ -343,7 +343,7 @@ describe('Task 12.2: Save Ceremony Data - Extended Pending Celebration', () => {
     })
   })
 
-  describe('Round-Trip Validation: Save → Load → Validate', () => {
+  describe('Round-Trip Validation: Save � Load � Validate', () => {
     it('should pass Zod validation after first completion', () => {
       finishQuiz('Rajasthan', {
         timeToComplete: 60000,
@@ -385,7 +385,7 @@ describe('Task 12.2: Save Ceremony Data - Extended Pending Celebration', () => {
       expect(celebration.stars).toBe('2')
       expect(celebration.correctCount).toBe(5)
       expect(celebration.totalQuestions).toBe(6)
-      expect(celebration.quizXp).toBe(100) // 5 × 20
+      expect(celebration.quizXp).toBe(100) // 5 � 20
       expect(celebration.bonusXp).toBe(100)
     })
 
@@ -503,13 +503,13 @@ describe('Task 12.2: Save Ceremony Data - Extended Pending Celebration', () => {
       let p = JSON.parse(stored!)
       
       // User selects a sticker in step 3
-      p.pendingCelebrations[0].sticker = '😋'
+      p.pendingCelebrations[0].sticker = '='
       localStorage.setItem('india-explorer:progress:v2', JSON.stringify(p))
 
       stored = localStorage.getItem('india-explorer:progress:v2')
       p = JSON.parse(stored!)
       
-      expect(p.pendingCelebrations[0].sticker).toBe('😋')
+      expect(p.pendingCelebrations[0].sticker).toBe('=')
     })
 
     it('should persist sticker through round-trip validation', () => {
@@ -526,7 +526,7 @@ describe('Task 12.2: Save Ceremony Data - Extended Pending Celebration', () => {
       // Add sticker
       const celebration = p.pendingCelebrations[0]
       if (celebration.type === 'full') {
-        celebration.sticker = '🏞️'
+        celebration.sticker = '<�'
       }
       p.pendingCelebrations[0].step = 3
       localStorage.setItem('india-explorer:progress:v2', JSON.stringify(p))
@@ -536,7 +536,7 @@ describe('Task 12.2: Save Ceremony Data - Extended Pending Celebration', () => {
       
       const finalCelebration = validated?.pendingCelebrations![0]
       if (finalCelebration?.type === 'full') {
-        expect(finalCelebration.sticker).toBe('🏞️')
+        expect(finalCelebration.sticker).toBe('<�')
       }
       expect(finalCelebration?.step).toBe(3)
     })

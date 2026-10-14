@@ -14,8 +14,8 @@ import { ResetPINDialog } from "@/components/ResetPINDialog";
 import { readTokenAsHex, subscribeThemeChange } from "@/lib/theme-tokens";
 
 const BADGE_EMOJI: Record<BadgeId, string> = {
-  monument: "ðŸ›️",
-  animal: "ðŸ¾",
+  monument: "�x�›️",
+  animal: "�x�¾",
   explorer: "🎖️",
 };
 
@@ -252,7 +252,7 @@ export function StatePostcardScreen({
         // Add to postcard library with image data
         library.addPostcard(state.name, badgeId, stampDate, now, base64);
 
-        toast.success("✨ Saved to your Passport!", {
+        toast.success("💾 Saved to your Passport!", {
           subtitle: "View anytime from Explorer",
         });
         setBusy(false);
@@ -368,7 +368,7 @@ export function StatePostcardScreen({
             disabled={busy || !previewUrl}
             className="flex-1 h-12 rounded-2xl ui-button ui-accent-1-soft text-ink text-sm font-bold disabled:opacity-60 active:scale-95 transition-transform"
           >
-            {busy ? "Saving..." : "ðŸ’¾ Save"}
+            {busy ? "Saving..." : "�x¾ Save"}
           </button>
 
           {/* Secondary: Share (Parent-gated) */}
@@ -377,7 +377,7 @@ export function StatePostcardScreen({
             disabled={busy || !previewUrl}
             className="flex-1 h-12 rounded-2xl ui-button ui-accent-2 text-ink text-sm font-bold disabled:opacity-60 active:scale-95 transition-transform"
           >
-            ðŸ”— Share
+            �x📤 Share
           </button>
         </div>
 
@@ -389,7 +389,7 @@ export function StatePostcardScreen({
           }}
           className="w-full h-14 rounded-2xl ui-button ui-accent-1 text-ink text-display font-extrabold active:scale-95 transition-transform"
         >
-          ðŸ  Home
+          �x🏠 Home
         </button>
 
         <button
@@ -399,7 +399,7 @@ export function StatePostcardScreen({
           }}
           className="w-full h-12 rounded-xl ui-button ui-accent-1-soft text-ink text-display font-bold active:scale-95 transition-transform"
         >
-          Next State âœˆ️
+          Next State �Sˆ️
         </button>
       </div>
 

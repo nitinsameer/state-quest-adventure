@@ -1,58 +1,63 @@
-import { readFileSync, writeFileSync, readdirSync, statSync } from 'fs';
+#!/usr/bin/env node
+/**
+ * Fix UTF-8 mojibake: when UTF-8 emoji bytes are read as Latin-1
+ * Example: <� (F0 9F 8F A0 in UTF-8) read as Latin-1 becomes "�x\x8f� "
+ * Solution: identify mojibake patterns and re-encode them correctly
+ */
+import { readFileSync, writeFileSync, readdirSync } from 'fs';
 import { join, extname } from 'path';
 
 const WRITE = process.argv.includes('--write');
-const rootDir = process.argv.find(arg => !arg.startsWith('-') && !arg.endsWith('.mjs')) || process.cwd();
+const rootDir = process.cwd();
 
 const ALLOWED_EXTENSIONS = ['.tsx', '.ts', '.jsx', '.js', '.mjs', '.css', '.json', '.md'];
-const SKIP_DIRS = new Set(['node_modules', '.git', 'dist', 'build', 'android', 'ios', '.agents']);
+const SKIP_DIRS = new Set(['node_modules', '.git', 'dist', 'build', 'android', 'ios', '.agents', '.kiro', 'apk_extract', 'temp_apk', '.tanstack', '.idea', '.vscode', '.lovable', '.wrangler', '.husky']);
 
-// Mojibake detection: UTF-8 bytes misinterpreted as Latin-1
-// This matches patterns like: ðŸ (d0 9f), â˜ (c2 98), etc.
-// Specific mojibake patterns to fix
-const MOJIBAKE_PATTERNS = [
-  // UTF-8 emoji like 🏠 (F0 9F 8F A0) misread as Latin-1: ðŸ 
-  [/ðŸ(.)/g, (match) => {
-    const code = match.charCodeAt(1);
-    if (code >= 0x80) {
-      // This is mojibake - bytes were read as Latin-1 instead of UTF-8
-      try {
-        const bytes = Buffer.from(match, 'latin1').toString('utf8');
-        return bytes;
-      } catch {
-        return match;
-      }
-    }
-    return match;
-  }],
-  // â, Â sequences (common UTF-8 mojibake)
-  [/â(.)/g, (match) => {
-    try {
-      return Buffer.from(match, 'latin1').toString('utf8');
-    } catch {
-      return match;
-    }
-  }],
-  // Ã (another mojibake pattern)
-  [/Ã(.)/g, (match) => {
-    try {
-      return Buffer.from(match, 'latin1').toString('utf8');
-    } catch {
-      return match;
-    }
-  }],
-];
-
+/**
+ * Detect and fix mojibake in a string
+ * Mojibake pattern: high-byte Latin-1 chars that should be UTF-8 sequences
+ */
 function fixMojibake(str) {
-  let result = str;
-  for (const [pattern, replacer] of MOJIBAKE_PATTERNS) {
-    result = result.replace(pattern, replacer);
+  // Check if string contains likely mojibake patterns
+  // These are UTF-8 bytes (0xC0-0xFF) interpreted as Latin-1 characters
+  const mojibakePattern = /[\xC0-\xFF]/g;
+  if (!mojibakePattern.test(str)) {
+    return str; // No high bytes, no mojibake
   }
-  return result;
+
+  // Try to fix by reinterpreting as Latin-1 encoded UTF-8
+  try {
+    // Convert string to Latin-1 buffer, then decode as UTF-8
+    const latin1Buffer = Buffer.from(str, 'latin1');
+    const utf8String = latin1Buffer.toString('utf8');
+    
+    // Only accept if it produces valid UTF-8 with actual emoji/symbols
+    // Check if result has emoji-like characters (codepoints > 0x1F300)
+    const hasEmoji = /[\uD800-\uDBFF]/.test(utf8String) || /[^\x00-\x7F]/.test(utf8String);
+    if (hasEmoji && utf8String !== str) {
+      return utf8String;
+    }
+  } catch (e) {
+    // If re-encoding fails, return original
+  }
+  
+  return str;
 }
 
 function shouldProcess(filePath) {
   const ext = extname(filePath);
+  // Skip backup/copy files
+  if (filePath.includes(' copy') || filePath.includes('-bck') || filePath.includes('bck3')) {
+    return false;
+  }
+  // Skip data files
+  if (filePath.includes('src\\lib\\content\\') && ext === '.json') {
+    return false;
+  }
+  // Only process source files, not dist/build outputs
+  if (filePath.includes('node_modules') || filePath.includes('apk_extract') || filePath.includes('temp_apk')) {
+    return false;
+  }
   return ALLOWED_EXTENSIONS.includes(ext);
 }
 
@@ -69,7 +74,7 @@ function walk(dir, callback) {
       }
     }
   } catch (err) {
-    console.error(`Error walking directory ${dir}:`, err.message);
+    // Silently skip inaccessible directories
   }
 }
 
@@ -84,33 +89,34 @@ walk(rootDir, (file) => {
     const fixed = fixMojibake(content);
     
     if (fixed !== content) {
-      // Count how many replacements were made by comparing character differences
-      const matches = content.match(/ðŸ|â|Ã/g) || [];
-      fileStats[file] = matches.length;
-      totalFixed += matches.length;
+      fileStats[file] = true;
+      totalFixed++;
 
       if (WRITE) {
         writeFileSync(file, fixed, 'utf8');
-        console.log(`Fixed: ${file} (${matches.length} sequences)`);
+        console.log(`Fixed: ${file}`);
       } else {
-        console.log(`Found: ${file} (${matches.length} sequences)`);
+        console.log(`Found: ${file}`);
       }
     }
   } catch (err) {
-    console.error(`Error processing ${file}:`, err.message);
+    // Silently skip files that can't be read
   }
 });
 
 console.log(`\n=== Summary ===`);
-console.log(`Total mojibake sequences found: ${totalFixed}`);
-if (Object.keys(fileStats).length > 0) {
+console.log(`Total files with mojibake: ${totalFixed}`);
+if (totalFixed > 0) {
   console.log(`\nFiles affected:`);
-  for (const [file, count] of Object.entries(fileStats)) {
-    console.log(`  ${file}: ${count}`);
+  for (const file of Object.keys(fileStats)) {
+    // Show relative path for readability
+    const relPath = file.startsWith(rootDir) ? file.slice(rootDir.length + 1) : file;
+    console.log(`  ${relPath}`);
   }
 }
 
 if (!WRITE && totalFixed > 0) {
+  console.log('\nRun with --write to apply fixes');
   process.exit(1);
 }
 

@@ -20,8 +20,8 @@ import { StandardModal } from "@/components/StandardModal";
 import { readTokenAsHex } from "@/lib/theme-tokens";
 
 const BADGE_EMOJI: Record<BadgeId, string> = {
-  monument: "ðŸ›️",
-  animal: "ðŸ¾",
+  monument: "�x�›️",
+  animal: "�x�¾",
   explorer: "🎖️",
 };
 
@@ -326,7 +326,7 @@ export function PostcardPreviewModal({
         ]}
         buttons={[
           {
-            label: isSaving ? "Saving..." : "ðŸ’¾ Save to Passport",
+            label: isSaving ? "Saving..." : "�x¾ Save to Passport",
             onClick: handleSaveToPassport,
             variant: "primary",
           },

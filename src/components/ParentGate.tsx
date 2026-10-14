@@ -159,7 +159,7 @@ export function ParentGate({ onVerified, onCancel }: ParentGateProps) {
     <StandardModal
       open={true}
       header={{
-        icon: "🔐",
+        icon: "=",
         title:
           mode === "pin-entry"
             ? "Parent Access"

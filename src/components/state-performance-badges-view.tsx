@@ -33,7 +33,7 @@ export function StatePerformanceBadgesView() {
     <div className="h-full w-full bg-bg-page flex flex-col">
       {/* Header - Kid-friendly celebration style */}
       <div className="px-5 pt-3 pb-4 gradient-gold rounded-b-[32px] relative overflow-hidden">
-        <div className="absolute top-2 right-4 text-5xl opacity-40 pointer-events-none">â˜️</div>
+        <div className="absolute top-2 right-4 text-5xl opacity-40 pointer-events-none">��️</div>
         
         <div className="flex items-center gap-3 relative z-10">
           <div className="h-14 w-14 rounded-2xl ui-card ui-accent-1-soft p-1 flex items-center justify-center overflow-hidden flex-shrink-0">
@@ -56,7 +56,7 @@ export function StatePerformanceBadgesView() {
         {completedStates.length > 0 && (
           <div>
             <h2 className="text-display font-extrabold text-lg mb-4 text-text-primary">
-              âœ“ Completed ({completedStates.length})
+              �S“ Completed ({completedStates.length})
             </h2>
             
             <div className="space-y-4">
@@ -79,7 +79,7 @@ export function StatePerformanceBadgesView() {
         {lockedStates.length > 0 && (
           <div>
             <h2 className="text-display font-extrabold text-lg mb-4 text-text-primary">
-              ðŸ”’ Not Started ({lockedStates.length})
+              �x’ Not Started ({lockedStates.length})
             </h2>
             
             <div className="space-y-4">
@@ -89,7 +89,7 @@ export function StatePerformanceBadgesView() {
                   className="rounded-2xl p-4 bg-surface-card shadow-soft border border-border-subtle"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="text-4xl">ðŸ”’</div>
+                    <div className="text-4xl">�x’</div>
                     <div className="flex-1">
                       <h3 className="text-display font-extrabold text-text-primary">{state.name}</h3>
                       <p className="text-xs font-bold text-text-secondary mt-1">Not yet started</p>
@@ -152,7 +152,7 @@ function StateDetailBadgeCard({ state, progress, onSelect }: any) {
             className="h-8 w-8 rounded-full bg-text-muted border-2 border-text-muted flex items-center justify-center text-xs opacity-50 flex-shrink-0 relative"
             title={`${STATE_PERFORMANCE_BADGE_DEFS[badge]?.name}`}
           >
-            <span className="absolute text-[10px]">ðŸ”’</span>
+            <span className="absolute text-[10px]">�x’</span>
           </div>
         ))}
       </div>

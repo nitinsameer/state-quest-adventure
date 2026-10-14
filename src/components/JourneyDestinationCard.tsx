@@ -87,19 +87,19 @@ export function JourneyDestinationCard({
   };
 
   // Determine button text and handler based on state
-  let buttonText = "Start Exploring â€º";
+  let buttonText = "Start Exploring �º";
   let buttonHandler = handleStartClick;
   let isButtonDisabled = false;
   
   if (status === "completed" && !isInProgress) {
-    buttonText = "Replay â†»";
+    buttonText = "Replay � »";
     buttonHandler = handleReplayClick;
   } else if (status === "locked") {
-    buttonText = "ðŸ”’ Locked";
+    buttonText = "�x’ Locked";
     isButtonDisabled = true;
     buttonHandler = () => {};
   } else if (isInProgress) {
-    buttonText = "Continue â€º";
+    buttonText = "Continue �º";
     buttonHandler = handleStartClick;
   }
 
@@ -128,7 +128,7 @@ export function JourneyDestinationCard({
       {/* Status indicator */}
       {status === "locked" && (
         <div className="mb-2 flex items-center gap-1 text-sm font-bold text-text-secondary">
-          <span>ðŸ”’</span>
+          <span>�x’</span>
           <span>Locked</span>
         </div>
       )}
@@ -136,7 +136,7 @@ export function JourneyDestinationCard({
       {/* Checkmark overlay badge for completed states */}
       {status === "completed" && (
         <div className="absolute top-2 right-2 w-10 h-10 rounded-full bg-success/80 shadow-lg flex items-center justify-center backdrop-blur-sm">
-          <span className="text-on-header text-lg font-bold leading-none">âœ“</span>
+          <span className="text-on-header text-lg font-bold leading-none">�S“</span>
         </div>
       )}
 
@@ -164,12 +164,12 @@ export function JourneyDestinationCard({
       >
         {status === "locked" ? (
           <>
-            <span>ðŸ”’</span>
+            <span>�x’</span>
             <span>Locked</span>
           </>
         ) : status === "completed" && !isInProgress ? (
           <>
-            <span>â†»</span>
+            <span>� »</span>
             <span>Replay</span>
           </>
         ) : isInProgress ? (

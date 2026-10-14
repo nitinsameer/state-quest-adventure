@@ -79,7 +79,7 @@ export function LanguageToggle({
         className="h-10 w-10 rounded-full bg-surface-card shadow-soft flex items-center justify-center text-lg transition-all active:scale-95 hover:shadow-md border border-info"
         title={`Switch to ${otherDisplayName}`}
       >
-        {currentLanguage === "en" ? "ðŸ“–" : "🌍"}
+        {currentLanguage === "en" ? "�x–" : "🌍"}
       </button>
     );
   }
@@ -93,7 +93,7 @@ export function LanguageToggle({
         className="px-(--padding-lg) py-(--padding-base) rounded-full text-sm font-bold transition-all ui-button ui-accent-2 text-ink shadow-md hover:shadow-lg active:scale-95"
         title={`Switch to ${otherDisplayName}`}
       >
-        ðŸ“– {currentDisplayName}
+        �x– {currentDisplayName}
       </button>
     </div>
   );

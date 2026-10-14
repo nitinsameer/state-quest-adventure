@@ -207,6 +207,14 @@
   --shadow-glow-blue: 0 12px 30px -8px oklch(0.62 0.2 250 / 0.45);
   --shadow-glow-green: 0 12px 30px -8px oklch(0.72 0.19 150 / 0.45);
   --shadow-glow-gold: 0 12px 30px -8px oklch(0.82 0.17 85 / 0.5);
+
+  /* Additional Missing Mappings */
+  --color-surface-muted: var(--surface-muted);
+  --color-action-primary: var(--action-primary-bg);
+  --color-action-primary-hover: var(--action-primary-hover);
+  --color-bg-overlay: var(--bg-overlay);
+  --color-blur-overlay: var(--blur-overlay);
+  --color-fb-error-soft: var(--fb-error-soft);
 }
 
 :root {

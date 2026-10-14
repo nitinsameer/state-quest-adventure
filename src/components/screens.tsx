@@ -1,4 +1,4 @@
-﻿import mascot from "@/assets/mascot.webp";
+﻿﻿import mascot from "@/assets/mascot.webp";
 import airplane from "@/assets/airplane.png";
 import welcomeScreenImage from "@/assets/welcome.webp";
 import avatarExplorerHat from "@/assets/avatars/avatar-explorer-hat.png";
@@ -213,11 +213,11 @@ export function BottomNav({
   active: "home" | "map" | "explorer" | "badges" | "profile";
 }) {
   const items = [
-    { id: "home", icon: "ðŸ ", label: "Home", to: "/home" },
+    { id: "home", icon: "🏠", label: "Home", to: "/home" },
     { id: "map", icon: "🗺️", label: "Journey", to: "/journey" },
-    { id: "explorer", icon: "ðŸ”", label: "Explore", to: "/explorer" },
-    { id: "badges", icon: "ðŸ…", label: "Badges", to: "/badges" },
-    { id: "profile", icon: "ðŸ‘¤", label: "Me", to: "/me" },
+    { id: "explorer", icon: "🗺️", label: "Explore", to: "/explorer" },
+    { id: "badges", icon: "🏅", label: "Badges", to: "/badges" },
+    { id: "profile", icon: "👤", label: "Me", to: "/me" },
   ] as const;
   return (
     <div className="relative w-full" data-testid="bottom-nav" role="navigation">

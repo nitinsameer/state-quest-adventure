@@ -10,8 +10,8 @@ import { usePostcardLibrary } from "@/store/postcard-library-store";
 import { readTokenAsHex } from "@/lib/theme-tokens";
 
 const BADGE_EMOJI: Record<string, string> = {
-  monument: "ðŸ›️",
-  animal: "ðŸ¾",
+  monument: "�x�›️",
+  animal: "�x�¾",
   explorer: "🎖️",
 };
 
@@ -207,7 +207,7 @@ export function PostcardModal({
           onClick={onClose}
           className="absolute top-4 right-4 h-8 w-8 rounded-full ui-button ui-accent-1-soft text-ink flex items-center justify-center"
         >
-          âœ•
+          ✕
         </button>
 
         {/* Header */}
@@ -239,7 +239,7 @@ export function PostcardModal({
         {/* Fun Fact Section */}
         <div className="ui-card ui-accent-4 rounded-2xl p-(--padding-md) my-(--space-0-5)">
           <div className="text-xs font-extrabold text-ink uppercase tracking-wider">
-            ðŸ’¡ Did You Know?
+            �x¡ Did You Know?
           </div>
           <p className="text-sm text-ink mt-(--space-2) leading-relaxed">
             {state.funFact}
@@ -259,7 +259,7 @@ export function PostcardModal({
             </>
           ) : (
             <>
-              ðŸ’¾ Save to Passport
+              �x¾ Save to Passport
             </>
           )}
         </button>
@@ -278,7 +278,7 @@ export function PostcardModal({
           }}
           className="w-full h-12 rounded-2xl ui-button ui-accent-2 text-ink font-extrabold transition-all duration-200 active:scale-95"
         >
-          ðŸ  Home
+          �x🏠 Home
         </button>
 
         {/* Next State Button */}
@@ -290,7 +290,7 @@ export function PostcardModal({
           }}
           className="w-full h-12 rounded-2xl ui-button ui-accent-1 text-ink font-extrabold transition-all duration-200 active:scale-95"
         >
-          ðŸŽ¯ Next State
+          🎯 Next State
         </button>
 
         {/* Close Button */}

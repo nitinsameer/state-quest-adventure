@@ -99,7 +99,7 @@ test.describe('Quiz System & Scoring', () => {
 
   test('should award XP for correct answers', async ({ page }) => {
     const initialXP = await home.getXPValue();
-    const expectedFromCards = 150; // 6 cards × 25 XP
+    const expectedFromCards = 150; // 6 cards � 25 XP
 
     // Complete quiz (randomly)
     const totalQuestions = await quiz.getTotalQuestions();
@@ -175,7 +175,7 @@ test.describe('Quiz System & Scoring', () => {
   });
 
   test('should complete full quiz journey', async ({ page }) => {
-    // Full flow: answer all → completion → continue
+    // Full flow: answer all � completion � continue
     await quiz.completeQuizFlow();
 
     // Should be back on learning hub or next screen

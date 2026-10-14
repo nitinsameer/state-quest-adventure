@@ -175,7 +175,7 @@ export function PassportSeedling() {
                 style={{ fontSize: 'var(--type-body)', fontWeight: 'var(--type-body-weight)' }}
                 title={`${completed}/${regionStates.length} explored`}
               >
-                {reg.emoji} {reg.name.split(" ")[0]} {isSelected && completed === regionStates.length && "âœ“"}
+                {reg.emoji} {reg.name.split(" ")[0]} {isSelected && completed === regionStates.length && "�S“"}
               </button>
             );
           })}
