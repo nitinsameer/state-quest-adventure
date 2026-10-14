@@ -214,7 +214,7 @@ export function BottomNav({
 }) {
   const items = [
     { id: "home", icon: "ðŸ ", label: "Home", to: "/home" },
-    { id: "map", icon: "🗺ï¸", label: "Journey", to: "/journey" },
+    { id: "map", icon: "🗺️", label: "Journey", to: "/journey" },
     { id: "explorer", icon: "ðŸ”", label: "Explore", to: "/explorer" },
     { id: "badges", icon: "ðŸ…", label: "Badges", to: "/badges" },
     { id: "profile", icon: "ðŸ‘¤", label: "Me", to: "/me" },
@@ -493,7 +493,7 @@ export function CreateProfileScreen() {
                     </div>
                   </div>
                   {isSelected && (
-                    <div className="text-2xl">â­</div>
+                    <div className="text-2xl">⭐</div>
                   )}
                 </button>
               );
@@ -1012,7 +1012,7 @@ function HomeDashboardContent() {
                   {/* State facts */}
                   <div className="space-y-3">
                     <div className="p-4 rounded-2xl bg-orange-soft border-l-4 border-orange shadow-elevated-1 hover:shadow-elevated-2 transition-all">
-                      <div className="text-label text-orange uppercase tracking-wider font-bold">ðŸ›ï¸ Monument</div>
+                      <div className="text-label text-orange uppercase tracking-wider font-bold">ðŸ›️ Monument</div>
                       <div className="text-body text-orange mt-2 font-semibold">{state.monumentName}</div>
                     </div>
 
@@ -1863,8 +1863,8 @@ export function StateIntroScreen({
         </div>
 
         <div className="mt-5 grid grid-cols-2 gap-3">
-          <IntroFact label="Capital" value={state.capital} icon="ðŸ›ï¸" />
-          <IntroFact label="Language" value={state.language} icon="ðŸ—£ï¸" />
+          <IntroFact label="Capital" value={state.capital} icon="ðŸ›️" />
+          <IntroFact label="Language" value={state.language} icon="ðŸ—£️" />
           <IntroFact label="Population" value={state.population} icon="ðŸ‘¥" />
           <IntroFact label="Animal" value={state.animalName} icon={state.animal} />
         </div>
@@ -1877,7 +1877,7 @@ export function StateIntroScreen({
           }}
           className="mt-6 w-full h-14 ui-button ui-accent-1 text-ink text-h4 text-display"
         >
-          Start Exploring! âœˆï¸
+          Start Exploring! âœˆ️
         </button>
       </div>
     </div>
@@ -2027,8 +2027,8 @@ export function LearningHubScreen({
 
   // Track completion per category - all cards must be read
   const cards = [
-    { icon: "ðŸ›ï¸", title: "Capital", sub: state.capital, tone: "orange" as const },
-    { icon: "ðŸ—£ï¸", title: "Language", sub: state.language, tone: "blue" as const },
+    { icon: "ðŸ›️", title: "Capital", sub: state.capital, tone: "orange" as const },
+    { icon: "ðŸ—£️", title: "Language", sub: state.language, tone: "blue" as const },
     { icon: "ðŸ›", title: "Famous Food", sub: state.food, tone: "gold" as const },
     { icon: state.monument, title: "Places", sub: state.monumentName, tone: "green" as const },
     { icon: state.animal, title: "State Animal", sub: state.animalName, tone: "orange" as const },
@@ -2106,7 +2106,7 @@ export function LearningHubScreen({
             )}
           </div>
           <div className="flex items-center gap-1 text-white text-display font-extrabold">
-            <span>â­</span> {completedCategories * XP_PER_CARD}
+            <span>⭐</span> {completedCategories * XP_PER_CARD}
           </div>
         </div>
 
@@ -2196,7 +2196,7 @@ export function LearningHubScreen({
                 }}
                 className="w-full h-14 ui-button ui-accent-1-soft text-ink text-display font-bold active:scale-95 transition-all"
               >
-                â° Ask Me Later
+                ⏰ Ask Me Later
               </button>
             </div>
           </div>
@@ -2313,7 +2313,7 @@ export function learningCardsFor(stateName?: string, displayLanguage: string = "
     {
       kicker: "Capital",
       title: state.capital,
-      icon: "ðŸ›ï¸",
+      icon: "ðŸ›️",
       chip: "Capital City",
       body: `${state.capital} is the capital city of ${state.name}. It is where the state's government works from.`,
       enrichedKey: "capital" as const,
@@ -2321,7 +2321,7 @@ export function learningCardsFor(stateName?: string, displayLanguage: string = "
     {
       kicker: "Language",
       title: state.language,
-      icon: "ðŸ—£ï¸",
+      icon: "ðŸ—£️",
       chip: "Language",
       body: `People in ${state.name} mostly speak ${state.language}. Try saying hello in it!`,
       enrichedKey: "language" as const,
@@ -2396,7 +2396,7 @@ export function learningCardsFor(stateName?: string, displayLanguage: string = "
           allCards.push({
             kicker: "Cool Fact",
             title: `Cool Fact #${idx + 1}`,
-            icon: "â­",
+            icon: "⭐",
             chip: "Cool Fact",
             body: getText(fact),
             type: "coolFact",
@@ -2590,7 +2590,7 @@ export function LearningCardScreen({
     return (
       <div className="w-full h-screen flex items-center justify-center bg-info-soft">
         <div className="text-center">
-          <div className="text-5xl mb-3">âš ï¸</div>
+          <div className="text-5xl mb-3">âš ️</div>
           <h1 className="text-h4 text-ink mb-2">Card content unavailable</h1>
           <p className="text-sm text-text-secondary mb-4">Please try again or go back</p>
           <button
@@ -2853,7 +2853,7 @@ export function LearningCardScreen({
           }`}
           title={hasFeatureConsent('audio') ? "Play card content" : "Enable audio in settings to listen"}
         >
-          {playingCardIndex === currentCardIndex ? "â¸" : "ðŸ”Š"} Listen
+          {playingCardIndex === currentCardIndex ? "⏸" : "ðŸ”Š"} Listen
         </button>
       </div>
 
@@ -2917,7 +2917,7 @@ export function LearningCardScreen({
         {/* Mastery badge for replayed cards */}
         {isReplaying && replayCount > 0 && (
           <div className="mt-3 px-3 py-2 bg-accent-2-soft rounded-lg text-center border border-accent-2">
-            <p className="text-xs font-bold text-warning">â­ Mastered! Replayed {replayCount}x</p>
+            <p className="text-xs font-bold text-warning">⭐ Mastered! Replayed {replayCount}x</p>
           </div>
         )}
       </div>
@@ -3219,7 +3219,7 @@ function QuizScreenContent({
         </div>
         {result === "correct" && (
           <div className="ml-auto flex items-center gap-1 ui-card ui-accent-3 px-3 py-1">
-            <span>â­</span>
+            <span>⭐</span>
             <span className="text-display font-extrabold text-sm text-ink">+20 XP</span>
           </div>
         )}
@@ -3344,7 +3344,7 @@ export function CorrectAnswerScreen({ stateName, onDismiss }: { stateName?: stri
         </p>
 
         <div className="mt-6 ui-card ui-accent-4 px-5 py-3 flex items-center gap-3">
-          <span className="text-3xl">â­</span>
+          <span className="text-3xl">⭐</span>
           <div>
             <div className="text-xs font-bold opacity-90 text-ink">You earned</div>
             <div className="text-display text-2xl font-extrabold leading-snug text-ink">
@@ -3439,7 +3439,7 @@ export function StateUnlockScreen({
           }}
           className="w-full h-14 ui-button ui-accent-1 text-ink text-display text-lg font-extrabold"
         >
-          Continue Adventure âœˆï¸
+          Continue Adventure âœˆ️
         </button>
       </div>
 
@@ -3604,7 +3604,7 @@ function BadgeDetailModal({
             Badge Type
           </p>
           <p className="text-body text-accent-1">
-            {badge.name === "Monument" && "ðŸ›ï¸ Learn about famous landmarks"}
+            {badge.name === "Monument" && "ðŸ›️ Learn about famous landmarks"}
             {badge.name === "Animal" && "ðŸ¦ Discover local wildlife"}
             {badge.name === "Explorer" && "🎖️ Master all cards in this state"}
           </p>
@@ -3672,10 +3672,10 @@ export function BadgesScreen() {
   const allBadges = achievementBadgesFor(progress);
   const unlockedCount = allBadges.filter((b) => b.unlocked).length;
 
-  // Helper to generate progress stars (e.g. â­â­â˜†)
+  // Helper to generate progress stars (e.g. ⭐⭐â˜†)
   const getProgressStars = (progress: number, max: number): string => {
     const filledCount = Math.min(Math.ceil((progress / max) * 3), 3);
-    const stars = "â­".repeat(filledCount) + "â˜†".repeat(3 - filledCount);
+    const stars = "⭐".repeat(filledCount) + "â˜†".repeat(3 - filledCount);
     return stars;
   };
 
@@ -4009,7 +4009,7 @@ function ProfileScreenContent() {
                   className="h-8 w-8 rounded-lg bg-white/20 hover:bg-white/30 text-white flex items-center justify-center text-sm transition"
                   title="Edit name"
                 >
-                  âœï¸
+                  âœ️
                 </button>
               </div>
               <div className="text-white/90 text-xs font-extrabold uppercase tracking-widest">
@@ -4086,10 +4086,10 @@ function ProfileScreenContent() {
           <ThemePickerNavButton />
         </div>
 
-        {/* âš™ï¸ Settings Section Header */}
+        {/* âš™️ Settings Section Header */}
         <div className="animate-fade-in pt-2" style={{ animationDelay: "195ms" }}>
           <h3 className="text-sm font-extrabold text-text-secondary uppercase tracking-wider px-1 mb-2">
-            âš™ï¸ Settings
+            âš™️ Settings
           </h3>
         </div>
 

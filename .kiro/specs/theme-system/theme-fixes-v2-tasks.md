@@ -29,7 +29,7 @@ Broken:
 - [ ] 1. Repair the garbled characters
   - [ ] 1.1 Add `scripts/fix-mojibake.mjs`. Run `node scripts/fix-mojibake.mjs` (dry run, expect 317 in 10 files), then `--write`, then the dry run again (expect 0). Review `git diff`: only emoji and symbols (`·`, `—`, `✓`, `▶`) may change.
   - [ ] 1.2 Find and fix the tool that caused it (the codemod used in T2.1): it must read and write UTF-8.
-  - [ ] 1.3 Add `.editorconfig` (`charset = utf-8`), `.gitattributes` (`* text=auto eol=lf`), and `scripts/check-encoding.mjs` (fails if any source file contains `ðŸ`, `â€`, `Â·`, `â–`, `âœ`, `âš`). Add it to `npm run lint` and CI.
+  - [ ] 1.3 Add `.editorconfig` (`charset = utf-8`), `.gitattributes` (`* text=auto eol=lf`), and `scripts/check-encoding.mjs` (fails if any source file contains `ðŸ`, `â€`, `·`, `â–`, `âœ`, `âš`). Add it to `npm run lint` and CI.
   - [ ] 1.4 After `npm run build` and `npx cap sync android`, confirm `android/app/src/main/assets/public` has no `ðŸ` and does contain real emoji.
   - VERIFY: the bottom nav icons, Home, Explore and Me show correct emoji on the phone.
 

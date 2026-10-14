@@ -22,11 +22,11 @@ interface StatePerformanceBadgeModalProps {
   onClose: () => void;
 }
 
-// Helper to generate progress stars (e.g â­â­â˜†)
+// Helper to generate progress stars (e.g ⭐⭐â˜†)
 const getProgressStars = (progress: number, max: number): string => {
   if (max === 0) return "";
   const filledCount = Math.min(Math.ceil((progress / max) * 3), 3);
-  const stars = "â­".repeat(filledCount) + "â˜†".repeat(3 - filledCount);
+  const stars = "⭐".repeat(filledCount) + "â˜†".repeat(3 - filledCount);
   return stars;
 };
 

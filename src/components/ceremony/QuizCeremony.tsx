@@ -187,7 +187,7 @@ export function QuizCeremony() {
                 }}
                 className="w-full h-12 ui-button ui-button-soft text-ink font-bold text-base rounded-3xl transition-all active:scale-95"
               >
-                Play again for â­â­â­
+                Play again for ⭐⭐⭐
               </button>
             )}
 
@@ -333,7 +333,7 @@ function StepResult({ ceremony, state, art }: StepProps) {
             aria-valuemax={1}
             aria-label={i < filledStars ? 'earned star' : 'empty star'}
           >
-            {i < filledStars ? 'â­' : 'â˜†'}
+            {i < filledStars ? '⭐' : 'â˜†'}
           </div>
         ))}
       </div>
@@ -578,7 +578,7 @@ function StepPostcard({ ceremony, state }: StepProps) {
   const prefersReducedMotion = useRef(false);
 
   // Fixed emoji list: face-savouring-food, national-park, party-popper
-  const STICKER_OPTIONS = ['😋', 'ðŸžï¸', '🎉'];
+  const STICKER_OPTIONS = ['😋', 'ðŸž️', '🎉'];
 
   // Check for prefers-reduced-motion
   useEffect(() => {

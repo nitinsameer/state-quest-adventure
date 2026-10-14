@@ -14,7 +14,7 @@ import { ResetPINDialog } from "@/components/ResetPINDialog";
 import { readTokenAsHex, subscribeThemeChange } from "@/lib/theme-tokens";
 
 const BADGE_EMOJI: Record<BadgeId, string> = {
-  monument: "ðŸ›ï¸",
+  monument: "ðŸ›️",
   animal: "ðŸ¾",
   explorer: "🎖️",
 };
@@ -399,7 +399,7 @@ export function StatePostcardScreen({
           }}
           className="w-full h-12 rounded-xl ui-button ui-accent-1-soft text-ink text-display font-bold active:scale-95 transition-transform"
         >
-          Next State âœˆï¸
+          Next State âœˆ️
         </button>
       </div>
 

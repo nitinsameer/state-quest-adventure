@@ -49,6 +49,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Check encoding (no mojibake)
+        run: node scripts/check-encoding.mjs
+
       # package.json "build" = vite build + wrap-html + copy assets to android
       - name: Build web app
         run: npm run build

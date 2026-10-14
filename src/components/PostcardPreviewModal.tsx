@@ -20,7 +20,7 @@ import { StandardModal } from "@/components/StandardModal";
 import { readTokenAsHex } from "@/lib/theme-tokens";
 
 const BADGE_EMOJI: Record<BadgeId, string> = {
-  monument: "ðŸ›ï¸",
+  monument: "ðŸ›️",
   animal: "ðŸ¾",
   explorer: "🎖️",
 };
@@ -331,7 +331,7 @@ export function PostcardPreviewModal({
             variant: "primary",
           },
           {
-            label: "â° Later",
+            label: "⏰ Later",
             onClick: handleLater,
             variant: "tertiary",
           },

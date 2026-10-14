@@ -10,7 +10,7 @@ import { usePostcardLibrary } from "@/store/postcard-library-store";
 import { readTokenAsHex } from "@/lib/theme-tokens";
 
 const BADGE_EMOJI: Record<string, string> = {
-  monument: "ðŸ›ï¸",
+  monument: "ðŸ›️",
   animal: "ðŸ¾",
   explorer: "🎖️",
 };
@@ -254,7 +254,7 @@ export function PostcardModal({
         >
           {isSaving ? (
             <>
-              <span className="animate-spin">â³</span>
+              <span className="animate-spin">⏳</span>
               Saving...
             </>
           ) : (

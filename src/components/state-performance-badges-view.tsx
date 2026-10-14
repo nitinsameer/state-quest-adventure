@@ -33,7 +33,7 @@ export function StatePerformanceBadgesView() {
     <div className="h-full w-full bg-bg-page flex flex-col">
       {/* Header - Kid-friendly celebration style */}
       <div className="px-5 pt-3 pb-4 gradient-gold rounded-b-[32px] relative overflow-hidden">
-        <div className="absolute top-2 right-4 text-5xl opacity-40 pointer-events-none">â˜ï¸</div>
+        <div className="absolute top-2 right-4 text-5xl opacity-40 pointer-events-none">â˜️</div>
         
         <div className="flex items-center gap-3 relative z-10">
           <div className="h-14 w-14 rounded-2xl ui-card ui-accent-1-soft p-1 flex items-center justify-center overflow-hidden flex-shrink-0">
