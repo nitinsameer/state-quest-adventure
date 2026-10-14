@@ -4,6 +4,8 @@ import globals from "globals";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
+import noHardcodedEmoji from "./eslint-rules/no-hardcoded-emoji.js";
+import noHardcodedColors from "./eslint-rules/no-hardcoded-colors.js";
 
 export default tseslint.config(
   { ignores: ["dist", ".output", ".vinxi"] },
@@ -17,9 +19,13 @@ export default tseslint.config(
     plugins: {
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
+      "no-hardcoded-emoji": { rules: { "no-hardcoded-emoji": noHardcodedEmoji } },
+      "no-hardcoded-colors": { rules: { "no-hardcoded-colors": noHardcodedColors } },
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
+      "no-hardcoded-emoji/no-hardcoded-emoji": "error",
+      "no-hardcoded-colors/no-hardcoded-colors": "error",
       "no-restricted-imports": [
         "error",
         {

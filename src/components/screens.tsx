@@ -14,7 +14,12 @@ import avatarFarmerHat from "@/assets/avatars/avatar-farmer-hat.png";
 import avatarSportsCap from "@/assets/avatars/avatar-sports-cap.png";
 import avatarGirlFlower from "@/assets/avatars/avatar-girl-flower.png";
 import { STATE_ART, TONE_GRADIENT, preloadStateArt } from "@/lib/state-art";
-import { getStateContent, getCardContent, getCardContentByAge, type AgeTaggedContent } from "@/lib/state-content";
+import {
+  getStateContent,
+  getCardContent,
+  getCardContentByAge,
+  type AgeTaggedContent,
+} from "@/lib/state-content";
 import { stopTts, playTts, playStateNarration } from "@/lib/tts";
 import { getJourneyMotivationalMessage } from "@/lib/journey-messaging";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
@@ -22,11 +27,11 @@ import { PassportSeedling } from "@/components/PassportSeedling";
 import { AudioSettingRow } from "@/components/AudioSettingToggle";
 import { ResetPINDialog } from "@/components/ResetPINDialog";
 import { StatePerformanceBadgesView } from "@/components/state-performance-badges-view";
-import { 
-  grantFeatureConsent, 
-  revokeFeatureConsent, 
+import {
+  grantFeatureConsent,
+  revokeFeatureConsent,
   hasFeatureConsent,
-  subscribeConsentChanges 
+  subscribeConsentChanges,
 } from "@/lib/parental-consent";
 import { LanguageToggle, type LanguageCode } from "@/components/LanguageToggle";
 import { LanguageSelector } from "@/components/LanguageSelector";
@@ -41,9 +46,9 @@ import { EMOJI } from "@/constants/emoji";
 import { lazy, Suspense } from "react";
 
 const IndiaProgressMapLazy = lazy(() =>
-  import("@/components/IndiaProgressMap").then(m => ({
+  import("@/components/IndiaProgressMap").then((m) => ({
     default: m.IndiaProgressMap,
-  }))
+  })),
 );
 import { useToastStore } from "@/store/toastStore";
 import { AVATAR_CONFIG, type AvatarId } from "@/lib/avatar-config";
@@ -56,7 +61,11 @@ import { useCelebration } from "@/hooks/useCelebration";
 import { appLogger } from "@/lib/logger";
 import { firebaseEvents } from "@/lib/firebase-events";
 import { isBilingual, getAvailableLanguages } from "@/lib/bilingual-config";
-import { getNewlyUnlockedBadges, markBadgeAsSeen, getBadgeNotificationMessage } from "@/lib/badge-unlock-tracker";
+import {
+  getNewlyUnlockedBadges,
+  markBadgeAsSeen,
+  getBadgeNotificationMessage,
+} from "@/lib/badge-unlock-tracker";
 import {
   INDIA_STATES,
   TOTAL_STATES_ONLY,
@@ -232,18 +241,10 @@ export function BottomNav({
               onClick={() => fxTap()}
               aria-label={i.label}
               data-testid={`nav-${i.id}`}
-              className={`flex-1 ui-nav-item ${
-                on ? "ui-nav-item-active" : ""
-              }`}
+              className={`flex-1 ui-nav-item ${on ? "ui-nav-item-active" : ""}`}
             >
               <span className="text-2xl leading-none">{i.icon}</span>
-              <span
-                className={`text-label ${
-                  on ? "" : "text-text-secondary"
-                }`}
-              >
-                {i.label}
-              </span>
+              <span className={`text-label ${on ? "" : "text-text-secondary"}`}>{i.label}</span>
             </Link>
           );
         })}
@@ -347,10 +348,13 @@ export function WelcomeScreen() {
   };
 
   return (
-    <div className="w-screen h-screen overflow-hidden select-none relative cursor-pointer fixed inset-0 bg-white" onClick={handleButtonClick}>
-      <img 
-        src={welcomeScreenImage} 
-        alt="Welcome to India Explorer" 
+    <div
+      className="w-screen h-screen overflow-hidden select-none relative cursor-pointer fixed inset-0 bg-white"
+      onClick={handleButtonClick}
+    >
+      <img
+        src={welcomeScreenImage}
+        alt="Welcome to India Explorer"
         className="w-full h-full object-cover"
         draggable="false"
       />
@@ -373,10 +377,10 @@ export function CreateProfileScreen() {
     { id: "sports-cap" as AvatarId, image: avatarSportsCap },
     { id: "girl-flower" as AvatarId, image: avatarGirlFlower },
   ];
-  
+
   const p = useProgress();
   const navigate = useNavigate();
-  const [avatar, setAvatar] = useState<AvatarId>(p.avatar as AvatarId || avatarImages[0].id);
+  const [avatar, setAvatar] = useState<AvatarId>((p.avatar as AvatarId) || avatarImages[0].id);
   const [ageBand, setAgeBand] = useState(p.ageBand);
   const [saved, setSaved] = useState(false);
   const [selectedAgeIndex, setSelectedAgeIndex] = useState(0);
@@ -387,7 +391,12 @@ export function CreateProfileScreen() {
     { value: "3-5", emoji: EMOJI.ageBand.toddler, label: "Sprout", gradient: "bg-accent-2" },
     { value: "6-7", emoji: EMOJI.ageBand.young, label: "Seedling", gradient: "bg-accent-1" },
     { value: "8-9", emoji: EMOJI.ageBand.mid, label: "Sapling", gradient: "bg-success" },
-    { value: "10-12", emoji: EMOJI.ageBand.preteen, label: "Mighty Tree", gradient: "bg-action-primary" },
+    {
+      value: "10-12",
+      emoji: EMOJI.ageBand.preteen,
+      label: "Mighty Tree",
+      gradient: "bg-action-primary",
+    },
   ];
 
   const handleAgeSelect = (value: string, index: number) => {
@@ -401,10 +410,10 @@ export function CreateProfileScreen() {
   const handleProfileSave = () => {
     fxTap();
     fxConfetti();
-    
+
     const avatarName = getAvatarName(avatar);
     saveProfile({ name: avatarName, avatar, ageBand });
-    
+
     // Navigate directly to home - no audio dialog here
     // Audio consent will be requested in Profile settings instead
     setSaved(true);
@@ -412,15 +421,16 @@ export function CreateProfileScreen() {
   };
 
   return (
-    <div className="w-full bg-accent-1-soft flex flex-col select-none touch-none" style={{ touchAction: 'pan-y' }}>
+    <div
+      className="w-full bg-accent-1-soft flex flex-col select-none touch-none"
+      style={{ touchAction: "pan-y" }}
+    >
       <div className="px-5 flex-1 overflow-auto">
         {/* Step 1: Avatar Selection */}
         <div className="rounded-3xl bg-accent-1 p-7 text-white relative overflow-hidden shadow-elevated-2 min-h-[140px] flex flex-col justify-center">
           <Cloud className="absolute -top-5 right-3 w-20 opacity-25" />
           <div className="relative z-10">
-            <div className="text-3xl font-black leading-normal">
-              Pick your avatar
-            </div>
+            <div className="text-3xl font-black leading-normal">Pick your avatar</div>
             <div className="text-base opacity-90 mt-3 leading-normal">
               Choose the explorer who will travel with you
             </div>
@@ -443,29 +453,30 @@ export function CreateProfileScreen() {
                   : "ring-2 ring-border-color shadow-sm hover:ring-border-strong hover:scale-103"
               }`}
             >
-              <img
-                src={a.image}
-                alt={getAvatarName(a.id)}
-                className="w-full h-full object-cover"
-              />
+              <img src={a.image} alt={getAvatarName(a.id)} className="w-full h-full object-cover" />
             </button>
           ))}
         </div>
 
         {/* Selected Avatar Preview with Avatar Name */}
-        {avatar && (() => {
-          const selectedAvatar = avatarImages.find(a => a.id === avatar);
-          const avatarName = getAvatarName(avatar);
-          return selectedAvatar ? (
-            <div className="mt-4 rounded-2xl bg-action-primary p-4 text-white animate-fade-in flex items-center gap-4 shadow-elevated-2">
-              <img src={selectedAvatar.image} alt={avatarName} className="w-20 h-20 rounded-full border-3 border-white shadow-elevated-2 flex-shrink-0" />
-              <div>
-                <div className="text-xs opacity-90 font-semibold">Your explorer!</div>
-                <div className="text-lg font-black">{avatarName}</div>
+        {avatar &&
+          (() => {
+            const selectedAvatar = avatarImages.find((a) => a.id === avatar);
+            const avatarName = getAvatarName(avatar);
+            return selectedAvatar ? (
+              <div className="mt-4 rounded-2xl bg-action-primary p-4 text-white animate-fade-in flex items-center gap-4 shadow-elevated-2">
+                <img
+                  src={selectedAvatar.image}
+                  alt={avatarName}
+                  className="w-20 h-20 rounded-full border-3 border-white shadow-elevated-2 flex-shrink-0"
+                />
+                <div>
+                  <div className="text-xs opacity-90 font-semibold">Your explorer!</div>
+                  <div className="text-lg font-black">{avatarName}</div>
+                </div>
               </div>
-            </div>
-          ) : null;
-        })()}
+            ) : null;
+          })()}
 
         {/* Age Selection with Vibrant Colors & Emojis */}
         <div className="mt-6 mb-1">
@@ -489,22 +500,20 @@ export function CreateProfileScreen() {
                   <span className="text-3xl">{band.emoji}</span>
                   <div className="flex-1 text-center">
                     <div className="text-sm font-black">{band.value}</div>
-                    <div className={`text-xs transition-colors ${isSelected ? "text-white/90" : "text-text-secondary"}`}>
+                    <div
+                      className={`text-xs transition-colors ${isSelected ? "text-white/90" : "text-text-secondary"}`}
+                    >
                       {band.label}
                     </div>
                   </div>
-                  {isSelected && (
-                    <div className="text-2xl">{EMOJI.action.star}</div>
-                  )}
+                  {isSelected && <div className="text-2xl">{EMOJI.action.star}</div>}
                 </button>
               );
             })}
           </div>
 
           {/* Age Selection Feedback */}
-          {ageBand && (
-            <ConfettiBurst key={`age-${burst}`} trigger={burst} size="big" />
-          )}
+          {ageBand && <ConfettiBurst key={`age-${burst}`} trigger={burst} size="big" />}
         </div>
       </div>
 
@@ -512,7 +521,9 @@ export function CreateProfileScreen() {
         <button
           onClick={handleProfileSave}
           className={`w-full h-12 rounded-xl bg-success text-white text-sm font-black shadow-elevated-2 transition-all duration-300 transform ${
-            saved ? "scale-95 opacity-80" : "hover:shadow-elevated-3 hover:scale-102 active:scale-95"
+            saved
+              ? "scale-95 opacity-80"
+              : "hover:shadow-elevated-3 hover:scale-102 active:scale-95"
           }`}
         >
           {saved ? "🎉 Saved ✓" : "Continue → Let's Explore!"}
@@ -576,28 +587,28 @@ function RecentlyCompletedCelebration({
 }) {
   // Read from pending celebrations (persistent, no auto-dismiss, no expiry)
   const pendingCelebration = p.pendingCelebrations?.[0];
-  
+
   // Play celebration sound on mount
   useEffect(() => {
     if (pendingCelebration) {
       fxCorrect();
     }
   }, [pendingCelebration]);
-  
+
   // Check if this celebration has already been shown in this session
   if (!showCelebrationPopup || !pendingCelebration) return null;
 
   // Type guard: only "full" type has quizXp/bonusXp
-  if (pendingCelebration.type !== 'full') return null;
+  if (pendingCelebration.type !== "full") return null;
 
   const totalXp = pendingCelebration.quizXp + pendingCelebration.bonusXp;
   const celebrationId = `${pendingCelebration.stateName}_${totalXp}`;
-  
+
   // If already shown in this session, don't show again
   if (shownCelebrationsRef.current.has(celebrationId)) return null;
 
   const { stateName, quizXp, bonusXp, earnedBadgeIds } = pendingCelebration;
-  const state = INDIA_STATES.find(s => s.name === stateName);
+  const state = INDIA_STATES.find((s) => s.name === stateName);
   if (!state) return null;
 
   const handleDismiss = () => {
@@ -622,12 +633,8 @@ function RecentlyCompletedCelebration({
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 animate-fade-in">
       {/* Backdrop click to close */}
-      <div 
-        className="absolute inset-0"
-        onClick={handleDismiss}
-        aria-label="Close celebration"
-      />
-      
+      <div className="absolute inset-0" onClick={handleDismiss} aria-label="Close celebration" />
+
       {/* Celebration Card */}
       <div className="relative bg-action-primary text-white rounded-3xl p-6 shadow-2xl max-w-sm w-full animate-scale-in border-2 border-action-primary">
         {/* Prominent Close Button - Top Right */}
@@ -643,9 +650,7 @@ function RecentlyCompletedCelebration({
           {/* Title - Celebration message */}
           <div className="text-center">
             <div className="text-lg font-bold opacity-95 text-ink">🏆† STATE MASTERED! 🏆†</div>
-            <div className="text-3xl font-black mt-2 drop-shadow-lg text-ink">
-              {stateName}
-            </div>
+            <div className="text-3xl font-black mt-2 drop-shadow-lg text-ink">{stateName}</div>
           </div>
 
           {/* Stats Grid - Show earned rewards (real values) */}
@@ -695,13 +700,13 @@ function RecentlyCompletedCelebration({
 
 export function HomeDashboardScreen() {
   const p = useProgress();
-  
+
   // Route guard: redirect to welcome if not onboarded (defensive check)
   if (!p.onboarded) {
-    appLogger.warn('home_dashboard', 'User attempted to access home without onboarding', {});
+    appLogger.warn("home_dashboard", "User attempted to access home without onboarding", {});
     return <Navigate to="/welcome" replace />;
   }
-  
+
   return <HomeDashboardContent />;
 }
 
@@ -724,33 +729,31 @@ function HomeDashboardContent() {
   const journey = statesWithProgress(p);
   const current = journey.find((s) => s.status === "current") ?? journey[journey.length - 1];
   const currentDone = cardsDone(p, current.name);
-  const upNext = journey.filter((s) => s.name !== current.name && s.status !== "done" && s.status !== "current").slice(0, 2);
+  const upNext = journey
+    .filter((s) => s.name !== current.name && s.status !== "done" && s.status !== "current")
+    .slice(0, 2);
 
   useEffect(() => {
     touchStreak();
-    
+
     // Check for streak milestone celebrations
     const { reached, message } = getStreakMilestone(p.streak);
     if (reached) {
       const celebrated = localStorage.getItem(`india-explorer:streak-milestone-${p.streak}:v1`);
       if (!celebrated) {
         setTimeout(() => {
-          celebration.custom(
-            message,
-            "🏆”¥",
-            {
-              subtitle: `Keep up this amazing momentum!`,
-              confetti: true,
-              duration: 3000,
-              type: "success",
-              showCloseButton: true,
-            }
-          );
+          celebration.custom(message, "🏆”¥", {
+            subtitle: `Keep up this amazing momentum!`,
+            confetti: true,
+            duration: 3000,
+            type: "success",
+            showCloseButton: true,
+          });
           localStorage.setItem(`india-explorer:streak-milestone-${p.streak}:v1`, "true");
         }, 500);
       }
     }
-    
+
     // Trigger animations on mount
     setTimeout(() => setStatsVisible(true), 100);
     setTimeout(() => setAnimateStats(true), 500);
@@ -779,284 +782,320 @@ function HomeDashboardContent() {
   };
 
   return (
-    <div className="h-full w-full bg-bg-page flex flex-col overflow-hidden" data-testid="home-screen">
-
+    <div
+      className="h-full w-full bg-bg-page flex flex-col overflow-hidden"
+      data-testid="home-screen"
+    >
       {/* Header with fade-in animation - Premium spacing */}
-      <div className={`flex-shrink-0 px-6 pt-4 pb-5 bg-bg-header rounded-b-[32px] relative overflow-hidden transition-opacity duration-500 ${statsVisible ? "opacity-100" : "opacity-0"}`}>
+      <div
+        className={`flex-shrink-0 px-6 pt-4 pb-5 bg-bg-header rounded-b-[32px] relative overflow-hidden transition-opacity duration-500 ${statsVisible ? "opacity-100" : "opacity-0"}`}
+      >
         <Cloud className="absolute top-2 right-4 w-14 opacity-40" />
         <div className="flex items-center gap-4 relative mb-3">
           {/* Avatar - Larger and more prominent */}
-          <div className="h-20 w-20 rounded-2xl ui-card ui-accent-1-soft p-1.5 flex items-center justify-center overflow-hidden flex-shrink-0" data-testid="profile-avatar">
-            <img src={getAvatarImage(p.avatar)} alt={getAvatarName(p.avatar)} className="w-full h-full object-cover" />
+          <div
+            className="h-20 w-20 rounded-2xl ui-card ui-accent-1-soft p-1.5 flex items-center justify-center overflow-hidden flex-shrink-0"
+            data-testid="profile-avatar"
+          >
+            <img
+              src={getAvatarImage(p.avatar)}
+              alt={getAvatarName(p.avatar)}
+              className="w-full h-full object-cover"
+            />
           </div>
-          
+
           <div className="flex-1 min-w-0">
             {/* Greeting - Single line, cleaner */}
             <div className="text-text-on-header">
               <div className="text-h4 text-display leading-tight">
-                Namaste, {(p?.name?.split(" ")[0] || "Explorer")}! 🏆‘‹
+                Namaste, {p?.name?.split(" ")[0] || "Explorer"}! 🏆‘‹
               </div>
               <div className="text-body-sm opacity-95 mt-1">Level {level} · Explorer</div>
             </div>
           </div>
-          
+
           {/* Right side: Streak badge */}
           <div className="flex items-center gap-2 flex-shrink-0">
-            <div className={`flex items-center gap-1.5 ui-chip ui-accent-1-soft transition-transform duration-1000`}>
+            <div
+              className={`flex items-center gap-1.5 ui-chip ui-accent-1-soft transition-transform duration-1000`}
+            >
               <span className="text-2xl">🏆”¥</span>
               <div className="flex flex-col items-start">
                 <span className="text-ink text-h5 font-black leading-none">{p.streak}</span>
-                <span className="text-ink text-xs font-bold opacity-90 leading-none">day streak</span>
+                <span className="text-ink text-xs font-bold opacity-90 leading-none">
+                  day streak
+                </span>
               </div>
             </div>
           </div>
         </div>
-
       </div>
 
       {/* Scrollable content area */}
       <div className="min-h-0 flex-1 overflow-y-auto">
-      {/* India Journey Meta-Game Card - Separate featured section */}
-      <div className={`px-6 pt-5 pb-4 transition-opacity duration-700 ${statsVisible ? "opacity-100" : "opacity-0"}`}>
-        <Suspense fallback={
-          <div className="w-full ui-card ui-accent-1-soft rounded-3xl p-6 animate-pulse">
-            <div className="h-8 bg-muted rounded w-1/3 mb-4" />
-            <div className="space-y-3">
-              {[1,2,3].map(i => <div key={i} className="h-3 bg-muted rounded" />)}
-            </div>
-          </div>
-        }>
-          <IndiaProgressMapLazy />
-        </Suspense>
-      </div>
-
-
-
-      {/* Recently Completed State Celebration - Premium Popup */}
-      <RecentlyCompletedCelebration
-        p={p}
-        showCelebrationPopup={showCelebrationPopup}
-        onDismiss={() => setShowCelebrationPopup(false)}
-        navigate={navigate}
-      />
-
-      {/* Stamp Collection Display - HIDDEN: Breaking home screen layout */}
-      {(() => {
-        // Disabled: Green popup breaking home screen UX
-        return null;
-      })()}
-      
-      {/* Streak Protection Alert */}
-      {(() => {
-        const streakStatus = getStreakStatus(p);
-        if (!streakStatus.isAtRisk || dismissStreakWarning) return null;
-        
-        return (
-          <div className="px-5 mt-5 animate-fade-in">
-            <div className="rounded-2xl bg-warning-soft text-warning p-4 shadow-elevated-2 transition-all hover:shadow-elevated-3 border border-warning">
-              <div className="flex items-start gap-3">
-                <div className="text-2xl flex-shrink-0">{EMOJI.utility.warning}</div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-body font-bold">Your streak is at risk!</div>
-                  <div className="text-caption mt-1 opacity-90">Last played {streakStatus.hoursSinceActive} hours ago</div>
-                  <div className="text-caption mt-1">Come back within 12 hours to keep your 🏆”¥ {p.streak} day streak!</div>
+        {/* India Journey Meta-Game Card - Separate featured section */}
+        <div
+          className={`px-6 pt-5 pb-4 transition-opacity duration-700 ${statsVisible ? "opacity-100" : "opacity-0"}`}
+        >
+          <Suspense
+            fallback={
+              <div className="w-full ui-card ui-accent-1-soft rounded-3xl p-6 animate-pulse">
+                <div className="h-8 bg-muted rounded w-1/3 mb-4" />
+                <div className="space-y-3">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="h-3 bg-muted rounded" />
+                  ))}
                 </div>
-                <button
-                  onClick={() => setDismissStreakWarning(true)}
-                  className="text-warning opacity-70 hover:opacity-100 text-xl flex-shrink-0 transition-all duration-200"
-                >
-                  âœ•
-                </button>
               </div>
-            </div>
-          </div>
-        );
-      })()}
-
-
-
-      {/* Continue journey - with pulse on play button */}
-      <div className="px-5 mt-5 mb-4 flex-shrink-0">
-        <h2 className="text-display font-bold text-sm text-text-secondary mb-2">
-          Continue your journey
-        </h2>
-        <div className="mt-2 rounded-3xl ui-card ui-accent-1-soft p-4 flex items-center gap-3">
-          <div className="h-16 w-16 rounded-2xl overflow-hidden flex-shrink-0">
-            <img 
-              src={STATE_ART[current.name]} 
-              alt={current.name}
-              className="w-full h-full object-cover"
-              loading="eager"
-              decoding="auto"
-            />
-          </div>
-          <div className="flex-1">
-            <div className="text-label text-saffron">
-              {current.kind === "ut" ? "Union Territory" : "Currently Exploring"}
-            </div>
-            <div className="text-h4 font-bold leading-tight">
-              {current.name}
-            </div>
-            <div className="mt-1 flex items-center gap-1.5">
-              <div className="h-2.5 flex-1 rounded-full bg-muted overflow-hidden">
-                <div
-                  className="h-full gradient-saffron transition-all duration-1000 ease-out"
-                  style={{ width: `${(currentDone / CARDS_PER_STATE) * 100}%` }}
-                />
-              </div>
-              <span className="text-label text-text-secondary">
-                {currentDone}/{CARDS_PER_STATE}
-              </span>
-            </div>
-          </div>
-          <Link
-            to="/state/$slug/learn"
-            params={{ slug: stateSlug(current.name) }}
-            onClick={() => fxTap()}
-            className="h-12 px-4 rounded-2xl ui-button ui-accent-1 text-ink text-display font-bold text-sm flex items-center transition-all duration-300 hover:scale-105 active:scale-95"
+            }
           >
-            Play •¶
-          </Link>
+            <IndiaProgressMapLazy />
+          </Suspense>
         </div>
-      </div>
 
+        {/* Recently Completed State Celebration - Premium Popup */}
+        <RecentlyCompletedCelebration
+          p={p}
+          showCelebrationPopup={showCelebrationPopup}
+          onDismiss={() => setShowCelebrationPopup(false)}
+          navigate={navigate}
+        />
 
+        {/* Stamp Collection Display - HIDDEN: Breaking home screen layout */}
+        {(() => {
+          // Disabled: Green popup breaking home screen UX
+          return null;
+        })()}
 
-      {/* Up next - with interactive locked cards */}
-      <div className="px-5 mt-5 mb-6 flex-shrink-0">
-        <div className="flex items-center justify-between mb-2">
-          <h2 className="text-display font-bold text-sm text-text-secondary">
-            Up next
-          </h2>
-          <Link to="/journey" className="text-xs font-extrabold text-explorer" aria-label="View all states">
-            View all
-          </Link>
-        </div>
-        <div className="mt-2 grid grid-cols-2 gap-3">
-          {upNext.map((s, idx) => (
-            <button
-              key={s.name}
-              onClick={() => handleLockedCardTap(s.name)}
-              className={`rounded-3xl ui-card ui-accent-1-soft p-3 flex flex-col items-center gap-2 transition-all duration-300 overflow-hidden hover:scale-105 ${
-                animateStats ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
-              }`}
-              style={{ transitionDelay: `${idx * 100}ms` }}
-              aria-label={`Next state to explore: ${s.name}`}
-              role="button"
-              tabIndex={0}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  handleLockedCardTap(s.name);
-                }
-              }}
-            >
-              <div className="w-12 h-12 rounded-xl overflow-hidden">
-                <img 
-                  src={STATE_ART[s.name]} 
-                  alt={s.name}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-              <div className="text-display font-bold text-sm text-center leading-tight line-clamp-ellipsis-2">
-                {s.name}
-              </div>
-              <Link
-                to="/state/$slug/learn"
-                params={{ slug: stateSlug(s.name) }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  fxTap();
-                }}
-                className="mt-1 px-4 py-2 rounded-lg ui-button ui-accent-1 text-ink text-label font-bold transition-all duration-200 hover:scale-105 active:scale-95"
-                aria-label={`Start exploring ${s.name}`}
-              >
-                Start exploring
-              </Link>
-            </button>
-          ))}
-        </div>
-      </div>
+        {/* Streak Protection Alert */}
+        {(() => {
+          const streakStatus = getStreakStatus(p);
+          if (!streakStatus.isAtRisk || dismissStreakWarning) return null;
 
-      {/* Locked Card Preview Modal */}
-      {showLockedPreview && (
-        <div className="fixed inset-0 bg-black/50 flex items-end justify-center z-50 p-4 animate-fade-in">
-          <div className="w-full max-w-sm bg-surface-card rounded-3xl shadow-2xl p-6 max-h-[80vh] overflow-y-auto animate-slide-up">
-            {(() => {
-              const state = journey.find((s) => s.name === showLockedPreview);
-              if (!state) return null;
-
-              return (
-                <div>
-                  {/* Close button */}
+          return (
+            <div className="px-5 mt-5 animate-fade-in">
+              <div className="rounded-2xl bg-warning-soft text-warning p-4 shadow-elevated-2 transition-all hover:shadow-elevated-3 border border-warning">
+                <div className="flex items-start gap-3">
+                  <div className="text-2xl flex-shrink-0">{EMOJI.utility.warning}</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-body font-bold">Your streak is at risk!</div>
+                    <div className="text-caption mt-1 opacity-90">
+                      Last played {streakStatus.hoursSinceActive} hours ago
+                    </div>
+                    <div className="text-caption mt-1">
+                      Come back within 12 hours to keep your 🏆”¥ {p.streak} day streak!
+                    </div>
+                  </div>
                   <button
-                    onClick={() => setShowLockedPreview(null)}
-                    className="absolute top-4 right-4 text-muted-light hover:text-text-secondary text-xl"
+                    onClick={() => setDismissStreakWarning(true)}
+                    className="text-warning opacity-70 hover:opacity-100 text-xl flex-shrink-0 transition-all duration-200"
                   >
                     âœ•
                   </button>
-
-                  {/* State preview */}
-                  <div className={`rounded-2xl gradient-saffron text-text-on-primary p-4 text-center mb-4`}>
-                    <div className="w-20 h-20 mx-auto mb-2 rounded-lg overflow-hidden">
-                      <img 
-                        src={STATE_ART[state.name]} 
-                        alt={state.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="text-display text-xl font-extrabold">{state.name}</div>
-                    <div className="text-sm opacity-90 mt-1">{state.nickname}</div>
-                  </div>
-
-                  {/* State facts */}
-                  <div className="space-y-3">
-                    <div className="p-4 rounded-2xl bg-orange-soft border-l-4 border-orange shadow-elevated-1 hover:shadow-elevated-2 transition-all">
-                      <div className="text-label text-orange uppercase tracking-wider font-bold">🏆›️ Monument</div>
-                      <div className="text-body text-orange mt-2 font-semibold">{state.monumentName}</div>
-                    </div>
-
-                    <div className="p-4 rounded-2xl bg-success-soft border-l-4 border-success shadow-elevated-1 hover:shadow-elevated-2 transition-all">
-                      <div className="text-label text-success uppercase tracking-wider font-bold">🦁 Wildlife</div>
-                      <div className="text-body text-success mt-2 font-semibold">{state.animalName}</div>
-                    </div>
-
-                    <div className="p-4 rounded-2xl bg-info-soft border-l-4 border-info shadow-elevated-1 hover:shadow-elevated-2 transition-all">
-                      <div className="text-label text-info uppercase tracking-wider font-bold">🏆’¡ Fun Fact</div>
-                      <div className="text-body text-info mt-2 font-semibold">{state.funFact}</div>
-                    </div>
-
-                    <div className="p-4 rounded-2xl bg-purple-soft border-l-4 border-purple shadow-elevated-1 hover:shadow-elevated-2 transition-all">
-                      <div className="text-label text-muted-dark uppercase tracking-wider font-bold">🏆”“ Unlock Path</div>
-                      <div className="text-body text-muted-dark mt-2 font-semibold">{getUnlockRequirement(state.name)}</div>
-                    </div>
-                  </div>
-
-                  {/* Action buttons */}
-                  <div className="mt-5 space-y-2">
-                    <Link
-                      to="/journey"
-                      className="w-full h-12 rounded-2xl ui-button ui-accent-1 text-ink font-extrabold flex items-center justify-center hover:scale-105 transition-all active:scale-95"
-                      onClick={() => fxTap()}
-                    >
-                      View Journey Map
-                    </Link>
-                    <button
-                      onClick={() => setShowLockedPreview(null)}
-                      className="w-full h-11 rounded-2xl ui-button ui-accent-1-soft text-ink font-bold hover:scale-105 transition-all active:scale-95"
-                    >
-                      Close
-                    </button>
-                  </div>
                 </div>
-              );
-            })()}
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* Continue journey - with pulse on play button */}
+        <div className="px-5 mt-5 mb-4 flex-shrink-0">
+          <h2 className="text-display font-bold text-sm text-text-secondary mb-2">
+            Continue your journey
+          </h2>
+          <div className="mt-2 rounded-3xl ui-card ui-accent-1-soft p-4 flex items-center gap-3">
+            <div className="h-16 w-16 rounded-2xl overflow-hidden flex-shrink-0">
+              <img
+                src={STATE_ART[current.name]}
+                alt={current.name}
+                className="w-full h-full object-cover"
+                loading="eager"
+                decoding="auto"
+              />
+            </div>
+            <div className="flex-1">
+              <div className="text-label text-saffron">
+                {current.kind === "ut" ? "Union Territory" : "Currently Exploring"}
+              </div>
+              <div className="text-h4 font-bold leading-tight">{current.name}</div>
+              <div className="mt-1 flex items-center gap-1.5">
+                <div className="h-2.5 flex-1 rounded-full bg-muted overflow-hidden">
+                  <div
+                    className="h-full gradient-saffron transition-all duration-1000 ease-out"
+                    style={{ width: `${(currentDone / CARDS_PER_STATE) * 100}%` }}
+                  />
+                </div>
+                <span className="text-label text-text-secondary">
+                  {currentDone}/{CARDS_PER_STATE}
+                </span>
+              </div>
+            </div>
+            <Link
+              to="/state/$slug/learn"
+              params={{ slug: stateSlug(current.name) }}
+              onClick={() => fxTap()}
+              className="h-12 px-4 rounded-2xl ui-button ui-accent-1 text-ink text-display font-bold text-sm flex items-center transition-all duration-300 hover:scale-105 active:scale-95"
+            >
+              Play •¶
+            </Link>
           </div>
         </div>
-      )}
 
-      {/* First Session Tutorial removed from onboarding flow */}
+        {/* Up next - with interactive locked cards */}
+        <div className="px-5 mt-5 mb-6 flex-shrink-0">
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="text-display font-bold text-sm text-text-secondary">Up next</h2>
+            <Link
+              to="/journey"
+              className="text-xs font-extrabold text-explorer"
+              aria-label="View all states"
+            >
+              View all
+            </Link>
+          </div>
+          <div className="mt-2 grid grid-cols-2 gap-3">
+            {upNext.map((s, idx) => (
+              <button
+                key={s.name}
+                onClick={() => handleLockedCardTap(s.name)}
+                className={`rounded-3xl ui-card ui-accent-1-soft p-3 flex flex-col items-center gap-2 transition-all duration-300 overflow-hidden hover:scale-105 ${
+                  animateStats ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+                }`}
+                style={{ transitionDelay: `${idx * 100}ms` }}
+                aria-label={`Next state to explore: ${s.name}`}
+                role="button"
+                tabIndex={0}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    handleLockedCardTap(s.name);
+                  }
+                }}
+              >
+                <div className="w-12 h-12 rounded-xl overflow-hidden">
+                  <img
+                    src={STATE_ART[s.name]}
+                    alt={s.name}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+                <div className="text-display font-bold text-sm text-center leading-tight line-clamp-ellipsis-2">
+                  {s.name}
+                </div>
+                <Link
+                  to="/state/$slug/learn"
+                  params={{ slug: stateSlug(s.name) }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    fxTap();
+                  }}
+                  className="mt-1 px-4 py-2 rounded-lg ui-button ui-accent-1 text-ink text-label font-bold transition-all duration-200 hover:scale-105 active:scale-95"
+                  aria-label={`Start exploring ${s.name}`}
+                >
+                  Start exploring
+                </Link>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Locked Card Preview Modal */}
+        {showLockedPreview && (
+          <div className="fixed inset-0 bg-black/50 flex items-end justify-center z-50 p-4 animate-fade-in">
+            <div className="w-full max-w-sm bg-surface-card rounded-3xl shadow-2xl p-6 max-h-[80vh] overflow-y-auto animate-slide-up">
+              {(() => {
+                const state = journey.find((s) => s.name === showLockedPreview);
+                if (!state) return null;
+
+                return (
+                  <div>
+                    {/* Close button */}
+                    <button
+                      onClick={() => setShowLockedPreview(null)}
+                      className="absolute top-4 right-4 text-muted-light hover:text-text-secondary text-xl"
+                    >
+                      âœ•
+                    </button>
+
+                    {/* State preview */}
+                    <div
+                      className={`rounded-2xl gradient-saffron text-text-on-primary p-4 text-center mb-4`}
+                    >
+                      <div className="w-20 h-20 mx-auto mb-2 rounded-lg overflow-hidden">
+                        <img
+                          src={STATE_ART[state.name]}
+                          alt={state.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="text-display text-xl font-extrabold">{state.name}</div>
+                      <div className="text-sm opacity-90 mt-1">{state.nickname}</div>
+                    </div>
+
+                    {/* State facts */}
+                    <div className="space-y-3">
+                      <div className="p-4 rounded-2xl bg-orange-soft border-l-4 border-orange shadow-elevated-1 hover:shadow-elevated-2 transition-all">
+                        <div className="text-label text-orange uppercase tracking-wider font-bold">
+                          🏆›️ Monument
+                        </div>
+                        <div className="text-body text-orange mt-2 font-semibold">
+                          {state.monumentName}
+                        </div>
+                      </div>
+
+                      <div className="p-4 rounded-2xl bg-success-soft border-l-4 border-success shadow-elevated-1 hover:shadow-elevated-2 transition-all">
+                        <div className="text-label text-success uppercase tracking-wider font-bold">
+                          🦁 Wildlife
+                        </div>
+                        <div className="text-body text-success mt-2 font-semibold">
+                          {state.animalName}
+                        </div>
+                      </div>
+
+                      <div className="p-4 rounded-2xl bg-info-soft border-l-4 border-info shadow-elevated-1 hover:shadow-elevated-2 transition-all">
+                        <div className="text-label text-info uppercase tracking-wider font-bold">
+                          🏆’¡ Fun Fact
+                        </div>
+                        <div className="text-body text-info mt-2 font-semibold">
+                          {state.funFact}
+                        </div>
+                      </div>
+
+                      <div className="p-4 rounded-2xl bg-purple-soft border-l-4 border-purple shadow-elevated-1 hover:shadow-elevated-2 transition-all">
+                        <div className="text-label text-muted-dark uppercase tracking-wider font-bold">
+                          🏆”“ Unlock Path
+                        </div>
+                        <div className="text-body text-muted-dark mt-2 font-semibold">
+                          {getUnlockRequirement(state.name)}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Action buttons */}
+                    <div className="mt-5 space-y-2">
+                      <Link
+                        to="/journey"
+                        className="w-full h-12 rounded-2xl ui-button ui-accent-1 text-ink font-extrabold flex items-center justify-center hover:scale-105 transition-all active:scale-95"
+                        onClick={() => fxTap()}
+                      >
+                        View Journey Map
+                      </Link>
+                      <button
+                        onClick={() => setShowLockedPreview(null)}
+                        className="w-full h-11 rounded-2xl ui-button ui-accent-1-soft text-ink font-bold hover:scale-105 transition-all active:scale-95"
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+          </div>
+        )}
+
+        {/* First Session Tutorial removed from onboarding flow */}
       </div>
       {/* End scrollable content area */}
     </div>
@@ -1082,12 +1121,8 @@ function StatCard({
   return (
     <div className={`rounded-2xl ui-card ui-accent-1-soft border ${border} p-3`}>
       <div className="text-lg">{icon}</div>
-      <div className="text-display text-h2 leading-snug mt-1">
-        {value}
-      </div>
-      <div className="text-label text-text-secondary">
-        {label}
-      </div>
+      <div className="text-display text-h2 leading-snug mt-1">{value}</div>
+      <div className="text-label text-text-secondary">{label}</div>
     </div>
   );
 }
@@ -1126,20 +1161,18 @@ function StatCardEnhanced({
   }[tone];
 
   return (
-    <div className={`rounded-2xl ${bgGradient} border ${borderColor} p-2 shadow-soft hover:shadow-md transition-all`}>
+    <div
+      className={`rounded-2xl ${bgGradient} border ${borderColor} p-2 shadow-soft hover:shadow-md transition-all`}
+    >
       <div className="flex flex-col gap-1">
         {/* Icon and Number - Horizontal */}
         <div className="flex items-center gap-1.5 pl-1">
           <div className="text-2xl flex-shrink-0">{icon}</div>
-          <div className={`text-h1 font-black ${numberColor} leading-none`}>
-            {value}
-          </div>
+          <div className={`text-h1 font-black ${numberColor} leading-none`}>{value}</div>
         </div>
-        
+
         {/* Label */}
-        <div className="text-label text-text-primary px-1">
-          {label}
-        </div>
+        <div className="text-label text-text-primary px-1">{label}</div>
       </div>
     </div>
   );
@@ -1223,16 +1256,14 @@ function StateDetailModal({
               isDone
                 ? "gradient-saffron shadow-lg"
                 : isLocked
-                ? "bg-surface-sunken opacity-60"
-                : "gradient-saffron shadow-lg"
+                  ? "bg-surface-sunken opacity-60"
+                  : "gradient-saffron shadow-lg"
             }`}
           >
             {stateData.emoji}
           </div>
 
-          <h2 className="text-h2 text-ink">
-            {stateName}
-          </h2>
+          <h2 className="text-h2 text-ink">{stateName}</h2>
           <p className="text-sm text-text-secondary mt-1">
             {state.isUT ? "Union Territory" : "State"} · {stateData.capital}
           </p>
@@ -1241,9 +1272,7 @@ function StateDetailModal({
         {/* Sneak Peek Preview for Locked States */}
         {isLocked && (
           <div className="rounded-2xl bg-action-primary/5 border-2 border-warning p-4 space-y-3">
-            <p className="text-h5 text-warning flex items-center gap-2">
-              🏆‘€ Sneak Peek Preview
-            </p>
+            <p className="text-h5 text-warning flex items-center gap-2">🏆‘€ Sneak Peek Preview</p>
             <div className="space-y-2 text-sm">
               <div className="flex items-start gap-2">
                 <span className="text-2xl flex-shrink-0">{stateData.animal}</span>
@@ -1270,27 +1299,19 @@ function StateDetailModal({
         {/* Status Information */}
         {isLocked ? (
           <div className="rounded-2xl bg-warning-soft border-2 border-warning p-4">
-            <p className="text-h5 text-warning mb-2">
-              🏆” Locked
-            </p>
+            <p className="text-h5 text-warning mb-2">🏆” Locked</p>
             <p className="text-body text-action-primary">
               Complete the previous state to unlock this adventure!
             </p>
           </div>
         ) : isDone ? (
           <div className="rounded-2xl bg-success-soft border-2 border-success p-4">
-            <p className="text-h5 text-success mb-2">
-              âœ“ Completed
-            </p>
-            <p className="text-body text-success">
-              You've earned all badges for this state!
-            </p>
+            <p className="text-h5 text-success mb-2">âœ“ Completed</p>
+            <p className="text-body text-success">You've earned all badges for this state!</p>
           </div>
         ) : (
           <div className="roundepppd-2xl bg-info-soft border-2 border-info p-4">
-            <p className="text-h5 text-info mb-2">
-              •¶ In Progress
-            </p>
+            <p className="text-h5 text-info mb-2">•¶ In Progress</p>
             <p className="text-body text-accent-1">
               Complete 3 cards and take the quiz to unlock the next state!
             </p>
@@ -1326,7 +1347,11 @@ export function JourneyMapScreen() {
   const navigate = useNavigate();
   const p = useProgress();
   const states = statesWithProgress(p);
-  const [view, setView] = useState<{ screen: "intro" | "hub" | "card" | "quiz"; name: string; cardIndex?: number } | null>(null);
+  const [view, setView] = useState<{
+    screen: "intro" | "hub" | "card" | "quiz";
+    name: string;
+    cardIndex?: number;
+  } | null>(null);
   const [selectedState, setSelectedState] = useState<string | null>(null);
   const [expandedRegion, setExpandedRegion] = useState<keyof typeof REGIONS>("north");
   const celebration = useCelebration();
@@ -1340,31 +1365,30 @@ export function JourneyMapScreen() {
     // Check for milestone achievements
     const milestones = [
       { threshold: 25, emoji: "🎯", message: "Quarter Way There! 25% Complete!" },
-      { threshold: 50, emoji: "{EMOJI.utility.worldMap}Ž", message: "Halfway Around India! 50% Complete!" },
+      {
+        threshold: 50,
+        emoji: "{EMOJI.utility.worldMap}Ž",
+        message: "Halfway Around India! 50% Complete!",
+      },
       { threshold: 75, emoji: "🏆", message: "Almost Complete! 75% Explored!" },
       { threshold: 100, emoji: "🏆‘‘", message: "India Master! 100% Complete!" },
     ];
 
     // Track which milestones have been celebrated in localStorage
     const celebratedKey = "india-explorer:milestones-celebrated:v1";
-    const celebrated = typeof window !== "undefined" 
-      ? JSON.parse(localStorage.getItem(celebratedKey) || "[]")
-      : [];
+    const celebrated =
+      typeof window !== "undefined" ? JSON.parse(localStorage.getItem(celebratedKey) || "[]") : [];
 
     milestones.forEach((m) => {
       if (percentage >= m.threshold && !celebrated.includes(m.threshold)) {
         // New milestone reached!
-        celebration.custom(
-          m.message,
-          m.emoji,
-          {
-            subtitle: `You've explored ${completed}/${totalStates} regions!`,
-            confetti: true,
-            duration: 4000,
-            type: "success",
-          }
-        );
-        
+        celebration.custom(m.message, m.emoji, {
+          subtitle: `You've explored ${completed}/${totalStates} regions!`,
+          confetti: true,
+          duration: 4000,
+          type: "success",
+        });
+
         // Mark as celebrated
         celebrated.push(m.threshold);
         if (typeof window !== "undefined") {
@@ -1377,32 +1401,32 @@ export function JourneyMapScreen() {
   // Register the back handler for this screen with the global journey back handler
   useEffect(() => {
     const handleBack = () => {
-      appLogger.info('journey_map_screen', 'handleJourneyBack called, current view:', view?.screen);
-      
+      appLogger.info("journey_map_screen", "handleJourneyBack called, current view:", view?.screen);
+
       // Navigate back within internal views: card â†’ hub â†’ intro â†’ map
       if (view?.screen === "card" || view?.screen === "quiz") {
         // From card or quiz, go back to hub
-        appLogger.info('journey_map_screen', 'Back from card/quiz to hub');
+        appLogger.info("journey_map_screen", "Back from card/quiz to hub");
         setView({ screen: "hub", name: view.name });
         return;
       } else if (view?.screen === "hub") {
         // From hub, go back to intro
-        appLogger.info('journey_map_screen', 'Back from hub to intro');
+        appLogger.info("journey_map_screen", "Back from hub to intro");
         setView({ screen: "intro", name: view.name });
         return;
       } else if (view?.screen === "intro") {
         // From intro, go back to journey map
-        appLogger.info('journey_map_screen', 'Back from intro to map');
+        appLogger.info("journey_map_screen", "Back from intro to map");
         setView(null);
         return;
       }
       // If already at journey map (view === null), don't handle - let default back behavior occur
-      appLogger.info('journey_map_screen', 'At journey map, allowing default back behavior');
+      appLogger.info("journey_map_screen", "At journey map, allowing default back behavior");
     };
-    
+
     // Register this handler when component mounts or view changes
     setJourneyBackHandler(handleBack);
-    
+
     // Cleanup: remove handler when component unmounts
     return () => {
       setJourneyBackHandler(null);
@@ -1410,7 +1434,7 @@ export function JourneyMapScreen() {
   }, [view]);
 
   useEffect(() => {
-    appLogger.info('journey_map_screen', 'view state changed', view);
+    appLogger.info("journey_map_screen", "view state changed", view);
   }, [view]);
 
   // Preload all state images for smooth rendering
@@ -1419,7 +1443,13 @@ export function JourneyMapScreen() {
     preloadStateArt(...stateNames);
   }, [states]);
 
-  appLogger.info('journey_map_screen', 'Rendering with states.length=' + (states ? states.length : 'undefined') + ', states=' + (states ? JSON.stringify(states.slice(0, 2)) : 'null'));
+  appLogger.info(
+    "journey_map_screen",
+    "Rendering with states.length=" +
+      (states ? states.length : "undefined") +
+      ", states=" +
+      (states ? JSON.stringify(states.slice(0, 2)) : "null"),
+  );
 
   // Organize states by region for color-coded grouping
   const statesByRegion = useMemo(() => {
@@ -1433,7 +1463,12 @@ export function JourneyMapScreen() {
 
   // Safety check: ensure we have states data
   if (!states || states.length === 0) {
-    appLogger.info('journey_map_screen', 'No states data available (states=' + (states ? 'empty' : 'null') + '), showing loading state');
+    appLogger.info(
+      "journey_map_screen",
+      "No states data available (states=" +
+        (states ? "empty" : "null") +
+        "), showing loading state",
+    );
     return <LoadingScreen />;
   }
 
@@ -1448,12 +1483,12 @@ export function JourneyMapScreen() {
 
   // Build nodes from regional data (not from old routes)
   const nodes: MapNode[] = [];
-  
+
   // Add nodes from all regions
   REGION_KEYS.forEach((regionKey) => {
     // Skip union territories - they'll be added separately
     if (regionKey === "unionTerritories") return;
-    
+
     const regionStates = statesByRegion[regionKey] || [];
     regionStates.forEach((state) => {
       nodes.push({
@@ -1466,7 +1501,7 @@ export function JourneyMapScreen() {
       });
     });
   });
-  
+
   // Add union territory nodes
   const utStates = statesByRegion["unionTerritories"] || [];
   utStates.forEach((state) => {
@@ -1483,19 +1518,23 @@ export function JourneyMapScreen() {
   const totalStates = TOTAL_STATES;
   const completedStates = nodes.filter((n) => n.status === "done").length;
 
-  appLogger.info('journey_map_screen', 'nodes count: ' + nodes.length, nodes.map(n => ({ name: n.name, status: n.status })));
+  appLogger.info(
+    "journey_map_screen",
+    "nodes count: " + nodes.length,
+    nodes.map((n) => ({ name: n.name, status: n.status })),
+  );
 
   if (view?.screen === "intro") {
-    appLogger.info('journey_map_screen', 'Rendering StateIntroScreen with: ' + view.name);
+    appLogger.info("journey_map_screen", "Rendering StateIntroScreen with: " + view.name);
     return (
       <StateIntroScreen
         stateName={view.name}
         onBack={() => {
-          appLogger.info('journey_map_screen', 'StateIntroScreen onBack clicked');
+          appLogger.info("journey_map_screen", "StateIntroScreen onBack clicked");
           setView(null);
         }}
         onContinue={() => {
-          appLogger.info('journey_map_screen', 'StateIntroScreen onContinue clicked');
+          appLogger.info("journey_map_screen", "StateIntroScreen onContinue clicked");
           setLastPlayedState(view.name);
           setView({ screen: "hub", name: view.name });
         }}
@@ -1503,20 +1542,23 @@ export function JourneyMapScreen() {
     );
   }
   if (view?.screen === "hub") {
-    appLogger.info('journey_map_screen', 'Rendering LearningHubScreen with: ' + view.name);
+    appLogger.info("journey_map_screen", "Rendering LearningHubScreen with: " + view.name);
     return (
       <LearningHubScreen
         stateName={view.name}
         onBack={() => {
-          appLogger.info('journey_map_screen', 'LearningHubScreen onBack clicked');
+          appLogger.info("journey_map_screen", "LearningHubScreen onBack clicked");
           setView({ screen: "intro", name: view.name });
         }}
         onCard={(index) => {
-          appLogger.info('journey_map_screen', 'LearningHubScreen onCard clicked with index: ' + index);
+          appLogger.info(
+            "journey_map_screen",
+            "LearningHubScreen onCard clicked with index: " + index,
+          );
           setView({ screen: "card", name: view.name, cardIndex: index });
         }}
         onQuiz={() => {
-          appLogger.info('journey_map_screen', 'LearningHubScreen onQuiz clicked');
+          appLogger.info("journey_map_screen", "LearningHubScreen onQuiz clicked");
           setView({ screen: "quiz", name: view.name });
         }}
         allowReplay={true}
@@ -1524,17 +1566,23 @@ export function JourneyMapScreen() {
     );
   }
   if (view?.screen === "card") {
-    appLogger.info('journey_map_screen', 'Rendering LearningCardScreen with: ' + view.name + ', cardIndex: ' + view.cardIndex);
+    appLogger.info(
+      "journey_map_screen",
+      "Rendering LearningCardScreen with: " + view.name + ", cardIndex: " + view.cardIndex,
+    );
     return (
       <LearningCardScreen
         stateName={view.name}
         cardIndex={view.cardIndex}
         onClose={() => {
-          appLogger.info('journey_map_screen', 'LearningCardScreen onClose clicked');
+          appLogger.info("journey_map_screen", "LearningCardScreen onClose clicked");
           setView({ screen: "hub", name: view.name });
         }}
         onNext={(index) => {
-          appLogger.info('journey_map_screen', 'LearningCardScreen onNext clicked with index: ' + index);
+          appLogger.info(
+            "journey_map_screen",
+            "LearningCardScreen onNext clicked with index: " + index,
+          );
           if (index === null) {
             // Move to quiz
             setView({ screen: "quiz", name: view.name });
@@ -1547,16 +1595,16 @@ export function JourneyMapScreen() {
     );
   }
   if (view?.screen === "quiz") {
-    appLogger.info('journey_map_screen', 'Rendering QuizScreen with: ' + view.name);
+    appLogger.info("journey_map_screen", "Rendering QuizScreen with: " + view.name);
     return (
       <QuizScreen
         stateName={view.name}
         onClose={() => {
-          appLogger.info('journey_map_screen', 'QuizScreen onClose clicked');
+          appLogger.info("journey_map_screen", "QuizScreen onClose clicked");
           setView({ screen: "hub", name: view.name });
         }}
         onDone={() => {
-          appLogger.info('journey_map_screen', 'QuizScreen onDone clicked');
+          appLogger.info("journey_map_screen", "QuizScreen onDone clicked");
           // Navigate to completion screen which will show postcard â†’ unlock â†’ explorer
           const slug = view.name.toLowerCase().replace(/\s+/g, "-");
           navigate({ to: "/state/$slug/complete", params: { slug } });
@@ -1570,11 +1618,15 @@ export function JourneyMapScreen() {
       {/* Header with orange gradient - matching Home screen with sticky positioning */}
       <div className="sticky top-0 z-40 px-6 pt-3 pb-4 gradient-saffron rounded-b-3xl relative overflow-hidden animate-fade-in shadow-elevated-2">
         <Cloud className="absolute top-2 right-4 w-14 opacity-40 pointer-events-none" />
-        
+
         {/* Journey Info */}
         <div className="flex items-center gap-3 relative z-10">
           <div className="h-11 w-11 rounded-2xl ui-card ui-accent-1-soft p-1 flex items-center justify-center overflow-hidden">
-            <img src={getAvatarImage(p.avatar)} alt={getAvatarName(p.avatar)} className="w-full h-full object-cover" />
+            <img
+              src={getAvatarImage(p.avatar)}
+              alt={getAvatarName(p.avatar)}
+              className="w-full h-full object-cover"
+            />
           </div>
           <div className="flex-1">
             <div className="text-display font-extrabold text-white">India Journey</div>
@@ -1605,7 +1657,9 @@ export function JourneyMapScreen() {
             {(() => {
               const msg = getJourneyMotivationalMessage(completedStates);
               const milestoneCount = 36 - completedStates;
-              return milestoneCount > 0 ? `${milestoneCount} more to grow your tree` : "{EMOJI.utility.tree} You grew the tree!";
+              return milestoneCount > 0
+                ? `${milestoneCount} more to grow your tree`
+                : "{EMOJI.utility.tree} You grew the tree!";
             })()}
           </div>
         </div>
@@ -1616,7 +1670,10 @@ export function JourneyMapScreen() {
       <Cloud className="absolute top-[500px] right-1 w-20 opacity-85 pointer-events-none animate-fade-in" />
 
       {/* Explorable States Map with Regional Organization */}
-      <div className="relative flex-1 flex flex-col overflow-hidden animate-fade-in" style={{ animationDelay: "200ms" }}>
+      <div
+        className="relative flex-1 flex flex-col overflow-hidden animate-fade-in"
+        style={{ animationDelay: "200ms" }}
+      >
         {/* Region Chips - Horizontal Scrollable */}
         <div className="px-4 pt-4 pb-2 overflow-x-auto sticky top-0 z-20 bg-bg-page">
           <div className="flex gap-2 pb-2 min-w-min">
@@ -1625,7 +1682,7 @@ export function JourneyMapScreen() {
               const regionStates = statesByRegion[regionKey] || [];
               const regionDone = regionStates.filter((s) => s.status === "done").length;
               const isSelected = regionKey === expandedRegion;
-              
+
               return (
                 <button
                   key={regionKey}
@@ -1638,10 +1695,11 @@ export function JourneyMapScreen() {
                       ? "ui-button ui-accent-1 text-ink"
                       : "ui-button ui-accent-1-soft text-ink"
                   }`}
-                  style={{ fontSize: 'var(--type-body)', fontWeight: 'var(--type-body-weight)' }}
+                  style={{ fontSize: "var(--type-body)", fontWeight: "var(--type-body-weight)" }}
                   title={`${regionDone}/${regionStates.length} explored`}
                 >
-                  {region.emoji} {region.name.split(" ")[0]} {isSelected && regionDone === regionStates.length && "âœ“"}
+                  {region.emoji} {region.name.split(" ")[0]}{" "}
+                  {isSelected && regionDone === regionStates.length && "âœ“"}
                 </button>
               );
             })}
@@ -1649,20 +1707,30 @@ export function JourneyMapScreen() {
         </div>
 
         {/* Expanded Region Content - Scrollable */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 pt-4 pb-4" style={{ paddingBottom: 'calc(64px + 16px + env(safe-area-inset-bottom))' }}>
+        <div
+          className="flex-1 overflow-y-auto overflow-x-hidden px-4 pt-4 pb-4"
+          style={{ paddingBottom: "calc(64px + 16px + env(safe-area-inset-bottom))" }}
+        >
           {/* Region Info Header */}
           {(() => {
             const region = REGIONS[expandedRegion];
             const regionStates = statesByRegion[expandedRegion] || [];
             const regionDone = regionStates.filter((s) => s.status === "done").length;
-            
+
             return (
               <div className="mb-4 animate-fade-in">
-                <div style={{ fontSize: 'var(--type-section-heading)', fontWeight: 'var(--type-section-heading-weight)' }} className="text-text-primary">
+                <div
+                  style={{
+                    fontSize: "var(--type-section-heading)",
+                    fontWeight: "var(--type-section-heading-weight)",
+                  }}
+                  className="text-text-primary"
+                >
                   {region.name}
                 </div>
                 <div className="text-base font-semibold text-text-secondary mt-1">
-                  {regionDone}/{regionStates.length} explored {regionDone === regionStates.length && "${EMOJI.action.sparkle} Region Complete!"}
+                  {regionDone}/{regionStates.length} explored{" "}
+                  {regionDone === regionStates.length && "${EMOJI.action.sparkle} Region Complete!"}
                 </div>
                 <div className="mt-2 h-2 bg-[var(--progress-track)] rounded-full overflow-hidden">
                   <div
@@ -1677,7 +1745,7 @@ export function JourneyMapScreen() {
           {/* States in selected region - 2-Column Grid */}
           {(() => {
             const regionStates = statesByRegion[expandedRegion] || [];
-            
+
             return (
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 animate-fade-in">
                 {regionStates.map((state, stateIndex) => {
@@ -1685,12 +1753,12 @@ export function JourneyMapScreen() {
                   const isDone = state.status === "done";
                   const isCurrent = state.status === "current";
                   const isAvailable = state.status === "available";
-                  
+
                   // Detect in-progress state (partially completed cards)
                   const cardsRead = cardsDone(p, state.name);
                   const totalCards = 6; // IndiaState doesn't have cards property, default to 6
                   const isInProgress = !isDone && cardsRead > 0 && cardsRead < totalCards;
-                  
+
                   // Determine card status
                   let cardStatus: "available" | "completed" | "locked" = "available";
                   if (isDone) {
@@ -1700,7 +1768,7 @@ export function JourneyMapScreen() {
                   } else if (isAvailable || isCurrent || isInProgress) {
                     cardStatus = "available";
                   }
-                  
+
                   return (
                     <JourneyDestinationCard
                       key={state.name}
@@ -1747,15 +1815,13 @@ export function JourneyMapScreen() {
   );
 }
 
-
-
 export function StateIntroScreen({
   stateName,
   onBack,
   onContinue,
 }: { stateName?: string; onBack?: () => void; onContinue?: () => void } = {}) {
-  appLogger.info('state_intro_screen', 'Mounted with stateName: ' + stateName);
-  
+  appLogger.info("state_intro_screen", "Mounted with stateName: " + stateName);
+
   const state = getState(stateName);
   const goBack = useGoBack();
   const art = STATE_ART[state.name];
@@ -1772,10 +1838,13 @@ export function StateIntroScreen({
     return null;
   }, [state.name]);
 
-  appLogger.info('state_intro_screen', 'Rendered with stateName: ' + stateName + ', state.name: ' + state?.name);
+  appLogger.info(
+    "state_intro_screen",
+    "Rendered with stateName: " + stateName + ", state.name: " + state?.name,
+  );
 
   useEffect(() => {
-    appLogger.info('state_intro_screen', 'useEffect - preloading art');
+    appLogger.info("state_intro_screen", "useEffect - preloading art");
     preloadStateArt(state.name, nextStateAfter(state.name)?.name);
   }, [state.name]);
 
@@ -1784,7 +1853,7 @@ export function StateIntroScreen({
       <div className={`relative py-12 ${grad} overflow-hidden`}>
         <Cloud className="absolute top-6 left-2 w-20 opacity-80" />
         <Cloud className="absolute top-14 right-2 w-16 opacity-70" />
-        
+
         {/* Breadcrumb Navigation */}
         <div className="absolute top-3 left-16 flex items-center gap-1 text-white text-xs font-bold">
           <span className="opacity-75">Journey</span>
@@ -1810,7 +1879,7 @@ export function StateIntroScreen({
             decoding="async"
           />
         </div>
-        
+
         <button
           onClick={() => {
             if (onBack) {
@@ -1828,10 +1897,7 @@ export function StateIntroScreen({
           State {stateIndex(state.name) + 1} of {TOTAL_STATES}
         </div>
         {art ? (
-          <img
-            src={art}
-            alt={`${stateName} state illustration`}
-          />
+          <img src={art} alt={`${stateName} state illustration`} />
         ) : (
           <div className="absolute bottom-6 left-1/2 -translate-x-1/2 h-48 aspect-square flex items-center justify-center drop-shadow-2xl">
             <img
@@ -1846,12 +1912,8 @@ export function StateIntroScreen({
       </div>
 
       <div className="-mt-8 rounded-t-[36px] bg-white flex-1 px-5 pt-6 pb-5 relative z-10">
-        <div className="text-xs font-black uppercase tracking-widest text-saffron">
-          Welcome to
-        </div>
-        <h1 className="text-h1 leading-snug mt-1">
-          {state.name}
-        </h1>
+        <div className="text-xs font-black uppercase tracking-widest text-saffron">Welcome to</div>
+        <h1 className="text-h1 leading-snug mt-1">{state.name}</h1>
         <div className="text-body text-text-secondary mt-1">
           <img
             src={STATE_ART[state.name]}
@@ -1872,7 +1934,7 @@ export function StateIntroScreen({
 
         <button
           onClick={() => {
-            appLogger.info('state_intro_screen', 'Start Exploring clicked, calling onContinue');
+            appLogger.info("state_intro_screen", "Start Exploring clicked, calling onContinue");
             fxTap();
             onContinue?.();
           }}
@@ -1885,25 +1947,12 @@ export function StateIntroScreen({
   );
 }
 
-
-function IntroFact({
-  label,
-  value,
-  icon,
-}: {
-  label: string;
-  value: string;
-  icon: string;
-}) {
+function IntroFact({ label, value, icon }: { label: string; value: string; icon: string }) {
   return (
     <div className="ui-card ui-accent-1-soft p-3">
       <div className="text-2xl">{icon}</div>
-      <div className="text-label text-ink">
-        {label}
-      </div>
-      <div className="text-h5 font-bold text-ink leading-tight">
-        {value}
-      </div>
+      <div className="text-label text-ink">{label}</div>
+      <div className="text-h5 font-bold text-ink leading-tight">{value}</div>
     </div>
   );
 }
@@ -1921,8 +1970,11 @@ export function LearningHubScreen({
   onCard?: (index: number) => void;
   allowReplay?: boolean;
 } = {}) {
-  appLogger.info('learning_hub_screen', 'Mounted with stateName: ' + stateName + ', allowReplay: ' + allowReplay);
-  
+  appLogger.info(
+    "learning_hub_screen",
+    "Mounted with stateName: " + stateName + ", allowReplay: " + allowReplay,
+  );
+
   const progress = useProgress();
   const goBack = useGoBack();
   const celebration = useCelebration();
@@ -1931,11 +1983,22 @@ export function LearningHubScreen({
   let status = live?.status ?? state.status;
   // If allowReplay is true, treat locked states as "current" so cards are playable
   if (allowReplay && status === "locked") {
-    appLogger.info('learning_hub_screen', 'allowReplay is true and status was locked, changing to current');
+    appLogger.info(
+      "learning_hub_screen",
+      "allowReplay is true and status was locked, changing to current",
+    );
     status = "current";
   }
 
-  appLogger.info('learning_hub_screen', 'Rendered with stateName: ' + stateName + ', allowReplay: ' + allowReplay + ', status: ' + status);
+  appLogger.info(
+    "learning_hub_screen",
+    "Rendered with stateName: " +
+      stateName +
+      ", allowReplay: " +
+      allowReplay +
+      ", status: " +
+      status,
+  );
   const read = cardsRead(progress, state.name);
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
 
@@ -1952,7 +2015,7 @@ export function LearningHubScreen({
 
   // Track which categories have been celebrated to avoid duplicate celebrations
   const [celebratedCategories, setCelebratedCategories] = useState<Set<number>>(new Set());
-  
+
   // State for showing the "All 6 cards done" decision modal
   const [showDecisionModal, setShowDecisionModal] = useState(false);
 
@@ -1964,37 +2027,44 @@ export function LearningHubScreen({
   const cardCounts = useMemo(() => {
     console.log(`[LearningHubScreen] cardCounts calculation for ${state.name}`);
     console.log(`[LearningHubScreen] allCards.length: ${allCards.length}`);
-    
+
     // Category names matching how they're stored in cardVisits
-    const categoryNames = ['Capital', 'Language', 'Food', 'Places', 'Animal', 'Fact'];
+    const categoryNames = ["Capital", "Language", "Food", "Places", "Animal", "Fact"];
     const cardVisits = progress.cardVisits?.[state.name];
-    
+
     console.log(`[LearningHubScreen] cardVisits structure for ${state.name}:`, cardVisits);
-    
+
     return Array.from({ length: 6 }).map((_, i) => {
       const categoryName = categoryNames[i];
-      
+
       // Count ALL cards for each category (main + sub-cards like Activity, Trivia, Cool Facts)
-      const allCategoryCards = allCards.filter(card => card.mainCardIndex === i);
-      
+      const allCategoryCards = allCards.filter((card) => card.mainCardIndex === i);
+
       // Get visited cards from cardVisits structure
-      const visitedKey = categoryName.toLowerCase().replace(/\s+/g, '-');
+      const visitedKey = categoryName.toLowerCase().replace(/\s+/g, "-");
       const visitedIndices = cardVisits?.[visitedKey] ?? [];
-      
-      console.log(`[LearningHubScreen] Category ${i} (${categoryName}): found ${allCategoryCards.length} total cards, visited ${visitedIndices.length}`);
+
+      console.log(
+        `[LearningHubScreen] Category ${i} (${categoryName}): found ${allCategoryCards.length} total cards, visited ${visitedIndices.length}`,
+      );
 
       return {
-        total: allCategoryCards.length,  // ALL cards including sub-cards
-        read: visitedIndices.length,     // How many visited
+        total: allCategoryCards.length, // ALL cards including sub-cards
+        read: visitedIndices.length, // How many visited
       };
     });
   }, [allCards, progress.cardVisits, state.name]);
 
   // Count completed categories (where ALL cards in that category are read)
   const completedCategories = useMemo(() => {
-    const result = cardCounts.filter(count => count.total > 0 && count.read === count.total).length;
+    const result = cardCounts.filter(
+      (count) => count.total > 0 && count.read === count.total,
+    ).length;
     console.log(`[LearningHubScreen] completedCategories: ${result}`);
-    console.log(`[LearningHubScreen] cardCounts breakdown:`, cardCounts.map((c, i) => `Cat${i}: ${c.read}/${c.total}`).join(', '));
+    console.log(
+      `[LearningHubScreen] cardCounts breakdown:`,
+      cardCounts.map((c, i) => `Cat${i}: ${c.read}/${c.total}`).join(", "),
+    );
     return result;
   }, [cardCounts]);
 
@@ -2002,27 +2072,23 @@ export function LearningHubScreen({
   useEffect(() => {
     // Celebrate at 3/6 (halfway milestone)
     if (completedCategories === 3 && !celebratedCategories.has(3)) {
-      celebration.custom(
-        `Halfway there! ${EMOJI.action.star}`,
-        "🏆ƒâ€♂️",
-        {
-          subtitle: `3/6 categories explored! Keep up the momentum 🏆’¨`,
-          confetti: true,
-          duration: 2500,
-          type: "success",
-        }
-      );
-      
-      setCelebratedCategories(prev => new Set([...prev, 3]));
+      celebration.custom(`Halfway there! ${EMOJI.action.star}`, "🏆ƒâ€♂️", {
+        subtitle: `3/6 categories explored! Keep up the momentum 🏆’¨`,
+        confetti: true,
+        duration: 2500,
+        type: "success",
+      });
+
+      setCelebratedCategories((prev) => new Set([...prev, 3]));
     }
-    
+
     // At 6/6 (full completion, before quiz): show decision modal instead of auto-celebrating
     if (completedCategories === 6 && !celebratedCategories.has(6)) {
       // Show the "All 6 cards done! Start quiz / Later" decision modal
       setShowDecisionModal(true);
-      
+
       // Mark as celebrated so we don't show this again
-      setCelebratedCategories(prev => new Set([...prev, 6]));
+      setCelebratedCategories((prev) => new Set([...prev, 6]));
     }
   }, [completedCategories, celebratedCategories, celebration, state.name]);
 
@@ -2036,8 +2102,8 @@ export function LearningHubScreen({
     { icon: "🏆’¡", title: "Fun Fact", sub: state.funFact, tone: "blue" as const },
   ].map((c, i) => {
     // Category is complete only if ALL cards in it are read
-    const isCategoryComplete = cardCounts[i].total > 0 && 
-      cardCounts[i].read === cardCounts[i].total;
+    const isCategoryComplete =
+      cardCounts[i].total > 0 && cardCounts[i].read === cardCounts[i].total;
 
     return {
       ...c,
@@ -2080,7 +2146,7 @@ export function LearningHubScreen({
             decoding="async"
           />
         </div>
-        
+
         <div className="flex items-center gap-3">
           <button
             onClick={() => {
@@ -2096,9 +2162,7 @@ export function LearningHubScreen({
             ‹
           </button>
           <div className="flex-1 text-white">
-            <div className="text-xs font-bold text-white/90">
-              Learning Hub
-            </div>
+            <div className="text-xs font-bold text-white/90">Learning Hub</div>
             <div className="text-display text-xl font-extrabold">{state.name}</div>
             {progress.streak > 0 && (
               <div className="text-xs font-bold text-white/80 mt-0.5">
@@ -2119,7 +2183,9 @@ export function LearningHubScreen({
               style={{ width: `${(completedCategories / 6) * 100}%` }}
             />
           </div>
-          <div className="text-sm font-extrabold text-white whitespace-nowrap">{completedCategories} / 6</div>
+          <div className="text-sm font-extrabold text-white whitespace-nowrap">
+            {completedCategories} / 6
+          </div>
         </div>
       </div>
 
@@ -2151,12 +2217,11 @@ export function LearningHubScreen({
           }`}
         >
           {completedCategories === 6 && !showDecisionModal
-            ? "${EMOJI.action.sparkle} Take the Quiz! {EMOJI.milestone.twentyFive}" 
-            : `🏆”’ Quiz Locked (${completedCategories}/6 done)`
-          }
+            ? "${EMOJI.action.sparkle} Take the Quiz! {EMOJI.milestone.twentyFive}"
+            : `🏆”’ Quiz Locked (${completedCategories}/6 done)`}
         </button>
       </div>
-      
+
       {/* "All 6 cards done!" Decision Modal */}
       {showDecisionModal && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in">
@@ -2167,12 +2232,8 @@ export function LearningHubScreen({
               <div className="text-ink text-xs font-black uppercase tracking-[0.3em] mb-2">
                 All Done!
               </div>
-              <h2 className="text-h2 text-ink font-extrabold">
-                All 6 Cards Explored!
-              </h2>
-              <p className="text-ink font-bold mt-3 text-sm">
-                Ready to test your knowledge?
-              </p>
+              <h2 className="text-h2 text-ink font-extrabold">All 6 Cards Explored!</h2>
+              <p className="text-ink font-bold mt-3 text-sm">Ready to test your knowledge?</p>
             </div>
 
             {/* Buttons */}
@@ -2206,7 +2267,6 @@ export function LearningHubScreen({
     </div>
   );
 }
-
 
 function HubCard({
   icon,
@@ -2261,16 +2321,13 @@ function HubCard({
       }`}
     >
       <div className="text-h1">{icon}</div>
-      <div className="text-h5 text-display mt-1 leading-tight">
-        {title}
-      </div>
+      <div className="text-h5 text-display mt-1 leading-tight">{title}</div>
       <div className="text-xs font-bold text-text-secondary">{sub}</div>
       {/* Category-scoped progress counter */}
       {categoryCardsTotal !== undefined && categoryCardsRead !== undefined && (
-        <div className={`mt-2 text-xs font-bold ${
-          done ? "text-success" : "text-text-secondary"
-        }`}>
-          {categoryCardsRead}/{categoryCardsTotal}{done && " âœ“"}
+        <div className={`mt-2 text-xs font-bold ${done ? "text-success" : "text-text-secondary"}`}>
+          {categoryCardsRead}/{categoryCardsTotal}
+          {done && " âœ“"}
         </div>
       )}
       {done && (
@@ -2299,7 +2356,11 @@ export type EnhancedCard = {
   mainCardIndex: number; // Track which main card this belongs to (0-5)
 };
 
-export function learningCardsFor(stateName?: string, displayLanguage: string = "en", ageBand: string = "8-9"): EnhancedCard[] {
+export function learningCardsFor(
+  stateName?: string,
+  displayLanguage: string = "en",
+  ageBand: string = "8-9",
+): EnhancedCard[] {
   const state = getState(stateName);
   const enrichedContent = getStateContent(state.name);
 
@@ -2308,7 +2369,7 @@ export function learningCardsFor(stateName?: string, displayLanguage: string = "
     if (!value) return "";
     return typeof value === "string" ? value : value.text;
   };
-  
+
   // Map of main card definitions
   const mainCardDefinitions = [
     {
@@ -2367,11 +2428,13 @@ export function learningCardsFor(stateName?: string, displayLanguage: string = "
   mainCardDefinitions.forEach((def, mainIndex) => {
     // Get the correct card content based on selected language AND age band
     const enrichedCard = enrichedContent ? enrichedContent[def.enrichedKey] : undefined;
-    
+
     // If enriched content exists and has language variants, get the language-specific version
     // Also filter by age band for age-appropriate content
-    let cardContent = enrichedCard ? getCardContentByAge(state.name, def.enrichedKey, displayLanguage, ageBand) : null;
-    
+    const cardContent = enrichedCard
+      ? getCardContentByAge(state.name, def.enrichedKey, displayLanguage, ageBand)
+      : null;
+
     // Use enriched content if available and in selected language, otherwise fall back to default
     const body = cardContent?.mainText || def.body;
     const title = cardContent?.title || def.title;
@@ -2493,14 +2556,14 @@ export function LearningCardScreen({
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
   const celebration = useCelebration();
   const level = levelInfo(progress.xp);
-  
+
   // Learning Card Screen - State and Navigation
   // mainCardIndex tracks which category (0-5)
   // cardIndexInCategory tracks position within category (0-4 or more)
   const [displayLanguage, setDisplayLanguage] = useState<LanguageCode>(() => {
     // Start with English, will validate based on available languages
     const available = getAvailableLanguages(state.name);
-    return (available.includes("en") ? "en" : available[0] ?? "en") as LanguageCode;
+    return (available.includes("en") ? "en" : (available[0] ?? "en")) as LanguageCode;
   });
   const [mainCardIndex, setMainCardIndex] = useState(cardIndex ?? 0); // Which category (0-5)
   const [cardIndexInCategory, setCardIndexInCategory] = useState(0); // Position within category (0-4 usually)
@@ -2508,7 +2571,7 @@ export function LearningCardScreen({
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [playingCardIndex, setPlayingCardIndex] = useState<number | null>(null);
   const [showAudioPermissionPrompt, setShowAudioPermissionPrompt] = useState(false);
-  
+
   // Now compute cards using displayLanguage and ageBand (which are now declared)
   const cards = useMemo(() => {
     const loadedCards = learningCardsFor(state.name, displayLanguage, progress.ageBand);
@@ -2524,29 +2587,38 @@ export function LearningCardScreen({
     }
     return loadedCards;
   }, [state.name, displayLanguage, progress.ageBand]);
-  
+
   // Get cards for current category only
   const cardsInCurrentCategory = useMemo(() => {
     if (!Array.isArray(cards)) return [];
-    return cards.filter(c => c && c.mainCardIndex === mainCardIndex);
+    return cards.filter((c) => c && c.mainCardIndex === mainCardIndex);
   }, [cards, mainCardIndex]);
-  
+
   // Get current card object with validation
   const currentCard = useMemo(() => {
-    if (!Array.isArray(cardsInCurrentCategory) || cardIndexInCategory >= cardsInCurrentCategory.length) {
+    if (
+      !Array.isArray(cardsInCurrentCategory) ||
+      cardIndexInCategory >= cardsInCurrentCategory.length
+    ) {
       return undefined;
     }
     return cardsInCurrentCategory[cardIndexInCategory];
   }, [cardsInCurrentCategory, cardIndexInCategory]);
-  
+
   // Get global index for progress tracking with validation
   const currentCardIndex = useMemo(() => {
     if (!currentCard || !Array.isArray(cards)) return -1;
-    return cards.findIndex(c => c && c.mainCardIndex === currentCard.mainCardIndex && c.kicker === currentCard.kicker && c.title === currentCard.title);
+    return cards.findIndex(
+      (c) =>
+        c &&
+        c.mainCardIndex === currentCard.mainCardIndex &&
+        c.kicker === currentCard.kicker &&
+        c.title === currentCard.title,
+    );
   }, [currentCard, cards]);
-  
+
   const enrichedContent = getStateContent(state.name);
-  
+
   useEffect(() => {
     preloadStateArt(state.name, nextStateAfter(state.name)?.name);
   }, [state.name]);
@@ -2558,9 +2630,11 @@ export function LearningCardScreen({
       const mainCategoryIndex = currentCard.mainCardIndex;
       const mainCategories = ["capital", "language", "food", "places", "animal", "fact"];
       const mainCategoryKey = mainCategories[mainCategoryIndex];
-      
+
       if (mainCategoryKey !== undefined) {
-        console.log(`[LearningCardScreen] Marking card visit: state="${state.name}", kicker="${currentCard.kicker}", type="${currentCard.type}", mainCategory="${mainCategoryKey}", cardIndexInCategory=${cardIndexInCategory}`);
+        console.log(
+          `[LearningCardScreen] Marking card visit: state="${state.name}", kicker="${currentCard.kicker}", type="${currentCard.type}", mainCategory="${mainCategoryKey}", cardIndexInCategory=${cardIndexInCategory}`,
+        );
         // Mark visit under the main category, regardless of whether it's a main or sub-card
         // This way, all cards (main + sub-cards) are counted toward the category total
         markCardVisit(state.name, mainCategoryKey, cardIndexInCategory);
@@ -2583,8 +2657,12 @@ export function LearningCardScreen({
 
   const card = currentCard; // Use validated currentCard from useMemo
   const isLast = currentCardIndex >= 0 && currentCardIndex === cards.length - 1;
-  const isReplaying = currentCardIndex >= 0 && currentCard ? isCardReplaying(progress, state.name, currentCardIndex) : false;
-  const replayCount = currentCardIndex >= 0 ? getReplayCount(progress, state.name, currentCardIndex) : 0;
+  const isReplaying =
+    currentCardIndex >= 0 && currentCard
+      ? isCardReplaying(progress, state.name, currentCardIndex)
+      : false;
+  const replayCount =
+    currentCardIndex >= 0 ? getReplayCount(progress, state.name, currentCardIndex) : 0;
 
   // Safety check: ensure card exists and currentCardIndex is valid
   if (!card || currentCardIndex < 0 || !Array.isArray(cards) || cards.length === 0) {
@@ -2607,10 +2685,13 @@ export function LearningCardScreen({
 
   // Find the main card index for the current card
   const currentMainCardIndex = card?.mainCardIndex ?? -1;
-  
+
   // Find where the current main card section ends
   let mainCardSectionEnd = currentCardIndex;
-  while (mainCardSectionEnd < cards.length - 1 && cards[mainCardSectionEnd + 1]?.mainCardIndex === currentMainCardIndex) {
+  while (
+    mainCardSectionEnd < cards.length - 1 &&
+    cards[mainCardSectionEnd + 1]?.mainCardIndex === currentMainCardIndex
+  ) {
     mainCardSectionEnd++;
   }
 
@@ -2626,7 +2707,7 @@ export function LearningCardScreen({
     if (touchStart !== null) {
       const swipeThreshold = 50;
       const diff = touchStart - e.changedTouches[0].clientX;
-      
+
       // Swipe left (show next card)
       if (diff > swipeThreshold && cardIndexInCategory < cardsInCurrentCategory.length - 1) {
         fxTap();
@@ -2652,17 +2733,17 @@ export function LearningCardScreen({
       // Moving to next card in same category - show immediate celebration
       const currentCard = cardsInCurrentCategory[cardIndexInCategory];
       const isReplaying = progress.cards?.[state.name]?.includes(currentCardIndex) ?? false;
-      
+
       // Mark current card as learned BEFORE showing celebration
       markCard(state.name, currentCardIndex, isReplaying);
-      
+
       // Show immediate celebration only on first read (not replay)
       if (!isReplaying) {
         fxCorrect();
-        
+
         // Trigger floating XP animation
         const feedbackId = `xp-${Date.now()}-${Math.random()}`;
-        
+
         // DISABLED FOR NOW - PHASE 2: Card learning celebration
         // celebration.custom(
         //   `${currentCard.kicker} card learned!`,
@@ -2674,7 +2755,7 @@ export function LearningCardScreen({
         //     type: "success",
         //   }
         // );
-        
+
         // Auto-advance to next card immediately (celebration disabled in PHASE 2)
         setCardIndexInCategory(cardIndexInCategory + 1);
       } else {
@@ -2686,10 +2767,10 @@ export function LearningCardScreen({
       // Last card in this category - mark and move to next category or exit
       const currentCard = cardsInCurrentCategory[cardIndexInCategory];
       const isReplaying = progress.cards?.[state.name]?.includes(currentCardIndex) ?? false;
-      
+
       // Mark final card as learned
       markCard(state.name, currentCardIndex, isReplaying);
-      
+
       // Show category completion celebration
       if (!isReplaying) {
         fxCorrect();
@@ -2704,7 +2785,7 @@ export function LearningCardScreen({
         //     type: "success",
         //   }
         // );
-        
+
         // Auto-advance to next category immediately (celebration disabled in PHASE 2)
         onNext?.(null);
       } else {
@@ -2717,41 +2798,44 @@ export function LearningCardScreen({
 
   const handleMainCardDone = () => {
     fxTap();
-    
+
     // Get the main card index and calculate completedCards for this main card
     const mainCardIdx = currentMainCardIndex;
-    const mainCardSectionCards = cards.filter(c => c.mainCardIndex === mainCardIdx);
-    const allCardsInMainCardRead = mainCardSectionCards.every(c => 
-      progress.cards?.[state.name]?.includes(cards.indexOf(c)) ?? false
+    const mainCardSectionCards = cards.filter((c) => c.mainCardIndex === mainCardIdx);
+    const allCardsInMainCardRead = mainCardSectionCards.every(
+      (c) => progress.cards?.[state.name]?.includes(cards.indexOf(c)) ?? false,
     );
-    
+
     // Mark the main card as learned
     const wasFirstRead = !allCardsInMainCardRead;
-    
+
     // Show immediate celebration when completing main card
     if (wasFirstRead) {
       fxCorrect(); // Rising chime sound
-      
-      const mainCardNames = ["Capital", "Language", "Famous Food", "Places", "State Animal", "Fun Fact"];
+
+      const mainCardNames = [
+        "Capital",
+        "Language",
+        "Famous Food",
+        "Places",
+        "State Animal",
+        "Fun Fact",
+      ];
       const categoryName = mainCardNames[mainCardIdx] ?? `Category ${mainCardIdx + 1}`;
-      
+
       // FIX: Only main card gives XP (25 XP), not all sub-cards in the category
       // Previously showed: +75 XP for 3 sub-cards, but only 25 was awarded
-      celebration.custom(
-        `${categoryName} mastered!`,
-        "{EMOJI.action.star}",
-        {
-          subtitle: `+${XP_PER_CARD} XP earned â€¢ ${mainCardIdx + 1}/6 categories mastered`,
-          confetti: true,
-          duration: 2500,
-          type: "success",
-          showCloseButton: true,
-        }
-      );
+      celebration.custom(`${categoryName} mastered!`, "{EMOJI.action.star}", {
+        subtitle: `+${XP_PER_CARD} XP earned â€¢ ${mainCardIdx + 1}/6 categories mastered`,
+        confetti: true,
+        duration: 2500,
+        type: "success",
+        showCloseButton: true,
+      });
     }
-    
+
     markCard(state.name, currentMainCardIndex, !wasFirstRead);
-    
+
     // If this is the last main card, go to quiz
     if (currentMainCardIndex === 5) {
       onNext?.(null);
@@ -2784,7 +2868,9 @@ export function LearningCardScreen({
           <div className="h-2 rounded-full bg-surface-card overflow-hidden shadow-inner flex-1">
             <div
               className={`h-full ${grad} transition-all`}
-              style={{ width: `${((cardIndexInCategory + 1) / cardsInCurrentCategory.length) * 100}%` }}
+              style={{
+                width: `${((cardIndexInCategory + 1) / cardsInCurrentCategory.length) * 100}%`,
+              }}
             />
           </div>
         </div>
@@ -2815,16 +2901,16 @@ export function LearningCardScreen({
         <button
           onClick={(e) => {
             e.stopPropagation();
-            
+
             // Check if audio is enabled
-            if (!hasFeatureConsent('audio')) {
+            if (!hasFeatureConsent("audio")) {
               setShowAudioPermissionPrompt(true);
               fxTap();
               return;
             }
-            
+
             const isPlaying = playingCardIndex === currentCardIndex;
-            
+
             if (isPlaying) {
               // Stop playing
               stopTts();
@@ -2835,10 +2921,16 @@ export function LearningCardScreen({
                 .replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, "")
                 .replace(/\s+/g, " ")
                 .trim();
-              playStateNarration(`card-${state.name}-${currentCardIndex}`, state.name, textToRead, {
-                speed: 0.85,
-                pitch: 1.05,
-              }, displayLanguage);
+              playStateNarration(
+                `card-${state.name}-${currentCardIndex}`,
+                state.name,
+                textToRead,
+                {
+                  speed: 0.85,
+                  pitch: 1.05,
+                },
+                displayLanguage,
+              );
               setPlayingCardIndex(currentCardIndex);
             }
           }}
@@ -2848,11 +2940,13 @@ export function LearningCardScreen({
           className={`h-9 px-3 rounded-full shadow-soft flex items-center justify-center gap-2 text-label transition-all active:scale-95 whitespace-nowrap ${
             playingCardIndex === currentCardIndex
               ? "bg-action-primary text-white shadow-lg animate-pulse"
-              : hasFeatureConsent('audio')
+              : hasFeatureConsent("audio")
                 ? "bg-accent-1-soft text-accent-1 hover:shadow-md border border-accent-1"
                 : "bg-muted text-muted-light border border-muted cursor-not-allowed"
           }`}
-          title={hasFeatureConsent('audio') ? "Play card content" : "Enable audio in settings to listen"}
+          title={
+            hasFeatureConsent("audio") ? "Play card content" : "Enable audio in settings to listen"
+          }
         >
           {playingCardIndex === currentCardIndex ? "⏸" : "🏆”Š"} Listen
         </button>
@@ -2862,17 +2956,14 @@ export function LearningCardScreen({
         <div className="text-xs font-black uppercase tracking-wider text-saffron">
           {state.name} · {card.kicker}
         </div>
-        <h2 className="text-display text-2xl font-extrabold leading-tight mt-1">
-          {card.title}
-        </h2>
+        <h2 className="text-display text-2xl font-extrabold leading-tight mt-1">{card.title}</h2>
       </div>
 
-      <div 
+      <div
         className="mx-5 mt-4 ui-card ui-accent-1-soft p-4 flex-1 flex flex-col relative overflow-hidden"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-
         {/* Replay indicator - shown when user is replaying a card */}
         {isReplaying && (
           <div className="mb-3 p-3 bg-accent-2-soft rounded-xl flex items-center gap-2 shadow-sm border border-accent-2">
@@ -2886,26 +2977,35 @@ export function LearningCardScreen({
             <span className="text-2xl">{EMOJI.action.sparkle}</span>
           </div>
         )}
-        
-        <div className={`flex-1 rounded-2xl flex items-center justify-center overflow-hidden bg-surface-card ${!art || card.type !== "main" || card.kicker !== "Places" ? "py-8" : ""}`}>
+
+        <div
+          className={`flex-1 rounded-2xl flex items-center justify-center overflow-hidden bg-surface-card ${!art || card.type !== "main" || card.kicker !== "Places" ? "py-8" : ""}`}
+        >
           {art && card.type === "main" && card.kicker === "Places" ? (
-            <img src={art} alt={`${state.name} learning card`} loading="lazy" decoding="async" className="h-full object-contain drop-shadow-xl" />
+            <img
+              src={art}
+              alt={`${state.name} learning card`}
+              loading="lazy"
+              decoding="async"
+              className="h-full object-contain drop-shadow-xl"
+            />
           ) : (
             <div className="text-[72px] drop-shadow-xl">{card.icon}</div>
           )}
         </div>
         <div className="mt-3 bg-surface-raised rounded-xl p-3">
           <div className="flex items-center gap-2">
-            <Chip icon={card.icon} tone={card.chipTone === "purple" ? "blue" : card.chipTone as any}>
+            <Chip
+              icon={card.icon}
+              tone={card.chipTone === "purple" ? "blue" : (card.chipTone as any)}
+            >
               {card.chip}
             </Chip>
             <Chip icon="🏆“" tone="blue">
               {state.name}
             </Chip>
           </div>
-          <p className="mt-2 font-semibold text-ink/85 text-[15px] leading-snug">
-            {card.body}
-          </p>
+          <p className="mt-2 font-semibold text-ink/85 text-[15px] leading-snug">{card.body}</p>
         </div>
 
         {/* Swipe hint for non-last cards */}
@@ -2918,7 +3018,9 @@ export function LearningCardScreen({
         {/* Mastery badge for replayed cards */}
         {isReplaying && replayCount > 0 && (
           <div className="mt-3 px-3 py-2 bg-accent-2-soft rounded-lg text-center border border-accent-2">
-            <p className="text-xs font-bold text-warning">{EMOJI.action.star} Mastered! Replayed {replayCount}x</p>
+            <p className="text-xs font-bold text-warning">
+              {EMOJI.action.star} Mastered! Replayed {replayCount}x
+            </p>
           </div>
         )}
       </div>
@@ -2934,7 +3036,13 @@ export function LearningCardScreen({
           }}
           className="w-full h-14 ui-button ui-accent-1 text-ink text-h4 text-display"
         >
-          {isLastInMainCardSection ? (currentMainCardIndex === 5 ? "Take the Quiz! {EMOJI.milestone.twentyFive}" : "Done! Back to Cards") : isReplaying ? "Replay Complete ${EMOJI.action.sparkle}" : "Got it! Next â†’"}
+          {isLastInMainCardSection
+            ? currentMainCardIndex === 5
+              ? "Take the Quiz! {EMOJI.milestone.twentyFive}"
+              : "Done! Back to Cards"
+            : isReplaying
+              ? "Replay Complete ${EMOJI.action.sparkle}"
+              : "Got it! Next â†’"}
         </button>
       </div>
 
@@ -2989,24 +3097,28 @@ export function LearningCardScreen({
   );
 }
 
-
 export function QuizScreen({
   stateName,
   onDone,
   onClose,
-}: { 
-  stateName?: string
-  onDone?: (quizMetrics?: { timeToComplete: number; quizAttempts: number; quizScore: number; correctCount?: number }) => void
-  onClose?: () => void
+}: {
+  stateName?: string;
+  onDone?: (quizMetrics?: {
+    timeToComplete: number;
+    quizAttempts: number;
+    quizScore: number;
+    correctCount?: number;
+  }) => void;
+  onClose?: () => void;
 } = {}) {
   const progress = useProgress();
   const states = statesWithProgress(progress);
-  
+
   // Safety check: ensure states data is loaded
   if (!states || states.length === 0) {
     return <LoadingScreen />;
   }
-  
+
   return <QuizScreenContent stateName={stateName} onDone={onDone} onClose={onClose} />;
 }
 
@@ -3014,15 +3126,20 @@ function QuizScreenContent({
   stateName,
   onDone,
   onClose,
-}: { 
-  stateName?: string
-  onDone?: (quizMetrics?: { timeToComplete: number; quizAttempts: number; quizScore: number; correctCount?: number }) => void
-  onClose?: () => void
+}: {
+  stateName?: string;
+  onDone?: (quizMetrics?: {
+    timeToComplete: number;
+    quizAttempts: number;
+    quizScore: number;
+    correctCount?: number;
+  }) => void;
+  onClose?: () => void;
 }) {
   const progress = useProgress();
   const states = statesWithProgress(progress);
   const level = levelInfo(progress.xp);
-  
+
   const activeName =
     stateName ??
     states.find((s) => s.status === "current")?.name ??
@@ -3033,16 +3150,16 @@ function QuizScreenContent({
     const qCount = questionCountForAgeBand(progress.ageBand);
     return randomQuestionsForState(activeName, qCount);
   }, [activeName, progress.ageBand]);
-  
+
   // Track quiz start on first render
   useEffect(() => {
     firebaseEvents.quizStart({
       stateName: activeName,
       ageBand: progress.ageBand,
       questionCount: questions.length,
-    })
-  }, [activeName, progress.ageBand, questions.length])
-  
+    });
+  }, [activeName, progress.ageBand, questions.length]);
+
   const [index, setIndex] = useState(0);
   const question = questions[Math.min(index, questions.length - 1)];
 
@@ -3052,7 +3169,9 @@ function QuizScreenContent({
   const [navigationStarted, setNavigationStarted] = useState(false); // Prevent double navigation
   const [quizStartTime] = useState(Date.now());
   // Track answers: array of { id, correct } for accurate score calculation
-  const [answeredQuestions, setAnsweredQuestions] = useState<Array<{ id: string; correct: boolean }>>([]);
+  const [answeredQuestions, setAnsweredQuestions] = useState<
+    Array<{ id: string; correct: boolean }>
+  >([]);
 
   const answers = question.options;
   const correct = question.correct;
@@ -3062,36 +3181,36 @@ function QuizScreenContent({
     fxTap();
     setSelected(label);
   };
-  
+
   const onCheck = () => {
     if (!selected || result) return;
     const isCorrect = selected === correct;
-    
+
     if (isCorrect) {
       fxCorrect();
       addXP(question.xp, question.id);
       setResult("correct");
       setBurst((n) => n + 1);
-      
+
       // Track correct answer
       firebaseEvents.quizAnswer({
         stateName: activeName,
         questionId: question.id,
         isCorrect: true,
-      })
+      });
     } else {
       fxWrong();
       setResult("wrong");
-      
+
       // Track wrong answer
       firebaseEvents.quizAnswer({
         stateName: activeName,
         questionId: question.id,
         isCorrect: false,
-      })
+      });
     }
   };
-  
+
   const isLastQuestion = index === questions.length - 1;
   const onReset = () => {
     fxTap();
@@ -3105,13 +3224,13 @@ function QuizScreenContent({
     // Always move to next question (or finish if last)
     if (isLastQuestion) {
       setNavigationStarted(true);
-      
+
       // Calculate accurate score from stored answers
-      const totalCorrect = newAnsweredQuestions.filter(a => a.correct).length;
+      const totalCorrect = newAnsweredQuestions.filter((a) => a.correct).length;
       const scorePercentage = (totalCorrect / questions.length) * 100;
-      
+
       const quizDuration = Date.now() - quizStartTime;
-      
+
       // Track quiz completion with accurate metrics
       firebaseEvents.quizComplete({
         stateName: activeName,
@@ -3119,30 +3238,30 @@ function QuizScreenContent({
         correctAnswers: totalCorrect,
         scorePercentage,
         timeSpentSeconds: quizDuration / 1000,
-      })
-      
+      });
+
       // Check if this is a replay (state already completed)
       const isReplay = progress.completed.includes(activeName);
-      
+
       // Pass quiz metrics to completion screen for badge tracking
       const quizMetrics = {
         timeToComplete: quizDuration,
-        quizAttempts: isReplay ? 2 : 1,  // Track real attempt number
+        quizAttempts: isReplay ? 2 : 1, // Track real attempt number
         quizScore: scorePercentage,
-        correctCount: totalCorrect,  // NEW: pass correct answer count for star calculation
+        correctCount: totalCorrect, // NEW: pass correct answer count for star calculation
       };
-      
+
       // ATOMIC: Call finishQuiz to complete state, award XP/stars, and queue celebration
       // This happens before navigation to ensure state is consistent
       finishQuiz(activeName, quizMetrics);
-      
+
       // Use setTimeout to ensure state is settled before navigation
       setTimeout(() => {
         onDone?.(quizMetrics);
       }, 50);
       return;
     }
-    
+
     // Move to next question
     setIndex((i) => i + 1);
     setResult(null);
@@ -3153,7 +3272,7 @@ function QuizScreenContent({
   return (
     <div className="h-full w-full bg-surface-card flex flex-col relative">
       <ConfettiBurst trigger={burst} size="small" />
-      
+
       {/* REDESIGNED TOP BAR - Clean & Minimal */}
       <div className="px-5 pt-3 pb-2 flex items-center gap-2">
         {/* Close Button - Goes back to category page */}
@@ -3168,7 +3287,7 @@ function QuizScreenContent({
         >
           â†
         </button>
-        
+
         {/* Progress Blocks - Color coded (Green=Correct, Red=Wrong, Blue=Current) */}
         <div className="flex-1 flex items-center gap-1 ml-1">
           {questions.map((q, i) => {
@@ -3186,7 +3305,7 @@ function QuizScreenContent({
             );
           })}
         </div>
-        
+
         {/* Question counter */}
         <div className="text-display font-extrabold text-explorer text-sm flex-shrink-0">
           Q{index + 1}/{questions.length}
@@ -3196,11 +3315,9 @@ function QuizScreenContent({
       {/* Status Bar with XP Info - Clean */}
       <div className="px-5 py-2 mx-5 ui-card ui-accent-1-soft flex items-center justify-between text-xs">
         <div className="font-bold text-text-secondary">
-          Total: {answeredQuestions.filter(a => a.correct).length * 20} XP
+          Total: {answeredQuestions.filter((a) => a.correct).length * 20} XP
         </div>
-        <div className="font-bold text-success">
-          +20 per answer
-        </div>
+        <div className="font-bold text-success">+20 per answer</div>
       </div>
 
       <div className="px-5 mt-3 flex items-center gap-3">
@@ -3214,8 +3331,8 @@ function QuizScreenContent({
           {result === "correct"
             ? "Nailed it! ${EMOJI.feedback.success}"
             : result === "wrong"
-            ? "Good try! Let's move on! 🏆‘‰"
-            : "You've got this! 🏆’ª"}
+              ? "Good try! Let's move on! 🏆‘‰"
+              : "You've got this! 🏆’ª"}
           <div className="absolute left-0 top-1/2 -translate-x-1 -translate-y-1/2 w-3 h-3 rotate-45 ui-card ui-accent-1-soft" />
         </div>
         {result === "correct" && (
@@ -3230,11 +3347,8 @@ function QuizScreenContent({
         <div className="text-[11px] font-black uppercase tracking-widest text-explorer">
           {question.kicker}
         </div>
-        <h2 className="text-display text-2xl font-bold leading-tight mt-1">
-          {question.prompt}
-        </h2>
+        <h2 className="text-display text-2xl font-bold leading-tight mt-1">{question.prompt}</h2>
       </div>
-
 
       <div className="p-5 mt-2 flex-1 flex flex-col gap-3">
         {answers.map((label) => {
@@ -3249,10 +3363,10 @@ function QuizScreenContent({
                 isCorrectPick
                   ? "ui-button ui-accent-3 text-ink"
                   : isWrongPick
-                  ? "ui-button ui-accent-1-soft text-ink opacity-60"
-                  : isSelected
-                  ? "ui-button ui-accent-2 text-ink"
-                  : "ui-button ui-accent-1-soft text-ink"
+                    ? "ui-button ui-accent-1-soft text-ink opacity-60"
+                    : isSelected
+                      ? "ui-button ui-accent-2 text-ink"
+                      : "ui-button ui-accent-1-soft text-ink"
               }`}
             >
               {label}
@@ -3261,10 +3375,10 @@ function QuizScreenContent({
                   isCorrectPick
                     ? "bg-fb-success-bg text-white"
                     : isWrongPick
-                    ? "bg-fb-error-bg text-white"
-                    : isSelected
-                    ? "gradient-explorer text-white"
-                    : "bg-muted text-text-secondary"
+                      ? "bg-fb-error-bg text-white"
+                      : isSelected
+                        ? "gradient-explorer text-white"
+                        : "bg-muted text-text-secondary"
                 }`}
               >
                 {isCorrectPick ? "âœ“" : isWrongPick ? "âœ•" : isSelected ? "âœ“" : ""}
@@ -3282,8 +3396,8 @@ function QuizScreenContent({
             result === "correct"
               ? "ui-button ui-accent-3 text-ink"
               : result === "wrong"
-              ? "ui-button ui-accent-2 text-ink"
-              : "ui-button ui-accent-1 text-ink"
+                ? "ui-button ui-accent-2 text-ink"
+                : "ui-button ui-accent-1 text-ink"
           }`}
         >
           {result === "correct"
@@ -3291,19 +3405,24 @@ function QuizScreenContent({
               ? "Finish Quiz ${EMOJI.feedback.success}"
               : "Next Question â†’"
             : result === "wrong"
-            ? isLastQuestion
-              ? "Finish Quiz ${EMOJI.feedback.success}"
-              : "Next Question â†’"
-            : "Check Answer"}
+              ? isLastQuestion
+                ? "Finish Quiz ${EMOJI.feedback.success}"
+                : "Next Question â†’"
+              : "Check Answer"}
         </button>
       </div>
     </div>
   );
 }
 
-export function CorrectAnswerScreen({ stateName, onDismiss }: { stateName?: string; onDismiss?: () => void } = {}) {
+export function CorrectAnswerScreen({
+  stateName,
+  onDismiss,
+}: { stateName?: string; onDismiss?: () => void } = {}) {
   const state = getState(stateName);
-  useEffect(() => { fxCorrect(); }, []);
+  useEffect(() => {
+    fxCorrect();
+  }, []);
   return (
     <div className="h-full w-full gradient-success relative overflow-hidden flex flex-col">
       {/* Premium Close Button - Top Right */}
@@ -3323,7 +3442,12 @@ export function CorrectAnswerScreen({ stateName, onDismiss }: { stateName?: stri
           style={{
             left: `${(i * 37) % 100}%`,
             top: `${(i * 53) % 80}%`,
-            background: ["var(--accent-4)", "var(--accent-1)", "var(--background)", "var(--accent-2)"][i % 4],
+            background: [
+              "var(--accent-4)",
+              "var(--accent-1)",
+              "var(--background)",
+              "var(--accent-2)",
+            ][i % 4],
             transform: `rotate(${i * 20}deg)`,
             opacity: 0.9,
           }}
@@ -3337,9 +3461,7 @@ export function CorrectAnswerScreen({ stateName, onDismiss }: { stateName?: stri
             <div className="text-6xl">âœ…</div>
           </div>
         </div>
-        <h1 className="mt-6 text-h1 text-white text-center leading-relaxed">
-          Awesome!
-        </h1>
+        <h1 className="mt-6 text-h1 text-white text-center leading-relaxed">Awesome!</h1>
         <p className="mt-2 text-white/95 font-bold text-center">
           You got it right â€” {state.capital} is the capital of {state.name}!
         </p>
@@ -3348,9 +3470,7 @@ export function CorrectAnswerScreen({ stateName, onDismiss }: { stateName?: stri
           <span className="text-3xl">{EMOJI.action.star}</span>
           <div>
             <div className="text-xs font-bold opacity-90 text-ink">You earned</div>
-            <div className="text-display text-2xl font-extrabold leading-snug text-ink">
-              +20 XP
-            </div>
+            <div className="text-display text-2xl font-extrabold leading-snug text-ink">+20 XP</div>
           </div>
         </div>
       </div>
@@ -3364,12 +3484,15 @@ export function CorrectAnswerScreen({ stateName, onDismiss }: { stateName?: stri
   );
 }
 
-
 export function StateUnlockScreen({
   stateName,
   onContinue,
 }: { stateName?: string; onContinue?: () => void } = {}) {
-  const state = stateName ? getState(stateName) : (INDIA_STATES && INDIA_STATES.length > 1 ? INDIA_STATES[1] : INDIA_STATES[0] || { name: "India", emoji: "🏆‡®🏆‡³", nickname: "Incredible India" });
+  const state = stateName
+    ? getState(stateName)
+    : INDIA_STATES && INDIA_STATES.length > 1
+      ? INDIA_STATES[1]
+      : INDIA_STATES[0] || { name: "India", emoji: "🏆‡®🏆‡³", nickname: "Incredible India" };
   const art = STATE_ART[state.name];
 
   // PHASE 1b: Play sound effect when state unlocks
@@ -3399,9 +3522,7 @@ export function StateUnlockScreen({
         <div className="text-white/90 text-xs font-black uppercase tracking-[0.3em]">
           New State Unlocked
         </div>
-        <h1 className="text-h1 text-white mt-1 drop-shadow leading-relaxed">
-          {state.name}!
-        </h1>
+        <h1 className="text-h1 text-white mt-1 drop-shadow leading-relaxed">{state.name}!</h1>
         <p className="text-white/90 font-bold mt-1">{state.nickname}</p>
       </div>
 
@@ -3443,7 +3564,6 @@ export function StateUnlockScreen({
           Continue Adventure âœˆ️
         </button>
       </div>
-
     </div>
   );
 }
@@ -3489,7 +3609,7 @@ function Stamp({
       onClick={() => {
         fxStamp();
         if (stateName && onSelect) {
-          appLogger.info('passport_stamp', 'Viewing achievement: ' + stateName);
+          appLogger.info("passport_stamp", "Viewing achievement: " + stateName);
           onSelect(stateName);
         }
       }}
@@ -3500,9 +3620,7 @@ function Stamp({
         className="h-20 w-20 rounded-full border-[3px] flex flex-col items-center justify-center"
         style={{ borderColor: color, color }}
       >
-        <div className="text-[9px] font-black tracking-widest opacity-80">
-          VISITED
-        </div>
+        <div className="text-[9px] font-black tracking-widest opacity-80">VISITED</div>
         <div className="text-display font-extrabold text-[11px] leading-tight text-center px-1">
           {name}
         </div>
@@ -3575,39 +3693,32 @@ function BadgeDetailModal({
         <div className="flex flex-col items-center pt-2">
           <div
             className={`h-20 w-20 rounded-full flex items-center justify-center text-5xl mb-4 ${
-              badge.done
-                ? "gradient-saffron shadow-lg"
-                : "bg-surface-sunken opacity-60"
+              badge.done ? "gradient-saffron shadow-lg" : "bg-surface-sunken opacity-60"
             }`}
           >
             {badge.done ? badge.icon : "🏆”’"}
           </div>
 
-          <h2 className="text-display text-2xl font-extrabold text-ink">
-            {badge.name}
-          </h2>
+          <h2 className="text-display text-2xl font-extrabold text-ink">{badge.name}</h2>
           <p className="text-sm text-text-secondary mt-1">{state}</p>
         </div>
 
         {/* Unlock Information */}
         {!badge.done && (
           <div className="rounded-2xl bg-warning-soft border-2 border-warning p-4">
-            <p className="text-h5 text-warning mb-2">
-              How to Unlock
-            </p>
+            <p className="text-h5 text-warning mb-2">How to Unlock</p>
             <p className="text-body text-warning-light">{unlockText}</p>
           </div>
         )}
 
         {/* Badge Info */}
         <div className="rounded-2xl bg-info-soft border border-info p-4">
-          <p className="text-h5 text-info mb-1">
-            Badge Type
-          </p>
+          <p className="text-h5 text-info mb-1">Badge Type</p>
           <p className="text-body text-accent-1">
             {badge.name === "Monument" && "🏆›️ Learn about famous landmarks"}
             {badge.name === "Animal" && "🦁 Discover local wildlife"}
-            {badge.name === "Explorer" && "{EMOJI.achievement.explorer} Master all cards in this state"}
+            {badge.name === "Explorer" &&
+              "{EMOJI.achievement.explorer} Master all cards in this state"}
           </p>
         </div>
 
@@ -3646,24 +3757,20 @@ export function BadgesScreen() {
   useEffect(() => {
     const allBadges = achievementBadgesFor(progress);
     const newBadges = getNewlyUnlockedBadges(allBadges);
-    
+
     // Show notification for each new badge
     newBadges.forEach((badge, idx) => {
       setTimeout(() => {
         const notification = getBadgeNotificationMessage(badge);
-        
+
         // Show celebration with confetti
-        celebration.custom(
-          notification.title,
-          notification.emoji,
-          {
-            subtitle: notification.subtitle,
-            confetti: true,
-            duration: 3000,
-            type: "success",
-          }
-        );
-        
+        celebration.custom(notification.title, notification.emoji, {
+          subtitle: notification.subtitle,
+          confetti: true,
+          duration: 3000,
+          type: "success",
+        });
+
         // Mark badge as seen so we don't show notification again
         markBadgeAsSeen(badge.id);
       }, idx * 1500); // Stagger multiple badge notifications by 1.5s
@@ -3718,15 +3825,17 @@ export function BadgesScreen() {
           {/* Header with Avatar + Celebration Tone */}
           <div className="px-5 pt-3 pb-4 gradient-gold rounded-b-[32px] relative overflow-hidden animate-fade-in">
             <Cloud className="absolute top-2 right-4 w-14 opacity-40 pointer-events-none" />
-            
+
             <div className="flex items-center gap-3 relative z-10">
               <div className="h-14 w-14 rounded-2xl ui-card ui-accent-1-soft p-1 flex items-center justify-center overflow-hidden flex-shrink-0">
-                <img src={getAvatarImage(progress.avatar)} alt={getAvatarName(progress.avatar)} className="w-full h-full object-cover" />
+                <img
+                  src={getAvatarImage(progress.avatar)}
+                  alt={getAvatarName(progress.avatar)}
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="flex-1 text-white">
-                <div className="text-h4 text-display leading-tight">
-                  {progress.name}
-                </div>
+                <div className="text-h4 text-display leading-tight">{progress.name}</div>
                 <div className="text-xs font-bold text-white/80">
                   {EMOJI.action.celebrate} {unlockedCount} Amazing Badges Collected!
                 </div>
@@ -3741,9 +3850,7 @@ export function BadgesScreen() {
                 <div
                   key={badge.id}
                   className={`rounded-3xl p-4 flex flex-col items-center gap-3 text-center transition-transform active:scale-95 animate-fade-in ${
-                    badge.unlocked
-                      ? "ui-accent-4 shadow-md"
-                      : "ui-accent-1-soft opacity-60"
+                    badge.unlocked ? "ui-accent-4 shadow-md" : "ui-accent-1-soft opacity-60"
                   }`}
                   style={{ animationDelay: `${idx * 30}ms` }}
                 >
@@ -3753,16 +3860,20 @@ export function BadgesScreen() {
                   </div>
 
                   {/* Badge Name - Bold Uppercase */}
-                  <div className={`text-sm font-extrabold uppercase leading-tight tracking-wide ${
-                    badge.unlocked ? "text-ink" : "text-text-secondary"
-                  }`}>
+                  <div
+                    className={`text-sm font-extrabold uppercase leading-tight tracking-wide ${
+                      badge.unlocked ? "text-ink" : "text-text-secondary"
+                    }`}
+                  >
                     {badge.name}
                   </div>
 
                   {/* Badge Description - Simple 1-2 lines */}
-                  <div className={`text-xs leading-snug ${
-                    badge.unlocked ? "text-ink/80" : "text-text-secondary"
-                  }`}>
+                  <div
+                    className={`text-xs leading-snug ${
+                      badge.unlocked ? "text-ink/80" : "text-text-secondary"
+                    }`}
+                  >
                     {badge.description}
                   </div>
 
@@ -3772,12 +3883,17 @@ export function BadgesScreen() {
                       <div className="flex flex-col gap-1">
                         <div className="text-lg font-extrabold">âœ“ You Did It!</div>
                         <div className="text-[11px] font-bold text-ink/70">
-                          {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                          {new Date().toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                          })}
                         </div>
                       </div>
                     ) : (
                       <div className="flex flex-col gap-2">
-                        <div className="text-xl">{getProgressStars(badge.progress, badge.achievementMax)}</div>
+                        <div className="text-xl">
+                          {getProgressStars(badge.progress, badge.achievementMax)}
+                        </div>
                         <div className="text-[11px] font-bold text-text-secondary">
                           Keep going! ${EMOJI.action.star}
                         </div>
@@ -3792,22 +3908,20 @@ export function BadgesScreen() {
       )}
 
       {/* State Badges View */}
-      {activeTab === "states" && (
-        <StatePerformanceBadgesView />
-      )}
+      {activeTab === "states" && <StatePerformanceBadgesView />}
     </div>
   );
 }
 
 export function ProfileScreen() {
   const p = useProgress();
-  
+
   // Route guard: redirect to welcome if not onboarded (defensive check)
   if (!p.onboarded) {
-    appLogger.warn('profile_screen', 'User attempted to access profile without onboarding', {});
+    appLogger.warn("profile_screen", "User attempted to access profile without onboarding", {});
     return <Navigate to="/welcome" replace />;
   }
-  
+
   return <ProfileScreenContent />;
 }
 
@@ -3815,7 +3929,7 @@ function ThemePickerNavButton() {
   const navigate = useNavigate();
   const handleClick = () => {
     fxTap();
-    navigate({ to: '/themes' });
+    navigate({ to: "/themes" });
   };
 
   return (
@@ -3830,9 +3944,7 @@ function ThemePickerNavButton() {
         <div className="text-display font-extrabold text-[15px] leading-tight">
           My Style {EMOJI.theme.painter}
         </div>
-        <div className="text-[11px] font-bold text-text-secondary">
-          Tap to change theme
-        </div>
+        <div className="text-[11px] font-bold text-text-secondary">Tap to change theme</div>
       </div>
       <div className="text-text-secondary text-xl">›</div>
     </button>
@@ -3849,29 +3961,29 @@ function ProfileScreenContent() {
   const [showResetPINDialog, setShowResetPINDialog] = useState(false);
   const [hasFileConsent, setHasFileConsent] = useState(() => {
     if (typeof window === "undefined") return false;
-    return hasFeatureConsent('file');
+    return hasFeatureConsent("file");
   });
   const [hasAudioConsent, setHasAudioConsent] = useState(() => {
     if (typeof window === "undefined") return false;
-    return hasFeatureConsent('audio');
+    return hasFeatureConsent("audio");
   });
-  
+
   // Subscribe to file consent changes
   useEffect(() => {
-    const unsubscribe = subscribeConsentChanges('file', () => {
-      setHasFileConsent(hasFeatureConsent('file'));
+    const unsubscribe = subscribeConsentChanges("file", () => {
+      setHasFileConsent(hasFeatureConsent("file"));
     });
     return unsubscribe;
   }, []);
 
   // Subscribe to audio consent changes
   useEffect(() => {
-    const unsubscribe = subscribeConsentChanges('audio', () => {
-      setHasAudioConsent(hasFeatureConsent('audio'));
+    const unsubscribe = subscribeConsentChanges("audio", () => {
+      setHasAudioConsent(hasFeatureConsent("audio"));
     });
     return unsubscribe;
   }, []);
-  
+
   // Avatar images list for ProfileScreen
   const avatarImages = [
     { id: "explorer-hat" as AvatarId, image: avatarExplorerHat },
@@ -3899,13 +4011,13 @@ function ProfileScreenContent() {
       setIsEditing(false);
       return;
     }
-    
+
     setSaveStatus("saving");
     fxTap();
-    
+
     // Save the profile with new name
     saveProfile({ name: trimmedName, avatar: p.avatar, ageBand: p.ageBand });
-    
+
     setSaveStatus("saved");
     setTimeout(() => {
       setIsEditing(false);
@@ -3947,8 +4059,8 @@ function ProfileScreenContent() {
         <div className="flex flex-col items-center mt-4">
           <div className="relative animate-bounce" style={{ animationDelay: "0ms" }}>
             <div className="h-24 w-24 rounded-3xl bg-surface-card p-2 shadow-xl flex items-center justify-center text-5xl overflow-hidden">
-              <img 
-                src={getAvatarImage(p.avatar)} 
+              <img
+                src={getAvatarImage(p.avatar)}
                 alt={getAvatarName(p.avatar)}
                 className="w-full h-full object-cover"
               />
@@ -3957,7 +4069,7 @@ function ProfileScreenContent() {
               {level}
             </div>
           </div>
-          
+
           {/* Name Section - Edit Mode or Display Mode */}
           {isEditing ? (
             <div className="mt-4 w-full max-w-xs flex flex-col gap-2">
@@ -3985,7 +4097,11 @@ function ProfileScreenContent() {
                         : "bg-white/80 hover:bg-white"
                   }`}
                 >
-                  {saveStatus === "saved" ? "âœ“ Saved" : saveStatus === "saving" ? "Saving..." : "Save"}
+                  {saveStatus === "saved"
+                    ? "âœ“ Saved"
+                    : saveStatus === "saving"
+                      ? "Saving..."
+                      : "Save"}
                 </button>
                 <button
                   onClick={handleCancelEdit}
@@ -3996,11 +4112,12 @@ function ProfileScreenContent() {
               </div>
             </div>
           ) : (
-            <div className="mt-3 flex flex-col items-center gap-1 animate-fade-in" style={{ animationDelay: "100ms" }}>
+            <div
+              className="mt-3 flex flex-col items-center gap-1 animate-fade-in"
+              style={{ animationDelay: "100ms" }}
+            >
               <div className="flex items-center gap-2">
-                <div className="text-display text-2xl font-extrabold text-white">
-                  {p.name}
-                </div>
+                <div className="text-display text-2xl font-extrabold text-white">{p.name}</div>
                 <button
                   onClick={() => {
                     fxTap();
@@ -4029,7 +4146,6 @@ function ProfileScreenContent() {
         </div>
       </div>
 
-
       <div className="px-5 mt-4 space-y-3 flex-1 overflow-auto">
         {/* Avatar Selector Section */}
         <div className="animate-fade-in" style={{ animationDelay: "175ms" }}>
@@ -4051,7 +4167,7 @@ function ProfileScreenContent() {
                 {getAvatarName(p.avatar)} · Tap to select
               </div>
             </div>
-            <div className="text-text-secondary text-xl">{isSelectingAvatar ? 'âœ•' : 'â€º'}</div>
+            <div className="text-text-secondary text-xl">{isSelectingAvatar ? "âœ•" : "â€º"}</div>
           </button>
 
           {/* Avatar Selection Grid */}
@@ -4108,11 +4224,11 @@ function ProfileScreenContent() {
             onClick={() => {
               if (hasFileConsent) {
                 // Revoke consent
-                revokeFeatureConsent('file');
+                revokeFeatureConsent("file");
                 fxTap();
               } else {
                 // Grant consent directly (no dialog)
-                grantFeatureConsent('file');
+                grantFeatureConsent("file");
                 fxTap();
               }
             }}
@@ -4122,7 +4238,9 @@ function ProfileScreenContent() {
               🏆“¸
             </div>
             <div className="flex-1 text-left">
-              <div className="text-display font-extrabold text-[15px] leading-tight">Save Pictures</div>
+              <div className="text-display font-extrabold text-[15px] leading-tight">
+                Save Pictures
+              </div>
               <div className="text-[11px] font-bold">
                 {hasFileConsent ? (
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-success/10 text-success border border-success">
@@ -4135,17 +4253,20 @@ function ProfileScreenContent() {
                 )}
               </div>
             </div>
-            <span className={`h-7 w-12 rounded-full flex items-center px-1 transition ${hasFileConsent ? "gradient-success" : "bg-muted"}`}>
-              <span className={`h-5 w-5 rounded-full bg-white shadow transition-transform ${hasFileConsent ? "translate-x-5" : "translate-x-0"}`} />
+            <span
+              className={`h-7 w-12 rounded-full flex items-center px-1 transition ${hasFileConsent ? "gradient-success" : "bg-muted"}`}
+            >
+              <span
+                className={`h-5 w-5 rounded-full bg-white shadow transition-transform ${hasFileConsent ? "translate-x-5" : "translate-x-0"}`}
+              />
             </span>
           </button>
         </div>
         {/* Daily Goals Section */}
         <div className="animate-fade-in" style={{ animationDelay: "250ms" }}>
           {(() => {
-            const dailyGoalText = p.completed.length === 0 
-              ? "Complete your first state" 
-              : "Explore a new state today";
+            const dailyGoalText =
+              p.completed.length === 0 ? "Complete your first state" : "Explore a new state today";
             const nextMilestone = Math.ceil((p.streak + 1) / 5) * 5;
             const daysUntilNext = nextMilestone - p.streak;
 
@@ -4167,15 +4288,13 @@ function ProfileScreenContent() {
                 </div>
 
                 {/* Daily Challenge */}
-                <div className="ml-15 text-[13px] font-extrabold text-ink">
-                  🏆“ {dailyGoalText}
-                </div>
+                <div className="ml-15 text-[13px] font-extrabold text-ink">🏆“ {dailyGoalText}</div>
 
                 {/* Next Reward */}
                 <div className="ml-15 text-[11px] font-bold text-warning">
-                  {daysUntilNext === 0 
-                    ? "🏆Ž Claim your milestone reward!" 
-                    : `🏆Ž ${daysUntilNext} day${daysUntilNext !== 1 ? 's' : ''} until ${nextMilestone}-day bonus!`}
+                  {daysUntilNext === 0
+                    ? "🏆Ž Claim your milestone reward!"
+                    : `🏆Ž ${daysUntilNext} day${daysUntilNext !== 1 ? "s" : ""} until ${nextMilestone}-day bonus!`}
                 </div>
               </div>
             );
@@ -4195,7 +4314,9 @@ function ProfileScreenContent() {
               <div className="text-display font-extrabold text-[15px] leading-tight">
                 Privacy Policy
               </div>
-              <div className="text-[11px] font-bold text-text-secondary">How we handle your data</div>
+              <div className="text-[11px] font-bold text-text-secondary">
+                How we handle your data
+              </div>
             </div>
             <div className="text-text-secondary text-xl">â€º</div>
           </Link>
@@ -4220,13 +4341,13 @@ function ProfileScreenContent() {
 function SoundToggleRow() {
   const soundOn = useSoundOn();
   const [audioEnabled, setAudioEnabled] = useState(() => {
-    return hasFeatureConsent('audio');
+    return hasFeatureConsent("audio");
   });
 
   // Subscribe to consent changes
   useEffect(() => {
-    const unsubscribe = subscribeConsentChanges('audio', () => {
-      setAudioEnabled(hasFeatureConsent('audio'));
+    const unsubscribe = subscribeConsentChanges("audio", () => {
+      setAudioEnabled(hasFeatureConsent("audio"));
     });
     return unsubscribe;
   }, []);
@@ -4242,11 +4363,11 @@ function SoundToggleRow() {
   const toggleAudio = () => {
     const newState = !audioEnabled;
     if (newState) {
-      grantFeatureConsent('audio');
+      grantFeatureConsent("audio");
       setAudioEnabled(true);
       setTimeout(() => fxTap(), 100);
     } else {
-      revokeFeatureConsent('audio');
+      revokeFeatureConsent("audio");
       setAudioEnabled(false);
     }
   };
@@ -4293,7 +4414,9 @@ function SoundToggleRow() {
           🏆Ž§
         </div>
         <div className="flex-1 text-left">
-          <div className="text-display font-extrabold text-[15px] leading-tight">Audio Narration</div>
+          <div className="text-display font-extrabold text-[15px] leading-tight">
+            Audio Narration
+          </div>
           <div className="text-[11px] font-bold">
             {audioEnabled ? (
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-success/10 text-success border border-success/30">
@@ -4322,9 +4445,7 @@ function ProfileStat({ value, label }: { value: string; label: string }) {
   return (
     <div className="flex flex-col items-center py-1">
       <div className="text-display text-xl font-extrabold">{value}</div>
-      <div className="text-xs font-bold text-text-secondary">
-        {label}
-      </div>
+      <div className="text-xs font-bold text-text-secondary">{label}</div>
     </div>
   );
 }
@@ -4339,7 +4460,7 @@ function ParentZonePlaceholder() {
       alert("PIN must be 4 digits");
       return;
     }
-    
+
     setPinSaveStatus("saving");
     try {
       const { setPin } = await import("@/lib/parent-gate");
@@ -4381,7 +4502,7 @@ function ParentZonePlaceholder() {
             Tap to configure PIN & parental settings
           </div>
         </div>
-        <div className="text-info text-lg">{showSettings ? '▼' : 'â€º'}</div>
+        <div className="text-info text-lg">{showSettings ? "▼" : "â€º"}</div>
       </button>
 
       {/* PIN Settings Panel */}
@@ -4412,7 +4533,11 @@ function ParentZonePlaceholder() {
                 : "bg-accent-1 disabled:opacity-50 hover:bg-accent-1/90"
             }`}
           >
-            {pinSaveStatus === "saved" ? "âœ“ PIN Saved" : pinSaveStatus === "saving" ? "Saving..." : "Save PIN"}
+            {pinSaveStatus === "saved"
+              ? "âœ“ PIN Saved"
+              : pinSaveStatus === "saving"
+                ? "Saving..."
+                : "Save PIN"}
           </button>
           <button
             onClick={() => {
@@ -4460,9 +4585,7 @@ function RowLink({
         {icon}
       </div>
       <div className="flex-1">
-        <div className="text-display font-extrabold text-[15px] leading-tight">
-          {title}
-        </div>
+        <div className="text-display font-extrabold text-[15px] leading-tight">{title}</div>
         <div className="text-[11px] font-bold text-text-secondary">{sub}</div>
       </div>
       <div className="text-text-secondary text-xl">â€º</div>
@@ -4490,7 +4613,6 @@ export function AchievementsScreen() {
       </div>
       <div className="px-5 flex-1 overflow-auto space-y-3">
         {items.map((a) => (
-
           <div
             key={a.title}
             className={`ui-card p-4 flex items-center gap-3 ${
@@ -4502,30 +4624,26 @@ export function AchievementsScreen() {
                 a.done
                   ? "gradient-gold"
                   : a.tone === "orange"
-                  ? "bg-saffron-soft"
-                  : a.tone === "blue"
-                  ? "bg-explorer-soft"
-                  : a.tone === "green"
-                  ? "bg-success-soft"
-                  : "bg-gold-soft"
+                    ? "bg-saffron-soft"
+                    : a.tone === "blue"
+                      ? "bg-explorer-soft"
+                      : a.tone === "green"
+                        ? "bg-success-soft"
+                        : "bg-gold-soft"
               }`}
             >
               {a.icon}
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-2">
-                <div className="text-display font-extrabold text-[16px]">
-                  {a.title}
-                </div>
+                <div className="text-display font-extrabold text-[16px]">{a.title}</div>
                 {a.done && (
                   <span className="text-xs font-bold tracking-wider bg-gold-soft text-[color:var(--gold)] px-1.5 py-0.5 rounded-full">
                     Unlocked
                   </span>
                 )}
               </div>
-              <div className="text-[11px] font-bold text-text-secondary">
-                {a.sub}
-              </div>
+              <div className="text-[11px] font-bold text-text-secondary">{a.sub}</div>
               {!a.done && "prog" in a && (
                 <div className="mt-2 flex items-center gap-2">
                   <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden">
@@ -4534,10 +4652,10 @@ export function AchievementsScreen() {
                         a.tone === "orange"
                           ? "gradient-saffron"
                           : a.tone === "blue"
-                          ? "gradient-explorer"
-                          : a.tone === "green"
-                          ? "gradient-success"
-                          : "gradient-gold"
+                            ? "gradient-explorer"
+                            : a.tone === "green"
+                              ? "gradient-success"
+                              : "gradient-gold"
                       }`}
                       style={{ width: `${(a.prog / a.max) * 100}%` }}
                     />
@@ -4574,9 +4692,7 @@ export function LoadingScreen() {
       </div>
       <div className="mt-8 text-center">
         <div className="text-display text-h2 font-bold">Flying to Gujarat…</div>
-        <div className="text-body text-text-secondary mt-1">
-          Packing camel snacks 🏆ª
-        </div>
+        <div className="text-body text-text-secondary mt-1">Packing camel snacks 🏆ª</div>
       </div>
       <div className="mt-6 w-56 h-2 rounded-full bg-white/70 overflow-hidden">
         <div className="h-full w-2/3 gradient-explorer animate-pulse" />
@@ -4594,12 +4710,9 @@ export function EmptyStateScreen() {
           <div className="absolute inset-0 blur-2xl bg-saffron/25 rounded-full" />
           <img src={mascot} alt="" className="relative w-52 h-52 object-contain" />
         </div>
-        <h2 className="text-display text-2xl font-extrabold mt-4">
-          No explorer friends yet!
-        </h2>
+        <h2 className="text-display text-2xl font-extrabold mt-4">No explorer friends yet!</h2>
         <p className="mt-2 text-body text-text-secondary max-w-[260px]">
-          Invite a friend to join your adventure and travel across India
-          together.
+          Invite a friend to join your adventure and travel across India together.
         </p>
         <button className="mt-6 h-14 px-6 rounded-2xl gradient-saffron text-white text-display text-lg font-extrabold shadow-[var(--shadow-glow-orange)]">
           Invite a Friend ${EMOJI.action.sparkle}
@@ -4611,8 +4724,3 @@ export function EmptyStateScreen() {
     </div>
   );
 }
-
-
-
-
-
