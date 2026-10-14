@@ -8,65 +8,12 @@
 
 import { useEffect, useState } from 'react';
 import { useThemeStore } from '@/store/themeStore';
-
-// Theme registry - must match src/lib/themes.ts
-interface Theme {
-  id: string;
-  name: string;
-  description: string;
-  hidden?: boolean;
-  // Token values for preview
-  accentColor: string;
-  backgroundColor: string;
-  textColor: string;
-}
-
-const THEMES: Theme[] = [
-  {
-    id: 'clay',
-    name: 'Clay',
-    description: 'Warm, earthy tones',
-    accentColor: '#FF7A1A',
-    backgroundColor: '#FFFFFF',
-    textColor: '#1A1A1A',
-  },
-  {
-    id: 'clay-dark',
-    name: 'Clay Dark',
-    description: 'Dark mode with warmth',
-    accentColor: '#FF9944',
-    backgroundColor: '#1A1A1A',
-    textColor: '#F5F5F5',
-  },
-  {
-    id: 'neobrutalism',
-    name: 'Neobrutalism',
-    description: 'Bold, geometric style',
-    accentColor: '#000000',
-    backgroundColor: '#F0F0F0',
-    textColor: '#000000',
-  },
-  {
-    id: 'minimal-flat',
-    name: 'Minimal Flat',
-    description: 'Clean and simple',
-    accentColor: '#3B82F6',
-    backgroundColor: '#FFFFFF',
-    textColor: '#1F2937',
-  },
-  {
-    id: 'festival',
-    name: 'Festival',
-    description: 'Vivid rangoli-inspired',
-    accentColor: '#FF6FB1',
-    backgroundColor: '#FFF6E5',
-    textColor: '#131A33',
-  },
-];
+import { getVisibleThemes } from '@/lib/themes';
 
 export function ThemesScreen() {
   const { currentTheme, setTheme } = useThemeStore();
   const [isChanging, setIsChanging] = useState(false);
+  const themes = getVisibleThemes();
 
   const handleThemeSelect = (themeId: string) => {
     setIsChanging(true);
@@ -99,7 +46,7 @@ export function ThemesScreen() {
       {/* Themes Grid */}
       <div className="px-4 py-6 flex-1 overflow-auto">
         <div className="grid grid-cols-2 gap-4">
-          {THEMES.map((theme) => (
+          {themes.map((theme) => (
             <button
               key={theme.id}
               onClick={() => handleThemeSelect(theme.id)}
@@ -108,7 +55,7 @@ export function ThemesScreen() {
                   ? 'border-accent-1 shadow-lg scale-105'
                   : 'border-transparent hover:shadow-md'
               }`}
-              style={{ backgroundColor: theme.backgroundColor }}
+              style={{ backgroundColor: theme.previewTokens.bg }}
             >
               {/* Tick icon for selected */}
               {currentTheme === theme.id && (
@@ -122,31 +69,31 @@ export function ThemesScreen() {
                 {/* Mini card preview */}
                 <div
                   className="h-20 rounded-xl p-3 flex flex-col items-center justify-center gap-1"
-                  style={{ backgroundColor: theme.accentColor + '20', border: `2px solid ${theme.accentColor}` }}
+                  style={{ backgroundColor: theme.previewTokens.accent + '20', border: `2px solid ${theme.previewTokens.accent}` }}
                 >
                   {/* Accent color dots */}
                   <div className="flex gap-1.5">
                     <div
                       className="h-2 w-2 rounded-full"
-                      style={{ backgroundColor: theme.accentColor }}
+                      style={{ backgroundColor: theme.previewTokens.accent }}
                     />
                     <div
                       className="h-2 w-2 rounded-full opacity-60"
-                      style={{ backgroundColor: theme.accentColor }}
+                      style={{ backgroundColor: theme.previewTokens.accent }}
                     />
                     <div
                       className="h-2 w-2 rounded-full opacity-30"
-                      style={{ backgroundColor: theme.accentColor }}
+                      style={{ backgroundColor: theme.previewTokens.accent }}
                     />
                   </div>
 
                   {/* Text preview */}
-                  <div className="text-xs font-bold" style={{ color: theme.textColor }}>
+                  <div className="text-xs font-bold" style={{ color: theme.previewTokens.text }}>
                     Aa
                   </div>
                   <div
                     className="text-[10px] px-2 py-0.5 rounded"
-                    style={{ backgroundColor: theme.accentColor, color: theme.backgroundColor }}
+                    style={{ backgroundColor: theme.previewTokens.accent, color: theme.previewTokens.bg }}
                   >
                     Play
                   </div>
@@ -157,13 +104,13 @@ export function ThemesScreen() {
               <div className="text-left">
                 <h3
                   className="text-sm font-extrabold"
-                  style={{ color: theme.textColor }}
+                  style={{ color: theme.previewTokens.text }}
                 >
                   {theme.name}
                 </h3>
                 <p
                   className="text-xs opacity-70 mt-1"
-                  style={{ color: theme.textColor }}
+                  style={{ color: theme.previewTokens.text }}
                 >
                   {theme.description}
                 </p>

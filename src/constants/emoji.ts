@@ -7,6 +7,18 @@
  * - Easy to update emoji in one place
  * - Better control over emoji rendering and fallbacks
  * - Proper UTF-8 encoding handling
+ * 
+ * MIGRATION STATUS: This file defines the centralized emoji registry, but
+ * components have not yet been updated to use it. Hardcoded emoji remain in:
+ * - screens.tsx (BottomNav, milestones, achievements, etc.)
+ * - HomeScreen.tsx
+ * - IndiaProgressMap.tsx
+ * - ParentZone.tsx
+ * - And 8+ other component files
+ * 
+ * TODO: Complete the migration by updating all components to import from
+ * this file instead of using hardcoded emoji literals. This is tracked as
+ * a follow-up after the theme/charset fixes.
  */
 
 // Navigation emoji

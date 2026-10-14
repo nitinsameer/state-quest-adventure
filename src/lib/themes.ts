@@ -36,10 +36,10 @@ export const THEMES: Theme[] = [
       heavy: false,
     },
     previewTokens: {
-      bg: 'var(--bg-page)',
-      surface: 'var(--surface-card)',
-      text: 'var(--text-primary)',
-      accent: 'var(--accent-1)',
+      bg: '#FFFFFF',
+      surface: '#FFFFFF',
+      text: '#1A1A1A',
+      accent: '#FF7A1A',
     },
   },
   {
@@ -53,10 +53,10 @@ export const THEMES: Theme[] = [
       heavy: false,
     },
     previewTokens: {
-      bg: 'var(--bg-page)',
-      surface: 'var(--surface-card)',
-      text: 'var(--text-primary)',
-      accent: 'var(--accent-1)',
+      bg: '#1A1A1A',
+      surface: '#1A1A1A',
+      text: '#F5F5F5',
+      accent: '#FF9944',
     },
   },
   {
@@ -70,10 +70,10 @@ export const THEMES: Theme[] = [
       heavy: false,
     },
     previewTokens: {
-      bg: 'var(--bg-page)',
-      surface: 'var(--surface-card)',
-      text: 'var(--text-primary)',
-      accent: 'var(--accent-1)',
+      bg: '#F0F0F0',
+      surface: '#F0F0F0',
+      text: '#000000',
+      accent: '#000000',
     },
   },
   {
@@ -87,10 +87,10 @@ export const THEMES: Theme[] = [
       heavy: false,
     },
     previewTokens: {
-      bg: 'var(--bg-page)',
-      surface: 'var(--surface-card)',
-      text: 'var(--text-primary)',
-      accent: 'var(--accent-1)',
+      bg: '#FFFFFF',
+      surface: '#FFFFFF',
+      text: '#1F2937',
+      accent: '#3B82F6',
     },
   },
   {

@@ -409,8 +409,6 @@ function HydratedApp() {
         type: "success",
       });
       
-      console.log(`[LevelUp] Celebration shown for Level ${currentLevel} (${levelName})`);
-      
       prevLevelRef.current = currentLevel;
     }
   }, [progress.xp, progress.onboarded, showCelebration]);

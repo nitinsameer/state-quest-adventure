@@ -68,7 +68,7 @@ export function PostcardCard({
           </div>
 
           {/* Status text */}
-          <div className="text-sm font-bold text-center" style={{ color: isCollected ? 'var(--feedback-success)' : 'var(--text-muted)' }}>
+          <div className="text-sm font-bold text-center" style={{ color: isCollected ? 'var(--color-feedback-success)' : 'var(--text-muted)' }}>
             {isCollected ? (
               <span className="inline-flex items-center gap-1">
                 <span>✓</span>
