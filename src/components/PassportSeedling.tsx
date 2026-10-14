@@ -37,7 +37,7 @@ export function PassportSeedling() {
   const [lockedPostcardState, setLockedPostcardState] = useState<string | null>(null);
 
   // Map avatar IDs to image imports
-  const AVATAR_IMAGE_MAP: Record<AvatarId, string> = {
+  const AVATAR_IMAGE_EMOJI_MAP: Record<AvatarId, string> = {
     "explorer-hat": avatarExplorerHat,
     "explorer-pink": avatarExplorerPink,
     "geek-glasses": avatarGeekGlasses,
@@ -55,7 +55,7 @@ export function PassportSeedling() {
   // Get avatar image by ID
   function getAvatarImage(avatarId: string): string {
     if (!avatarId) return avatarExplorerHat;
-    return AVATAR_IMAGE_MAP[avatarId as AvatarId] || avatarExplorerHat;
+    return AVATAR_IMAGE_EMOJI_MAP[avatarId as AvatarId] || avatarExplorerHat;
   }
 
   // Get avatar display name

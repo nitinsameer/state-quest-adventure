@@ -120,7 +120,7 @@ const TOTAL_STATES = 36;
  * Map avatar ID to imported image module
  * Used throughout app to display consistent avatar images
  */
-const AVATAR_IMAGE_MAP: Record<AvatarId, string> = {
+const AVATAR_IMAGE_EMOJI_MAP: Record<AvatarId, string> = {
   "explorer-hat": avatarExplorerHat,
   "explorer-pink": avatarExplorerPink,
   "geek-glasses": avatarGeekGlasses,
@@ -141,7 +141,7 @@ const AVATAR_IMAGE_MAP: Record<AvatarId, string> = {
  */
 function getAvatarImage(avatarId: string): string {
   if (!avatarId) return avatarExplorerHat;
-  return AVATAR_IMAGE_MAP[avatarId as AvatarId] || avatarExplorerHat;
+  return AVATAR_IMAGE_EMOJI_MAP[avatarId as AvatarId] || avatarExplorerHat;
 }
 
 /**

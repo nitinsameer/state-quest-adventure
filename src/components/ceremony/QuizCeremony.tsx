@@ -505,7 +505,7 @@ function StepStamp({ ceremony, state, art, stamped = false, onStamped }: StepPro
           </div>
         )}
 
-        {/* STAMP TARGET - Ring with state name and stamp */}
+        {/* STAMP EMOJI_TARGET - Ring with state name and stamp */}
         <div className="flex justify-center py-6">
           <button
             onClick={handleStampTap}

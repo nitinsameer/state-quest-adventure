@@ -10,6 +10,7 @@ export interface Theme {
   name: string;
   description: string;
   isDark: boolean;
+  hidden?: boolean;
   effects: {
     blur: boolean;
     glow: boolean;
@@ -97,6 +98,7 @@ export const THEMES: Theme[] = [
     name: 'Material You',
     description: 'Modern and expressive. Inspired by Material Design 3.',
     isDark: false,
+    hidden: true,
     effects: {
       blur: false,
       glow: false,
@@ -114,6 +116,7 @@ export const THEMES: Theme[] = [
     name: 'Neumorphism',
     description: 'Soft and sophisticated. Subtle shadows create depth and refinement.',
     isDark: false,
+    hidden: true,
     effects: {
       blur: false,
       glow: false,
@@ -124,6 +127,23 @@ export const THEMES: Theme[] = [
       surface: 'var(--surface-card)',
       text: 'var(--text-primary)',
       accent: 'var(--accent-1)',
+    },
+  },
+  {
+    id: 'festival',
+    name: 'Festival',
+    description: 'Vivid and vibrant. Rangoli-inspired, celebrating India\'s colours.',
+    isDark: false,
+    effects: {
+      blur: false,
+      glow: false,
+      heavy: false,
+    },
+    previewTokens: {
+      bg: '#FFF6E5',
+      surface: '#FFFFFF',
+      text: '#131A33',
+      accent: '#FF8A3D',
     },
   },
 ];
@@ -151,6 +171,13 @@ export function getThemeIds(): string[] {
  */
 export function getNonHeavyThemes(): Theme[] {
   return THEMES.filter((t) => !t.effects.heavy);
+}
+
+/**
+ * Get visible non-heavy themes (for the picker UI).
+ */
+export function getVisibleThemes(): Theme[] {
+  return THEMES.filter((t) => !t.effects.heavy && !t.hidden);
 }
 
 /**

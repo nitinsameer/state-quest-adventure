@@ -11,6 +11,7 @@
 @import "./styles/themes/minimal-flat.css";
 @import "./styles/themes/material-you.css";
 @import "./styles/themes/neumorphism.css";
+@import "./styles/themes/festival.css";
 
 @custom-variant dark (&:is(.dark *));
 
