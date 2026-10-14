@@ -48,7 +48,8 @@ function applyTheme(themeId: ThemeId) {
       const statusbarStyle = computedStyle.getPropertyValue('--statusbar-style').trim() || 'dark';
       const statusbarBg = computedStyle.getPropertyValue('--statusbar-bg').trim() || '#FF8A3D';
       
-      StatusBar.setStyle({ style: statusbarStyle === 'dark' ? 'DARK' : 'LIGHT' }).catch(() => {});
+      const styleValue = statusbarStyle === 'dark' ? 'DARK' : 'LIGHT';
+      StatusBar.setStyle({ style: styleValue as any }).catch(() => {});
       StatusBar.setBackgroundColor({ color: statusbarBg }).catch(() => {});
     } catch (error) {
       console.warn('Failed to update status bar:', error);

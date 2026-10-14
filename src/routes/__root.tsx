@@ -294,7 +294,8 @@ function HydratedApp() {
         
         // Set status bar appearance
         if (Capacitor.isNativePlatform()) {
-          await StatusBar.setStyle({ style: statusbarStyle === 'dark' ? 'DARK' : 'LIGHT' });
+          const styleValue = statusbarStyle === 'dark' ? 'DARK' : 'LIGHT';
+          await StatusBar.setStyle({ style: styleValue as any });
           await StatusBar.setBackgroundColor({ color: statusbarBg });
         }
         
