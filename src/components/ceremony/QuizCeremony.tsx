@@ -366,7 +366,7 @@ function StepResult({ ceremony, state, art }: StepProps) {
               />
             </div>
             <div className="text-xs text-ink/60 font-medium text-center">
-              Level {currentLevel} Â· Explorer
+              Level {currentLevel} · Explorer
             </div>
           </div>
 
@@ -374,7 +374,7 @@ function StepResult({ ceremony, state, art }: StepProps) {
           {ceremony.leveledUp && (
             <div className="ui-card ui-accent-3 px-4 py-3 rounded-2xl border-2 border-success/30">
               <div className="text-center">
-                <div className="text-sm font-bold text-ink">ðŸŽ‰ New level!</div>
+                <div className="text-sm font-bold text-ink">🎉 New level!</div>
                 <div className="text-xs font-semibold text-ink/80 mt-1">{ceremony.levelName}</div>
               </div>
             </div>
@@ -578,7 +578,7 @@ function StepPostcard({ ceremony, state }: StepProps) {
   const prefersReducedMotion = useRef(false);
 
   // Fixed emoji list: face-savouring-food, national-park, party-popper
-  const STICKER_OPTIONS = ['ðŸ˜‹', 'ðŸžï¸', 'ðŸŽ‰'];
+  const STICKER_OPTIONS = ['😋', 'ðŸžï¸', '🎉'];
 
   // Check for prefers-reduced-motion
   useEffect(() => {

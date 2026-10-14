@@ -124,7 +124,7 @@ export function PassportSeedling() {
 
       {/* Header with title */}
       <div className="px-5 pt-4 pb-2 flex items-center justify-between">
-        <h1 style={{ fontSize: 'var(--type-screen-title)', fontWeight: 'var(--type-screen-title-weight)' }} className="text-ink">ðŸŽ« My Explorer</h1>
+        <h1 style={{ fontSize: 'var(--type-screen-title)', fontWeight: 'var(--type-screen-title-weight)' }} className="text-ink">🎫 My Explorer</h1>
       </div>
 
       {/* Profile Card - Simplified */}
@@ -140,7 +140,7 @@ export function PassportSeedling() {
           </div>
           <div className="flex-1">
             <div className="text-lg font-extrabold">{progress.name}</div>
-            <div className="text-sm font-bold">ðŸŽ« {progress.completed.length} of 36 stamps</div>
+            <div className="text-sm font-bold">🎫 {progress.completed.length} of 36 stamps</div>
           </div>
         </div>
 
@@ -186,7 +186,7 @@ export function PassportSeedling() {
       <div className="px-5 mt-4 mb-2">
         <div style={{ fontSize: 'var(--type-section-heading)', fontWeight: 'var(--type-section-heading-weight)' }} className="text-text-primary">{region.name}</div>
         <div className="text-base font-semibold text-text-secondary mt-1">
-          {regionProgress} explored {unlockedInRegion.length === regionStates.length && "âœ¨ Region Complete!"}
+          {regionProgress} explored {unlockedInRegion.length === regionStates.length && "✨ Region Complete!"}
         </div>
         <div className="mt-2 h-2 bg-[oklch(0.9_0.02_260)] rounded-full overflow-hidden">
           <div

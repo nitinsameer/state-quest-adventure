@@ -94,7 +94,7 @@ export function StatePerformanceBadgeModal({
         {availableBadges.length > 0 && (
           <div>
             <h3 className="text-display font-extrabold text-lg mb-3 text-muted-dark">
-              Keep Exploring! ðŸŒŸ
+              Keep Exploring! ⭐
             </h3>
             <div className="space-y-3">
               {availableBadges.map(badgeId => (
@@ -167,7 +167,7 @@ function BadgeDetailCard({ badgeId, progress }: BadgeDetailCardProps) {
               <div className="flex flex-col gap-2">
                 <div className="text-lg">{getProgressStars(progress.progress, progress.max)}</div>
                 <div className="text-[11px] font-bold text-muted-foreground">
-                  Keep going! ðŸŒŸ
+                  Keep going! ⭐
                 </div>
               </div>
             )}

@@ -12,7 +12,7 @@ import { readTokenAsHex } from "@/lib/theme-tokens";
 const BADGE_EMOJI: Record<string, string> = {
   monument: "ðŸ›ï¸",
   animal: "ðŸ¾",
-  explorer: "ðŸŽ–ï¸",
+  explorer: "🎖️",
 };
 
 function roundRect(
@@ -122,7 +122,7 @@ async function generatePostcardBlob(postcard: PostcardData): Promise<Blob | null
   c.textAlign = "center";
   c.fillText("Badge Earned", W / 2, 735);
 
-  const badgeEmoji = BADGE_EMOJI[postcard.badge] || "ðŸŽ–ï¸";
+  const badgeEmoji = BADGE_EMOJI[postcard.badge] || "🎖️";
   c.font = "60px system-ui";
   c.fillText(badgeEmoji, W / 2, 800);
 
@@ -175,7 +175,7 @@ export function PostcardModal({
         // Add to postcard library with image data
         library.addPostcard(postcard.state, postcard.badge, postcard.stampDate, new Date().toISOString(), base64);
 
-        toast.success("âœ¨ Saved to your Passport!", {
+        toast.success("✨ Saved to your Passport!", {
           subtitle: "View anytime from Explorer",
         });
         setIsSaving(false);
@@ -191,7 +191,7 @@ export function PostcardModal({
     }
   };
 
-  const badgeEmoji = BADGE_EMOJI[postcard.badge] || "ðŸŽ–ï¸";
+  const badgeEmoji = BADGE_EMOJI[postcard.badge] || "🎖️";
 
   return (
     <div
@@ -266,7 +266,7 @@ export function PostcardModal({
 
         {/* Info Text */}
         <p className="text-xs text-center text-ink">
-          Keep it in your Passport! ðŸŽ‰
+          Keep it in your Passport! 🎉
         </p>
 
         {/* Home Button */}

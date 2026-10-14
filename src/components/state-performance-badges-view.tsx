@@ -43,7 +43,7 @@ export function StatePerformanceBadgesView() {
             <div className="text-display text-lg font-bold leading-tight">
               {progress.name}
             </div>
-            <div className="text-xs font-bold text-white/80">ðŸŽ‰ {totalBadgesEarned} Amazing State Badges!</div>
+            <div className="text-xs font-bold text-white/80">🎉 {totalBadgesEarned} Amazing State Badges!</div>
           </div>
         </div>
       </div>
@@ -159,7 +159,7 @@ function StateDetailBadgeCard({ state, progress, onSelect }: any) {
 
       {/* Kid-friendly copy */}
       <div className="mt-3 text-xs font-bold text-action-primary-bg">
-        Keep exploring! ðŸŒŸ
+        Keep exploring! ⭐
       </div>
     </button>
   );

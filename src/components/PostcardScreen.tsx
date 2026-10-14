@@ -16,7 +16,7 @@ import { readTokenAsHex, subscribeThemeChange } from "@/lib/theme-tokens";
 const BADGE_EMOJI: Record<BadgeId, string> = {
   monument: "ðŸ›ï¸",
   animal: "ðŸ¾",
-  explorer: "ðŸŽ–ï¸",
+  explorer: "🎖️",
 };
 
 function loadImage(src: string): Promise<HTMLImageElement> {
@@ -239,11 +239,11 @@ export function StatePostcardScreen({
         const library = usePostcardLibrary.getState();
         const now = new Date().toISOString();
         
-        // Generate a stamp date like "12 Â· MAR"
+        // Generate a stamp date like "12 · MAR"
         const date = new Date();
         const day = date.getDate();
         const month = date.toLocaleString("en-US", { month: "short" }).toUpperCase();
-        const stampDate = `${day} Â· ${month}`;
+        const stampDate = `${day} · ${month}`;
 
         // Determine badge earned
         const earned = badgesFor(progress, state.name);
@@ -252,7 +252,7 @@ export function StatePostcardScreen({
         // Add to postcard library with image data
         library.addPostcard(state.name, badgeId, stampDate, now, base64);
 
-        toast.success("âœ¨ Saved to your Passport!", {
+        toast.success("✨ Saved to your Passport!", {
           subtitle: "View anytime from Explorer",
         });
         setBusy(false);
@@ -299,7 +299,7 @@ export function StatePostcardScreen({
           // User cancelled share sheet, just close
           setBusy(false);
         } else {
-          toast.success("âœ¨ Postcard shared!", {
+          toast.success("✨ Postcard shared!", {
             subtitle: "Parent can view it now",
           });
           setBusy(false);
@@ -331,7 +331,7 @@ export function StatePostcardScreen({
           Your Stamp
         </div>
         <div className="text-white text-xs font-semibold mt-1">
-          Show your friends you beat {state.name}! ðŸŽ«
+          Show your friends you beat {state.name}! 🎫
         </div>
       </div>
 
@@ -348,7 +348,7 @@ export function StatePostcardScreen({
               />
             ) : (
               <div className="flex flex-col items-center justify-center">
-                <div className="text-5xl mb-2">âœ¨</div>
+                <div className="text-5xl mb-2">✨</div>
                 <div className="text-sm font-semibold text-muted-foreground">
                   Creating your postcard...
                 </div>

@@ -22,7 +22,7 @@ import { readTokenAsHex } from "@/lib/theme-tokens";
 const BADGE_EMOJI: Record<BadgeId, string> = {
   monument: "ðŸ›ï¸",
   animal: "ðŸ¾",
-  explorer: "ðŸŽ–ï¸",
+  explorer: "🎖️",
 };
 
 function loadImage(src: string): Promise<HTMLImageElement> {
@@ -246,11 +246,11 @@ export function PostcardPreviewModal({
         const library = usePostcardLibrary.getState();
         const now = new Date().toISOString();
         
-        // Generate a stamp date like "12 Â· MAR"
+        // Generate a stamp date like "12 · MAR"
         const date = new Date();
         const day = date.getDate();
         const month = date.toLocaleString("en-US", { month: "short" }).toUpperCase();
-        const stampDate = `${day} Â· ${month}`;
+        const stampDate = `${day} · ${month}`;
 
         // Determine badge earned
         const earned = badgesFor({ stamps: {}, postcards: {}, achievements: {} } as any, stateName || "");
@@ -259,7 +259,7 @@ export function PostcardPreviewModal({
         // Add to postcard library with image data
         library.addPostcard(stateName || "", badgeId, stampDate, now, base64);
 
-        toast.success("âœ¨ Saved to your Passport!", {
+        toast.success("✨ Saved to your Passport!", {
           subtitle: "View anytime from Explorer",
         });
         setIsSaving(false);
@@ -296,7 +296,7 @@ export function PostcardPreviewModal({
         open={isOpen}
         onClose={handleClose}
         header={{
-          icon: "âœ¨",
+          icon: "✨",
           title: "Your Postcard's Ready!",
           subtitle: "What would you like to do?",
         }}
@@ -316,7 +316,7 @@ export function PostcardPreviewModal({
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-accent-1-soft">
                     <div className="text-center">
-                      <div className="text-5xl mb-2">âœ¨</div>
+                      <div className="text-5xl mb-2">✨</div>
                       <div className="text-sm font-semibold text-muted-foreground">Creating your postcard...</div>
                     </div>
                   </div>

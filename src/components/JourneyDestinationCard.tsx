@@ -174,12 +174,12 @@ export function JourneyDestinationCard({
           </>
         ) : isInProgress ? (
           <>
-            <span>â–¶ï¸</span>
+            <span>•¶ï¸</span>
             <span>Continue</span>
           </>
         ) : (
           <>
-            <span>â–¶ï¸</span>
+            <span>•¶ï¸</span>
             <span>Play</span>
           </>
         )}

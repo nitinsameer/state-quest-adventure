@@ -214,7 +214,7 @@ export function BottomNav({
 }) {
   const items = [
     { id: "home", icon: "ðŸ ", label: "Home", to: "/home" },
-    { id: "map", icon: "ðŸ—ºï¸", label: "Journey", to: "/journey" },
+    { id: "map", icon: "🗺ï¸", label: "Journey", to: "/journey" },
     { id: "explorer", icon: "ðŸ”", label: "Explore", to: "/explorer" },
     { id: "badges", icon: "ðŸ…", label: "Badges", to: "/badges" },
     { id: "profile", icon: "ðŸ‘¤", label: "Me", to: "/me" },
@@ -383,10 +383,10 @@ export function CreateProfileScreen() {
 
   // Age bands with milestone emoji and vibrant gradient
   const ageBands = [
-    { value: "3-5", emoji: "ðŸŒ±", label: "Sprout", gradient: "bg-accent-2" },
-    { value: "6-7", emoji: "ðŸŒ¿", label: "Seedling", gradient: "bg-accent-1" },
-    { value: "8-9", emoji: "ðŸŒ³", label: "Sapling", gradient: "bg-success" },
-    { value: "10-12", emoji: "ðŸŒ²", label: "Mighty Tree", gradient: "bg-action-primary" },
+    { value: "3-5", emoji: "🌱", label: "Sprout", gradient: "bg-accent-2" },
+    { value: "6-7", emoji: "🌿", label: "Seedling", gradient: "bg-accent-1" },
+    { value: "8-9", emoji: "🌳", label: "Sapling", gradient: "bg-success" },
+    { value: "10-12", emoji: "🌲", label: "Mighty Tree", gradient: "bg-action-primary" },
   ];
 
   const handleAgeSelect = (value: string, index: number) => {
@@ -469,7 +469,7 @@ export function CreateProfileScreen() {
         {/* Age Selection with Vibrant Colors & Emojis */}
         <div className="mt-6 mb-1">
           <label className="text-base font-black text-text-primary">
-            ðŸŽ‚ How old are you?
+            🎂 How old are you?
           </label>
           <div className="mt-3 space-y-2">
             {ageBands.map((band, idx) => {
@@ -514,7 +514,7 @@ export function CreateProfileScreen() {
             saved ? "scale-95 opacity-80" : "hover:shadow-elevated-3 hover:scale-102 active:scale-95"
           }`}
         >
-          {saved ? "ðŸŽ‰ Saved âœ“" : "Continue â†’ Let's Explore!"}
+          {saved ? "🎉 Saved âœ“" : "Continue â†’ Let's Explore!"}
         </button>
       </div>
 
@@ -550,7 +550,7 @@ function FloatingXPFeedback({ xp, key: feedbackKey }: { xp: number; key: string 
           }
         }
       `}</style>
-      +{xp} XP âœ¨
+      +{xp} XP ✨
     </div>
   );
 }
@@ -770,7 +770,7 @@ function HomeDashboardContent() {
 
   const getUnlockRequirement = (stateName: string): string => {
     // All states unlocked from day 1 - free exploration mode
-    return "ðŸŒ All states open - explore freely!";
+    return "🌍 All states open - explore freely!";
   };
 
   return (
@@ -791,7 +791,7 @@ function HomeDashboardContent() {
               <div className="text-h4 text-display leading-tight">
                 Namaste, {(p?.name?.split(" ")[0] || "Explorer")}! ðŸ‘‹
               </div>
-              <div className="text-body-sm opacity-95 mt-1">Level {level} Â· Explorer</div>
+              <div className="text-body-sm opacity-95 mt-1">Level {level} · Explorer</div>
             </div>
           </div>
           
@@ -850,7 +850,7 @@ function HomeDashboardContent() {
           <div className="px-5 mt-5 animate-fade-in">
             <div className="rounded-2xl bg-warning-soft text-warning p-4 shadow-elevated-2 transition-all hover:shadow-elevated-3 border border-warning">
               <div className="flex items-start gap-3">
-                <div className="text-2xl flex-shrink-0">ðŸš¨</div>
+                <div className="text-2xl flex-shrink-0">🚨</div>
                 <div className="flex-1 min-w-0">
                   <div className="text-body font-bold">Your streak is at risk!</div>
                   <div className="text-caption mt-1 opacity-90">Last played {streakStatus.hoursSinceActive} hours ago</div>
@@ -910,7 +910,7 @@ function HomeDashboardContent() {
             onClick={() => fxTap()}
             className="h-12 px-4 rounded-2xl ui-button ui-accent-1 text-ink text-display font-bold text-sm flex items-center transition-all duration-300 hover:scale-105 active:scale-95"
           >
-            Play â–¶
+            Play •¶
           </Link>
         </div>
       </div>
@@ -1229,7 +1229,7 @@ function StateDetailModal({
             {stateName}
           </h2>
           <p className="text-sm text-text-secondary mt-1">
-            {state.isUT ? "Union Territory" : "State"} Â· {stateData.capital}
+            {state.isUT ? "Union Territory" : "State"} · {stateData.capital}
           </p>
         </div>
 
@@ -1284,7 +1284,7 @@ function StateDetailModal({
         ) : (
           <div className="roundepppd-2xl bg-info-soft border-2 border-info p-4">
             <p className="text-h5 text-info mb-2">
-              â–¶ In Progress
+              •¶ In Progress
             </p>
             <p className="text-body text-accent-1">
               Complete 3 cards and take the quiz to unlock the next state!
@@ -1308,7 +1308,7 @@ function StateDetailModal({
               }}
               className="flex-1 h-12 rounded-2xl bg-accent-1 text-display font-extrabold text-white shadow-lg hover:shadow-xl transition"
             >
-              {isDone ? "ðŸŽ–ï¸ Review" : "â–¶ Play"}
+              {isDone ? "🎖️ Review" : "•¶ Play"}
             </button>
           )}
         </div>
@@ -1335,7 +1335,7 @@ export function JourneyMapScreen() {
     // Check for milestone achievements
     const milestones = [
       { threshold: 25, emoji: "ðŸŽ¯", message: "Quarter Way There! 25% Complete!" },
-      { threshold: 50, emoji: "ðŸŒŽ", message: "Halfway Around India! 50% Complete!" },
+      { threshold: 50, emoji: "🌍Ž", message: "Halfway Around India! 50% Complete!" },
       { threshold: 75, emoji: "ðŸ", message: "Almost Complete! 75% Explored!" },
       { threshold: 100, emoji: "ðŸ‘‘", message: "India Master! 100% Complete!" },
     ];
@@ -1600,7 +1600,7 @@ export function JourneyMapScreen() {
             {(() => {
               const msg = getJourneyMotivationalMessage(completedStates);
               const milestoneCount = 36 - completedStates;
-              return milestoneCount > 0 ? `${milestoneCount} more to grow your tree` : "ðŸŒ³ You grew the tree!";
+              return milestoneCount > 0 ? `${milestoneCount} more to grow your tree` : "🌳 You grew the tree!";
             })()}
           </div>
         </div>
@@ -1657,7 +1657,7 @@ export function JourneyMapScreen() {
                   {region.name}
                 </div>
                 <div className="text-base font-semibold text-text-secondary mt-1">
-                  {regionDone}/{regionStates.length} explored {regionDone === regionStates.length && "âœ¨ Region Complete!"}
+                  {regionDone}/{regionStates.length} explored {regionDone === regionStates.length && "✨ Region Complete!"}
                 </div>
                 <div className="mt-2 h-2 bg-[oklch(0.9_0.02_260)] rounded-full overflow-hidden">
                   <div
@@ -1998,8 +1998,8 @@ export function LearningHubScreen({
     // Celebrate at 3/6 (halfway milestone)
     if (completedCategories === 3 && !celebratedCategories.has(3)) {
       celebration.custom(
-        `Halfway there! ðŸŒŸ`,
-        "ðŸƒâ€â™‚ï¸",
+        `Halfway there! ⭐`,
+        "ðŸƒâ€♂️",
         {
           subtitle: `3/6 categories explored! Keep up the momentum ðŸ’¨`,
           confetti: true,
@@ -2146,7 +2146,7 @@ export function LearningHubScreen({
           }`}
         >
           {completedCategories === 6 && !showDecisionModal
-            ? "âœ¨ Take the Quiz! ðŸŽ¯" 
+            ? "✨ Take the Quiz! ðŸŽ¯" 
             : `ðŸ”’ Quiz Locked (${completedCategories}/6 done)`
           }
         </button>
@@ -2158,7 +2158,7 @@ export function LearningHubScreen({
           <div className="bg-action-primary rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden animate-in zoom-in-95 flex flex-col">
             {/* Header */}
             <div className="p-6 text-center">
-              <div className="text-5xl mb-4">ðŸŽ‰</div>
+              <div className="text-5xl mb-4">🎉</div>
               <div className="text-ink text-xs font-black uppercase tracking-[0.3em] mb-2">
                 All Done!
               </div>
@@ -2181,7 +2181,7 @@ export function LearningHubScreen({
                 }}
                 className="w-full h-14 ui-button ui-accent-3 text-ink text-display font-extrabold active:scale-95 transition-all"
               >
-                âœ¨ Start Quiz Now
+                ✨ Start Quiz Now
               </button>
 
               {/* Later button - with pulsing indicator */}
@@ -2734,7 +2734,7 @@ export function LearningCardScreen({
       // Previously showed: +75 XP for 3 sub-cards, but only 25 was awarded
       celebration.custom(
         `${categoryName} mastered!`,
-        "ðŸŒŸ",
+        "⭐",
         {
           subtitle: `+${XP_PER_CARD} XP earned â€¢ ${mainCardIdx + 1}/6 categories mastered`,
           confetti: true,
@@ -2855,7 +2855,7 @@ export function LearningCardScreen({
 
       <div className="px-5 mt-3">
         <div className="text-xs font-black uppercase tracking-wider text-saffron">
-          {state.name} Â· {card.kicker}
+          {state.name} · {card.kicker}
         </div>
         <h2 className="text-display text-2xl font-extrabold leading-tight mt-1">
           {card.title}
@@ -2875,10 +2875,10 @@ export function LearningCardScreen({
             <div className="flex-1">
               <p className="text-xs font-bold text-accent-5">Replaying this card</p>
               <p className="text-xs text-accent-5 font-medium">
-                You've mastered this! Keep practicing âœ¨
+                You've mastered this! Keep practicing ✨
               </p>
             </div>
-            <span className="text-2xl">âœ¨</span>
+            <span className="text-2xl">✨</span>
           </div>
         )}
         
@@ -2929,7 +2929,7 @@ export function LearningCardScreen({
           }}
           className="w-full h-14 ui-button ui-accent-1 text-ink text-h4 text-display"
         >
-          {isLastInMainCardSection ? (currentMainCardIndex === 5 ? "Take the Quiz! ðŸŽ¯" : "Done! Back to Cards") : isReplaying ? "Replay Complete âœ¨" : "Got it! Next â†’"}
+          {isLastInMainCardSection ? (currentMainCardIndex === 5 ? "Take the Quiz! ðŸŽ¯" : "Done! Back to Cards") : isReplaying ? "Replay Complete ✨" : "Got it! Next â†’"}
         </button>
       </div>
 
@@ -2951,7 +2951,7 @@ export function LearningCardScreen({
                 <span className="font-semibold text-info">Stories read aloud</span>
               </div>
               <div className="flex gap-2">
-                <span>ðŸŒ</span>
+                <span>🌍</span>
                 <span className="font-semibold text-info">Available in multiple languages</span>
               </div>
             </div>
@@ -3207,7 +3207,7 @@ function QuizScreenContent({
         />
         <div className="relative ui-card ui-accent-1-soft px-3 py-2 text-label font-bold">
           {result === "correct"
-            ? "Nailed it! ðŸŽ‰"
+            ? "Nailed it! 🎉"
             : result === "wrong"
             ? "Good try! Let's move on! ðŸ‘‰"
             : "You've got this! ðŸ’ª"}
@@ -3283,11 +3283,11 @@ function QuizScreenContent({
         >
           {result === "correct"
             ? isLastQuestion
-              ? "Finish Quiz ðŸŽ‰"
+              ? "Finish Quiz 🎉"
               : "Next Question â†’"
             : result === "wrong"
             ? isLastQuestion
-              ? "Finish Quiz ðŸŽ‰"
+              ? "Finish Quiz 🎉"
               : "Next Question â†’"
             : "Check Answer"}
         </button>
@@ -3602,7 +3602,7 @@ function BadgeDetailModal({
           <p className="text-body text-accent-1">
             {badge.name === "Monument" && "ðŸ›ï¸ Learn about famous landmarks"}
             {badge.name === "Animal" && "ðŸ¦ Discover local wildlife"}
-            {badge.name === "Explorer" && "ðŸŽ–ï¸ Master all cards in this state"}
+            {badge.name === "Explorer" && "🎖️ Master all cards in this state"}
           </p>
         </div>
 
@@ -3622,7 +3622,7 @@ function BadgeDetailModal({
               }}
               className="flex-1 h-12 rounded-2xl bg-success text-display font-extrabold text-white shadow-lg hover:shadow-xl transition"
             >
-              ðŸŽ‰ Celebrate!
+              🎉 Celebrate!
             </button>
           )}
         </div>
@@ -3703,7 +3703,7 @@ export function BadgesScreen() {
               : "text-text-secondary hover:text-muted-dark"
           }`}
         >
-          ðŸŽ–ï¸ State Badges
+          🎖️ State Badges
         </button>
       </div>
 
@@ -3723,7 +3723,7 @@ export function BadgesScreen() {
                   {progress.name}
                 </div>
                 <div className="text-xs font-bold text-white/80">
-                  ðŸŽ‰ {unlockedCount} Amazing Badges Collected!
+                  🎉 {unlockedCount} Amazing Badges Collected!
                 </div>
               </div>
             </div>
@@ -3774,7 +3774,7 @@ export function BadgesScreen() {
                       <div className="flex flex-col gap-2">
                         <div className="text-xl">{getProgressStars(badge.progress, badge.achievementMax)}</div>
                         <div className="text-[11px] font-bold text-text-secondary">
-                          Keep going! ðŸŒŸ
+                          Keep going! ⭐
                         </div>
                       </div>
                     )}
@@ -3981,7 +3981,7 @@ function ProfileScreenContent() {
                 </button>
               </div>
               <div className="text-white/90 text-xs font-extrabold uppercase tracking-widest">
-                Junior Explorer Â· Age {p.ageBand}
+                Junior Explorer · Age {p.ageBand}
               </div>
             </div>
           )}
@@ -4015,7 +4015,7 @@ function ProfileScreenContent() {
                 Change Avatar
               </div>
               <div className="text-[11px] font-bold text-text-secondary">
-                {getAvatarName(p.avatar)} Â· Tap to select
+                {getAvatarName(p.avatar)} · Tap to select
               </div>
             </div>
             <div className="text-text-secondary text-xl">{isSelectingAvatar ? 'âœ•' : 'â€º'}</div>
@@ -4343,7 +4343,7 @@ function ParentZonePlaceholder() {
             Tap to configure PIN & parental settings
           </div>
         </div>
-        <div className="text-info text-lg">{showSettings ? 'â–¼' : 'â€º'}</div>
+        <div className="text-info text-lg">{showSettings ? '▼' : 'â€º'}</div>
       </button>
 
       {/* PIN Settings Panel */}
@@ -4564,7 +4564,7 @@ export function EmptyStateScreen() {
           together.
         </p>
         <button className="mt-6 h-14 px-6 rounded-2xl gradient-saffron text-white text-display text-lg font-extrabold shadow-[var(--shadow-glow-orange)]">
-          Invite a Friend âœ¨
+          Invite a Friend ✨
         </button>
         <button className="mt-2 h-12 px-6 rounded-2xl bg-muted text-ink text-display font-extrabold">
           Maybe later
