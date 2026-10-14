@@ -8,9 +8,8 @@
  * - Better control over emoji rendering and fallbacks
  * - Proper UTF-8 encoding handling
  * 
- * MIGRATION STATUS: Components have been updated to use these constants.
- * BottomNav, ParentZone, and PostcardPreviewModal now import from this file.
- * Additional components may be updated as needed.
+ * MIGRATION STATUS: Complete centralization of all emoji constants.
+ * All components should import and use EMOJI constants from this registry.
  */
 
 // Navigation emoji
@@ -43,6 +42,7 @@ export const EMOJI = {
   // Achievements and badges
   achievement: {
     badge: '🏅',
+    defaultBadge: '🏅',
     explorer: '🎖️',
     monument: '🛖',
     animal: '🦁',
@@ -59,7 +59,9 @@ export const EMOJI = {
     runningMan: '🏃‍♂️',
     momentum: '💨',
     star: '⭐',
-    halfwayStar: '⭐',
+    stars: '⭐⭐⭐',
+    emptyStar: '☆',
+    done: '✓',
   },
 
   // Utilities
@@ -71,15 +73,17 @@ export const EMOJI = {
     confetti: '🎉',
     warning: '🚨',
     alert: '🛖',
+    rocket: '🚀',
+    trophy: '🏆',
   },
 
-  // Debug and logging (for console only)
+  // Debug and logging (for console only - not for UI)
   debug: {
     clapboard: '🎬',
     timer: '⏱️',
   },
 
-  // Feedback
+  // Feedback and encouragement
   feedback: {
     success: '🎉',
     correct: '🎉',
@@ -88,13 +92,36 @@ export const EMOJI = {
     goal: '🎯',
     rocket: '🚀',
     sparkles: '✨',
+    unlocked: '⭐',
+    newLevel: '🎉',
   },
 
-  // UI Elements
-  ui: {
-    stars: '⭐⭐⭐',
-    emptyStar: '☆',
-    filleStar: '⭐',
+  // Daily goal messages
+  goal: {
+    met: '🏆',
+    progress: '🎯',
+    start: '🚀',
+    complete: '🎉',
+    motivate: '💪',
+  },
+
+  // Quiz and learning
+  quiz: {
+    celebrate: '🎉',
+    correct: '🎉',
+    playAgain: '⭐⭐⭐',
+    newLevel: '🎉',
+    sticker1: '😋',
+    sticker2: '🎉',
+    sticker3: '🎉',
+  },
+
+  // Postcard and celebrations
+  postcard: {
+    saved: '✨',
+    nextState: '🎯',
+    keepIt: '🎉',
+    unlocked: '✨',
   },
 
   // Theme picker
@@ -103,11 +130,61 @@ export const EMOJI = {
     style: '🎨',
   },
 
-  // Invite
-  invite: '✨',
+  // Cool facts and learning
+  facts: {
+    fact: '✨',
+    activity: '🎮',
+    more: '⭐',
+    allFacts: '⭐',
+  },
 
-  // Data deletion
-  delete: '🗑️',
+  // Language
+  language: {
+    globe: '🌍',
+    indFlag: '🇮🇳',
+  },
+
+  // Progress states
+  progress: {
+    streamStart: '🚀',
+    streamHalfway: '🌳',
+    streamAlmost: '🏆',
+    streamComplete: '👑',
+    streamCongrats: '👑',
+  },
+
+  // Milestones
+  explorer: {
+    five: '🌱',
+    ten: '🌿',
+    fifteen: '🌳',
+    twenty: '🏆',
+    twentyFive: '💎',
+    thirty: '👑',
+    thirtySix: '🎉',
+  },
+
+  // Unlocks and badges
+  unlocks: {
+    badgeIcon: '🏅',
+  },
+
+  // Audio and permissions
+  audio: {
+    sounds: '🎮',
+    music: '🎵',
+    stories: '🎧',
+    switch: '🌍',
+  },
+
+  // Other icons
+  icons: {
+    language: '🌍',
+    deleteIcon: '🗑️',
+    invite: '✨',
+    badges: '🏆',
+    facts: '📖',
+  },
 };
 
 /**

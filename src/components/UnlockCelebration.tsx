@@ -49,7 +49,13 @@ function saveCelebrated(set: Set<string>) {
   }
 }
 
-const COLORS = ["#FF7A1A", "#2E7DFF", "#22C55E", "#F5B301", "#ffffff"];
+const COLORS = [
+  "var(--accent-1)",       // Saffron
+  "var(--accent-2)",       // Explorer blue
+  "var(--accent-3)",       // Success green
+  "var(--accent-4)",       // Gold
+  "var(--background)"      // White
+];
 
 function makePieces(seed: number): Piece[] {
   return Array.from({ length: 60 }).map((_, i) => ({

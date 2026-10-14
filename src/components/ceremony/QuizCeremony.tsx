@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+﻿import { useEffect, useState, useRef } from 'react';
 import { useProgress, dismissPendingCelebration, updateCeremonyStep, type PendingCelebration } from '@/lib/progress';
 import { useNavigate } from '@tanstack/react-router';
 import { getState, type IndiaState, nextStateAfter } from '@/lib/states';
@@ -8,6 +8,7 @@ import { fxTap, fxCorrect, fxStamp } from '@/lib/fx';
 import { playTts } from '@/lib/tts';
 import { hasFeatureConsent } from '@/lib/parental-consent';
 import { PostcardFrame } from '@/components/PostcardFrame';
+import { EMOJI } from '@/constants/emoji';
 import mascot from '@/assets/mascot.webp';
 
 /**
@@ -187,7 +188,7 @@ export function QuizCeremony() {
                 }}
                 className="w-full h-12 ui-button ui-button-soft text-ink font-bold text-base rounded-3xl transition-all active:scale-95"
               >
-                Play again for ⭐⭐⭐
+                Play again for {EMOJI.action.stars}
               </button>
             )}
 
@@ -847,4 +848,5 @@ function StepWhatsNext({ ceremony, state }: StepProps) {
     </div>
   );
 }
+
 

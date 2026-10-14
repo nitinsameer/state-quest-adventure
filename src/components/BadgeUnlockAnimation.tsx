@@ -13,6 +13,7 @@
 import { useEffect, useState } from 'react';
 import { ConfettiBurst } from './ConfettiBurst';
 import { fxStamp } from '../lib/fx';
+import { EMOJI } from '@/constants/emoji';
 
 interface BadgeUnlockAnimationProps {
   badgeName: string;
@@ -23,7 +24,7 @@ interface BadgeUnlockAnimationProps {
 
 export function BadgeUnlockAnimation({
   badgeName,
-  badgeEmoji = '🏅',
+  badgeEmoji = EMOJI.achievement.defaultBadge,
   badgeDescription,
   onComplete,
 }: BadgeUnlockAnimationProps) {
@@ -116,7 +117,7 @@ export function BadgeUnlockAnimation({
                 : 'opacity-0'
             }`}
           >
-            ⭐ Unlocked! ⭐
+            {EMOJI.action.star} Unlocked! {EMOJI.action.star}
           </div>
         </div>
       </div>

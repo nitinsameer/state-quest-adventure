@@ -3323,7 +3323,7 @@ export function CorrectAnswerScreen({ stateName, onDismiss }: { stateName?: stri
           style={{
             left: `${(i * 37) % 100}%`,
             top: `${(i * 53) % 80}%`,
-            background: ["#FFD84D", "#FF7A1A", "#fff", "#2E7DFF"][i % 4],
+            background: ["var(--accent-4)", "var(--accent-1)", "var(--background)", "var(--accent-2)"][i % 4],
             transform: `rotate(${i * 20}deg)`,
             opacity: 0.9,
           }}
@@ -3470,10 +3470,10 @@ function Stamp({
   onSelect?: (stateName: string) => void;
 }) {
   const color = {
-    orange: "#FF7A1A",
-    blue: "#2E7DFF",
-    green: "#22C55E",
-    gold: "#F5B301",
+    orange: "var(--accent-1)",
+    blue: "var(--accent-2)",
+    green: "var(--accent-3)",
+    gold: "var(--accent-4)",
   }[tone];
   if (!filled) {
     return (

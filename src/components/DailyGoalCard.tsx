@@ -2,6 +2,7 @@ import { useProgress, cardsDone, CARDS_PER_STATE } from "@/lib/progress";
 import { getState, stateSlug, INDIA_STATES } from "@/lib/states";
 import { fxTap } from "@/lib/fx";
 import { Link } from "@tanstack/react-router";
+import { EMOJI } from "@/constants/emoji";
 
 /**
  * Daily Goal Card for HomeDashboardScreen
@@ -64,13 +65,13 @@ export function DailyGoalCard() {
   // Encouragement messages
   const getEncouragementMessage = (): string => {
     if (goalMet) {
-      return "🎉 Goal met! You're amazing!";
+      return `${EMOJI.feedback.success} Goal met! You're amazing!`;
     }
     if (goalProgress === 0) {
-      return `🚀 Complete ${dailyGoal} state${dailyGoal > 1 ? "s" : ""} today!`;
+      return `${EMOJI.goal.start} Complete ${dailyGoal} state${dailyGoal > 1 ? "s" : ""} today!`;
     }
     const remaining = dailyGoal - goalProgress;
-    return `${remaining} more state${remaining > 1 ? "s" : ""} to go! You got this! 💪`;
+    return `${remaining} more state${remaining > 1 ? "s" : ""} to go! You got this! ${EMOJI.feedback.encouragement}`;
   };
 
   return (
@@ -94,7 +95,7 @@ export function DailyGoalCard() {
           {/* Middle: Progress indicator */}
           <div className="flex-shrink-0">
             <div className="h-12 w-12 rounded-full bg-white/20 flex items-center justify-center">
-              <div className="text-2xl">{goalMet ? "🏆" : "🎯"}</div>
+              <div className="text-2xl">{goalMet ? EMOJI.goal.met : EMOJI.goal.progress}</div>
             </div>
           </div>
 

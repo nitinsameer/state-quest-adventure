@@ -147,7 +147,7 @@ export function HomeScreen() {
                 className="w-20 h-20 rounded-2xl flex-shrink-0"
                 style={{
                   backgroundImage: STATE_ART[current.name] ? `url(${STATE_ART[current.name]})` : undefined,
-                  backgroundColor: STATE_ART[current.name] ? undefined : "#e5e7eb",
+                  backgroundColor: STATE_ART[current.name] ? undefined : "var(--surface-muted)",
                   backgroundSize: "cover",
                   backgroundPosition: "center"
                 }}

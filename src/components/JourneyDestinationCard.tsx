@@ -38,10 +38,10 @@ export function JourneyDestinationCard({
   
   // Tone-specific background color mapping
   const toneBackgrounds: Record<string, string> = {
-    orange: "#FFF3E8",
-    gold: "#FFF9E8",
-    green: "#E8F8EE",
-    blue: "#E8F0FF",
+    orange: "var(--accent-1-soft)",
+    gold: "var(--accent-4-soft)",
+    green: "var(--accent-3-soft)",
+    blue: "var(--accent-2-soft)",
   };
   
   // Gradient button class mapping per tone
@@ -64,7 +64,7 @@ export function JourneyDestinationCard({
     buttonGradientClass = toneGradients[state.tone] || "gradient-saffron";
     buttonTextClass = "text-on-header";
   } else if (status === "locked") {
-    cardBgColor = "#F0F0F0";
+    cardBgColor = "var(--surface-sunken)";
     textColorClass = "text-text-secondary";
     buttonGradientClass = "bg-surface-sunken";
     buttonTextClass = "text-text-secondary";
