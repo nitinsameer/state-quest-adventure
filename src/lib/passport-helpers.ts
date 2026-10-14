@@ -34,7 +34,7 @@ export const REGIONS: Record<
   north: {
     name: "Northern Region",
     emoji: "🏔️",
-    gradient: "from-orange-400 to-red-500",
+    gradient: "bg-warning",
     states: INDIA_STATES.filter((s) =>
       ["Punjab", "Haryana", "Himachal Pradesh", "Uttarakhand", "Uttar Pradesh", "Rajasthan"].includes(s.name)
     ),
@@ -42,7 +42,7 @@ export const REGIONS: Record<
   south: {
     name: "Southern Region",
     emoji: "🌴",
-    gradient: "from-teal-400 to-cyan-500",
+    gradient: "bg-accent-2",
     states: INDIA_STATES.filter((s) =>
       ["Andhra Pradesh", "Telangana", "Karnataka", "Kerala", "Tamil Nadu"].includes(s.name)
     ),
@@ -50,7 +50,7 @@ export const REGIONS: Record<
   east: {
     name: "Eastern Region",
     emoji: "🌳",
-    gradient: "from-green-400 to-emerald-500",
+    gradient: "bg-success",
     states: INDIA_STATES.filter((s) =>
       ["West Bengal", "Odisha", "Bihar", "Jharkhand"].includes(s.name)
     ),
@@ -58,7 +58,7 @@ export const REGIONS: Record<
   central: {
     name: "Central Region",
     emoji: "🏞️",
-    gradient: "from-amber-400 to-orange-500",
+    gradient: "bg-accent-4",
     states: INDIA_STATES.filter((s) =>
       ["Madhya Pradesh", "Chhattisgarh"].includes(s.name)
     ),
@@ -66,7 +66,7 @@ export const REGIONS: Record<
   west: {
     name: "Western Region",
     emoji: "🌊",
-    gradient: "from-blue-400 to-purple-500",
+    gradient: "bg-accent-2",
     states: INDIA_STATES.filter((s) =>
       ["Gujarat", "Maharashtra", "Goa"].includes(s.name)
     ),
@@ -74,7 +74,7 @@ export const REGIONS: Record<
   northeast: {
     name: "Northeast Region",
     emoji: "⛰️",
-    gradient: "from-pink-400 to-rose-500",
+    gradient: "bg-accent-1-soft",
     states: INDIA_STATES.filter((s) =>
       ["Assam", "Arunachal Pradesh", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Sikkim", "Tripura"].includes(s.name)
     ),
@@ -82,7 +82,7 @@ export const REGIONS: Record<
   unionTerritories: {
     name: "Union Territories",
     emoji: "🏛️",
-    gradient: "from-indigo-400 to-purple-500",
+    gradient: "bg-accent-5",
     states: INDIA_STATES.filter((s) =>
       ["Delhi", "Jammu & Kashmir", "Ladakh", "Chandigarh", "Puducherry", "Andaman & Nicobar Islands", "Lakshadweep", "Dadra & Nagar Haveli and Daman & Diu"].includes(s.name)
     ),

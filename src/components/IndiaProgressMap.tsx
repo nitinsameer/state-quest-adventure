@@ -72,7 +72,7 @@ export function IndiaProgressMap() {
         <div className="mb-4">
           <div className="h-2.5 bg-surface-sunken rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-saffron-500 to-orange-500 transition-all duration-1500 ease-out rounded-full"
+              className="h-full bg-accent-1 transition-all duration-1500 ease-out rounded-full"
               style={{ width: `${completionPercentage}%` }}
             />
           </div>

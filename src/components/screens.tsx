@@ -438,8 +438,8 @@ export function CreateProfileScreen() {
               }}
               className={`aspect-square rounded-2xl flex items-center justify-center overflow-hidden transition-all duration-300 transform ${
                 a.id === avatar
-                  ? "ring-3 ring-yellow-400 shadow-elevated-2 scale-105"
-                  : "ring-2 ring-gray-300 shadow-sm hover:ring-gray-400 hover:scale-103"
+                  ? "ring-3 ring-accent-4 shadow-elevated-2 scale-105"
+                  : "ring-2 ring-border-color shadow-sm hover:ring-border-strong hover:scale-103"
               }`}
             >
               <img
@@ -481,7 +481,7 @@ export function CreateProfileScreen() {
                   onClick={() => handleAgeSelect(band.value, idx)}
                   className={`w-full h-14 rounded-xl flex items-center justify-between px-4 font-bold transition-all duration-300 transform ${
                     isSelected
-                      ? `bg-gradient-to-r ${band.gradient} text-white shadow-elevated-2 scale-100 border-2 border-white`
+                      ? `${band.gradient} text-white shadow-elevated-2 scale-100 border-2 border-white`
                       : "bg-surface-card border-2 border-surface-sunken text-text-primary hover:border-surface-sunken hover:shadow-elevated-1"
                   }`}
                 >
@@ -507,7 +507,7 @@ export function CreateProfileScreen() {
         </div>
       </div>
 
-      <div className="p-4 pb-safe bg-white border-t border-gray-200">
+      <div className="p-4 pb-safe bg-surface-card border-t border-border-color">
         <button
           onClick={handleProfileSave}
           className={`w-full h-12 rounded-xl bg-success text-white text-sm font-black shadow-elevated-2 transition-all duration-300 transform ${
@@ -1132,7 +1132,7 @@ function StatCardEnhanced({
         </div>
         
         {/* Label */}
-        <div className="text-label text-slate-700 px-1">
+        <div className="text-label text-text-primary px-1">
           {label}
         </div>
       </div>
@@ -1306,7 +1306,7 @@ function StateDetailModal({
                 fxTap();
                 onPlay();
               }}
-              className="flex-1 h-12 rounded-2xl bg-gradient-to-r from-saffron-400 to-saffron-500 text-display font-extrabold text-white shadow-lg hover:shadow-xl transition"
+              className="flex-1 h-12 rounded-2xl bg-accent-1 text-display font-extrabold text-white shadow-lg hover:shadow-xl transition"
             >
               {isDone ? "ðŸŽ–ï¸ Review" : "â–¶ Play"}
             </button>
@@ -1613,7 +1613,7 @@ export function JourneyMapScreen() {
       {/* Explorable States Map with Regional Organization */}
       <div className="relative flex-1 flex flex-col overflow-hidden animate-fade-in" style={{ animationDelay: "200ms" }}>
         {/* Region Chips - Horizontal Scrollable */}
-        <div className="px-4 pt-4 pb-2 overflow-x-auto sticky top-0 z-20 bg-gradient-to-b from-sky-100 to-transparent">
+        <div className="px-4 pt-4 pb-2 overflow-x-auto sticky top-0 z-20 bg-bg-page">
           <div className="flex gap-2 pb-2 min-w-min">
             {REGION_KEYS.map((regionKey) => {
               const region = REGIONS[regionKey];
@@ -1661,7 +1661,7 @@ export function JourneyMapScreen() {
                 </div>
                 <div className="mt-2 h-2 bg-[oklch(0.9_0.02_260)] rounded-full overflow-hidden">
                   <div
-                    className={`h-full bg-gradient-to-r ${region.gradient} transition-all duration-300`}
+                    className={`h-full bg-accent-1 transition-all duration-300`}
                     style={{ width: `${(regionDone / regionStates.length) * 100}%` }}
                   />
                 </div>
@@ -2269,7 +2269,7 @@ function HubCard({
         </div>
       )}
       {done && (
-        <div className="absolute top-2 right-2 h-8 w-8 rounded-full bg-gradient-to-br from-fb-success-bg to-fb-success-bg text-white flex items-center justify-center text-h5 font-black shadow-lg animate-bounce">
+        <div className="absolute top-2 right-2 h-8 w-8 rounded-full bg-success text-white flex items-center justify-center text-h5 font-black shadow-lg animate-bounce">
           âœ“
         </div>
       )}
@@ -2584,7 +2584,7 @@ export function LearningCardScreen({
   // Safety check: ensure card exists and currentCardIndex is valid
   if (!card || currentCardIndex < 0 || !Array.isArray(cards) || cards.length === 0) {
     return (
-      <div className="w-full h-screen flex items-center justify-center bg-gradient-to-b from-info-soft to-white">
+      <div className="w-full h-screen flex items-center justify-center bg-info-soft">
         <div className="text-center">
           <div className="text-5xl mb-3">âš ï¸</div>
           <h1 className="text-h4 text-ink mb-2">Card content unavailable</h1>
@@ -2873,8 +2873,8 @@ export function LearningCardScreen({
           <div className="mb-3 p-3 bg-accent-2-soft rounded-xl flex items-center gap-2 shadow-sm border border-accent-2">
             <span className="text-lg">ðŸ“–</span>
             <div className="flex-1">
-              <p className="text-xs font-bold text-purple-900">Replaying this card</p>
-              <p className="text-xs text-purple-700 font-medium">
+              <p className="text-xs font-bold text-accent-5">Replaying this card</p>
+              <p className="text-xs text-accent-5 font-medium">
                 You've mastered this! Keep practicing âœ¨
               </p>
             </div>
@@ -3488,7 +3488,7 @@ function Stamp({
           onSelect(stateName);
         }
       }}
-      className="relative aspect-square rounded-2xl bg-[#f5e6c8] flex flex-col items-center justify-center active:scale-95 transition-transform cursor-pointer"
+      className="relative aspect-square rounded-2xl bg-accent-2-soft flex flex-col items-center justify-center active:scale-95 transition-transform cursor-pointer"
       style={{ boxShadow: "inset 0 0 0 1px rgba(0,0,0,0.06)" }}
     >
       <div
@@ -3676,7 +3676,7 @@ export function BadgesScreen() {
   };
 
   return (
-    <div className="h-full w-full bg-[#F7F5F0] flex flex-col">
+    <div className="h-full w-full bg-surface-card flex flex-col">
       {/* Tab Switcher - Before Header */}
       <div className="px-5 pt-4 pb-0 flex gap-2 border-b border-muted bg-white z-10">
         <button
@@ -4080,7 +4080,7 @@ function ProfileScreenContent() {
             }}
             className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
           >
-            <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-accent-5-soft to-accent-5 flex items-center justify-center text-2xl">
+            <div className="h-12 w-12 rounded-2xl bg-accent-5 flex items-center justify-center text-2xl">
               ðŸ“¸
             </div>
             <div className="flex-1 text-left">
@@ -4224,7 +4224,7 @@ function SoundToggleRow() {
         onClick={toggleSound}
         className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
       >
-        <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-accent-5-soft to-accent-5 flex items-center justify-center text-2xl">
+        <div className="h-12 w-12 rounded-2xl bg-accent-5 flex items-center justify-center text-2xl">
           ðŸ”Š
         </div>
         <div className="flex-1 text-left">
@@ -4251,18 +4251,18 @@ function SoundToggleRow() {
         onClick={toggleAudio}
         className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
       >
-        <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-accent-5-soft to-accent-5 flex items-center justify-center text-2xl">
+        <div className="h-12 w-12 rounded-2xl bg-accent-5 flex items-center justify-center text-2xl">
           ðŸŽ§
         </div>
         <div className="flex-1 text-left">
           <div className="text-display font-extrabold text-[15px] leading-tight">Audio Narration</div>
           <div className="text-[11px] font-bold">
             {audioEnabled ? (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 border border-green-200">
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-success/10 text-success border border-success/30">
                 Active âœ“
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200">
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-sunken text-text-secondary border border-border-color">
                 Tap to enable
               </span>
             )}
@@ -4324,7 +4324,7 @@ function ParentZonePlaceholder() {
   };
 
   return (
-    <div className="rounded-2xl bg-gradient-to-br from-info-soft to-info-soft border-2 border-info p-3 transition">
+    <div className="rounded-2xl bg-info-soft border-2 border-info p-3 transition">
       <button
         onClick={() => {
           fxTap();

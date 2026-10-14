@@ -73,7 +73,7 @@ export function QuizCeremony() {
   };
 
   return (
-    <div className="h-full w-full bg-[#F7F5F0] flex flex-col overflow-hidden">
+    <div className="h-full w-full bg-surface-card flex flex-col overflow-hidden">
       {/* HEADER BAND - matching Journey/Learning Hub */}
       <div className={`px-5 pt-3 pb-4 ${grad} rounded-b-[32px] relative`}>
         <div className="flex items-center justify-between">
@@ -134,7 +134,7 @@ export function QuizCeremony() {
       </div>
 
       {/* BOTTOM BUTTON */}
-      <div className="px-6 pb-6 pt-4 bg-[#F7F5F0] space-y-3">
+      <div className="px-6 pb-6 pt-4 bg-surface-card space-y-3">
         {step === 0 && (
           <button
             onClick={advanceStep}
@@ -372,7 +372,7 @@ function StepResult({ ceremony, state, art }: StepProps) {
 
           {/* LEVEL UP BANNER */}
           {ceremony.leveledUp && (
-            <div className="ui-card ui-accent-3 px-4 py-3 rounded-2xl border-2 border-green-200/50">
+            <div className="ui-card ui-accent-3 px-4 py-3 rounded-2xl border-2 border-success/30">
               <div className="text-center">
                 <div className="text-sm font-bold text-ink">ðŸŽ‰ New level!</div>
                 <div className="text-xs font-semibold text-ink/80 mt-1">{ceremony.levelName}</div>
@@ -778,7 +778,7 @@ function StepWhatsNext({ ceremony, state }: StepProps) {
 
       {/* REGION MASTER BANNER - appears only when region just completed */}
       {isRegionComplete && (
-        <div className="ui-card ui-accent-3 px-6 py-4 rounded-2xl border-2 border-green-200/50 animate-bounce">
+        <div className="ui-card ui-accent-3 px-6 py-4 rounded-2xl border-2 border-success/30 animate-bounce">
           <div className="flex items-center justify-center gap-2">
             <span className="text-3xl">ðŸ‘‘</span>
             <div className="text-center">

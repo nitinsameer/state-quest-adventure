@@ -15,7 +15,7 @@ export const Route = createFileRoute("/privacy")({
 
 function PrivacyPolicyScreen() {
   return (
-    <div className="h-full w-full bg-[#F7F5F0] flex flex-col overflow-hidden">
+    <div className="h-full w-full bg-surface-card flex flex-col overflow-hidden">
       {/* Header */}
       <div className="px-5 pt-3 pb-6 gradient-explorer rounded-b-[32px] text-white">
         <div className="flex items-center justify-between">

@@ -88,7 +88,7 @@ export function QuizAnswerFeedback({
 
             {/* XP reward floating popup */}
             <div
-              className="absolute top-1/3 animate-float-up text-5xl font-black text-yellow-500 drop-shadow-lg"
+              className="absolute top-1/3 animate-float-up text-5xl font-black text-accent-4 drop-shadow-lg"
               style={{ animation: 'float-up 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards' }}
             >
               +{xpReward} XP ✨

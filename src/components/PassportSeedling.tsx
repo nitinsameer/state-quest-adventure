@@ -128,7 +128,7 @@ export function PassportSeedling() {
       </div>
 
       {/* Profile Card - Simplified */}
-      <div className="mx-5 mt-5 p-5 rounded-3xl bg-gradient-to-br from-saffron to-orange-500 text-white shadow-xl">
+      <div className="mx-5 mt-5 p-5 rounded-3xl bg-accent-1 text-white shadow-xl">
         {/* ROW 1: Avatar + User Info */}
         <div className="flex items-center gap-4 mb-3">
           <div className="h-16 w-16 rounded-2xl bg-white p-1 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-lg">
@@ -184,13 +184,13 @@ export function PassportSeedling() {
 
       {/* Region Title & Progress */}
       <div className="px-5 mt-4 mb-2">
-        <div style={{ fontSize: 'var(--type-section-heading)', fontWeight: 'var(--type-section-heading-weight)' }} className="text-slate-900">{region.name}</div>
-        <div className="text-base font-semibold text-slate-600 mt-1">
+        <div style={{ fontSize: 'var(--type-section-heading)', fontWeight: 'var(--type-section-heading-weight)' }} className="text-text-primary">{region.name}</div>
+        <div className="text-base font-semibold text-text-secondary mt-1">
           {regionProgress} explored {unlockedInRegion.length === regionStates.length && "âœ¨ Region Complete!"}
         </div>
         <div className="mt-2 h-2 bg-[oklch(0.9_0.02_260)] rounded-full overflow-hidden">
           <div
-            className={`h-full bg-gradient-to-r ${region.gradient} transition-all duration-300`}
+            className={`h-full bg-accent-1 transition-all duration-300`}
             style={{ width: `${(unlockedInRegion.length / regionStates.length) * 100}%` }}
           />
         </div>

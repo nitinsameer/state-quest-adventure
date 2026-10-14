@@ -300,7 +300,7 @@ export function PostcardPreviewModal({
           title: "Your Postcard's Ready!",
           subtitle: "What would you like to do?",
         }}
-        headerGradient={["from-purple-400", "to-pink-400"]}
+        headerGradient={["from-accent-5", "to-accent-5"]}
         content={[
           {
             type: "custom",

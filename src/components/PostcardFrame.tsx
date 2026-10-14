@@ -53,7 +53,7 @@ export function PostcardFrame({
   return (
     <div className="flex justify-center">
       {/* Postcard Frame - 3:2 aspect ratio, white background with shadow */}
-      <div className="w-full max-w-sm bg-white rounded-xl shadow-lg border border-gray-200 p-5 relative overflow-hidden">
+      <div className="w-full max-w-sm bg-surface-card rounded-xl shadow-lg border border-border-color p-5 relative overflow-hidden">
         {/* Aspect ratio 3:2 container */}
         <div className="aspect-[3/2] flex flex-col relative">
           {/* Top section (40% height) - State illustration centered */}
@@ -74,8 +74,8 @@ export function PostcardFrame({
           {/* Middle section - State name + badge level */}
           <div className="flex-[1] flex flex-col items-center justify-center py-1">
             <div className="text-center">
-              <div className="text-sm font-bold text-gray-800">{state.name}</div>
-              <div className="text-xs font-semibold text-gray-600 mt-0.5">
+              <div className="text-sm font-bold text-text-primary">{state.name}</div>
+              <div className="text-xs font-semibold text-text-secondary mt-0.5">
                 Level 1 · {badgeLabel}
               </div>
             </div>
@@ -84,7 +84,7 @@ export function PostcardFrame({
           {/* Bottom section - Date left, Stars right, Stamp top-right */}
           <div className="flex-[1] flex items-center justify-between px-2 py-1 relative">
             {/* Left: Date */}
-            <div className="text-xs font-semibold text-gray-700 tabular-nums">
+            <div className="text-xs font-semibold text-text-secondary tabular-nums">
               {dateStr}
             </div>
 

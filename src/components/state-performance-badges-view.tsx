@@ -138,7 +138,7 @@ function StateDetailBadgeCard({ state, progress, onSelect }: any) {
         {earnedBadges.map((badge: StatePerformanceBadgeId) => (
           <div 
             key={badge}
-            className="h-8 w-8 rounded-full bg-gradient-to-br from-accent-1-soft to-action-primary-bg border-2 border-action-primary-bg flex items-center justify-center text-base flex-shrink-0"
+            className="h-8 w-8 rounded-full bg-accent-1 border-2 border-action-primary-bg flex items-center justify-center text-base flex-shrink-0"
             title={STATE_PERFORMANCE_BADGE_DEFS[badge]?.name}
           >
             {getPerformanceBadgeIcon(badge)}

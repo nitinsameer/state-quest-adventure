@@ -54,7 +54,7 @@ export function GranularConsentDialog({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm p-4 animate-in fade-in">
       <div className="bg-surface-card rounded-3xl shadow-2xl max-w-md w-full overflow-hidden animate-in zoom-in-95 flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="bg-gradient-to-r from-action-primary-bg to-action-primary-bg p-(--padding-lg) text-text-on-primary">
+        <div className="bg-bg-header p-(--padding-lg) text-text-on-primary">
           <h2 className="text-2xl font-extrabold mb-(--space-0-25)">🔒 Stamp Privacy</h2>
           <p className="text-sm opacity-90">
             Manage who can see this stamp from {postcard.state}

@@ -118,7 +118,7 @@ export function ExpandableCard({
                 onClick={() => handleToggleDetail(0)}
                 className="w-full flex items-center justify-between p-(--padding-sm) rounded-lg hover:bg-black/5 active:scale-95 transition bg-warning-soft border border-warning"
               >
-                <span className="text-xs font-bold text-amber-700">
+                <span className="text-xs font-bold text-warning">
                   ⭐ More Amazing Facts
                 </span>
                 <span className="text-lg transition-transform" style={{ transform: expandedDetailIndex === 0 ? "rotate(180deg)" : "rotate(0deg)" }}>
@@ -131,7 +131,7 @@ export function ExpandableCard({
                   {coolFacts.map((fact, index) => (
                     <div
                       key={index}
-                      className="text-xs font-semibold text-muted-dark bg-warning-soft p-(--padding-sm) rounded-lg border-l-3 border-amber-400"
+                      className="text-xs font-semibold text-text-secondary bg-warning-soft p-(--padding-sm) rounded-lg border-l-3 border-warning"
                     >
                       {fact}
                     </div>
@@ -146,9 +146,9 @@ export function ExpandableCard({
             <div className="overflow-hidden">
               <button
                 onClick={() => handleToggleDetail(1)}
-                className="w-full flex items-center justify-between p-(--padding-sm) rounded-lg hover:bg-black/5 active:scale-95 transition bg-purple-soft border border-purple"
+                className="w-full flex items-center justify-between p-(--padding-sm) rounded-lg hover:bg-black/5 active:scale-95 transition bg-accent-5-soft border border-accent-5"
               >
-                <span className="text-xs font-bold text-purple-700">
+                <span className="text-xs font-bold text-accent-5">
                   🤔 Did You Know?
                 </span>
                 <span className="text-lg transition-transform" style={{ transform: expandedDetailIndex === 1 ? "rotate(180deg)" : "rotate(0deg)" }}>
@@ -157,8 +157,8 @@ export function ExpandableCard({
               </button>
 
               {expandedDetailIndex === 1 && (
-                <div className="mt-2 bg-purple-soft p-(--padding-base) rounded-lg border-2 border-purple-300 animate-fadeIn">
-                  <p className="text-xs font-bold text-purple-900 leading-relaxed">
+                <div className="mt-2 bg-accent-5-soft p-(--padding-base) rounded-lg border-2 border-accent-5 animate-fadeIn">
+                  <p className="text-xs font-bold text-accent-5 leading-relaxed">
                     {didYouKnow}
                   </p>
                 </div>
@@ -182,7 +182,7 @@ export function ExpandableCard({
               </button>
 
               {expandedDetailIndex === 2 && (
-                <div className="mt-2 bg-success-soft p-(--padding-base) rounded-lg border-2 border-green-300 animate-fadeIn">
+                <div className="mt-2 bg-success-soft p-(--padding-base) rounded-lg border-2 border-success animate-fadeIn">
                   <p className="text-xs font-bold text-success leading-relaxed">
                     {tryThis}
                   </p>

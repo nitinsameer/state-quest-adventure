@@ -130,8 +130,8 @@ export function StateCompletionCelebration({
             </div>
 
             {/* XP gained */}
-            <div className="bg-yellow-100 rounded-2xl p-4 text-center border-2 border-yellow-400">
-              <p className="text-h4 font-black text-yellow-600 mb-1">
+            <div className="bg-accent-4/10 rounded-2xl p-4 text-center border-2 border-accent-4">
+              <p className="text-h4 font-black text-accent-4 mb-1">
                 +{totalXpGained}
               </p>
               <p className="text-body-sm text-muted-foreground">XP Earned</p>
@@ -156,7 +156,7 @@ export function StateCompletionCelebration({
                     }`}
                   >
                     <div
-                      className={`rounded-2xl bg-yellow-50 p-3 text-center border-3 border-yellow-400 transition-all ${
+                      className={`rounded-2xl bg-accent-4/5 p-3 text-center border-3 border-accent-4 transition-all ${
                         isRevealed
                           ? 'animate-bounce-scale'
                           : ''
@@ -173,7 +173,7 @@ export function StateCompletionCelebration({
 
           {/* Celebration message */}
           <div
-            className={`text-center text-h5 font-bold text-purple-600 transition-opacity duration-300 ${
+            className={`text-center text-h5 font-bold text-accent-5 transition-opacity duration-300 ${
               stage === 'celebrate' ? 'opacity-100' : 'opacity-0'
             }`}
           >

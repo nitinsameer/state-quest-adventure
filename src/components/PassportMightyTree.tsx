@@ -92,7 +92,7 @@ export function PassportMightyTree() {
               </div>
               <div className="w-full h-3 bg-surface-sunken rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-accent-3 to-accent-3 transition-all duration-300"
+                  className="h-full bg-accent-3 transition-all duration-300"
                   style={{ width: `${milestone.percentage}%` }}
                 />
               </div>

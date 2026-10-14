@@ -78,7 +78,7 @@ export function BadgeUnlockAnimation({
         >
           {/* Animated border glow */}
           <div
-            className={`absolute inset-0 rounded-3xl border-4 border-yellow-400 transition-all duration-300 ${
+            className={`absolute inset-0 rounded-3xl border-4 border-accent-4 transition-all duration-300 ${
               stage === 'celebrate'
                 ? 'animate-pulse'
                 : ''

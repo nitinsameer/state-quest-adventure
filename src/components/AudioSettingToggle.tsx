@@ -70,7 +70,7 @@ export function AudioSettingToggle() {
         disabled={isToggling}
         className={`ml-(--space-3) relative inline-flex h-8 w-14 items-center rounded-full transition-all flex-shrink-0 ${
           audioEnabled
-            ? "bg-success shadow-lg shadow-green-400/50"
+            ? "bg-success shadow-lg shadow-success/50"
             : "bg-muted shadow-md"
         } ${isToggling ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:scale-105"}`}
       >

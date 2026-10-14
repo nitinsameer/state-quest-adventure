@@ -534,7 +534,7 @@ function RootComponent() {
   // useProgress() IS called in HydratedApp (separate component, always called)
   if (!isReady) {
     return (
-      <div className="h-screen w-full flex items-center justify-center bg-gradient-to-br from-action-primary-bg to-action-primary-bg/80">
+      <div className="h-screen w-full flex items-center justify-center bg-bg-header">
         <div className="text-center">
           <div className="text-6xl mb-4 animate-bounce">🗺️</div>
           <div className="text-text-on-primary font-bold text-lg">Loading your adventure...</div>

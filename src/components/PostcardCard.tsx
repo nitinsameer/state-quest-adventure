@@ -56,7 +56,7 @@ export function PostcardCard({
 
             {/* Padlock badge for locked state */}
             {!isCollected && (
-              <div className="absolute top-2 right-2 w-8 h-8 bg-white/90 rounded-full shadow-md flex items-center justify-center border-2 border-slate-800">
+              <div className="absolute top-2 right-2 w-8 h-8 bg-surface-card/90 rounded-full shadow-md flex items-center justify-center border-2 border-border-strong">
                 <span className="text-lg">🔒</span>
               </div>
             )}

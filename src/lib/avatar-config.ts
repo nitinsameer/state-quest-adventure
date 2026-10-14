@@ -40,73 +40,73 @@ export const AVATAR_CONFIG: Record<AvatarId, {
   "explorer-hat": {
     name: "Mia",
     emoji: "🧑‍🔬",
-    color: "from-yellow-400 to-yellow-500",
+    color: "bg-accent-4",
     description: "Adventure seeker"
   },
   "explorer-pink": {
     name: "Alex",
     emoji: "🧑‍🔬",
-    color: "from-pink-400 to-pink-500",
+    color: "bg-accent-1-soft",
     description: "Pink explorer"
   },
   "geek-glasses": {
     name: "Rohan",
     emoji: "🤓",
-    color: "from-blue-400 to-blue-500",
+    color: "bg-accent-2",
     description: "Smart explorer"
   },
   "girl-peace": {
     name: "Priya",
     emoji: "👧",
-    color: "from-purple-400 to-purple-500",
+    color: "bg-accent-5",
     description: "Peace keeper"
   },
   "turban-red": {
     name: "Ishaan",
     emoji: "👦",
-    color: "from-green-400 to-green-500",
+    color: "bg-success",
     description: "Brave explorer"
   },
   "girl-earring": {
     name: "Zara",
     emoji: "👧",
-    color: "from-orange-400 to-orange-500",
+    color: "bg-warning",
     description: "Bold explorer"
   },
   "boy-smile": {
     name: "Aditya",
     emoji: "👦",
-    color: "from-purple-400 to-purple-500",
+    color: "bg-accent-5",
     description: "Happy adventurer"
   },
   "girl-tikka": {
     name: "Anaya",
     emoji: "👧",
-    color: "from-cyan-400 to-cyan-500",
+    color: "bg-accent-2",
     description: "Joyful explorer"
   },
   "ski-goggles": {
     name: "Karan",
     emoji: "🎿",
-    color: "from-blue-400 to-blue-500",
+    color: "bg-accent-2",
     description: "Cool explorer"
   },
   "farmer-hat": {
     name: "Vikram",
     emoji: "👨‍🌾",
-    color: "from-green-400 to-green-500",
+    color: "bg-success",
     description: "Nature lover"
   },
   "sports-cap": {
     name: "Nikhil",
     emoji: "👦",
-    color: "from-orange-400 to-orange-500",
+    color: "bg-warning",
     description: "Active explorer"
   },
   "girl-flower": {
     name: "Diya",
     emoji: "👧",
-    color: "from-pink-400 to-pink-500",
+    color: "bg-accent-1-soft",
     description: "Bright explorer"
   },
 };

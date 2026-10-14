@@ -81,7 +81,7 @@ export function LanguageSelector({
 
       {/* Dropdown Menu */}
       {showDropdown && (
-        <div className="absolute top-full mt-(--space-0-25) right-0 bg-white rounded-2xl shadow-lg z-50 min-w-[160px] overflow-hidden border border-blue-100">
+        <div className="absolute top-full mt-(--space-0-25) right-0 bg-surface-card rounded-2xl shadow-lg z-50 min-w-[160px] overflow-hidden border border-border-color">
           {availableLanguages.map((lang) => (
             <button
               key={lang}
