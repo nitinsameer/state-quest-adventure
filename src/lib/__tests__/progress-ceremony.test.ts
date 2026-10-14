@@ -377,13 +377,16 @@ describe('Task 12.2: Save Ceremony Data - Extended Pending Celebration', () => {
       expect(validated).not.toBeNull()
       const celebration = validated?.pendingCelebrations![0]
       
-      expect(celebration?.stateName).toBe('Karnataka')
-      expect(celebration?.stars).toBe('2')
-      expect(celebration?.correctCount).toBe(5)
-      expect(celebration?.totalQuestions).toBe(6)
-      expect(celebration?.quizXp).toBe(100) // 5 × 20
-      expect(celebration?.bonusXp).toBe(100)
+      // Type guard: ensure this is a 'full' celebration type
       expect(celebration?.type).toBe('full')
+      if (celebration?.type !== 'full') throw new Error('Expected full celebration')
+      
+      expect(celebration.stateName).toBe('Karnataka')
+      expect(celebration.stars).toBe('2')
+      expect(celebration.correctCount).toBe(5)
+      expect(celebration.totalQuestions).toBe(6)
+      expect(celebration.quizXp).toBe(100) // 5 × 20
+      expect(celebration.bonusXp).toBe(100)
     })
 
     it('should NOT delete existing data if new save fails validation', () => {
@@ -521,15 +524,21 @@ describe('Task 12.2: Save Ceremony Data - Extended Pending Celebration', () => {
       let p = JSON.parse(stored!)
       
       // Add sticker
-      p.pendingCelebrations[0].sticker = '🏞️'
+      const celebration = p.pendingCelebrations[0]
+      if (celebration.type === 'full') {
+        celebration.sticker = '🏞️'
+      }
       p.pendingCelebrations[0].step = 3
       localStorage.setItem('india-explorer:progress:v2', JSON.stringify(p))
 
       stored = localStorage.getItem('india-explorer:progress:v2')
       const validated = validateProgress(stored!)
       
-      expect(validated?.pendingCelebrations![0].sticker).toBe('🏞️')
-      expect(validated?.pendingCelebrations![0].step).toBe(3)
+      const finalCelebration = validated?.pendingCelebrations![0]
+      if (finalCelebration?.type === 'full') {
+        expect(finalCelebration.sticker).toBe('🏞️')
+      }
+      expect(finalCelebration?.step).toBe(3)
     })
   })
 
@@ -620,7 +629,7 @@ describe('Task 12.2: Save Ceremony Data - Extended Pending Celebration', () => {
       // (Note: stars-improved celebrations don't have earnedBadgeIds, just older type)
       // If we're still getting full ceremonies, check the last full one
       const ceremonies = p.pendingCelebrations.filter((c: any) => c.type === 'full')
-      const ceremoniesToCounts = celebrations => {
+      const ceremoniesToCounts = (celebrations: any[]) => {
         let count = 0
         celebrations.forEach((c: any) => {
           if (c.earnedBadgeIds?.includes('region-master-north')) {
@@ -651,8 +660,15 @@ describe('Task 12.2: Save Ceremony Data - Extended Pending Celebration', () => {
       
       expect(validated).not.toBeNull()
       
-      // Find the last full celebration
-      const lastFullCeremony = validated?.pendingCelebrations?.findLast((c: any) => c.type === 'full')
+      // Find the last full celebration (findLast polyfill for older environments)
+      const celebrations = validated?.pendingCelebrations || []
+      let lastFullCeremony: any = undefined
+      for (let i = celebrations.length - 1; i >= 0; i--) {
+        if (celebrations[i].type === 'full') {
+          lastFullCeremony = celebrations[i]
+          break
+        }
+      }
       expect(lastFullCeremony).toBeDefined()
       expect(lastFullCeremony?.earnedBadgeIds).toContain('region-master-north')
     })

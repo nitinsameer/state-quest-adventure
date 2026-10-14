@@ -60,7 +60,6 @@ function CelebrationModal({ config }: { config: CelebrationConfig }) {
         }}
         buttons={buttons}
         footer={footer}
-        headerGradient={["bg-action-primary", "bg-action-primary"]}
         maxWidth="max-w-sm"
       />
 

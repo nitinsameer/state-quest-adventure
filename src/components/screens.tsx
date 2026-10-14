@@ -586,12 +586,16 @@ function RecentlyCompletedCelebration({
   // Check if this celebration has already been shown in this session
   if (!showCelebrationPopup || !pendingCelebration) return null;
 
-  const celebrationId = `${pendingCelebration.stateName}_${pendingCelebration.xp}`;
+  // Type guard: only "full" type has quizXp/bonusXp
+  if (pendingCelebration.type !== 'full') return null;
+
+  const totalXp = pendingCelebration.quizXp + pendingCelebration.bonusXp;
+  const celebrationId = `${pendingCelebration.stateName}_${totalXp}`;
   
   // If already shown in this session, don't show again
   if (shownCelebrationsRef.current.has(celebrationId)) return null;
 
-  const { stateName, xp, badges } = pendingCelebration;
+  const { stateName, quizXp, bonusXp, earnedBadgeIds } = pendingCelebration;
   const state = INDIA_STATES.find(s => s.name === stateName);
   if (!state) return null;
 
@@ -645,15 +649,15 @@ function RecentlyCompletedCelebration({
 
           {/* Stats Grid - Show earned rewards (real values) */}
           <div className="grid grid-cols-3 gap-3 text-center">
-            {badges.length > 0 && (
+            {earnedBadgeIds.length > 0 && (
               <div className="bg-white/90 backdrop-blur rounded-xl p-3">
                 <div className="text-sm opacity-90 font-semibold text-ink">Badges</div>
-                <div className="text-2xl font-bold mt-1 text-ink">+{badges.length}</div>
+                <div className="text-2xl font-bold mt-1 text-ink">+{earnedBadgeIds.length}</div>
               </div>
             )}
             <div className="bg-white/90 backdrop-blur rounded-xl p-3">
               <div className="text-sm opacity-90 font-semibold text-ink">XP</div>
-              <div className="text-2xl font-bold mt-1 text-ink">+{xp}</div>
+              <div className="text-2xl font-bold mt-1 text-ink">+{totalXp}</div>
             </div>
             <div className="bg-white/90 backdrop-blur rounded-xl p-3">
               <div className="text-sm opacity-90 font-semibold text-ink">Stamp</div>

@@ -658,7 +658,7 @@ function StepPostcard({ ceremony, state }: StepProps) {
           stateName={state.name}
           stars={ceremony.stars}
           date={ceremony.stampDate}
-          badge={ceremony.earnedBadgeIds?.[0] || 'explorer'}
+          badge={(ceremony.earnedBadgeIds?.[0] as any) || 'explorer'}
         />
       </div>
 
