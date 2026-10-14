@@ -12,9 +12,10 @@ import { usePostcardLibrary } from "@/store/postcard-library-store";
 import { sharePostcard } from "@/lib/share-postcard";
 import { ResetPINDialog } from "@/components/ResetPINDialog";
 import { readTokenAsHex, subscribeThemeChange } from "@/lib/theme-tokens";
+import { EMOJI } from "@/constants/emoji";
 
 const BADGE_EMOJI: Record<BadgeId, string> = {
-  monument: "�x�›️",
+  monument: "🛖️",
   animal: "�x�¾",
   explorer: "🎖️",
 };
@@ -302,7 +303,7 @@ export function StatePostcardScreen({
           // User cancelled share sheet, just close
           setBusy(false);
         } else {
-          toast.success("✨ Postcard shared!", {
+          toast.success("{EMOJI.action.sparkle} Postcard shared!", {
             subtitle: "Parent can view it now",
           });
           setBusy(false);
@@ -351,7 +352,7 @@ export function StatePostcardScreen({
               />
             ) : (
               <div className="flex flex-col items-center justify-center">
-                <div className="text-5xl mb-2">✨</div>
+                <div className="text-5xl mb-2">{EMOJI.action.sparkle}</div>
                 <div className="text-sm font-semibold text-muted-foreground">
                   Creating your postcard...
                 </div>

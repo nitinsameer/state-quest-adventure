@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useCelebration } from "@/hooks/useCelebration";
 import { useProgress, achievementsFor, STATE_BADGES, type BadgeId } from "@/lib/progress";
 import { fxConfetti } from "@/lib/fx";
+import { EMOJI } from "@/constants/emoji";
 
 const BADGE_ICON: Record<BadgeId, string> = {
   monument: "🏛️",
@@ -190,9 +191,9 @@ export function UnlockCelebration() {
     const title =
       newAchievements.length > 0
         ? total > 1
-          ? `🎉 ${total} new unlocks!`
+          ? `${EMOJI.action.celebrate} ${total} new unlocks!`
           : `${newAchievements[0].icon} Achievement unlocked!`
-        : `🏅 ${newBadges.length} new badge${newBadges.length > 1 ? "s" : ""}!`;
+        : `${EMOJI.achievement.badge} ${newBadges.length} new badge${newBadges.length > 1 ? "s" : ""}!`;
 
     const subtitle = lines.join("\n");
 

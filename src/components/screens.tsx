@@ -1,4 +1,4 @@
-import mascot from "@/assets/mascot.webp";
+﻿import mascot from "@/assets/mascot.webp";
 import airplane from "@/assets/airplane.png";
 import welcomeScreenImage from "@/assets/welcome.webp";
 import avatarExplorerHat from "@/assets/avatars/avatar-explorer-hat.png";
@@ -290,7 +290,7 @@ function HeaderBar({
           aria-label="Go back"
           className="h-12 w-12 rounded-full ui-button ui-accent-1-soft flex items-center justify-center text-xl text-ink"
         >
-          â€¹
+          ‹
         </button>
       ) : (
         <div className="w-10" />
@@ -332,7 +332,7 @@ export function SplashScreen() {
         <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
         <span className="h-2 w-2 rounded-full bg-white/60" />
         <span className="h-2 w-2 rounded-full bg-white/40" />
-        <span className="ml-2">Loading adventureâ€¦</span>
+        <span className="ml-2">Loading adventure…</span>
       </div>
     </div>
   );
@@ -470,7 +470,7 @@ export function CreateProfileScreen() {
         {/* Age Selection with Vibrant Colors & Emojis */}
         <div className="mt-6 mb-1">
           <label className="text-base font-black text-text-primary">
-            🎂 How old are you?
+            {EMOJI.action.birthday} How old are you?
           </label>
           <div className="mt-3 space-y-2">
             {ageBands.map((band, idx) => {
@@ -494,7 +494,7 @@ export function CreateProfileScreen() {
                     </div>
                   </div>
                   {isSelected && (
-                    <div className="text-2xl">⭐</div>
+                    <div className="text-2xl">{EMOJI.action.star}</div>
                   )}
                 </button>
               );
@@ -515,7 +515,7 @@ export function CreateProfileScreen() {
             saved ? "scale-95 opacity-80" : "hover:shadow-elevated-3 hover:scale-102 active:scale-95"
           }`}
         >
-          {saved ? "🎉 Saved âœ“" : "Continue â†’ Let's Explore!"}
+          {saved ? "🎉 Saved ✓" : "Continue → Let's Explore!"}
         </button>
       </div>
 
@@ -551,7 +551,7 @@ function FloatingXPFeedback({ xp, key: feedbackKey }: { xp: number; key: string 
           }
         }
       `}</style>
-      +{xp} XP ✨
+      +{xp} XP ${EMOJI.action.sparkle}
     </div>
   );
 }
@@ -642,7 +642,7 @@ function RecentlyCompletedCelebration({
         <div className="relative z-10 flex flex-col gap-4">
           {/* Title - Celebration message */}
           <div className="text-center">
-            <div className="text-lg font-bold opacity-95 text-ink">ðŸ† STATE MASTERED! ðŸ†</div>
+            <div className="text-lg font-bold opacity-95 text-ink">🏆† STATE MASTERED! 🏆†</div>
             <div className="text-3xl font-black mt-2 drop-shadow-lg text-ink">
               {stateName}
             </div>
@@ -737,7 +737,7 @@ function HomeDashboardContent() {
         setTimeout(() => {
           celebration.custom(
             message,
-            "ðŸ”¥",
+            "🏆”¥",
             {
               subtitle: `Keep up this amazing momentum!`,
               confetti: true,
@@ -775,7 +775,7 @@ function HomeDashboardContent() {
 
   const getUnlockRequirement = (stateName: string): string => {
     // All states unlocked from day 1 - free exploration mode
-    return "🌍 All states open - explore freely!";
+    return "{EMOJI.utility.worldMap} All states open - explore freely!";
   };
 
   return (
@@ -794,7 +794,7 @@ function HomeDashboardContent() {
             {/* Greeting - Single line, cleaner */}
             <div className="text-text-on-header">
               <div className="text-h4 text-display leading-tight">
-                Namaste, {(p?.name?.split(" ")[0] || "Explorer")}! ðŸ‘‹
+                Namaste, {(p?.name?.split(" ")[0] || "Explorer")}! 🏆‘‹
               </div>
               <div className="text-body-sm opacity-95 mt-1">Level {level} · Explorer</div>
             </div>
@@ -803,7 +803,7 @@ function HomeDashboardContent() {
           {/* Right side: Streak badge */}
           <div className="flex items-center gap-2 flex-shrink-0">
             <div className={`flex items-center gap-1.5 ui-chip ui-accent-1-soft transition-transform duration-1000`}>
-              <span className="text-2xl">ðŸ”¥</span>
+              <span className="text-2xl">🏆”¥</span>
               <div className="flex flex-col items-start">
                 <span className="text-ink text-h5 font-black leading-none">{p.streak}</span>
                 <span className="text-ink text-xs font-bold opacity-90 leading-none">day streak</span>
@@ -855,11 +855,11 @@ function HomeDashboardContent() {
           <div className="px-5 mt-5 animate-fade-in">
             <div className="rounded-2xl bg-warning-soft text-warning p-4 shadow-elevated-2 transition-all hover:shadow-elevated-3 border border-warning">
               <div className="flex items-start gap-3">
-                <div className="text-2xl flex-shrink-0">🚨</div>
+                <div className="text-2xl flex-shrink-0">{EMOJI.utility.warning}</div>
                 <div className="flex-1 min-w-0">
                   <div className="text-body font-bold">Your streak is at risk!</div>
                   <div className="text-caption mt-1 opacity-90">Last played {streakStatus.hoursSinceActive} hours ago</div>
-                  <div className="text-caption mt-1">Come back within 12 hours to keep your ðŸ”¥ {p.streak} day streak!</div>
+                  <div className="text-caption mt-1">Come back within 12 hours to keep your 🏆”¥ {p.streak} day streak!</div>
                 </div>
                 <button
                   onClick={() => setDismissStreakWarning(true)}
@@ -1013,22 +1013,22 @@ function HomeDashboardContent() {
                   {/* State facts */}
                   <div className="space-y-3">
                     <div className="p-4 rounded-2xl bg-orange-soft border-l-4 border-orange shadow-elevated-1 hover:shadow-elevated-2 transition-all">
-                      <div className="text-label text-orange uppercase tracking-wider font-bold">ðŸ›️ Monument</div>
+                      <div className="text-label text-orange uppercase tracking-wider font-bold">🏆›️ Monument</div>
                       <div className="text-body text-orange mt-2 font-semibold">{state.monumentName}</div>
                     </div>
 
                     <div className="p-4 rounded-2xl bg-success-soft border-l-4 border-success shadow-elevated-1 hover:shadow-elevated-2 transition-all">
-                      <div className="text-label text-success uppercase tracking-wider font-bold">ðŸ¦ Wildlife</div>
+                      <div className="text-label text-success uppercase tracking-wider font-bold">🦁 Wildlife</div>
                       <div className="text-body text-success mt-2 font-semibold">{state.animalName}</div>
                     </div>
 
                     <div className="p-4 rounded-2xl bg-info-soft border-l-4 border-info shadow-elevated-1 hover:shadow-elevated-2 transition-all">
-                      <div className="text-label text-info uppercase tracking-wider font-bold">ðŸ’¡ Fun Fact</div>
+                      <div className="text-label text-info uppercase tracking-wider font-bold">🏆’¡ Fun Fact</div>
                       <div className="text-body text-info mt-2 font-semibold">{state.funFact}</div>
                     </div>
 
                     <div className="p-4 rounded-2xl bg-purple-soft border-l-4 border-purple shadow-elevated-1 hover:shadow-elevated-2 transition-all">
-                      <div className="text-label text-muted-dark uppercase tracking-wider font-bold">ðŸ”“ Unlock Path</div>
+                      <div className="text-label text-muted-dark uppercase tracking-wider font-bold">🏆”“ Unlock Path</div>
                       <div className="text-body text-muted-dark mt-2 font-semibold">{getUnlockRequirement(state.name)}</div>
                     </div>
                   </div>
@@ -1170,7 +1170,7 @@ function MiniStateCard({
       </div>
       <div className="mt-2 text-display font-extrabold text-sm">{name}</div>
       <div className="text-[10px] font-bold text-text-secondary">
-        {locked ? "ðŸ”’ Locked" : "Unlocked"}
+        {locked ? "🏆”’ Locked" : "Unlocked"}
       </div>
     </div>
   );
@@ -1242,7 +1242,7 @@ function StateDetailModal({
         {isLocked && (
           <div className="rounded-2xl bg-action-primary/5 border-2 border-warning p-4 space-y-3">
             <p className="text-h5 text-warning flex items-center gap-2">
-              ðŸ‘€ Sneak Peek Preview
+              🏆‘€ Sneak Peek Preview
             </p>
             <div className="space-y-2 text-sm">
               <div className="flex items-start gap-2">
@@ -1271,7 +1271,7 @@ function StateDetailModal({
         {isLocked ? (
           <div className="rounded-2xl bg-warning-soft border-2 border-warning p-4">
             <p className="text-h5 text-warning mb-2">
-              ðŸ” Locked
+              🏆” Locked
             </p>
             <p className="text-body text-action-primary">
               Complete the previous state to unlock this adventure!
@@ -1313,7 +1313,7 @@ function StateDetailModal({
               }}
               className="flex-1 h-12 rounded-2xl bg-accent-1 text-display font-extrabold text-white shadow-lg hover:shadow-xl transition"
             >
-              {isDone ? "🎖️ Review" : "•¶ Play"}
+              {isDone ? "{EMOJI.achievement.explorer} Review" : "▶ Play"}
             </button>
           )}
         </div>
@@ -1339,10 +1339,10 @@ export function JourneyMapScreen() {
 
     // Check for milestone achievements
     const milestones = [
-      { threshold: 25, emoji: "ðŸŽ¯", message: "Quarter Way There! 25% Complete!" },
-      { threshold: 50, emoji: "🌍Ž", message: "Halfway Around India! 50% Complete!" },
-      { threshold: 75, emoji: "ðŸ", message: "Almost Complete! 75% Explored!" },
-      { threshold: 100, emoji: "ðŸ‘‘", message: "India Master! 100% Complete!" },
+      { threshold: 25, emoji: "🎯", message: "Quarter Way There! 25% Complete!" },
+      { threshold: 50, emoji: "{EMOJI.utility.worldMap}Ž", message: "Halfway Around India! 50% Complete!" },
+      { threshold: 75, emoji: "🏆", message: "Almost Complete! 75% Explored!" },
+      { threshold: 100, emoji: "🏆‘‘", message: "India Master! 100% Complete!" },
     ];
 
     // Track which milestones have been celebrated in localStorage
@@ -1581,7 +1581,7 @@ export function JourneyMapScreen() {
             <div className="text-sm font-bold text-white flex items-center gap-2">
               {p.streak > 0 && (
                 <span className="inline-flex items-center gap-0.5 px-2 py-1 bg-white/30 rounded-full">
-                  <span>ðŸ”¥</span>
+                  <span>🏆”¥</span>
                   <span className="font-extrabold">{p.streak}-day streak!</span>
                 </span>
               )}
@@ -1605,7 +1605,7 @@ export function JourneyMapScreen() {
             {(() => {
               const msg = getJourneyMotivationalMessage(completedStates);
               const milestoneCount = 36 - completedStates;
-              return milestoneCount > 0 ? `${milestoneCount} more to grow your tree` : "🌳 You grew the tree!";
+              return milestoneCount > 0 ? `${milestoneCount} more to grow your tree` : "{EMOJI.utility.tree} You grew the tree!";
             })()}
           </div>
         </div>
@@ -1662,7 +1662,7 @@ export function JourneyMapScreen() {
                   {region.name}
                 </div>
                 <div className="text-base font-semibold text-text-secondary mt-1">
-                  {regionDone}/{regionStates.length} explored {regionDone === regionStates.length && "✨ Region Complete!"}
+                  {regionDone}/{regionStates.length} explored {regionDone === regionStates.length && "${EMOJI.action.sparkle} Region Complete!"}
                 </div>
                 <div className="mt-2 h-2 bg-[var(--progress-track)] rounded-full overflow-hidden">
                   <div
@@ -1822,7 +1822,7 @@ export function StateIntroScreen({
           }}
           className="absolute top-3 left-4 h-12 w-12 rounded-full bg-white/25 backdrop-blur flex items-center justify-center text-white text-xl"
         >
-          â€¹
+          ‹
         </button>
         <div className="absolute top-4 right-4 flex items-center gap-1.5 bg-white/25 backdrop-blur rounded-full px-3 py-1.5 text-white text-xs font-extrabold">
           State {stateIndex(state.name) + 1} of {TOTAL_STATES}
@@ -1864,9 +1864,9 @@ export function StateIntroScreen({
         </div>
 
         <div className="mt-5 grid grid-cols-2 gap-3">
-          <IntroFact label="Capital" value={state.capital} icon="ðŸ›️" />
-          <IntroFact label="Language" value={state.language} icon="ðŸ—£️" />
-          <IntroFact label="Population" value={state.population} icon="ðŸ‘¥" />
+          <IntroFact label="Capital" value={state.capital} icon="🏆›️" />
+          <IntroFact label="Language" value={state.language} icon="🏆—£️" />
+          <IntroFact label="Population" value={state.population} icon="🏆‘¥" />
           <IntroFact label="Animal" value={state.animalName} icon={state.animal} />
         </div>
 
@@ -2003,10 +2003,10 @@ export function LearningHubScreen({
     // Celebrate at 3/6 (halfway milestone)
     if (completedCategories === 3 && !celebratedCategories.has(3)) {
       celebration.custom(
-        `Halfway there! ⭐`,
-        "ðŸƒâ€♂️",
+        `Halfway there! ${EMOJI.action.star}`,
+        "🏆ƒâ€♂️",
         {
-          subtitle: `3/6 categories explored! Keep up the momentum ðŸ’¨`,
+          subtitle: `3/6 categories explored! Keep up the momentum 🏆’¨`,
           confetti: true,
           duration: 2500,
           type: "success",
@@ -2028,12 +2028,12 @@ export function LearningHubScreen({
 
   // Track completion per category - all cards must be read
   const cards = [
-    { icon: "ðŸ›️", title: "Capital", sub: state.capital, tone: "orange" as const },
-    { icon: "ðŸ—£️", title: "Language", sub: state.language, tone: "blue" as const },
-    { icon: "ðŸ›", title: "Famous Food", sub: state.food, tone: "gold" as const },
+    { icon: "🏆›️", title: "Capital", sub: state.capital, tone: "orange" as const },
+    { icon: "🏆—£️", title: "Language", sub: state.language, tone: "blue" as const },
+    { icon: "🏆›", title: "Famous Food", sub: state.food, tone: "gold" as const },
     { icon: state.monument, title: "Places", sub: state.monumentName, tone: "green" as const },
     { icon: state.animal, title: "State Animal", sub: state.animalName, tone: "orange" as const },
-    { icon: "ðŸ’¡", title: "Fun Fact", sub: state.funFact, tone: "blue" as const },
+    { icon: "🏆’¡", title: "Fun Fact", sub: state.funFact, tone: "blue" as const },
   ].map((c, i) => {
     // Category is complete only if ALL cards in it are read
     const isCategoryComplete = cardCounts[i].total > 0 && 
@@ -2093,7 +2093,7 @@ export function LearningHubScreen({
             }}
             className="h-12 w-12 rounded-full bg-white/25 flex items-center justify-center text-white text-xl"
           >
-            â€¹
+            ‹
           </button>
           <div className="flex-1 text-white">
             <div className="text-xs font-bold text-white/90">
@@ -2102,12 +2102,12 @@ export function LearningHubScreen({
             <div className="text-display text-xl font-extrabold">{state.name}</div>
             {progress.streak > 0 && (
               <div className="text-xs font-bold text-white/80 mt-0.5">
-                ðŸ”¥ Day {progress.streak} streak
+                🏆”¥ Day {progress.streak} streak
               </div>
             )}
           </div>
           <div className="flex items-center gap-1 text-white text-display font-extrabold">
-            <span>⭐</span> {completedCategories * XP_PER_CARD}
+            <span>{EMOJI.action.star}</span> {completedCategories * XP_PER_CARD}
           </div>
         </div>
 
@@ -2151,8 +2151,8 @@ export function LearningHubScreen({
           }`}
         >
           {completedCategories === 6 && !showDecisionModal
-            ? "✨ Take the Quiz! ðŸŽ¯" 
-            : `ðŸ”’ Quiz Locked (${completedCategories}/6 done)`
+            ? "${EMOJI.action.sparkle} Take the Quiz! 🎯" 
+            : `🏆”’ Quiz Locked (${completedCategories}/6 done)`
           }
         </button>
       </div>
@@ -2163,7 +2163,7 @@ export function LearningHubScreen({
           <div className="bg-action-primary rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden animate-in zoom-in-95 flex flex-col">
             {/* Header */}
             <div className="p-6 text-center">
-              <div className="text-5xl mb-4">🎉</div>
+              <div className="text-5xl mb-4">{EMOJI.action.celebrate}</div>
               <div className="text-ink text-xs font-black uppercase tracking-[0.3em] mb-2">
                 All Done!
               </div>
@@ -2186,7 +2186,7 @@ export function LearningHubScreen({
                 }}
                 className="w-full h-14 ui-button ui-accent-3 text-ink text-display font-extrabold active:scale-95 transition-all"
               >
-                ✨ Start Quiz Now
+                ${EMOJI.action.sparkle} Start Quiz Now
               </button>
 
               {/* Later button - with pulsing indicator */}
@@ -2280,7 +2280,7 @@ function HubCard({
       )}
       {locked && (
         <div className="absolute top-2 right-2 h-7 w-7 rounded-full bg-black/50 text-white flex items-center justify-center text-xs">
-          ðŸ”’
+          🏆”’
         </div>
       )}
     </button>
@@ -2314,7 +2314,7 @@ export function learningCardsFor(stateName?: string, displayLanguage: string = "
     {
       kicker: "Capital",
       title: state.capital,
-      icon: "ðŸ›️",
+      icon: "🏆›️",
       chip: "Capital City",
       body: `${state.capital} is the capital city of ${state.name}. It is where the state's government works from.`,
       enrichedKey: "capital" as const,
@@ -2322,7 +2322,7 @@ export function learningCardsFor(stateName?: string, displayLanguage: string = "
     {
       kicker: "Language",
       title: state.language,
-      icon: "ðŸ—£️",
+      icon: "🏆—£️",
       chip: "Language",
       body: `People in ${state.name} mostly speak ${state.language}. Try saying hello in it!`,
       enrichedKey: "language" as const,
@@ -2330,7 +2330,7 @@ export function learningCardsFor(stateName?: string, displayLanguage: string = "
     {
       kicker: "Famous Food",
       title: state.food,
-      icon: "ðŸ›",
+      icon: "🏆›",
       chip: "Food",
       body: `${state.food} is a favourite dish of ${state.name}. Yum!`,
       enrichedKey: "food" as const,
@@ -2354,7 +2354,7 @@ export function learningCardsFor(stateName?: string, displayLanguage: string = "
     {
       kicker: "Fun Fact",
       title: "Did you know?",
-      icon: "ðŸ’¡",
+      icon: "🏆’¡",
       chip: "Fun Fact",
       body: state.funFact,
       enrichedKey: "funFact" as const,
@@ -2397,7 +2397,7 @@ export function learningCardsFor(stateName?: string, displayLanguage: string = "
           allCards.push({
             kicker: "Cool Fact",
             title: `Cool Fact #${idx + 1}`,
-            icon: "⭐",
+            icon: "{EMOJI.action.star}",
             chip: "Cool Fact",
             body: getText(fact),
             type: "coolFact",
@@ -2413,7 +2413,7 @@ export function learningCardsFor(stateName?: string, displayLanguage: string = "
         allCards.push({
           kicker: "Trivia",
           title: "Did You Know?",
-          icon: "ðŸ¤”",
+          icon: "🏆¤”",
           chip: "Did You Know?",
           body: getText(cardContent.didYouKnow),
           type: "didYouKnow",
@@ -2428,7 +2428,7 @@ export function learningCardsFor(stateName?: string, displayLanguage: string = "
         allCards.push({
           kicker: "Activity",
           title: "Try This Activity",
-          icon: "ðŸŽ®",
+          icon: "🏆Ž®",
           chip: "Try This Activity",
           body: getText(cardContent.tryThis),
           type: "tryThis",
@@ -2666,7 +2666,7 @@ export function LearningCardScreen({
         // DISABLED FOR NOW - PHASE 2: Card learning celebration
         // celebration.custom(
         //   `${currentCard.kicker} card learned!`,
-        //   "ðŸ“š",
+        //   "🏆“š",
         //   {
         //     subtitle: `+${XP_PER_CARD} XP earned â€¢ ${cardIndexInCategory + 1}/${cardsInCurrentCategory.length} cards in ${currentCard.kicker}`,
         //     confetti: true,
@@ -2696,9 +2696,9 @@ export function LearningCardScreen({
         // DISABLED FOR NOW - PHASE 2: Card learning celebration
         // celebration.custom(
         //   `${currentCard.kicker} card learned!`,
-        //   "ðŸ“š",
+        //   "🏆“š",
         //   {
-        //     subtitle: `+${XP_PER_CARD} XP earned â€¢ ${currentCard.kicker} category complete! ðŸŽ“`,
+        //     subtitle: `+${XP_PER_CARD} XP earned â€¢ ${currentCard.kicker} category complete! 🏆Ž“`,
         //     confetti: true,
         //     duration: 2000,
         //     type: "success",
@@ -2739,7 +2739,7 @@ export function LearningCardScreen({
       // Previously showed: +75 XP for 3 sub-cards, but only 25 was awarded
       celebration.custom(
         `${categoryName} mastered!`,
-        "⭐",
+        "{EMOJI.action.star}",
         {
           subtitle: `+${XP_PER_CARD} XP earned â€¢ ${mainCardIdx + 1}/6 categories mastered`,
           confetti: true,
@@ -2854,7 +2854,7 @@ export function LearningCardScreen({
           }`}
           title={hasFeatureConsent('audio') ? "Play card content" : "Enable audio in settings to listen"}
         >
-          {playingCardIndex === currentCardIndex ? "⏸" : "ðŸ”Š"} Listen
+          {playingCardIndex === currentCardIndex ? "⏸" : "🏆”Š"} Listen
         </button>
       </div>
 
@@ -2876,14 +2876,14 @@ export function LearningCardScreen({
         {/* Replay indicator - shown when user is replaying a card */}
         {isReplaying && (
           <div className="mb-3 p-3 bg-accent-2-soft rounded-xl flex items-center gap-2 shadow-sm border border-accent-2">
-            <span className="text-lg">ðŸ“–</span>
+            <span className="text-lg">🏆“–</span>
             <div className="flex-1">
               <p className="text-xs font-bold text-accent-5">Replaying this card</p>
               <p className="text-xs text-accent-5 font-medium">
-                You've mastered this! Keep practicing ✨
+                You've mastered this! Keep practicing {EMOJI.action.sparkle}
               </p>
             </div>
-            <span className="text-2xl">✨</span>
+            <span className="text-2xl">{EMOJI.action.sparkle}</span>
           </div>
         )}
         
@@ -2899,7 +2899,7 @@ export function LearningCardScreen({
             <Chip icon={card.icon} tone={card.chipTone === "purple" ? "blue" : card.chipTone as any}>
               {card.chip}
             </Chip>
-            <Chip icon="ðŸ“" tone="blue">
+            <Chip icon="🏆“" tone="blue">
               {state.name}
             </Chip>
           </div>
@@ -2918,7 +2918,7 @@ export function LearningCardScreen({
         {/* Mastery badge for replayed cards */}
         {isReplaying && replayCount > 0 && (
           <div className="mt-3 px-3 py-2 bg-accent-2-soft rounded-lg text-center border border-accent-2">
-            <p className="text-xs font-bold text-warning">⭐ Mastered! Replayed {replayCount}x</p>
+            <p className="text-xs font-bold text-warning">{EMOJI.action.star} Mastered! Replayed {replayCount}x</p>
           </div>
         )}
       </div>
@@ -2934,7 +2934,7 @@ export function LearningCardScreen({
           }}
           className="w-full h-14 ui-button ui-accent-1 text-ink text-h4 text-display"
         >
-          {isLastInMainCardSection ? (currentMainCardIndex === 5 ? "Take the Quiz! ðŸŽ¯" : "Done! Back to Cards") : isReplaying ? "Replay Complete ✨" : "Got it! Next â†’"}
+          {isLastInMainCardSection ? (currentMainCardIndex === 5 ? "Take the Quiz! 🎯" : "Done! Back to Cards") : isReplaying ? "Replay Complete ${EMOJI.action.sparkle}" : "Got it! Next â†’"}
         </button>
       </div>
 
@@ -2943,20 +2943,20 @@ export function LearningCardScreen({
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
           <div className="bg-surface-card rounded-3xl shadow-2xl max-w-sm w-full p-6 space-y-4 animate-in zoom-in-95">
             <div className="text-center">
-              <div className="text-5xl mb-3">ðŸŽ§</div>
+              <div className="text-5xl mb-3">🏆Ž§</div>
               <h3 className="text-display text-xl font-extrabold text-ink">Enable Audio?</h3>
               <p className="text-sm text-text-secondary mt-2">
-                Turn on audio to hear the stories read aloud! ðŸŽµ
+                Turn on audio to hear the stories read aloud! 🏆Žµ
               </p>
             </div>
 
             <div className="bg-info-soft rounded-2xl p-4 space-y-2 text-sm">
               <div className="flex gap-2">
-                <span>ðŸŽ§</span>
+                <span>🏆Ž§</span>
                 <span className="font-semibold text-info">Stories read aloud</span>
               </div>
               <div className="flex gap-2">
-                <span>🌍</span>
+                <span>{EMOJI.utility.worldMap}</span>
                 <span className="font-semibold text-info">Available in multiple languages</span>
               </div>
             </div>
@@ -3212,15 +3212,15 @@ function QuizScreenContent({
         />
         <div className="relative ui-card ui-accent-1-soft px-3 py-2 text-label font-bold">
           {result === "correct"
-            ? "Nailed it! 🎉"
+            ? "Nailed it! ${EMOJI.feedback.success}"
             : result === "wrong"
-            ? "Good try! Let's move on! ðŸ‘‰"
-            : "You've got this! ðŸ’ª"}
+            ? "Good try! Let's move on! 🏆‘‰"
+            : "You've got this! 🏆’ª"}
           <div className="absolute left-0 top-1/2 -translate-x-1 -translate-y-1/2 w-3 h-3 rotate-45 ui-card ui-accent-1-soft" />
         </div>
         {result === "correct" && (
           <div className="ml-auto flex items-center gap-1 ui-card ui-accent-3 px-3 py-1">
-            <span>⭐</span>
+            <span>{EMOJI.action.star}</span>
             <span className="text-display font-extrabold text-sm text-ink">+20 XP</span>
           </div>
         )}
@@ -3288,11 +3288,11 @@ function QuizScreenContent({
         >
           {result === "correct"
             ? isLastQuestion
-              ? "Finish Quiz 🎉"
+              ? "Finish Quiz ${EMOJI.feedback.success}"
               : "Next Question â†’"
             : result === "wrong"
             ? isLastQuestion
-              ? "Finish Quiz 🎉"
+              ? "Finish Quiz ${EMOJI.feedback.success}"
               : "Next Question â†’"
             : "Check Answer"}
         </button>
@@ -3345,7 +3345,7 @@ export function CorrectAnswerScreen({ stateName, onDismiss }: { stateName?: stri
         </p>
 
         <div className="mt-6 ui-card ui-accent-4 px-5 py-3 flex items-center gap-3">
-          <span className="text-3xl">⭐</span>
+          <span className="text-3xl">{EMOJI.action.star}</span>
           <div>
             <div className="text-xs font-bold opacity-90 text-ink">You earned</div>
             <div className="text-display text-2xl font-extrabold leading-snug text-ink">
@@ -3369,7 +3369,7 @@ export function StateUnlockScreen({
   stateName,
   onContinue,
 }: { stateName?: string; onContinue?: () => void } = {}) {
-  const state = stateName ? getState(stateName) : (INDIA_STATES && INDIA_STATES.length > 1 ? INDIA_STATES[1] : INDIA_STATES[0] || { name: "India", emoji: "ðŸ‡®ðŸ‡³", nickname: "Incredible India" });
+  const state = stateName ? getState(stateName) : (INDIA_STATES && INDIA_STATES.length > 1 ? INDIA_STATES[1] : INDIA_STATES[0] || { name: "India", emoji: "🏆‡®🏆‡³", nickname: "Incredible India" });
   const art = STATE_ART[state.name];
 
   // PHASE 1b: Play sound effect when state unlocks
@@ -3478,7 +3478,7 @@ function Stamp({
   if (!filled) {
     return (
       <div className="aspect-square rounded-2xl border-2 border-dashed border-muted-foreground/30 flex flex-col items-center justify-center text-text-secondary">
-        <div className="text-3xl opacity-40">ðŸ”’</div>
+        <div className="text-3xl opacity-40">🏆”’</div>
         <div className="text-[11px] font-extrabold mt-1">{name}</div>
       </div>
     );
@@ -3580,7 +3580,7 @@ function BadgeDetailModal({
                 : "bg-surface-sunken opacity-60"
             }`}
           >
-            {badge.done ? badge.icon : "ðŸ”’"}
+            {badge.done ? badge.icon : "🏆”’"}
           </div>
 
           <h2 className="text-display text-2xl font-extrabold text-ink">
@@ -3605,9 +3605,9 @@ function BadgeDetailModal({
             Badge Type
           </p>
           <p className="text-body text-accent-1">
-            {badge.name === "Monument" && "ðŸ›️ Learn about famous landmarks"}
-            {badge.name === "Animal" && "ðŸ¦ Discover local wildlife"}
-            {badge.name === "Explorer" && "🎖️ Master all cards in this state"}
+            {badge.name === "Monument" && "🏆›️ Learn about famous landmarks"}
+            {badge.name === "Animal" && "🦁 Discover local wildlife"}
+            {badge.name === "Explorer" && "{EMOJI.achievement.explorer} Master all cards in this state"}
           </p>
         </div>
 
@@ -3627,7 +3627,7 @@ function BadgeDetailModal({
               }}
               className="flex-1 h-12 rounded-2xl bg-success text-display font-extrabold text-white shadow-lg hover:shadow-xl transition"
             >
-              🎉 Celebrate!
+              ${EMOJI.feedback.success} Celebrate!
             </button>
           )}
         </div>
@@ -3673,10 +3673,10 @@ export function BadgesScreen() {
   const allBadges = achievementBadgesFor(progress);
   const unlockedCount = allBadges.filter((b) => b.unlocked).length;
 
-  // Helper to generate progress stars (e.g. ⭐⭐â˜†)
+  // Helper to generate progress stars (e.g. {EMOJI.action.star}{EMOJI.action.star}â˜†)
   const getProgressStars = (progress: number, max: number): string => {
     const filledCount = Math.min(Math.ceil((progress / max) * 3), 3);
-    const stars = "⭐".repeat(filledCount) + "â˜†".repeat(3 - filledCount);
+    const stars = "{EMOJI.action.star}".repeat(filledCount) + "â˜†".repeat(3 - filledCount);
     return stars;
   };
 
@@ -3695,7 +3695,7 @@ export function BadgesScreen() {
               : "text-text-secondary hover:text-muted-dark"
           }`}
         >
-          ðŸ† Achievement Badges
+          🏆† Achievement Badges
         </button>
         <button
           onClick={() => {
@@ -3708,7 +3708,7 @@ export function BadgesScreen() {
               : "text-text-secondary hover:text-muted-dark"
           }`}
         >
-          🎖️ State Badges
+          {EMOJI.achievement.explorer} State Badges
         </button>
       </div>
 
@@ -3728,7 +3728,7 @@ export function BadgesScreen() {
                   {progress.name}
                 </div>
                 <div className="text-xs font-bold text-white/80">
-                  🎉 {unlockedCount} Amazing Badges Collected!
+                  {EMOJI.action.celebrate} {unlockedCount} Amazing Badges Collected!
                 </div>
               </div>
             </div>
@@ -3779,7 +3779,7 @@ export function BadgesScreen() {
                       <div className="flex flex-col gap-2">
                         <div className="text-xl">{getProgressStars(badge.progress, badge.achievementMax)}</div>
                         <div className="text-[11px] font-bold text-text-secondary">
-                          Keep going! ⭐
+                          Keep going! ${EMOJI.action.star}
                         </div>
                       </div>
                     )}
@@ -3824,11 +3824,11 @@ function ThemePickerNavButton() {
       className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
     >
       <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-accent-1 via-accent-2 to-accent-5 flex items-center justify-center text-2xl">
-        🎨
+        {EMOJI.theme.painter}
       </div>
       <div className="flex-1 text-left">
         <div className="text-display font-extrabold text-[15px] leading-tight">
-          My Style 🎨
+          My Style {EMOJI.theme.painter}
         </div>
         <div className="text-[11px] font-bold text-text-secondary">
           Tap to change theme
@@ -3939,7 +3939,7 @@ function ProfileScreenContent() {
             aria-label="Go back"
             className="h-10 w-10 rounded-full bg-white/20 text-white flex items-center justify-center"
           >
-            â€¹
+            ‹
           </button>
           <div className="text-display font-extrabold text-white">Profile</div>
           <div className="w-10" /> {/* Spacer for alignment */}
@@ -4041,7 +4041,7 @@ function ProfileScreenContent() {
             className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
           >
             <div className="h-12 w-12 rounded-2xl gradient-saffron flex items-center justify-center text-2xl">
-              ðŸŽ­
+              🏆Ž­
             </div>
             <div className="flex-1 text-left">
               <div className="text-display font-extrabold text-[15px] leading-tight">
@@ -4119,7 +4119,7 @@ function ProfileScreenContent() {
             className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
           >
             <div className="h-12 w-12 rounded-2xl bg-accent-5 flex items-center justify-center text-2xl">
-              ðŸ“¸
+              🏆“¸
             </div>
             <div className="flex-1 text-left">
               <div className="text-display font-extrabold text-[15px] leading-tight">Save Pictures</div>
@@ -4154,28 +4154,28 @@ function ProfileScreenContent() {
                 {/* Header Row */}
                 <div className="flex items-center gap-3">
                   <div className="h-12 w-12 rounded-2xl gradient-success flex items-center justify-center text-2xl">
-                    ðŸŽ¯
+                    🎯
                   </div>
                   <div className="flex-1">
                     <div className="text-display font-extrabold text-[15px] leading-tight">
                       Daily Goals
                     </div>
                     <div className="text-[11px] font-bold text-text-secondary">
-                      ðŸ”¥ {p.streak} day streak
+                      🏆”¥ {p.streak} day streak
                     </div>
                   </div>
                 </div>
 
                 {/* Daily Challenge */}
                 <div className="ml-15 text-[13px] font-extrabold text-ink">
-                  ðŸ“ {dailyGoalText}
+                  🏆“ {dailyGoalText}
                 </div>
 
                 {/* Next Reward */}
                 <div className="ml-15 text-[11px] font-bold text-warning">
                   {daysUntilNext === 0 
-                    ? "ðŸŽ Claim your milestone reward!" 
-                    : `ðŸŽ ${daysUntilNext} day${daysUntilNext !== 1 ? 's' : ''} until ${nextMilestone}-day bonus!`}
+                    ? "🏆Ž Claim your milestone reward!" 
+                    : `🏆Ž ${daysUntilNext} day${daysUntilNext !== 1 ? 's' : ''} until ${nextMilestone}-day bonus!`}
                 </div>
               </div>
             );
@@ -4189,7 +4189,7 @@ function ProfileScreenContent() {
             className="ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
           >
             <div className="h-12 w-12 rounded-2xl gradient-explorer flex items-center justify-center text-2xl">
-              ðŸ”’
+              🏆”’
             </div>
             <div className="flex-1">
               <div className="text-display font-extrabold text-[15px] leading-tight">
@@ -4263,7 +4263,7 @@ function SoundToggleRow() {
         className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
       >
         <div className="h-12 w-12 rounded-2xl bg-accent-5 flex items-center justify-center text-2xl">
-          ðŸ”Š
+          🏆”Š
         </div>
         <div className="flex-1 text-left">
           <div className="text-display font-extrabold text-[15px] leading-tight">Sound Effects</div>
@@ -4290,7 +4290,7 @@ function SoundToggleRow() {
         className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
       >
         <div className="h-12 w-12 rounded-2xl bg-accent-5 flex items-center justify-center text-2xl">
-          ðŸŽ§
+          🏆Ž§
         </div>
         <div className="flex-1 text-left">
           <div className="text-display font-extrabold text-[15px] leading-tight">Audio Narration</div>
@@ -4371,7 +4371,7 @@ function ParentZonePlaceholder() {
         className="w-full flex items-center gap-3 hover:opacity-80 transition"
       >
         <div className="h-12 w-12 rounded-2xl bg-accent-1 flex items-center justify-center text-2xl flex-shrink-0">
-          ðŸ‘¨â€ðŸ‘©â€ðŸ‘§
+          🏆‘¨â€🏆‘©â€🏆‘§
         </div>
         <div className="flex-1 text-left">
           <div className="text-display font-extrabold text-[15px] leading-tight text-info">
@@ -4400,7 +4400,7 @@ function ParentZonePlaceholder() {
               className="w-full h-10 rounded-lg border-2 border-info px-3 font-extrabold text-center text-lg tracking-widest text-info"
             />
             <div className="text-[10px] text-accent-1 mt-1">
-              ðŸ’¡ Used to reset progress. Default: 1234
+              🏆’¡ Used to reset progress. Default: 1234
             </div>
           </div>
           <button
@@ -4573,9 +4573,9 @@ export function LoadingScreen() {
         />
       </div>
       <div className="mt-8 text-center">
-        <div className="text-display text-h2 font-bold">Flying to Gujaratâ€¦</div>
+        <div className="text-display text-h2 font-bold">Flying to Gujarat…</div>
         <div className="text-body text-text-secondary mt-1">
-          Packing camel snacks ðŸª
+          Packing camel snacks 🏆ª
         </div>
       </div>
       <div className="mt-6 w-56 h-2 rounded-full bg-white/70 overflow-hidden">
@@ -4602,7 +4602,7 @@ export function EmptyStateScreen() {
           together.
         </p>
         <button className="mt-6 h-14 px-6 rounded-2xl gradient-saffron text-white text-display text-lg font-extrabold shadow-[var(--shadow-glow-orange)]">
-          Invite a Friend ✨
+          Invite a Friend ${EMOJI.action.sparkle}
         </button>
         <button className="mt-2 h-12 px-6 rounded-2xl bg-muted text-ink text-display font-extrabold">
           Maybe later
@@ -4611,6 +4611,8 @@ export function EmptyStateScreen() {
     </div>
   );
 }
+
+
 
 
 

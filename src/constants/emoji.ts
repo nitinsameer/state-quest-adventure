@@ -62,6 +62,7 @@ export const EMOJI = {
     stars: '⭐⭐⭐',
     emptyStar: '☆',
     done: '✓',
+    rocket: '🚀',
   },
 
   // Utilities

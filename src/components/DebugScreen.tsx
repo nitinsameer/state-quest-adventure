@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { appLogger } from '@/lib/logger';
+import { EMOJI } from "@/constants/emoji";
 
 /**
  * Debug screen that appears on white screen to show logs and app state
@@ -179,7 +180,7 @@ export function DebugScreen() {
           <div className="text-muted-light">
             <p>No logs found. Try interacting with the app.</p>
             <p className="mt-2 text-xs">
-              🎯 Shortcuts: Ctrl+D to toggle debug | Tap corner 5x to toggle
+              {EMOJI.milestone.twentyFive} Shortcuts: Ctrl+D to toggle debug | Tap corner 5x to toggle
             </p>
           </div>
         ) : (

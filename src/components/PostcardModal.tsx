@@ -8,11 +8,12 @@ import { useCelebration } from "@/hooks/useCelebration";
 import { useToast } from "@/hooks/useToast";
 import { usePostcardLibrary } from "@/store/postcard-library-store";
 import { readTokenAsHex } from "@/lib/theme-tokens";
+import { EMOJI } from "@/constants/emoji";
 
 const BADGE_EMOJI: Record<string, string> = {
-  monument: "�x�›️",
-  animal: "�x�¾",
-  explorer: "🎖️",
+  monument: "{EMOJI.achievement.monument}",
+  animal: "{EMOJI.achievement.animal}",
+  explorer: EMOJI.achievement.explorer,
 };
 
 function roundRect(
@@ -122,7 +123,7 @@ async function generatePostcardBlob(postcard: PostcardData): Promise<Blob | null
   c.textAlign = "center";
   c.fillText("Badge Earned", W / 2, 735);
 
-  const badgeEmoji = BADGE_EMOJI[postcard.badge] || "🎖️";
+  const badgeEmoji = BADGE_EMOJI[postcard.badge] || EMOJI.achievement.explorer;
   c.font = "60px system-ui";
   c.fillText(badgeEmoji, W / 2, 800);
 
@@ -175,7 +176,7 @@ export function PostcardModal({
         // Add to postcard library with image data
         library.addPostcard(postcard.state, postcard.badge, postcard.stampDate, new Date().toISOString(), base64);
 
-        toast.success("✨ Saved to your Passport!", {
+        toast.success(`${EMOJI.postcard.saved} Saved to your Passport!`, {
           subtitle: "View anytime from Explorer",
         });
         setIsSaving(false);
@@ -191,7 +192,7 @@ export function PostcardModal({
     }
   };
 
-  const badgeEmoji = BADGE_EMOJI[postcard.badge] || "🎖️";
+  const badgeEmoji = BADGE_EMOJI[postcard.badge] || EMOJI.achievement.explorer;
 
   return (
     <div
@@ -239,7 +240,7 @@ export function PostcardModal({
         {/* Fun Fact Section */}
         <div className="ui-card ui-accent-4 rounded-2xl p-(--padding-md) my-(--space-0-5)">
           <div className="text-xs font-extrabold text-ink uppercase tracking-wider">
-            �x¡ Did You Know?
+            Did You Know?
           </div>
           <p className="text-sm text-ink mt-(--space-2) leading-relaxed">
             {state.funFact}
@@ -259,14 +260,14 @@ export function PostcardModal({
             </>
           ) : (
             <>
-              �x¾ Save to Passport
+              {EMOJI.achievement.explorer} Save to Passport
             </>
           )}
         </button>
 
         {/* Info Text */}
         <p className="text-xs text-center text-ink">
-          Keep it in your Passport! 🎉
+          Keep it in your Passport! {EMOJI.postcard.keepIt}
         </p>
 
         {/* Home Button */}
@@ -278,7 +279,7 @@ export function PostcardModal({
           }}
           className="w-full h-12 rounded-2xl ui-button ui-accent-2 text-ink font-extrabold transition-all duration-200 active:scale-95"
         >
-          �x🏠 Home
+          {EMOJI.nav.home} Home
         </button>
 
         {/* Next State Button */}
@@ -290,7 +291,7 @@ export function PostcardModal({
           }}
           className="w-full h-12 rounded-2xl ui-button ui-accent-1 text-ink font-extrabold transition-all duration-200 active:scale-95"
         >
-          🎯 Next State
+          {EMOJI.postcard.nextState} Next State
         </button>
 
         {/* Close Button */}
@@ -304,5 +305,3 @@ export function PostcardModal({
     </div>
   );
 }
-
-

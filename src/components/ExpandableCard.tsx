@@ -7,6 +7,7 @@
 import { useState } from "react";
 import { CardNarrationPlayer } from "./CardNarrationPlayer";
 import { fxTap } from "@/lib/fx";
+import { EMOJI } from "@/constants/emoji";
 
 export interface ExpandableCardProps {
   cardId: string;
@@ -77,7 +78,7 @@ export function ExpandableCard({
             className="w-full flex items-center justify-between mb-2 p-(--padding-sm) rounded-lg hover:bg-surface-sunken active:scale-95 transition"
           >
             <span className="text-xs font-bold text-muted-foreground">
-              {isExpanded ? "📖 Hide Facts" : "✨ Cool Facts"}
+              {isExpanded ? "{EMOJI.icons.facts} Hide Facts" : "{EMOJI.action.sparkle} Cool Facts"}
             </span>
             <span className="text-lg transition-transform" style={{ transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)" }}>
               ▼
@@ -100,7 +101,7 @@ export function ExpandableCard({
                   onClick={handleShowMore}
                   className="w-full mt-2 py-(--padding-sm) px-(--padding-base) bg-accent-1-soft hover:bg-accent-1-soft/70 rounded-lg text-xs font-bold text-accent-1 active:scale-95 transition"
                 >
-                  + Show {Math.min(3, keyFacts.length - visibleFactsCount)} More Facts ⭐
+                  + Show {Math.min(3, keyFacts.length - visibleFactsCount)} More Facts {EMOJI.action.star}
                 </button>
               )}
             </div>
@@ -119,7 +120,7 @@ export function ExpandableCard({
                 className="w-full flex items-center justify-between p-(--padding-sm) rounded-lg hover:bg-surface-sunken active:scale-95 transition bg-warning-soft border border-warning"
               >
                 <span className="text-xs font-bold text-warning">
-                  ⭐ More Amazing Facts
+                  {EMOJI.action.star} More Amazing Facts
                 </span>
                 <span className="text-lg transition-transform" style={{ transform: expandedDetailIndex === 0 ? "rotate(180deg)" : "rotate(0deg)" }}>
                   ▼

@@ -11,6 +11,7 @@
 import { useState, useEffect } from "react";
 import { fxTap } from "@/lib/fx";
 import { StandardModal } from "@/components/StandardModal";
+import { EMOJI } from "@/constants/emoji";
 import mascot from "@/assets/mascot.webp";
 
 export interface FirstSessionTutorialProps {
@@ -56,9 +57,9 @@ export function FirstSessionTutorial({ onComplete, isVisible = true }: FirstSess
       emoji: "📚",
       description: "Tap 'Play' to read fun facts about each state. Each fact is a card!",
       tips: [
-        { emoji: "🎵", text: "Tap the speaker icon to hear the story" },
-        { emoji: "👉", text: "Swipe or tap to move to the next card" },
-        { emoji: "⭐", text: "Each card gives you 10 XP" },
+        { emoji: EMOJI.audio.music, text: "Tap the speaker icon to hear the story" },
+        { emoji: EMOJI.action.pointingFinger, text: "Swipe or tap to move to the next card" },
+        { emoji: EMOJI.action.star, text: "Each card gives you 10 XP" },
       ],
       gradient: undefined,
     },
@@ -68,19 +69,19 @@ export function FirstSessionTutorial({ onComplete, isVisible = true }: FirstSess
       description: "After reading all the cards, take the quiz! Answer correctly to earn big XP.",
       tips: [
         { emoji: "✅", text: "Right answers give you 50 XP" },
-        { emoji: "💪", text: "You've got this! It's okay to learn" },
-        { emoji: "🎉", text: "Finish the quiz to complete the state" },
+        { emoji: EMOJI.feedback.encouragement, text: "You've got this! It's okay to learn" },
+        { emoji: EMOJI.feedback.success, text: "Finish the quiz to complete the state" },
       ],
       gradient: undefined,
     },
     {
       title: "Unlock New States",
-      emoji: "🗺️",
+      emoji: "{EMOJI.nav.map}",
       description: "Complete states to unlock the next adventure. Each state = 1 stamp for your passport!",
       tips: [
-        { emoji: "🏆", text: "Collect all 36 state stamps" },
+        { emoji: EMOJI.utility.trophy, text: "Collect all 36 state stamps" },
         { emoji: "🔥", text: "Build a daily streak" },
-        { emoji: "🏅", text: "Earn special badges" },
+        { emoji: EMOJI.achievement.badge, text: "Earn special badges" },
       ],
       gradient: undefined,
     },
@@ -135,12 +136,12 @@ export function FirstSessionTutorial({ onComplete, isVisible = true }: FirstSess
           variant: "secondary",
         },
         {
-          label: step === 2 ? "Got It! 🚀" : "Next →",
+          label: step === 2 ? `Got It! ${EMOJI.utility.rocket}` : "Next →",
           onClick: handleNext,
           variant: "primary",
         },
       ]}
-      footer="💡 You can always come back to learn more by tapping the state cards!"
+      footer={`💡 You can always come back to learn more by tapping the state cards!`}
       maxWidth="max-w-sm"
     />
   );

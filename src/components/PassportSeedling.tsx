@@ -186,7 +186,7 @@ export function PassportSeedling() {
       <div className="px-5 mt-4 mb-2">
         <div style={{ fontSize: 'var(--type-section-heading)', fontWeight: 'var(--type-section-heading-weight)' }} className="text-text-primary">{region.name}</div>
         <div className="text-base font-semibold text-text-secondary mt-1">
-          {regionProgress} explored {unlockedInRegion.length === regionStates.length && "✨ Region Complete!"}
+          {regionProgress} explored {unlockedInRegion.length === regionStates.length && "{EMOJI.action.sparkle} Region Complete!"}
         </div>
         <div className="mt-2 h-2 bg-progress-track rounded-full overflow-hidden">
           <div

@@ -14,6 +14,7 @@
 import { useEffect, useState } from 'react';
 import { ConfettiBurst } from './ConfettiBurst';
 import { fxConfetti } from '../lib/fx';
+import { EMOJI } from "@/constants/emoji";
 
 interface Badge {
   id: string;
@@ -115,7 +116,7 @@ export function StateCompletionCelebration({
               {stateName}
             </h1>
             <p className="text-body text-success font-bold">
-              ✨ Completely Explored! ✨
+              {EMOJI.action.sparkle} Completely Explored! {EMOJI.action.sparkle}
             </p>
           </div>
 
@@ -177,7 +178,7 @@ export function StateCompletionCelebration({
               stage === 'celebrate' ? 'opacity-100' : 'opacity-0'
             }`}
           >
-            🏆 Amazing Achievement! 🏆
+            {EMOJI.milestone.hundred} Amazing Achievement! {EMOJI.milestone.hundred}
           </div>
         </div>
       </div>

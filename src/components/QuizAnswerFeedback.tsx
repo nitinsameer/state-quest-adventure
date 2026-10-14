@@ -14,6 +14,7 @@
 import { useEffect, useState } from 'react';
 import { ConfettiBurst } from './ConfettiBurst';
 import { fxCorrect, fxWrong } from '../lib/fx';
+import { EMOJI } from "@/constants/emoji";
 
 interface QuizAnswerFeedbackProps {
   isCorrect: boolean;
@@ -79,7 +80,7 @@ export function QuizAnswerFeedback({
             {/* Success message with slide-up animation */}
             <div className="animate-slide-up text-center px-6">
               <h1 className="text-h1 font-bold text-success mb-2 drop-shadow-lg">
-                Correct! 🎉
+                Correct! {EMOJI.action.celebrate}
               </h1>
               <p className="text-body text-muted-foreground mb-4">
                 Awesome work!
@@ -91,7 +92,7 @@ export function QuizAnswerFeedback({
               className="absolute top-1/3 animate-float-up text-5xl font-black text-accent-4 drop-shadow-lg"
               style={{ animation: 'float-up 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards' }}
             >
-              +{xpReward} XP ✨
+              +{xpReward} XP {EMOJI.action.sparkle}
             </div>
 
             {/* Celebratory emoji rain */}

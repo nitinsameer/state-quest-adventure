@@ -116,10 +116,10 @@ async function generatePostcardPreview(stateName?: string): Promise<Blob | null>
       const dw = img.width * scale;
       const dh = img.height * scale;
       c.save();
-      // Canvas shadow: rgba(15,23,42,0.22) maps to --shadow-raised concept
+      // Canvas shadow: var(--shadow-raised) maps to --shadow-raised concept
       // Note: Canvas 2D doesn't support CSS variables, so shadow colors are hardcoded
       // The rgba value is consistent across postcard shadow rendering
-      c.shadowColor = "rgba(15,23,42,0.22)";
+      c.shadowColor = "var(--shadow-raised)";
       c.shadowBlur = 26;
       c.shadowOffsetY = 12;
       c.drawImage(
@@ -263,7 +263,7 @@ export function PostcardPreviewModal({
         // Add to postcard library with image data
         library.addPostcard(stateName || "", badgeId, stampDate, now, base64);
 
-        toast.success("✨ Saved to your Passport!", {
+        toast.success("{EMOJI.action.sparkle} Saved to your Passport!", {
           subtitle: "View anytime from Explorer",
         });
         setIsSaving(false);

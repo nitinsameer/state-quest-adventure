@@ -8,6 +8,7 @@ import { generatePassportNumber } from "@/lib/passport-number";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { PostcardModal } from "@/components/PostcardModal";
 import { fxTap } from "@/lib/fx";
+import { EMOJI } from "@/constants/emoji";
 
 /**
  * My Stamps for Ages 10-12 (Mighty Tree)
@@ -81,7 +82,7 @@ export function PassportMightyTree() {
 
         {/* Milestones/Goals */}
         <div className="space-y-2">
-          <div className="px-1 text-sm font-bold text-text-secondary">🎯 Milestones</div>
+          <div className="px-1 text-sm font-bold text-text-secondary">{EMOJI.milestone.twentyFive} Milestones</div>
           {milestones.map((milestone) => (
             <div key={milestone.id} className="p-3 rounded-2xl bg-surface-card border-2 border-border-color shadow-sm">
               <div className="flex items-center justify-between mb-1">

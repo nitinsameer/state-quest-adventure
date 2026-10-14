@@ -14,6 +14,7 @@ import {
   getWebSpeechVoices,
   captureAudioDiagnostics 
 } from "@/lib/audio-diagnostics";
+import { EMOJI } from "@/constants/emoji";
 
 export function AudioTestScreen() {
   const [testResults, setTestResults] = useState<string[]>([]);
@@ -132,7 +133,7 @@ export function AudioTestScreen() {
               disabled={isRunning}
               className="bg-success text-white font-bold py-(--padding-base) px-(--padding-md) rounded-lg hover:opacity-90 disabled:opacity-50"
             >
-              🚀 Run All Tests
+              {EMOJI.action.rocket} Run All Tests
             </button>
             <button
               onClick={testNativeTTS}

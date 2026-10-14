@@ -1,6 +1,7 @@
 import { useProgress } from "@/lib/progress";
 import { useNavigate } from "@tanstack/react-router";
 import { fxTap } from "@/lib/fx";
+import { EMOJI } from "@/constants/emoji";
 
 /**
  * India Journey Meta-Game Progress Card
@@ -18,13 +19,13 @@ export function IndiaProgressMap() {
   const completionPercentage = Math.round((p.completed.length / 36) * 100);
 
   const milestones = [
-    { states: 5, emoji: "🌱", label: "5 States" },
-    { states: 10, emoji: "🌿", label: "10 States" },
-    { states: 15, emoji: "🌳", label: "15 States" },
-    { states: 20, emoji: "🏆", label: "20 States" },
-    { states: 25, emoji: "💎", label: "25 States" },
-    { states: 30, emoji: "👑", label: "30 States" },
-    { states: 36, emoji: "🎉", label: "36 States" },
+    { states: 5, emoji: EMOJI.explorer.five, label: "5 States" },
+    { states: 10, emoji: EMOJI.explorer.ten, label: "10 States" },
+    { states: 15, emoji: EMOJI.explorer.fifteen, label: "15 States" },
+    { states: 20, emoji: EMOJI.explorer.twenty, label: "20 States" },
+    { states: 25, emoji: EMOJI.explorer.twentyFive, label: "25 States" },
+    { states: 30, emoji: EMOJI.explorer.thirty, label: "30 States" },
+    { states: 36, emoji: EMOJI.explorer.thirtySix, label: "36 States" },
   ];
 
   const handleStartExploring = () => {
@@ -34,15 +35,15 @@ export function IndiaProgressMap() {
 
   const getMotivationalMessage = () => {
     if (completionPercentage === 0) {
-      return "🚀 Start exploring";
+      return `${EMOJI.utility.rocket} Start exploring`;
     } else if (completionPercentage === 100) {
-      return "👑 Congratulations! You're an India Master!";
+      return `${EMOJI.progress.streamComplete} Congratulations! You're an India Master!`;
     } else if (completionPercentage >= 75) {
-      return "🏆 You're almost there! Just a few more states!";
+      return `${EMOJI.utility.trophy} You're almost there! Just a few more states!`;
     } else if (completionPercentage >= 50) {
-      return "🌳 Halfway there! Keep exploring!";
+      return `${EMOJI.utility.tree} Halfway there! Keep exploring!`;
     } else {
-      return "🌱 Great start! Keep the momentum going!";
+      return `${EMOJI.ageBand.toddler} Great start! Keep the momentum going!`;
     }
   };
 
@@ -53,7 +54,7 @@ export function IndiaProgressMap() {
         {/* Title row with flag and count */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <span className="text-xl">🇮🇳</span>
+            <span className="text-xl">{EMOJI.language.indFlag}</span>
             <div>
               <h3 className="text-base font-black text-text-primary">India Journey</h3>
               <p className="text-xs text-text-secondary font-semibold">{p.completed.length} / 36 states explored</p>
@@ -63,7 +64,7 @@ export function IndiaProgressMap() {
             onClick={handleStartExploring}
             className="flex items-center gap-1.5 bg-accent-1-soft hover:bg-accent-1-soft/80 text-accent-1 px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 active:scale-95"
           >
-            <span>🚀</span>
+            <span>{EMOJI.utility.rocket}</span>
             <span>Start exploring!</span>
           </button>
         </div>

@@ -27,6 +27,7 @@ import { ensureAudioConsentGranted } from "@/lib/parental-consent";
 import { initializeAudioCleanup } from "@/lib/fx";
 import { Capacitor } from "@capacitor/core";
 import { useCelebrationStore } from "@/store/celebrationStore";
+import { EMOJI } from "@/constants/emoji";
 
 // React Error Boundary for catching runtime errors
 // CRITICAL FIX #1.2: Comprehensive error boundary with Crashlytics logging
@@ -192,7 +193,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
             href="/"
             className="w-full h-14 rounded-2xl bg-surface-card border-2 border-accent-1 text-accent-1 text-h4 flex items-center justify-center transition-all hover:bg-accent-1-soft active:scale-95"
           >
-            🏠 Go Home
+            {EMOJI.nav.home} Go Home
           </a>
         </div>
 
@@ -571,7 +572,7 @@ function RootComponent() {
     return (
       <div className="h-screen w-full flex items-center justify-center bg-bg-header">
         <div className="text-center">
-          <div className="text-6xl mb-4 animate-bounce">🗺️</div>
+          <div className="text-6xl mb-4 animate-bounce">{EMOJI.nav.map}</div>
           <div className="text-text-on-primary font-bold text-lg">Loading your adventure...</div>
         </div>
       </div>

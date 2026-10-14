@@ -15,6 +15,7 @@ import {
   getStatePerformance,
 } from "@/lib/state-performance-badges";
 import { fxTap } from "@/lib/fx";
+import { EMOJI } from "@/constants/emoji";
 
 interface StatePerformanceBadgeModalProps {
   stateName: string;
@@ -94,7 +95,7 @@ export function StatePerformanceBadgeModal({
         {availableBadges.length > 0 && (
           <div>
             <h3 className="text-display font-extrabold text-lg mb-3 text-muted-dark">
-              Keep Exploring! ⭐
+              Keep Exploring! {EMOJI.action.star}
             </h3>
             <div className="space-y-3">
               {availableBadges.map(badgeId => (
@@ -167,7 +168,7 @@ function BadgeDetailCard({ badgeId, progress }: BadgeDetailCardProps) {
               <div className="flex flex-col gap-2">
                 <div className="text-lg">{getProgressStars(progress.progress, progress.max)}</div>
                 <div className="text-[11px] font-bold text-muted-foreground">
-                  Keep going! ⭐
+                  Keep going! {EMOJI.action.star}
                 </div>
               </div>
             )}

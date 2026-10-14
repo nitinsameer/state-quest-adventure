@@ -1,6 +1,7 @@
 import { STATE_ART, TONE_GRADIENT } from "@/lib/state-art";
 import { getState } from "@/lib/states";
 import { type BadgeId } from "@/lib/progress";
+import { EMOJI } from "@/constants/emoji";
 
 interface PostcardFrameProps {
   stateName: string;
@@ -45,7 +46,7 @@ export function PostcardFrame({
 
   // Star display
   const starCount = parseInt(stars) || 3;
-  const starDisplay = "⭐".repeat(starCount);
+  const starDisplay = EMOJI.action.star.repeat(starCount);
 
   // Badge labels
   const badgeLabel = badge === "monument" ? "Monument" : badge === "animal" ? "Animal" : "Explorer";

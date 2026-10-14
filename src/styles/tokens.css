@@ -75,6 +75,11 @@
   --fb-error-soft: oklch(0.95 0.05 27);           /* Error feedback light background */
   --blur-overlay: blur(4px);                      /* Blur effect for overlays */
 
+  /* Missing tokens discovered in audit */
+  --success-on-bg: oklch(0.35 0.1 150);          /* Success text on backgrounds */
+  --feedback-success-text: oklch(0.35 0.1 150);  /* Success feedback text color */
+  --canvas-shadow: var(--shadow-raised);          /* Canvas drop shadow */
+
   /* Legacy tokens - marked for removal in 2.5; migrated to role-based naming */
   /* See Task 2.5 for migration plan */
   --ink: oklch(0.22 0.05 260);                      /* legacy, remove in 2.5 */

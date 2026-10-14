@@ -8,6 +8,7 @@ import { generatePassportNumber } from "@/lib/passport-number";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { PostcardModal } from "@/components/PostcardModal";
 import { fxTap } from "@/lib/fx";
+import { EMOJI } from "@/constants/emoji";
 
 /**
  * Passport for Ages 8-9 (Sapling)
@@ -53,7 +54,7 @@ export function PassportSapling() {
 
       {/* Header */}
       <div className="px-5 pt-4 pb-3 bg-bg-header text-text-on-header rounded-b-3xl shadow-lg">
-        <div className="text-2xl font-extrabold">My Passport 📖</div>
+        <div className="text-2xl font-extrabold">My Passport {EMOJI.icons.facts}</div>
       </div>
 
       {/* Profile & Stats */}
@@ -82,7 +83,7 @@ export function PassportSapling() {
             <div className="text-xs font-extrabold mt-1">{streak}-day streak!</div>
           </div>
           <div className="p-3 rounded-2xl bg-accent-2 text-text-on-primary shadow-md">
-            <div className="text-2xl">⭐</div>
+            <div className="text-2xl">{EMOJI.action.star}</div>
             <div className="text-xs font-extrabold mt-1">{xpToNextLevel} XP to next level</div>
           </div>
         </div>
@@ -126,7 +127,7 @@ export function PassportSapling() {
           onClick={() => navigate({ to: "/home" })}
           className="w-full h-12 rounded-2xl bg-accent-3 text-text-on-primary font-extrabold shadow-lg"
         >
-          Back Home 🏠
+          Back Home {EMOJI.nav.home}
         </button>
       </div>
     </div>

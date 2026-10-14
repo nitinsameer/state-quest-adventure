@@ -5,6 +5,7 @@
  */
 
 import { useState } from "react";
+import { EMOJI } from "@/constants/emoji";
 
 export type LanguageCode = "en" | "te" | "hi" | "ta" | "gu" | "mr" | "kn" | "ml" | "or" | "bn" | "pa" | "kok" | "as" | "mni" | "kha" | "miz" | "hne" | "ks" | "lbj" | "ne";
 
@@ -79,7 +80,7 @@ export function LanguageToggle({
         className="h-10 w-10 rounded-full bg-surface-card shadow-soft flex items-center justify-center text-lg transition-all active:scale-95 hover:shadow-md border border-info"
         title={`Switch to ${otherDisplayName}`}
       >
-        {currentLanguage === "en" ? "�x–" : "🌍"}
+        {currentLanguage === "en" ? EMOJI.language.indFlag : EMOJI.language.globe}
       </button>
     );
   }
@@ -93,10 +94,8 @@ export function LanguageToggle({
         className="px-(--padding-lg) py-(--padding-base) rounded-full text-sm font-bold transition-all ui-button ui-accent-2 text-ink shadow-md hover:shadow-lg active:scale-95"
         title={`Switch to ${otherDisplayName}`}
       >
-        �x– {currentDisplayName}
+        {EMOJI.language.globe} {currentDisplayName}
       </button>
     </div>
   );
 }
-
-

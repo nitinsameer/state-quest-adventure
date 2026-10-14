@@ -18,6 +18,7 @@ import { INDIA_STATES } from "@/lib/states";
 import { fxTap } from "@/lib/fx";
 import { getAvatarImage, getAvatarName } from "@/lib/avatar-config";
 import { StatePerformanceBadgeModal } from "./state-performance-badge-modal";
+import { EMOJI } from "@/constants/emoji";
 
 export function StatePerformanceBadgesView() {
   const progress = useProgress();
@@ -43,7 +44,7 @@ export function StatePerformanceBadgesView() {
             <div className="text-display text-lg font-bold leading-tight">
               {progress.name}
             </div>
-            <div className="text-xs font-bold text-white/80">🎉 {totalBadgesEarned} Amazing State Badges!</div>
+            <div className="text-xs font-bold text-white/80">{EMOJI.action.celebrate} {totalBadgesEarned} Amazing State Badges!</div>
           </div>
         </div>
       </div>
@@ -159,7 +160,7 @@ function StateDetailBadgeCard({ state, progress, onSelect }: any) {
 
       {/* Kid-friendly copy */}
       <div className="mt-3 text-xs font-bold text-action-primary-bg">
-        Keep exploring! ⭐
+        Keep exploring! {EMOJI.action.star}
       </div>
     </button>
   );

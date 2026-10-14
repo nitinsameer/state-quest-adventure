@@ -19,6 +19,7 @@ import navJourneyIcon from "@/assets/home/nav_journey_icon.png";
 import navExplorerIcon from "@/assets/home/nav_explorer_icon.png";
 import navBadgesIcon from "@/assets/home/nav_badges_icon.png";
 import navMeIcon from "@/assets/home/nav_me_icon.png";
+import { EMOJI } from "@/constants/emoji";
 
 const TOTAL_STATES = 36;
 
@@ -120,7 +121,7 @@ export function HomeScreen() {
 
           {/* Badges Card */}
           <div className="flex-1 bg-surface-card rounded-2xl shadow-sm p-(--padding-base) text-center">
-            <div className="text-2xl mb-1">🏆</div>
+            <div className="text-2xl mb-1">{EMOJI.milestone.hundred}</div>
             <div className="text-h5 text-text-primary">0</div>
             <div className="text-caption font-semibold text-text-secondary">Badges</div>
           </div>
