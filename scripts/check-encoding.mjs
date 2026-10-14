@@ -1,24 +1,10 @@
 #!/usr/bin/env node
-/**
- * Check that source files don't contain UTF-8 mojibake sequences.
- * Exit 0 if OK, exit 1 if issues found.
- */
-
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { Buffer } from 'buffer';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, '..');
-
-// Detect mojibake by checking for the specific byte patterns that indicate corruption
-// These are the exact byte sequences we see when UTF-8 is misinterpreted as Latin-1
-const corruptedByteSequences = [
-  Buffer.from([0xd0, 0x9f]), // ðŸ in latin1 = corrupted emoji start
-  Buffer.from([0xc2, 0xa0]), // â  in latin1 = corrupted symbol
-  Buffer.from([0xc2, 0xb7]), // Â· in latin1 = corrupted middle dot
-];
 
 const checkDirs = ['src', 'scripts'];
 const extensions = ['.ts', '.tsx', '.js', '.mjs', '.jsx', '.css'];
@@ -41,35 +27,88 @@ function scanDir(dir) {
   return files;
 }
 
-let checked = 0, failed = 0;
-console.log('Checking file encodings...\n');
+let checked = 0;
+let failed = 0;
+
+// Real mojibake patterns: emoji codes read as Latin-1 bytes
+// When UTF-8 F0 9F XX XX is wrongly treated as 4 Latin-1 chars,
+// it produces the byte sequences shown here
+const realMojibakePatterns = [
+  Buffer.from([0xef, 0xbf, 0xbd]), // replacement character (invalid UTF-8)
+];
+
+// Also check for incomplete UTF-8 sequences at end of file
+function isValidUTF8(buffer) {
+  let i = 0;
+  while (i < buffer.length) {
+    const byte = buffer[i];
+    let seqLen;
+    
+    if ((byte & 0x80) === 0) {
+      seqLen = 1;
+    } else if ((byte & 0xe0) === 0xc0) {
+      seqLen = 2;
+    } else if ((byte & 0xf0) === 0xe0) {
+      seqLen = 3;
+    } else if ((byte & 0xf8) === 0xf0) {
+      seqLen = 4;
+    } else {
+      // Invalid start byte
+      return false;
+    }
+    
+    if (i + seqLen > buffer.length) {
+      // Incomplete sequence at end
+      return false;
+    }
+    
+    for (let j = 1; j < seqLen; j++) {
+      if ((buffer[i + j] & 0xc0) !== 0x80) {
+        // Invalid continuation byte
+        return false;
+      }
+    }
+    
+    i += seqLen;
+  }
+  
+  return true;
+}
+
+console.log('Checking file encodings...');
 
 for (const checkDir of checkDirs) {
   const files = scanDir(path.join(projectRoot, checkDir));
   for (const filePath of files) {
     checked++;
     const buffer = fs.readFileSync(filePath);
-    let hasCorruption = false;
     
-    for (const seq of corruptedByteSequences) {
-      if (buffer.includes(seq)) {
-        hasCorruption = true;
+    // Check for real mojibake patterns
+    let isBad = false;
+    for (const pattern of realMojibakePatterns) {
+      if (buffer.includes(pattern)) {
+        isBad = true;
         break;
       }
     }
     
-    if (hasCorruption) {
+    // Also validate UTF-8 integrity
+    if (!isBad) {
+      isBad = !isValidUTF8(buffer);
+    }
+    
+    if (isBad) {
       failed++;
-      console.error(`  ❌ ${path.relative(projectRoot, filePath)}`);
+      console.log('FAIL: ' + path.relative(projectRoot, filePath));
     }
   }
 }
 
-console.log(`\nChecked ${checked} files`);
+console.log('Checked ' + checked + ' files');
 if (failed > 0) {
-  console.error(`❌ FAILED: ${failed} file(s) with encoding issues\n`);
+  console.log('FAILED: ' + failed + ' file(s) with encoding issues');
   process.exit(1);
 } else {
-  console.log('✅ All files OK\n');
+  console.log('OK: All files clean');
   process.exit(0);
 }
