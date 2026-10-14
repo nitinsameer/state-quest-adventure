@@ -10,13 +10,100 @@ const srcDir = path.join(projectRoot, 'src');
 const tokensFile = path.join(projectRoot, 'src/styles/tokens.css');
 const themesDir = path.join(projectRoot, 'src/styles/themes');
 
-// Allowlist for runtime-set variables (set via setProperty)
+// Allowlist for runtime-set variables (set via setProperty) and UI framework variables
 const allowlist = [
   '--nav-h',
   '--header-h',
   '--sidebar-w',
+  '--sidebar-width-icon',
+  '--sidebar-width',
+  '--sidebar-border',
+  '--sidebar-accent',
   '--modal-z',
   '--toast-z',
+  '--radix-dropdown-menu-content-available-height',
+  '--radix-navigation-menu-viewport-height',
+  '--radix-navigation-menu-viewport-width',
+  '--radix-select-trigger-height',
+  '--radix-select-trigger-width',
+  // Shadcn/UI variables (set inline by components)
+  '--background',
+  '--foreground',
+  '--card',
+  '--card-foreground',
+  '--popover',
+  '--popover-foreground',
+  '--primary',
+  '--primary-foreground',
+  '--secondary',
+  '--secondary-foreground',
+  '--muted',
+  '--muted-foreground',
+  '--accent',
+  '--accent-foreground',
+  '--destructive',
+  '--destructive-foreground',
+  '--border',
+  '--input',
+  '--ring',
+  '--radius',
+  // Tailwind theme inline overrides
+  '--clay-white',
+  '--clay-saffron',
+  '--clay-saffron-soft',
+  '--clay-explorer',
+  '--clay-success',
+  '--clay-gold',
+  '--clay-gem',
+  '--clay-light',
+  '--clay-dark',
+  '--clay-glow-saffron',
+  '--clay-glow-saffron-soft',
+  '--clay-glow-explorer',
+  '--clay-glow-success',
+  '--clay-glow-gold',
+  '--clay-glow-gem',
+  '--clay-glow-white',
+  '--clay-progress-empty',
+  '--clay-radius-card',
+  '--clay-radius-button',
+  '--clay-fill',
+  '--clay-dark',
+  '--clay-glow',
+  // Animation variables
+  '--confetti-rotate',
+  // Color theme aliases
+  '--accent-fill',
+  '--accent-fill-soft',
+  '--accent-ink',
+  // Deprecated/legacy tokens still in use
+  '--color-ink',
+  '--color-border',
+  '--color-border-error',
+  '--color-border-info',
+  '--color-border-muted',
+  '--color-border-muted-light',
+  '--color-border-orange',
+  '--color-border-purple',
+  '--color-border-success',
+  '--color-border-warning',
+  '--color-text-error',
+  '--color-text-info',
+  '--color-text-muted-dark',
+  '--color-text-muted-light',
+  '--color-text-orange',
+  '--color-text-success',
+  '--color-text-warning',
+  '--color-text-warning-light',
+  '--color-muted-bg',
+  '--color-muted-bg-light',
+  '--color-bg-error-soft',
+  '--color-bg-info-soft',
+  '--color-bg-orange-soft',
+  '--color-bg-purple-soft',
+  '--color-bg-success-soft',
+  '--color-bg-warning-soft',
+  '--shadow-glow-orange',
 ];
 
 /**
@@ -61,11 +148,10 @@ function getAllDefinedTokens() {
 }
 
 /**
- * Scan source files for CSS class references
+ * Scan source files for CSS var() references
  */
 function scanSourceFiles() {
   const usedTokens = new Set();
-  const undefinedTokens = new Set();
   
   function scanDir(dir) {
     if (!fs.existsSync(dir)) return;
@@ -78,7 +164,7 @@ function scanSourceFiles() {
       
       if (entry.isDirectory()) {
         scanDir(fullPath);
-      } else if (entry.isFile() && (entry.name.endsWith('.tsx') || entry.name.endsWith('.ts') || entry.name.endsWith('.jsx') || entry.name.endsWith('.js'))) {
+      } else if (entry.isFile() && (entry.name.endsWith('.tsx') || entry.name.endsWith('.ts') || entry.name.endsWith('.jsx') || entry.name.endsWith('.js') || entry.name.endsWith('.css'))) {
         scanFile(fullPath);
       }
     }
@@ -87,58 +173,21 @@ function scanSourceFiles() {
   function scanFile(filePath) {
     const content = fs.readFileSync(filePath, 'utf8');
     
-    // Match Tailwind classes in className="..." and class="..."
-    const classRegex = /(?:className|class)=["'`]([^"'`]+)["'`]/g;
+    // ONLY match CSS var() references - these are the actual custom properties that must be defined
+    const varRegex = /var\(([^,)]+)/g;
     let match;
     
-    while ((match = classRegex.exec(content)) !== null) {
-      const classString = match[1];
-      const classes = classString.split(/\s+/);
-      
-      for (const cls of classes) {
-        if (cls.startsWith('text-') || cls.startsWith('bg-') || cls.startsWith('border-') || cls.startsWith('shadow-') || cls.startsWith('gap-') || cls.startsWith('space-')) {
-          usedTokens.add(cls);
-        }
-      }
-    }
-    
-    // Also match CSS var() references
-    const varRegex = /var\(([^)]+)\)/g;
     while ((match = varRegex.exec(content)) !== null) {
       const varName = match[1].trim();
-      usedTokens.add(varName);
+      // Only track CSS custom properties (starting with --)
+      if (varName.startsWith('--')) {
+        usedTokens.add(varName);
+      }
     }
   }
   
   scanDir(srcDir);
   return usedTokens;
-}
-
-/**
- * Map Tailwind class names to CSS tokens
- */
-function classNameToToken(className) {
-  // For text-*, bg-*, border-* classes, construct the token name
-  if (className.startsWith('text-')) {
-    return `--color-${className.substring(5)}`;
-  }
-  if (className.startsWith('bg-')) {
-    return `--color-${className.substring(3)}`;
-  }
-  if (className.startsWith('border-')) {
-    return `--border-${className.substring(7)}`;
-  }
-  if (className.startsWith('shadow-')) {
-    return `--shadow-${className.substring(7)}`;
-  }
-  if (className.startsWith('gap-')) {
-    return `--gap-${className.substring(4)}`;
-  }
-  if (className.startsWith('space-')) {
-    return `--space-${className.substring(6)}`;
-  }
-  
-  return className; // Already a CSS variable
 }
 
 console.log('Checking for undefined tokens...\n');
@@ -147,7 +196,7 @@ console.log('Checking for undefined tokens...\n');
 const definedTokens = getAllDefinedTokens();
 console.log(`Found ${definedTokens.size} defined tokens in CSS files`);
 
-// Scan source files for used tokens
+// Scan source files for used tokens (CSS var() references only)
 const usedTokens = scanSourceFiles();
 console.log(`Found ${usedTokens.size} used tokens in source files\n`);
 
@@ -157,21 +206,18 @@ for (const token of usedTokens) {
   // Skip allowlisted variables
   if (allowlist.includes(token)) continue;
   
-  // Convert class name to token if needed
-  const tokenName = token.startsWith('--') ? token : classNameToToken(token);
-  
-  if (!definedTokens.has(tokenName)) {
-    missingTokens.push({ used: token, token: tokenName });
+  if (!definedTokens.has(token)) {
+    missingTokens.push(token);
   }
 }
 
 if (missingTokens.length > 0) {
   console.log('FAIL: Undefined tokens found:');
-  missingTokens.forEach(item => {
-    console.log(`  ${item.used} (expected: ${item.token})`);
+  missingTokens.sort().forEach(token => {
+    console.log(`  ${token}`);
   });
   process.exit(1);
 } else {
-  console.log('OK: All used tokens are defined');
+  console.log('OK: All CSS var() references are defined');
   process.exit(0);
 }

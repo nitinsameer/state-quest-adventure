@@ -4053,6 +4053,31 @@ function ProfileScreenContent() {
           )}
         </div>
 
+        {/* My Style Theme Picker */}
+        <div className="animate-fade-in" style={{ animationDelay: "185ms" }}>
+          <button
+            onClick={() => {
+              fxTap();
+              const navigate = useNavigate();
+              navigate({ to: '/themes' });
+            }}
+            className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
+          >
+            <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-accent-1 via-accent-2 to-accent-5 flex items-center justify-center text-2xl">
+              🎨
+            </div>
+            <div className="flex-1 text-left">
+              <div className="text-display font-extrabold text-[15px] leading-tight">
+                My Style 🎨
+              </div>
+              <div className="text-[11px] font-bold text-text-secondary">
+                Tap to change theme
+              </div>
+            </div>
+            <div className="text-text-secondary text-xl">›</div>
+          </button>
+        </div>
+
         {/* âš™ï¸ Settings Section Header */}
         <div className="animate-fade-in pt-2" style={{ animationDelay: "195ms" }}>
           <h3 className="text-sm font-extrabold text-text-secondary uppercase tracking-wider px-1 mb-2">

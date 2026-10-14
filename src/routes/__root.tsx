@@ -32,6 +32,7 @@ import { useCelebrationStore } from "@/store/celebrationStore";
 // CRITICAL FIX #1.2: Comprehensive error boundary with Crashlytics logging
 import { logError, categorizeError } from "@/lib/error-tracking";
 import { initializeTheme, useThemeStore } from "@/store/themeStore";
+import { StatusBar } from "@capacitor/status-bar";
 
 class RootErrorBoundary extends React.Component<
   { children: React.ReactNode },
@@ -276,9 +277,38 @@ function HydratedApp() {
     }
   }, []);
 
-  // Initialize theme from localStorage on app load
+  // Initialize theme from localStorage on app load and set up status bar
   useEffect(() => {
     initializeTheme();
+    
+    // Initialize status bar with theme colors
+    const initStatusBar = async () => {
+      try {
+        const root = document.documentElement;
+        const themeStyle = root.getAttribute('data-theme') || 'clay';
+        
+        // Get computed style for status bar colors
+        const computedStyle = getComputedStyle(root);
+        const statusbarStyle = computedStyle.getPropertyValue('--statusbar-style').trim() || 'dark';
+        const statusbarBg = computedStyle.getPropertyValue('--statusbar-bg').trim() || '#FF8A3D';
+        
+        // Set status bar appearance
+        if (Capacitor.isNativePlatform()) {
+          await StatusBar.setStyle({ style: statusbarStyle === 'dark' ? 'DARK' : 'LIGHT' });
+          await StatusBar.setBackgroundColor({ color: statusbarBg });
+        }
+        
+        // Update meta theme-color
+        const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+        if (metaThemeColor) {
+          metaThemeColor.setAttribute('content', statusbarBg);
+        }
+      } catch (error) {
+        console.warn('Failed to initialize status bar:', error);
+      }
+    };
+    
+    initStatusBar();
   }, []);
   
   // Measure bottom nav height and set as CSS variable

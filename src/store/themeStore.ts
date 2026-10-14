@@ -7,6 +7,8 @@
 
 import { create } from 'zustand';
 import { z } from 'zod';
+import { Capacitor } from '@capacitor/core';
+import { StatusBar } from '@capacitor/status-bar';
 
 // Valid theme IDs (must match entries in src/lib/themes.ts)
 type ThemeId = 'clay' | 'clay-dark' | 'neobrutalism' | 'minimal-flat' | 'festival' | 'material-you' | 'neumorphism';
@@ -37,6 +39,32 @@ function applyTheme(themeId: ThemeId) {
     root.style.colorScheme = 'dark';
   } else {
     root.style.colorScheme = 'light';
+  }
+  
+  // Update status bar for native platforms
+  if (Capacitor.isNativePlatform()) {
+    try {
+      const computedStyle = getComputedStyle(root);
+      const statusbarStyle = computedStyle.getPropertyValue('--statusbar-style').trim() || 'dark';
+      const statusbarBg = computedStyle.getPropertyValue('--statusbar-bg').trim() || '#FF8A3D';
+      
+      StatusBar.setStyle({ style: statusbarStyle === 'dark' ? 'DARK' : 'LIGHT' }).catch(() => {});
+      StatusBar.setBackgroundColor({ color: statusbarBg }).catch(() => {});
+    } catch (error) {
+      console.warn('Failed to update status bar:', error);
+    }
+  }
+  
+  // Update meta theme-color
+  const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+  if (metaThemeColor) {
+    try {
+      const computedStyle = getComputedStyle(root);
+      const statusbarBg = computedStyle.getPropertyValue('--statusbar-bg').trim() || '#FF8A3D';
+      metaThemeColor.setAttribute('content', statusbarBg);
+    } catch (error) {
+      console.warn('Failed to update meta theme-color:', error);
+    }
   }
 }
 
