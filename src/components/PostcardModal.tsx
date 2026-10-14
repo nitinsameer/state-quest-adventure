@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { getState } from "@/lib/states";
 import { STATE_ART, TONE_GRADIENT, TONE_HEX } from "@/lib/state-art";

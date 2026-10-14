@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Language Toggle Component
  * Allows users to switch between English and native language for card content
  * Displays as a simple toggle button showing current language

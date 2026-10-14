@@ -68,7 +68,7 @@ export function PostcardCard({
           </div>
 
           {/* Status text */}
-          <div className="text-sm font-bold text-center" style={{ color: isCollected ? 'oklch(0.35 0.1 150)' : 'oklch(0.35 0.1 260)' }}>
+          <div className="text-sm font-bold text-center" style={{ color: isCollected ? 'var(--feedback-success)' : 'var(--text-muted)' }}>
             {isCollected ? (
               <span className="inline-flex items-center gap-1">
                 <span>✓</span>

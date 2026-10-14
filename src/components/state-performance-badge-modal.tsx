@@ -1,4 +1,4 @@
-﻿/**
+/**
  * State Performance Badge Detail Modal
  * Shows detailed info about all badges for a specific state
  */

@@ -1,4 +1,4 @@
-﻿﻿import mascot from "@/assets/mascot.webp";
+import mascot from "@/assets/mascot.webp";
 import airplane from "@/assets/airplane.png";
 import welcomeScreenImage from "@/assets/welcome.webp";
 import avatarExplorerHat from "@/assets/avatars/avatar-explorer-hat.png";

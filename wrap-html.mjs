@@ -7,7 +7,7 @@ const indexPath = 'dist/client/index.html';
 let shell = '';
 const shellPath = 'dist/client/_shell.html';
 if (fs.existsSync(shellPath)) {
-  shell = fs.readFileSync(shellPath, 'utf-8');
+  shell = fs.readFileSync(shellPath, 'utf8');
   
   // CRITICAL: Remove async attribute from embedded router manifest script
   // TanStack Start embeds async:!0 in the manifest which breaks hydration
@@ -83,7 +83,7 @@ ${shell}
 </body>
 </html>`;
 
-fs.writeFileSync(indexPath, html, 'utf-8');
+fs.writeFileSync(indexPath, html, 'utf8');
 console.log(`✓ Generated index.html: ${indexPath}`);
 console.log(`  CSS: ${cssFile}`);
 console.log(`  JS:  ${jsFile}`);

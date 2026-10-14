@@ -1,4 +1,4 @@
-﻿import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useProgress, dismissPendingCelebration, updateCeremonyStep, type PendingCelebration } from '@/lib/progress';
 import { useNavigate } from '@tanstack/react-router';
 import { getState, type IndiaState, nextStateAfter } from '@/lib/states';

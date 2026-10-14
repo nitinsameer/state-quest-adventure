@@ -23,7 +23,7 @@ export function PhoneFrame({
         className="relative w-[360px] h-[760px] rounded-[52px] p-[10px] bg-surface-sunken"
         style={{
           boxShadow:
-            "0 40px 80px -30px rgba(15,23,42,0.35), 0 10px 25px -10px rgba(15,23,42,0.25), inset 0 0 0 2px #111",
+            "0 40px 80px -30px rgba(15,23,42,0.35), 0 10px 25px -10px rgba(15,23,42,0.25), inset 0 0 0 2px var(--border-strong)",
         }}
       >
         <div className="relative w-full h-full rounded-[44px] overflow-hidden bg-white">

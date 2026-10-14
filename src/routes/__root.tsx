@@ -392,7 +392,7 @@ function HydratedApp() {
     
     // Check if level increased
     if (currentLevel > prevLevelRef.current) {
-      console.log(`[LevelUp] User advanced to Level ${currentLevel}! 🎉`);
+      appLogger.info('app_lifecycle', 'User advanced to level', { level: currentLevel });
       
       // Get the fun level name
       const levelName = getLevelName(currentLevel);

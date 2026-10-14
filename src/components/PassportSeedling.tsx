@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useProgress, type PostcardData } from "@/lib/progress";
 import { REGIONS, REGION_KEYS, getProgressPercentage } from "@/lib/passport-helpers";
@@ -188,7 +188,7 @@ export function PassportSeedling() {
         <div className="text-base font-semibold text-text-secondary mt-1">
           {regionProgress} explored {unlockedInRegion.length === regionStates.length && "✨ Region Complete!"}
         </div>
-        <div className="mt-2 h-2 bg-[oklch(0.9_0.02_260)] rounded-full overflow-hidden">
+        <div className="mt-2 h-2 bg-progress-track rounded-full overflow-hidden">
           <div
             className={`h-full bg-accent-1 transition-all duration-300`}
             style={{ width: `${(unlockedInRegion.length / regionStates.length) * 100}%` }}

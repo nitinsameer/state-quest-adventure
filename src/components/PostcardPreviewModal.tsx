@@ -1,4 +1,4 @@
-﻿/**
+/**
  * PostcardPreviewModal - Uses StandardModal for consistent design
  * 
  * Auto-shows postcard preview after quiz completion with two CTAs:
@@ -115,6 +115,9 @@ async function generatePostcardPreview(stateName?: string): Promise<Blob | null>
       const dw = img.width * scale;
       const dh = img.height * scale;
       c.save();
+      // Canvas shadow: rgba(15,23,42,0.22) maps to --shadow-raised concept
+      // Note: Canvas 2D doesn't support CSS variables, so shadow colors are hardcoded
+      // The rgba value is consistent across postcard shadow rendering
       c.shadowColor = "rgba(15,23,42,0.22)";
       c.shadowBlur = 26;
       c.shadowOffsetY = 12;

@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, Link } from "@tanstack/react-router";
 import mascot from "@/assets/mascot.webp";
 import { getState } from "@/lib/states";
@@ -144,6 +144,9 @@ export function StatePostcardScreen({
         const dw = img.width * scale;
         const dh = img.height * scale;
         c.save();
+        // Canvas shadow: rgba(15,23,42,0.22) maps to --shadow-raised concept
+        // Note: Canvas 2D doesn't support CSS variables, so shadow colors are hardcoded
+        // The rgba value is consistent across postcard shadow rendering
         c.shadowColor = "rgba(15,23,42,0.22)";
         c.shadowBlur = 26;
         c.shadowOffsetY = 12;

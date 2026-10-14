@@ -1,4 +1,4 @@
-﻿/**
+/**
  * State Performance Badges View
  * Shows badges earned for each individual state
  */
