@@ -31,6 +31,7 @@ import { useCelebrationStore } from "@/store/celebrationStore";
 // React Error Boundary for catching runtime errors
 // CRITICAL FIX #1.2: Comprehensive error boundary with Crashlytics logging
 import { logError, categorizeError } from "@/lib/error-tracking";
+import { initializeTheme, useThemeStore } from "@/store/themeStore";
 
 class RootErrorBoundary extends React.Component<
   { children: React.ReactNode },
@@ -273,6 +274,11 @@ function HydratedApp() {
     if (soundState === null) {
       localStorage.setItem(SOUND_KEY, "1");
     }
+  }, []);
+
+  // Initialize theme from localStorage on app load
+  useEffect(() => {
+    initializeTheme();
   }, []);
   
   // Measure bottom nav height and set as CSS variable

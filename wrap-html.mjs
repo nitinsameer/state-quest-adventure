@@ -57,6 +57,28 @@ const html = `<!DOCTYPE html>
 </head>
 <body>
 ${shell}
+  <!-- No-flash theme script: apply saved theme before React hydration -->
+  <script type="text/javascript">
+    (function() {
+      try {
+        const stored = localStorage.getItem('india-explorer:theme:v1');
+        let theme = 'clay';
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          theme = parsed.theme || 'clay';
+        }
+        // Apply theme before React renders
+        document.documentElement.setAttribute('data-theme', theme);
+        if (theme.includes('dark')) {
+          document.documentElement.style.colorScheme = 'dark';
+        } else {
+          document.documentElement.style.colorScheme = 'light';
+        }
+      } catch (e) {
+        // Silently fail - theme will be applied after hydration
+      }
+    })();
+  </script>
   <script type="module" src="./assets/${jsFile}"></script>
 </body>
 </html>`;
