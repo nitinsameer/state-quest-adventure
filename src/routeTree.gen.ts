@@ -20,6 +20,7 @@ import { Route as JourneyRouteImport } from './routes/journey'
 import { Route as MeRouteImport } from './routes/me'
 import { Route as ParentRouteImport } from './routes/parent'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ThemesRouteImport } from './routes/themes'
 import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as StateSlugIndexRouteImport } from './routes/state.$slug.index'
 import { Route as StateSlugCardsRouteImport } from './routes/state.$slug.cards'
@@ -85,6 +86,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ThemesRoute = ThemesRouteImport.update({
+  id: '/themes',
+  path: '/themes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WelcomeRoute = WelcomeRouteImport.update({
   id: '/welcome',
   path: '/welcome',
@@ -143,6 +149,7 @@ export interface FileRoutesByFullPath {
   '/me': typeof MeRoute
   '/parent': typeof ParentRoute
   '/privacy': typeof PrivacyRoute
+  '/themes': typeof ThemesRoute
   '/welcome': typeof WelcomeRoute
   '/state/$slug/cards': typeof StateSlugCardsRoute
   '/state/$slug/complete': typeof StateSlugCompleteRoute
@@ -165,6 +172,7 @@ export interface FileRoutesByTo {
   '/me': typeof MeRoute
   '/parent': typeof ParentRoute
   '/privacy': typeof PrivacyRoute
+  '/themes': typeof ThemesRoute
   '/welcome': typeof WelcomeRoute
   '/state/$slug/cards': typeof StateSlugCardsRoute
   '/state/$slug/complete': typeof StateSlugCompleteRoute
@@ -188,6 +196,7 @@ export interface FileRoutesById {
   '/me': typeof MeRoute
   '/parent': typeof ParentRoute
   '/privacy': typeof PrivacyRoute
+  '/themes': typeof ThemesRoute
   '/welcome': typeof WelcomeRoute
   '/state/$slug/cards': typeof StateSlugCardsRoute
   '/state/$slug/complete': typeof StateSlugCompleteRoute
@@ -212,6 +221,7 @@ export interface FileRouteTypes {
     | '/me'
     | '/parent'
     | '/privacy'
+    | '/themes'
     | '/welcome'
     | '/state/$slug/cards'
     | '/state/$slug/complete'
@@ -234,6 +244,7 @@ export interface FileRouteTypes {
     | '/me'
     | '/parent'
     | '/privacy'
+    | '/themes'
     | '/welcome'
     | '/state/$slug/cards'
     | '/state/$slug/complete'
@@ -256,6 +267,7 @@ export interface FileRouteTypes {
     | '/me'
     | '/parent'
     | '/privacy'
+    | '/themes'
     | '/welcome'
     | '/state/$slug/cards'
     | '/state/$slug/complete'
@@ -279,6 +291,7 @@ export interface RootRouteChildren {
   MeRoute: typeof MeRoute
   ParentRoute: typeof ParentRoute
   PrivacyRoute: typeof PrivacyRoute
+  ThemesRoute: typeof ThemesRoute
   WelcomeRoute: typeof WelcomeRoute
   StateSlugCardsRoute: typeof StateSlugCardsRoute
   StateSlugCompleteRoute: typeof StateSlugCompleteRoute
@@ -369,6 +382,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/themes': {
+      id: '/themes'
+      path: '/themes'
+      fullPath: '/themes'
+      preLoaderRoute: typeof ThemesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/welcome': {
       id: '/welcome'
       path: '/welcome'
@@ -447,6 +467,7 @@ const rootRouteChildren: RootRouteChildren = {
   MeRoute: MeRoute,
   ParentRoute: ParentRoute,
   PrivacyRoute: PrivacyRoute,
+  ThemesRoute: ThemesRoute,
   WelcomeRoute: WelcomeRoute,
   StateSlugCardsRoute: StateSlugCardsRoute,
   StateSlugCompleteRoute: StateSlugCompleteRoute,
