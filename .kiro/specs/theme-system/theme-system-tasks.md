@@ -190,3 +190,69 @@ Parallel Opportunities:
 - 3.1, 3.2, 3.3 can proceed in parallel once 1.3 is complete
 - Theme implementations (6.x) can proceed in parallel once 5.2 passes
 ```
+
+### Wave Definitions (JSON)
+
+```json
+{
+  "waves": [
+    {
+      "id": "wave-1",
+      "phase": "Foundation & Engine",
+      "tasks": ["1.1", "1.2", "1.3", "2.1", "2.2", "3.1", "3.2", "3.3", "3.4"],
+      "duration": "Phase 1–3",
+      "description": "Establish token contract, build themeable component layer, implement theme engine and persistence."
+    },
+    {
+      "id": "wave-2",
+      "phase": "Hardcode Removal & Guard",
+      "tasks": ["4.1", "4.2", "4.3", "4.4", "4.5", "4.6", "4.7", "5.1", "5.2"],
+      "duration": "Phase 2–3",
+      "description": "Replace hardcoded styling in all screens and components, implement guard script to prevent regressions."
+    },
+    {
+      "id": "wave-3",
+      "phase": "Theme Implementations",
+      "tasks": ["6.1", "6.2", "6.3", "6.4", "6.5", "6.6"],
+      "duration": "Phase 4",
+      "description": "Implement 7–19 theme variants (Clay Dark, Neobrutalism, Minimal Flat, Material You, Neumorphism, heavy themes, additional themes)."
+    },
+    {
+      "id": "wave-4",
+      "phase": "Quality Gates & Documentation",
+      "tasks": ["7.1", "7.2", "7.3"],
+      "duration": "Phase 4",
+      "description": "Per-theme accessibility and performance validation, documentation for theme creation process."
+    }
+  ],
+  "dependencies": {
+    "1.1": [],
+    "1.2": ["1.1"],
+    "1.3": ["1.2"],
+    "2.1": ["1.3"],
+    "2.2": ["2.1"],
+    "3.1": ["1.3"],
+    "3.2": ["3.1"],
+    "3.3": ["3.2"],
+    "3.4": ["2.1", "3.3"],
+    "4.1": ["2.2"],
+    "4.2": ["4.1"],
+    "4.3": ["4.2"],
+    "4.4": ["4.3"],
+    "4.5": ["4.4"],
+    "4.6": ["4.5"],
+    "4.7": ["4.6"],
+    "5.1": ["4.1"],
+    "5.2": ["4.7", "5.1"],
+    "6.1": ["5.2"],
+    "6.2": ["6.1"],
+    "6.3": ["6.2"],
+    "6.4": ["6.3"],
+    "6.5": ["6.4"],
+    "6.6": ["6.5"],
+    "7.1": ["6.1"],
+    "7.2": ["6.5"],
+    "7.3": ["7.1", "7.2"]
+  }
+}
+```
