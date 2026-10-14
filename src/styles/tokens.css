@@ -66,6 +66,28 @@
   --color-brand-ink: oklch(0.22 0.05 260);        /* Text color */
   --color-brand-sky: oklch(0.94 0.04 235);        /* Light background */
 
+  /* Task 2.2: Additional missing semantic tokens */
+  --surface-muted: oklch(0.92 0.01 260);          /* Muted surface background */
+  --surface-subtle: oklch(0.96 0.005 260);        /* Very subtle surface */
+  --border-default: oklch(0.92 0.015 260);        /* Default border color */
+  --action-primary: oklch(0.74 0.19 45);          /* Primary action (saffron) */
+  --action-primary-hover: oklch(0.78 0.16 45);    /* Primary action hover */
+  --fb-error-soft: oklch(0.95 0.05 27);           /* Error feedback light background */
+  --blur-overlay: blur(4px);                      /* Blur effect for overlays */
+
+  /* Legacy tokens - marked for removal in 2.5; migrated to role-based naming */
+  /* See Task 2.5 for migration plan */
+  --ink: oklch(0.22 0.05 260);                      /* legacy, remove in 2.5 */
+  --saffron: oklch(0.74 0.19 45);                   /* legacy, remove in 2.5 */
+  --saffron-soft: oklch(0.95 0.06 55);              /* legacy, remove in 2.5 */
+  --explorer: oklch(0.62 0.2 250);                  /* legacy, remove in 2.5 */
+  --explorer-soft: oklch(0.95 0.05 250);            /* legacy, remove in 2.5 */
+  --success: oklch(0.72 0.19 150);                  /* legacy, remove in 2.5 */
+  --success-soft: oklch(0.95 0.06 150);             /* legacy, remove in 2.5 */
+  --gold: oklch(0.82 0.17 85);                      /* legacy, remove in 2.5 */
+  --gold-soft: oklch(0.96 0.08 90);                 /* legacy, remove in 2.5 */
+  --sky: oklch(0.94 0.04 235);                      /* legacy, remove in 2.5 */
+
   /* ========================================================================
      TYPOGRAPHY TOKENS - KID-FRIENDLY TYPE SCALE
      ======================================================================== */
@@ -128,6 +150,7 @@
 
   --space-0: 0;
   --space-0-5: 0.25rem;   /* 4px */
+  --space-0-25: 0.25rem;  /* 4px - extra precise (Task 2.2) */
   --space-1: 0.5rem;      /* 8px (base unit) */
   --space-1-5: 0.75rem;   /* 12px */
   --space-2: 1rem;        /* 16px */
@@ -149,9 +172,11 @@
   --padding-xl: 2.5rem;    /* 40px */
 
   /* Component Gaps */
+  --gap-xs: 0.5rem;        /* 8px (Task 2.2) */
   --gap-compact: 0.5rem;   /* 8px */
   --gap-base: 0.75rem;     /* 12px */
   --gap-loose: 1rem;       /* 16px */
+  --gap-md: 1rem;          /* 16px (Task 2.2) */
   --gap-xl: 1.5rem;        /* 24px */
 
   /* ========================================================================
