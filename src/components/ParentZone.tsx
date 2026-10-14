@@ -5,6 +5,7 @@ import { useGoBack, BottomNav } from "@/components/screens";
 import { fxTap } from "@/lib/fx";
 import { setPin } from "@/lib/parent-gate";
 import { getParentZoneSettings, setParentZoneSetting } from "@/lib/parent-zone-settings";
+import { EMOJI } from "@/constants/emoji";
 import { useState } from "react";
 
 // Local constant to avoid bundler issues
@@ -26,12 +27,12 @@ export function ParentZoneScreen() {
   );
 
   const stats = [
-    { icon: "🗺️", label: "Places completed", value: `${p.completed.length}/${TOTAL_STATES}` },
-    { icon: "⭐", label: "Total XP", value: p.xp.toLocaleString() },
-    { icon: "🏅", label: "Badges earned", value: String(badgeCount(p)) },
+    { icon: EMOJI.nav.map, label: "Places completed", value: `${p.completed.length}/${TOTAL_STATES}` },
+    { icon: EMOJI.action.star, label: "Total XP", value: p.xp.toLocaleString() },
+    { icon: EMOJI.nav.badges, label: "Badges earned", value: String(badgeCount(p)) },
     { icon: "🎫", label: "Stamps collected", value: String(Object.keys(p.stamps).length) },
     { icon: "🔥", label: "Day streak", value: String(p.streak) },
-    { icon: "🏆", label: "Achievements", value: String(unlocked) },
+    { icon: EMOJI.milestone.hundred, label: "Achievements", value: String(unlocked) },
   ];
 
   // Estimate screen time (rough calculation based on completed states)

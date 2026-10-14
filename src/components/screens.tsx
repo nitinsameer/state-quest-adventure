@@ -37,6 +37,7 @@ import { CardProgressBar } from "@/components/CardProgressBar";
 import { JourneyDestinationCard } from "@/components/JourneyDestinationCard";
 
 import { DailyGoalCard } from "@/components/DailyGoalCard";
+import { EMOJI } from "@/constants/emoji";
 import { lazy, Suspense } from "react";
 
 const IndiaProgressMapLazy = lazy(() =>
@@ -213,11 +214,11 @@ export function BottomNav({
   active: "home" | "map" | "explorer" | "badges" | "profile";
 }) {
   const items = [
-    { id: "home", icon: "🏠", label: "Home", to: "/home" },
-    { id: "map", icon: "🗺️", label: "Journey", to: "/journey" },
-    { id: "explorer", icon: "🗺️", label: "Explore", to: "/explorer" },
-    { id: "badges", icon: "🏅", label: "Badges", to: "/badges" },
-    { id: "profile", icon: "👤", label: "Me", to: "/me" },
+    { id: "home", icon: EMOJI.nav.home, label: "Home", to: "/home" },
+    { id: "map", icon: EMOJI.nav.map, label: "Journey", to: "/journey" },
+    { id: "explorer", icon: EMOJI.nav.explorer, label: "Explore", to: "/explorer" },
+    { id: "badges", icon: EMOJI.nav.badges, label: "Badges", to: "/badges" },
+    { id: "profile", icon: EMOJI.nav.profile, label: "Me", to: "/me" },
   ] as const;
   return (
     <div className="relative w-full" data-testid="bottom-nav" role="navigation">
@@ -383,10 +384,10 @@ export function CreateProfileScreen() {
 
   // Age bands with milestone emoji and vibrant gradient
   const ageBands = [
-    { value: "3-5", emoji: "🌱", label: "Sprout", gradient: "bg-accent-2" },
-    { value: "6-7", emoji: "🌿", label: "Seedling", gradient: "bg-accent-1" },
-    { value: "8-9", emoji: "🌳", label: "Sapling", gradient: "bg-success" },
-    { value: "10-12", emoji: "🌲", label: "Mighty Tree", gradient: "bg-action-primary" },
+    { value: "3-5", emoji: EMOJI.ageBand.toddler, label: "Sprout", gradient: "bg-accent-2" },
+    { value: "6-7", emoji: EMOJI.ageBand.young, label: "Seedling", gradient: "bg-accent-1" },
+    { value: "8-9", emoji: EMOJI.ageBand.mid, label: "Sapling", gradient: "bg-success" },
+    { value: "10-12", emoji: EMOJI.ageBand.preteen, label: "Mighty Tree", gradient: "bg-action-primary" },
   ];
 
   const handleAgeSelect = (value: string, index: number) => {
@@ -1663,7 +1664,7 @@ export function JourneyMapScreen() {
                 <div className="text-base font-semibold text-text-secondary mt-1">
                   {regionDone}/{regionStates.length} explored {regionDone === regionStates.length && "✨ Region Complete!"}
                 </div>
-                <div className="mt-2 h-2 bg-[oklch(0.9_0.02_260)] rounded-full overflow-hidden">
+                <div className="mt-2 h-2 bg-[var(--progress-track)] rounded-full overflow-hidden">
                   <div
                     className={`h-full bg-accent-1 transition-all duration-300`}
                     style={{ width: `${(regionDone / regionStates.length) * 100}%` }}

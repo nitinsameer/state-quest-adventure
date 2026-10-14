@@ -18,6 +18,7 @@ import { useToast } from "@/hooks/useToast";
 import { usePostcardLibrary } from "@/store/postcard-library-store";
 import { StandardModal } from "@/components/StandardModal";
 import { readTokenAsHex } from "@/lib/theme-tokens";
+import { EMOJI } from "@/constants/emoji";
 
 const BADGE_EMOJI: Record<BadgeId, string> = {
   monument: "�x�›️",
@@ -299,7 +300,7 @@ export function PostcardPreviewModal({
         open={isOpen}
         onClose={handleClose}
         header={{
-          icon: "✨",
+          icon: EMOJI.action.sparkle,
           title: "Your Postcard's Ready!",
           subtitle: "What would you like to do?",
         }}
@@ -318,7 +319,7 @@ export function PostcardPreviewModal({
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-accent-1-soft">
                     <div className="text-center">
-                      <div className="text-5xl mb-2">✨</div>
+                      <div className="text-5xl mb-2">{EMOJI.action.sparkle}</div>
                       <div className="text-sm font-semibold text-muted-foreground">Creating your postcard...</div>
                     </div>
                   </div>
