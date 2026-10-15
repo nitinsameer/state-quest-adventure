@@ -334,7 +334,7 @@ function StepResult({ ceremony, state, art }: StepProps) {
             aria-valuemax={1}
             aria-label={i < filledStars ? 'earned star' : 'empty star'}
           >
-            {i < filledStars ? '⭐' : '��†'}
+            {i < filledStars ? '⭐' : '☆'}
           </div>
         ))}
       </div>
@@ -537,7 +537,7 @@ function StepStamp({ ceremony, state, art, stamped = false, onStamped }: StepPro
             </div>
 
             {/* Stamp emoji overlay (top-right) */}
-            <div className="absolute -top-1 -right-1 text-3xl">�x–</div>
+            <div className="absolute -top-1 -right-1 text-3xl">🎫</div>
           </button>
         </div>
 
@@ -701,7 +701,7 @@ function StepPostcard({ ceremony, state }: StepProps) {
         onClick={handleShare}
         className="w-full h-12 ui-button ui-button-soft text-ink font-bold text-base rounded-3xl transition-all active:scale-95"
       >
-        �x¤ Share
+        {EMOJI.action.share} Share
       </button>
     </div>
   );
@@ -821,7 +821,7 @@ function StepWhatsNext({ ceremony, state }: StepProps) {
         {/* Streak flame */}
         {ceremony.streak > 0 && (
           <div className="flex items-center justify-center gap-2">
-            <span className="text-lg">�x¥</span>
+            <span className="text-lg">{EMOJI.action.fire}</span>
             <p className="text-sm font-bold text-ink">{ceremony.streak}-day streak</p>
           </div>
         )}

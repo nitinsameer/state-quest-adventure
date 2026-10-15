@@ -1,4 +1,4 @@
-/**
+﻿/**
  * PostcardPreviewModal - Uses StandardModal for consistent design
  * 
  * Auto-shows postcard preview after quiz completion with two CTAs:
@@ -21,8 +21,8 @@ import { readTokenAsHex } from "@/lib/theme-tokens";
 import { EMOJI } from "@/constants/emoji";
 
 const BADGE_EMOJI: Record<BadgeId, string> = {
-  monument: "�x�›️",
-  animal: "�x�¾",
+  monument: "{EMOJI.achievement.monument}",
+  animal: "{EMOJI.achievement.animal}",
   explorer: "🎖️",
 };
 
@@ -330,7 +330,7 @@ export function PostcardPreviewModal({
         ]}
         buttons={[
           {
-            label: isSaving ? "Saving..." : "�x¾ Save to Passport",
+            label: isSaving ? "Saving..." : "{EMOJI.action.save} Save to Passport",
             onClick: handleSaveToPassport,
             variant: "primary",
           },

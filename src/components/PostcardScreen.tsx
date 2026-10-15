@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import { useNavigate, Link } from "@tanstack/react-router";
 import mascot from "@/assets/mascot.webp";
 import { getState } from "@/lib/states";
@@ -16,7 +16,7 @@ import { EMOJI } from "@/constants/emoji";
 
 const BADGE_EMOJI: Record<BadgeId, string> = {
   monument: "{EMOJI.achievement.monument}",
-  animal: "�x�¾",
+  animal: "{EMOJI.achievement.animal}",
   explorer: "🎖️",
 };
 
@@ -372,7 +372,7 @@ export function StatePostcardScreen({
             disabled={busy || !previewUrl}
             className="flex-1 h-12 rounded-2xl ui-button ui-accent-1-soft text-ink text-sm font-bold disabled:opacity-60 active:scale-95 transition-transform"
           >
-            {busy ? "Saving..." : "�x¾ Save"}
+            {busy ? "Saving..." : "{EMOJI.action.save} Save"}
           </button>
 
           {/* Secondary: Share (Parent-gated) */}
@@ -381,7 +381,7 @@ export function StatePostcardScreen({
             disabled={busy || !previewUrl}
             className="flex-1 h-12 rounded-2xl ui-button ui-accent-2 text-ink text-sm font-bold disabled:opacity-60 active:scale-95 transition-transform"
           >
-            �x📤 Share
+            {EMOJI.action.share} Share
           </button>
         </div>
 
@@ -403,7 +403,7 @@ export function StatePostcardScreen({
           }}
           className="w-full h-12 rounded-xl ui-button ui-accent-1-soft text-ink text-display font-bold active:scale-95 transition-transform"
         >
-          Next State �Sˆ️
+          Next State {EMOJI.action.arrow}
         </button>
       </div>
 

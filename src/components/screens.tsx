@@ -1940,7 +1940,7 @@ export function StateIntroScreen({
           }}
           className="mt-6 w-full h-14 ui-button ui-accent-1 text-ink text-h4 text-display"
         >
-          Start Exploring! âœˆ️
+          Start Exploring! ✈️
         </button>
       </div>
     </div>
@@ -3464,7 +3464,7 @@ export function CorrectAnswerScreen({
         <div className="relative">
           <div className="absolute inset-0 blur-2xl bg-white/40 rounded-full" />
           <div className="relative h-32 w-32 rounded-full ui-card ui-accent-3 flex items-center justify-center shadow-2xl">
-            <div className="text-6xl">âœ…</div>
+            <div className="text-6xl">✅</div>
           </div>
         </div>
         <h1 className="mt-6 text-h1 text-white text-center leading-relaxed">Awesome!</h1>
@@ -3567,7 +3567,7 @@ export function StateUnlockScreen({
           }}
           className="w-full h-14 ui-button ui-accent-1 text-ink text-display text-lg font-extrabold"
         >
-          Continue Adventure âœˆ️
+          Continue Adventure ✈️
         </button>
       </div>
     </div>

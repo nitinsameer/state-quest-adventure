@@ -1,4 +1,4 @@
-import { STATE_ART } from "@/lib/state-art";
+﻿import { STATE_ART } from "@/lib/state-art";
 import { getState } from "@/lib/states";
 import { fxTap } from "@/lib/fx";
 
@@ -87,19 +87,19 @@ export function JourneyDestinationCard({
   };
 
   // Determine button text and handler based on state
-  let buttonText = "Start Exploring �º";
+  let buttonText = "Start Exploring {EMOJI.action.play}";
   let buttonHandler = handleStartClick;
   let isButtonDisabled = false;
   
   if (status === "completed" && !isInProgress) {
-    buttonText = "Replay � »";
+    buttonText = "Replay {EMOJI.action.replay}";
     buttonHandler = handleReplayClick;
   } else if (status === "locked") {
     buttonText = "�x’ Locked";
     isButtonDisabled = true;
     buttonHandler = () => {};
   } else if (isInProgress) {
-    buttonText = "Continue �º";
+    buttonText = "Continue {EMOJI.action.play}";
     buttonHandler = handleStartClick;
   }
 
@@ -169,17 +169,17 @@ export function JourneyDestinationCard({
           </>
         ) : status === "completed" && !isInProgress ? (
           <>
-            <span>� »</span>
+            <span>{EMOJI.action.replay}</span>
             <span>Replay</span>
           </>
         ) : isInProgress ? (
           <>
-            <span>•¶️</span>
+            <span>{EMOJI.action.play}</span>
             <span>Continue</span>
           </>
         ) : (
           <>
-            <span>•¶️</span>
+            <span>{EMOJI.action.play}</span>
             <span>Play</span>
           </>
         )}
