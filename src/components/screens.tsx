@@ -1,4 +1,4 @@
-import mascot from "@/assets/mascot.webp";
+﻿import mascot from "@/assets/mascot.webp";
 import airplane from "@/assets/airplane.png";
 import welcomeScreenImage from "@/assets/welcome.webp";
 import avatarExplorerHat from "@/assets/avatars/avatar-explorer-hat.png";
@@ -643,7 +643,7 @@ function RecentlyCompletedCelebration({
           className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/30 hover:bg-white/50 flex items-center justify-center text-white text-lg transition-all duration-200 z-10"
           aria-label="Close"
         >
-          âœ•
+          ✕
         </button>
 
         <div className="relative z-10 flex flex-col gap-4">
@@ -890,7 +890,7 @@ function HomeDashboardContent() {
                     onClick={() => setDismissStreakWarning(true)}
                     className="text-warning opacity-70 hover:opacity-100 text-xl flex-shrink-0 transition-all duration-200"
                   >
-                    âœ•
+                    ✕
                   </button>
                 </div>
               </div>
@@ -1015,7 +1015,7 @@ function HomeDashboardContent() {
                       onClick={() => setShowLockedPreview(null)}
                       className="absolute top-4 right-4 text-muted-light hover:text-text-secondary text-xl"
                     >
-                      âœ•
+                      ✕
                     </button>
 
                     {/* State preview */}
@@ -1246,7 +1246,7 @@ function StateDetailModal({
           onClick={onClose}
           className="absolute top-4 right-4 h-8 w-8 rounded-full bg-muted flex items-center justify-center text-text-secondary hover:bg-muted"
         >
-          âœ•
+          ✕
         </button>
 
         {/* State Display */}
@@ -1857,7 +1857,7 @@ export function StateIntroScreen({
         {/* Breadcrumb Navigation */}
         <div className="absolute top-3 left-16 flex items-center gap-1 text-white text-xs font-bold">
           <span className="opacity-75">Journey</span>
-          <span className="opacity-50">›º</span>
+          <span className="opacity-50">›</span>
           {currentRegion && (
             <>
               <img
@@ -1868,7 +1868,7 @@ export function StateIntroScreen({
                 decoding="async"
               />
               <span className="opacity-75">{currentRegion.name}</span>
-              <span className="opacity-50">›º</span>
+              <span className="opacity-50">›</span>
             </>
           )}
           <img
@@ -2124,7 +2124,7 @@ export function LearningHubScreen({
         {/* Breadcrumb Navigation Context */}
         <div className="mb-2 flex items-center gap-1 text-white text-xs font-bold px-12">
           <span className="opacity-75">Journey</span>
-          <span className="opacity-50">›º</span>
+          <span className="opacity-50">›</span>
           {currentRegion && (
             <>
               <img
@@ -2135,7 +2135,7 @@ export function LearningHubScreen({
                 decoding="async"
               />
               <span className="opacity-75">{currentRegion.name}</span>
-              <span className="opacity-50">›º</span>
+              <span className="opacity-50">›</span>
             </>
           )}
           <img
@@ -2859,7 +2859,7 @@ export function LearningCardScreen({
           aria-label="Close learning card"
           className="h-12 w-12 rounded-full bg-surface-card shadow-soft flex items-center justify-center text-h4"
         >
-          âœ•
+          ✕
         </button>
 
         {/* Card counter and progress bar */}
@@ -3387,7 +3387,7 @@ function QuizScreenContent({
                         : "bg-muted text-text-secondary"
                 }`}
               >
-                {isCorrectPick ? "âœ“" : isWrongPick ? "âœ•" : isSelected ? "âœ“" : ""}
+                {isCorrectPick ? "✓" : isWrongPick ? "✕" : isSelected ? "✓" : ""}
               </span>
             </button>
           );
@@ -3437,7 +3437,7 @@ export function CorrectAnswerScreen({
         className="absolute top-3 right-3 ui-button ui-accent-1-soft text-ink w-8 h-8 rounded-full flex items-center justify-center text-lg transition-all duration-200 z-10"
         aria-label="Close"
       >
-        âœ•
+        ✕
       </button>
 
       {/* confetti dots */}
@@ -3517,7 +3517,7 @@ export function StateUnlockScreen({
         className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/30 hover:bg-white/50 text-white flex items-center justify-center text-lg transition-all duration-200 z-10"
         aria-label="Close"
       >
-        âœ•
+        ✕
       </button>
 
       <Cloud className="absolute top-10 left-2 w-28 opacity-90" />
@@ -3692,7 +3692,7 @@ function BadgeDetailModal({
           onClick={onClose}
           className="absolute top-4 right-4 h-8 w-8 rounded-full bg-muted flex items-center justify-center text-text-secondary hover:bg-muted"
         >
-          âœ•
+          ✕
         </button>
 
         {/* Badge Display */}
@@ -4173,7 +4173,7 @@ function ProfileScreenContent() {
                 {getAvatarName(p.avatar)} · Tap to select
               </div>
             </div>
-            <div className="text-text-secondary text-xl">{isSelectingAvatar ? "âœ•" : "›º"}</div>
+            <div className="text-text-secondary text-xl">{isSelectingAvatar ? "✕" : "›"}</div>
           </button>
 
           {/* Avatar Selection Grid */}
@@ -4324,7 +4324,7 @@ function ProfileScreenContent() {
                 How we handle your data
               </div>
             </div>
-            <div className="text-text-secondary text-xl">›º</div>
+            <div className="text-text-secondary text-xl">›</div>
           </Link>
         </div>
       </div>
@@ -4508,7 +4508,7 @@ function ParentZonePlaceholder() {
             Tap to configure PIN & parental settings
           </div>
         </div>
-        <div className="text-info text-lg">{showSettings ? "▼" : "›º"}</div>
+        <div className="text-info text-lg">{showSettings ? "▼" : "›"}</div>
       </button>
 
       {/* PIN Settings Panel */}
@@ -4594,7 +4594,7 @@ function RowLink({
         <div className="text-display font-extrabold text-[15px] leading-tight">{title}</div>
         <div className="text-[11px] font-bold text-text-secondary">{sub}</div>
       </div>
-      <div className="text-text-secondary text-xl">›º</div>
+      <div className="text-text-secondary text-xl">›</div>
     </Link>
   );
 }
