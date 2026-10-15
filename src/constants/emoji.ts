@@ -63,6 +63,7 @@ export const EMOJI = {
     emptyStar: '☆',
     done: '✓',
     rocket: '🚀',
+    fire: '🔥',
   },
 
   // Utilities
@@ -76,6 +77,13 @@ export const EMOJI = {
     alert: '🛖',
     rocket: '🚀',
     trophy: '🏆',
+    capital: '🏛️',
+    food: '🍽️',
+    funFact: '💡',
+    state: '📍',
+    population: '👥',
+    brain: '🧠',
+    game: '🎮',
   },
 
   // Debug and logging (for console only - not for UI)

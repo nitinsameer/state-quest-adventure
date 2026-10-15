@@ -1,4 +1,4 @@
-﻿import mascot from "@/assets/mascot.webp";
+import mascot from "@/assets/mascot.webp";
 import airplane from "@/assets/airplane.png";
 import welcomeScreenImage from "@/assets/welcome.webp";
 import avatarExplorerHat from "@/assets/avatars/avatar-explorer-hat.png";
@@ -742,7 +742,7 @@ function HomeDashboardContent() {
       const celebrated = localStorage.getItem(`india-explorer:streak-milestone-${p.streak}:v1`);
       if (!celebrated) {
         setTimeout(() => {
-          celebration.custom(message, "🏆”¥", {
+          celebration.custom(message, EMOJI.action.fire, {
             subtitle: `Keep up this amazing momentum!`,
             confetti: true,
             duration: 3000,
@@ -936,7 +936,7 @@ function HomeDashboardContent() {
               onClick={() => fxTap()}
               className="h-12 px-4 rounded-2xl ui-button ui-accent-1 text-ink text-display font-bold text-sm flex items-center transition-all duration-300 hover:scale-105 active:scale-95"
             >
-              Play •¶
+              Play ▶
             </Link>
           </div>
         </div>
@@ -1311,7 +1311,7 @@ function StateDetailModal({
           </div>
         ) : (
           <div className="roundepppd-2xl bg-info-soft border-2 border-info p-4">
-            <p className="text-h5 text-info mb-2">•¶ In Progress</p>
+            <p className="text-h5 text-info mb-2">▶ In Progress</p>
             <p className="text-body text-accent-1">
               Complete 3 cards and take the quiz to unlock the next state!
             </p>
@@ -1367,7 +1367,7 @@ export function JourneyMapScreen() {
       { threshold: 25, emoji: "🎯", message: "Quarter Way There! 25% Complete!" },
       {
         threshold: 50,
-        emoji: "{EMOJI.utility.worldMap}Ž",
+        emoji: EMOJI.utility.worldMap,
         message: "Halfway Around India! 50% Complete!",
       },
       { threshold: 75, emoji: "🏆", message: "Almost Complete! 75% Explored!" },
@@ -1659,7 +1659,7 @@ export function JourneyMapScreen() {
               const milestoneCount = 36 - completedStates;
               return milestoneCount > 0
                 ? `${milestoneCount} more to grow your tree`
-                : "{EMOJI.utility.tree} You grew the tree!";
+                : `${EMOJI.utility.tree} You grew the tree!`;
             })()}
           </div>
         </div>
@@ -1730,7 +1730,7 @@ export function JourneyMapScreen() {
                 </div>
                 <div className="text-base font-semibold text-text-secondary mt-1">
                   {regionDone}/{regionStates.length} explored{" "}
-                  {regionDone === regionStates.length && "${EMOJI.action.sparkle} Region Complete!"}
+                  {regionDone === regionStates.length && `${EMOJI.action.sparkle} Region Complete!`}
                 </div>
                 <div className="mt-2 h-2 bg-[var(--progress-track)] rounded-full overflow-hidden">
                   <div
@@ -1857,7 +1857,7 @@ export function StateIntroScreen({
         {/* Breadcrumb Navigation */}
         <div className="absolute top-3 left-16 flex items-center gap-1 text-white text-xs font-bold">
           <span className="opacity-75">Journey</span>
-          <span className="opacity-50">â€º</span>
+          <span className="opacity-50">›º</span>
           {currentRegion && (
             <>
               <img
@@ -1868,7 +1868,7 @@ export function StateIntroScreen({
                 decoding="async"
               />
               <span className="opacity-75">{currentRegion.name}</span>
-              <span className="opacity-50">â€º</span>
+              <span className="opacity-50">›º</span>
             </>
           )}
           <img
@@ -1928,7 +1928,7 @@ export function StateIntroScreen({
         <div className="mt-5 grid grid-cols-2 gap-3">
           <IntroFact label="Capital" value={state.capital} icon="🏆›️" />
           <IntroFact label="Language" value={state.language} icon="🗣️" />
-          <IntroFact label="Population" value={state.population} icon="🏆‘¥" />
+          <IntroFact label="Population" value={state.population} icon={EMOJI.utility.population} />
           <IntroFact label="Animal" value={state.animalName} icon={state.animal} />
         </div>
 
@@ -2072,8 +2072,8 @@ export function LearningHubScreen({
   useEffect(() => {
     // Celebrate at 3/6 (halfway milestone)
     if (completedCategories === 3 && !celebratedCategories.has(3)) {
-      celebration.custom(`Halfway there! ${EMOJI.action.star}`, "🏆ƒâ€♂️", {
-        subtitle: `3/6 categories explored! Keep up the momentum 🏆’¨`,
+      celebration.custom(`Halfway there! ${EMOJI.action.star}`, EMOJI.action.runningMan, {
+        subtitle: `3/6 categories explored! Keep up the momentum ${EMOJI.action.momentum}`,
         confetti: true,
         duration: 2500,
         type: "success",
@@ -2094,12 +2094,12 @@ export function LearningHubScreen({
 
   // Track completion per category - all cards must be read
   const cards = [
-    { icon: "🏆›️", title: "Capital", sub: state.capital, tone: "orange" as const },
+    { icon: EMOJI.utility.capital, title: "Capital", sub: state.capital, tone: "orange" as const },
     { icon: "🗣️", title: "Language", sub: state.language, tone: "blue" as const },
-    { icon: "🏆›", title: "Famous Food", sub: state.food, tone: "gold" as const },
+    { icon: EMOJI.utility.food, title: "Famous Food", sub: state.food, tone: "gold" as const },
     { icon: state.monument, title: "Places", sub: state.monumentName, tone: "green" as const },
     { icon: state.animal, title: "State Animal", sub: state.animalName, tone: "orange" as const },
-    { icon: "🏆’¡", title: "Fun Fact", sub: state.funFact, tone: "blue" as const },
+    { icon: EMOJI.utility.funFact, title: "Fun Fact", sub: state.funFact, tone: "blue" as const },
   ].map((c, i) => {
     // Category is complete only if ALL cards in it are read
     const isCategoryComplete =
@@ -2124,7 +2124,7 @@ export function LearningHubScreen({
         {/* Breadcrumb Navigation Context */}
         <div className="mb-2 flex items-center gap-1 text-white text-xs font-bold px-12">
           <span className="opacity-75">Journey</span>
-          <span className="opacity-50">â€º</span>
+          <span className="opacity-50">›º</span>
           {currentRegion && (
             <>
               <img
@@ -2135,7 +2135,7 @@ export function LearningHubScreen({
                 decoding="async"
               />
               <span className="opacity-75">{currentRegion.name}</span>
-              <span className="opacity-50">â€º</span>
+              <span className="opacity-50">›º</span>
             </>
           )}
           <img
@@ -2216,9 +2216,11 @@ export function LearningHubScreen({
               : "ui-accent-1-soft text-ink opacity-40 cursor-not-allowed"
           }`}
         >
-          {completedCategories === 6 && !showDecisionModal
-            ? "${EMOJI.action.sparkle} Take the Quiz! {EMOJI.milestone.twentyFive}"
-            : `🏆”’ Quiz Locked (${completedCategories}/6 done)`}
+          {completedCategories === 6 && !showDecisionModal ? (
+            <>Take the Quiz! {EMOJI.milestone.twentyFive}</>
+          ) : (
+            `Quiz Locked (${completedCategories}/6 done)`
+          )}
         </button>
       </div>
 
@@ -2375,7 +2377,7 @@ export function learningCardsFor(
     {
       kicker: "Capital",
       title: state.capital,
-      icon: "🏆›️",
+      icon: EMOJI.utility.capital,
       chip: "Capital City",
       body: `${state.capital} is the capital city of ${state.name}. It is where the state's government works from.`,
       enrichedKey: "capital" as const,
@@ -2391,7 +2393,7 @@ export function learningCardsFor(
     {
       kicker: "Famous Food",
       title: state.food,
-      icon: "🏆›",
+      icon: EMOJI.utility.food,
       chip: "Food",
       body: `${state.food} is a favourite dish of ${state.name}. Yum!`,
       enrichedKey: "food" as const,
@@ -2415,7 +2417,7 @@ export function learningCardsFor(
     {
       kicker: "Fun Fact",
       title: "Did you know?",
-      icon: "🏆’¡",
+      icon: EMOJI.utility.funFact,
       chip: "Fun Fact",
       body: state.funFact,
       enrichedKey: "funFact" as const,
@@ -2460,7 +2462,7 @@ export function learningCardsFor(
           allCards.push({
             kicker: "Cool Fact",
             title: `Cool Fact #${idx + 1}`,
-            icon: "{EMOJI.action.star}",
+            icon: EMOJI.action.star,
             chip: "Cool Fact",
             body: getText(fact),
             type: "coolFact",
@@ -2476,7 +2478,7 @@ export function learningCardsFor(
         allCards.push({
           kicker: "Trivia",
           title: "Did You Know?",
-          icon: "🏆¤”",
+          icon: EMOJI.utility.brain,
           chip: "Did You Know?",
           body: getText(cardContent.didYouKnow),
           type: "didYouKnow",
@@ -2491,7 +2493,7 @@ export function learningCardsFor(
         allCards.push({
           kicker: "Activity",
           title: "Try This Activity",
-          icon: "🏆Ž®",
+          icon: EMOJI.utility.game,
           chip: "Try This Activity",
           body: getText(cardContent.tryThis),
           type: "tryThis",
@@ -2669,7 +2671,7 @@ export function LearningCardScreen({
     return (
       <div className="w-full h-screen flex items-center justify-center bg-info-soft">
         <div className="text-center">
-          <div className="text-5xl mb-3">âš ️</div>
+          <div className="text-5xl mb-3">{EMOJI.utility.warning}</div>
           <h1 className="text-h4 text-ink mb-2">Card content unavailable</h1>
           <p className="text-sm text-text-secondary mb-4">Please try again or go back</p>
           <button
@@ -2749,7 +2751,7 @@ export function LearningCardScreen({
         //   `${currentCard.kicker} card learned!`,
         //   "🏆“š",
         //   {
-        //     subtitle: `+${XP_PER_CARD} XP earned â€¢ ${cardIndexInCategory + 1}/${cardsInCurrentCategory.length} cards in ${currentCard.kicker}`,
+        //     subtitle: `+${XP_PER_CARD} XP earned ›¢ ${cardIndexInCategory + 1}/${cardsInCurrentCategory.length} cards in ${currentCard.kicker}`,
         //     confetti: true,
         //     duration: 2000,
         //     type: "success",
@@ -2779,7 +2781,7 @@ export function LearningCardScreen({
         //   `${currentCard.kicker} card learned!`,
         //   "🏆“š",
         //   {
-        //     subtitle: `+${XP_PER_CARD} XP earned â€¢ ${currentCard.kicker} category complete! 🏆Ž“`,
+        //     subtitle: `+${XP_PER_CARD} XP earned ›¢ ${currentCard.kicker} category complete! 🎨“`,
         //     confetti: true,
         //     duration: 2000,
         //     type: "success",
@@ -2825,8 +2827,8 @@ export function LearningCardScreen({
 
       // FIX: Only main card gives XP (25 XP), not all sub-cards in the category
       // Previously showed: +75 XP for 3 sub-cards, but only 25 was awarded
-      celebration.custom(`${categoryName} mastered!`, "{EMOJI.action.star}", {
-        subtitle: `+${XP_PER_CARD} XP earned â€¢ ${mainCardIdx + 1}/6 categories mastered`,
+      celebration.custom(`${categoryName} mastered!`, EMOJI.action.star, {
+        subtitle: `+${XP_PER_CARD} XP earned ›¢ ${mainCardIdx + 1}/6 categories mastered`,
         confetti: true,
         duration: 2500,
         type: "success",
@@ -2997,11 +2999,15 @@ export function LearningCardScreen({
           <div className="flex items-center gap-2">
             <Chip
               icon={card.icon}
-              tone={card.chipTone === "purple" ? "blue" : (card.chipTone as any)}
+              tone={
+                card.chipTone === "purple"
+                  ? "blue"
+                  : (card.chipTone as "orange" | "blue" | "green" | "gold")
+              }
             >
               {card.chip}
             </Chip>
-            <Chip icon="🏆“" tone="blue">
+            <Chip icon={EMOJI.utility.state} tone="blue">
               {state.name}
             </Chip>
           </div>
@@ -3041,7 +3047,7 @@ export function LearningCardScreen({
               ? "Take the Quiz! {EMOJI.milestone.twentyFive}"
               : "Done! Back to Cards"
             : isReplaying
-              ? "Replay Complete ${EMOJI.action.sparkle}"
+              ? "Replay Complete {EMOJI.action.sparkle}"
               : "Got it! Next â†’"}
         </button>
       </div>
@@ -3051,16 +3057,16 @@ export function LearningCardScreen({
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
           <div className="bg-surface-card rounded-3xl shadow-2xl max-w-sm w-full p-6 space-y-4 animate-in zoom-in-95">
             <div className="text-center">
-              <div className="text-5xl mb-3">🏆Ž§</div>
+              <div className="text-5xl mb-3">🎨§</div>
               <h3 className="text-display text-xl font-extrabold text-ink">Enable Audio?</h3>
               <p className="text-sm text-text-secondary mt-2">
-                Turn on audio to hear the stories read aloud! 🏆Žµ
+                Turn on audio to hear the stories read aloud! 🎨µ
               </p>
             </div>
 
             <div className="bg-info-soft rounded-2xl p-4 space-y-2 text-sm">
               <div className="flex gap-2">
-                <span>🏆Ž§</span>
+                <span>🎨§</span>
                 <span className="font-semibold text-info">Stories read aloud</span>
               </div>
               <div className="flex gap-2">
@@ -3329,7 +3335,7 @@ function QuizScreenContent({
         />
         <div className="relative ui-card ui-accent-1-soft px-3 py-2 text-label font-bold">
           {result === "correct"
-            ? "Nailed it! ${EMOJI.feedback.success}"
+            ? "Nailed it! {EMOJI.feedback.success}"
             : result === "wrong"
               ? "Good try! Let's move on! 🏆‘‰"
               : "You've got this! 🏆’ª"}
@@ -3402,11 +3408,11 @@ function QuizScreenContent({
         >
           {result === "correct"
             ? isLastQuestion
-              ? "Finish Quiz ${EMOJI.feedback.success}"
+              ? "Finish Quiz {EMOJI.feedback.success}"
               : "Next Question â†’"
             : result === "wrong"
               ? isLastQuestion
-                ? "Finish Quiz ${EMOJI.feedback.success}"
+                ? "Finish Quiz {EMOJI.feedback.success}"
                 : "Next Question â†’"
               : "Check Answer"}
         </button>
@@ -3463,7 +3469,7 @@ export function CorrectAnswerScreen({
         </div>
         <h1 className="mt-6 text-h1 text-white text-center leading-relaxed">Awesome!</h1>
         <p className="mt-2 text-white/95 font-bold text-center">
-          You got it right â€” {state.capital} is the capital of {state.name}!
+          You got it right ›” {state.capital} is the capital of {state.name}!
         </p>
 
         <div className="mt-6 ui-card ui-accent-4 px-5 py-3 flex items-center gap-3">
@@ -3492,7 +3498,7 @@ export function StateUnlockScreen({
     ? getState(stateName)
     : INDIA_STATES && INDIA_STATES.length > 1
       ? INDIA_STATES[1]
-      : INDIA_STATES[0] || { name: "India", emoji: "🏆‡®🏆‡³", nickname: "Incredible India" };
+      : INDIA_STATES[0] || { name: "India", emoji: "🇮🇳", nickname: "Incredible India" };
   const art = STATE_ART[state.name];
 
   // PHASE 1b: Play sound effect when state unlocks
@@ -3738,7 +3744,7 @@ function BadgeDetailModal({
               }}
               className="flex-1 h-12 rounded-2xl bg-success text-display font-extrabold text-white shadow-lg hover:shadow-xl transition"
             >
-              ${EMOJI.feedback.success} Celebrate!
+              {EMOJI.feedback.success} Celebrate!
             </button>
           )}
         </div>
@@ -3780,10 +3786,10 @@ export function BadgesScreen() {
   const allBadges = achievementBadgesFor(progress);
   const unlockedCount = allBadges.filter((b) => b.unlocked).length;
 
-  // Helper to generate progress stars (e.g. {EMOJI.action.star}{EMOJI.action.star}â˜†)
+  // Helper to generate progress stars
   const getProgressStars = (progress: number, max: number): string => {
     const filledCount = Math.min(Math.ceil((progress / max) * 3), 3);
-    const stars = "{EMOJI.action.star}".repeat(filledCount) + "â˜†".repeat(3 - filledCount);
+    const stars = EMOJI.action.star.repeat(filledCount) + "☆".repeat(3 - filledCount);
     return stars;
   };
 
@@ -3895,7 +3901,7 @@ export function BadgesScreen() {
                           {getProgressStars(badge.progress, badge.achievementMax)}
                         </div>
                         <div className="text-[11px] font-bold text-text-secondary">
-                          Keep going! ${EMOJI.action.star}
+                          Keep going! {EMOJI.action.star}
                         </div>
                       </div>
                     )}
@@ -4157,7 +4163,7 @@ function ProfileScreenContent() {
             className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
           >
             <div className="h-12 w-12 rounded-2xl gradient-saffron flex items-center justify-center text-2xl">
-              🏆Ž­
+              🎨­
             </div>
             <div className="flex-1 text-left">
               <div className="text-display font-extrabold text-[15px] leading-tight">
@@ -4167,7 +4173,7 @@ function ProfileScreenContent() {
                 {getAvatarName(p.avatar)} · Tap to select
               </div>
             </div>
-            <div className="text-text-secondary text-xl">{isSelectingAvatar ? "âœ•" : "â€º"}</div>
+            <div className="text-text-secondary text-xl">{isSelectingAvatar ? "âœ•" : "›º"}</div>
           </button>
 
           {/* Avatar Selection Grid */}
@@ -4293,8 +4299,8 @@ function ProfileScreenContent() {
                 {/* Next Reward */}
                 <div className="ml-15 text-[11px] font-bold text-warning">
                   {daysUntilNext === 0
-                    ? "🏆Ž Claim your milestone reward!"
-                    : `🏆Ž ${daysUntilNext} day${daysUntilNext !== 1 ? "s" : ""} until ${nextMilestone}-day bonus!`}
+                    ? "🎨 Claim your milestone reward!"
+                    : `🎨 ${daysUntilNext} day${daysUntilNext !== 1 ? "s" : ""} until ${nextMilestone}-day bonus!`}
                 </div>
               </div>
             );
@@ -4318,7 +4324,7 @@ function ProfileScreenContent() {
                 How we handle your data
               </div>
             </div>
-            <div className="text-text-secondary text-xl">â€º</div>
+            <div className="text-text-secondary text-xl">›º</div>
           </Link>
         </div>
       </div>
@@ -4411,7 +4417,7 @@ function SoundToggleRow() {
         className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
       >
         <div className="h-12 w-12 rounded-2xl bg-accent-5 flex items-center justify-center text-2xl">
-          🏆Ž§
+          🎨§
         </div>
         <div className="flex-1 text-left">
           <div className="text-display font-extrabold text-[15px] leading-tight">
@@ -4492,7 +4498,7 @@ function ParentZonePlaceholder() {
         className="w-full flex items-center gap-3 hover:opacity-80 transition"
       >
         <div className="h-12 w-12 rounded-2xl bg-accent-1 flex items-center justify-center text-2xl flex-shrink-0">
-          🏆‘¨â€🏆‘©â€🏆‘§
+          🏆‘¨›🏆‘©›🏆‘§
         </div>
         <div className="flex-1 text-left">
           <div className="text-display font-extrabold text-[15px] leading-tight text-info">
@@ -4502,7 +4508,7 @@ function ParentZonePlaceholder() {
             Tap to configure PIN & parental settings
           </div>
         </div>
-        <div className="text-info text-lg">{showSettings ? "▼" : "â€º"}</div>
+        <div className="text-info text-lg">{showSettings ? "▼" : "›º"}</div>
       </button>
 
       {/* PIN Settings Panel */}
@@ -4588,7 +4594,7 @@ function RowLink({
         <div className="text-display font-extrabold text-[15px] leading-tight">{title}</div>
         <div className="text-[11px] font-bold text-text-secondary">{sub}</div>
       </div>
-      <div className="text-text-secondary text-xl">â€º</div>
+      <div className="text-text-secondary text-xl">›º</div>
     </Link>
   );
 }
@@ -4715,7 +4721,7 @@ export function EmptyStateScreen() {
           Invite a friend to join your adventure and travel across India together.
         </p>
         <button className="mt-6 h-14 px-6 rounded-2xl gradient-saffron text-white text-display text-lg font-extrabold shadow-[var(--shadow-glow-orange)]">
-          Invite a Friend ${EMOJI.action.sparkle}
+          Invite a Friend {EMOJI.action.sparkle}
         </button>
         <button className="mt-2 h-12 px-6 rounded-2xl bg-muted text-ink text-display font-extrabold">
           Maybe later
