@@ -6,12 +6,11 @@
 @import "./styles/celebrations.css";
 
 /* Theme Files */
-@import "./styles/themes/clay-dark.css";
-@import "./styles/themes/neobrutalism.css";
-@import "./styles/themes/minimal-flat.css";
-@import "./styles/themes/material-you.css";
-@import "./styles/themes/neumorphism.css";
-@import "./styles/themes/festival.css";
+@import "./styles/themes/clay.css";
+@import "./styles/themes/aero.css";
+@import "./styles/themes/cartoon-comic.css";
+@import "./styles/themes/glassmorphism.css";
+@import "./styles/themes/skeumorphism.css";
 
 @custom-variant dark (&:is(.dark *));
 

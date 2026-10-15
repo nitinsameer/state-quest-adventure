@@ -11,7 +11,7 @@ import { Capacitor } from '@capacitor/core';
 import { StatusBar } from '@capacitor/status-bar';
 
 // Valid theme IDs (must match entries in src/lib/themes.ts)
-type ThemeId = 'clay' | 'clay-dark' | 'neobrutalism' | 'minimal-flat' | 'festival' | 'material-you' | 'neumorphism';
+type ThemeId = 'clay' | 'aero' | 'cartoon-comic' | 'glassmorphism' | 'skeumorphism';
 
 // Zod validation schema for persisted theme data
 const ThemePersistenceSchema = z.object({
@@ -75,12 +75,10 @@ function applyTheme(themeId: ThemeId) {
 function validateTheme(value: unknown): ThemeId {
   const validThemes: ThemeId[] = [
     'clay',
-    'clay-dark',
-    'neobrutalism',
-    'minimal-flat',
-    'festival',
-    'material-you',
-    'neumorphism',
+    'aero',
+    'cartoon-comic',
+    'glassmorphism',
+    'skeumorphism',
   ];
 
   if (typeof value === 'string' && validThemes.includes(value as ThemeId)) {
