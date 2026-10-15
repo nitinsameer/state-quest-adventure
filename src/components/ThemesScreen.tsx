@@ -1,24 +1,41 @@
 /**
  * Themes Screen - Theme Picker UI
- * 
+ *
  * Shows a 2-column grid of theme tiles with live previews.
  * Users can tap to apply a theme instantly.
  * Choice persists to localStorage and applies immediately.
  */
 
-import { useEffect, useState } from 'react';
-import { useThemeStore } from '@/store/themeStore';
-import { getVisibleThemes } from '@/lib/themes';
+import { useEffect, useState } from "react";
+import { useThemeStore } from "@/store/themeStore";
+import { getVisibleThemes, getTheme } from "@/lib/themes";
+import { isMusicEnabled, setMusicEnabled, playThemeMusic } from "@/lib/theme-music";
+import { EMOJI } from "@/constants/emoji";
 
 export function ThemesScreen() {
   const { currentTheme, setTheme } = useThemeStore();
   const [isChanging, setIsChanging] = useState(false);
+  const [musicEnabled, setMusicEnabledState] = useState(isMusicEnabled());
   const themes = getVisibleThemes();
 
   const handleThemeSelect = (themeId: string) => {
     setIsChanging(true);
-    setTheme(themeId as any);
+    setTheme(themeId as "clay" | "aero" | "cartoon-comic" | "glassmorphism" | "skeumorphism");
     setTimeout(() => setIsChanging(false), 200);
+  };
+
+  const handleMusicToggle = () => {
+    const newState = !musicEnabled;
+    setMusicEnabled(newState);
+    setMusicEnabledState(newState);
+
+    // If enabling, start playing current theme music
+    if (newState) {
+      const theme = getTheme(currentTheme);
+      if (theme.musicUrl) {
+        playThemeMusic(currentTheme, theme.musicUrl);
+      }
+    }
   };
 
   return (
@@ -33,14 +50,39 @@ export function ThemesScreen() {
           >
             ‹
           </button>
-          <h1 className="text-display font-extrabold text-white text-center flex-1">
-            My Style
-          </h1>
+          <h1 className="text-display font-extrabold text-white text-center flex-1">My Style</h1>
           <div className="w-10" />
         </div>
         <p className="text-white/90 text-sm text-center mt-2">
           Choose your favorite theme — changes apply instantly
         </p>
+
+        {/* Music Toggle */}
+        <div
+          className="flex items-center justify-center gap-3 mt-4 px-4 py-3 rounded-2xl"
+          style={{ backgroundColor: "var(--blur-overlay)" }}
+        >
+          <span className="text-white text-sm font-bold flex items-center gap-2">
+            <span>{EMOJI.audio.music}</span>
+            <span>Play theme music</span>
+          </span>
+          <button
+            onClick={handleMusicToggle}
+            className="w-12 h-6 rounded-full transition-all"
+            style={{
+              backgroundColor: musicEnabled ? "var(--surface-card)" : "var(--blur-overlay)",
+            }}
+            aria-label={musicEnabled ? "Disable theme music" : "Enable theme music"}
+          >
+            <div
+              className="w-5 h-5 rounded-full transition-transform"
+              style={{
+                backgroundColor: musicEnabled ? "var(--accent-1)" : "var(--surface-muted)",
+                transform: musicEnabled ? "translateX(1.5rem)" : "translateX(0.125rem)",
+              }}
+            />
+          </button>
+        </div>
       </div>
 
       {/* Themes Grid */}
@@ -52,8 +94,8 @@ export function ThemesScreen() {
               onClick={() => handleThemeSelect(theme.id)}
               className={`rounded-2xl p-4 transition-all duration-200 relative border-4 ${
                 currentTheme === theme.id
-                  ? 'border-accent-1 shadow-lg scale-105'
-                  : 'border-transparent hover:shadow-md'
+                  ? "border-accent-1 shadow-lg scale-105"
+                  : "border-transparent hover:shadow-md"
               }`}
               style={{ backgroundColor: theme.previewTokens.bg }}
             >
@@ -69,7 +111,10 @@ export function ThemesScreen() {
                 {/* Mini card preview */}
                 <div
                   className="h-20 rounded-xl p-3 flex flex-col items-center justify-center gap-1"
-                  style={{ backgroundColor: theme.previewTokens.accent + '20', border: `2px solid ${theme.previewTokens.accent}` }}
+                  style={{
+                    backgroundColor: theme.previewTokens.accent + "20",
+                    border: `2px solid ${theme.previewTokens.accent}`,
+                  }}
                 >
                   {/* Accent color dots */}
                   <div className="flex gap-1.5">
@@ -93,7 +138,10 @@ export function ThemesScreen() {
                   </div>
                   <div
                     className="text-[10px] px-2 py-0.5 rounded"
-                    style={{ backgroundColor: theme.previewTokens.accent, color: theme.previewTokens.bg }}
+                    style={{
+                      backgroundColor: theme.previewTokens.accent,
+                      color: theme.previewTokens.bg,
+                    }}
                   >
                     Play
                   </div>
@@ -102,16 +150,10 @@ export function ThemesScreen() {
 
               {/* Theme Name and Description */}
               <div className="text-left">
-                <h3
-                  className="text-sm font-extrabold"
-                  style={{ color: theme.previewTokens.text }}
-                >
+                <h3 className="text-sm font-extrabold" style={{ color: theme.previewTokens.text }}>
                   {theme.name}
                 </h3>
-                <p
-                  className="text-xs opacity-70 mt-1"
-                  style={{ color: theme.previewTokens.text }}
-                >
+                <p className="text-xs opacity-70 mt-1" style={{ color: theme.previewTokens.text }}>
                   {theme.description}
                 </p>
               </div>

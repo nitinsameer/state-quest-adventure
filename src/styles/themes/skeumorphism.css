@@ -90,4 +90,36 @@
   --bg-overlay: oklch(1 0 0);
   --blur-overlay: rgba(200, 200, 200, 0.4);
   --fb-error-soft: oklch(0.96 0.08 27);
+
+  /* Typography */
+  --font-display: 'Roboto Slab', Georgia, serif;
+  --font-sans: 'Roboto', sans-serif;
+
+  /* Gradient background */
+  --bg-page: linear-gradient(180deg, #F5F5F5 0%, #E8E8E8 100%);
+
+  /* Shadows */
+  --shadow-card: 0 2px 4px rgba(0, 0, 0, 0.3), 0 8px 16px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  --shadow-button: 0 2px 3px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+
+  /* Radii */
+  --radius-card: 1rem;
+  --radius-button: 0.5rem;
+
+  /* Border width */
+  --border-width-ui: 1px;
+}
+
+/* Skeumorphism-specific card effects */
+[data-theme='skeumorphism'] .card,
+[data-theme='skeumorphism'] [class*='card'] {
+  box-shadow: var(--shadow-card);
+  border-radius: var(--radius-card);
+  background: linear-gradient(180deg, #FFFFFF 0%, #F8F8F8 100%) !important;
+}
+
+[data-theme='skeumorphism'] button,
+[data-theme='skeumorphism'] [role='button'] {
+  box-shadow: var(--shadow-button);
+  background: linear-gradient(180deg, #FFFFFF 0%, #E8E8E8 100%);
 }

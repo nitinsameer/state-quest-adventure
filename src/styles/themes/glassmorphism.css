@@ -90,4 +90,33 @@
   --bg-overlay: oklch(1 0 0 / 0.6);
   --blur-overlay: rgba(255, 255, 255, 0.9);
   --fb-error-soft: oklch(0.96 0.08 27 / 0.7);
+
+  /* Typography */
+  --font-display: 'Poppins', sans-serif;
+  --font-sans: 'Poppins', sans-serif;
+
+  /* Gradient background */
+  --bg-page: linear-gradient(135deg, #E8EAFF 0%, #F5E6FF 50%, #E6F0FF 100%);
+
+  /* Shadows */
+  --shadow-card: 0 8px 32px rgba(100, 100, 200, 0.15);
+  --shadow-button: 0 4px 16px rgba(100, 100, 200, 0.2);
+
+  /* Radii */
+  --radius-card: 1.5rem;
+  --radius-button: 1rem;
+
+  /* Border width */
+  --border-width-ui: 1px;
+}
+
+/* Glassmorphism-specific card effects */
+[data-theme='glassmorphism'] .card,
+[data-theme='glassmorphism'] [class*='card'] {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.25) !important;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: var(--shadow-card);
+  border-radius: var(--radius-card);
 }

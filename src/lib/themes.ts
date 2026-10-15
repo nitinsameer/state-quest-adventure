@@ -11,6 +11,7 @@ export interface Theme {
   description: string;
   isDark: boolean;
   hidden?: boolean;
+  musicUrl?: string;
   effects: {
     blur: boolean;
     glow: boolean;
@@ -30,6 +31,7 @@ export const THEMES: Theme[] = [
     name: 'Claymorphism',
     description: 'Soft, warm, and friendly. The default India Explorer theme.',
     isDark: false,
+    musicUrl: '/music/clay-folk-loop.mp3',
     effects: {
       blur: false,
       glow: false,
@@ -47,6 +49,7 @@ export const THEMES: Theme[] = [
     name: 'Futura Aero',
     description: 'Clean, futuristic, and streamlined. Modern aerospace-inspired design.',
     isDark: false,
+    musicUrl: '/music/aero-synthwave-loop.mp3',
     effects: {
       blur: false,
       glow: false,
@@ -64,6 +67,7 @@ export const THEMES: Theme[] = [
     name: 'Cartoon Comic',
     description: 'Playful and vibrant. Bold lines, bright colors, comic book style.',
     isDark: false,
+    musicUrl: '/music/cartoon-comic-upbeat-loop.mp3',
     effects: {
       blur: false,
       glow: false,
@@ -81,6 +85,7 @@ export const THEMES: Theme[] = [
     name: 'Glassmorphism',
     description: 'Modern and translucent. Frosted glass effect with soft blur.',
     isDark: false,
+    musicUrl: '/music/glass-lofi-loop.mp3',
     effects: {
       blur: true,
       glow: false,
@@ -98,6 +103,7 @@ export const THEMES: Theme[] = [
     name: 'Skeumorphism',
     description: 'Realistic and tactile. Detailed shadows and textures. Nostalgic iOS feel.',
     isDark: false,
+    musicUrl: '/music/skeu-nostalgic-loop.mp3',
     effects: {
       blur: false,
       glow: false,

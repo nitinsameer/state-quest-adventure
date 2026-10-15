@@ -90,4 +90,37 @@
   --bg-overlay: oklch(1 0 0);
   --blur-overlay: rgba(255, 200, 0, 0.3);
   --fb-error-soft: oklch(0.96 0.12 30);
+
+  /* Typography */
+  --font-display: 'Bangers', 'Comic Neue', cursive;
+  --font-sans: 'Patrick Hand', 'Comic Neue', cursive;
+
+  /* Gradient background */
+  --bg-page: linear-gradient(135deg, #FFF9E6 0%, #FFEB99 100%);
+
+  /* Shadows */
+  --shadow-card: 4px 4px 0px #000000;
+  --shadow-button: 4px 4px 0px #000000;
+
+  /* Radii */
+  --radius-card: 1rem;
+  --radius-button: 0.75rem;
+
+  /* Border width */
+  --border-width-ui: 3px;
+  --border-color: #000000;
+}
+
+/* Cartoon-comic-specific card effects */
+[data-theme='cartoon-comic'] .card,
+[data-theme='cartoon-comic'] [class*='card'] {
+  box-shadow: var(--shadow-card);
+  border: var(--border-width-ui) solid #000;
+  border-radius: var(--radius-card);
+}
+
+[data-theme='cartoon-comic'] button,
+[data-theme='cartoon-comic'] [role='button'] {
+  border: 3px solid #000 !important;
+  box-shadow: var(--shadow-button);
 }
