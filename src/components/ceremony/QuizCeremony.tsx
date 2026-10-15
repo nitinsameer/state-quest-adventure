@@ -89,7 +89,7 @@ export function QuizCeremony() {
             className="text-on-header text-xs font-bold opacity-75 hover:opacity-100 transition-opacity active:scale-95"
             aria-label="Skip to results"
           >
-            Skip � “
+            Skip »
           </button>
         </div>
 
@@ -551,7 +551,7 @@ function StepStamp({ ceremony, state, art, stamped = false, onStamped }: StepPro
       <div className="text-center">
         {stamped ? (
           <p className="text-body text-ink font-bold">
-            Stamp {stampCount} of 36 collected! �S“
+            Stamp {stampCount} of 36 collected! ✓
           </p>
         ) : (
           <p className="text-body text-ink/60 text-sm">
@@ -690,7 +690,7 @@ function StepPostcard({ ceremony, state }: StepProps) {
       {showSaveStatus && (
         <div className="ui-card ui-accent-3 px-4 py-3 rounded-2xl animate-fade-in">
           <div className="flex items-center justify-center gap-2">
-            <span className="text-xl">�S“</span>
+            <span className="text-xl">✓</span>
             <span className="text-sm font-bold text-ink">Saved in your Passport</span>
           </div>
         </div>

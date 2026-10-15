@@ -649,7 +649,7 @@ function RecentlyCompletedCelebration({
         <div className="relative z-10 flex flex-col gap-4">
           {/* Title - Celebration message */}
           <div className="text-center">
-            <div className="text-lg font-bold opacity-95 text-ink">🏆† STATE MASTERED! 🏆†</div>
+            <div className="text-lg font-bold opacity-95 text-ink">🏆 STATE MASTERED! 🏆</div>
             <div className="text-3xl font-black mt-2 drop-shadow-lg text-ink">{stateName}</div>
           </div>
 
@@ -689,7 +689,7 @@ function RecentlyCompletedCelebration({
               onClick={handleNextState}
               className="flex-1 h-11 rounded-xl bg-surface-card text-action-primary text-sm font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 active:scale-95"
             >
-              Next State â†’
+              Next State →
             </button>
           </div>
         </div>
@@ -808,7 +808,7 @@ function HomeDashboardContent() {
             {/* Greeting - Single line, cleaner */}
             <div className="text-text-on-header">
               <div className="text-h4 text-display leading-tight">
-                Namaste, {p?.name?.split(" ")[0] || "Explorer"}! 🏆‘‹
+                Namaste, {p?.name?.split(" ")[0] || "Explorer"}! 👋
               </div>
               <div className="text-body-sm opacity-95 mt-1">Level {level} · Explorer</div>
             </div>
@@ -1055,7 +1055,7 @@ function HomeDashboardContent() {
 
                       <div className="p-4 rounded-2xl bg-info-soft border-l-4 border-info shadow-elevated-1 hover:shadow-elevated-2 transition-all">
                         <div className="text-label text-info uppercase tracking-wider font-bold">
-                          🏆’¡ Fun Fact
+                          🎯 Fun Fact
                         </div>
                         <div className="text-body text-info mt-2 font-semibold">
                           {state.funFact}
@@ -1203,7 +1203,7 @@ function MiniStateCard({
       </div>
       <div className="mt-2 text-display font-extrabold text-sm">{name}</div>
       <div className="text-[10px] font-bold text-text-secondary">
-        {locked ? "🏆”’ Locked" : "Unlocked"}
+        {locked ? "🏆 Locked" : "Unlocked"}
       </div>
     </div>
   );
@@ -1306,7 +1306,7 @@ function StateDetailModal({
           </div>
         ) : isDone ? (
           <div className="rounded-2xl bg-success-soft border-2 border-success p-4">
-            <p className="text-h5 text-success mb-2">âœ“ Completed</p>
+            <p className="text-h5 text-success mb-2">✓ Completed</p>
             <p className="text-body text-success">You've earned all badges for this state!</p>
           </div>
         ) : (
@@ -1403,7 +1403,7 @@ export function JourneyMapScreen() {
     const handleBack = () => {
       appLogger.info("journey_map_screen", "handleJourneyBack called, current view:", view?.screen);
 
-      // Navigate back within internal views: card â†’ hub â†’ intro â†’ map
+      // Navigate back within internal views: card → hub → intro → map
       if (view?.screen === "card" || view?.screen === "quiz") {
         // From card or quiz, go back to hub
         appLogger.info("journey_map_screen", "Back from card/quiz to hub");
@@ -1605,7 +1605,7 @@ export function JourneyMapScreen() {
         }}
         onDone={() => {
           appLogger.info("journey_map_screen", "QuizScreen onDone clicked");
-          // Navigate to completion screen which will show postcard â†’ unlock â†’ explorer
+          // Navigate to completion screen which will show postcard → unlock → explorer
           const slug = view.name.toLowerCase().replace(/\s+/g, "-");
           navigate({ to: "/state/$slug/complete", params: { slug } });
         }}
@@ -1699,7 +1699,7 @@ export function JourneyMapScreen() {
                   title={`${regionDone}/${regionStates.length} explored`}
                 >
                   {region.emoji} {region.name.split(" ")[0]}{" "}
-                  {isSelected && regionDone === regionStates.length && "âœ“"}
+                  {isSelected && regionDone === regionStates.length && "✓"}
                 </button>
               );
             })}
@@ -2329,17 +2329,17 @@ function HubCard({
       {categoryCardsTotal !== undefined && categoryCardsRead !== undefined && (
         <div className={`mt-2 text-xs font-bold ${done ? "text-success" : "text-text-secondary"}`}>
           {categoryCardsRead}/{categoryCardsTotal}
-          {done && " âœ“"}
+          {done && " ✓"}
         </div>
       )}
       {done && (
         <div className="absolute top-2 right-2 h-8 w-8 rounded-full bg-success text-white flex items-center justify-center text-h5 font-black shadow-lg animate-bounce">
-          âœ“
+          ✓
         </div>
       )}
       {locked && (
         <div className="absolute top-2 right-2 h-7 w-7 rounded-full bg-black/50 text-white flex items-center justify-center text-xs">
-          🏆”’
+          🏆
         </div>
       )}
     </button>
@@ -3017,7 +3017,7 @@ export function LearningCardScreen({
         {/* Swipe hint for non-last cards */}
         {!isLast && !isLastInMainCardSection && (
           <div className="mt-3 text-center text-xs font-semibold text-ink/50">
-            â† Swipe or tap Next â†’
+            â† Swipe or tap Next →
           </div>
         )}
 
@@ -3048,7 +3048,7 @@ export function LearningCardScreen({
               : "Done! Back to Cards"
             : isReplaying
               ? "Replay Complete {EMOJI.action.sparkle}"
-              : "Got it! Next â†’"}
+              : "Got it! Next →"}
         </button>
       </div>
 
@@ -3409,11 +3409,11 @@ function QuizScreenContent({
           {result === "correct"
             ? isLastQuestion
               ? "Finish Quiz {EMOJI.feedback.success}"
-              : "Next Question â†’"
+              : "Next Question →"
             : result === "wrong"
               ? isLastQuestion
                 ? "Finish Quiz {EMOJI.feedback.success}"
-                : "Next Question â†’"
+                : "Next Question →"
               : "Check Answer"}
         </button>
       </div>
@@ -3483,7 +3483,7 @@ export function CorrectAnswerScreen({
 
       <div className="p-6 relative">
         <button className="w-full h-14 ui-button ui-accent-1 text-ink text-display text-lg font-extrabold animate-pulse active:scale-95 transition-transform">
-          Next Question â†’
+          Next Question →
         </button>
       </div>
     </div>
@@ -3604,7 +3604,7 @@ function Stamp({
   if (!filled) {
     return (
       <div className="aspect-square rounded-2xl border-2 border-dashed border-muted-foreground/30 flex flex-col items-center justify-center text-text-secondary">
-        <div className="text-3xl opacity-40">🏆”’</div>
+        <div className="text-3xl opacity-40">🏆</div>
         <div className="text-[11px] font-extrabold mt-1">{name}</div>
       </div>
     );
@@ -3636,7 +3636,7 @@ function Stamp({
         className="absolute -top-1 -right-1 text-xs font-bold rotate-12 px-1.5 py-0.5 rounded"
         style={{ background: color, color: "white" }}
       >
-        âœ“
+        ✓
       </div>
     </button>
   );
@@ -3702,7 +3702,7 @@ function BadgeDetailModal({
               badge.done ? "gradient-saffron shadow-lg" : "bg-surface-sunken opacity-60"
             }`}
           >
-            {badge.done ? badge.icon : "🏆”’"}
+            {badge.done ? badge.icon : "🏆"}
           </div>
 
           <h2 className="text-display text-2xl font-extrabold text-ink">{badge.name}</h2>
@@ -3808,7 +3808,7 @@ export function BadgesScreen() {
               : "text-text-secondary hover:text-muted-dark"
           }`}
         >
-          🏆† Achievement Badges
+          🏆 Achievement Badges
         </button>
         <button
           onClick={() => {
@@ -3887,7 +3887,7 @@ export function BadgesScreen() {
                   <div className="mt-1 pt-3 border-t border-white/20 w-full">
                     {badge.unlocked ? (
                       <div className="flex flex-col gap-1">
-                        <div className="text-lg font-extrabold">âœ“ You Did It!</div>
+                        <div className="text-lg font-extrabold">✓ You Did It!</div>
                         <div className="text-[11px] font-bold text-ink/70">
                           {new Date().toLocaleDateString("en-US", {
                             month: "short",
@@ -4104,7 +4104,7 @@ function ProfileScreenContent() {
                   }`}
                 >
                   {saveStatus === "saved"
-                    ? "âœ“ Saved"
+                    ? "✓ Saved"
                     : saveStatus === "saving"
                       ? "Saving..."
                       : "Save"}
@@ -4250,7 +4250,7 @@ function ProfileScreenContent() {
               <div className="text-[11px] font-bold">
                 {hasFileConsent ? (
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-success/10 text-success border border-success">
-                    Active âœ“
+                    Active ✓
                   </span>
                 ) : (
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-sunken text-text-secondary border border-surface-sunken">
@@ -4314,7 +4314,7 @@ function ProfileScreenContent() {
             className="ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
           >
             <div className="h-12 w-12 rounded-2xl gradient-explorer flex items-center justify-center text-2xl">
-              🏆”’
+              🏆
             </div>
             <div className="flex-1">
               <div className="text-display font-extrabold text-[15px] leading-tight">
@@ -4426,7 +4426,7 @@ function SoundToggleRow() {
           <div className="text-[11px] font-bold">
             {audioEnabled ? (
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-success/10 text-success border border-success/30">
-                Active âœ“
+                Active ✓
               </span>
             ) : (
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-sunken text-text-secondary border border-border-color">
@@ -4527,7 +4527,7 @@ function ParentZonePlaceholder() {
               className="w-full h-10 rounded-lg border-2 border-info px-3 font-extrabold text-center text-lg tracking-widest text-info"
             />
             <div className="text-[10px] text-accent-1 mt-1">
-              🏆’¡ Used to reset progress. Default: 1234
+              🎯 Used to reset progress. Default: 1234
             </div>
           </div>
           <button
@@ -4540,7 +4540,7 @@ function ParentZonePlaceholder() {
             }`}
           >
             {pinSaveStatus === "saved"
-              ? "âœ“ PIN Saved"
+              ? "✓ PIN Saved"
               : pinSaveStatus === "saving"
                 ? "Saving..."
                 : "Save PIN"}
