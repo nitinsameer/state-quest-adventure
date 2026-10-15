@@ -1,4 +1,4 @@
-﻿import mascot from "@/assets/mascot.webp";
+import mascot from "@/assets/mascot.webp";
 import airplane from "@/assets/airplane.png";
 import welcomeScreenImage from "@/assets/welcome.webp";
 import avatarExplorerHat from "@/assets/avatars/avatar-explorer-hat.png";
@@ -3017,7 +3017,7 @@ export function LearningCardScreen({
         {/* Swipe hint for non-last cards */}
         {!isLast && !isLastInMainCardSection && (
           <div className="mt-3 text-center text-xs font-semibold text-ink/50">
-            â† Swipe or tap Next →
+            ← Swipe or tap Next →
           </div>
         )}
 
@@ -3291,7 +3291,7 @@ function QuizScreenContent({
           aria-label="Back to categories"
           className="h-12 w-12 rounded-full ui-button ui-accent-1-soft text-ink flex items-center justify-center text-xl flex-shrink-0"
         >
-          â†
+          ←
         </button>
 
         {/* Progress Blocks - Color coded (Green=Correct, Red=Wrong, Blue=Current) */}
@@ -4209,10 +4209,10 @@ function ProfileScreenContent() {
           <ThemePickerNavButton />
         </div>
 
-        {/* âš™️ Settings Section Header */}
+        {/* ⚙️ Settings Section Header */}
         <div className="animate-fade-in pt-2" style={{ animationDelay: "195ms" }}>
           <h3 className="text-sm font-extrabold text-text-secondary uppercase tracking-wider px-1 mb-2">
-            âš™️ Settings
+            ⚙️ Settings
           </h3>
         </div>
 

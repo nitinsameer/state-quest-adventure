@@ -141,7 +141,7 @@ export function QuizCeremony() {
             onClick={advanceStep}
             className="w-full h-14 ui-button ui-accent-1 text-ink font-display font-bold text-lg rounded-3xl transition-all active:scale-95"
           >
-            Next � ’
+            Next →
           </button>
         )}
         {step === 1 && (
@@ -150,7 +150,7 @@ export function QuizCeremony() {
             disabled={!stampedState}
             className="w-full h-14 ui-button ui-accent-1 text-ink font-display font-bold text-lg rounded-3xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Next � ’
+            Next →
           </button>
         )}
         {step === 2 && (
@@ -158,7 +158,7 @@ export function QuizCeremony() {
             onClick={advanceStep}
             className="w-full h-14 ui-button ui-accent-1 text-ink font-display font-bold text-lg rounded-3xl transition-all active:scale-95"
           >
-            Next � ’
+            Next →
           </button>
         )}
         {step === 3 && (
@@ -175,7 +175,7 @@ export function QuizCeremony() {
               }}
               className="w-full h-14 ui-button ui-accent-1 text-ink font-display font-bold text-lg rounded-3xl transition-all active:scale-95"
             >
-              Next State � ’
+              Next State →
             </button>
 
             {/* Secondary: Replay button (only if stars < 3) */}

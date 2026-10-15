@@ -23,11 +23,11 @@ interface StatePerformanceBadgeModalProps {
   onClose: () => void;
 }
 
-// Helper to generate progress stars (e.g ⭐⭐��†)
+// Helper to generate progress stars (e.g ⭐⭐☆)
 const getProgressStars = (progress: number, max: number): string => {
   if (max === 0) return "";
   const filledCount = Math.min(Math.ceil((progress / max) * 3), 3);
-  const stars = "⭐".repeat(filledCount) + "��†".repeat(3 - filledCount);
+  const stars = "⭐".repeat(filledCount) + "☆".repeat(3 - filledCount);
   return stars;
 };
 
@@ -67,7 +67,7 @@ export function StatePerformanceBadgeModal({
             }}
             className="text-2xl text-muted-light hover:text-muted-foreground transition"
           >
-            �S•
+            ✕
           </button>
         </div>
 
