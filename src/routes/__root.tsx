@@ -628,7 +628,7 @@ function RootComponent() {
       <div className="h-screen w-full flex items-center justify-center bg-bg-header">
         <div className="text-center">
           <div className="text-6xl mb-4 animate-bounce">{EMOJI.nav.map}</div>
-          <div className="text-text-on-primary font-bold text-lg">Loading your adventure...</div>
+          <div className="font-bold text-lg" style={{color: "var(--text-on-primary)"}}>Loading your adventure...</div>
         </div>
       </div>
     );

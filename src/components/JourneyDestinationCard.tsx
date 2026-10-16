@@ -55,18 +55,18 @@ export function JourneyDestinationCard({
 
   // Determine card styling based on status and tone
   let cardBgColor = toneBackgrounds[state.tone] || toneBackgrounds.orange;
-  let textColorClass = "text-text-primary";
+  let textColorStyle: React.CSSProperties = {color: "var(--text-primary)"};
   let buttonGradientClass = toneGradients[state.tone] || "gradient-saffron";
   let buttonTextClass = "text-on-header";
 
   if (status === "completed") {
     cardBgColor = toneBackgrounds[state.tone] || toneBackgrounds.orange;
-    textColorClass = "text-text-primary";
+    textColorStyle = {color: "var(--text-primary)"};
     buttonGradientClass = toneGradients[state.tone] || "gradient-saffron";
     buttonTextClass = "text-on-header";
   } else if (status === "locked") {
     cardBgColor = "var(--surface-sunken)";
-    textColorClass = "text-text-secondary";
+    textColorStyle = {color: "var(--text-secondary)"};
     buttonGradientClass = "bg-surface-sunken";
     buttonTextClass = "text-text-secondary";
   }
@@ -131,7 +131,7 @@ export function JourneyDestinationCard({
 
       {/* Status indicator */}
       {status === "locked" && (
-        <div className="mb-2 flex items-center gap-1 text-sm font-bold text-text-secondary">
+        <div className="mb-2 flex items-center gap-1 text-sm font-bold" style={{color: "var(--text-secondary)"}}>
           <span>🔥</span>
           <span>Locked</span>
         </div>

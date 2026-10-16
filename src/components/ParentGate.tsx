@@ -172,7 +172,7 @@ export function ParentGate({ onVerified, onCancel }: ParentGateProps) {
         {mode === "pin-entry" && (
           <>
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-text-primary">Enter PIN</label>
+              <label className="text-sm font-semibold" style={{color: "var(--text-primary)"}}>Enter PIN</label>
               <input
                 type="password"
                 inputMode="numeric"
@@ -185,7 +185,7 @@ export function ParentGate({ onVerified, onCancel }: ParentGateProps) {
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handlePinVerify();
                 }}
-                className="w-full rounded-lg border-2 border-[var(--border-color)] px-4 py-2 text-center tracking-widest bg-surface-card text-text-primary"
+                className="w-full rounded-lg border-2 border-[var(--border-color)] px-4 py-2 text-center tracking-widest bg-surface-card" style={{color: "var(--text-primary)"}}
               />
               {pinError && (
                 <p className="text-xs text-[var(--fb-error-fg)] font-semibold">{pinError}</p>
@@ -195,14 +195,14 @@ export function ParentGate({ onVerified, onCancel }: ParentGateProps) {
             <div className="flex gap-2">
               <button
                 onClick={onCancel}
-                className="flex-1 rounded-lg bg-[var(--surface-muted)] px-4 py-2 font-semibold text-text-primary hover:bg-[var(--surface-raised)]"
+                className="flex-1 rounded-lg bg-[var(--surface-muted)] px-4 py-2 font-semibold  hover:bg-[var(--surface-raised)]"
               >
                 Cancel
               </button>
               <button
                 onClick={handlePinVerify}
                 disabled={loading}
-                className="flex-1 rounded-lg bg-[var(--action-primary-bg)] px-4 py-2 font-semibold text-text-on-primary hover:bg-[var(--action-primary-hover)] disabled:opacity-50"
+                className="flex-1 rounded-lg bg-[var(--action-primary-bg)] px-4 py-2 font-semibold hover:bg-[var(--action-primary-hover)] disabled:opacity-50" style={{color: "var(--text-on-primary)"}}
               >
                 {loading ? "Checking..." : "Verify"}
               </button>
@@ -220,7 +220,7 @@ export function ParentGate({ onVerified, onCancel }: ParentGateProps) {
         {mode === "pin-create" && (
           <>
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-text-primary">
+              <label className="text-sm font-semibold ">
                 Create a PIN (4+ digits)
               </label>
               <input
@@ -232,12 +232,12 @@ export function ParentGate({ onVerified, onCancel }: ParentGateProps) {
                   setPin_State(e.target.value);
                   setPinError("");
                 }}
-                className="w-full rounded-lg border-2 border-[var(--border-color)] px-4 py-2 text-center tracking-widest bg-surface-card text-text-primary"
+                className="w-full rounded-lg border-2 border-[var(--border-color)] px-4 py-2 text-center tracking-widest bg-surface-card "
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-text-primary">Confirm PIN</label>
+              <label className="text-sm font-semibold ">Confirm PIN</label>
               <input
                 type="password"
                 inputMode="numeric"
@@ -250,7 +250,7 @@ export function ParentGate({ onVerified, onCancel }: ParentGateProps) {
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handlePinCreate();
                 }}
-                className="w-full rounded-lg border-2 border-[var(--border-color)] px-4 py-2 text-center tracking-widest bg-surface-card text-text-primary"
+                className="w-full rounded-lg border-2 border-[var(--border-color)] px-4 py-2 text-center tracking-widest bg-surface-card "
               />
               {pinError && (
                 <p className="text-xs text-[var(--fb-error-fg)] font-semibold">{pinError}</p>
@@ -260,14 +260,14 @@ export function ParentGate({ onVerified, onCancel }: ParentGateProps) {
             <div className="flex gap-2">
               <button
                 onClick={onCancel}
-                className="flex-1 rounded-lg bg-[var(--surface-muted)] px-4 py-2 font-semibold text-text-primary hover:bg-[var(--surface-raised)]"
+                className="flex-1 rounded-lg bg-[var(--surface-muted)] px-4 py-2 font-semibold  hover:bg-[var(--surface-raised)]"
               >
                 Cancel
               </button>
               <button
                 onClick={handlePinCreate}
                 disabled={loading}
-                className="flex-1 rounded-lg bg-[var(--action-primary-bg)] px-4 py-2 font-semibold text-text-on-primary hover:bg-[var(--action-primary-hover)] disabled:opacity-50"
+                className="flex-1 rounded-lg bg-[var(--action-primary-bg)] px-4 py-2 font-semibold  hover:bg-[var(--action-primary-hover)] disabled:opacity-50"
               >
                 {loading ? "Creating..." : "Create PIN"}
               </button>
@@ -278,10 +278,10 @@ export function ParentGate({ onVerified, onCancel }: ParentGateProps) {
         {mode === "challenge" && (
           <>
             <div className="space-y-4 rounded-lg bg-[var(--surface-raised)] p-4 text-center">
-              <p className="text-sm text-text-primary/70">
+              <p className="text-sm /70">
                 Let's verify you're a parent. Multiply these numbers:
               </p>
-              <p className="text-3xl font-bold text-text-primary">
+              <p className="text-3xl font-bold ">
                 {num1} × {num2} = ?
               </p>
               <input
@@ -306,13 +306,13 @@ export function ParentGate({ onVerified, onCancel }: ParentGateProps) {
             <div className="flex gap-2">
               <button
                 onClick={() => setMode("pin-entry")}
-                className="flex-1 rounded-lg bg-[var(--surface-muted)] px-4 py-2 font-semibold text-text-primary hover:bg-[var(--surface-raised)]"
+                className="flex-1 rounded-lg bg-[var(--surface-muted)] px-4 py-2 font-semibold  hover:bg-[var(--surface-raised)]"
               >
                 Back
               </button>
               <button
                 onClick={handleChallengeSubmit}
-                className="flex-1 rounded-lg bg-[var(--action-primary-bg)] px-4 py-2 font-semibold text-text-on-primary hover:bg-[var(--action-primary-hover)]"
+                className="flex-1 rounded-lg bg-[var(--action-primary-bg)] px-4 py-2 font-semibold  hover:bg-[var(--action-primary-hover)]"
               >
                 Check Answer
               </button>
