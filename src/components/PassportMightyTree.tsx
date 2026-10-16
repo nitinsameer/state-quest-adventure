@@ -53,14 +53,14 @@ export function PassportMightyTree() {
       )}
 
       {/* Header */}
-      <div className="px-5 pt-4 pb-3 bg-bg-header text-text-on-header rounded-b-3xl shadow-lg">
+      <div className="px-5 pt-4 pb-3 bg-bg-header rounded-b-3xl shadow-lg" style={{color: "var(--text-on-header)"}}>
         <div className="text-2xl font-extrabold">My Stamps 🎫</div>
       </div>
 
       {/* Profile & Detailed Stats */}
       <div className="mx-5 mt-4 space-y-3 overflow-y-auto flex-1">
         {/* Profile Card */}
-        <div className="p-4 rounded-3xl bg-accent-1 text-text-on-primary shadow-lg sticky top-0">
+        <div className="p-4 rounded-3xl bg-accent-1 shadow-lg sticky top-0" style={{color: "var(--text-on-primary)"}}>
           <div className="flex items-center gap-3 mb-2">
             <div className="text-4xl">{progress.avatar}</div>
             <div className="flex-1">
@@ -87,7 +87,7 @@ export function PassportMightyTree() {
 
         {/* Milestones/Goals */}
         <div className="space-y-2">
-          <div className="px-1 text-sm font-bold text-text-secondary">
+          <div className="px-1 text-sm font-bold" style={{color: "var(--text-secondary)"}}>
             {EMOJI.milestone.twentyFive} Milestones
           </div>
           {milestones.map((milestone) => (
@@ -96,8 +96,8 @@ export function PassportMightyTree() {
               className="p-3 rounded-2xl bg-surface-card border-2 border-border-color shadow-sm"
             >
               <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-extrabold text-text-primary">{milestone.label}</span>
-                <span className="text-xs font-bold text-text-secondary">
+                <span className="text-sm font-extrabold" style={{color: "var(--text-primary)"}}>{milestone.label}</span>
+                <span className="text-xs font-bold" style={{color: "var(--text-secondary)"}}>
                   {milestone.current}/{milestone.target}
                 </span>
               </div>
@@ -113,15 +113,15 @@ export function PassportMightyTree() {
 
         {/* Activity */}
         <div className="space-y-2">
-          <div className="px-1 text-sm font-bold text-text-secondary">📊 Activity</div>
+          <div className="px-1 text-sm font-bold" style={{color: "var(--text-secondary)"}}>📊 Activity</div>
           <div className="p-3 rounded-2xl bg-surface-card border-2 border-border-color shadow-sm space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-text-secondary">This week:</span>
-              <span className="font-extrabold text-text-primary">3 states</span>
+              <span style={{color: "var(--text-secondary)"}}>This week:</span>
+              <span className="font-extrabold" style={{color: "var(--text-primary)"}}>3 states</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-text-secondary">Last played:</span>
-              <span className="font-extrabold text-text-primary">Yesterday</span>
+              <span style={{color: "var(--text-secondary)"}}>Last played:</span>
+              <span className="font-extrabold" style={{color: "var(--text-primary)"}}>Yesterday</span>
             </div>
           </div>
         </div>

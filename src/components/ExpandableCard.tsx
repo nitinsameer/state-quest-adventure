@@ -66,9 +66,9 @@ export function ExpandableCard({
       <div className="flex items-start gap-(--gap-base) mb-(--space-3)">
         <div className="text-3xl flex-shrink-0">{emoji}</div>
         <div className="flex-1 min-w-0">
-          <h3 className="text-display font-bold text-xl leading-snug" style={{color: "var(--text-muted)"}}>{title}</h3>
+          <h3 className="text-display font-bold text-xl leading-snug" style={{color: "var(--text-primary)"}}>{title}</h3>
           {/* Main Text positioned just above key facts to preserve space */}
-          <p className="text-sm font-semibold text-muted-foreground leading-relaxed mt-1.5">
+          <p className="text-body-sm font-semibold text-primary leading-relaxed mt-(--space-0-5)">
             {mainText}
           </p>
         </div>
@@ -79,9 +79,10 @@ export function ExpandableCard({
         <div className="mb-(--space-3)">
           <button
             onClick={handleToggleExpand}
-            className="w-full flex items-center justify-between mb-2 p-(--padding-sm) rounded-lg hover:bg-surface-sunken active:scale-95 transition"
+            className="w-full flex items-center justify-between mb-(--space-1) p-(--padding-sm) rounded-lg hover:bg-surface-sunken active:scale-95 transition min-h-12 min-w-12"
+            aria-label={isExpanded ? "Hide facts" : "Show facts"}
           >
-            <span className="text-xs font-bold text-muted-foreground">
+            <span className="text-label font-bold text-primary">
               {isExpanded ? <>{EMOJI.icons.facts} Hide Facts</> : <>{EMOJI.action.sparkle} Cool Facts</>}
             </span>
             <span
@@ -93,11 +94,11 @@ export function ExpandableCard({
           </button>
 
           {isExpanded && (
-            <div className="space-y-2 pl-1">
+            <div className="space-y-(--space-1) pl-1">
               {keyFacts.slice(0, visibleFactsCount).map((fact, index) => (
                 <div
                   key={index}
-                  className="text-xs font-semibold bg-surface-card/60 p-(--padding-sm) rounded-lg border-l-3 border-info animate-fadeIn" style={{color: "var(--text-muted)"}}
+                  className="text-caption font-semibold bg-surface-card/60 p-(--padding-sm) rounded-lg border-l-3 border-info animate-fadeIn" style={{color: "var(--text-primary)"}}
                 >
                   {fact}
                 </div>
@@ -106,7 +107,7 @@ export function ExpandableCard({
               {hasMoreFacts && (
                 <button
                   onClick={handleShowMore}
-                  className="w-full mt-2 py-(--padding-sm) px-(--padding-base) bg-accent-1-soft hover:bg-accent-1-soft/70 rounded-lg text-xs font-bold text-accent-1 active:scale-95 transition"
+                  className="w-full mt-(--space-1) py-(--padding-sm) px-(--padding-base) bg-accent-1-soft hover:bg-accent-1-soft/70 rounded-lg text-caption font-bold text-accent-1 active:scale-95 transition"
                 >
                   + Show {Math.min(3, keyFacts.length - visibleFactsCount)} More Facts{" "}
                   {EMOJI.action.star}
@@ -125,9 +126,9 @@ export function ExpandableCard({
             <div className="overflow-hidden">
               <button
                 onClick={() => handleToggleDetail(0)}
-                className="w-full flex items-center justify-between p-(--padding-sm) rounded-lg hover:bg-surface-sunken active:scale-95 transition bg-warning-soft border border-warning"
+                className="w-full flex items-center justify-between p-(--padding-sm) rounded-lg hover:bg-surface-sunken active:scale-95 transition bg-warning-soft border border-warning min-h-12 min-w-12"
               >
-                <span className="text-xs font-bold text-warning">
+                <span className="text-label font-bold text-warning">
                   {EMOJI.action.star} More Amazing Facts
                 </span>
                 <span
@@ -141,11 +142,11 @@ export function ExpandableCard({
               </button>
 
               {expandedDetailIndex === 0 && (
-                <div className="mt-2 space-y-2 pl-1 animate-fadeIn">
+                <div className="mt-(--space-1) space-y-(--space-1) pl-1 animate-fadeIn">
                   {coolFacts.map((fact, index) => (
                     <div
                       key={index}
-                      className="text-xs font-semibold bg-warning-soft p-(--padding-sm) rounded-lg border-l-3 border-warning" style={{color: "var(--text-secondary)"}}
+                      className="text-caption font-semibold bg-warning-soft p-(--padding-sm) rounded-lg border-l-3 border-warning" style={{color: "var(--text-primary)"}}
                     >
                       {fact}
                     </div>
@@ -160,9 +161,9 @@ export function ExpandableCard({
             <div className="overflow-hidden">
               <button
                 onClick={() => handleToggleDetail(1)}
-                className="w-full flex items-center justify-between p-(--padding-sm) rounded-lg hover:bg-surface-sunken active:scale-95 transition bg-accent-5-soft border border-accent-5"
+                className="w-full flex items-center justify-between p-(--padding-sm) rounded-lg hover:bg-surface-sunken active:scale-95 transition bg-accent-5-soft border border-accent-5 min-h-12 min-w-12"
               >
-                <span className="text-xs font-bold text-accent-5">🤔 Did You Know?</span>
+                <span className="text-label font-bold text-accent-5">🤔 Did You Know?</span>
                 <span
                   className="text-lg transition-transform"
                   style={{
@@ -174,8 +175,8 @@ export function ExpandableCard({
               </button>
 
               {expandedDetailIndex === 1 && (
-                <div className="mt-2 bg-accent-5-soft p-(--padding-base) rounded-lg border-2 border-accent-5 animate-fadeIn">
-                  <p className="text-xs font-bold text-accent-5 leading-relaxed">{didYouKnow}</p>
+                <div className="mt-(--space-1) bg-accent-5-soft p-(--padding-base) rounded-lg border-2 border-accent-5 animate-fadeIn">
+                  <p className="text-caption font-bold text-accent-5 leading-relaxed">{didYouKnow}</p>
                 </div>
               )}
             </div>
@@ -186,9 +187,9 @@ export function ExpandableCard({
             <div className="overflow-hidden">
               <button
                 onClick={() => handleToggleDetail(2)}
-                className="w-full flex items-center justify-between p-(--padding-sm) rounded-lg hover:bg-surface-sunken active:scale-95 transition bg-success-soft border border-success"
+                className="w-full flex items-center justify-between p-(--padding-sm) rounded-lg hover:bg-surface-sunken active:scale-95 transition bg-success-soft border border-success min-h-12 min-w-12"
               >
-                <span className="text-xs font-bold text-success">🎮 Try This Activity</span>
+                <span className="text-label font-bold text-success">🎮 Try This Activity</span>
                 <span
                   className="text-lg transition-transform"
                   style={{
@@ -200,8 +201,8 @@ export function ExpandableCard({
               </button>
 
               {expandedDetailIndex === 2 && (
-                <div className="mt-2 bg-success-soft p-(--padding-base) rounded-lg border-2 border-success animate-fadeIn">
-                  <p className="text-xs font-bold text-success leading-relaxed">{tryThis}</p>
+                <div className="mt-(--space-1) bg-success-soft p-(--padding-base) rounded-lg border-2 border-success animate-fadeIn">
+                  <p className="text-caption font-bold text-success leading-relaxed">{tryThis}</p>
                 </div>
               )}
             </div>

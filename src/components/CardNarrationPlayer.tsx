@@ -18,6 +18,7 @@ import {
   subscribeConsentChanges,
   grantFeatureConsent,
 } from "@/lib/parental-consent";
+import { KidsButton } from "./KidsButton";
 
 export interface CardNarrationPlayerProps {
   narrationId: string;
@@ -96,25 +97,27 @@ export function CardNarrationPlayer({
           <div className="bg-surface-card rounded-3xl p-(--padding-lg) max-w-sm shadow-2xl animate-in fade-in scale-in">
             <div className="text-center">
               <div className="text-5xl mb-(--space-2)">🎧</div>
-              <h3 className="text-xl font-bold mb-(--space-0-5)" style={{color: "var(--text-primary)"}}>
+              <h3 className="text-h4 font-bold mb-(--space-0-5)" style={{color: "var(--text-primary)"}}>
                 Enable Audio?
               </h3>
-              <p className="text-sm mb-(--space-2)" style={{color: "var(--text-muted)"}}>
+              <p className="text-body-sm mb-(--space-2)" style={{color: "var(--text-primary)"}}>
                 Would you like to enable audio to hear this story read aloud?
               </p>
               <div className="flex gap-(--gap-base)">
-                <button
+                <KidsButton
+                  variant="secondary"
+                  size="md"
                   onClick={() => setShowPermissionPrompt(false)}
-                  className="flex-1 px-(--padding-md) py-(--padding-base) rounded-xl bg-surface-muted font-bold transition active:scale-95" style={{color: "var(--text-muted)"}}
                 >
                   Not Now
-                </button>
-                <button
+                </KidsButton>
+                <KidsButton
+                  variant="primary"
+                  size="md"
                   onClick={handleEnableAudio}
-                  className="flex-1 px-(--padding-md) py-(--padding-base) rounded-xl bg-action-primary-bg font-bold transition active:scale-95" style={{color: "var(--text-on-primary)"}}
                 >
                   Enable Audio
-                </button>
+                </KidsButton>
               </div>
             </div>
           </div>
@@ -147,18 +150,18 @@ export function CardNarrationPlayer({
 
           {/* Info Section */}
           <div className="flex-1 min-w-0">
-            <div className="text-xs font-bold text-action-primary-bg uppercase tracking-wide">
+            <div className="text-label font-bold text-action-primary-bg uppercase tracking-wide">
               🎧 Listen to Story
             </div>
-            <div className="text-sm font-bold text-action-primary-bg mt-(--space-0-25)">
+            <div className="text-body-sm font-bold text-action-primary-bg mt-(--space-0-25)">
               {title}
             </div>
             {audioNarrationEnabled ? (
-              <div className="text-xs text-action-primary-bg mt-(--space-0-25)">
+              <div className="text-caption text-action-primary-bg mt-(--space-0-25)">
                 {isCurrentPlaying ? "🎵 Playing... tap to stop" : "Tap play to hear! 👂"}
               </div>
             ) : (
-              <div className="text-xs text-action-primary-bg font-semibold mt-1">
+              <div className="text-caption text-action-primary-bg font-semibold mt-(--space-0-25)">
                 📢 Tap to enable audio
               </div>
             )}

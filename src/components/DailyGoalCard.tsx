@@ -3,6 +3,7 @@ import { getState, stateSlug, INDIA_STATES } from "@/lib/states";
 import { fxTap } from "@/lib/fx";
 import { Link } from "@tanstack/react-router";
 import { EMOJI } from "@/constants/emoji";
+import { KidsButton } from "./KidsButton";
 
 /**
  * Daily Goal Card for HomeDashboardScreen
@@ -90,7 +91,7 @@ export function DailyGoalCard() {
             <div className="text-body-sm text-white leading-tight">
               {dailyGoal} State{dailyGoal > 1 ? "s" : ""} Today
             </div>
-            <div className="text-caption text-white/90 mt-1">{getEncouragementMessage()}</div>
+            <div className="text-caption text-white/90 mt-(--space-0-5)">{getEncouragementMessage()}</div>
           </div>
 
           {/* Middle: Progress indicator */}
@@ -107,13 +108,14 @@ export function DailyGoalCard() {
                 to="/state/$slug/learn"
                 params={{ slug: stateSlug(currentState.name) }}
                 onClick={() => fxTap()}
-                className="h-10 px-(--padding-base) rounded-lg bg-white text-display font-extrabold text-xs shadow-lg flex items-center justify-center transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
               >
-                Play →
+                <KidsButton variant="primary" size="md">
+                  Play →
+                </KidsButton>
               </Link>
             )}
             {goalMet && (
-              <div className="h-10 px-(--padding-base) rounded-lg bg-white/20 border border-white text-white text-display font-extrabold text-xs flex items-center justify-center">
+              <div className="h-12 px-(--padding-base) rounded-full bg-white/20 border border-white text-white text-label font-bold flex items-center justify-center">
                 ✓ Done
               </div>
             )}
