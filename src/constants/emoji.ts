@@ -87,6 +87,14 @@ export const EMOJI = {
     language: '🗣️',
   },
 
+  // Learning and content
+  learning: {
+    funFact: '💡',
+    brain: '🧠',
+    game: '🎮',
+    state: '🗺️',
+  },
+
   // Debug and logging (for console only - not for UI)
   debug: {
     clapboard: '🎬',

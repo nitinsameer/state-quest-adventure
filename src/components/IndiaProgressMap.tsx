@@ -35,13 +35,13 @@ export function IndiaProgressMap() {
 
   const getMotivationalMessage = () => {
     if (completionPercentage === 0) {
-      return `${EMOJI.utility.rocket} Start exploring`;
+      return `${EMOJI.action.rocket} Start exploring`;
     } else if (completionPercentage === 100) {
       return `${EMOJI.progress.streamComplete} Congratulations! You're an India Master!`;
     } else if (completionPercentage >= 75) {
-      return `${EMOJI.utility.trophy} You're almost there! Just a few more states!`;
+      return `${EMOJI.feedback.trophy} You're almost there! Just a few more states!`;
     } else if (completionPercentage >= 50) {
-      return `${EMOJI.utility.tree} Halfway there! Keep exploring!`;
+      return `${EMOJI.ageBand.mid} Halfway there! Keep exploring!`;
     } else {
       return `${EMOJI.ageBand.toddler} Great start! Keep the momentum going!`;
     }
@@ -64,7 +64,7 @@ export function IndiaProgressMap() {
             onClick={handleStartExploring}
             className="flex items-center gap-1.5 bg-accent-1-soft hover:bg-accent-1-soft/80 text-accent-1 px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 active:scale-95"
           >
-            <span>{EMOJI.utility.rocket}</span>
+            <span>{EMOJI.action.rocket}</span>
             <span>Start exploring!</span>
           </button>
         </div>

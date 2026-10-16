@@ -76,10 +76,10 @@ export function FirstSessionTutorial({ onComplete, isVisible = true }: FirstSess
     },
     {
       title: "Unlock New States",
-      emoji: "{EMOJI.nav.map}",
+      emoji: EMOJI.nav.map,
       description: "Complete states to unlock the next adventure. Each state = 1 stamp for your passport!",
       tips: [
-        { emoji: EMOJI.utility.trophy, text: "Collect all 36 state stamps" },
+        { emoji: EMOJI.feedback.trophy, text: "Collect all 36 state stamps" },
         { emoji: "🔥", text: "Build a daily streak" },
         { emoji: EMOJI.achievement.badge, text: "Earn special badges" },
       ],
@@ -136,7 +136,7 @@ export function FirstSessionTutorial({ onComplete, isVisible = true }: FirstSess
           variant: "secondary",
         },
         {
-          label: step === 2 ? `Got It! ${EMOJI.utility.rocket}` : "Next →",
+          label: step === 2 ? `Got It! ${EMOJI.action.rocket}` : "Next →",
           onClick: handleNext,
           variant: "primary",
         },

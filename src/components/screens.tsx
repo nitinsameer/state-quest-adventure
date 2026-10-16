@@ -778,7 +778,7 @@ function HomeDashboardContent() {
 
   const getUnlockRequirement = (stateName: string): string => {
     // All states unlocked from day 1 - free exploration mode
-    return "{EMOJI.utility.worldMap} All states open - explore freely!";
+    return `${EMOJI.utility.worldMap} All states open - explore freely!`;
   };
 
   return (
@@ -1659,7 +1659,7 @@ export function JourneyMapScreen() {
               const milestoneCount = 36 - completedStates;
               return milestoneCount > 0
                 ? `${milestoneCount} more to grow your tree`
-                : `${EMOJI.utility.tree} You grew the tree!`;
+                : `${EMOJI.ageBand.mid} You grew the tree!`;
             })()}
           </div>
         </div>
@@ -2099,7 +2099,7 @@ export function LearningHubScreen({
     { icon: EMOJI.utility.food, title: "Famous Food", sub: state.food, tone: "gold" as const },
     { icon: state.monument, title: "Places", sub: state.monumentName, tone: "green" as const },
     { icon: state.animal, title: "State Animal", sub: state.animalName, tone: "orange" as const },
-    { icon: EMOJI.utility.funFact, title: "Fun Fact", sub: state.funFact, tone: "blue" as const },
+    { icon: EMOJI.learning.funFact, title: "Fun Fact", sub: state.funFact, tone: "blue" as const },
   ].map((c, i) => {
     // Category is complete only if ALL cards in it are read
     const isCategoryComplete =
@@ -2417,7 +2417,7 @@ export function learningCardsFor(
     {
       kicker: "Fun Fact",
       title: "Did you know?",
-      icon: EMOJI.utility.funFact,
+      icon: EMOJI.learning.funFact,
       chip: "Fun Fact",
       body: state.funFact,
       enrichedKey: "funFact" as const,
@@ -2478,7 +2478,7 @@ export function learningCardsFor(
         allCards.push({
           kicker: "Trivia",
           title: "Did You Know?",
-          icon: EMOJI.utility.brain,
+          icon: EMOJI.learning.brain,
           chip: "Did You Know?",
           body: getText(cardContent.didYouKnow),
           type: "didYouKnow",
@@ -2493,7 +2493,7 @@ export function learningCardsFor(
         allCards.push({
           kicker: "Activity",
           title: "Try This Activity",
-          icon: EMOJI.utility.game,
+          icon: EMOJI.learning.game,
           chip: "Try This Activity",
           body: getText(cardContent.tryThis),
           type: "tryThis",
@@ -3007,7 +3007,7 @@ export function LearningCardScreen({
             >
               {card.chip}
             </Chip>
-            <Chip icon={EMOJI.utility.state} tone="blue">
+            <Chip icon={EMOJI.learning.state} tone="blue">
               {state.name}
             </Chip>
           </div>
