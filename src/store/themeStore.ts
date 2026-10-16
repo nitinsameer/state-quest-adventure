@@ -8,7 +8,7 @@
 import { create } from "zustand";
 import { z } from "zod";
 import { Capacitor } from "@capacitor/core";
-import { StatusBar } from "@capacitor/status-bar";
+import { StatusBar, Style } from "@capacitor/status-bar";
 import { playThemeMusic, stopThemeMusic, isMusicEnabled } from "@/lib/theme-music";
 import { getTheme } from "@/lib/themes";
 
@@ -50,8 +50,8 @@ function applyTheme(themeId: ThemeId) {
       const statusbarStyle = computedStyle.getPropertyValue("--statusbar-style").trim() || "dark";
       const statusbarBg = computedStyle.getPropertyValue("--statusbar-bg").trim() || "#FF8A3D";
 
-      const styleValue = statusbarStyle === "dark" ? "DARK" : "LIGHT";
-      StatusBar.setStyle({ style: styleValue as "DARK" | "LIGHT" }).catch(() => {});
+      const styleValue = statusbarStyle === "dark" ? Style.Dark : Style.Light;
+      StatusBar.setStyle({ style: styleValue }).catch(() => {});
       StatusBar.setBackgroundColor({ color: statusbarBg }).catch(() => {});
     } catch (error) {
       console.warn("Failed to update status bar:", error);
