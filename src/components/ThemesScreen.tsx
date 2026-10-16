@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { useThemeStore } from "@/store/themeStore";
 import { getVisibleThemes, getTheme } from "@/lib/themes";
 import { isMusicEnabled, setMusicEnabled, playThemeMusic } from "@/lib/theme-music";
+import { fxTap } from "@/lib/fx";
 import { EMOJI } from "@/constants/emoji";
 
 export function ThemesScreen() {
@@ -19,12 +20,14 @@ export function ThemesScreen() {
   const themes = getVisibleThemes();
 
   const handleThemeSelect = (themeId: string) => {
+    fxTap();
     setIsChanging(true);
     setTheme(themeId as "clay" | "aero" | "cartoon-comic" | "glassmorphism" | "skeumorphism");
     setTimeout(() => setIsChanging(false), 200);
   };
 
   const handleMusicToggle = () => {
+    fxTap();
     const newState = !musicEnabled;
     setMusicEnabled(newState);
     setMusicEnabledState(newState);
@@ -44,7 +47,10 @@ export function ThemesScreen() {
       <div className="px-5 pt-4 pb-6 bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 rounded-b-[32px]">
         <div className="flex items-center justify-between">
           <button
-            onClick={() => window.history.back()}
+            onClick={() => {
+              fxTap();
+              window.history.back();
+            }}
             aria-label="Go back"
             className="h-10 w-10 rounded-full bg-white/25 flex items-center justify-center text-white text-xl"
           >
