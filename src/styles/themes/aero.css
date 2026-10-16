@@ -33,7 +33,7 @@
   --action-secondary-bg: oklch(0.95 0.02 260);
   --action-secondary-fg: oklch(0.15 0.02 250);
   --action-success-bg: oklch(0.65 0.18 150);
-  --action-success-fg: oklch(1 0 0);
+  --action-success-fg: oklch(0.22 0.05 260);
   --action-disabled-bg: oklch(0.92 0.01 260);
   --action-disabled-fg: oklch(0.6 0.04 260);
 
@@ -43,16 +43,16 @@
   --accent-1-ink: oklch(1 0 0);
   --accent-2: oklch(0.65 0.18 150);
   --accent-2-soft: oklch(0.94 0.04 150);
-  --accent-2-ink: oklch(1 0 0);
+  --accent-2-ink: oklch(0.22 0.05 260);
   --accent-3: oklch(0.72 0.15 60);
   --accent-3-soft: oklch(0.96 0.02 60);
-  --accent-3-ink: oklch(0.15 0.02 250);
+  --accent-3-ink: oklch(0.22 0.05 260);
   --accent-4: oklch(0.62 0.2 290);
   --accent-4-soft: oklch(0.94 0.05 290);
-  --accent-4-ink: oklch(1 0 0);
+  --accent-4-ink: oklch(0.22 0.05 260);
   --accent-5: oklch(0.55 0.15 40);
   --accent-5-soft: oklch(0.95 0.03 40);
-  --accent-5-ink: oklch(0.15 0.02 250);
+  --accent-5-ink: oklch(1 0 0);
   --accent-6: oklch(0.65 0.18 200);
   --accent-6-soft: oklch(0.94 0.04 200);
   --accent-6-ink: oklch(1 0 0);
