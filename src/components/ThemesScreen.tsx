@@ -26,7 +26,7 @@ export function ThemesScreen() {
   return (
     <div className="h-full w-full bg-bg-page flex flex-col">
       {/* Header */}
-      <div className="px-5 pt-4 pb-6 bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 rounded-b-[32px]">
+      <div className="px-5 pt-4 pb-6 bg-header rounded-b-[32px]">
         <div className="flex items-center justify-between">
           <button
             onClick={() => {
