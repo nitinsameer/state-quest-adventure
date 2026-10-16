@@ -82,7 +82,7 @@ export function ExpandableCard({
             className="w-full flex items-center justify-between mb-2 p-(--padding-sm) rounded-lg hover:bg-surface-sunken active:scale-95 transition"
           >
             <span className="text-xs font-bold text-muted-foreground">
-              {isExpanded ? "{EMOJI.icons.facts} Hide Facts" : "{EMOJI.action.sparkle} Cool Facts"}
+              {isExpanded ? <>{EMOJI.icons.facts} Hide Facts</> : <>{EMOJI.action.sparkle} Cool Facts</>}
             </span>
             <span
               className="text-lg transition-transform"

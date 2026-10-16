@@ -188,7 +188,7 @@ export function UnlockCelebration() {
         const names = ids
           .map((id) => `${BADGE_ICON[id]} ${STATE_BADGES.find((b) => b.id === id)?.name ?? id}`)
           .join(" · ");
-        lines.push(`{EMOJI.achievement.badge} ${state}: ${names}`);
+        lines.push(`${EMOJI.achievement.badge} ${state}: ${names}`);
       }
     }
 

@@ -203,8 +203,9 @@ export function PassportSeedling() {
         </div>
         <div className="text-base font-semibold text-text-secondary mt-1">
           {regionProgress} explored{" "}
-          {unlockedInRegion.length === regionStates.length &&
-            "{EMOJI.action.sparkle} Region Complete!"}
+          {unlockedInRegion.length === regionStates.length && (
+            <>{EMOJI.action.sparkle} Region Complete!</>
+          )}
         </div>
         <div className="mt-2 h-2 bg-progress-track rounded-full overflow-hidden">
           <div

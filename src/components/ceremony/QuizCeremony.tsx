@@ -575,7 +575,7 @@ function StepPostcard({ ceremony, state }: StepProps) {
   const prefersReducedMotion = useRef(false);
 
   // Fixed emoji list: face-savouring-food, national-park, party-popper
-  const STICKER_OPTIONS = ["😋", "🎊", "{EMOJI.action.celebrate}"];
+  const STICKER_OPTIONS = ["😋", "🎊", EMOJI.action.celebrate];
 
   // Check for prefers-reduced-motion
   useEffect(() => {
