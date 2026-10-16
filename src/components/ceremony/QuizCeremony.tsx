@@ -175,7 +175,7 @@ export function QuizCeremony() {
                 dismissPendingCelebration();
                 const nextState = nextStateAfter(ceremony.stateName);
                 if (nextState) {
-                  navigate({ to: `/state/${nextState.short}/welcome` });
+                  navigate({ to: "/state/$slug", params: { slug: nextState.short } });
                 }
               }}
               className="w-full h-14 ui-button ui-accent-1 text-ink font-display font-bold text-lg rounded-3xl transition-all active:scale-95"
@@ -743,7 +743,7 @@ function StepWhatsNext({ ceremony, state }: StepProps) {
     fxTap();
     dismissPendingCelebration();
     if (nextState) {
-      navigate({ to: `/state/${nextState.short}/welcome` });
+      navigate({ to: "/state/$slug", params: { slug: nextState.short } });
     }
   };
 
