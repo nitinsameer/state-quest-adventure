@@ -1927,7 +1927,7 @@ export function StateIntroScreen({
 
         <div className="mt-5 grid grid-cols-2 gap-3">
           <IntroFact label="Capital" value={state.capital} icon="🏆›️" />
-          <IntroFact label="Language" value={state.language} icon="🗣️" />
+          <IntroFact label="Language" value={state.language} icon={EMOJI.utility.language} />
           <IntroFact label="Population" value={state.population} icon={EMOJI.utility.population} />
           <IntroFact label="Animal" value={state.animalName} icon={state.animal} />
         </div>
@@ -2095,7 +2095,7 @@ export function LearningHubScreen({
   // Track completion per category - all cards must be read
   const cards = [
     { icon: EMOJI.utility.capital, title: "Capital", sub: state.capital, tone: "orange" as const },
-    { icon: "🗣️", title: "Language", sub: state.language, tone: "blue" as const },
+    { icon: EMOJI.utility.language, title: "Language", sub: state.language, tone: "blue" as const },
     { icon: EMOJI.utility.food, title: "Famous Food", sub: state.food, tone: "gold" as const },
     { icon: state.monument, title: "Places", sub: state.monumentName, tone: "green" as const },
     { icon: state.animal, title: "State Animal", sub: state.animalName, tone: "orange" as const },
@@ -2385,7 +2385,7 @@ export function learningCardsFor(
     {
       kicker: "Language",
       title: state.language,
-      icon: "🗣️",
+      icon: EMOJI.utility.language,
       chip: "Language",
       body: `People in ${state.name} mostly speak ${state.language}. Try saying hello in it!`,
       enrichedKey: "language" as const,

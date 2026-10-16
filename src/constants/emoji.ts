@@ -79,22 +79,12 @@ export const EMOJI = {
 
   // Utilities
   utility: {
-    worldMap: '🌍',
-    tree: '🌳',
-    regionComplete: '✨',
-    target: '🎯',
-    confetti: '🎉',
-    warning: '🚨',
-    alert: '🛖',
-    rocket: '🚀',
-    trophy: '🏆',
-    capital: '🏛️',
-    food: '🍽️',
-    funFact: '💡',
-    state: '📍',
+    worldMap: '🗺️',
     population: '👥',
-    brain: '🧠',
-    game: '🎮',
+    capital: '🏛️',
+    food: '🍛',
+    warning: '⚠️',
+    language: '🗣️',
   },
 
   // Debug and logging (for console only - not for UI)

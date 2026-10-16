@@ -30,6 +30,9 @@ function getVolume(): number {
 }
 
 export function playThemeMusic(themeId: string, musicUrl?: string): void {
+  // Respect reduced-motion preference
+  if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  
   if (!isEnabled()) return;
   if (!musicUrl) return;
   if (currentThemeId === themeId && currentAudio && !currentAudio.paused) return;
