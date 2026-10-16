@@ -5,7 +5,7 @@ import { EMOJI } from "@/constants/emoji";
 
 /**
  * India Journey Meta-Game Progress Card
- * 
+ *
  * Features:
  * - Prominent white card showcasing milestone progression
  * - Progress visualization with dots (one per milestone)
@@ -57,7 +57,9 @@ export function IndiaProgressMap() {
             <span className="text-xl">{EMOJI.language.indFlag}</span>
             <div>
               <h3 className="text-base font-black text-text-primary">India Journey</h3>
-              <p className="text-xs text-text-secondary font-semibold">{p.completed.length} / 36 states explored</p>
+              <p className="text-xs text-text-secondary font-semibold">
+                {p.completed.length} / 36 states explored
+              </p>
             </div>
           </div>
           <button
@@ -104,7 +106,9 @@ export function IndiaProgressMap() {
                   {milestone.emoji}
                 </div>
                 {/* Label */}
-                <span className="text-xs font-bold text-text-secondary text-center">{milestone.label}</span>
+                <span className="text-xs font-bold text-text-secondary text-center">
+                  {milestone.label}
+                </span>
               </div>
             );
           })}
@@ -118,4 +122,3 @@ export function IndiaProgressMap() {
     </div>
   );
 }
-

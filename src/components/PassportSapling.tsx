@@ -29,10 +29,12 @@ export function PassportSapling() {
     fxTap();
     // If state is completed, show postcard first (with celebration)
     if (isUnlocked) {
-      const stateName = INDIA_STATES.find(s => s.name.toLowerCase().replace(/\s+/g, "-") === slug)?.name;
+      const stateName = INDIA_STATES.find(
+        (s) => s.name.toLowerCase().replace(/\s+/g, "-") === slug,
+      )?.name;
       if (stateName && progress.postcards[stateName]) {
         setSelectedPostcard(progress.postcards[stateName]);
-        setBurst(b => b + 1);
+        setBurst((b) => b + 1);
         return;
       }
     }
@@ -46,10 +48,7 @@ export function PassportSapling() {
 
       {/* Postcard Modal - shown on same screen */}
       {selectedPostcard && (
-        <PostcardModal
-          postcard={selectedPostcard}
-          onClose={() => setSelectedPostcard(null)}
-        />
+        <PostcardModal postcard={selectedPostcard} onClose={() => setSelectedPostcard(null)} />
       )}
 
       {/* Header */}
@@ -65,7 +64,9 @@ export function PassportSapling() {
             <div className="text-4xl">{progress.avatar}</div>
             <div>
               <div className="text-lg font-extrabold">{progress.name}</div>
-              <div className="text-xs opacity-75">Passport No: {generatePassportNumber(progress.avatar, progress.name)}</div>
+              <div className="text-xs opacity-75">
+                Passport No: {generatePassportNumber(progress.avatar, progress.name)}
+              </div>
             </div>
           </div>
           <div className="text-sm opacity-90 mt-2">
@@ -133,4 +134,3 @@ export function PassportSapling() {
     </div>
   );
 }
-

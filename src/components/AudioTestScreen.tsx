@@ -1,18 +1,18 @@
 /**
  * Audio Test Screen - Developer Only
  * Minimal TTS test that bypasses all application logic
- * 
+ *
  * STEP 8: Test that ANY audio can be produced before testing narration
  */
 
 import { useState } from "react";
 import { TextToSpeech } from "@capacitor-community/text-to-speech";
 import { Capacitor } from "@capacitor/core";
-import { 
-  logAudioDiagnostics, 
-  testWebSpeechAPI, 
+import {
+  logAudioDiagnostics,
+  testWebSpeechAPI,
   getWebSpeechVoices,
-  captureAudioDiagnostics 
+  captureAudioDiagnostics,
 } from "@/lib/audio-diagnostics";
 import { EMOJI } from "@/constants/emoji";
 
@@ -22,7 +22,7 @@ export function AudioTestScreen() {
 
   const log = (message: string) => {
     console.log("[AUDIO TEST]", message);
-    setTestResults(prev => [...prev, message]);
+    setTestResults((prev) => [...prev, message]);
   };
 
   const testNativeTTS = async () => {
@@ -64,7 +64,7 @@ export function AudioTestScreen() {
     log("🔵 Capturing diagnostics...");
     logAudioDiagnostics("MANUAL TRIGGER");
     const diag = captureAudioDiagnostics();
-    
+
     log(`Platform: ${diag.platform}`);
     log(`Is Native: ${diag.isNativePlatform}`);
     log(`Audio Consent: ${diag.audioNarrationConsent}`);
@@ -79,7 +79,7 @@ export function AudioTestScreen() {
     const { voices, diagnostics } = getWebSpeechVoices();
     log(`Found ${voices.length} voices`);
     log(diagnostics);
-    
+
     if (voices.length === 0) {
       log("⚠️ No voices available - Web Speech API may not work");
     } else {
@@ -100,21 +100,21 @@ export function AudioTestScreen() {
   const runAllTests = async () => {
     setIsRunning(true);
     clearResults();
-    
+
     log("=== RUNNING ALL AUDIO TESTS ===");
-    await new Promise(r => setTimeout(r, 500));
-    
+    await new Promise((r) => setTimeout(r, 500));
+
     showDiagnostics();
-    await new Promise(r => setTimeout(r, 1000));
-    
+    await new Promise((r) => setTimeout(r, 1000));
+
     showVoices();
-    await new Promise(r => setTimeout(r, 1000));
-    
+    await new Promise((r) => setTimeout(r, 1000));
+
     await testWebSpeech();
-    await new Promise(r => setTimeout(r, 2000));
-    
+    await new Promise((r) => setTimeout(r, 2000));
+
     await testNativeTTS();
-    
+
     log("=== TESTS COMPLETE ===");
     setIsRunning(false);
   };
@@ -123,8 +123,12 @@ export function AudioTestScreen() {
     <div className="min-h-screen bg-bg-page p-(--padding-md)">
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-lg shadow-lg p-(--padding-lg) mb-(--space-2)">
-          <h1 className="text-3xl font-bold text-accent-2 mb-(--space-0-5)">🔊 Audio Test Screen</h1>
-          <p className="text-sm text-muted-foreground mb-(--space-2)">Developer-only minimal TTS test</p>
+          <h1 className="text-3xl font-bold text-accent-2 mb-(--space-0-5)">
+            🔊 Audio Test Screen
+          </h1>
+          <p className="text-sm text-muted-foreground mb-(--space-2)">
+            Developer-only minimal TTS test
+          </p>
 
           {/* Buttons */}
           <div className="grid grid-cols-2 gap-(--gap-base) mb-(--space-2)">
@@ -187,7 +191,9 @@ export function AudioTestScreen() {
 
           {/* Instructions */}
           <div className="mt-(--space-2) p-(--padding-md) bg-warning/10 border-l-4 border-warning">
-            <p className="text-sm text-warning font-semibold mb-(--space-0-25)">📝 Testing Instructions:</p>
+            <p className="text-sm text-warning font-semibold mb-(--space-0-25)">
+              📝 Testing Instructions:
+            </p>
             <ol className="text-sm text-warning list-decimal list-inside space-y-(--space-0-25)">
               <li>Click "Run All Tests" to test everything</li>
               <li>Check console for [AUDIO DEBUG] logs</li>
@@ -202,4 +208,3 @@ export function AudioTestScreen() {
     </div>
   );
 }
-

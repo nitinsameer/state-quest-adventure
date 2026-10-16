@@ -30,10 +30,12 @@ export function PassportMightyTree() {
     fxTap();
     // If state is completed, show postcard first (with celebration)
     if (isUnlocked) {
-      const stateName = INDIA_STATES.find(s => s.name.toLowerCase().replace(/\s+/g, "-") === slug)?.name;
+      const stateName = INDIA_STATES.find(
+        (s) => s.name.toLowerCase().replace(/\s+/g, "-") === slug,
+      )?.name;
       if (stateName && progress.postcards[stateName]) {
         setSelectedPostcard(progress.postcards[stateName]);
-        setBurst(b => b + 1);
+        setBurst((b) => b + 1);
         return;
       }
     }
@@ -47,10 +49,7 @@ export function PassportMightyTree() {
 
       {/* Postcard Modal - shown on same screen */}
       {selectedPostcard && (
-        <PostcardModal
-          postcard={selectedPostcard}
-          onClose={() => setSelectedPostcard(null)}
-        />
+        <PostcardModal postcard={selectedPostcard} onClose={() => setSelectedPostcard(null)} />
       )}
 
       {/* Header */}
@@ -66,12 +65,18 @@ export function PassportMightyTree() {
             <div className="text-4xl">{progress.avatar}</div>
             <div className="flex-1">
               <div className="text-lg font-extrabold">{progress.name}</div>
-              <div className="text-xs opacity-75">Passport No: {generatePassportNumber(progress.avatar, progress.name)}</div>
+              <div className="text-xs opacity-75">
+                Passport No: {generatePassportNumber(progress.avatar, progress.name)}
+              </div>
             </div>
           </div>
           <div className="space-y-1 text-sm opacity-90 mt-3">
-            <div>India Progress: {progress.completed.length} of 36 ({progressPct}%)</div>
-            <div>Level {level} · {progress.xp} XP ({xpToNextLevel} to next level)</div>
+            <div>
+              India Progress: {progress.completed.length} of 36 ({progressPct}%)
+            </div>
+            <div>
+              Level {level} · {progress.xp} XP ({xpToNextLevel} to next level)
+            </div>
             <div className="flex items-center gap-2 mt-2">
               <span className="text-lg">🔥</span>
               <span>{streak}-day streak</span>
@@ -82,9 +87,14 @@ export function PassportMightyTree() {
 
         {/* Milestones/Goals */}
         <div className="space-y-2">
-          <div className="px-1 text-sm font-bold text-text-secondary">{EMOJI.milestone.twentyFive} Milestones</div>
+          <div className="px-1 text-sm font-bold text-text-secondary">
+            {EMOJI.milestone.twentyFive} Milestones
+          </div>
           {milestones.map((milestone) => (
-            <div key={milestone.id} className="p-3 rounded-2xl bg-surface-card border-2 border-border-color shadow-sm">
+            <div
+              key={milestone.id}
+              className="p-3 rounded-2xl bg-surface-card border-2 border-border-color shadow-sm"
+            >
               <div className="flex items-center justify-between mb-1">
                 <span className="text-sm font-extrabold text-text-primary">{milestone.label}</span>
                 <span className="text-xs font-bold text-text-secondary">
@@ -126,7 +136,9 @@ export function PassportMightyTree() {
               return (
                 <button
                   key={stateName}
-                  onClick={() => handleStateClick(stateName.toLowerCase().replace(/\s+/g, "-"), true)}
+                  onClick={() =>
+                    handleStateClick(stateName.toLowerCase().replace(/\s+/g, "-"), true)
+                  }
                   className="w-full p-2 rounded-xl bg-accent-2-soft text-accent-2-ink text-sm font-semibold hover:shadow-md active:scale-95 transition text-left flex items-center gap-2"
                 >
                   <img
@@ -188,4 +200,3 @@ export function PassportMightyTree() {
     </div>
   );
 }
-

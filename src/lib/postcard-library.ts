@@ -1,12 +1,12 @@
 /**
  * Proposal C: Premium Postcard Library
- * 
+ *
  * Advanced postcard management with:
  * - Granular, reversible consent per postcard
  * - Timestamp and location metadata
  * - COPPA-compliant consent tracking
  * - Search, filtering, and bulk operations
- * 
+ *
  * This system allows kids to:
  * - See all their postcards in one place
  * - Toggle consent ON/OFF per postcard (reversible)
@@ -93,7 +93,7 @@ export function createLibraryPostcard(
   stateName: string,
   badgeId: BadgeId,
   stampDate: string,
-  generatedAt: string
+  generatedAt: string,
 ): LibraryPostcard {
   const id = `${stateName}-${new Date(generatedAt).getTime()}`;
 
@@ -138,7 +138,7 @@ export function getLibraryMetadata(postcards: LibraryPostcard[]): PostcardLibrar
 export function updatePostcardConsent(
   postcard: LibraryPostcard,
   newState: ConsentState,
-  reason: string = "user_toggle"
+  reason: string = "user_toggle",
 ): LibraryPostcard {
   const changedAt = new Date().toISOString();
 
@@ -162,10 +162,10 @@ export function updatePostcardConsent(
  */
 export function markPostcardAsExported(
   postcard: LibraryPostcard,
-  filename: string
+  filename: string,
 ): LibraryPostcard {
   const now = new Date().toISOString();
-  
+
   return {
     ...postcard,
     isExportedToDevice: true,
@@ -185,7 +185,7 @@ export function filterPostcards(
     badge?: BadgeId;
     consentState?: ConsentState;
     searchTerm?: string;
-  }
+  },
 ): LibraryPostcard[] {
   return postcards.filter((p) => {
     if (filters.state && p.state !== filters.state) return false;
@@ -208,20 +208,18 @@ export function filterPostcards(
  */
 export function sortPostcards(
   postcards: LibraryPostcard[],
-  sortBy: "date-newest" | "date-oldest" | "state-asc" | "state-desc" = "date-newest"
+  sortBy: "date-newest" | "date-oldest" | "state-asc" | "state-desc" = "date-newest",
 ): LibraryPostcard[] {
   const sorted = [...postcards];
 
   switch (sortBy) {
     case "date-newest":
       return sorted.sort(
-        (a, b) =>
-          new Date(b.generatedAt).getTime() - new Date(a.generatedAt).getTime()
+        (a, b) => new Date(b.generatedAt).getTime() - new Date(a.generatedAt).getTime(),
       );
     case "date-oldest":
       return sorted.sort(
-        (a, b) =>
-          new Date(a.generatedAt).getTime() - new Date(b.generatedAt).getTime()
+        (a, b) => new Date(a.generatedAt).getTime() - new Date(b.generatedAt).getTime(),
       );
     case "state-asc":
       return sorted.sort((a, b) => a.state.localeCompare(b.state));
@@ -270,9 +268,7 @@ export function getPostcardStats(postcards: LibraryPostcard[]) {
   // Count recent (last 7 days)
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-  stats.recentCount = postcards.filter(
-    (p) => new Date(p.generatedAt) > sevenDaysAgo
-  ).length;
+  stats.recentCount = postcards.filter((p) => new Date(p.generatedAt) > sevenDaysAgo).length;
 
   // Find oldest and newest
   const sorted = sortPostcards(postcards, "date-newest");

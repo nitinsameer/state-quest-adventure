@@ -35,6 +35,10 @@ export function NotFoundPlace() {
 
 export function PlaceError() {
   return (
-    <Shell emoji="🛠️" title="Something went wrong" body="This place couldn't be loaded right now." />
+    <Shell
+      emoji="🛠️"
+      title="Something went wrong"
+      body="This place couldn't be loaded right now."
+    />
   );
 }

@@ -1,6 +1,6 @@
 /**
  * Parent Gate - Secure PIN Management
- * 
+ *
  * For Play Designed for Families compliance:
  * - PIN stored as salted PBKDF2 hash
  * - Lockout after 5 failed attempts (5 minute duration)
@@ -58,13 +58,9 @@ async function hashPIN(pin: string, salt: Uint8Array): Promise<string> {
   const encoder = new TextEncoder();
   const pinBuffer = encoder.encode(pin);
 
-  const keyMaterial = await crypto.subtle.importKey(
-    "raw",
-    pinBuffer,
-    { name: "PBKDF2" },
-    false,
-    ["deriveBits"]
-  );
+  const keyMaterial = await crypto.subtle.importKey("raw", pinBuffer, { name: "PBKDF2" }, false, [
+    "deriveBits",
+  ]);
 
   const derivedBits = await crypto.subtle.deriveBits(
     {
@@ -74,7 +70,7 @@ async function hashPIN(pin: string, salt: Uint8Array): Promise<string> {
       hash: "SHA-256",
     },
     keyMaterial,
-    PBKDF2_HASH_LENGTH * 8
+    PBKDF2_HASH_LENGTH * 8,
   );
 
   return bufferToHex(derivedBits);
@@ -290,9 +286,7 @@ export async function verifyPin(pin: string): Promise<{
     const providedHash = await hashPIN(pin, salt);
 
     // Constant-time comparison to prevent timing attacks
-    const match =
-      providedHash === storedHash &&
-      providedHash.length === storedHash.length;
+    const match = providedHash === storedHash && providedHash.length === storedHash.length;
 
     if (match) {
       clearFailedAttempts();
@@ -300,8 +294,7 @@ export async function verifyPin(pin: string): Promise<{
       return { success: true, lockout: false, remainingMinutes: 0 };
     } else {
       recordFailedAttempt();
-      const { isLocked: nowLocked, remainingMs: newRemainingMs } =
-        getLockoutState();
+      const { isLocked: nowLocked, remainingMs: newRemainingMs } = getLockoutState();
       return {
         success: false,
         lockout: nowLocked,

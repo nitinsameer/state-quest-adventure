@@ -1,9 +1,9 @@
 /**
  * Share Postcard Utility
- * 
+ *
  * Handles native sharing via Android share sheet (Capacitor v6) with web fallback.
  * For kids' app (COPPA-compliant): sharing is gated behind parent verification.
- * 
+ *
  * - Native (isNativePlatform): writes to cache, gets URI, calls Share.share()
  * - Web fallback: anchor download
  * - Treats user cancellation as normal outcome (not error)
@@ -39,15 +39,12 @@ function blobToBase64(blob: Blob): Promise<string> {
 
 /**
  * Share a postcard via native share sheet (Android) or download (web).
- * 
+ *
  * @param blob - PNG image blob
  * @param filename - Suggested filename for saved/shared postcard
  * @returns Promise with result { ok: boolean; cancelled?: boolean; error?: string }
  */
-export async function sharePostcard(
-  blob: Blob,
-  filename: string
-): Promise<SharePostcardResult> {
+export async function sharePostcard(blob: Blob, filename: string): Promise<SharePostcardResult> {
   try {
     if (!Capacitor.isNativePlatform()) {
       // Web fallback: anchor download
@@ -69,10 +66,7 @@ export async function sharePostcard(
 /**
  * Native implementation: write to cache, get URI, call Share.share()
  */
-async function sharePostcardNative(
-  blob: Blob,
-  filename: string
-): Promise<SharePostcardResult> {
+async function sharePostcardNative(blob: Blob, filename: string): Promise<SharePostcardResult> {
   let cacheFilePath: string | undefined;
 
   try {
@@ -105,11 +99,7 @@ async function sharePostcardNative(
     const message = error instanceof Error ? error.message : "Unknown error";
 
     // Check if user cancelled the share sheet
-    if (
-      message.includes("cancel") ||
-      message.includes("Cancel") ||
-      message.includes("user")
-    ) {
+    if (message.includes("cancel") || message.includes("Cancel") || message.includes("user")) {
       return { ok: true, cancelled: true };
     }
 
@@ -136,10 +126,7 @@ async function sharePostcardNative(
 /**
  * Web fallback: create anchor element and trigger download
  */
-function sharePostcardWeb(
-  blob: Blob,
-  filename: string
-): SharePostcardResult {
+function sharePostcardWeb(blob: Blob, filename: string): SharePostcardResult {
   try {
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");

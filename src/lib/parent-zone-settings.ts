@@ -1,11 +1,11 @@
 /**
  * Parent Zone Settings
- * 
+ *
  * Stores parental controls and preferences in localStorage.
  * All settings default to OFF (child-safe defaults).
  */
 
-const STORAGE_KEY = 'india-explorer:parent-zone-settings:v1';
+const STORAGE_KEY = "india-explorer:parent-zone-settings:v1";
 
 export interface ParentZoneSettings {
   // Postcard sharing: include child's name on shared postcards
@@ -24,7 +24,7 @@ function defaultSettings(): ParentZoneSettings {
  */
 export function getParentZoneSettings(): ParentZoneSettings {
   try {
-    if (typeof window === 'undefined') {
+    if (typeof window === "undefined") {
       return defaultSettings();
     }
 
@@ -35,7 +35,8 @@ export function getParentZoneSettings(): ParentZoneSettings {
 
     const parsed = JSON.parse(stored);
     return {
-      postcardNameSharing: typeof parsed.postcardNameSharing === 'boolean' ? parsed.postcardNameSharing : false,
+      postcardNameSharing:
+        typeof parsed.postcardNameSharing === "boolean" ? parsed.postcardNameSharing : false,
     };
   } catch {
     // Corrupted data - fall back to defaults
@@ -48,10 +49,10 @@ export function getParentZoneSettings(): ParentZoneSettings {
  */
 export function setParentZoneSetting<K extends keyof ParentZoneSettings>(
   key: K,
-  value: ParentZoneSettings[K]
+  value: ParentZoneSettings[K],
 ): boolean {
   try {
-    if (typeof window === 'undefined') return false;
+    if (typeof window === "undefined") return false;
 
     const current = getParentZoneSettings();
     const updated = { ...current, [key]: value };

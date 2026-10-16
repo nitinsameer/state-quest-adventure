@@ -3,7 +3,7 @@ import { fxCorrect, fxConfetti, isSoundOn } from "@/lib/fx";
 
 /**
  * Hook to trigger celebration popups throughout the app
- * 
+ *
  * Usage:
  * const celebration = useCelebration();
  * celebration.success("Postcard Saved!", { subtitle: "Ready to share" });
@@ -16,7 +16,15 @@ export function useCelebration() {
     /**
      * Show success celebration with sound
      */
-    success: (title: string, options?: { subtitle?: string; confetti?: boolean; duration?: number; action?: { label: string; onClick: () => void } }) => {
+    success: (
+      title: string,
+      options?: {
+        subtitle?: string;
+        confetti?: boolean;
+        duration?: number;
+        action?: { label: string; onClick: () => void };
+      },
+    ) => {
       show({
         type: "success",
         title,
@@ -26,7 +34,7 @@ export function useCelebration() {
         duration: options?.duration,
         action: options?.action,
       });
-      
+
       // Play success sound if enabled
       if (isSoundOn()) {
         fxCorrect();
@@ -36,7 +44,14 @@ export function useCelebration() {
     /**
      * Show error alert without confetti
      */
-    error: (title: string, options?: { subtitle?: string; duration?: number; action?: { label: string; onClick: () => void } }) => {
+    error: (
+      title: string,
+      options?: {
+        subtitle?: string;
+        duration?: number;
+        action?: { label: string; onClick: () => void };
+      },
+    ) => {
       show({
         type: "error",
         title,
@@ -51,7 +66,14 @@ export function useCelebration() {
     /**
      * Show info message
      */
-    info: (title: string, options?: { subtitle?: string; duration?: number; action?: { label: string; onClick: () => void } }) => {
+    info: (
+      title: string,
+      options?: {
+        subtitle?: string;
+        duration?: number;
+        action?: { label: string; onClick: () => void };
+      },
+    ) => {
       show({
         type: "info",
         title,
@@ -66,7 +88,15 @@ export function useCelebration() {
     /**
      * Show achievement unlock with full celebration and sound
      */
-    achievement: (title: string, options?: { subtitle?: string; confetti?: boolean; duration?: number; action?: { label: string; onClick: () => void } }) => {
+    achievement: (
+      title: string,
+      options?: {
+        subtitle?: string;
+        confetti?: boolean;
+        duration?: number;
+        action?: { label: string; onClick: () => void };
+      },
+    ) => {
       show({
         type: "achievement",
         title,
@@ -76,7 +106,7 @@ export function useCelebration() {
         duration: options?.duration ?? 4000,
         action: options?.action,
       });
-      
+
       // Play achievement sound if enabled
       if (isSoundOn()) {
         fxConfetti();
@@ -86,7 +116,18 @@ export function useCelebration() {
     /**
      * Custom celebration with full control
      */
-    custom: (title: string, icon: string, options?: { subtitle?: string; type?: "success" | "error" | "info"; confetti?: boolean; duration?: number; action?: { label: string; onClick: () => void }; showCloseButton?: boolean }) => {
+    custom: (
+      title: string,
+      icon: string,
+      options?: {
+        subtitle?: string;
+        type?: "success" | "error" | "info";
+        confetti?: boolean;
+        duration?: number;
+        action?: { label: string; onClick: () => void };
+        showCloseButton?: boolean;
+      },
+    ) => {
       show({
         type: options?.type ?? "info",
         title,

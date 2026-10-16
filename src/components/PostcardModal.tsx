@@ -62,7 +62,7 @@ async function generatePostcardBlob(postcard: PostcardData): Promise<Blob | null
   c.fillRect(0, 0, W, H);
 
   // inner card
-  c.fillStyle = readTokenAsHex('--surface-card');
+  c.fillStyle = readTokenAsHex("--surface-card");
   roundRect(c, 50, 50, W - 100, H - 100, 48);
   c.fill();
 
@@ -77,7 +77,7 @@ async function generatePostcardBlob(postcard: PostcardData): Promise<Blob | null
   c.fillRect(50, 50, W - 100, 330);
   c.restore();
 
-  c.fillStyle = readTokenAsHex('--text-on-header');
+  c.fillStyle = readTokenAsHex("--text-on-header");
   c.globalAlpha = 0.92;
   c.font = "bold 30px system-ui, sans-serif";
   c.textAlign = "center";
@@ -114,11 +114,11 @@ async function generatePostcardBlob(postcard: PostcardData): Promise<Blob | null
   }
 
   // badge section
-  c.fillStyle = readTokenAsHex('--accent-6-soft');
+  c.fillStyle = readTokenAsHex("--accent-6-soft");
   roundRect(c, 100, 700, W - 200, 140, 16);
   c.fill();
 
-  c.fillStyle = readTokenAsHex('--text-primary');
+  c.fillStyle = readTokenAsHex("--text-primary");
   c.font = "bold 18px system-ui, sans-serif";
   c.textAlign = "center";
   c.fillText("Badge Earned", W / 2, 735);
@@ -129,7 +129,7 @@ async function generatePostcardBlob(postcard: PostcardData): Promise<Blob | null
 
   // footer
   c.globalAlpha = 0.3;
-  c.fillStyle = readTokenAsHex('--text-primary');
+  c.fillStyle = readTokenAsHex("--text-primary");
   c.font = "14px system-ui, sans-serif";
   c.textAlign = "center";
   c.fillText("India Explorer", W / 2, 1080);
@@ -172,9 +172,15 @@ export function PostcardModal({
       reader.onloadend = () => {
         const base64 = (reader.result as string).split(",")[1];
         const library = usePostcardLibrary.getState();
-        
+
         // Add to postcard library with image data
-        library.addPostcard(postcard.state, postcard.badge, postcard.stampDate, new Date().toISOString(), base64);
+        library.addPostcard(
+          postcard.state,
+          postcard.badge,
+          postcard.stampDate,
+          new Date().toISOString(),
+          base64,
+        );
 
         toast.success(`${EMOJI.postcard.saved} Saved to your Passport!`, {
           subtitle: "View anytime from Explorer",
@@ -213,12 +219,8 @@ export function PostcardModal({
 
         {/* Header */}
         <div className="text-center pt-2">
-          <h2 className="text-display font-extrabold text-2xl text-ink">
-            Achievement Unlocked!
-          </h2>
-          <p className="text-sm text-ink mt-(--space-0-25)">
-            You completed {state.name}
-          </p>
+          <h2 className="text-display font-extrabold text-2xl text-ink">Achievement Unlocked!</h2>
+          <p className="text-sm text-ink mt-(--space-0-25)">You completed {state.name}</p>
         </div>
 
         {/* Badge Display */}
@@ -231,9 +233,7 @@ export function PostcardModal({
             <div className="text-display font-extrabold text-lg text-ink mt-(--space-0-25)">
               {state.name} Explorer
             </div>
-            <div className="text-xs text-ink mt-(--space-0-25)">
-              {postcard.stampDate}
-            </div>
+            <div className="text-xs text-ink mt-(--space-0-25)">{postcard.stampDate}</div>
           </div>
         </div>
 
@@ -242,9 +242,7 @@ export function PostcardModal({
           <div className="text-xs font-extrabold text-ink uppercase tracking-wider">
             Did You Know?
           </div>
-          <p className="text-sm text-ink mt-(--space-2) leading-relaxed">
-            {state.funFact}
-          </p>
+          <p className="text-sm text-ink mt-(--space-2) leading-relaxed">{state.funFact}</p>
         </div>
 
         {/* Save Button */}
@@ -259,9 +257,7 @@ export function PostcardModal({
               Saving...
             </>
           ) : (
-            <>
-              {EMOJI.achievement.explorer} Save to Passport
-            </>
+            <>{EMOJI.achievement.explorer} Save to Passport</>
           )}
         </button>
 

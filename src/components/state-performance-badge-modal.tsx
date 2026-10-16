@@ -51,7 +51,7 @@ export function StatePerformanceBadgeModal({
     >
       <div
         className="w-full bg-white rounded-t-4xl p-5 max-h-[90vh] overflow-auto flex flex-col gap-5 animate-slide-up"
-        onClick={e => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -80,7 +80,7 @@ export function StatePerformanceBadgeModal({
               �S“ You Did It!
             </h3>
             <div className="space-y-3">
-              {earnedBadges.map(badgeId => (
+              {earnedBadges.map((badgeId) => (
                 <BadgeDetailCard
                   key={badgeId}
                   badgeId={badgeId}
@@ -98,7 +98,7 @@ export function StatePerformanceBadgeModal({
               Keep Exploring! {EMOJI.action.star}
             </h3>
             <div className="space-y-3">
-              {availableBadges.map(badgeId => (
+              {availableBadges.map((badgeId) => (
                 <BadgeDetailCard
                   key={badgeId}
                   badgeId={badgeId}
@@ -149,14 +149,14 @@ function BadgeDetailCard({ badgeId, progress }: BadgeDetailCardProps) {
         {/* Badge Info */}
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <h4 className={`text-display font-extrabold text-lg ${progress.earned ? "text-ink" : "text-muted-foreground"}`}>
+            <h4
+              className={`text-display font-extrabold text-lg ${progress.earned ? "text-ink" : "text-muted-foreground"}`}
+            >
               {badgeDef.name}
             </h4>
           </div>
 
-          <p className="text-xs font-bold text-muted-foreground mt-1">
-            {badgeDef.description}
-          </p>
+          <p className="text-xs font-bold text-muted-foreground mt-1">{badgeDef.description}</p>
 
           {/* Status Section */}
           <div className="mt-3 pt-3 border-t border-white/20">
@@ -178,5 +178,3 @@ function BadgeDetailCard({ badgeId, progress }: BadgeDetailCardProps) {
     </div>
   );
 }
-
-

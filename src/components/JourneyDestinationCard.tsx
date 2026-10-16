@@ -36,7 +36,7 @@ export function JourneyDestinationCard({
 }: JourneyDestinationCardProps) {
   const state = getState(stateName);
   const artSrc = STATE_ART[stateName];
-  
+
   // Tone-specific background color mapping
   const toneBackgrounds: Record<string, string> = {
     orange: "var(--accent-1-soft)",
@@ -44,7 +44,7 @@ export function JourneyDestinationCard({
     green: "var(--accent-3-soft)",
     blue: "var(--accent-2-soft)",
   };
-  
+
   // Gradient button class mapping per tone
   const toneGradients: Record<string, string> = {
     orange: "gradient-saffron",
@@ -52,13 +52,13 @@ export function JourneyDestinationCard({
     green: "gradient-success",
     blue: "gradient-explorer",
   };
-  
+
   // Determine card styling based on status and tone
   let cardBgColor = toneBackgrounds[state.tone] || toneBackgrounds.orange;
   let textColorClass = "text-text-primary";
   let buttonGradientClass = toneGradients[state.tone] || "gradient-saffron";
   let buttonTextClass = "text-on-header";
-  
+
   if (status === "completed") {
     cardBgColor = toneBackgrounds[state.tone] || toneBackgrounds.orange;
     textColorClass = "text-text-primary";
@@ -91,7 +91,7 @@ export function JourneyDestinationCard({
   let buttonText = "Start Exploring {EMOJI.action.play}";
   let buttonHandler = handleStartClick;
   let isButtonDisabled = false;
-  
+
   if (status === "completed" && !isInProgress) {
     buttonText = "Replay {EMOJI.action.replay}";
     buttonHandler = handleReplayClick;
@@ -107,9 +107,9 @@ export function JourneyDestinationCard({
   return (
     <div
       className="relative ui-card ui-accent-1-soft overflow-hidden flex flex-col transition-all active:scale-95 h-full"
-      style={{ 
+      style={{
         backgroundColor: cardBgColor,
-        padding: "var(--padding-base)"
+        padding: "var(--padding-base)",
       }}
     >
       {/* Landmark illustration - full width, no white container */}
@@ -122,7 +122,10 @@ export function JourneyDestinationCard({
       />
 
       {/* State name - centered, larger */}
-      <div className="text-center font-extrabold leading-tight mb-3 line-clamp-2" style={{ fontSize: 'var(--type-state-name)', fontWeight: 'var(--type-state-name-weight)' }}>
+      <div
+        className="text-center font-extrabold leading-tight mb-3 line-clamp-2"
+        style={{ fontSize: "var(--type-state-name)", fontWeight: "var(--type-state-name-weight)" }}
+      >
         {stateName}
       </div>
 
@@ -144,7 +147,9 @@ export function JourneyDestinationCard({
       {/* In-progress indicator */}
       {isInProgress && (
         <div className="mb-2 text-sm font-bold opacity-75">
-          <div className="mb-1">{cardsDone}/{totalCards} adventures</div>
+          <div className="mb-1">
+            {cardsDone}/{totalCards} adventures
+          </div>
           <div className="h-1.5 bg-surface-muted rounded-full overflow-hidden">
             <div
               className="h-full bg-surface-muted/70 rounded-full transition-all"
@@ -188,4 +193,3 @@ export function JourneyDestinationCard({
     </div>
   );
 }
-

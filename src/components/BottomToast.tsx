@@ -73,7 +73,10 @@ export function BottomToastProvider() {
   if (!current) return null;
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-[998]" style={{ pointerEvents: current ? "auto" : "none" }}>
+    <div
+      className="fixed inset-0 pointer-events-none z-[998]"
+      style={{ pointerEvents: current ? "auto" : "none" }}
+    >
       <ToastNotification config={current} />
     </div>
   );

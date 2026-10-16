@@ -112,9 +112,7 @@ describe("ParentGate", () => {
     it("should migrate old plain PIN to hash", async () => {
       // Simulate old plain PIN storage
       localStorage.setItem("india-explorer:parent-pin:v1", "1234");
-      expect(localStorage.getItem("india-explorer:parent-pin-hash:v1")).toBe(
-        null
-      );
+      expect(localStorage.getItem("india-explorer:parent-pin-hash:v1")).toBe(null);
 
       const migrated = await migrateOldPIN();
       expect(migrated).toBe(true);
@@ -123,9 +121,7 @@ describe("ParentGate", () => {
       expect(localStorage.getItem("india-explorer:parent-pin:v1")).toBe(null);
 
       // New hash should exist
-      expect(localStorage.getItem("india-explorer:parent-pin-hash:v1")).not.toBe(
-        null
-      );
+      expect(localStorage.getItem("india-explorer:parent-pin-hash:v1")).not.toBe(null);
 
       // Old PIN should still work after migration
       const result = await verifyPin("1234");

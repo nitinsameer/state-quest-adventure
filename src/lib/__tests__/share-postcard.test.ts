@@ -1,6 +1,6 @@
 /**
  * Share Postcard Tests
- * 
+ *
  * Tests for native and web sharing of postcard PNG files
  */
 
@@ -62,9 +62,7 @@ describe("sharePostcard", () => {
       // Mock document methods
       const mockAnchor = document.createElement("a");
       const clickSpy = vi.spyOn(mockAnchor, "click");
-      const createElementSpy = vi
-        .spyOn(document, "createElement")
-        .mockReturnValue(mockAnchor);
+      const createElementSpy = vi.spyOn(document, "createElement").mockReturnValue(mockAnchor);
       const appendSpy = vi.spyOn(document.body, "appendChild");
       const removeSpy = vi.spyOn(document.body, "removeChild");
 
@@ -111,19 +109,19 @@ describe("sharePostcard", () => {
         expect.objectContaining({
           directory: Directory.Cache,
           path: "test-postcard.png",
-        })
+        }),
       );
       expect(Filesystem.getUri).toHaveBeenCalledWith(
         expect.objectContaining({
           directory: Directory.Cache,
           path: "test-postcard.png",
-        })
+        }),
       );
       expect(Share.share).toHaveBeenCalledWith(
         expect.objectContaining({
           title: "Share postcard",
           files: [mockUri],
-        })
+        }),
       );
       expect(Filesystem.deleteFile).toHaveBeenCalled();
     });
@@ -133,9 +131,7 @@ describe("sharePostcard", () => {
       vi.mocked(Filesystem.getUri).mockResolvedValue({
         uri: "file:///cache/test.png",
       } as any);
-      vi.mocked(Share.share).mockRejectedValue(
-        new Error("User cancelled share")
-      );
+      vi.mocked(Share.share).mockRejectedValue(new Error("User cancelled share"));
       vi.mocked(Filesystem.deleteFile).mockResolvedValue(undefined as any);
 
       const result = await sharePostcard(mockBlob, "test-postcard");
@@ -147,9 +143,7 @@ describe("sharePostcard", () => {
 
     it("should clean up cache file even on error", async () => {
       vi.mocked(Filesystem.writeFile).mockResolvedValue(undefined as any);
-      vi.mocked(Filesystem.getUri).mockRejectedValue(
-        new Error("URI retrieval failed")
-      );
+      vi.mocked(Filesystem.getUri).mockRejectedValue(new Error("URI retrieval failed"));
       vi.mocked(Filesystem.deleteFile).mockResolvedValue(undefined as any);
 
       const result = await sharePostcard(mockBlob, "test-postcard");
@@ -175,9 +169,7 @@ describe("sharePostcard", () => {
       vi.mocked(Filesystem.getUri).mockResolvedValue({
         uri: "file:///cache/test.png",
       } as any);
-      vi.mocked(Share.share).mockRejectedValue(
-        new Error("Share not available")
-      );
+      vi.mocked(Share.share).mockRejectedValue(new Error("Share not available"));
       vi.mocked(Filesystem.deleteFile).mockResolvedValue(undefined as any);
 
       const result = await sharePostcard(mockBlob, "test-postcard");
@@ -196,12 +188,8 @@ describe("sharePostcard", () => {
       vi.spyOn(URL, "revokeObjectURL").mockImplementation(() => {});
       const mockAnchor = document.createElement("a");
       vi.spyOn(document, "createElement").mockReturnValue(mockAnchor);
-      vi.spyOn(document.body, "appendChild").mockImplementation(() =>
-        mockAnchor
-      );
-      vi.spyOn(document.body, "removeChild").mockImplementation(() =>
-        mockAnchor
-      );
+      vi.spyOn(document.body, "appendChild").mockImplementation(() => mockAnchor);
+      vi.spyOn(document.body, "removeChild").mockImplementation(() => mockAnchor);
     });
 
     it("should always include 'ok' field", async () => {
@@ -216,9 +204,7 @@ describe("sharePostcard", () => {
       vi.mocked(Filesystem.getUri).mockResolvedValue({
         uri: "file:///cache/test.png",
       } as any);
-      vi.mocked(Share.share).mockRejectedValue(
-        new Error("User cancelled")
-      );
+      vi.mocked(Share.share).mockRejectedValue(new Error("User cancelled"));
       vi.mocked(Filesystem.deleteFile).mockResolvedValue(undefined as any);
 
       const result = await sharePostcard(mockBlob, "test");
@@ -244,12 +230,8 @@ describe("sharePostcard", () => {
       vi.spyOn(URL, "revokeObjectURL").mockImplementation(() => {});
       const mockAnchor = document.createElement("a");
       vi.spyOn(document, "createElement").mockReturnValue(mockAnchor);
-      vi.spyOn(document.body, "appendChild").mockImplementation(() =>
-        mockAnchor
-      );
-      vi.spyOn(document.body, "removeChild").mockImplementation(() =>
-        mockAnchor
-      );
+      vi.spyOn(document.body, "appendChild").mockImplementation(() => mockAnchor);
+      vi.spyOn(document.body, "removeChild").mockImplementation(() => mockAnchor);
     });
 
     it("should accept PNG blobs", async () => {
@@ -280,12 +262,8 @@ describe("sharePostcard", () => {
       vi.spyOn(URL, "revokeObjectURL").mockImplementation(() => {});
       const mockAnchor = document.createElement("a");
       vi.spyOn(document, "createElement").mockReturnValue(mockAnchor);
-      vi.spyOn(document.body, "appendChild").mockImplementation(() =>
-        mockAnchor
-      );
-      vi.spyOn(document.body, "removeChild").mockImplementation(() =>
-        mockAnchor
-      );
+      vi.spyOn(document.body, "appendChild").mockImplementation(() => mockAnchor);
+      vi.spyOn(document.body, "removeChild").mockImplementation(() => mockAnchor);
     });
 
     it("should append .png extension", async () => {
@@ -293,12 +271,8 @@ describe("sharePostcard", () => {
       const mockAnchor = document.createElement("a");
       createElementSpy.mockReturnValue(mockAnchor);
 
-      vi.spyOn(document.body, "appendChild").mockImplementation(() =>
-        mockAnchor
-      );
-      vi.spyOn(document.body, "removeChild").mockImplementation(() =>
-        mockAnchor
-      );
+      vi.spyOn(document.body, "appendChild").mockImplementation(() => mockAnchor);
+      vi.spyOn(document.body, "removeChild").mockImplementation(() => mockAnchor);
 
       await sharePostcard(mockBlob, "my-postcard");
 

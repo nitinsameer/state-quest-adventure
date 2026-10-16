@@ -13,10 +13,7 @@ export const Route = createFileRoute("/state/$slug/unlock")({
   head: ({ loaderData }) => {
     if (!loaderData) {
       return {
-        meta: [
-          { title: "Unavailable — India Explorer" },
-          { name: "robots", content: "noindex" },
-        ],
+        meta: [{ title: "Unavailable — India Explorer" }, { name: "robots", content: "noindex" }],
       };
     }
     const title = `${loaderData.nextName} Unlocked — India Explorer`;

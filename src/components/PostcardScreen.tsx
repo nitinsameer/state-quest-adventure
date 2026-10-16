@@ -60,9 +60,8 @@ export function StatePostcardScreen({
   const art = STATE_ART[state.name];
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
   const earned = badgesFor(progress, state.name);
-  const badge =
-    STATE_BADGES.find((b) => b.id === earned[earned.length - 1]) ?? STATE_BADGES[0];
-  
+  const badge = STATE_BADGES.find((b) => b.id === earned[earned.length - 1]) ?? STATE_BADGES[0];
+
   const [burst, setBurst] = useState(0);
   const [busy, setBusy] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -90,7 +89,7 @@ export function StatePostcardScreen({
     canvas.width = W;
     canvas.height = H;
     const c = canvas.getContext("2d");
-    
+
     if (!c) return null;
 
     const [from, to] = TONE_HEX[state.tone] ?? TONE_HEX.orange;
@@ -101,7 +100,7 @@ export function StatePostcardScreen({
     c.fillRect(0, 0, W, H);
 
     // inner card
-    c.fillStyle = readTokenAsHex('--surface-card');
+    c.fillStyle = readTokenAsHex("--surface-card");
     roundRect(c, 50, 50, W - 100, H - 100, 48);
     c.fill();
 
@@ -117,13 +116,13 @@ export function StatePostcardScreen({
     c.restore();
 
     // Header text - white on gradient header
-    c.fillStyle = readTokenAsHex('--text-on-header');
+    c.fillStyle = readTokenAsHex("--text-on-header");
     c.font = "bold 30px system-ui, sans-serif";
     c.textAlign = "center";
     c.globalAlpha = 0.92;
     c.fillText("GREETINGS FROM", W / 2, 150);
     c.globalAlpha = 1;
-    c.fillStyle = readTokenAsHex('--text-on-header');
+    c.fillStyle = readTokenAsHex("--text-on-header");
     c.font = "bold 74px system-ui, sans-serif";
     c.fillText(state.name.toUpperCase(), W / 2, 235);
     c.font = "bold 30px system-ui, sans-serif";
@@ -151,13 +150,7 @@ export function StatePostcardScreen({
         c.shadowColor = "rgba(15,23,42,0.22)";
         c.shadowBlur = 26;
         c.shadowOffsetY = 12;
-        c.drawImage(
-          img,
-          BAND_X + (BAND_W - dw) / 2,
-          BAND_Y + (BAND_H - dh) / 2,
-          dw,
-          dh,
-        );
+        c.drawImage(img, BAND_X + (BAND_W - dw) / 2, BAND_Y + (BAND_H - dh) / 2, dw, dh);
         c.restore();
       } else {
         c.font = "200px system-ui, sans-serif";
@@ -176,15 +169,15 @@ export function StatePostcardScreen({
     }
 
     // badge chip
-    c.fillStyle = readTokenAsHex('--accent-6-soft');
+    c.fillStyle = readTokenAsHex("--accent-6-soft");
     roundRect(c, 120, 830, W - 240, 110, 40);
     c.fill();
-    c.fillStyle = readTokenAsHex('--text-primary');
+    c.fillStyle = readTokenAsHex("--text-primary");
     c.font = "bold 40px system-ui, sans-serif";
     c.fillText(`${BADGE_EMOJI[badge.id]}  ${badge.name} Badge Earned`, W / 2, 900);
 
     // fun fact
-    c.fillStyle = readTokenAsHex('--text-secondary');
+    c.fillStyle = readTokenAsHex("--text-secondary");
     c.font = "30px system-ui, sans-serif";
     const words = state.funFact.split(" ");
     let line = "";
@@ -201,7 +194,7 @@ export function StatePostcardScreen({
     }
     if (line) c.fillText(line, W / 2, y);
 
-    c.fillStyle = readTokenAsHex('--text-muted');
+    c.fillStyle = readTokenAsHex("--text-muted");
     c.font = "bold 26px system-ui, sans-serif";
     c.fillText("India Explorer", W / 2, H - 100);
 
@@ -242,7 +235,7 @@ export function StatePostcardScreen({
         const base64 = (reader.result as string).split(",")[1];
         const library = usePostcardLibrary.getState();
         const now = new Date().toISOString();
-        
+
         // Generate a stamp date like "12 · MAR"
         const date = new Date();
         const day = date.getDate();
@@ -274,7 +267,7 @@ export function StatePostcardScreen({
   async function handleSharePostcard() {
     if (busy) return;
     fxTap();
-    
+
     // Show parent gate first
     try {
       const blob = await generatePostcardPreview();
@@ -331,9 +324,7 @@ export function StatePostcardScreen({
 
       {/* Header */}
       <div className="pt-5 text-center px-(--padding-lg) relative z-10">
-        <div className="text-white/90 text-xs font-bold tracking-wide">
-          Your Stamp
-        </div>
+        <div className="text-white/90 text-xs font-bold tracking-wide">Your Stamp</div>
         <div className="text-white text-xs font-semibold mt-1">
           Show your friends you beat {state.name}! 🎫
         </div>
@@ -345,11 +336,7 @@ export function StatePostcardScreen({
           {/* Preview Image (Loading or Generated) */}
           <div className="relative bg-muted aspect-[3/4] overflow-hidden flex items-center justify-center">
             {previewUrl ? (
-              <img
-                src={previewUrl}
-                alt="Your postcard"
-                className="w-full h-full object-cover"
-              />
+              <img src={previewUrl} alt="Your postcard" className="w-full h-full object-cover" />
             ) : (
               <div className="flex flex-col items-center justify-center">
                 <div className="text-5xl mb-2">{EMOJI.action.sparkle}</div>
@@ -422,5 +409,3 @@ export function StatePostcardScreen({
     </div>
   );
 }
-
-

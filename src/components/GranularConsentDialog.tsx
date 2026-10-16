@@ -1,13 +1,13 @@
 /**
  * GranularConsentDialog - Per-postcard consent toggle
- * 
+ *
  * Proposal C: COPPA-compliant, reversible consent dialog
- * 
+ *
  * Explains:
  * - What each consent state means
  * - Why parent consent matters for sharing
  * - How to toggle ON/OFF anytime
- * 
+ *
  * States:
  * - Accepted: Can potentially share with parents/friends
  * - Declined: Keep private (still saved, just not for sharing)
@@ -56,9 +56,7 @@ export function GranularConsentDialog({
         {/* Header */}
         <div className="bg-bg-header p-(--padding-lg) text-text-on-primary">
           <h2 className="text-2xl font-extrabold mb-(--space-0-25)">🔒 Stamp Privacy</h2>
-          <p className="text-sm opacity-90">
-            Manage who can see this stamp from {postcard.state}
-          </p>
+          <p className="text-sm opacity-90">Manage who can see this stamp from {postcard.state}</p>
         </div>
 
         {/* Content */}
@@ -110,7 +108,8 @@ export function GranularConsentDialog({
                 <div className="flex-1">
                   <div className="font-bold text-text-primary">Shareable with Parents</div>
                   <div className="text-xs text-text-muted mt-(--space-0-25)">
-                    You're OK with your parents, friends, or family seeing this stamp. It could be shared in messages or printed!
+                    You're OK with your parents, friends, or family seeing this stamp. It could be
+                    shared in messages or printed!
                   </div>
                 </div>
               </div>
@@ -162,7 +161,8 @@ export function GranularConsentDialog({
             <div className="flex gap-(--gap-base)">
               <span className="text-lg flex-shrink-0">🔐</span>
               <div className="text-xs text-text-on-primary">
-                <strong>You're in control:</strong> You can change your mind anytime. We never share your stamps without your permission.
+                <strong>You're in control:</strong> You can change your mind anytime. We never share
+                your stamps without your permission.
               </div>
             </div>
           </div>
@@ -210,4 +210,3 @@ export function GranularConsentDialog({
     </div>
   );
 }
-

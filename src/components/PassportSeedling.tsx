@@ -88,7 +88,7 @@ export function PassportSeedling() {
       // Show postcard with celebration
       if (progress.postcards[stateName]) {
         setSelectedPostcard(progress.postcards[stateName]);
-        setBurst(b => b + 1);
+        setBurst((b) => b + 1);
         return;
       }
     } else {
@@ -108,10 +108,7 @@ export function PassportSeedling() {
 
       {/* Postcard Modal - shown on same screen */}
       {selectedPostcard && (
-        <PostcardModal
-          postcard={selectedPostcard}
-          onClose={() => setSelectedPostcard(null)}
-        />
+        <PostcardModal postcard={selectedPostcard} onClose={() => setSelectedPostcard(null)} />
       )}
 
       {/* Locked Postcard Modal */}
@@ -124,7 +121,15 @@ export function PassportSeedling() {
 
       {/* Header with title */}
       <div className="px-5 pt-4 pb-2 flex items-center justify-between">
-        <h1 style={{ fontSize: 'var(--type-screen-title)', fontWeight: 'var(--type-screen-title-weight)' }} className="text-ink">🎫 My Explorer</h1>
+        <h1
+          style={{
+            fontSize: "var(--type-screen-title)",
+            fontWeight: "var(--type-screen-title-weight)",
+          }}
+          className="text-ink"
+        >
+          🎫 My Explorer
+        </h1>
       </div>
 
       {/* Profile Card - Simplified */}
@@ -132,8 +137,8 @@ export function PassportSeedling() {
         {/* ROW 1: Avatar + User Info */}
         <div className="flex items-center gap-4 mb-3">
           <div className="h-16 w-16 rounded-2xl bg-surface-card p-1 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-lg">
-            <img 
-              src={getAvatarImage(progress.avatar)} 
+            <img
+              src={getAvatarImage(progress.avatar)}
               alt={getAvatarName(progress.avatar)}
               className="w-full h-full object-cover"
             />
@@ -162,7 +167,9 @@ export function PassportSeedling() {
             const reg = REGIONS[key];
             const isSelected = key === selectedRegion;
             const regionStates = reg.states;
-            const completed = regionStates.filter((s) => progress.completed.includes(s.name)).length;
+            const completed = regionStates.filter((s) =>
+              progress.completed.includes(s.name),
+            ).length;
             return (
               <button
                 key={key}
@@ -172,10 +179,11 @@ export function PassportSeedling() {
                     ? "ui-button ui-accent-1 text-ink"
                     : "ui-button ui-accent-1-soft text-ink"
                 }`}
-                style={{ fontSize: 'var(--type-body)', fontWeight: 'var(--type-body-weight)' }}
+                style={{ fontSize: "var(--type-body)", fontWeight: "var(--type-body-weight)" }}
                 title={`${completed}/${regionStates.length} explored`}
               >
-                {reg.emoji} {reg.name.split(" ")[0]} {isSelected && completed === regionStates.length && "�S“"}
+                {reg.emoji} {reg.name.split(" ")[0]}{" "}
+                {isSelected && completed === regionStates.length && "�S“"}
               </button>
             );
           })}
@@ -184,9 +192,19 @@ export function PassportSeedling() {
 
       {/* Region Title & Progress */}
       <div className="px-5 mt-4 mb-2">
-        <div style={{ fontSize: 'var(--type-section-heading)', fontWeight: 'var(--type-section-heading-weight)' }} className="text-text-primary">{region.name}</div>
+        <div
+          style={{
+            fontSize: "var(--type-section-heading)",
+            fontWeight: "var(--type-section-heading-weight)",
+          }}
+          className="text-text-primary"
+        >
+          {region.name}
+        </div>
         <div className="text-base font-semibold text-text-secondary mt-1">
-          {regionProgress} explored {unlockedInRegion.length === regionStates.length && "{EMOJI.action.sparkle} Region Complete!"}
+          {regionProgress} explored{" "}
+          {unlockedInRegion.length === regionStates.length &&
+            "{EMOJI.action.sparkle} Region Complete!"}
         </div>
         <div className="mt-2 h-2 bg-progress-track rounded-full overflow-hidden">
           <div
@@ -197,7 +215,10 @@ export function PassportSeedling() {
       </div>
 
       {/* States Grid - Using PostcardCard component */}
-      <div className="px-5 pt-2 pb-6 flex-1 overflow-auto" style={{ paddingBottom: 'calc(64px + 16px + env(safe-area-inset-bottom))' }}>
+      <div
+        className="px-5 pt-2 pb-6 flex-1 overflow-auto"
+        style={{ paddingBottom: "calc(64px + 16px + env(safe-area-inset-bottom))" }}
+      >
         <div className="grid grid-cols-2 gap-3">
           {regionStates.map((state) => {
             const isCollected = progress.completed.includes(state.name);
@@ -217,5 +238,3 @@ export function PassportSeedling() {
     </div>
   );
 }
-
-

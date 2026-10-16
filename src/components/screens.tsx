@@ -1367,7 +1367,11 @@ export function JourneyMapScreen() {
 
     // Check for milestone achievements
     const milestones = [
-      { threshold: 25, emoji: EMOJI.milestone.twentyFive, message: "Quarter Way There! 25% Complete!" },
+      {
+        threshold: 25,
+        emoji: EMOJI.milestone.twentyFive,
+        message: "Quarter Way There! 25% Complete!",
+      },
       {
         threshold: 50,
         emoji: EMOJI.utility.worldMap,

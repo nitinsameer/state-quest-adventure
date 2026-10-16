@@ -10,23 +10,20 @@ export const Route = createFileRoute("/state/$slug/complete")({
   loader: ({ params }) => {
     const state = getStateBySlug(params.slug);
     if (!state) throw notFound();
-    
+
     // GUARD: Check that state is actually completed
     const progress = getProgress();
     if (!progress.completed.includes(state.name)) {
       console.warn("[CompleteRoute] Guard check failed, redirecting — state not completed");
       throw redirect({ to: "/state/$slug/learn", params: { slug: params.slug } });
     }
-    
+
     return { name: state.name };
   },
   head: ({ loaderData }) => {
     if (!loaderData) {
       return {
-        meta: [
-          { title: "Unavailable — India Explorer" },
-          { name: "robots", content: "noindex" },
-        ],
+        meta: [{ title: "Unavailable — India Explorer" }, { name: "robots", content: "noindex" }],
       };
     }
     const title = `${loaderData.name} Complete! — India Explorer`;
@@ -52,39 +49,40 @@ function Complete() {
   const { name } = Route.useLoaderData();
   const navigate = useNavigate();
   const progress = useProgress();
-  
+
   // Guard: If no pending celebration, redirect to learn
   if (!progress.pendingCelebrations?.length) {
     // Navigate away if ceremony is not in progress
     navigate({ to: "/state/$slug/learn", params: { slug } });
     return null;
   }
-  
+
   // Android back button: navigate to learning hub, not back into quiz
   useAndroidBackButton(() => {
     goToReplay();
   });
-  
+
   const goToPostcard = () => navigate({ to: "/state/$slug/postcard", params: { slug } });
   const goToReplay = () => navigate({ to: "/state/$slug/learn", params: { slug } });
-  
+
   // Navigate to next uncompleted state
   const goToNextState = () => {
     const states = statesWithProgress(progress);
     // Find next uncompleted state after current
-    const currentIndex = states.findIndex(s => s.name === name);
-    const nextState = states.slice(currentIndex + 1).find(s => s.status !== "done");
-    
+    const currentIndex = states.findIndex((s) => s.name === name);
+    const nextState = states.slice(currentIndex + 1).find((s) => s.status !== "done");
+
     if (nextState) {
       setLastPlayedState(nextState.name);
-      navigate({ to: "/state/$slug/learn", params: { slug: nextState.name.toLowerCase().replace(/\s+/g, "-") } });
+      navigate({
+        to: "/state/$slug/learn",
+        params: { slug: nextState.name.toLowerCase().replace(/\s+/g, "-") },
+      });
     } else {
       // All states completed, go to journey instead of home
       navigate({ to: "/journey" });
     }
   };
 
-  return (
-    <QuizCeremony />
-  );
+  return <QuizCeremony />;
 }

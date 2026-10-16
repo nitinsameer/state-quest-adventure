@@ -59,14 +59,18 @@ export function ExpandableCard({
   const hasExpandedDetails = coolFacts || didYouKnow || tryThis;
 
   return (
-    <div className={`w-full ${backgroundColor} rounded-2xl border-2 ${borderColor} p-(--padding-md) transition-all duration-300 shadow-soft`}>
+    <div
+      className={`w-full ${backgroundColor} rounded-2xl border-2 ${borderColor} p-(--padding-md) transition-all duration-300 shadow-soft`}
+    >
       {/* Header with Main Text moved here */}
       <div className="flex items-start gap-(--gap-base) mb-(--space-3)">
         <div className="text-3xl flex-shrink-0">{emoji}</div>
         <div className="flex-1 min-w-0">
           <h3 className="text-display font-bold text-xl leading-snug text-muted-dark">{title}</h3>
           {/* Main Text positioned just above key facts to preserve space */}
-          <p className="text-sm font-semibold text-muted-foreground leading-relaxed mt-1.5">{mainText}</p>
+          <p className="text-sm font-semibold text-muted-foreground leading-relaxed mt-1.5">
+            {mainText}
+          </p>
         </div>
       </div>
 
@@ -80,7 +84,10 @@ export function ExpandableCard({
             <span className="text-xs font-bold text-muted-foreground">
               {isExpanded ? "{EMOJI.icons.facts} Hide Facts" : "{EMOJI.action.sparkle} Cool Facts"}
             </span>
-            <span className="text-lg transition-transform" style={{ transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)" }}>
+            <span
+              className="text-lg transition-transform"
+              style={{ transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)" }}
+            >
               ▼
             </span>
           </button>
@@ -101,7 +108,8 @@ export function ExpandableCard({
                   onClick={handleShowMore}
                   className="w-full mt-2 py-(--padding-sm) px-(--padding-base) bg-accent-1-soft hover:bg-accent-1-soft/70 rounded-lg text-xs font-bold text-accent-1 active:scale-95 transition"
                 >
-                  + Show {Math.min(3, keyFacts.length - visibleFactsCount)} More Facts {EMOJI.action.star}
+                  + Show {Math.min(3, keyFacts.length - visibleFactsCount)} More Facts{" "}
+                  {EMOJI.action.star}
                 </button>
               )}
             </div>
@@ -122,11 +130,16 @@ export function ExpandableCard({
                 <span className="text-xs font-bold text-warning">
                   {EMOJI.action.star} More Amazing Facts
                 </span>
-                <span className="text-lg transition-transform" style={{ transform: expandedDetailIndex === 0 ? "rotate(180deg)" : "rotate(0deg)" }}>
+                <span
+                  className="text-lg transition-transform"
+                  style={{
+                    transform: expandedDetailIndex === 0 ? "rotate(180deg)" : "rotate(0deg)",
+                  }}
+                >
                   ▼
                 </span>
               </button>
-              
+
               {expandedDetailIndex === 0 && (
                 <div className="mt-2 space-y-2 pl-1 animate-fadeIn">
                   {coolFacts.map((fact, index) => (
@@ -149,19 +162,20 @@ export function ExpandableCard({
                 onClick={() => handleToggleDetail(1)}
                 className="w-full flex items-center justify-between p-(--padding-sm) rounded-lg hover:bg-surface-sunken active:scale-95 transition bg-accent-5-soft border border-accent-5"
               >
-                <span className="text-xs font-bold text-accent-5">
-                  🤔 Did You Know?
-                </span>
-                <span className="text-lg transition-transform" style={{ transform: expandedDetailIndex === 1 ? "rotate(180deg)" : "rotate(0deg)" }}>
+                <span className="text-xs font-bold text-accent-5">🤔 Did You Know?</span>
+                <span
+                  className="text-lg transition-transform"
+                  style={{
+                    transform: expandedDetailIndex === 1 ? "rotate(180deg)" : "rotate(0deg)",
+                  }}
+                >
                   ▼
                 </span>
               </button>
 
               {expandedDetailIndex === 1 && (
                 <div className="mt-2 bg-accent-5-soft p-(--padding-base) rounded-lg border-2 border-accent-5 animate-fadeIn">
-                  <p className="text-xs font-bold text-accent-5 leading-relaxed">
-                    {didYouKnow}
-                  </p>
+                  <p className="text-xs font-bold text-accent-5 leading-relaxed">{didYouKnow}</p>
                 </div>
               )}
             </div>
@@ -174,19 +188,20 @@ export function ExpandableCard({
                 onClick={() => handleToggleDetail(2)}
                 className="w-full flex items-center justify-between p-(--padding-sm) rounded-lg hover:bg-surface-sunken active:scale-95 transition bg-success-soft border border-success"
               >
-                <span className="text-xs font-bold text-success">
-                  🎮 Try This Activity
-                </span>
-                <span className="text-lg transition-transform" style={{ transform: expandedDetailIndex === 2 ? "rotate(180deg)" : "rotate(0deg)" }}>
+                <span className="text-xs font-bold text-success">🎮 Try This Activity</span>
+                <span
+                  className="text-lg transition-transform"
+                  style={{
+                    transform: expandedDetailIndex === 2 ? "rotate(180deg)" : "rotate(0deg)",
+                  }}
+                >
                   ▼
                 </span>
               </button>
 
               {expandedDetailIndex === 2 && (
                 <div className="mt-2 bg-success-soft p-(--padding-base) rounded-lg border-2 border-success animate-fadeIn">
-                  <p className="text-xs font-bold text-success leading-relaxed">
-                    {tryThis}
-                  </p>
+                  <p className="text-xs font-bold text-success leading-relaxed">{tryThis}</p>
                 </div>
               )}
             </div>
@@ -195,12 +210,7 @@ export function ExpandableCard({
       )}
 
       {/* Narration Player */}
-      <CardNarrationPlayer
-        narrationId={cardId}
-        text={narration}
-        title={title}
-        emoji={emoji}
-      />
+      <CardNarrationPlayer narrationId={cardId} text={narration} title={title} emoji={emoji} />
     </div>
   );
 }
@@ -225,4 +235,3 @@ if (typeof window !== "undefined") {
   `;
   document.head.appendChild(style);
 }
-

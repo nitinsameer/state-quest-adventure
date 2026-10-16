@@ -1,20 +1,25 @@
-﻿import { useEffect, useState, useRef } from 'react';
-import { useProgress, dismissPendingCelebration, updateCeremonyStep, type PendingCelebration } from '@/lib/progress';
-import { useNavigate } from '@tanstack/react-router';
-import { getState, type IndiaState, nextStateAfter } from '@/lib/states';
-import { STATE_ART, TONE_GRADIENT } from '@/lib/state-art';
-import { ConfettiBurst } from '@/components/ConfettiBurst';
-import { fxTap, fxCorrect, fxStamp } from '@/lib/fx';
-import { playTts } from '@/lib/tts';
-import { hasFeatureConsent } from '@/lib/parental-consent';
-import { PostcardFrame } from '@/components/PostcardFrame';
-import { EMOJI } from '@/constants/emoji';
-import mascot from '@/assets/mascot.webp';
+﻿import { useEffect, useState, useRef } from "react";
+import {
+  useProgress,
+  dismissPendingCelebration,
+  updateCeremonyStep,
+  type PendingCelebration,
+} from "@/lib/progress";
+import { useNavigate } from "@tanstack/react-router";
+import { getState, type IndiaState, nextStateAfter } from "@/lib/states";
+import { STATE_ART, TONE_GRADIENT } from "@/lib/state-art";
+import { ConfettiBurst } from "@/components/ConfettiBurst";
+import { fxTap, fxCorrect, fxStamp } from "@/lib/fx";
+import { playTts } from "@/lib/tts";
+import { hasFeatureConsent } from "@/lib/parental-consent";
+import { PostcardFrame } from "@/components/PostcardFrame";
+import { EMOJI } from "@/constants/emoji";
+import mascot from "@/assets/mascot.webp";
 
 /**
  * QuizCeremony: Four-step reward ceremony after quiz completion.
  * Steps: 0 = Result, 1 = Stamp, 2 = Postcard, 3 = What's Next
- * 
+ *
  * Persists step in pending-celebration context so resume works on app reopen.
  * Only calls dismissPendingCelebration on step 3's primary button.
  */
@@ -39,12 +44,12 @@ export function QuizCeremony() {
   }, [ceremony?.step]);
 
   // If no ceremony, render nothing (will navigate away)
-  if (!ceremony || ceremony.type !== 'full') {
+  if (!ceremony || ceremony.type !== "full") {
     return null;
   }
 
   const state = getState(ceremony.stateName);
-  const grad = TONE_GRADIENT[state.tone] ?? 'gradient-saffron';
+  const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
   const art = STATE_ART[state.name];
   const step = ceremony.step ?? 0;
 
@@ -99,7 +104,7 @@ export function QuizCeremony() {
             <div
               key={i}
               className={`h-2 rounded-full transition-all ${
-                i === step ? 'w-6 ui-chip' : 'w-2 ui-chip opacity-40'
+                i === step ? "w-6 ui-chip" : "w-2 ui-chip opacity-40"
               }`}
               role="progressbar"
               aria-valuenow={i === step ? 1 : 0}
@@ -117,9 +122,9 @@ export function QuizCeremony() {
 
           {/* Step 1: Stamp */}
           {step === 1 && (
-            <StepStamp 
-              ceremony={ceremony} 
-              state={state} 
+            <StepStamp
+              ceremony={ceremony}
+              state={state}
               art={art}
               stamped={stampedState}
               onStamped={() => setStampedState(true)}
@@ -213,7 +218,7 @@ export function QuizCeremony() {
 /* ========== STEP COMPONENTS ========== */
 
 interface StepProps {
-  ceremony: PendingCelebration & { type: 'full' };
+  ceremony: PendingCelebration & { type: "full" };
   state: IndiaState;
   art?: string;
   stamped?: boolean;
@@ -222,7 +227,7 @@ interface StepProps {
 
 /**
  * Step 0: Result - Show stars, XP, and level up
- * 
+ *
  * ANIMATION FLOW:
  * 1. Stars fill one at a time, 400ms apart, with fxCorrect haptic per star
  * 2. Respect prefers-reduced-motion: show all stars immediately
@@ -237,18 +242,18 @@ function StepResult({ ceremony, state, art }: StepProps) {
   const [filledStars, setFilledStars] = useState(0);
   const [xpChipsShown, setXpChipsShown] = useState(false);
   const prefersReducedMotion = useRef(false);
-  const mascotSpeechRef = useRef<string>('');
+  const mascotSpeechRef = useRef<string>("");
 
   // Check for prefers-reduced-motion
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      prefersReducedMotion.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (typeof window !== "undefined") {
+      prefersReducedMotion.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     }
   }, []);
 
   // Trigger confetti on mount
   useEffect(() => {
-    setBurstKey(k => k + 1);
+    setBurstKey((k) => k + 1);
   }, []);
 
   // Star animation: fill one at a time, 400ms apart
@@ -277,24 +282,24 @@ function StepResult({ ceremony, state, art }: StepProps) {
 
   // Mascot speech messages based on stars
   const starMessages: Record<number, string> = {
-    3: 'Three stars! Amazing!',
-    2: 'Great job!',
-    1: 'Good try! Play again for more stars.',
+    3: "Three stars! Amazing!",
+    2: "Great job!",
+    1: "Good try! Play again for more stars.",
   };
 
   mascotSpeechRef.current = starMessages[stars];
 
   // Read mascot speech aloud if narration is enabled
   useEffect(() => {
-    const shouldNarrate = hasFeatureConsent('audio');
+    const shouldNarrate = hasFeatureConsent("audio");
     if (shouldNarrate && prefersReducedMotion.current === false) {
       // Add a small delay for immersion after star animation
       const timer = setTimeout(() => {
-        playTts(
-          `ceremony-step-1-mascot-${stars}`,
-          mascotSpeechRef.current,
-          { language: 'en-IN', speed: 0.9, pitch: 1.1 }
-        );
+        playTts(`ceremony-step-1-mascot-${stars}`, mascotSpeechRef.current, {
+          language: "en-IN",
+          speed: 0.9,
+          pitch: 1.1,
+        });
       }, 2000); // After stars finish animating
       return () => clearTimeout(timer);
     }
@@ -307,9 +312,9 @@ function StepResult({ ceremony, state, art }: StepProps) {
   const nextLevelXp = 400;
 
   const starHintMessages: Record<number, string> = {
-    3: '6 right = 3 stars',
-    2: '4 right = 2 stars',
-    1: 'Play again for more stars',
+    3: "6 right = 3 stars",
+    2: "4 right = 2 stars",
+    1: "Play again for more stars",
   };
 
   return (
@@ -327,14 +332,14 @@ function StepResult({ ceremony, state, art }: StepProps) {
           <div
             key={i}
             className={`text-5xl transition-all duration-300 ${
-              i < filledStars ? 'scale-100 opacity-100' : 'scale-75 opacity-40'
+              i < filledStars ? "scale-100 opacity-100" : "scale-75 opacity-40"
             }`}
             role="progressbar"
             aria-valuenow={i < filledStars ? 1 : 0}
             aria-valuemax={1}
-            aria-label={i < filledStars ? 'earned star' : 'empty star'}
+            aria-label={i < filledStars ? "earned star" : "empty star"}
           >
-            {i < filledStars ? '⭐' : '☆'}
+            {i < filledStars ? "⭐" : "☆"}
           </div>
         ))}
       </div>
@@ -363,7 +368,7 @@ function StepResult({ ceremony, state, art }: StepProps) {
               />
               <div
                 className="absolute top-0 h-1 rounded-full bg-default/70 transition-all duration-1000 ease-out"
-                style={{ width: `${(xpInCurrentLevel / nextLevelXp) * 100 * 0.9}%`, left: '5%' }}
+                style={{ width: `${(xpInCurrentLevel / nextLevelXp) * 100 * 0.9}%`, left: "5%" }}
               />
             </div>
             <div className="text-xs text-ink/60 font-medium text-center">
@@ -375,7 +380,9 @@ function StepResult({ ceremony, state, art }: StepProps) {
           {ceremony.leveledUp && (
             <div className="ui-card ui-accent-3 px-4 py-3 rounded-2xl border-2 border-success/30">
               <div className="text-center">
-                <div className="text-sm font-bold text-ink">{EMOJI.action.celebrate} New level!</div>
+                <div className="text-sm font-bold text-ink">
+                  {EMOJI.action.celebrate} New level!
+                </div>
                 <div className="text-xs font-semibold text-ink/80 mt-1">{ceremony.levelName}</div>
               </div>
             </div>
@@ -392,9 +399,7 @@ function StepResult({ ceremony, state, art }: StepProps) {
             className="w-16 h-16 object-contain flex-shrink-0 mascot-cheer"
           />
           <div className="relative ui-card ui-accent-1-soft px-4 py-3 rounded-2xl flex-1">
-            <p className="text-sm font-semibold text-ink leading-snug">
-              {mascotSpeechRef.current}
-            </p>
+            <p className="text-sm font-semibold text-ink leading-snug">{mascotSpeechRef.current}</p>
             {/* Tail pointer */}
             <div className="absolute -left-2 bottom-4 w-3 h-3 ui-card ui-accent-1-soft rounded-full transform rotate-45" />
           </div>
@@ -406,7 +411,7 @@ function StepResult({ ceremony, state, art }: StepProps) {
 
 /**
  * Step 2: Stamp - Passport card with tappable stamp target
- * 
+ *
  * - Shows state art and name in a ring
  * - Tap to stamp: plays animation (transform only), fxStamp, haptic, shows count
  * - Auto-stamp after 4 seconds if no tap
@@ -421,8 +426,8 @@ function StepStamp({ ceremony, state, art, stamped = false, onStamped }: StepPro
 
   // Check for prefers-reduced-motion
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      prefersReducedMotion.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (typeof window !== "undefined") {
+      prefersReducedMotion.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     }
   }, []);
 
@@ -438,7 +443,7 @@ function StepStamp({ ceremony, state, art, stamped = false, onStamped }: StepPro
 
     // Play effects
     fxStamp();
-    if (typeof window !== 'undefined' && 'vibrate' in navigator) {
+    if (typeof window !== "undefined" && "vibrate" in navigator) {
       navigator.vibrate(50);
     }
 
@@ -454,9 +459,12 @@ function StepStamp({ ceremony, state, art, stamped = false, onStamped }: StepPro
     }
 
     // Mark as stamped after animation completes
-    setTimeout(() => {
-      onStamped?.();
-    }, prefersReducedMotion.current ? 0 : 300);
+    setTimeout(
+      () => {
+        onStamped?.();
+      },
+      prefersReducedMotion.current ? 0 : 300,
+    );
   };
 
   // Auto-stamp after 4 seconds if not tapped
@@ -466,7 +474,7 @@ function StepStamp({ ceremony, state, art, stamped = false, onStamped }: StepPro
     autoStampTimer.current = setTimeout(() => {
       // Trigger stamp without user tap
       fxStamp();
-      if (typeof window !== 'undefined' && 'vibrate' in navigator) {
+      if (typeof window !== "undefined" && "vibrate" in navigator) {
         navigator.vibrate(50);
       }
       onStamped?.();
@@ -498,11 +506,7 @@ function StepStamp({ ceremony, state, art, stamped = false, onStamped }: StepPro
         {/* State art */}
         {art && (
           <div className="flex justify-center mb-3">
-            <img
-              src={art}
-              alt={state.name}
-              className="w-24 h-24 object-cover rounded-lg"
-            />
+            <img src={art} alt={state.name} className="w-24 h-24 object-cover rounded-lg" />
           </div>
         )}
 
@@ -512,10 +516,12 @@ function StepStamp({ ceremony, state, art, stamped = false, onStamped }: StepPro
             onClick={handleStampTap}
             disabled={stamped}
             className="relative w-32 h-32 rounded-full transition-all active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[--color-saffron]"
-            style={{
-              transform: `scale(${stampScale}) rotate(${stampRotation}deg)`,
-              transitionDuration: prefersReducedMotion.current ? '0ms' : '300ms',
-            } as React.CSSProperties}
+            style={
+              {
+                transform: `scale(${stampScale}) rotate(${stampRotation}deg)`,
+                transitionDuration: prefersReducedMotion.current ? "0ms" : "300ms",
+              } as React.CSSProperties
+            }
             aria-label="Tap to stamp"
             aria-pressed={stamped}
           >
@@ -526,13 +532,7 @@ function StepStamp({ ceremony, state, art, stamped = false, onStamped }: StepPro
                 <div className="text-sm font-bold text-ink text-center leading-tight max-w-[80px]">
                   {state.name}
                 </div>
-                {art && (
-                  <img
-                    src={art}
-                    alt=""
-                    className="w-12 h-12 object-cover rounded"
-                  />
-                )}
+                {art && <img src={art} alt="" className="w-12 h-12 object-cover rounded" />}
               </div>
             </div>
 
@@ -550,13 +550,9 @@ function StepStamp({ ceremony, state, art, stamped = false, onStamped }: StepPro
       {/* Status text */}
       <div className="text-center">
         {stamped ? (
-          <p className="text-body text-ink font-bold">
-            Stamp {stampCount} of 36 collected! ✓
-          </p>
+          <p className="text-body text-ink font-bold">Stamp {stampCount} of 36 collected! ✓</p>
         ) : (
-          <p className="text-body text-ink/60 text-sm">
-            Tap the stamp to add it to your passport
-          </p>
+          <p className="text-body text-ink/60 text-sm">Tap the stamp to add it to your passport</p>
         )}
       </div>
     </div>
@@ -565,7 +561,7 @@ function StepStamp({ ceremony, state, art, stamped = false, onStamped }: StepPro
 
 /**
  * Step 3: Postcard - Reuse PostcardFrame, pick sticker, share button
- * 
+ *
  * - Slide in the postcard with CSS transition
  * - Three emoji buttons to pick a sticker (fixed list)
  * - Show "Saved in your Passport" with checkmark
@@ -579,12 +575,12 @@ function StepPostcard({ ceremony, state }: StepProps) {
   const prefersReducedMotion = useRef(false);
 
   // Fixed emoji list: face-savouring-food, national-park, party-popper
-  const STICKER_OPTIONS = ['😋', '🎊', '{EMOJI.action.celebrate}'];
+  const STICKER_OPTIONS = ["😋", "🎊", "{EMOJI.action.celebrate}"];
 
   // Check for prefers-reduced-motion
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      prefersReducedMotion.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (typeof window !== "undefined") {
+      prefersReducedMotion.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     }
   }, []);
 
@@ -601,14 +597,13 @@ function StepPostcard({ ceremony, state }: StepProps) {
     const ceremony_copy = { ...ceremony, sticker };
     const updated = {
       ...progress,
-      pendingCelebrations: progress.pendingCelebrations?.map((c, i) =>
-        i === 0 ? ceremony_copy : c
-      ) || [],
+      pendingCelebrations:
+        progress.pendingCelebrations?.map((c, i) => (i === 0 ? ceremony_copy : c)) || [],
     };
 
     // Persist sticker choice
     try {
-      const STORAGE_KEY = 'india-explorer:progress:v2';
+      const STORAGE_KEY = "india-explorer:progress:v2";
       localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
     } catch {
       // Storage error - fail silently
@@ -625,16 +620,18 @@ function StepPostcard({ ceremony, state }: StepProps) {
 
     try {
       // Verify parent PIN before sharing
-      const { verifyPin } = await import('@/lib/parent-gate');
+      const { verifyPin } = await import("@/lib/parent-gate");
 
       // For now, just log that share is being attempted
       // Full implementation includes PIN gate modal from ParentGate component
-      console.log('[Postcard Share] Share button pressed - would open PIN gate in full implementation');
+      console.log(
+        "[Postcard Share] Share button pressed - would open PIN gate in full implementation",
+      );
 
       setShowSaveStatus(true);
       setTimeout(() => setShowSaveStatus(false), 2000);
     } catch (err) {
-      console.error('[Postcard Share Error]', err);
+      console.error("[Postcard Share Error]", err);
     }
   };
 
@@ -648,18 +645,16 @@ function StepPostcard({ ceremony, state }: StepProps) {
         style={{
           opacity: prefersReducedMotion.current ? 1 : 1,
           transform: prefersReducedMotion.current
-            ? 'translateY(0) scaleY(1)'
-            : 'translateY(-20px) scaleY(0.95)',
-          animation: prefersReducedMotion.current
-            ? 'none'
-            : 'slideInDown 0.5s ease-out forwards',
+            ? "translateY(0) scaleY(1)"
+            : "translateY(-20px) scaleY(0.95)",
+          animation: prefersReducedMotion.current ? "none" : "slideInDown 0.5s ease-out forwards",
         }}
       >
         <PostcardFrame
           stateName={state.name}
           stars={ceremony.stars}
           date={ceremony.stampDate}
-          badge={(ceremony.earnedBadgeIds?.[0] as any) || 'explorer'}
+          badge={(ceremony.earnedBadgeIds?.[0] as any) || "explorer"}
         />
       </div>
 
@@ -673,10 +668,10 @@ function StepPostcard({ ceremony, state }: StepProps) {
               onClick={() => handleStickerPick(sticker)}
               className={`text-5xl transition-all active:scale-90 ${
                 selectedSticker === sticker
-                  ? 'scale-125 drop-shadow-lg'
-                  : 'scale-100 opacity-70 hover:opacity-100'
+                  ? "scale-125 drop-shadow-lg"
+                  : "scale-100 opacity-70 hover:opacity-100"
               }`}
-              style={{ minHeight: '48px', minWidth: '48px' }}
+              style={{ minHeight: "48px", minWidth: "48px" }}
               aria-pressed={selectedSticker === sticker}
               aria-label={`Pick sticker ${sticker}`}
             >
@@ -708,9 +703,9 @@ function StepPostcard({ ceremony, state }: StepProps) {
 }
 
 // Add CSS keyframes for slide-in animation (add to global or component styles)
-if (typeof window !== 'undefined' && !document.querySelector('style[data-postcard-animation]')) {
-  const style = document.createElement('style');
-  style.setAttribute('data-postcard-animation', 'true');
+if (typeof window !== "undefined" && !document.querySelector("style[data-postcard-animation]")) {
+  const style = document.createElement("style");
+  style.setAttribute("data-postcard-animation", "true");
   style.textContent = `
     @keyframes slideInDown {
       from {
@@ -728,7 +723,7 @@ if (typeof window !== 'undefined' && !document.querySelector('style[data-postcar
 
 /**
  * Step 4: What's Next - Show region progress, next state, and action buttons
- * 
+ *
  * REGION CARD: Shows region name, dots for states (filled/empty), streak, and "Done" count
  * NEXT STATE: Art and name from nextStateAfter()
  * REGION MASTER: If regionDone === regionTotal, show success banner
@@ -736,7 +731,7 @@ if (typeof window !== 'undefined' && !document.querySelector('style[data-postcar
  */
 function StepWhatsNext({ ceremony, state }: StepProps) {
   const navigate = useNavigate();
-  
+
   // Get the next state
   const nextState = nextStateAfter(state.name);
   const nextStateArt = nextState ? STATE_ART[nextState.name] : undefined;
@@ -802,12 +797,12 @@ function StepWhatsNext({ ceremony, state }: StepProps) {
               <div
                 key={i}
                 className={`w-2.5 h-2.5 rounded-full transition-all ${
-                  i < ceremony.regionDone ? 'ui-chip' : 'bg-ink/20'
+                  i < ceremony.regionDone ? "ui-chip" : "bg-ink/20"
                 }`}
                 role="progressbar"
                 aria-valuenow={i < ceremony.regionDone ? 1 : 0}
                 aria-valuemax={1}
-                aria-label={i < ceremony.regionDone ? 'completed state' : 'incomplete state'}
+                aria-label={i < ceremony.regionDone ? "completed state" : "incomplete state"}
               />
             ))}
           </div>
@@ -848,5 +843,3 @@ function StepWhatsNext({ ceremony, state }: StepProps) {
     </div>
   );
 }
-
-

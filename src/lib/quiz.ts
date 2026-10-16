@@ -64,8 +64,18 @@ function build(
   pick: (s: IndiaState) => string,
   xp = 20,
 ): QuizQuestion {
-  const options = shuffle([correct, ...distractors(state, pick, correct, id)], `${id}:${state.name}:opts`);
-  return { id: `${state.name.toLowerCase().replace(/\s+/g, "-")}-${id}`, kicker, prompt, options, correct, xp };
+  const options = shuffle(
+    [correct, ...distractors(state, pick, correct, id)],
+    `${id}:${state.name}:opts`,
+  );
+  return {
+    id: `${state.name.toLowerCase().replace(/\s+/g, "-")}-${id}`,
+    kicker,
+    prompt,
+    options,
+    correct,
+    xp,
+  };
 }
 
 /** Extract the English value from a state field that might be bilingual or simple string */
@@ -73,12 +83,12 @@ function extractEnglishValue(value: any): string {
   // BUG FIX #7: Validate extracted values to prevent blank questions
   // Previously: Returns empty string or "[object Object]" silently
   // Now: Returns empty string only if truly empty, logs errors
-  
+
   if (!value) return "";
   if (typeof value === "string") {
     // Don't return empty strings - log if encountered
     if (!value.trim()) {
-      console.warn('Empty string value extracted');
+      console.warn("Empty string value extracted");
       return "[CONTENT MISSING]";
     }
     return value;
@@ -86,21 +96,21 @@ function extractEnglishValue(value: any): string {
   if (typeof value === "object" && value.en) {
     if (typeof value.en === "string") {
       if (!value.en.trim()) {
-        console.warn('Empty English translation');
+        console.warn("Empty English translation");
         return "[TRANSLATION MISSING]";
       }
       return value.en;
     }
     if (typeof value.en === "object" && value.en.title) {
       if (!value.en.title.trim()) {
-        console.warn('Empty English title');
+        console.warn("Empty English title");
         return "[TITLE MISSING]";
       }
       return value.en.title;
     }
   }
   // Last resort: log unexpected format
-  console.warn('Unexpected value format, cannot extract English:', value);
+  console.warn("Unexpected value format, cannot extract English:", value);
   return "[FORMAT ERROR]";
 }
 
@@ -117,24 +127,89 @@ export function questionsForState(state: IndiaState): QuizQuestion[] {
 
   // BUG FIX #7: Validate all required fields before generating questions
   // If any critical field is missing, return empty array to prevent broken quiz
-  const requiredFields = [capital, language, food, animalName, monumentName, nickname, population, funFact];
-  const anyMissing = requiredFields.some(field => field.includes("[") && field.includes("]"));
-  
+  const requiredFields = [
+    capital,
+    language,
+    food,
+    animalName,
+    monumentName,
+    nickname,
+    population,
+    funFact,
+  ];
+  const anyMissing = requiredFields.some((field) => field.includes("[") && field.includes("]"));
+
   if (anyMissing) {
     console.error(`State ${state.name} has missing or invalid data for quizzes`);
   }
 
   return [
-    build(state, "capital", "Capital City", `What is the capital of ${state.name}?`, capital, (s) => extractEnglishValue(s.capital)),
-    build(state, "state-of-capital", "Find the State", `${capital} is the capital of which state?`, state.name, (s) => s.name),
-    build(state, "landmark", "Landmark", `Which symbol stands for ${state.name}?`, state.emoji, (s) => s.emoji),
-    build(state, "language", "Language", `Which language is mainly spoken in ${state.name}?`, language, (s) => extractEnglishValue(s.language)),
-    build(state, "food", "Famous Food", `Which tasty dish comes from ${state.name}?`, food, (s) => extractEnglishValue(s.food)),
-    build(state, "animal", "State Animal", `Which animal is the state animal of ${state.name}?`, animalName, (s) => extractEnglishValue(s.animalName)),
-    build(state, "monument", "Monument", `Which famous place can you visit in ${state.name}?`, monumentName, (s) => extractEnglishValue(s.monumentName)),
-    build(state, "nickname", "Nickname", `${state.name} is also known as...?`, nickname, (s) => extractEnglishValue(s.nickname)),
-    build(state, "population", "How Many People", `About how many people live in ${state.name}?`, population, (s) => extractEnglishValue(s.population)),
-    build(state, "fun-fact", "Cool Fact", `What's super cool about ${state.name}?`, funFact, (s) => extractEnglishValue(s.funFact), 25),
+    build(state, "capital", "Capital City", `What is the capital of ${state.name}?`, capital, (s) =>
+      extractEnglishValue(s.capital),
+    ),
+    build(
+      state,
+      "state-of-capital",
+      "Find the State",
+      `${capital} is the capital of which state?`,
+      state.name,
+      (s) => s.name,
+    ),
+    build(
+      state,
+      "landmark",
+      "Landmark",
+      `Which symbol stands for ${state.name}?`,
+      state.emoji,
+      (s) => s.emoji,
+    ),
+    build(
+      state,
+      "language",
+      "Language",
+      `Which language is mainly spoken in ${state.name}?`,
+      language,
+      (s) => extractEnglishValue(s.language),
+    ),
+    build(state, "food", "Famous Food", `Which tasty dish comes from ${state.name}?`, food, (s) =>
+      extractEnglishValue(s.food),
+    ),
+    build(
+      state,
+      "animal",
+      "State Animal",
+      `Which animal is the state animal of ${state.name}?`,
+      animalName,
+      (s) => extractEnglishValue(s.animalName),
+    ),
+    build(
+      state,
+      "monument",
+      "Monument",
+      `Which famous place can you visit in ${state.name}?`,
+      monumentName,
+      (s) => extractEnglishValue(s.monumentName),
+    ),
+    build(state, "nickname", "Nickname", `${state.name} is also known as...?`, nickname, (s) =>
+      extractEnglishValue(s.nickname),
+    ),
+    build(
+      state,
+      "population",
+      "How Many People",
+      `About how many people live in ${state.name}?`,
+      population,
+      (s) => extractEnglishValue(s.population),
+    ),
+    build(
+      state,
+      "fun-fact",
+      "Cool Fact",
+      `What's super cool about ${state.name}?`,
+      funFact,
+      (s) => extractEnglishValue(s.funFact),
+      25,
+    ),
   ];
 }
 

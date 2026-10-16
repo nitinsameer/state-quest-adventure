@@ -1,6 +1,6 @@
 /**
  * ParentGate Component
- * 
+ *
  * Secure gate for parent zone access and sensitive actions
  * - Requires PIN verification before accessing /parent
  * - Gate session expires after 5 minutes or on logout
@@ -8,13 +8,7 @@
  */
 
 import { useState, useEffect } from "react";
-import {
-  hasPin,
-  setPin,
-  verifyPin,
-  isGated,
-  migrateOldPIN,
-} from "@/lib/parent-gate";
+import { hasPin, setPin, verifyPin, isGated, migrateOldPIN } from "@/lib/parent-gate";
 import { StandardModal } from "@/components/StandardModal";
 import { fxTap } from "@/lib/fx";
 
@@ -78,7 +72,7 @@ export function ParentGate({ onVerified, onCancel }: ParentGateProps) {
         onVerified();
       } else if (result.lockout) {
         setPinError(
-          `Locked. Try again in ${result.remainingMinutes} minute${result.remainingMinutes > 1 ? "s" : ""}`
+          `Locked. Try again in ${result.remainingMinutes} minute${result.remainingMinutes > 1 ? "s" : ""}`,
         );
       } else {
         setPinError("Wrong PIN. Try again.");
@@ -178,9 +172,7 @@ export function ParentGate({ onVerified, onCancel }: ParentGateProps) {
         {mode === "pin-entry" && (
           <>
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-text-primary">
-                Enter PIN
-              </label>
+              <label className="text-sm font-semibold text-text-primary">Enter PIN</label>
               <input
                 type="password"
                 inputMode="numeric"
@@ -245,9 +237,7 @@ export function ParentGate({ onVerified, onCancel }: ParentGateProps) {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-text-primary">
-                Confirm PIN
-              </label>
+              <label className="text-sm font-semibold text-text-primary">Confirm PIN</label>
               <input
                 type="password"
                 inputMode="numeric"
@@ -309,9 +299,7 @@ export function ParentGate({ onVerified, onCancel }: ParentGateProps) {
                 className="mx-auto block w-32 rounded-lg border-2 border-[var(--border-color)] px-3 py-2 text-center text-lg font-semibold"
               />
               {challengeError && (
-                <p className="text-xs text-[var(--fb-error-fg)] font-semibold">
-                  {challengeError}
-                </p>
+                <p className="text-xs text-[var(--fb-error-fg)] font-semibold">{challengeError}</p>
               )}
             </div>
 

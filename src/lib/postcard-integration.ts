@@ -1,6 +1,6 @@
 /**
  * PostcardLibrary Integration with Progress System
- * 
+ *
  * Handles:
  * - Migration from old postcard format to LibraryPostcard format
  * - Auto-syncing new postcards when states are completed
@@ -14,14 +14,11 @@ import { createLibraryPostcard } from "@/lib/postcard-library";
 
 /**
  * Migrate old PostcardData to new LibraryPostcard format
- * 
+ *
  * Old format: { generatedAt, state, badge, stampDate }
  * New format: LibraryPostcard with consent tracking, history, etc.
  */
-function migratePostcardData(
-  stateName: string,
-  oldData: PostcardData
-): LibraryPostcard {
+function migratePostcardData(stateName: string, oldData: PostcardData): LibraryPostcard {
   return {
     id: `${stateName}-${new Date(oldData.generatedAt).getTime()}`,
     generatedAt: oldData.generatedAt,
@@ -60,10 +57,7 @@ export function migratePostcardsToLibrary(progress: Progress): LibraryPostcard[]
   }
 
   // Sort by date (newest first)
-  migrated.sort(
-    (a, b) =>
-      new Date(b.generatedAt).getTime() - new Date(a.generatedAt).getTime()
-  );
+  migrated.sort((a, b) => new Date(b.generatedAt).getTime() - new Date(a.generatedAt).getTime());
 
   return migrated;
 }
@@ -90,12 +84,9 @@ export async function initializePostcardLibrary(progress: Progress) {
     if (migrated.length > 0) {
       // Add all migrated postcards
       migrated.forEach((postcard) => {
-        usePostcardLibrary.getState().addPostcard(
-          postcard.state,
-          postcard.badge,
-          postcard.stampDate,
-          postcard.generatedAt
-        );
+        usePostcardLibrary
+          .getState()
+          .addPostcard(postcard.state, postcard.badge, postcard.stampDate, postcard.generatedAt);
       });
     }
   }
@@ -109,7 +100,7 @@ export function syncNewPostcardToLibrary(
   stateName: string,
   badge: "monument" | "animal" | "explorer",
   stampDate: string,
-  generatedAt: string
+  generatedAt: string,
 ) {
   try {
     const library = usePostcardLibrary.getState();

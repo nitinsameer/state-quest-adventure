@@ -13,10 +13,10 @@ const SEEN_BADGES_KEY = "india-explorer:seen-badges:v1";
  */
 export function getSeenBadgeIds(): Set<string> {
   if (typeof window === "undefined") return new Set();
-  
+
   const saved = localStorage.getItem(SEEN_BADGES_KEY);
   if (!saved) return new Set();
-  
+
   try {
     return new Set(JSON.parse(saved));
   } catch {
@@ -29,7 +29,7 @@ export function getSeenBadgeIds(): Set<string> {
  */
 export function markBadgeAsSeen(badgeId: string): void {
   if (typeof window === "undefined") return;
-  
+
   const seen = getSeenBadgeIds();
   seen.add(badgeId);
   localStorage.setItem(SEEN_BADGES_KEY, JSON.stringify(Array.from(seen)));
@@ -40,16 +40,18 @@ export function markBadgeAsSeen(badgeId: string): void {
  */
 export function getNewlyUnlockedBadges(badges: AchievementBadge[]): AchievementBadge[] {
   const seen = getSeenBadgeIds();
-  
-  return badges.filter(badge => 
-    badge.unlocked && !seen.has(badge.id)
-  );
+
+  return badges.filter((badge) => badge.unlocked && !seen.has(badge.id));
 }
 
 /**
  * Get notification message for a badge
  */
-export function getBadgeNotificationMessage(badge: AchievementBadge): { title: string; subtitle: string; emoji: string } {
+export function getBadgeNotificationMessage(badge: AchievementBadge): {
+  title: string;
+  subtitle: string;
+  emoji: string;
+} {
   const tierEmojis: Record<string, string> = {
     seedling: "🌱",
     growing: "🌿",

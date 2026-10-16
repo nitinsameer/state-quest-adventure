@@ -21,7 +21,13 @@ import { DebugScreen } from "@/components/DebugScreen";
 import { BottomNav } from "@/components/screens";
 import { appLogger } from "@/lib/logger";
 import { firebaseEvents } from "@/lib/firebase-events";
-import { useProgress, isHydrated, initializeHydration, levelInfo, getLevelName } from "@/lib/progress";
+import {
+  useProgress,
+  isHydrated,
+  initializeHydration,
+  levelInfo,
+  getLevelName,
+} from "@/lib/progress";
 import { pauseTts, resumeTts } from "@/lib/tts";
 import { ensureAudioConsentGranted } from "@/lib/parental-consent";
 import { initializeAudioCleanup } from "@/lib/fx";
@@ -42,53 +48,61 @@ class RootErrorBoundary extends React.Component<
   constructor(props: { children: React.ReactNode }) {
     super(props);
     this.state = { hasError: false, error: null };
-    appLogger.info('root_error_boundary', 'RootErrorBoundary mounted');
+    appLogger.info("root_error_boundary", "RootErrorBoundary mounted");
   }
 
   static getDerivedStateFromError(error: Error) {
     const category = categorizeError(error);
-    appLogger.error('root_error_boundary', 'getDerivedStateFromError called', { 
-      errorMessage: error.message,
-      category: category.category,
-      severity: category.severity,
-    }, error);
+    appLogger.error(
+      "root_error_boundary",
+      "getDerivedStateFromError called",
+      {
+        errorMessage: error.message,
+        category: category.category,
+        severity: category.severity,
+      },
+      error,
+    );
     return { hasError: true, error, errorCategory: category.category };
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     const category = categorizeError(error);
-    
+
     // Log to our error tracking system (includes Crashlytics)
     logError(error, {
-      boundary: 'root_error_boundary',
+      boundary: "root_error_boundary",
       errorInfo,
       severity: category.severity,
-      screen: 'root_component',
+      screen: "root_component",
     });
 
-    appLogger.error('root_error_boundary', 'componentDidCatch called', { 
-      errorInfo,
-      category: category.category,
-      recoverable: category.recoverable,
-    }, error);
-    
+    appLogger.error(
+      "root_error_boundary",
+      "componentDidCatch called",
+      {
+        errorInfo,
+        category: category.category,
+        recoverable: category.recoverable,
+      },
+      error,
+    );
+
     console.error("RootErrorBoundary caught error:", error, errorInfo);
     reportLovableError(error, { boundary: "root_error_boundary", errorInfo });
   }
 
   render() {
-    appLogger.debug('root_error_boundary', 'render called', { hasError: this.state.hasError });
-    
+    appLogger.debug("root_error_boundary", "render called", { hasError: this.state.hasError });
+
     if (this.state.hasError) {
       return (
         <div className="flex min-h-screen items-center justify-center bg-accent-1-soft px-4">
           <div className="max-w-md text-center">
             {/* Error Icon */}
             <div className="text-6xl mb-4">💥</div>
-            
-            <h1 className="text-h2">
-              App encountered an error
-            </h1>
+
+            <h1 className="text-h2">App encountered an error</h1>
             <p className="mt-3 text-body text-muted-foreground leading-relaxed">
               Something unexpected happened. Let's try reloading the app!
             </p>
@@ -114,9 +128,7 @@ class RootErrorBoundary extends React.Component<
             </div>
 
             {/* Reassuring message */}
-            <p className="mt-6 text-caption text-muted-foreground">
-              Your progress is saved! 💾
-            </p>
+            <p className="mt-6 text-caption text-muted-foreground">Your progress is saved! 💾</p>
           </div>
         </div>
       );
@@ -160,14 +172,12 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
       <div className="max-w-md text-center">
         {/* Error Icon */}
         <div className="text-6xl mb-4">⚠️</div>
-        
-        <h1 className="text-h2 text-ink">
-          Oops! Something went wrong
-        </h1>
+
+        <h1 className="text-h2 text-ink">Oops! Something went wrong</h1>
         <p className="mt-3 text-body text-muted-foreground leading-relaxed">
           The page didn't load properly. Don't worry—just try again or go back home!
         </p>
-        
+
         {/* Debug info (small, for parents/developers) */}
         <details className="mt-4 text-left">
           <summary className="cursor-pointer text-caption text-muted-foreground hover:text-foreground">
@@ -212,16 +222,42 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "India Explorer — Travel Across India, One State at a Time" },
-      { name: "description", content: "A kids adventure app that teaches Indian states through exploration, quizzes, passport stamps and badges." },
+      {
+        name: "description",
+        content:
+          "A kids adventure app that teaches Indian states through exploration, quizzes, passport stamps and badges.",
+      },
       { name: "author", content: "India Explorer" },
-      { property: "og:title", content: "India Explorer — Travel Across India, One State at a Time" },
-      { property: "og:description", content: "A kids adventure app that teaches Indian states through exploration, quizzes, passport stamps and badges." },
+      {
+        property: "og:title",
+        content: "India Explorer — Travel Across India, One State at a Time",
+      },
+      {
+        property: "og:description",
+        content:
+          "A kids adventure app that teaches Indian states through exploration, quizzes, passport stamps and badges.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "India Explorer — Travel Across India, One State at a Time" },
-      { name: "twitter:description", content: "A kids adventure app that teaches Indian states through exploration, quizzes, passport stamps and badges." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/023f343d-c8a3-4545-965b-70c6731973fa/id-preview-55bc3492--e756e1b4-32bb-4081-85f6-698df446f49e.lovable.app-1784188463257.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/023f343d-c8a3-4545-965b-70c6731973fa/id-preview-55bc3492--e756e1b4-32bb-4081-85f6-698df446f49e.lovable.app-1784188463257.png" },
+      {
+        name: "twitter:title",
+        content: "India Explorer — Travel Across India, One State at a Time",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "A kids adventure app that teaches Indian states through exploration, quizzes, passport stamps and badges.",
+      },
+      {
+        property: "og:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/023f343d-c8a3-4545-965b-70c6731973fa/id-preview-55bc3492--e756e1b4-32bb-4081-85f6-698df446f49e.lovable.app-1784188463257.png",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/023f343d-c8a3-4545-965b-70c6731973fa/id-preview-55bc3492--e756e1b4-32bb-4081-85f6-698df446f49e.lovable.app-1784188463257.png",
+      },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -251,17 +287,18 @@ function HydratedApp() {
   // RULES OF HOOKS: useProgress() is ALWAYS called here, never conditionally
   // This ensures hook count/order is consistent across renders
   const progress = useProgress();
-  
+
   // Get celebration store show method at top level (hooks must be called before any conditionals)
   const showCelebration = useCelebrationStore((state) => state.show);
 
   // Pre-auth routes that should NOT show BottomNav
-  const preAuthRoutes = ['/', '/welcome', '/create'];
-  
+  const preAuthRoutes = ["/", "/welcome", "/create"];
+
   // Immersive routes that should NOT show BottomNav (full-screen experiences)
   // Uses regex to match /state/<slug>/quiz, /state/<slug>/learn, etc.
-  const immersiveRoutePattern = /^\/state\/[^/]+\/(quiz|learn|card|cards|complete|postcard|unlock)(\/|$)/;
-  
+  const immersiveRoutePattern =
+    /^\/state\/[^/]+\/(quiz|learn|card|cards|complete|postcard|unlock)(\/|$)/;
+
   // Check if current route is immersive (quiz, learning, celebration)
   const isImmersiveRoute = immersiveRoutePattern.test(location.pathname);
   const shouldShowBottomNav = !preAuthRoutes.includes(location.pathname) && !isImmersiveRoute;
@@ -281,50 +318,54 @@ function HydratedApp() {
   // Initialize theme from localStorage on app load and set up status bar
   useEffect(() => {
     initializeTheme();
-    
+
     // Initialize status bar with theme colors
     const initStatusBar = async () => {
       try {
         const root = document.documentElement;
-        const themeStyle = root.getAttribute('data-theme') || 'clay';
-        
+        const themeStyle = root.getAttribute("data-theme") || "clay";
+
         // Get computed style for status bar colors
         const computedStyle = getComputedStyle(root);
-        const statusbarStyle = computedStyle.getPropertyValue('--statusbar-style').trim() || 'dark';
-        const statusbarBg = computedStyle.getPropertyValue('--statusbar-bg').trim() || '#FF8A3D';
-        
+        const statusbarStyle = computedStyle.getPropertyValue("--statusbar-style").trim() || "dark";
+        const statusbarBg = computedStyle.getPropertyValue("--statusbar-bg").trim() || "#FF8A3D";
+
         // Set status bar appearance
         if (Capacitor.isNativePlatform()) {
-          const styleValue = statusbarStyle === 'dark' ? 'DARK' : 'LIGHT';
+          const styleValue = statusbarStyle === "dark" ? "DARK" : "LIGHT";
           await StatusBar.setStyle({ style: styleValue as any });
           await StatusBar.setBackgroundColor({ color: statusbarBg });
         }
-        
+
         // Update meta theme-color
         const metaThemeColor = document.querySelector('meta[name="theme-color"]');
         if (metaThemeColor) {
-          metaThemeColor.setAttribute('content', statusbarBg);
+          metaThemeColor.setAttribute("content", statusbarBg);
         }
       } catch (error) {
-        console.warn('Failed to initialize status bar:', error);
+        console.warn("Failed to initialize status bar:", error);
       }
     };
-    
+
     initStatusBar();
   }, []);
-  
+
   // Measure bottom nav height and set as CSS variable
   useEffect(() => {
     if (navRef.current && shouldShowBottomNav) {
       const updateNavHeight = () => {
         const height = navRef.current?.offsetHeight || 0;
-        const safeAreaBottom = parseInt(getComputedStyle(document.documentElement).getPropertyValue('env(safe-area-inset-bottom)') || '0');
-        document.documentElement.style.setProperty('--nav-h', `${height + safeAreaBottom}px`);
+        const safeAreaBottom = parseInt(
+          getComputedStyle(document.documentElement).getPropertyValue(
+            "env(safe-area-inset-bottom)",
+          ) || "0",
+        );
+        document.documentElement.style.setProperty("--nav-h", `${height + safeAreaBottom}px`);
       };
-      
+
       updateNavHeight();
-      window.addEventListener('resize', updateNavHeight);
-      return () => window.removeEventListener('resize', updateNavHeight);
+      window.addEventListener("resize", updateNavHeight);
+      return () => window.removeEventListener("resize", updateNavHeight);
     }
   }, [shouldShowBottomNav]);
 
@@ -378,28 +419,28 @@ function HydratedApp() {
   // Level-up celebration detection
   // Tracks when user advances to a new level and shows celebration
   const prevLevelRef = useRef<number | null>(null);
-  
+
   useEffect(() => {
     if (!progress.onboarded) return;
-    
+
     // Calculate current level
     const currentLevel = levelInfo(progress.xp).level;
-    
+
     // On first load, just record the level
     if (prevLevelRef.current === null) {
       prevLevelRef.current = currentLevel;
       return;
     }
-    
+
     // Check if level increased
     if (currentLevel > prevLevelRef.current) {
-      appLogger.info('app_lifecycle', 'User advanced to level', { level: currentLevel });
-      
+      appLogger.info("app_lifecycle", "User advanced to level", { level: currentLevel });
+
       // Get the fun level name
       const levelName = getLevelName(currentLevel);
-      
+
       // Log level-up event to Firebase
-      
+
       // Show celebration with confetti via celebration store
       showCelebration({
         title: `🎉 Level ${currentLevel} - ${levelName}!`,
@@ -409,11 +450,11 @@ function HydratedApp() {
         duration: 3500,
         type: "success",
       });
-      
+
       prevLevelRef.current = currentLevel;
     }
   }, [progress.xp, progress.onboarded, showCelebration]);
-  
+
   // Get the journey back handler dynamically so it always calls the current one
   const handleAndroidBack = () => {
     const handler = getJourneyBackHandler();
@@ -423,8 +464,8 @@ function HydratedApp() {
   };
 
   useAndroidBackButton(handleAndroidBack);
-  
-  appLogger.info('root_component', 'HydratedApp rendering', { pathname: location.pathname });
+
+  appLogger.info("root_component", "HydratedApp rendering", { pathname: location.pathname });
 
   // Determine which tab is active based on current pathname
   const getActiveTab = (): "home" | "map" | "explorer" | "badges" | "profile" => {
@@ -435,12 +476,13 @@ function HydratedApp() {
     if (path.startsWith("/me")) return "profile";
     return "home"; // Default for /home or root
   };
-  
+
   // Pre-auth routes should use pb-safe only (no extra padding)
   // Authenticated routes need bottom padding to ensure content scrolls above BottomNav
   // Use CSS variable --nav-h for dynamic nav height
   const isPreAuthRoute = preAuthRoutes.includes(location.pathname);
-  const scrollContainerPadding = isPreAuthRoute || isImmersiveRoute ? 'pb-safe' : 'pb-[calc(var(--nav-h,80px))]';
+  const scrollContainerPadding =
+    isPreAuthRoute || isImmersiveRoute ? "pb-safe" : "pb-[calc(var(--nav-h,80px))]";
 
   // Monitor localStorage for consent changes (from dialog)
   useEffect(() => {
@@ -448,7 +490,7 @@ function HydratedApp() {
       // Consent changes handled by parental-consent system
       // No action needed here - component will re-render automatically
     };
-    
+
     if (typeof window !== "undefined") {
       window.addEventListener("storage", handleStorageChange);
       return () => window.removeEventListener("storage", handleStorageChange);
@@ -462,7 +504,7 @@ function HydratedApp() {
     // Only start ambient on authenticated routes (home, state exploration, etc.)
     // Pre-auth routes should remain silent
     const isAuthenticatedRoute = !preAuthRoutes.includes(location.pathname);
-    
+
     // Ambient audio disabled - background music removed
 
     // Listen for app pause/resume only on native platforms (Capacitor)
@@ -473,15 +515,23 @@ function HydratedApp() {
 
     if (Capacitor.isNativePlatform()) {
       // On Android/iOS: listeners work correctly
-      App.addListener('pause', () => {
-        appLogger.info('app_lifecycle', 'App paused');
+      App.addListener("pause", () => {
+        appLogger.info("app_lifecycle", "App paused");
         pauseTts();
-      }).then(handle => { pauseHandle = handle; }).catch(() => {});
+      })
+        .then((handle) => {
+          pauseHandle = handle;
+        })
+        .catch(() => {});
 
-      App.addListener('resume', () => {
-        appLogger.info('app_lifecycle', 'App resumed');
+      App.addListener("resume", () => {
+        appLogger.info("app_lifecycle", "App resumed");
         resumeTts();
-      }).then(handle => { resumeHandle = handle; }).catch(() => {});
+      })
+        .then((handle) => {
+          resumeHandle = handle;
+        })
+        .catch(() => {});
     }
 
     // Cleanup listeners on unmount or route change
@@ -499,21 +549,30 @@ function HydratedApp() {
 
   const innerComponent = (
     <QueryClientProvider client={queryClient}>
-      <div className="h-full w-full flex flex-col bg-surface-raised relative" suppressHydrationWarning>
+      <div
+        className="h-full w-full flex flex-col bg-surface-raised relative"
+        suppressHydrationWarning
+      >
         {/* Scrollable content area - conditional padding: pb-safe for pre-auth, pb-[80px] for authenticated */}
-        <main className={`flex-1 overflow-auto pt-safe px-safe ${scrollContainerPadding}`} suppressHydrationWarning>
+        <main
+          className={`flex-1 overflow-auto pt-safe px-safe ${scrollContainerPadding}`}
+          suppressHydrationWarning
+        >
           {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
           <Outlet />
         </main>
       </div>
-      
+
       {/* Global BottomNav - positioned fixed OUTSIDE flex container to prevent flex layout interference */}
       {shouldShowBottomNav && (
-        <div ref={navRef} className="fixed bottom-0 left-0 right-0 z-20 bg-surface-raised pb-[env(safe-area-inset-bottom)]">
+        <div
+          ref={navRef}
+          className="fixed bottom-0 left-0 right-0 z-20 bg-surface-raised pb-[env(safe-area-inset-bottom)]"
+        >
           <BottomNav active={getActiveTab()} />
         </div>
       )}
-      
+
       <UnlockCelebration />
       <CelebrationPopupProvider />
       <BottomToastProvider />
@@ -522,11 +581,7 @@ function HydratedApp() {
     </QueryClientProvider>
   );
 
-  return (
-    <RootErrorBoundary>
-      {innerComponent}
-    </RootErrorBoundary>
-  );
+  return <RootErrorBoundary>{innerComponent}</RootErrorBoundary>;
 }
 
 function RootComponent() {
@@ -538,10 +593,10 @@ function RootComponent() {
   useEffect(() => {
     // FIX: Add timeout to force ready state if hydration never completes (DEBUG)
     const timeoutId = setTimeout(() => {
-      console.warn('[HYDRATION DEBUG] Hydration timeout - forcing ready state');
+      console.warn("[HYDRATION DEBUG] Hydration timeout - forcing ready state");
       setIsReady(true);
     }, 5000); // 5 second timeout
-    
+
     initializeHydration()
       .then(() => {
         clearTimeout(timeoutId);
@@ -550,14 +605,14 @@ function RootComponent() {
       .catch((error) => {
         clearTimeout(timeoutId);
         // Hydration failed - log it and continue with defaults
-        console.error('[HYDRATION ERROR]', error);
+        console.error("[HYDRATION ERROR]", error);
         const { logError } = require("@/lib/error-tracking");
         logError(error, {
-          boundary: 'hydration',
-          severity: 'critical',
-          screen: 'root_component',
+          boundary: "hydration",
+          severity: "critical",
+          screen: "root_component",
         });
-        
+
         // Set ready anyway - use default progress
         setIsReady(true);
       });

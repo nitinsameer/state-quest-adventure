@@ -21,86 +21,86 @@ export const colorTokens = {
   // === Semantic Colors (WCAG AA compliant at 4.5:1 contrast) ===
   semantic: {
     // Backgrounds
-    background: "oklch(1 0 0)",           // White
+    background: "oklch(1 0 0)", // White
     surface: {
-      primary: "oklch(1 0 0)",            // White (cards, panels)
-      secondary: "oklch(0.94 0.04 235)",  // Sky blue (sky)
-      elevated: "oklch(0.99 0.005 260)",  // Almost white (hover states)
-      overlay: "rgba(0, 0, 0, 0.5)",      // Modal backdrop
+      primary: "oklch(1 0 0)", // White (cards, panels)
+      secondary: "oklch(0.94 0.04 235)", // Sky blue (sky)
+      elevated: "oklch(0.99 0.005 260)", // Almost white (hover states)
+      overlay: "rgba(0, 0, 0, 0.5)", // Modal backdrop
     },
 
     // Text (all meet 4.5:1 contrast minimum on white)
     text: {
-      primary: "oklch(0.22 0.05 260)",    // Ink (dark gray) - 12.5:1 on white
-      secondary: "oklch(0.5 0.03 260)",   // Muted foreground - 4.5:1 on white (WCAG AA)
-      tertiary: "oklch(0.6 0.02 260)",    // Lighter secondary - 3.2:1 on white (WCAG A for 18pt+)
-      inverted: "oklch(1 0 0)",           // White on dark backgrounds
+      primary: "oklch(0.22 0.05 260)", // Ink (dark gray) - 12.5:1 on white
+      secondary: "oklch(0.5 0.03 260)", // Muted foreground - 4.5:1 on white (WCAG AA)
+      tertiary: "oklch(0.6 0.02 260)", // Lighter secondary - 3.2:1 on white (WCAG A for 18pt+)
+      inverted: "oklch(1 0 0)", // White on dark backgrounds
     },
 
     // States
     state: {
-      active: "oklch(0.74 0.19 45)",      // Saffron (primary interactive)
-      hover: "oklch(0.78 0.16 45)",       // Saffron lighter (hover)
-      focus: "oklch(0.72 0.19 45)",       // Saffron (focus ring)
-      disabled: "oklch(0.97 0.01 260)",   // Muted (disabled backgrounds)
+      active: "oklch(0.74 0.19 45)", // Saffron (primary interactive)
+      hover: "oklch(0.78 0.16 45)", // Saffron lighter (hover)
+      focus: "oklch(0.72 0.19 45)", // Saffron (focus ring)
+      disabled: "oklch(0.97 0.01 260)", // Muted (disabled backgrounds)
       disabled_text: "oklch(0.65 0.02 260)", // Lighter gray (disabled text)
     },
 
     // Feedback
     feedback: {
-      success: "oklch(0.72 0.19 150)",    // Green
-      warning: "oklch(0.65 0.24 70)",     // Orange
-      error: "oklch(0.62 0.24 27)",       // Red
-      info: "oklch(0.62 0.2 250)",        // Blue
+      success: "oklch(0.72 0.19 150)", // Green
+      warning: "oklch(0.65 0.24 70)", // Orange
+      error: "oklch(0.62 0.24 27)", // Red
+      info: "oklch(0.62 0.2 250)", // Blue
     },
 
     // Borders
     border: {
-      default: "oklch(0.92 0.015 260)",   // Light gray
-      subtle: "oklch(0.95 0.01 260)",     // Very light gray
-      strong: "oklch(0.7 0.04 260)",      // Dark gray
+      default: "oklch(0.92 0.015 260)", // Light gray
+      subtle: "oklch(0.95 0.01 260)", // Very light gray
+      strong: "oklch(0.7 0.04 260)", // Dark gray
     },
   },
 
   // === Brand Colors (India Explorer specific) ===
   brand: {
     saffron: {
-      base: "oklch(0.74 0.19 45)",        // #FF7A1A
-      light: "oklch(0.95 0.06 55)",       // Soft saffron (backgrounds)
-      dark: "oklch(0.68 0.21 40)",        // Darker saffron (gradients)
+      base: "oklch(0.74 0.19 45)", // #FF7A1A
+      light: "oklch(0.95 0.06 55)", // Soft saffron (backgrounds)
+      dark: "oklch(0.68 0.21 40)", // Darker saffron (gradients)
     },
     explorer: {
-      base: "oklch(0.62 0.2 250)",        // Blue
-      light: "oklch(0.95 0.05 250)",      // Soft blue (backgrounds)
-      dark: "oklch(0.55 0.22 255)",       // Darker blue (gradients)
+      base: "oklch(0.62 0.2 250)", // Blue
+      light: "oklch(0.95 0.05 250)", // Soft blue (backgrounds)
+      dark: "oklch(0.55 0.22 255)", // Darker blue (gradients)
     },
     success: {
-      base: "oklch(0.72 0.19 150)",       // Green
-      light: "oklch(0.95 0.06 150)",      // Soft green
-      dark: "oklch(0.62 0.2 150)",        // Dark green
+      base: "oklch(0.72 0.19 150)", // Green
+      light: "oklch(0.95 0.06 150)", // Soft green
+      dark: "oklch(0.62 0.2 150)", // Dark green
     },
     gold: {
-      base: "oklch(0.82 0.17 85)",        // Gold/yellow
-      light: "oklch(0.96 0.08 90)",       // Soft gold
-      dark: "oklch(0.72 0.18 80)",        // Dark gold
+      base: "oklch(0.82 0.17 85)", // Gold/yellow
+      light: "oklch(0.96 0.08 90)", // Soft gold
+      dark: "oklch(0.72 0.18 80)", // Dark gold
     },
-    gem: "oklch(0.62 0.24 290)",          // Purple (rewards)
-    ink: "oklch(0.22 0.05 260)",          // Text color
-    sky: "oklch(0.94 0.04 235)",          // Light background
+    gem: "oklch(0.62 0.24 290)", // Purple (rewards)
+    ink: "oklch(0.22 0.05 260)", // Text color
+    sky: "oklch(0.94 0.04 235)", // Light background
   },
 
   // === Contrast Ratios (WCAG compliance) ===
   // All text colors tested for 4.5:1 (AA) or 3:1 (Large text 18pt+)
   // Format: "color_on_background": { fg, bg, ratio }
   contrastMatrix: {
-    text_primary_on_white: { fg: "oklch(0.22 0.05 260)", bg: "oklch(1 0 0)", ratio: 12.5 },  // ✅ AA
-    text_secondary_on_white: { fg: "oklch(0.5 0.03 260)", bg: "oklch(1 0 0)", ratio: 4.5 },  // ✅ AA
-    text_tertiary_on_white: { fg: "oklch(0.6 0.02 260)", bg: "oklch(1 0 0)", ratio: 3.2 },  // ✅ A (large)
-    text_on_saffron: { fg: "oklch(1 0 0)", bg: "oklch(0.74 0.19 45)", ratio: 9.5 },         // ✅ AA
-    text_on_explorer: { fg: "oklch(1 0 0)", bg: "oklch(0.62 0.2 250)", ratio: 7.2 },        // ✅ AA
-    text_on_success: { fg: "oklch(1 0 0)", bg: "oklch(0.72 0.19 150)", ratio: 8.1 },        // ✅ AA
-    text_on_gold: { fg: "oklch(0.22 0.05 260)", bg: "oklch(0.82 0.17 85)", ratio: 7.8 },    // ✅ AA
-    focus_ring: { fg: "oklch(0.72 0.19 45)", bg: "oklch(1 0 0)", ratio: 6.2 },             // ✅ AA
+    text_primary_on_white: { fg: "oklch(0.22 0.05 260)", bg: "oklch(1 0 0)", ratio: 12.5 }, // ✅ AA
+    text_secondary_on_white: { fg: "oklch(0.5 0.03 260)", bg: "oklch(1 0 0)", ratio: 4.5 }, // ✅ AA
+    text_tertiary_on_white: { fg: "oklch(0.6 0.02 260)", bg: "oklch(1 0 0)", ratio: 3.2 }, // ✅ A (large)
+    text_on_saffron: { fg: "oklch(1 0 0)", bg: "oklch(0.74 0.19 45)", ratio: 9.5 }, // ✅ AA
+    text_on_explorer: { fg: "oklch(1 0 0)", bg: "oklch(0.62 0.2 250)", ratio: 7.2 }, // ✅ AA
+    text_on_success: { fg: "oklch(1 0 0)", bg: "oklch(0.72 0.19 150)", ratio: 8.1 }, // ✅ AA
+    text_on_gold: { fg: "oklch(0.22 0.05 260)", bg: "oklch(0.82 0.17 85)", ratio: 7.8 }, // ✅ AA
+    focus_ring: { fg: "oklch(0.72 0.19 45)", bg: "oklch(1 0 0)", ratio: 6.2 }, // ✅ AA
   },
 };
 
@@ -111,33 +111,33 @@ export const colorTokens = {
 export const typographyTokens = {
   // Font families
   fonts: {
-    display: '"Baloo 2", system-ui, sans-serif',   // Headers, emphasis
-    sans: '"Nunito", system-ui, sans-serif',       // Body text
+    display: '"Baloo 2", system-ui, sans-serif', // Headers, emphasis
+    sans: '"Nunito", system-ui, sans-serif', // Body text
   },
 
   // Font sizes (in rem, scalable from 16px base)
   // Designed for kids app: larger than typical web
   sizes: {
     // Display scales (for headers, emphasis)
-    display: "2rem",        // 32px (h1, screen titles)
-    h1: "2rem",             // 32px
-    h2: "1.5rem",           // 24px
-    h3: "1.25rem",          // 20px
-    h4: "1.125rem",         // 18px
-    h5: "1rem",             // 16px
+    display: "2rem", // 32px (h1, screen titles)
+    h1: "2rem", // 32px
+    h2: "1.5rem", // 24px
+    h3: "1.25rem", // 20px
+    h4: "1.125rem", // 18px
+    h5: "1rem", // 16px
 
     // Body scales (for content)
-    xl: "1.125rem",         // 18px (large body)
-    lg: "1rem",             // 16px (base body)
-    base: "1rem",           // 16px (default)
-    md: "0.9375rem",        // 15px (slightly smaller)
-    sm: "0.875rem",         // 14px (small text, captions)
-    xs: "0.75rem",          // 12px (very small, labels)
+    xl: "1.125rem", // 18px (large body)
+    lg: "1rem", // 16px (base body)
+    base: "1rem", // 16px (default)
+    md: "0.9375rem", // 15px (slightly smaller)
+    sm: "0.875rem", // 14px (small text, captions)
+    xs: "0.75rem", // 12px (very small, labels)
 
     // Special sizes
     stat_label: "0.875rem", // 14px (stat labels in cards)
-    button_text: "1rem",    // 16px (button labels)
-    caption: "0.75rem",     // 12px (captions, hints)
+    button_text: "1rem", // 16px (button labels)
+    caption: "0.75rem", // 12px (captions, hints)
   },
 
   // Font weights
@@ -155,20 +155,20 @@ export const typographyTokens = {
 
   // Line heights (unitless, multipliers of font-size)
   lineHeights: {
-    tight: 1.2,      // Headers
-    snug: 1.375,     // Smaller text
-    normal: 1.5,     // Body text
-    relaxed: 1.625,  // Large text
-    loose: 1.75,     // Captions
+    tight: 1.2, // Headers
+    snug: 1.375, // Smaller text
+    normal: 1.5, // Body text
+    relaxed: 1.625, // Large text
+    loose: 1.75, // Captions
   },
 
   // Letter spacing (in em units)
   letterSpacings: {
-    tighter: "-0.02em",  // Headers (tighter)
-    tight: "-0.01em",    // Display text
-    normal: "0em",       // Body text
-    wide: "0.025em",     // Labels, emphasis
-    wider: "0.05em",     // All-caps, special
+    tighter: "-0.02em", // Headers (tighter)
+    tight: "-0.01em", // Display text
+    normal: "0em", // Body text
+    wide: "0.025em", // Labels, emphasis
+    wider: "0.05em", // All-caps, special
   },
 
   // Type scales (complete scale definitions)
@@ -247,55 +247,55 @@ export const spacingTokens = {
   // Base spacing scale (multiples of 0.5rem / 8px)
   base: {
     0: "0",
-    0.5: "0.25rem",   // 4px
-    1: "0.5rem",      // 8px (base unit)
-    1.5: "0.75rem",   // 12px
-    2: "1rem",        // 16px
-    2.5: "1.25rem",   // 20px
-    3: "1.5rem",      // 24px
-    3.5: "1.75rem",   // 28px
-    4: "2rem",        // 32px
-    5: "2.5rem",      // 40px
-    6: "3rem",        // 48px
-    7: "3.5rem",      // 56px
-    8: "4rem",        // 64px
+    0.5: "0.25rem", // 4px
+    1: "0.5rem", // 8px (base unit)
+    1.5: "0.75rem", // 12px
+    2: "1rem", // 16px
+    2.5: "1.25rem", // 20px
+    3: "1.5rem", // 24px
+    3.5: "1.75rem", // 28px
+    4: "2rem", // 32px
+    5: "2.5rem", // 40px
+    6: "3rem", // 48px
+    7: "3.5rem", // 56px
+    8: "4rem", // 64px
   },
 
   // Component-specific spacing
   component: {
     // Padding
     padding: {
-      xs: "0.5rem",     // 8px (small components)
-      sm: "0.75rem",    // 12px (icon buttons)
-      base: "1rem",     // 16px (standard)
-      md: "1.5rem",     // 24px (cards)
-      lg: "2rem",       // 32px (large cards)
-      xl: "2.5rem",     // 40px (full-width)
+      xs: "0.5rem", // 8px (small components)
+      sm: "0.75rem", // 12px (icon buttons)
+      base: "1rem", // 16px (standard)
+      md: "1.5rem", // 24px (cards)
+      lg: "2rem", // 32px (large cards)
+      xl: "2.5rem", // 40px (full-width)
     },
 
     // Gaps (space between items)
     gap: {
-      compact: "0.5rem",    // 8px (tight layouts)
-      base: "0.75rem",      // 12px (standard)
-      loose: "1rem",        // 16px (airy layouts)
-      xl: "1.5rem",         // 24px (section breaks)
+      compact: "0.5rem", // 8px (tight layouts)
+      base: "0.75rem", // 12px (standard)
+      loose: "1rem", // 16px (airy layouts)
+      xl: "1.5rem", // 24px (section breaks)
     },
 
     // Margins (vertical rhythm)
     margin: {
-      section: "1.5rem",    // 24px (between sections)
-      block: "1rem",        // 16px (between blocks)
-      tight: "0.5rem",      // 8px (tight vertical)
+      section: "1.5rem", // 24px (between sections)
+      block: "1rem", // 16px (between blocks)
+      tight: "0.5rem", // 8px (tight vertical)
     },
   },
 
   // Container widths
   containers: {
-    xs: "20rem",    // 320px
-    sm: "24rem",    // 384px
-    md: "28rem",    // 448px
-    lg: "32rem",    // 512px
-    xl: "36rem",    // 576px
+    xs: "20rem", // 320px
+    sm: "24rem", // 384px
+    md: "28rem", // 448px
+    lg: "32rem", // 512px
+    xl: "36rem", // 576px
     full: "100%",
   },
 };
@@ -306,14 +306,14 @@ export const spacingTokens = {
 
 export const borderRadiusTokens = {
   base: "1rem",
-  sm: "0.5rem",        // Smaller elements
-  md: "0.75rem",       // Default
-  lg: "1rem",          // Cards, modals
-  xl: "1.375rem",      // Larger components
-  "2xl": "1.875rem",   // Extra large
-  "3xl": "2.375rem",   // Full rounded
-  "4xl": "2.875rem",   // Pill-shaped
-  full: "9999px",      // Completely rounded
+  sm: "0.5rem", // Smaller elements
+  md: "0.75rem", // Default
+  lg: "1rem", // Cards, modals
+  xl: "1.375rem", // Larger components
+  "2xl": "1.875rem", // Extra large
+  "3xl": "2.375rem", // Full rounded
+  "4xl": "2.875rem", // Pill-shaped
+  full: "9999px", // Completely rounded
 };
 
 // ============================================================================
@@ -415,10 +415,10 @@ export const zIndexTokens = {
 
 export const breakpoints = {
   xs: "320px",
-  sm: "640px",   // iPad portrait
-  md: "768px",   // iPad landscape, small tablet
-  lg: "1024px",  // Standard tablet
-  xl: "1280px",  // Desktop
+  sm: "640px", // iPad portrait
+  md: "768px", // iPad landscape, small tablet
+  lg: "1024px", // Standard tablet
+  xl: "1280px", // Desktop
   "2xl": "1536px", // Large desktop
 };
 

@@ -26,7 +26,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
   // Countdown timer
   useEffect(() => {
     if (!open) return;
-    
+
     setPin("");
     setError("");
     setTimeLeft(30);
@@ -56,7 +56,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
       if (newPin.length === 4) {
         setIsVerifying(true);
         const result = await verifyPin(newPin);
-        
+
         if (result.lockout) {
           setError(`🔒 Locked. Try again in ${result.remainingMinutes}m`);
           fxWrong();
@@ -99,7 +99,9 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
         {/* Header */}
         <div className="text-center mb-(--space-4)">
           <div className="text-4xl mb-(--space-0-5)">🔐</div>
-          <h2 className="text-display text-xl font-extrabold text-text-primary">Parent PIN Required</h2>
+          <h2 className="text-display text-xl font-extrabold text-text-primary">
+            Parent PIN Required
+          </h2>
           <p className="text-sm text-text-muted mt-(--space-0-5)">
             This will erase all progress. Enter the parental PIN to confirm.
           </p>
@@ -107,9 +109,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
 
         {/* Timer */}
         <div className="text-center mb-(--space-2)">
-          <div className="text-xs font-bold text-text-muted">
-            ⏱️ {timeLeft}s remaining
-          </div>
+          <div className="text-xs font-bold text-text-muted">⏱️ {timeLeft}s remaining</div>
           <div className="h-1.5 bg-progress-track rounded-full overflow-hidden mt-(--space-0-25)">
             <div
               className="h-full bg-fb-error-bg transition-all"
@@ -202,4 +202,3 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
     </div>
   );
 }
-

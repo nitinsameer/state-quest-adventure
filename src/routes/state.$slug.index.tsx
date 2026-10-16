@@ -12,7 +12,10 @@ export const Route = createFileRoute("/state/$slug/")({
   head: ({ loaderData }) => {
     if (!loaderData) {
       return {
-        meta: [{ title: "Place unavailable — India Explorer" }, { name: "robots", content: "noindex" }],
+        meta: [
+          { title: "Place unavailable — India Explorer" },
+          { name: "robots", content: "noindex" },
+        ],
       };
     }
     const title = `${loaderData.name} — India Explorer`;

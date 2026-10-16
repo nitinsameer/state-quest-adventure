@@ -1,6 +1,6 @@
 /**
  * PostcardLibraryStore - Zustand store for managing postcard collection
- * 
+ *
  * Proposal C: Manages all postcard operations with granular consent tracking
  * - CRUD operations on postcards
  * - Consent state management
@@ -51,7 +51,7 @@ interface PostcardLibraryStore {
     badgeId: "monument" | "animal" | "explorer",
     stampDate: string,
     generatedAt: string,
-    imageData?: string
+    imageData?: string,
   ) => void;
   updatePostcard: (id: string, updates: Partial<LibraryPostcard>) => void;
   deletePostcard: (id: string) => void;
@@ -112,12 +112,7 @@ const createPostcardLibraryStore = (): PostcardLibraryStore => {
     // CRUD Operations
     addPostcard: (stateName, badgeId, stampDate, generatedAt, imageData) => {
       usePostcardLibrary.setState((state) => {
-        const newPostcard = createLibraryPostcard(
-          stateName,
-          badgeId,
-          stampDate,
-          generatedAt
-        );
+        const newPostcard = createLibraryPostcard(stateName, badgeId, stampDate, generatedAt);
         if (imageData) {
           newPostcard.imageData = imageData;
         }
@@ -136,7 +131,7 @@ const createPostcardLibraryStore = (): PostcardLibraryStore => {
     updatePostcard: (id, updates) => {
       usePostcardLibrary.setState((state) => {
         const updatedPostcards = state.postcards.map((p) =>
-          p.id === id ? { ...p, ...updates } : p
+          p.id === id ? { ...p, ...updates } : p,
         );
         const updatedMetadata = getLibraryMetadata(updatedPostcards);
 
@@ -165,9 +160,7 @@ const createPostcardLibraryStore = (): PostcardLibraryStore => {
 
     deletePostcardsByState: (stateName) => {
       usePostcardLibrary.setState((state) => {
-        const updatedPostcards = state.postcards.filter(
-          (p) => p.state !== stateName
-        );
+        const updatedPostcards = state.postcards.filter((p) => p.state !== stateName);
         const updatedMetadata = getLibraryMetadata(updatedPostcards);
 
         usePostcardLibrary.getState().saveToStorage();

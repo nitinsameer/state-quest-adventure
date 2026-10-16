@@ -1,5 +1,12 @@
 import { Navigate, Link, useNavigate } from "@tanstack/react-router";
-import { useProgress, levelInfo, statesWithProgress, cardsDone, completedCategoriesCount, getLevelName } from "@/lib/progress";
+import {
+  useProgress,
+  levelInfo,
+  statesWithProgress,
+  cardsDone,
+  completedCategoriesCount,
+  getLevelName,
+} from "@/lib/progress";
 import { learningCardsFor } from "@/components/screens";
 import { getUpNext } from "@/lib/passport-helpers";
 import { STATE_ART } from "@/lib/state-art";
@@ -33,11 +40,11 @@ export function HomeScreen() {
 
   const { level } = levelInfo(p.xp);
   const journey = statesWithProgress(p);
-  
+
   // Prefer last played state if it exists and is not completed
   let current = null;
   if (p.lastPlayedState) {
-    current = journey.find(s => s.name === p.lastPlayedState);
+    current = journey.find((s) => s.name === p.lastPlayedState);
     // If last played is completed, fallback to first uncompleted
     if (current?.status === "done") {
       current = null;
@@ -45,19 +52,19 @@ export function HomeScreen() {
   }
   // Fallback: first uncompleted or last state
   if (!current) {
-    current = journey.find(s => s.status !== "done") ?? journey[journey.length - 1];
+    current = journey.find((s) => s.status !== "done") ?? journey[journey.length - 1];
   }
-  
+
   const allCards = learningCardsFor(current.name, "en", p.ageBand);
   console.log(`[HomeScreen] State: ${current.name}`);
   console.log(`[HomeScreen] allCards.length: ${allCards.length}`);
   allCards.forEach((card: any, idx: number) => {
     console.log(`[HomeScreen] Card[${idx}]: mainCardIndex=${card.mainCardIndex}`);
   });
-  
+
   const currentDone = completedCategoriesCount(p, current.name, allCards);
   console.log(`[HomeScreen] completedCategoriesCount result: ${currentDone}`);
-  
+
   const nextStates = getUpNext(current.name, journey, 2);
 
   const handlePlayClick = () => {
@@ -75,10 +82,12 @@ export function HomeScreen() {
   };
 
   return (
-    <div className="w-full h-full flex flex-col bg-muted-light" style={{ backgroundImage: `url(${screenBg})`, backgroundSize: "cover" }}>
+    <div
+      className="w-full h-full flex flex-col bg-muted-light"
+      style={{ backgroundImage: `url(${screenBg})`, backgroundSize: "cover" }}
+    >
       {/* Scrollable Content Area */}
       <div className="flex-1 overflow-y-auto overflow-x-hidden pt-safe pb-safe">
-        
         {/* HEADER SECTION - Orange gradient with character */}
         <div className="flex-shrink-0 bg-header px-5 pt-6 pb-8 rounded-b-3xl text-text-on-header">
           {/* Top Row: Character + Streak & Coins */}
@@ -88,7 +97,9 @@ export function HomeScreen() {
               {p.avatar ? (
                 <div className="w-14 h-14 text-2xl">{p.avatar}</div>
               ) : (
-                <div className="w-14 h-14 bg-accent-2-soft rounded-full flex items-center justify-center text-2xl">👧</div>
+                <div className="w-14 h-14 bg-accent-2-soft rounded-full flex items-center justify-center text-2xl">
+                  👧
+                </div>
               )}
             </div>
 
@@ -106,7 +117,9 @@ export function HomeScreen() {
           {/* Greeting + Level */}
           <div>
             <h1 className="text-h2 text-text-on-header">Namaste, Explorer! 👋</h1>
-            <p className="text-body-sm font-semibold text-text-on-header/90">Level {level} • {getLevelName(level)} • v3.0</p>
+            <p className="text-body-sm font-semibold text-text-on-header/90">
+              Level {level} • {getLevelName(level)} • v3.0
+            </p>
           </div>
         </div>
 
@@ -136,7 +149,6 @@ export function HomeScreen() {
 
         {/* MAIN CONTENT */}
         <div className="px-(--padding-md) py-(--space-4) space-y-(--space-5)">
-
           {/* CONTINUE YOUR JOURNEY */}
           <div>
             <h2 className="text-h3 text-text-primary mb-3">Continue your journey</h2>
@@ -144,28 +156,37 @@ export function HomeScreen() {
             {/* Current State Card with IMAGE */}
             <div className="bg-surface-card rounded-2xl shadow-sm p-(--padding-md) flex items-center gap-(--gap-loose)">
               {/* Left: STATE IMAGE */}
-              <div 
+              <div
                 className="w-20 h-20 rounded-2xl flex-shrink-0"
                 style={{
-                  backgroundImage: STATE_ART[current.name] ? `url(${STATE_ART[current.name]})` : undefined,
+                  backgroundImage: STATE_ART[current.name]
+                    ? `url(${STATE_ART[current.name]})`
+                    : undefined,
                   backgroundColor: STATE_ART[current.name] ? undefined : "var(--surface-muted)",
                   backgroundSize: "cover",
-                  backgroundPosition: "center"
+                  backgroundPosition: "center",
                 }}
               />
 
               {/* CENTER: STATE INFO */}
               <div className="flex-1 min-w-0">
-                <div className="text-caption font-semibold text-accent-1 uppercase">Currently Exploring</div>
+                <div className="text-caption font-semibold text-accent-1 uppercase">
+                  Currently Exploring
+                </div>
                 <h3 className="text-h4 text-text-primary">{current.name}</h3>
                 <div className="mt-2 h-1.5 bg-progress-track rounded-full overflow-hidden">
-                  <div className="h-full bg-progress-fill transition-all duration-300" style={{ width: `${(currentDone / 6) * 100}%` }} />
+                  <div
+                    className="h-full bg-progress-fill transition-all duration-300"
+                    style={{ width: `${(currentDone / 6) * 100}%` }}
+                  />
                 </div>
-                <div className="text-caption font-semibold text-text-secondary mt-1">{currentDone}/6</div>
+                <div className="text-caption font-semibold text-text-secondary mt-1">
+                  {currentDone}/6
+                </div>
               </div>
 
               {/* RIGHT: PLAY BUTTON */}
-              <button 
+              <button
                 onClick={handlePlayClick}
                 className="h-14 px-(--padding-md) bg-action-primary-bg rounded-full text-action-primary-fg font-bold text-sm shadow-md flex items-center justify-center flex-shrink-0"
               >
@@ -178,7 +199,11 @@ export function HomeScreen() {
           <div>
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-h3 text-text-primary">Up next</h2>
-              <Link to="/journey" onClick={() => fxTap()} className="text-body-sm font-bold text-text-link">
+              <Link
+                to="/journey"
+                onClick={() => fxTap()}
+                className="text-body-sm font-bold text-text-link"
+              >
                 View all
               </Link>
             </div>
@@ -192,18 +217,22 @@ export function HomeScreen() {
                   className="bg-surface-card rounded-2xl shadow-sm p-(--padding-md) text-center"
                 >
                   {/* State Image */}
-                  <div 
+                  <div
                     className="w-full h-24 rounded-lg mb-2"
                     style={{
-                      backgroundImage: STATE_ART[state.name] ? `url(${STATE_ART[state.name]})` : undefined,
+                      backgroundImage: STATE_ART[state.name]
+                        ? `url(${STATE_ART[state.name]})`
+                        : undefined,
                       backgroundColor: STATE_ART[state.name] ? undefined : "var(--surface-sunken)",
                       backgroundSize: "cover",
-                      backgroundPosition: "center"
+                      backgroundPosition: "center",
                     }}
                   />
                   <h3 className="text-h5 text-text-primary mb-2">{state.name}</h3>
                   <div className="text-body-sm font-bold text-text-link">✌️ Open</div>
-                  <div className="text-caption font-semibold text-text-secondary">Start exploring</div>
+                  <div className="text-caption font-semibold text-text-secondary">
+                    Start exploring
+                  </div>
                 </button>
               ))}
             </div>
@@ -217,27 +246,47 @@ export function HomeScreen() {
       {/* BOTTOM NAVIGATION - Fixed */}
       <div className="fixed bottom-0 left-0 right-0 z-50 bg-surface-card shadow-2xl rounded-t-3xl border-t border-border-color">
         <div className="flex items-center justify-around py-(--padding-base) px-safe">
-          <Link to="/home" onClick={() => fxTap()} className="flex flex-col items-center gap-1 py-(--padding-base) px-(--padding-md) rounded-2xl bg-accent-1-soft">
+          <Link
+            to="/home"
+            onClick={() => fxTap()}
+            className="flex flex-col items-center gap-1 py-(--padding-base) px-(--padding-md) rounded-2xl bg-accent-1-soft"
+          >
             <img src={navHomeIcon} alt="home" className="w-6 h-6" />
             <span className="text-label text-accent-1">Home</span>
           </Link>
 
-          <Link to="/journey" onClick={() => fxTap()} className="flex flex-col items-center gap-1 py-(--padding-base) px-(--padding-md)">
+          <Link
+            to="/journey"
+            onClick={() => fxTap()}
+            className="flex flex-col items-center gap-1 py-(--padding-base) px-(--padding-md)"
+          >
             <img src={navJourneyIcon} alt="journey" className="w-6 h-6" />
             <span className="text-label text-text-primary">Journey</span>
           </Link>
 
-          <Link to="/explorer" onClick={() => fxTap()} className="flex flex-col items-center gap-1 py-(--padding-base) px-(--padding-md)">
+          <Link
+            to="/explorer"
+            onClick={() => fxTap()}
+            className="flex flex-col items-center gap-1 py-(--padding-base) px-(--padding-md)"
+          >
             <img src={navExplorerIcon} alt="explorer" className="w-6 h-6" />
             <span className="text-label text-text-primary">Explorer</span>
           </Link>
 
-          <Link to="/badges" onClick={() => fxTap()} className="flex flex-col items-center gap-1 py-(--padding-base) px-(--padding-md)">
+          <Link
+            to="/badges"
+            onClick={() => fxTap()}
+            className="flex flex-col items-center gap-1 py-(--padding-base) px-(--padding-md)"
+          >
             <img src={navBadgesIcon} alt="badges" className="w-6 h-6" />
             <span className="text-label text-text-primary">Badges</span>
           </Link>
 
-          <Link to="/me" onClick={() => fxTap()} className="flex flex-col items-center gap-1 py-(--padding-base) px-(--padding-md)">
+          <Link
+            to="/me"
+            onClick={() => fxTap()}
+            className="flex flex-col items-center gap-1 py-(--padding-base) px-(--padding-md)"
+          >
             <img src={navMeIcon} alt="me" className="w-6 h-6" />
             <span className="text-label text-text-primary">Me</span>
           </Link>
@@ -246,4 +295,3 @@ export function HomeScreen() {
     </div>
   );
 }
-

@@ -13,7 +13,7 @@ import { validateSoundToggle } from "./localStorage-schema";
 /* ---------- sound preference (persisted) ---------- */
 
 const SOUND_KEY = "india-explorer:sound:v1";
-let soundOn = false;  // Sound toggle (separate from audio narration permission)
+let soundOn = false; // Sound toggle (separate from audio narration permission)
 let soundHydrated = false;
 const soundListeners = new Set<() => void>();
 
@@ -25,9 +25,9 @@ const soundListeners = new Set<() => void>();
  */
 export function ensureAudioContext(): AudioContext | null {
   console.log("[AUDIO DEBUG] ensureAudioContext() called");
-  
+
   const ctx = ac();
-  
+
   if (ctx) {
     console.log("[AUDIO DEBUG] ✓ AudioContext available", {
       state: ctx.state,
@@ -55,12 +55,12 @@ function hydrateSound() {
     const raw = localStorage.getItem(SOUND_KEY);
     const validated = validateSoundToggle(raw);
     soundOn = validated === "1";
-    
+
     // If raw was null or invalid, ensure we persist the valid default
     if (raw !== validated) {
       localStorage.setItem(SOUND_KEY, validated);
     }
-    
+
     debugLog("fx", "Sound toggle hydrated from storage", {
       key: SOUND_KEY,
       storedValue: raw,
@@ -96,12 +96,12 @@ export function setSoundOn(next: boolean) {
   } catch {
     /* ignore */
   }
-  
+
   // If disabling audio, immediately stop all active sound effects
   if (!next) {
     stopAllActiveSounds();
   }
-  
+
   for (const l of soundListeners) l();
 }
 
@@ -131,7 +131,7 @@ const activeSoundNodes = new Set<{ osc?: OscillatorNode; gain: GainNode }>();
 export function cleanupAudioContext() {
   // Stop all active sounds
   stopAllActiveSounds();
-  
+
   // Close the AudioContext
   if (ctx) {
     try {
@@ -141,7 +141,7 @@ export function cleanupAudioContext() {
           // Ignore if can't resume
         });
       }
-      
+
       // Close the context to free all resources
       void ctx.close();
       console.log("[AUDIO DEBUG] ✓ AudioContext closed successfully");
@@ -162,14 +162,14 @@ export function cleanupAudioContext() {
  */
 export function initializeAudioCleanup() {
   if (typeof window === "undefined") return;
-  
+
   // Add cleanup on page unload
   const handleUnload = () => {
     cleanupAudioContext();
   };
-  
+
   window.addEventListener("beforeunload", handleUnload);
-  
+
   // Also cleanup when visibility changes (user leaves tab)
   const handleVisibilityChange = () => {
     if (document.hidden) {
@@ -177,16 +177,16 @@ export function initializeAudioCleanup() {
       stopAllActiveSounds();
     }
   };
-  
+
   document.addEventListener("visibilitychange", handleVisibilityChange);
-  
+
   // Cleanup on app destroy (for SPA navigation or manual destroy)
   // Expose a manual cleanup function if needed
   (window as any).__cleanupAudio = cleanupAudioContext;
-  
+
   console.log("[AUDIO DEBUG] Audio cleanup handlers initialized");
   debugLog("fx", "Audio cleanup handlers initialized on window unload");
-  
+
   return () => {
     window.removeEventListener("beforeunload", handleUnload);
     document.removeEventListener("visibilitychange", handleVisibilityChange);
@@ -199,7 +199,7 @@ export function initializeAudioCleanup() {
 function stopAllActiveSounds() {
   const a = ac();
   if (!a) return;
-  
+
   for (const node of activeSoundNodes) {
     try {
       if (node.osc) {
@@ -225,41 +225,46 @@ function stopAllActiveSounds() {
  */
 function ac(): AudioContext | null {
   console.log("[AUDIO DEBUG] ac() called");
-  
+
   if (typeof window === "undefined") {
     console.log("[AUDIO DEBUG] ✗ window is undefined (SSR)");
     return null;
   }
-  
+
   if (ctx) {
     console.log("[AUDIO DEBUG] ✓ AudioContext already exists", { state: ctx.state });
     return ctx;
   }
-  
+
   console.log("[AUDIO DEBUG] AudioContext does not exist yet - creating...");
-  
+
   const AC =
-    (window as unknown as { AudioContext?: typeof AudioContext; webkitAudioContext?: typeof AudioContext }).AudioContext ??
+    (
+      window as unknown as {
+        AudioContext?: typeof AudioContext;
+        webkitAudioContext?: typeof AudioContext;
+      }
+    ).AudioContext ??
     (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-  
+
   if (!AC) {
     console.log("[AUDIO DEBUG] ✗ AudioContext constructor not available on window");
     return null;
   }
-  
+
   console.log("[AUDIO DEBUG] AudioContext constructor available - creating new instance");
-  
+
   try {
     ctx = new AC();
-    console.log("[AUDIO DEBUG] ✓ AudioContext created successfully", { 
+    console.log("[AUDIO DEBUG] ✓ AudioContext created successfully", {
       state: ctx.state,
       sampleRate: ctx.sampleRate,
     });
-    
+
     // Initialize audio mixer on first AudioContext creation
     initAudioMixer(ctx);
     console.log("[AUDIO DEBUG] ✓ Audio mixer initialized");
-    
+
     debugLog("fx", "AudioContext created and mixer initialized", {
       state: ctx.state,
       sampleRate: ctx.sampleRate,
@@ -269,15 +274,16 @@ function ac(): AudioContext | null {
     debugError("fx", "Failed to create AudioContext", error);
     return null;
   }
-  
+
   // Resume context if suspended (required for user interaction on web)
   if (ctx && ctx.state === "suspended") {
     console.log("[AUDIO DEBUG] AudioContext suspended - attempting resume...");
-    void ctx.resume()
+    void ctx
+      .resume()
       .then(() => console.log("[AUDIO DEBUG] ✓ AudioContext resumed"))
-      .catch(err => console.log("[AUDIO DEBUG] ✗ AudioContext resume failed", err));
+      .catch((err) => console.log("[AUDIO DEBUG] ✗ AudioContext resume failed", err));
   }
-  
+
   return ctx;
 }
 
@@ -310,24 +316,25 @@ function tone({ freq, dur = 0.18, type = "sine", gain = 0.18, slideTo, delay = 0
     console.log("[FX/tone] ❌ No AudioContext available");
     return;
   }
-  
+
   // Resume AudioContext if suspended (required for user gesture on native)
   if (a.state === "suspended") {
     console.log("[FX/tone] ⚠️ AudioContext suspended - attempting to resume");
-    void a.resume()
+    void a
+      .resume()
       .then(() => console.log("[FX/tone] ✅ AudioContext resumed"))
       .catch((err) => console.log("[FX/tone] ❌ AudioContext resume failed:", err));
   }
-  
+
   // Only output sound if Sound toggle is ON
   const shouldPlay = shouldPlaySound();
   if (!shouldPlay) {
     console.log("[FX/tone] ❌ shouldPlaySound=false, isSoundOn=", isSoundOn());
     return;
   }
-  
+
   console.log("[FX/tone] ✅ Playing tone", { freq, dur, shouldPlay });
-  
+
   const t0 = a.currentTime + delay;
   const osc = a.createOscillator();
   const g = a.createGain();
@@ -337,36 +344,39 @@ function tone({ freq, dur = 0.18, type = "sine", gain = 0.18, slideTo, delay = 0
   g.gain.setValueAtTime(0, t0);
   g.gain.linearRampToValueAtTime(gain, t0 + 0.01);
   g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
-  
+
   // Track this sound for immediate cutoff when audio is disabled
   const soundNode = { osc, gain: g };
   activeSoundNodes.add(soundNode);
-  
+
   // Always connect directly to destination for reliability
   // The mixer is optional - effects must work even without it
   osc.connect(g);
   g.connect(a.destination);
-  
+
   osc.start(t0);
   osc.stop(t0 + dur + 0.02);
-  
+
   // Remove from active set after sound finishes
-  setTimeout(() => {
-    activeSoundNodes.delete(soundNode);
-  }, (dur + delay + 0.02) * 1000);
+  setTimeout(
+    () => {
+      activeSoundNodes.delete(soundNode);
+    },
+    (dur + delay + 0.02) * 1000,
+  );
 }
 
 function noise(dur = 0.25, gain = 0.15, delay = 0) {
   // Get or create audio context (decoupled from Sound toggle)
   const a = ac();
   if (!a) return;
-  
+
   // Only output sound if Sound toggle is ON
   if (!shouldPlaySound()) return;
-  
+
   // Optimize: cap noise duration to 0.3s max for performance
   const maxNoiseDur = Math.min(dur, 0.3);
-  
+
   const t0 = a.currentTime + delay;
   const buf = a.createBuffer(1, Math.floor(a.sampleRate * maxNoiseDur), a.sampleRate);
   const data = buf.getChannelData(0);
@@ -376,21 +386,24 @@ function noise(dur = 0.25, gain = 0.15, delay = 0) {
   const g = a.createGain();
   g.gain.setValueAtTime(gain, t0);
   g.gain.exponentialRampToValueAtTime(0.0001, t0 + maxNoiseDur);
-  
+
   // Track this sound for immediate cutoff when audio is disabled
   const soundNode = { gain: g };
   activeSoundNodes.add(soundNode);
-  
+
   // Always connect directly to destination for reliability
   src.connect(g);
   g.connect(a.destination);
-  
+
   src.start(t0);
-  
+
   // Remove from active set after sound finishes
-  setTimeout(() => {
-    activeSoundNodes.delete(soundNode);
-  }, (maxNoiseDur + delay) * 1000);
+  setTimeout(
+    () => {
+      activeSoundNodes.delete(soundNode);
+    },
+    (maxNoiseDur + delay) * 1000,
+  );
 }
 
 function vibrate(pattern: number | number[]) {
@@ -412,7 +425,11 @@ function vibrate(pattern: number | number[]) {
   // Fallback to navigator.vibrate on web
   const nav = navigator as Navigator & { vibrate?: (p: number | number[]) => boolean };
   if (typeof nav.vibrate === "function") {
-    try { nav.vibrate(pattern); } catch { /* noop */ }
+    try {
+      nav.vibrate(pattern);
+    } catch {
+      /* noop */
+    }
   }
 }
 
@@ -432,7 +449,9 @@ export function fxWrong() {
 /** Confetti / celebration: arpeggio + shimmer noise + celebratory buzz. */
 export function fxConfetti() {
   const notes = [523, 659, 784, 1046]; // C E G C
-  notes.forEach((f, i) => tone({ freq: f, dur: 0.28, type: "triangle", gain: 0.2, delay: i * 0.08 }));
+  notes.forEach((f, i) =>
+    tone({ freq: f, dur: 0.28, type: "triangle", gain: 0.2, delay: i * 0.08 }),
+  );
   tone({ freq: 1568, dur: 0.5, type: "sine", gain: 0.12, delay: 0.28 });
   noise(0.6, 0.08, 0.05);
   vibrate([20, 40, 20, 40, 60]);

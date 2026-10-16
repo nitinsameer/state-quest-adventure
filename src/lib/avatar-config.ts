@@ -17,7 +17,7 @@ import avatarFarmerHat from "@/assets/avatars/avatar-farmer-hat.png";
 import avatarSportsCap from "@/assets/avatars/avatar-sports-cap.png";
 import avatarGirlFlower from "@/assets/avatars/avatar-girl-flower.png";
 
-export type AvatarId = 
+export type AvatarId =
   | "explorer-hat"
   | "explorer-pink"
   | "geek-glasses"
@@ -31,83 +31,86 @@ export type AvatarId =
   | "sports-cap"
   | "girl-flower";
 
-export const AVATAR_CONFIG: Record<AvatarId, {
-  name: string;
-  emoji: string;
-  color: string;
-  description: string;
-}> = {
+export const AVATAR_CONFIG: Record<
+  AvatarId,
+  {
+    name: string;
+    emoji: string;
+    color: string;
+    description: string;
+  }
+> = {
   "explorer-hat": {
     name: "Mia",
     emoji: "🧑‍🔬",
     color: "bg-accent-4",
-    description: "Adventure seeker"
+    description: "Adventure seeker",
   },
   "explorer-pink": {
     name: "Alex",
     emoji: "🧑‍🔬",
     color: "bg-accent-1-soft",
-    description: "Pink explorer"
+    description: "Pink explorer",
   },
   "geek-glasses": {
     name: "Rohan",
     emoji: "🤓",
     color: "bg-accent-2",
-    description: "Smart explorer"
+    description: "Smart explorer",
   },
   "girl-peace": {
     name: "Priya",
     emoji: "👧",
     color: "bg-accent-5",
-    description: "Peace keeper"
+    description: "Peace keeper",
   },
   "turban-red": {
     name: "Ishaan",
     emoji: "👦",
     color: "bg-success",
-    description: "Brave explorer"
+    description: "Brave explorer",
   },
   "girl-earring": {
     name: "Zara",
     emoji: "👧",
     color: "bg-warning",
-    description: "Bold explorer"
+    description: "Bold explorer",
   },
   "boy-smile": {
     name: "Aditya",
     emoji: "👦",
     color: "bg-accent-5",
-    description: "Happy adventurer"
+    description: "Happy adventurer",
   },
   "girl-tikka": {
     name: "Anaya",
     emoji: "👧",
     color: "bg-accent-2",
-    description: "Joyful explorer"
+    description: "Joyful explorer",
   },
   "ski-goggles": {
     name: "Karan",
     emoji: "🎿",
     color: "bg-accent-2",
-    description: "Cool explorer"
+    description: "Cool explorer",
   },
   "farmer-hat": {
     name: "Vikram",
     emoji: "👨‍🌾",
     color: "bg-success",
-    description: "Nature lover"
+    description: "Nature lover",
   },
   "sports-cap": {
     name: "Nikhil",
     emoji: "👦",
     color: "bg-warning",
-    description: "Active explorer"
+    description: "Active explorer",
   },
   "girl-flower": {
     name: "Diya",
     emoji: "👧",
     color: "bg-accent-1-soft",
-    description: "Bright explorer"
+    description: "Bright explorer",
   },
 };
 

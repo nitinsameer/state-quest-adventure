@@ -1,14 +1,14 @@
 /**
  * Text-to-Speech service using @capacitor-community/text-to-speech
  * Kid-friendly, respects Sound & Vibration toggle
- * 
+ *
  * Uses maintained community plugin for reliable native TTS
  * Calls Android's system TTS engine directly through Capacitor bridge
- * 
+ *
  * FIX #6 & #22: Console logging removed - only logs on dev mode
  * FIX #29: Error feedback provided to user on TTS failure
  */
-import { TextToSpeech } from '@capacitor-community/text-to-speech';
+import { TextToSpeech } from "@capacitor-community/text-to-speech";
 import { useCelebrationStore } from "@/store/celebrationStore";
 import { useToastStore } from "@/store/toastStore";
 import { hasFeatureConsent } from "./parental-consent";
@@ -17,7 +17,19 @@ import { getStateLanguageCode } from "./state-content";
 import { debugLog, debugError } from "./debug";
 import * as React from "react";
 
-export type TtsLanguage = "en-IN" | "hi-IN" | "en-US" | "te-IN" | "ta-IN" | "gu-IN" | "mr-IN" | "kn-IN" | "ml-IN" | "or-IN" | "bn-IN" | "pa-IN";
+export type TtsLanguage =
+  | "en-IN"
+  | "hi-IN"
+  | "en-US"
+  | "te-IN"
+  | "ta-IN"
+  | "gu-IN"
+  | "mr-IN"
+  | "kn-IN"
+  | "ml-IN"
+  | "or-IN"
+  | "bn-IN"
+  | "pa-IN";
 
 export interface TtsConfig {
   language: TtsLanguage;
@@ -36,7 +48,7 @@ export const DEFAULT_TTS_CONFIG: TtsConfig = {
 // Global TTS state
 let isPlaying = false;
 let currentNarrationId = "";
-let ttsListeners = new Set<() => void>();
+const ttsListeners = new Set<() => void>();
 
 /**
  * Check if TTS is available
@@ -48,11 +60,7 @@ export function isTtsAvailable(): boolean {
 /**
  * Play TTS narration using native TextToSpeech plugin
  */
-export function playTts(
-  narrationId: string,
-  text: string,
-  config: Partial<TtsConfig> = {}
-): void {
+export function playTts(narrationId: string, text: string, config: Partial<TtsConfig> = {}): void {
   console.log("\n[TTS] ===== playTts() CALLED =====");
   console.log("[TTS] narrationId:", narrationId);
   console.log("[TTS] text length:", text.length);
@@ -60,9 +68,9 @@ export function playTts(
   console.log("[TTS] config:", config);
 
   // Check audio consent
-  const hasConsent = hasFeatureConsent('audio');
+  const hasConsent = hasFeatureConsent("audio");
   console.log("[TTS] Audio consent check:", hasConsent);
-  
+
   if (!hasConsent) {
     console.log("[TTS] ❌ NO AUDIO CONSENT - returning early");
     return;
@@ -92,7 +100,7 @@ export function playTts(
  * Play TTS narration using the state's native language
  * Automatically selects the appropriate language for the given state
  * Falls back to English if language code is not available
- * 
+ *
  * @param narrationId - Unique identifier for this narration (e.g., "andhra_capital_2024")
  * @param stateName - Name of the state (e.g., "Andhra Pradesh", "Rajasthan")
  * @param text - Text to narrate in the state's native language
@@ -104,14 +112,14 @@ export function playStateNarration(
   stateName: string,
   text: string,
   config: Partial<TtsConfig> = {},
-  overrideLanguage?: string
+  overrideLanguage?: string,
 ): void {
   // Use override language if provided, otherwise get the state's native language code
   const languageCode = overrideLanguage ?? getStateLanguageCode(stateName);
-  
+
   // Convert to full TTS language code (e.g., "te" → "te-IN")
   const ttsLanguageCode = `${languageCode}-IN` as TtsLanguage;
-  
+
   // Play with the state-specific language
   playTts(narrationId, text, { ...config, language: ttsLanguageCode });
 }
@@ -124,7 +132,7 @@ async function playTtsNative(
   narrationId: string,
   text: string,
   config: TtsConfig,
-  langCode: string
+  langCode: string,
 ): Promise<void> {
   console.log("\n[TTS-NATIVE] ===== playTtsNative() CALLED =====");
   console.log("[TTS-NATIVE] narrationId:", narrationId);

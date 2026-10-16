@@ -5,8 +5,19 @@
  */
 
 import { useEffect, useState } from "react";
-import { playTts, stopTts, isTtsPlaying, getCurrentNarrationId, useTtsState, isTtsAvailable } from "@/lib/tts";
-import { hasFeatureConsent, subscribeConsentChanges, grantFeatureConsent } from "@/lib/parental-consent";
+import {
+  playTts,
+  stopTts,
+  isTtsPlaying,
+  getCurrentNarrationId,
+  useTtsState,
+  isTtsAvailable,
+} from "@/lib/tts";
+import {
+  hasFeatureConsent,
+  subscribeConsentChanges,
+  grantFeatureConsent,
+} from "@/lib/parental-consent";
 
 export interface CardNarrationPlayerProps {
   narrationId: string;
@@ -15,9 +26,14 @@ export interface CardNarrationPlayerProps {
   emoji?: string;
 }
 
-export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }: CardNarrationPlayerProps) {
+export function CardNarrationPlayer({
+  narrationId,
+  text,
+  title,
+  emoji = "🔊",
+}: CardNarrationPlayerProps) {
   const [audioNarrationEnabled, setAudioNarrationEnabled] = useState(() => {
-    const hasConsent = hasFeatureConsent('audio');
+    const hasConsent = hasFeatureConsent("audio");
     console.log("[CardNarrationPlayer] ===== INITIAL RENDER =====");
     console.log("[CardNarrationPlayer] Checking audio consent:", { hasConsent });
     console.log("[CardNarrationPlayer] narrationId:", narrationId);
@@ -30,9 +46,9 @@ export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }
   const isCurrentPlaying = ttsState.narrationId === narrationId && ttsState.isPlaying;
   const [hasSupport] = useState(isTtsAvailable());
 
-  console.log("[CardNarrationPlayer] STATE UPDATE:", { 
-    audioNarrationEnabled, 
-    showPermissionPrompt, 
+  console.log("[CardNarrationPlayer] STATE UPDATE:", {
+    audioNarrationEnabled,
+    showPermissionPrompt,
     isCurrentPlaying,
     hasSupport,
     narrationId,
@@ -41,13 +57,15 @@ export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }
   // Subscribe to consent changes and re-render when consent status changes
   useEffect(() => {
     console.log("[CardNarrationPlayer] ===== useEffect MOUNTED =====");
-    const currentConsent = hasFeatureConsent('audio');
+    const currentConsent = hasFeatureConsent("audio");
     console.log("[CardNarrationPlayer] useEffect - current consent:", { currentConsent });
     setAudioNarrationEnabled(currentConsent);
-    
-    const unsubscribe = subscribeConsentChanges('audio', () => {
-      const consentAfterChange = hasFeatureConsent('audio');
-      console.log("[CardNarrationPlayer] ⚡ Consent changed via listener - NEW VALUE:", { consentAfterChange });
+
+    const unsubscribe = subscribeConsentChanges("audio", () => {
+      const consentAfterChange = hasFeatureConsent("audio");
+      console.log("[CardNarrationPlayer] ⚡ Consent changed via listener - NEW VALUE:", {
+        consentAfterChange,
+      });
       setAudioNarrationEnabled(consentAfterChange);
     });
 
@@ -65,19 +83,24 @@ export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }
     console.log("[CardNarrationPlayer] isCurrentPlaying:", isCurrentPlaying);
     console.log("[CardNarrationPlayer] hasSupport:", hasSupport);
     console.log("[CardNarrationPlayer] showPermissionPrompt:", showPermissionPrompt);
-    
+
     if (!audioNarrationEnabled) {
-      console.log("[CardNarrationPlayer] ❌ BLOCKED: Audio narration not enabled - showing permission prompt");
+      console.log(
+        "[CardNarrationPlayer] ❌ BLOCKED: Audio narration not enabled - showing permission prompt",
+      );
       setShowPermissionPrompt(true);
       return;
     }
-    
+
     if (isCurrentPlaying) {
       console.log("[CardNarrationPlayer] ⏸ STOPPING TTS", { narrationId });
       stopTts();
     } else {
       console.log("[CardNarrationPlayer] ▶️ STARTING TTS PLAYBACK");
-      console.log("[CardNarrationPlayer] Text preview:", text.substring(0, 100) + (text.length > 100 ? "..." : ""));
+      console.log(
+        "[CardNarrationPlayer] Text preview:",
+        text.substring(0, 100) + (text.length > 100 ? "..." : ""),
+      );
       playTts(narrationId, text, {
         speed: 0.85,
         pitch: 1.05,
@@ -88,18 +111,18 @@ export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }
   const handleEnableAudio = () => {
     console.log("\n[CardNarrationPlayer] ===== ENABLE AUDIO BUTTON CLICKED =====");
     console.log("[CardNarrationPlayer] About to grantFeatureConsent('audio')");
-    grantFeatureConsent('audio');
+    grantFeatureConsent("audio");
     console.log("[CardNarrationPlayer] ✅ Feature consent granted");
-    
-    const consentAfterGrant = hasFeatureConsent('audio');
+
+    const consentAfterGrant = hasFeatureConsent("audio");
     console.log("[CardNarrationPlayer] Verifying consent after grant:", { consentAfterGrant });
-    
+
     setAudioNarrationEnabled(true);
     console.log("[CardNarrationPlayer] State updated - audioNarrationEnabled set to true");
-    
+
     setShowPermissionPrompt(false);
     console.log("[CardNarrationPlayer] Permission prompt closed");
-    
+
     // Auto-play the narration immediately after enabling
     console.log("[CardNarrationPlayer] Auto-playing narration");
     playTts(narrationId, text, {
@@ -122,7 +145,9 @@ export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }
           <div className="bg-surface-card rounded-3xl p-(--padding-lg) max-w-sm shadow-2xl animate-in fade-in scale-in">
             <div className="text-center">
               <div className="text-5xl mb-(--space-2)">🎧</div>
-              <h3 className="text-xl font-bold text-text-primary mb-(--space-0-5)">Enable Audio?</h3>
+              <h3 className="text-xl font-bold text-text-primary mb-(--space-0-5)">
+                Enable Audio?
+              </h3>
               <p className="text-sm text-text-muted mb-(--space-2)">
                 Would you like to enable audio to hear this story read aloud?
               </p>
@@ -158,7 +183,13 @@ export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }
                   ? "bg-action-primary-bg text-text-on-primary shadow-md hover:shadow-lg"
                   : "bg-action-primary-bg/50 text-text-on-primary shadow-md hover:shadow-lg"
             }`}
-            title={isCurrentPlaying ? "Stop narration" : audioNarrationEnabled ? "Play narration" : "Enable audio to play narration"}
+            title={
+              isCurrentPlaying
+                ? "Stop narration"
+                : audioNarrationEnabled
+                  ? "Play narration"
+                  : "Enable audio to play narration"
+            }
           >
             {isCurrentPlaying ? "⏸️" : "▶️"}
           </button>
@@ -168,13 +199,17 @@ export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }
             <div className="text-xs font-bold text-action-primary-bg uppercase tracking-wide">
               🎧 Listen to Story
             </div>
-            <div className="text-sm font-bold text-action-primary-bg mt-(--space-0-25)">{title}</div>
+            <div className="text-sm font-bold text-action-primary-bg mt-(--space-0-25)">
+              {title}
+            </div>
             {audioNarrationEnabled ? (
               <div className="text-xs text-action-primary-bg mt-(--space-0-25)">
                 {isCurrentPlaying ? "🎵 Playing... tap to stop" : "Tap play to hear! 👂"}
               </div>
             ) : (
-              <div className="text-xs text-action-primary-bg font-semibold mt-1">📢 Tap to enable audio</div>
+              <div className="text-xs text-action-primary-bg font-semibold mt-1">
+                📢 Tap to enable audio
+              </div>
             )}
           </div>
 
@@ -194,4 +229,3 @@ export function CardNarrationPlayer({ narrationId, text, title, emoji = "🔊" }
     </div>
   );
 }
-

@@ -3,11 +3,11 @@ import { readTokenAsHex } from "@/lib/theme-tokens";
 
 function getConfettiColors(): string[] {
   return [
-    readTokenAsHex('--accent-1'),      // Saffron
-    readTokenAsHex('--accent-2'),      // Explorer blue
-    readTokenAsHex('--accent-3'),      // Success green
-    readTokenAsHex('--accent-4'),      // Gold
-    readTokenAsHex('--surface-card'),  // White
+    readTokenAsHex("--accent-1"), // Saffron
+    readTokenAsHex("--accent-2"), // Explorer blue
+    readTokenAsHex("--accent-3"), // Success green
+    readTokenAsHex("--accent-4"), // Gold
+    readTokenAsHex("--surface-card"), // White
   ];
 }
 

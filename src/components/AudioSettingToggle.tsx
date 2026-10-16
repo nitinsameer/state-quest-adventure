@@ -1,6 +1,6 @@
 /**
  * AudioSettingToggle - Profile Audio Settings Control
- * 
+ *
  * Allows users to enable/disable AUDIO NARRATION in profile settings
  * Uses parental-consent system (not sound effects toggle)
  * Changes take effect immediately (no app restart needed)
@@ -21,14 +21,14 @@ import {
 
 export function AudioSettingToggle() {
   const [audioEnabled, setAudioEnabled] = useState(() => {
-    return hasFeatureConsent('audio');
+    return hasFeatureConsent("audio");
   });
   const [isToggling, setIsToggling] = useState(false);
 
   // Subscribe to consent changes
   useEffect(() => {
-    const unsubscribe = subscribeConsentChanges('audio', () => {
-      setAudioEnabled(hasFeatureConsent('audio'));
+    const unsubscribe = subscribeConsentChanges("audio", () => {
+      setAudioEnabled(hasFeatureConsent("audio"));
     });
     return unsubscribe;
   }, []);
@@ -37,18 +37,18 @@ export function AudioSettingToggle() {
     if (isToggling) return;
     setIsToggling(true);
     fxTap(); // Play feedback before changing
-    
+
     const newState = !audioEnabled;
-    
+
     if (newState) {
-      grantFeatureConsent('audio');
+      grantFeatureConsent("audio");
       setAudioEnabled(true);
     } else {
-      revokeFeatureConsent('audio');
+      revokeFeatureConsent("audio");
       setAudioEnabled(false);
       stopTts(); // Stop any active TTS immediately
     }
-    
+
     setIsToggling(false);
   };
 
@@ -58,9 +58,7 @@ export function AudioSettingToggle() {
       <div className="flex-1">
         <h3 className="font-bold text-ink text-base">🎧 Audio Narration</h3>
         <p className="text-xs text-muted-foreground mt-1">
-          {audioEnabled 
-            ? "✓ Stories are read aloud" 
-            : "✗ Audio is disabled"}
+          {audioEnabled ? "✓ Stories are read aloud" : "✗ Audio is disabled"}
         </p>
       </div>
 
@@ -69,9 +67,7 @@ export function AudioSettingToggle() {
         onClick={handleToggle}
         disabled={isToggling}
         className={`ml-(--space-3) relative inline-flex h-8 w-14 items-center rounded-full transition-all flex-shrink-0 ${
-          audioEnabled
-            ? "bg-success shadow-lg shadow-success/50"
-            : "bg-muted shadow-md"
+          audioEnabled ? "bg-success shadow-lg shadow-success/50" : "bg-muted shadow-md"
         } ${isToggling ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:scale-105"}`}
       >
         {/* Toggle Thumb */}
@@ -80,7 +76,7 @@ export function AudioSettingToggle() {
             audioEnabled ? "translate-x-7" : "translate-x-1"
           } ${isToggling ? "scale-95" : "scale-100"}`}
         />
-        
+
         {/* Status Indicator */}
         <span className="absolute inset-0 flex items-center justify-center text-xs font-bold">
           {audioEnabled ? "✓" : "✗"}
@@ -96,12 +92,12 @@ export function AudioSettingToggle() {
  */
 export function AudioSettingToggleCompact() {
   const [audioEnabled, setAudioEnabled] = useState(() => {
-    return hasFeatureConsent('audio');
+    return hasFeatureConsent("audio");
   });
 
   useEffect(() => {
-    const unsubscribe = subscribeConsentChanges('audio', () => {
-      setAudioEnabled(hasFeatureConsent('audio'));
+    const unsubscribe = subscribeConsentChanges("audio", () => {
+      setAudioEnabled(hasFeatureConsent("audio"));
     });
     return unsubscribe;
   }, []);
@@ -109,12 +105,12 @@ export function AudioSettingToggleCompact() {
   const handleToggle = () => {
     fxTap();
     const newState = !audioEnabled;
-    
+
     if (newState) {
-      grantFeatureConsent('audio');
+      grantFeatureConsent("audio");
       setAudioEnabled(true);
     } else {
-      revokeFeatureConsent('audio');
+      revokeFeatureConsent("audio");
       setAudioEnabled(false);
       stopTts();
     }
@@ -124,9 +120,7 @@ export function AudioSettingToggleCompact() {
     <button
       onClick={handleToggle}
       className={`relative inline-flex h-7 w-12 items-center rounded-full transition-all ${
-        audioEnabled
-          ? "bg-success"
-          : "bg-muted"
+        audioEnabled ? "bg-success" : "bg-muted"
       } hover:scale-105 active:scale-95`}
       title={audioEnabled ? "Disable audio narration" : "Enable audio narration"}
     >
@@ -145,12 +139,12 @@ export function AudioSettingToggleCompact() {
  */
 export function AudioSettingRow() {
   const [audioEnabled, setAudioEnabled] = useState(() => {
-    return hasFeatureConsent('audio');
+    return hasFeatureConsent("audio");
   });
 
   useEffect(() => {
-    const unsubscribe = subscribeConsentChanges('audio', () => {
-      setAudioEnabled(hasFeatureConsent('audio'));
+    const unsubscribe = subscribeConsentChanges("audio", () => {
+      setAudioEnabled(hasFeatureConsent("audio"));
     });
     return unsubscribe;
   }, []);
@@ -158,12 +152,12 @@ export function AudioSettingRow() {
   const handleToggle = () => {
     fxTap();
     const newState = !audioEnabled;
-    
+
     if (newState) {
-      grantFeatureConsent('audio');
+      grantFeatureConsent("audio");
       setAudioEnabled(true);
     } else {
-      revokeFeatureConsent('audio');
+      revokeFeatureConsent("audio");
       setAudioEnabled(false);
       stopTts();
     }
@@ -188,9 +182,7 @@ export function AudioSettingRow() {
       {/* Right: Toggle */}
       <div
         className={`relative inline-flex h-8 w-14 items-center rounded-full transition-all flex-shrink-0 ml-4 ${
-          audioEnabled
-            ? "bg-success"
-            : "bg-muted"
+          audioEnabled ? "bg-success" : "bg-muted"
         }`}
       >
         <div
@@ -202,4 +194,3 @@ export function AudioSettingRow() {
     </button>
   );
 }
-

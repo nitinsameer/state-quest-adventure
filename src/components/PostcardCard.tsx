@@ -63,12 +63,22 @@ export function PostcardCard({
           </div>
 
           {/* State name - centered, larger */}
-          <div className="font-extrabold text-center mb-2 line-clamp-2" style={{ fontSize: 'var(--type-state-name)', fontWeight: 'var(--type-state-name-weight)', color: 'var(--color-ink)' }}>
+          <div
+            className="font-extrabold text-center mb-2 line-clamp-2"
+            style={{
+              fontSize: "var(--type-state-name)",
+              fontWeight: "var(--type-state-name-weight)",
+              color: "var(--color-ink)",
+            }}
+          >
             {destination}
           </div>
 
           {/* Status text */}
-          <div className="text-sm font-bold text-center" style={{ color: isCollected ? 'var(--color-feedback-success)' : 'var(--text-muted)' }}>
+          <div
+            className="text-sm font-bold text-center"
+            style={{ color: isCollected ? "var(--color-feedback-success)" : "var(--text-muted)" }}
+          >
             {isCollected ? (
               <span className="inline-flex items-center gap-1">
                 <span>✓</span>

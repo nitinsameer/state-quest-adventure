@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { appLogger } from '@/lib/logger';
+import { useEffect, useState } from "react";
+import { appLogger } from "@/lib/logger";
 import { EMOJI } from "@/constants/emoji";
 
 /**
@@ -11,15 +11,15 @@ export function DebugScreen() {
   const [tapCount, setTapCount] = useState(0);
   const [logs, setLogs] = useState<any[]>([]);
   const [autoScroll, setAutoScroll] = useState(true);
-  const [filter, setFilter] = useState<'all' | 'error' | 'warn' | 'info' | 'debug'>('all');
+  const [filter, setFilter] = useState<"all" | "error" | "warn" | "info" | "debug">("all");
 
   useEffect(() => {
     // Activate with keyboard shortcut 'D'
     const handleKeyPress = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'd') {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "d") {
         e.preventDefault();
         setIsVisible((prev) => !prev);
-        appLogger.info('debug_screen', 'Debug screen toggled via keyboard');
+        appLogger.info("debug_screen", "Debug screen toggled via keyboard");
       }
     };
 
@@ -31,7 +31,7 @@ export function DebugScreen() {
           const newCount = prev + 1;
           if (newCount >= 5) {
             setIsVisible((prev) => !prev);
-            appLogger.info('debug_screen', 'Debug screen toggled via tap');
+            appLogger.info("debug_screen", "Debug screen toggled via tap");
             return 0;
           }
           return newCount;
@@ -39,12 +39,12 @@ export function DebugScreen() {
       }
     };
 
-    window.addEventListener('keydown', handleKeyPress);
-    window.addEventListener('touchstart', handleTouchStart);
+    window.addEventListener("keydown", handleKeyPress);
+    window.addEventListener("touchstart", handleTouchStart);
 
     return () => {
-      window.removeEventListener('keydown', handleKeyPress);
-      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener("keydown", handleKeyPress);
+      window.removeEventListener("touchstart", handleTouchStart);
     };
   }, []);
 
@@ -54,13 +54,12 @@ export function DebugScreen() {
     // Update logs every 500ms
     const interval = setInterval(() => {
       const allLogs = appLogger.getLogs();
-      const filtered =
-        filter === 'all' ? allLogs : allLogs.filter((log) => log.level === filter);
+      const filtered = filter === "all" ? allLogs : allLogs.filter((log) => log.level === filter);
       setLogs(filtered);
 
       if (autoScroll) {
         setTimeout(() => {
-          const logContainer = document.getElementById('debug-logs-container');
+          const logContainer = document.getElementById("debug-logs-container");
           if (logContainer) {
             logContainer.scrollTop = logContainer.scrollHeight;
           }
@@ -77,9 +76,9 @@ export function DebugScreen() {
 
   const handleExportLogs = () => {
     const exported = appLogger.exportLogs();
-    const blob = new Blob([exported], { type: 'application/json' });
+    const blob = new Blob([exported], { type: "application/json" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = `app-debug-logs-${Date.now()}.json`;
     a.click();
@@ -87,7 +86,7 @@ export function DebugScreen() {
   };
 
   const handleClearLogs = () => {
-    if (confirm('Clear all logs?')) {
+    if (confirm("Clear all logs?")) {
       appLogger.clearLogs();
       setLogs([]);
     }
@@ -103,41 +102,41 @@ export function DebugScreen() {
         </div>
         <div className="flex gap-(--gap-xs) flex-wrap">
           <button
-            onClick={() => setFilter('all')}
+            onClick={() => setFilter("all")}
             className={`px-2 py-1 rounded ${
-              filter === 'all'
-                ? 'bg-accent-2 text-white'
-                : 'bg-surface-raised text-text-secondary hover:bg-surface-elevated'
+              filter === "all"
+                ? "bg-accent-2 text-white"
+                : "bg-surface-raised text-text-secondary hover:bg-surface-elevated"
             }`}
           >
             All
           </button>
           <button
-            onClick={() => setFilter('error')}
+            onClick={() => setFilter("error")}
             className={`px-2 py-1 rounded ${
-              filter === 'error'
-                ? 'bg-error text-white'
-                : 'bg-surface-raised text-text-secondary hover:bg-surface-elevated'
+              filter === "error"
+                ? "bg-error text-white"
+                : "bg-surface-raised text-text-secondary hover:bg-surface-elevated"
             }`}
           >
             Errors
           </button>
           <button
-            onClick={() => setFilter('warn')}
+            onClick={() => setFilter("warn")}
             className={`px-2 py-1 rounded ${
-              filter === 'warn'
-                ? 'bg-warning text-white'
-                : 'bg-surface-sunken text-text-secondary hover:bg-surface-raised'
+              filter === "warn"
+                ? "bg-warning text-white"
+                : "bg-surface-sunken text-text-secondary hover:bg-surface-raised"
             }`}
           >
             Warns
           </button>
           <button
-            onClick={() => setFilter('info')}
+            onClick={() => setFilter("info")}
             className={`px-2 py-1 rounded ${
-              filter === 'info'
-                ? 'bg-success text-white'
-                : 'bg-surface-raised text-text-secondary hover:bg-surface-elevated'
+              filter === "info"
+                ? "bg-success text-white"
+                : "bg-surface-raised text-text-secondary hover:bg-surface-elevated"
             }`}
           >
             Info
@@ -180,7 +179,8 @@ export function DebugScreen() {
           <div className="text-muted-light">
             <p>No logs found. Try interacting with the app.</p>
             <p className="mt-2 text-xs">
-              {EMOJI.milestone.twentyFive} Shortcuts: Ctrl+D to toggle debug | Tap corner 5x to toggle
+              {EMOJI.milestone.twentyFive} Shortcuts: Ctrl+D to toggle debug | Tap corner 5x to
+              toggle
             </p>
           </div>
         ) : (
@@ -188,13 +188,13 @@ export function DebugScreen() {
             <div
               key={idx}
               className={`border-l-2 pl-2 py-0.5 ${
-                log.level === 'error'
-                  ? 'border-error text-error'
-                  : log.level === 'warn'
-                    ? 'border-warning text-warning'
-                    : log.level === 'info'
-                      ? 'border-success text-success'
-                      : 'border-text-muted text-muted-light'
+                log.level === "error"
+                  ? "border-error text-error"
+                  : log.level === "warn"
+                    ? "border-warning text-warning"
+                    : log.level === "info"
+                      ? "border-success text-success"
+                      : "border-text-muted text-muted-light"
               }`}
             >
               <div className="flex gap-(--gap-base)">
@@ -227,4 +227,3 @@ export function DebugScreen() {
     </div>
   );
 }
-

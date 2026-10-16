@@ -25,7 +25,7 @@ export function PassportSprout() {
   const sproutStates = getSproutStates(progress, 24); // Get up to 24 states (4 pages)
   const statesThisPage = sproutStates.slice(
     currentPage * STATES_PER_PAGE,
-    (currentPage + 1) * STATES_PER_PAGE
+    (currentPage + 1) * STATES_PER_PAGE,
   );
   const hasNextPage = (currentPage + 1) * STATES_PER_PAGE < sproutStates.length;
 
@@ -39,7 +39,7 @@ export function PassportSprout() {
       // Show postcard with celebration
       if (progress.postcards[stateName]) {
         setSelectedPostcard(progress.postcards[stateName]);
-        setBurst(b => b + 1);
+        setBurst((b) => b + 1);
         return;
       }
     }
@@ -51,10 +51,7 @@ export function PassportSprout() {
 
       {/* Postcard Modal - shown on same screen */}
       {selectedPostcard && (
-        <PostcardModal
-          postcard={selectedPostcard}
-          onClose={() => setSelectedPostcard(null)}
-        />
+        <PostcardModal postcard={selectedPostcard} onClose={() => setSelectedPostcard(null)} />
       )}
 
       {/* Header */}
@@ -90,7 +87,9 @@ export function PassportSprout() {
 
       {/* States Grid */}
       <div className="px-5 pt-4 pb-2 flex-1 overflow-auto">
-        <div className="text-sm font-bold text-muted-foreground mb-3">{EMOJI.utility.worldMap} Time to Explore!</div>
+        <div className="text-sm font-bold text-muted-foreground mb-3">
+          {EMOJI.utility.worldMap} Time to Explore!
+        </div>
 
         <div className="grid grid-cols-2 gap-3 mb-4">
           {statesThisPage.map((state) => {
@@ -165,4 +164,3 @@ export function PassportSprout() {
     </div>
   );
 }
-

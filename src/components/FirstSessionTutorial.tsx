@@ -4,7 +4,7 @@
  * - Step 1: How to read learning cards
  * - Step 2: How to take quizzes and earn XP
  * - Step 3: How to unlock new states
- * 
+ *
  * Shows once per profile, can be skipped
  */
 
@@ -77,7 +77,8 @@ export function FirstSessionTutorial({ onComplete, isVisible = true }: FirstSess
     {
       title: "Unlock New States",
       emoji: EMOJI.nav.map,
-      description: "Complete states to unlock the next adventure. Each state = 1 stamp for your passport!",
+      description:
+        "Complete states to unlock the next adventure. Each state = 1 stamp for your passport!",
       tips: [
         { emoji: EMOJI.feedback.trophy, text: "Collect all 36 state stamps" },
         { emoji: "🔥", text: "Build a daily streak" },
@@ -102,7 +103,11 @@ export function FirstSessionTutorial({ onComplete, isVisible = true }: FirstSess
           type: "custom",
           children: (
             <div className="flex items-center gap-(--gap-base) bg-accent-1-soft rounded-2xl p-(--padding-md) mb-(--space-0-25)">
-              <img src={mascot} alt="Helper mascot" className="w-12 h-12 object-contain flex-shrink-0" />
+              <img
+                src={mascot}
+                alt="Helper mascot"
+                className="w-12 h-12 object-contain flex-shrink-0"
+              />
               <p className="text-sm font-semibold text-accent-1-dark">{current.description}</p>
             </div>
           ),

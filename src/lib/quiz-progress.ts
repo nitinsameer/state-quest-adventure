@@ -1,16 +1,16 @@
 /**
  * Quiz Progress Persistence
- * 
+ *
  * Stores and resumes in-progress quiz state per state.
  * Key: "india-explorer:quiz-progress:v1"
- * 
+ *
  * Never sent to analytics. Expires after 7 days.
  */
 
-import { validateQuizProgress, QuizProgressEntry, QuizProgress } from './localStorage-schema';
-import { debugError } from './debug';
+import { validateQuizProgress, QuizProgressEntry, QuizProgress } from "./localStorage-schema";
+import { debugError } from "./debug";
 
-const QUIZ_PROGRESS_KEY = 'india-explorer:quiz-progress:v1';
+const QUIZ_PROGRESS_KEY = "india-explorer:quiz-progress:v1";
 const EXPIRY_DAYS = 7;
 const EXPIRY_MS = EXPIRY_DAYS * 24 * 60 * 60 * 1000;
 
@@ -28,16 +28,16 @@ export function getQuizProgress(): QuizProgress {
 export function getQuizProgressForState(stateName: string): QuizProgressEntry | null {
   const progress = getQuizProgress();
   const entry = progress[stateName];
-  
+
   if (!entry) return null;
-  
+
   // Check if expired (7 days old)
   const ageMs = Date.now() - entry.startedAt;
   if (ageMs > EXPIRY_MS) {
     clearQuizProgressForState(stateName);
     return null;
   }
-  
+
   return entry;
 }
 
@@ -49,16 +49,16 @@ export function saveQuizProgress(
   stateName: string,
   index: number,
   correctCount: number,
-  answers: { id: string; correct: boolean }[]
+  answers: { id: string; correct: boolean }[],
 ): void {
   try {
     const progress = getQuizProgress();
     const now = Date.now();
-    
+
     // Get existing entry to preserve startedAt
     const existing = progress[stateName];
     const startedAt = existing?.startedAt || now;
-    
+
     progress[stateName] = {
       index,
       correctCount,
@@ -66,10 +66,10 @@ export function saveQuizProgress(
       startedAt,
       updatedAt: now,
     };
-    
+
     localStorage.setItem(QUIZ_PROGRESS_KEY, JSON.stringify(progress));
   } catch (err) {
-    debugError('quiz-progress', 'Failed to save quiz progress', { stateName, error: err });
+    debugError("quiz-progress", "Failed to save quiz progress", { stateName, error: err });
   }
 }
 
@@ -82,7 +82,7 @@ export function clearQuizProgressForState(stateName: string): void {
     delete progress[stateName];
     localStorage.setItem(QUIZ_PROGRESS_KEY, JSON.stringify(progress));
   } catch (err) {
-    debugError('quiz-progress', 'Failed to clear quiz progress', { stateName, error: err });
+    debugError("quiz-progress", "Failed to clear quiz progress", { stateName, error: err });
   }
 }
 
@@ -91,9 +91,9 @@ export function clearQuizProgressForState(stateName: string): void {
  */
 export function clearAllQuizProgress(): void {
   try {
-    localStorage.setItem(QUIZ_PROGRESS_KEY, '{}');
+    localStorage.setItem(QUIZ_PROGRESS_KEY, "{}");
   } catch (err) {
-    debugError('quiz-progress', 'Failed to clear all quiz progress', { error: err });
+    debugError("quiz-progress", "Failed to clear all quiz progress", { error: err });
   }
 }
 
@@ -105,7 +105,7 @@ export function cleanupExpiredQuizProgress(): void {
     const progress = getQuizProgress();
     const now = Date.now();
     let modified = false;
-    
+
     for (const [stateName, entry] of Object.entries(progress)) {
       const ageMs = now - entry.startedAt;
       if (ageMs > EXPIRY_MS) {
@@ -113,11 +113,11 @@ export function cleanupExpiredQuizProgress(): void {
         modified = true;
       }
     }
-    
+
     if (modified) {
       localStorage.setItem(QUIZ_PROGRESS_KEY, JSON.stringify(progress));
     }
   } catch (err) {
-    debugError('quiz-progress', 'Failed to cleanup expired quiz progress', { error: err });
+    debugError("quiz-progress", "Failed to cleanup expired quiz progress", { error: err });
   }
 }

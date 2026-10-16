@@ -1,4 +1,13 @@
-import { useProgress, levelInfo, badgeCount, resetProgress, unlockedCount, cardsDone, CARDS_PER_STATE, getLevelName } from "@/lib/progress";
+import {
+  useProgress,
+  levelInfo,
+  badgeCount,
+  resetProgress,
+  unlockedCount,
+  cardsDone,
+  CARDS_PER_STATE,
+  getLevelName,
+} from "@/lib/progress";
 import { INDIA_STATES } from "@/lib/states";
 import { STATE_ART } from "@/lib/state-art";
 import { useGoBack, BottomNav } from "@/components/screens";
@@ -19,15 +28,23 @@ export function ParentZoneScreen() {
   const [showPINSettings, setShowPINSettings] = useState(false);
   const [newPIN, setNewPIN] = useState("");
   const [pinSaveStatus, setPinSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
-  const [activeTab, setActiveTab] = useState<"overview" | "analytics" | "controls" | "export">("overview");
-  const [postcardNameSharing, setPostcardNameSharing] = useState(getParentZoneSettings().postcardNameSharing ?? false);
+  const [activeTab, setActiveTab] = useState<"overview" | "analytics" | "controls" | "export">(
+    "overview",
+  );
+  const [postcardNameSharing, setPostcardNameSharing] = useState(
+    getParentZoneSettings().postcardNameSharing ?? false,
+  );
   const unlocked = unlockedCount(p);
   const inProgress = INDIA_STATES.filter(
     (s) => !p.completed.includes(s.name) && cardsDone(p, s.name) > 0,
   );
 
   const stats = [
-    { icon: EMOJI.nav.map, label: "Places completed", value: `${p.completed.length}/${TOTAL_STATES}` },
+    {
+      icon: EMOJI.nav.map,
+      label: "Places completed",
+      value: `${p.completed.length}/${TOTAL_STATES}`,
+    },
     { icon: EMOJI.action.star, label: "Total XP", value: p.xp.toLocaleString() },
     { icon: EMOJI.nav.badges, label: "Badges earned", value: String(badgeCount(p)) },
     { icon: "🎫", label: "Stamps collected", value: String(Object.keys(p.stamps).length) },
@@ -36,18 +53,20 @@ export function ParentZoneScreen() {
   ];
 
   // Estimate screen time (rough calculation based on completed states)
-  const estimatedHours = Math.round((p.completed.length * 15 + cardsDone(p, p.completed[0] || "Andhra Pradesh") * 2) / 60);
-  
+  const estimatedHours = Math.round(
+    (p.completed.length * 15 + cardsDone(p, p.completed[0] || "Andhra Pradesh") * 2) / 60,
+  );
+
   // Calculate daily average
   const daysActive = p.streak || 1;
-  const dailyAverage = Math.round((p.xp / daysActive) / 100);
+  const dailyAverage = Math.round(p.xp / daysActive / 100);
 
   const handleSavePIN = async () => {
     if (newPIN.length !== 4) {
       alert("PIN must be 4 digits");
       return;
     }
-    
+
     setPinSaveStatus("saving");
     try {
       const success = await setPin(newPIN);
@@ -85,16 +104,18 @@ export function ParentZoneScreen() {
       [""],
       ["STATES IN PROGRESS"],
       ["State", "Cards Done", "Progress %"],
-      ...inProgress.map(s => [
+      ...inProgress.map((s) => [
         s.name,
         cardsDone(p, s.name),
-        Math.round((cardsDone(p, s.name) / CARDS_PER_STATE) * 100)
+        Math.round((cardsDone(p, s.name) / CARDS_PER_STATE) * 100),
       ]),
       [""],
       ["COMPLETED STATES"],
       ["State"],
-      ...p.completed.map(name => [name]),
-    ].map(row => row.join(",")).join("\n");
+      ...p.completed.map((name) => [name]),
+    ]
+      .map((row) => row.join(","))
+      .join("\n");
 
     // Download CSV
     const blob = new Blob([csv], { type: "text/csv" });
@@ -164,10 +185,17 @@ export function ParentZoneScreen() {
             </div>
             <div className="grid grid-cols-2 gap-(--gap-base)">
               {stats.map((s) => (
-                <div key={s.label} className="rounded-3xl bg-surface-card p-(--padding-base) shadow-[var(--shadow-card)] border border-black/5">
+                <div
+                  key={s.label}
+                  className="rounded-3xl bg-surface-card p-(--padding-base) shadow-[var(--shadow-card)] border border-black/5"
+                >
                   <div className="text-2xl">{s.icon}</div>
-                  <div className="text-display text-lg font-extrabold mt-(--space-0-25)">{s.value}</div>
-                  <div className="text-[10px] font-bold text-text-muted leading-tight">{s.label}</div>
+                  <div className="text-display text-lg font-extrabold mt-(--space-0-25)">
+                    {s.value}
+                  </div>
+                  <div className="text-[10px] font-bold text-text-muted leading-tight">
+                    {s.label}
+                  </div>
                 </div>
               ))}
             </div>
@@ -217,10 +245,12 @@ export function ParentZoneScreen() {
             <div className="text-display font-extrabold text-sm text-text-muted uppercase">
               Engagement Metrics
             </div>
-            
+
             <div className="rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-black/5 space-y-(--space-2)">
               <div>
-                <div className="text-sm font-bold text-text-muted mb-(--space-0-25)">Overall Progress</div>
+                <div className="text-sm font-bold text-text-muted mb-(--space-0-25)">
+                  Overall Progress
+                </div>
                 <div className="flex items-center gap-(--gap-base)">
                   <div className="flex-1 h-3 bg-progress-track rounded-full overflow-hidden">
                     <div
@@ -263,9 +293,13 @@ export function ParentZoneScreen() {
             </div>
 
             <div className="rounded-3xl bg-[var(--surface-subtle)] border border-[var(--border-default)] p-(--padding-md)">
-              <div className="text-sm font-bold text-text-primary mb-(--space-0-5)">💡 Insights</div>
+              <div className="text-sm font-bold text-text-primary mb-(--space-0-5)">
+                💡 Insights
+              </div>
               <div className="text-xs text-text-secondary leading-relaxed">
-                {estimatedHours < 5 ? "Great balance! Your child is learning at a healthy pace." : "Your child is very engaged! Consider encouraging breaks."}
+                {estimatedHours < 5
+                  ? "Great balance! Your child is learning at a healthy pace."
+                  : "Your child is very engaged! Consider encouraging breaks."}
               </div>
             </div>
           </div>
@@ -311,7 +345,11 @@ export function ParentZoneScreen() {
                         : "bg-action-primary-bg text-text-on-primary disabled:opacity-50"
                     }`}
                   >
-                    {pinSaveStatus === "saved" ? "✓ Saved" : pinSaveStatus === "saving" ? "Saving..." : "Save PIN"}
+                    {pinSaveStatus === "saved"
+                      ? "✓ Saved"
+                      : pinSaveStatus === "saving"
+                        ? "Saving..."
+                        : "Save PIN"}
                   </button>
                 </div>
               )}
@@ -340,8 +378,12 @@ export function ParentZoneScreen() {
             <div className="rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-black/5">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-sm font-bold text-text-primary">Include child's name on shared postcards</div>
-                  <div className="text-xs text-text-muted">When sharing, add child's name to image</div>
+                  <div className="text-sm font-bold text-text-primary">
+                    Include child's name on shared postcards
+                  </div>
+                  <div className="text-xs text-text-muted">
+                    When sharing, add child's name to image
+                  </div>
                 </div>
                 <input
                   type="checkbox"
@@ -350,7 +392,7 @@ export function ParentZoneScreen() {
                     fxTap();
                     const newValue = e.target.checked;
                     setPostcardNameSharing(newValue);
-                    setParentZoneSetting('postcardNameSharing', newValue);
+                    setParentZoneSetting("postcardNameSharing", newValue);
                   }}
                   className="h-5 w-5 cursor-pointer"
                 />
@@ -367,9 +409,12 @@ export function ParentZoneScreen() {
             </div>
 
             <div className="rounded-3xl bg-info-soft border border-info p-(--padding-md)">
-              <div className="text-sm font-bold text-text-on-primary mb-(--space-0-5)">📋 About Export</div>
+              <div className="text-sm font-bold text-text-on-primary mb-(--space-0-5)">
+                📋 About Export
+              </div>
               <div className="text-xs text-text-on-primary/90 leading-relaxed">
-                Download your child's progress as a CSV file. Useful for school reports or tracking learning over time.
+                Download your child's progress as a CSV file. Useful for school reports or tracking
+                learning over time.
               </div>
             </div>
 
@@ -443,4 +488,3 @@ export function ParentZoneScreen() {
     </div>
   );
 }
-

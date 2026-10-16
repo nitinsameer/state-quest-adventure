@@ -40,7 +40,8 @@ export function LockedPostcardModal({ destination, onClose }: LockedPostcardModa
         {/* Message */}
         <div className="text-center mb-8">
           <p className="text-base text-muted-dark leading-relaxed">
-            Complete <span className="font-extrabold">{destination}</span>'s journey to collect this postcard!
+            Complete <span className="font-extrabold">{destination}</span>'s journey to collect this
+            postcard!
           </p>
         </div>
 

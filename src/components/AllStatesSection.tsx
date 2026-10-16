@@ -12,7 +12,6 @@ import { INDIA_STATES } from "@/lib/states";
 import { STATE_ART } from "@/lib/state-art";
 import { fxTap } from "@/lib/fx";
 
-
 export function AllStatesSection() {
   const [active, setActive] = useState(INDIA_STATES[0].name);
 
@@ -24,16 +23,14 @@ export function AllStatesSection() {
             All {INDIA_STATES.length} State Screens
           </h2>
           <p className="mt-(--space-0-25) text-sm font-bold text-muted-foreground">
-            Pick a state to see its full six-screen set — Intro, Learning Hub,
-            Learning Card, Quiz, Correct Answer, Completed and Unlock — all
-            generated from that state's own data.
+            Pick a state to see its full six-screen set — Intro, Learning Hub, Learning Card, Quiz,
+            Correct Answer, Completed and Unlock — all generated from that state's own data.
           </p>
         </div>
         <div className="text-xs font-extrabold uppercase tracking-widest text-muted-foreground">
           {INDIA_STATES.length * 7} screens
         </div>
       </div>
-
 
       <div className="flex flex-wrap gap-(--gap-base) mb-(--space-3) justify-center">
         {INDIA_STATES.map((s) => {
@@ -86,6 +83,5 @@ export function AllStatesSection() {
         </PhoneFrame>
       </div>
     </section>
-
   );
 }

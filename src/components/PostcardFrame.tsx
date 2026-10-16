@@ -36,12 +36,7 @@ export function PostcardFrame({
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
 
   // Format date for postcard (e.g., "15 · Jan")
-  const [day, month] = date
-    .split(" ")
-    .slice(0, 2)
-    .join(" ")
-    .split(" ")
-    .filter(Boolean);
+  const [day, month] = date.split(" ").slice(0, 2).join(" ").split(" ").filter(Boolean);
   const dateStr = `${day} · ${month}`;
 
   // Star display
@@ -85,9 +80,7 @@ export function PostcardFrame({
           {/* Bottom section - Date left, Stars right, Stamp top-right */}
           <div className="flex-[1] flex items-center justify-between px-2 py-1 relative">
             {/* Left: Date */}
-            <div className="text-xs font-semibold text-text-secondary tabular-nums">
-              {dateStr}
-            </div>
+            <div className="text-xs font-semibold text-text-secondary tabular-nums">{dateStr}</div>
 
             {/* Right: Stars */}
             <div className="text-xs leading-none">{starDisplay}</div>

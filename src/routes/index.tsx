@@ -4,7 +4,7 @@ import { SplashScreen } from "@/components/screens";
 import { useProgress, isHydrated } from "@/lib/progress";
 import { appLogger } from "@/lib/logger";
 
-appLogger.info('route_index', 'Index route loaded');
+appLogger.info("route_index", "Index route loaded");
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -35,15 +35,18 @@ function Splash() {
 
   // Wait for hydration to complete (with 3s timeout safety limit)
   useEffect(() => {
-    appLogger.info('splash_screen', 'Splash component rendering', { onboarded: p.onboarded, isHydrated: isHydrated() });
-    
+    appLogger.info("splash_screen", "Splash component rendering", {
+      onboarded: p.onboarded,
+      isHydrated: isHydrated(),
+    });
+
     if (isHydrated()) {
-      appLogger.info('splash_screen', 'Hydration already complete');
+      appLogger.info("splash_screen", "Hydration already complete");
       setIsReady(true);
       return;
     }
 
-    appLogger.info('splash_screen', 'Waiting for hydration...');
+    appLogger.info("splash_screen", "Waiting for hydration...");
     let isMounted = true;
     const startTime = Date.now();
     const maxWaitMs = 3000; // 3s timeout
@@ -53,11 +56,13 @@ function Splash() {
 
       const elapsed = Date.now() - startTime;
       if (isHydrated()) {
-        appLogger.info('splash_screen', 'Hydration complete', { elapsedMs: elapsed });
+        appLogger.info("splash_screen", "Hydration complete", { elapsedMs: elapsed });
         clearInterval(checkHydration);
         setIsReady(true);
       } else if (elapsed > maxWaitMs) {
-        appLogger.warn('splash_screen', 'Hydration timeout, proceeding with stale state', { elapsedMs: elapsed });
+        appLogger.warn("splash_screen", "Hydration timeout, proceeding with stale state", {
+          elapsedMs: elapsed,
+        });
         clearInterval(checkHydration);
         setIsReady(true);
       }
@@ -74,10 +79,14 @@ function Splash() {
       return;
     }
 
-    appLogger.info('splash_screen', 'Splash effect setup', { delay: 600 });
+    appLogger.info("splash_screen", "Splash effect setup", { delay: 600 });
     const t = setTimeout(() => {
       const destination = p.onboarded ? "/home" : "/welcome";
-      appLogger.info('splash_screen', 'Navigating after splash', { destination, onboarded: p.onboarded, isHydrated: isHydrated() });
+      appLogger.info("splash_screen", "Navigating after splash", {
+        destination,
+        onboarded: p.onboarded,
+        isHydrated: isHydrated(),
+      });
       navigate({ to: destination });
     }, 600);
     return () => clearTimeout(t);

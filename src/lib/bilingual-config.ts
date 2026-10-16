@@ -1,12 +1,12 @@
 /**
  * Bilingual States Configuration
- * 
+ *
  * Central source of truth for which states support bilingual content.
  * This allows scaling to multiple states without changing core logic.
- * 
+ *
  * Each state can have multiple language variants (en + native language).
  * Benchmark: Andhra Pradesh (English + Telugu)
- * 
+ *
  * Adding a new bilingual state:
  * 1. Add entry to BILINGUAL_STATES below
  * 2. Ensure content in states.json has {en: {...}, langCode: {...}} format for all cards
@@ -29,14 +29,14 @@ export interface BilingualStateConfig {
 
 /**
  * All bilingual states
- * 
+ *
  * Benchmark Pattern (Andhra Pradesh):
  * - English + Telugu
  * - Content stored as {en: {...}, te: {...}} in states.json
  * - Language toggle in learning hub only
  * - Quiz always in English
  * - User can switch in learning hub, state not persisted
- * 
+ *
  * To add new bilingual state:
  * 1. Duplicate AP pattern in states.json (create {en: {...}, langCode: {...}})
  * 2. Add entry to this array
@@ -277,10 +277,10 @@ export const BILINGUAL_STATES: BilingualStateConfig[] = [
 
 /**
  * Check if a state is bilingual
- * 
+ *
  * @param stateName - State name to check
  * @returns true if state has multiple languages
- * 
+ *
  * Usage:
  * ```tsx
  * if (isBilingual("Andhra Pradesh")) {
@@ -294,10 +294,10 @@ export function isBilingual(stateName: string): boolean {
 
 /**
  * Get available languages for a state
- * 
+ *
  * @param stateName - State name
  * @returns Array of language codes, defaults to ["en"] if not bilingual
- * 
+ *
  * Usage:
  * ```tsx
  * const langs = getAvailableLanguages("Andhra Pradesh"); // ["en", "te"]
@@ -311,10 +311,10 @@ export function getAvailableLanguages(stateName: string): LanguageCode[] {
 
 /**
  * Get native language for a state
- * 
+ *
  * @param stateName - State name
  * @returns Native language code, defaults to "en" if not bilingual
- * 
+ *
  * Usage:
  * ```tsx
  * const native = getNativeLanguage("Andhra Pradesh"); // "te"
@@ -328,12 +328,10 @@ export function getNativeLanguage(stateName: string): LanguageCode {
 
 /**
  * Get bilingual state config
- * 
+ *
  * @param stateName - State name
  * @returns Config object or undefined if not bilingual
  */
-export function getBilingualStateConfig(
-  stateName: string
-): BilingualStateConfig | undefined {
+export function getBilingualStateConfig(stateName: string): BilingualStateConfig | undefined {
   return BILINGUAL_STATES.find((s) => s.stateName === stateName);
 }

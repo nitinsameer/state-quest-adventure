@@ -3,15 +3,19 @@ import { INDIA_STATES, TOTAL_STATES, type IndiaState, type StateStatus } from ".
 import { firebaseEvents } from "./firebase-events";
 import type { StatePerformanceData, StatePerformanceMetrics } from "./state-performance-badges";
 import { calculatePerformanceBadges } from "./state-performance-badges";
-import { validateProgress, validateAppVersion, validateRecentlyCompleted } from "./localStorage-schema";
+import {
+  validateProgress,
+  validateAppVersion,
+  validateRecentlyCompleted,
+} from "./localStorage-schema";
 
 export type BadgeId = "monument" | "animal" | "explorer";
 
-export type PendingCelebration = 
+export type PendingCelebration =
   | {
-      type: 'full';
+      type: "full";
       stateName: string;
-      stars: '1' | '2' | '3';
+      stars: "1" | "2" | "3";
       correctCount: number;
       totalQuestions: number;
       quizXp: number;
@@ -28,24 +32,41 @@ export type PendingCelebration =
       sticker?: string;
     }
   | {
-      type: 'stars-improved';
+      type: "stars-improved";
       stateName: string;
-      oldStars: '1' | '2' | '3';
-      newStars: '1' | '2' | '3';
+      oldStars: "1" | "2" | "3";
+      newStars: "1" | "2" | "3";
       stampDate: string;
       step: number;
     };
 
 /** Achievement-based badge system - 20 badges across 4 tiers */
-export type AchievementBadgeId = 
+export type AchievementBadgeId =
   // Tier 1: Seedling
-  | "explorers-awakening" | "reader" | "quiz-starter" | "stamp-collector" | "fired-up"
+  | "explorers-awakening"
+  | "reader"
+  | "quiz-starter"
+  | "stamp-collector"
+  | "fired-up"
   // Tier 2: Growing
-  | "five-explorer" | "knowledge-keeper" | "quiz-master" | "artist" | "week-warrior" | "regional-champ" | "region-master"
+  | "five-explorer"
+  | "knowledge-keeper"
+  | "quiz-master"
+  | "artist"
+  | "week-warrior"
+  | "regional-champ"
+  | "region-master"
   // Tier 3: Mighty
-  | "ten-champion" | "master-reader" | "quiz-legend" | "unstoppable" | "postcard-master"
+  | "ten-champion"
+  | "master-reader"
+  | "quiz-legend"
+  | "unstoppable"
+  | "postcard-master"
   // Tier 4: Elite
-  | "india-conqueror" | "level-master" | "badge-collector" | "world-guardian";
+  | "india-conqueror"
+  | "level-master"
+  | "badge-collector"
+  | "world-guardian";
 
 export type AchievementBadgeTier = "seedling" | "growing" | "mighty" | "elite";
 
@@ -102,7 +123,7 @@ export type Progress = {
   /** NEW: Pending celebrations queue with full ceremony data (Task 12.2) */
   pendingCelebrations?: PendingCelebration[];
   /** NEW: Best stars per state (1, 2, or 3; kept on replay) */
-  stars?: Record<string, '1' | '2' | '3'>;
+  stars?: Record<string, "1" | "2" | "3">;
   /** NEW: Completed categories per state (tracks which categories earned the 25 XP reward) */
   categoryProgress?: Record<string, string[]>;
 };
@@ -125,9 +146,9 @@ export const XP_PER_CARD = 25;
 function generatePostcardData(stateName: string, badgeIds: BadgeId[]): PostcardData {
   // Get the highest badge earned (explorer > animal > monument)
   const badgePriority: Record<BadgeId, number> = { explorer: 3, animal: 2, monument: 1 };
-  const badge = badgeIds.reduce((best, current) => 
-    (badgePriority[current] > badgePriority[best] ? current : best),
-    badgeIds[0] || "monument"
+  const badge = badgeIds.reduce(
+    (best, current) => (badgePriority[current] > badgePriority[best] ? current : best),
+    badgeIds[0] || "monument",
   );
 
   return {
@@ -177,12 +198,12 @@ function persist() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
   } catch (error) {
     // FIX #23: Handle localStorage quota exceeded specifically
-    if (error instanceof DOMException && error.name === 'QuotaExceededError') {
+    if (error instanceof DOMException && error.name === "QuotaExceededError") {
       // Storage full - log to Firebase but keep in-memory state
       try {
         firebaseEvents.crash({
-          errorType: 'localStorage_quota_exceeded',
-          errorMessage: 'localStorage full - progress not persisted',
+          errorType: "localStorage_quota_exceeded",
+          errorMessage: "localStorage full - progress not persisted",
           ageBand: current.ageBand,
         });
       } catch {
@@ -197,13 +218,13 @@ function persist() {
  * Migrate progress data when app version changes.
  * Instead of clearing all data, this attempts to salvage valid fields from old data
  * and applies safe defaults to missing fields.
- * 
+ *
  * @param oldData Raw old progress data (may have old schema)
  * @returns Migrated progress data with all current fields, preserving valid old data
  */
 function migrateProgressVersion(oldData: any): Progress {
   const defaultData = defaultProgress();
-  
+
   // If oldData is null/undefined, return defaults
   if (!oldData) {
     return defaultData;
@@ -220,40 +241,100 @@ function migrateProgressVersion(oldData: any): Progress {
   // If a field is valid, keep it. If invalid, use the default for that field.
   const migrated: Progress = {
     // String fields - simple validation
-    name: typeof oldData.name === 'string' && oldData.name.length > 0 ? oldData.name : defaultData.name,
-    avatar: typeof oldData.avatar === 'string' && oldData.avatar.length > 0 ? oldData.avatar : defaultData.avatar,
-    ageBand: typeof oldData.ageBand === 'string' && /^\d+-\d+$/.test(oldData.ageBand) ? oldData.ageBand : defaultData.ageBand,
-    
+    name:
+      typeof oldData.name === "string" && oldData.name.length > 0 ? oldData.name : defaultData.name,
+    avatar:
+      typeof oldData.avatar === "string" && oldData.avatar.length > 0
+        ? oldData.avatar
+        : defaultData.avatar,
+    ageBand:
+      typeof oldData.ageBand === "string" && /^\d+-\d+$/.test(oldData.ageBand)
+        ? oldData.ageBand
+        : defaultData.ageBand,
+
     // Boolean fields
-    onboarded: typeof oldData.onboarded === 'boolean' ? oldData.onboarded : defaultData.onboarded,
-    
+    onboarded: typeof oldData.onboarded === "boolean" ? oldData.onboarded : defaultData.onboarded,
+
     // Number fields with validation
-    xp: typeof oldData.xp === 'number' && oldData.xp >= 0 && oldData.xp <= 999999 ? oldData.xp : defaultData.xp,
-    streak: typeof oldData.streak === 'number' && oldData.streak >= 0 ? oldData.streak : defaultData.streak,
-    
+    xp:
+      typeof oldData.xp === "number" && oldData.xp >= 0 && oldData.xp <= 999999
+        ? oldData.xp
+        : defaultData.xp,
+    streak:
+      typeof oldData.streak === "number" && oldData.streak >= 0
+        ? oldData.streak
+        : defaultData.streak,
+
     // Date string
-    lastActive: typeof oldData.lastActive === 'string' && /^\d{4}-\d{2}-\d{2}$|^$/.test(oldData.lastActive) ? oldData.lastActive : defaultData.lastActive,
-    
+    lastActive:
+      typeof oldData.lastActive === "string" && /^\d{4}-\d{2}-\d{2}$|^$/.test(oldData.lastActive)
+        ? oldData.lastActive
+        : defaultData.lastActive,
+
     // Array fields - validate as arrays of strings
-    completed: Array.isArray(oldData.completed) && oldData.completed.every((s: any) => typeof s === 'string') ? oldData.completed : defaultData.completed,
-    answered: Array.isArray(oldData.answered) && oldData.answered.every((s: any) => typeof s === 'string') ? oldData.answered : defaultData.answered,
-    
+    completed:
+      Array.isArray(oldData.completed) && oldData.completed.every((s: any) => typeof s === "string")
+        ? oldData.completed
+        : defaultData.completed,
+    answered:
+      Array.isArray(oldData.answered) && oldData.answered.every((s: any) => typeof s === "string")
+        ? oldData.answered
+        : defaultData.answered,
+
     // Record fields - validate as objects
-    stamps: typeof oldData.stamps === 'object' && oldData.stamps !== null && !Array.isArray(oldData.stamps) ? oldData.stamps : defaultData.stamps,
-    postcards: typeof oldData.postcards === 'object' && oldData.postcards !== null && !Array.isArray(oldData.postcards) ? oldData.postcards : defaultData.postcards,
-    badges: typeof oldData.badges === 'object' && oldData.badges !== null && !Array.isArray(oldData.badges) ? oldData.badges : defaultData.badges,
-    cards: typeof oldData.cards === 'object' && oldData.cards !== null && !Array.isArray(oldData.cards) ? oldData.cards : defaultData.cards,
-    
+    stamps:
+      typeof oldData.stamps === "object" &&
+      oldData.stamps !== null &&
+      !Array.isArray(oldData.stamps)
+        ? oldData.stamps
+        : defaultData.stamps,
+    postcards:
+      typeof oldData.postcards === "object" &&
+      oldData.postcards !== null &&
+      !Array.isArray(oldData.postcards)
+        ? oldData.postcards
+        : defaultData.postcards,
+    badges:
+      typeof oldData.badges === "object" &&
+      oldData.badges !== null &&
+      !Array.isArray(oldData.badges)
+        ? oldData.badges
+        : defaultData.badges,
+    cards:
+      typeof oldData.cards === "object" && oldData.cards !== null && !Array.isArray(oldData.cards)
+        ? oldData.cards
+        : defaultData.cards,
+
     // Optional record fields
-    replayCount: typeof oldData.replayCount === 'object' && oldData.replayCount !== null ? oldData.replayCount : defaultData.replayCount,
-    cardVisits: typeof oldData.cardVisits === 'object' && oldData.cardVisits !== null ? oldData.cardVisits : defaultData.cardVisits,
-    
+    replayCount:
+      typeof oldData.replayCount === "object" && oldData.replayCount !== null
+        ? oldData.replayCount
+        : defaultData.replayCount,
+    cardVisits:
+      typeof oldData.cardVisits === "object" && oldData.cardVisits !== null
+        ? oldData.cardVisits
+        : defaultData.cardVisits,
+
     // Optional fields - new in current version
-    lastPlayedState: typeof oldData.lastPlayedState === 'string' ? oldData.lastPlayedState : defaultData.lastPlayedState,
-    statePerformance: typeof oldData.statePerformance === 'object' && oldData.statePerformance !== null ? oldData.statePerformance : defaultData.statePerformance,
-    pendingCelebrations: Array.isArray(oldData.pendingCelebrations) ? oldData.pendingCelebrations : defaultData.pendingCelebrations,
-    stars: typeof oldData.stars === 'object' && oldData.stars !== null ? oldData.stars : defaultData.stars,
-    categoryProgress: typeof oldData.categoryProgress === 'object' && oldData.categoryProgress !== null ? oldData.categoryProgress : defaultData.categoryProgress,
+    lastPlayedState:
+      typeof oldData.lastPlayedState === "string"
+        ? oldData.lastPlayedState
+        : defaultData.lastPlayedState,
+    statePerformance:
+      typeof oldData.statePerformance === "object" && oldData.statePerformance !== null
+        ? oldData.statePerformance
+        : defaultData.statePerformance,
+    pendingCelebrations: Array.isArray(oldData.pendingCelebrations)
+      ? oldData.pendingCelebrations
+      : defaultData.pendingCelebrations,
+    stars:
+      typeof oldData.stars === "object" && oldData.stars !== null
+        ? oldData.stars
+        : defaultData.stars,
+    categoryProgress:
+      typeof oldData.categoryProgress === "object" && oldData.categoryProgress !== null
+        ? oldData.categoryProgress
+        : defaultData.categoryProgress,
   };
 
   return migrated;
@@ -268,7 +349,7 @@ function hydrate() {
     if (storedVersion !== APP_VERSION) {
       // Version mismatch - migrate old data instead of clearing
       const oldProgressRaw = localStorage.getItem(STORAGE_KEY);
-      
+
       if (oldProgressRaw) {
         try {
           const oldData = JSON.parse(oldProgressRaw);
@@ -282,31 +363,31 @@ function hydrate() {
           persist();
         }
       }
-      
+
       // Update version marker
       localStorage.setItem("india-explorer:app-version", APP_VERSION);
       emit();
       return;
     }
-    
+
     // BUX FIX #1: Add timeout to prevent blocking main thread on slow storage
     // Previously: localStorage.getItem() could block for 3+ seconds
     // Now: Uses timeout to unblock render, falls back to defaults
     let storageData: string | null = null;
     let timeoutOccurred = false;
     const startTime = Date.now();
-    
+
     // Set a timer to abort if localStorage is slow
     const timeout = setTimeout(() => {
       timeoutOccurred = true;
     }, 200); // 200ms timeout
-    
+
     try {
       storageData = localStorage.getItem(STORAGE_KEY);
     } finally {
       clearTimeout(timeout);
     }
-    
+
     if (timeoutOccurred) {
       // Track hydration timeout event (suppress console.warn in prod)
       try {
@@ -317,12 +398,11 @@ function hydrate() {
       } catch {
         // Firebase events not available
       }
-      
+
       emit();
       return;
     }
-    
-    
+
     if (storageData) {
       // CRITICAL FIX #1.5: Validate progress data with Zod schema
       const validated = validateProgress(storageData);
@@ -404,7 +484,7 @@ export function initializeHydration(): Promise<void> {
       resolve();
       return;
     }
-    
+
     isHydrating = true;
     hydrate();
     isHydrating = false;
@@ -440,9 +520,9 @@ export function saveProfile(profile: { name: string; avatar: string; ageBand: st
   });
 }
 
-/** 
+/**
  * Marks today as active and keeps the daily streak honest.
- * 
+ *
  * FIX #9: Use local date instead of UTC to fix timezone/DST issues
  * FIX #21: Handle empty lastActive string properly
  * Previously: Used toISOString() which returns UTC date
@@ -452,20 +532,20 @@ export function saveProfile(profile: { name: string; avatar: string; ageBand: st
 export function touchStreak() {
   // Get local date string (YYYY-MM-DD in user's timezone)
   const now = new Date();
-  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-  
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+
   set((p) => {
     if (p.lastActive === today) return p;
-    
+
     // FIX #21: Handle empty or missing lastActive
-    if (!p.lastActive || typeof p.lastActive !== 'string') {
+    if (!p.lastActive || typeof p.lastActive !== "string") {
       return { ...p, lastActive: today, streak: 1 };
     }
-    
+
     // Calculate yesterday's date in local timezone
     const yesterday = new Date(now.getTime() - 86400000);
-    const yesterdayStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
-    
+    const yesterdayStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, "0")}-${String(yesterday.getDate()).padStart(2, "0")}`;
+
     const streak = p.lastActive === yesterdayStr ? p.streak + 1 : 1;
     return { ...p, lastActive: today, streak };
   });
@@ -475,13 +555,17 @@ export function touchStreak() {
  * Check if streak has reached a milestone and return milestone info
  * Milestones: 7, 14, 30 day streaks
  */
-export function getStreakMilestone(streak: number): { reached: boolean; days: number; message: string } {
+export function getStreakMilestone(streak: number): {
+  reached: boolean;
+  days: number;
+  message: string;
+} {
   const milestones = [
     { days: 7, message: "Week Warrior! 🔥 7-day streak!" },
     { days: 14, message: "Fortnight Master! 🔥🔥 14-day streak!" },
     { days: 30, message: "Legend! 🔥🔥🔥 30-day streak!" },
   ];
-  
+
   for (const m of milestones) {
     if (streak === m.days) {
       return { reached: true, days: m.days, message: m.message };
@@ -490,16 +574,16 @@ export function getStreakMilestone(streak: number): { reached: boolean; days: nu
   return { reached: false, days: 0, message: "" };
 }
 
-/** 
+/**
  * Marks one learning card as read or replayed.
  * - First read: Awards 25 XP and records card index in cards[]
  * - Replay: Tracks replay count but does NOT award XP
- * 
+ *
  * FIX #3: Added state name validation to prevent orphaned data
  * FIX #17: Properly initialize replayCount per state
  * Previously: Didn't validate stateName exists; could create orphaned state records
  * Now: Verifies state exists in INDIA_STATES before marking
- * 
+ *
  * @param stateName Name of the state (e.g., "Rajasthan")
  * @param index Card index (0-5)
  * @param isReplay Whether user is replaying an already-read card
@@ -507,7 +591,7 @@ export function getStreakMilestone(streak: number): { reached: boolean; days: nu
 export function markCard(stateName: string, index: number, isReplay: boolean = false) {
   set((p) => {
     // FIX #3: Validate state exists to prevent orphaned data
-    const stateExists = INDIA_STATES.some(s => s.name === stateName);
+    const stateExists = INDIA_STATES.some((s) => s.name === stateName);
     if (!stateExists) {
       // Invalid state name - silently ignore
       return p;
@@ -526,16 +610,16 @@ export function markCard(stateName: string, index: number, isReplay: boolean = f
       // Create new array to avoid race condition
       // Each state gets a new array reference to track reads
       const updatedCards = { ...p.cards, [stateName]: [...read, index] };
-      
+
       // Track analytics
       firebaseEvents.cardRead({
         stateName,
         cardIndex: index,
         isReplay: false,
-      })
-      
-      firebaseEvents.xpEarned(XP_PER_CARD, 'card')
-      
+      });
+
+      firebaseEvents.xpEarned(XP_PER_CARD, "card");
+
       return {
         ...p,
         xp: p.xp + XP_PER_CARD,
@@ -549,13 +633,13 @@ export function markCard(stateName: string, index: number, isReplay: boolean = f
         stateName,
         cardIndex: index,
         isReplay: true,
-      })
-      
+      });
+
       // FIX #17: Properly initialize replayCount
       const replays = p.replayCount ?? {};
       const stateReplays = replays[stateName] ?? {};
       const currentCount = stateReplays[index] ?? 0;
-      
+
       return {
         ...p,
         replayCount: {
@@ -581,23 +665,23 @@ export function cardsDone(p: Progress, stateName: string): number {
   if (p.completed.includes(stateName)) {
     return CARDS_PER_STATE;
   }
-  
+
   // Get base card reads count
   const cardsReadCount = cardsRead(p, stateName).length;
-  
+
   // Add replay counts for cards that have been replayed
   const replayCount = p.replayCount?.[stateName];
   if (!replayCount || Object.keys(replayCount).length === 0) {
     return cardsReadCount;
   }
-  
+
   // Count unique cards (first reads + replayed cards)
   const uniqueCards = new Set(cardsRead(p, stateName));
-  Object.keys(replayCount).forEach(cardIndexStr => {
+  Object.keys(replayCount).forEach((cardIndexStr) => {
     const idx = parseInt(cardIndexStr, 10);
     uniqueCards.add(idx);
   });
-  
+
   return uniqueCards.size;
 }
 
@@ -606,35 +690,39 @@ export function cardsDone(p: Progress, stateName: string): number {
  * Returns a number 0-6 representing completed categories
  * Uses cardVisits structure which tracks cards visited in each category
  */
-export function completedCategoriesCount(p: Progress, stateName: string, allCards: Array<{ mainCardIndex: number; kicker?: string }>): number {
+export function completedCategoriesCount(
+  p: Progress,
+  stateName: string,
+  allCards: Array<{ mainCardIndex: number; kicker?: string }>,
+): number {
   const cardVisits = p.cardVisits?.[stateName];
-  
+
   console.log(`[completedCategoriesCount] State: ${stateName}`);
   console.log(`[completedCategoriesCount] Card visits: ${JSON.stringify(cardVisits)}`);
-  
+
   // Count how many categories are complete
   let completedCount = 0;
-  
+
   // Process each of the 6 main categories (0-5)
   for (let categoryIndex = 0; categoryIndex < 6; categoryIndex++) {
     // Get all cards in this category
-    const categoryCards = allCards.filter(card => card.mainCardIndex === categoryIndex);
-    
+    const categoryCards = allCards.filter((card) => card.mainCardIndex === categoryIndex);
+
     if (categoryCards.length === 0) {
       console.log(`[completedCategoriesCount] Category index ${categoryIndex}: NO CARDS DEFINED`);
       continue;
     }
-    
+
     // Get the kicker from the first main card in this category to derive the key
-    const mainCardInCategory = categoryCards.find(c => c.kicker);
+    const mainCardInCategory = categoryCards.find((c) => c.kicker);
     if (!mainCardInCategory) {
       console.log(`[completedCategoriesCount] Category index ${categoryIndex}: NO MAIN CARD FOUND`);
       continue;
     }
-    
+
     // Normalize the kicker to match how it's stored in cardVisits
-    const categoryKey = mainCardInCategory.kicker!.toLowerCase().replace(/\s+/g, '-');
-    
+    const categoryKey = mainCardInCategory.kicker!.toLowerCase().replace(/\s+/g, "-");
+
     // Special normalization for known variations
     let normalizedKey = categoryKey;
     if (categoryKey === "state-animal") {
@@ -642,21 +730,23 @@ export function completedCategoriesCount(p: Progress, stateName: string, allCard
     } else if (categoryKey === "fun-fact") {
       normalizedKey = "fact";
     }
-    
+
     // Get visited cards in this category
     const visitedIndices = cardVisits?.[normalizedKey] ?? [];
-    
-    console.log(`[completedCategoriesCount] Category index ${categoryIndex} (kicker="${mainCardInCategory.kicker}", key="${normalizedKey}"): ${categoryCards.length} total cards, ${visitedIndices.length} visited`);
-    
+
+    console.log(
+      `[completedCategoriesCount] Category index ${categoryIndex} (kicker="${mainCardInCategory.kicker}", key="${normalizedKey}"): ${categoryCards.length} total cards, ${visitedIndices.length} visited`,
+    );
+
     // Category is complete if all cards in it have been visited
     if (visitedIndices.length === categoryCards.length) {
       completedCount++;
       console.log(`[completedCategoriesCount] Category index ${categoryIndex}: COMPLETE ✓`);
     }
   }
-  
+
   console.log(`[completedCategoriesCount] FINAL RESULT: ${completedCount}/6 categories complete`);
-  
+
   return completedCount;
 }
 
@@ -668,23 +758,28 @@ export function completedCategoriesCount(p: Progress, stateName: string, allCard
  * @param cardIndex The index of the card within that category
  */
 export function markCardVisit(stateName: string, cardCategory: string, cardIndex: number) {
-  console.log(`[markCardVisit] ENTRY: state="${stateName}", category="${cardCategory}", cardIndex=${cardIndex}`);
-  
+  console.log(
+    `[markCardVisit] ENTRY: state="${stateName}", category="${cardCategory}", cardIndex=${cardIndex}`,
+  );
+
   set((p) => {
     const visits = p.cardVisits ?? {};
     const stateVisits = visits[stateName] ?? {};
     const categoryVisits = stateVisits[cardCategory] ?? [];
-    
+
     console.log(`[markCardVisit] Before: state cardVisits:`, stateVisits);
-    
+
     // Only add if not already present (avoid duplicates)
     if (!categoryVisits.includes(cardIndex)) {
       categoryVisits.push(cardIndex);
-      console.log(`[markCardVisit] Added cardIndex ${cardIndex}. New categoryVisits:`, categoryVisits);
+      console.log(
+        `[markCardVisit] Added cardIndex ${cardIndex}. New categoryVisits:`,
+        categoryVisits,
+      );
     } else {
       console.log(`[markCardVisit] CardIndex ${cardIndex} already present, skipping duplicate`);
     }
-    
+
     const updatedVisits = {
       ...visits,
       [stateName]: {
@@ -692,9 +787,9 @@ export function markCardVisit(stateName: string, cardCategory: string, cardIndex
         [cardCategory]: categoryVisits,
       },
     };
-    
+
     console.log(`[markCardVisit] After: complete cardVisits structure:`, updatedVisits);
-    
+
     return {
       ...p,
       cardVisits: updatedVisits,
@@ -709,16 +804,16 @@ export function markCardVisit(stateName: string, cardCategory: string, cardIndex
 export function getVisitedCardCount(p: Progress, stateName: string, cardCategory: string): number {
   const stateVisits = p.cardVisits?.[stateName];
   const visits = stateVisits?.[cardCategory];
-  
+
   console.log(`[getVisitedCardCount] state="${stateName}", category="${cardCategory}"`);
   console.log(`[getVisitedCardCount] stateVisits:`, stateVisits);
   console.log(`[getVisitedCardCount] visits for category:`, visits);
-  
+
   if (!visits) {
     console.log(`[getVisitedCardCount] No visits found, returning 0`);
     return 0;
   }
-  
+
   const count = Array.isArray(visits) ? visits.length : 0;
   console.log(`[getVisitedCardCount] Returning count: ${count}`);
   return count;
@@ -728,7 +823,12 @@ export function getVisitedCardCount(p: Progress, stateName: string, cardCategory
  * Check if a card has been visited
  * @returns true if user has opened this card before
  */
-export function isCardVisited(p: Progress, stateName: string, cardCategory: string, cardIndex: number): boolean {
+export function isCardVisited(
+  p: Progress,
+  stateName: string,
+  cardCategory: string,
+  cardIndex: number,
+): boolean {
   const visits = p.cardVisits?.[stateName]?.[cardCategory];
   if (!visits) return false;
   return Array.isArray(visits) ? visits.includes(cardIndex) : false;
@@ -756,30 +856,30 @@ export function addXP(amount: number, questionId?: string) {
     // FIX #8: Add rate limiting with timestamp validation
     // Previously: Accepted negative XP, empty string defeated deduplication, no cooldown
     // Now: Validates amount > 0, explicit null/empty/undefined checks, cooldown between awards
-    
+
     // Validate XP amount is positive
     if (amount <= 0) {
       return p;
     }
-    
+
     // FIX #4: Explicit validation for questionId (not falsy check)
     // Empty string, null, undefined should not trigger dedup but also not be stored
     // This prevents the empty-string-bypass attack on deduplication
-    if (questionId !== undefined && questionId !== null && questionId !== '') {
+    if (questionId !== undefined && questionId !== null && questionId !== "") {
       // Has valid questionId: check deduplication
       if (p.answered.includes(questionId)) {
         return p; // Already answered this question
       }
     }
-    
+
     // Track analytics
-    firebaseEvents.xpEarned(amount, 'quiz')
-    
+    firebaseEvents.xpEarned(amount, "quiz");
+
     return {
       ...p,
       xp: p.xp + amount,
       // FIX #4: Only add questionId if it's a valid non-empty string
-      answered: (questionId && questionId !== '') ? [...p.answered, questionId] : p.answered,
+      answered: questionId && questionId !== "" ? [...p.answered, questionId] : p.answered,
     };
   });
 }
@@ -797,14 +897,14 @@ function stampDate() {
  */
 export function recordStatePerformance(
   stateName: string,
-  timeToComplete: number,        // in milliseconds
+  timeToComplete: number, // in milliseconds
   quizAttempts: number,
-  quizScore: number,             // 0-100
+  quizScore: number, // 0-100
   cardsReplayed: number = 0,
 ) {
   set((p) => {
     // Validate state
-    const stateExists = INDIA_STATES.some(s => s.name === stateName);
+    const stateExists = INDIA_STATES.some((s) => s.name === stateName);
     if (!stateExists) return p;
 
     // Calculate which badges are earned
@@ -819,7 +919,7 @@ export function recordStatePerformance(
 
     // Record performance metrics
     const statePerformance = p.statePerformance ?? {};
-    
+
     return {
       ...p,
       statePerformance: {
@@ -852,15 +952,15 @@ export function getStatePerformance(p: Progress, stateName: string) {
  * 6+ correct = 3 stars, 4+ = 2 stars, 0-3 = 1 star
  * Nobody gets stuck on a low score.
  */
-export function calculateStars(totalCorrect: number, totalQuestions: number): '1' | '2' | '3' {
+export function calculateStars(totalCorrect: number, totalQuestions: number): "1" | "2" | "3" {
   const correctCount = totalCorrect;
-  
+
   if (correctCount >= 6) {
-    return '3';
+    return "3";
   } else if (correctCount >= 4) {
-    return '2';
+    return "2";
   } else {
-    return '1';
+    return "1";
   }
 }
 
@@ -874,12 +974,12 @@ export function completeCategory(stateName: string, categoryName: string) {
     // Get current categoryProgress or initialize
     const categoryProgress = p.categoryProgress ?? {};
     const stateCategories = categoryProgress[stateName] ?? [];
-    
+
     // Don't re-award XP for already completed categories
     if (stateCategories.includes(categoryName)) {
       return p;
     }
-    
+
     return {
       ...p,
       xp: p.xp + 25,
@@ -893,32 +993,32 @@ export function completeCategory(stateName: string, categoryName: string) {
 
 /**
  * ATOMIC COMPLETION: Finish quiz and complete state in one operation
- * 
+ *
  * This function combines:
  * 1. recordStatePerformance (calculate and store badges)
  * 2. completeState (add XP, stamp, postcard)
  * 3. markRecentlyCompleted (queue celebration for home screen)
  * 4. Store best stars (keep highest, never decrease on replay)
- * 
+ *
  * All in a SINGLE set() call to ensure data consistency.
  * Called from QuizScreen when the last answer is confirmed, before navigation.
- * 
+ *
  * @param stateName The state that was completed
  * @param metrics Quiz metrics { timeToComplete, quizAttempts, quizScore, correctCount }
  */
 export function finishQuiz(
   stateName: string,
   metrics: {
-    timeToComplete: number;        // in milliseconds
+    timeToComplete: number; // in milliseconds
     quizAttempts: number;
-    quizScore: number;             // 0-100
-    correctCount?: number;          // number of correct answers (new)
+    quizScore: number; // 0-100
+    correctCount?: number; // number of correct answers (new)
     cardsReplayed?: number;
   },
 ) {
   set((p) => {
     // Validate state exists
-    const stateExists = INDIA_STATES.some(s => s.name === stateName);
+    const stateExists = INDIA_STATES.some((s) => s.name === stateName);
     if (!stateExists) {
       return p;
     }
@@ -928,29 +1028,31 @@ export function finishQuiz(
     // 6+ = 3 stars, 4+ = 2 stars, 0-3 = 1 star (nobody stuck on low score)
     const correctCount = metrics.correctCount ?? 0;
     const newStars = calculateStars(correctCount, 6);
-    
+
     // Keep best stars on replay (never decrease)
     const currentBestStars = p.stars?.[stateName];
-    const bestStars = currentBestStars 
-      ? (parseInt(currentBestStars) > parseInt(newStars) ? currentBestStars : newStars)
+    const bestStars = currentBestStars
+      ? parseInt(currentBestStars) > parseInt(newStars)
+        ? currentBestStars
+        : newStars
       : newStars;
 
     // Check if this is a replay (state already completed)
     const isReplay = p.completed.includes(stateName);
-    
+
     // On replay: handle stars-improved case
     if (isReplay) {
       // If stars improved, queue a stars-improved celebration
-      if (parseInt(newStars) > parseInt(currentBestStars || '0')) {
+      if (parseInt(newStars) > parseInt(currentBestStars || "0")) {
         return {
           ...p,
           stars: { ...p.stars, [stateName]: bestStars },
           pendingCelebrations: [
             ...(p.pendingCelebrations ?? []),
             {
-              type: 'stars-improved',
+              type: "stars-improved",
               stateName,
-              oldStars: currentBestStars || ('1' as const),
+              oldStars: currentBestStars || ("1" as const),
               newStars: bestStars,
               stampDate: stampDate(),
               step: 0,
@@ -983,7 +1085,7 @@ export function finishQuiz(
     // 3. Record performance metrics and complete state in one atomic update
     const statePerformance = p.statePerformance ?? {};
     const xpReward = 100; // State completion bonus
-    
+
     // 4. Calculate quiz XP (20 per first-time correct answer)
     const quizXp = correctCount * 20;
 
@@ -1001,29 +1103,68 @@ export function finishQuiz(
     }
 
     // Sync postcard to library (async, doesn't block)
-    import("@/lib/postcard-integration").then(({ syncNewPostcardToLibrary }) => {
-      const badge = earnedQuizBadges[earnedQuizBadges.length - 1] || "explorer";
-      syncNewPostcardToLibrary(stateName, badge, stampDateStr, generatedAtStr);
-    }).catch((err) => {
-      console.error("[finishQuiz] Failed to sync postcard to library", err);
-    });
+    import("@/lib/postcard-integration")
+      .then(({ syncNewPostcardToLibrary }) => {
+        const badge = earnedQuizBadges[earnedQuizBadges.length - 1] || "explorer";
+        syncNewPostcardToLibrary(stateName, badge, stampDateStr, generatedAtStr);
+      })
+      .catch((err) => {
+        console.error("[finishQuiz] Failed to sync postcard to library", err);
+      });
 
     // 5. Determine region info (inline helpers to avoid circular import)
     // Find which region a state belongs to
-    let regionKey = 'north';
+    let regionKey = "north";
     let regionTotal = 6;
-    
+
     // Check all known regions (from passport-helpers REGIONS)
     const REGION_MAPPINGS: Record<string, { states: string[]; total: number }> = {
-      north: { states: ['Punjab', 'Haryana', 'Himachal Pradesh', 'Uttarakhand', 'Uttar Pradesh', 'Rajasthan'], total: 6 },
-      south: { states: ['Andhra Pradesh', 'Telangana', 'Karnataka', 'Kerala', 'Tamil Nadu'], total: 5 },
-      east: { states: ['West Bengal', 'Odisha', 'Bihar', 'Jharkhand'], total: 4 },
-      central: { states: ['Madhya Pradesh', 'Chhattisgarh'], total: 2 },
-      west: { states: ['Gujarat', 'Maharashtra', 'Goa'], total: 3 },
-      northeast: { states: ['Assam', 'Arunachal Pradesh', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Sikkim', 'Tripura'], total: 8 },
-      unionTerritories: { states: ['Delhi', 'Jammu & Kashmir', 'Ladakh', 'Chandigarh', 'Puducherry', 'Andaman & Nicobar Islands', 'Lakshadweep', 'Dadra & Nagar Haveli and Daman & Diu'], total: 8 },
+      north: {
+        states: [
+          "Punjab",
+          "Haryana",
+          "Himachal Pradesh",
+          "Uttarakhand",
+          "Uttar Pradesh",
+          "Rajasthan",
+        ],
+        total: 6,
+      },
+      south: {
+        states: ["Andhra Pradesh", "Telangana", "Karnataka", "Kerala", "Tamil Nadu"],
+        total: 5,
+      },
+      east: { states: ["West Bengal", "Odisha", "Bihar", "Jharkhand"], total: 4 },
+      central: { states: ["Madhya Pradesh", "Chhattisgarh"], total: 2 },
+      west: { states: ["Gujarat", "Maharashtra", "Goa"], total: 3 },
+      northeast: {
+        states: [
+          "Assam",
+          "Arunachal Pradesh",
+          "Manipur",
+          "Meghalaya",
+          "Mizoram",
+          "Nagaland",
+          "Sikkim",
+          "Tripura",
+        ],
+        total: 8,
+      },
+      unionTerritories: {
+        states: [
+          "Delhi",
+          "Jammu & Kashmir",
+          "Ladakh",
+          "Chandigarh",
+          "Puducherry",
+          "Andaman & Nicobar Islands",
+          "Lakshadweep",
+          "Dadra & Nagar Haveli and Daman & Diu",
+        ],
+        total: 8,
+      },
     };
-    
+
     for (const [key, region] of Object.entries(REGION_MAPPINGS)) {
       if (region.states.includes(stateName)) {
         regionKey = key;
@@ -1031,20 +1172,23 @@ export function finishQuiz(
         break;
       }
     }
-    
+
     // Count completed states in this region
     const regionInfo = REGION_MAPPINGS[regionKey];
-    const regionDone = regionInfo.states.filter(s => [...p.completed, stateName].includes(s)).length;
+    const regionDone = regionInfo.states.filter((s) =>
+      [...p.completed, stateName].includes(s),
+    ).length;
 
     // 6. Build list of badges to display in ceremony (state badges + achievement badges like region-master)
     // earnedQuizBadges only contains state badges (monument, animal, explorer)
     const ceremonyBadgeIds: (BadgeId | string)[] = [...earnedQuizBadges];
-    
+
     // Check if Region Master badge should be awarded (Task 12.8)
     // Award if: region just completed AND badge not already earned
     const regionMasterBadgeId = `region-master-${regionKey}`;
-    const hasRegionMasterBadge = p.badges?.['_achievements']?.some((id: any) => id === regionMasterBadgeId) ?? false;
-    
+    const hasRegionMasterBadge =
+      p.badges?.["_achievements"]?.some((id: any) => id === regionMasterBadgeId) ?? false;
+
     if (regionDone === regionTotal && !hasRegionMasterBadge) {
       // Add to ceremony display badges (but don't modify earnedQuizBadges which is state-only)
       ceremonyBadgeIds.push(regionMasterBadgeId);
@@ -1090,7 +1234,7 @@ export function finishQuiz(
       pendingCelebrations: [
         ...(p.pendingCelebrations ?? []),
         {
-          type: 'full',
+          type: "full",
           stateName,
           stars: bestStars,
           correctCount,
@@ -1120,67 +1264,69 @@ export function finishQuiz(
 export function getTotalPerformanceBadges(p: Progress): number {
   let total = 0;
   if (!p.statePerformance) return total;
-  
+
   Object.values(p.statePerformance).forEach((metrics) => {
     total += metrics.earnedPerformanceBadges?.length ?? 0;
   });
-  
+
   return total;
 }
 
 export function completeState(name: string, xpReward = 100) {
   set((p) => {
     if (p.completed.includes(name)) return p;
-    
+
     // FIX #16: Add state validation to prevent orphaned data
     // Previously: Didn't validate state exists in INDIA_STATES
     // Now: Checks state is real before marking complete
-    const stateExists = INDIA_STATES.some(s => s.name === name);
+    const stateExists = INDIA_STATES.some((s) => s.name === name);
     if (!stateExists) {
       return p; // Invalid state - don't mark as complete
     }
-    
+
     // Only include badges that were actually earned
     const earnedBadges = p.badges?.[name] ?? [];
-    
+
     const stampDateStr = stampDate();
     const generatedAtStr = new Date().toISOString();
-    
+
     // Track analytics
-    const timeToCompleteSeconds = p.stamps[name] 
+    const timeToCompleteSeconds = p.stamps[name]
       ? Math.round((Date.now() - new Date(p.stamps[name]).getTime()) / 1000)
-      : 0
-    
+      : 0;
+
     firebaseEvents.stateCompleted({
       stateName: name,
       totalXp: p.xp + xpReward,
       totalCards: CARDS_PER_STATE,
       timeToCompleteSeconds,
       streakAtCompletion: p.streak,
-    })
-    
+    });
+
     // Check if this is first state completion (milestone)
     if (p.completed.length === 0) {
-      firebaseEvents.firstStateCompleted()
+      firebaseEvents.firstStateCompleted();
     }
-    
+
     // Proposal C: Sync new postcard to library (async, doesn't block state update)
     // Import is deferred to avoid circular dependency
-    import("@/lib/postcard-integration").then(({ syncNewPostcardToLibrary }) => {
-      const badge = earnedBadges[earnedBadges.length - 1] || "explorer";
-      syncNewPostcardToLibrary(name, badge, stampDateStr, generatedAtStr);
-    }).catch((err) => {
-      console.error("[completeState] Failed to sync postcard to library", err);
-    });
-    
+    import("@/lib/postcard-integration")
+      .then(({ syncNewPostcardToLibrary }) => {
+        const badge = earnedBadges[earnedBadges.length - 1] || "explorer";
+        syncNewPostcardToLibrary(name, badge, stampDateStr, generatedAtStr);
+      })
+      .catch((err) => {
+        console.error("[completeState] Failed to sync postcard to library", err);
+      });
+
     return {
       ...p,
       xp: p.xp + xpReward,
       completed: [...p.completed, name],
       stamps: { ...p.stamps, [name]: stampDateStr },
-      postcards: { 
-        ...p.postcards, 
-        [name]: generatePostcardData(name, earnedBadges) 
+      postcards: {
+        ...p.postcards,
+        [name]: generatePostcardData(name, earnedBadges),
       },
       badges: { ...p.badges, [name]: earnedBadges },
       lastPlayedState: name,
@@ -1195,11 +1341,11 @@ export function completeState(name: string, xpReward = 100) {
 export function setLastPlayedState(stateName: string) {
   set((p) => {
     // Validate state exists
-    const stateExists = INDIA_STATES.some(s => s.name === stateName);
+    const stateExists = INDIA_STATES.some((s) => s.name === stateName);
     if (!stateExists) {
       return p; // Invalid state - don't update
     }
-    
+
     return {
       ...p,
       lastPlayedState: stateName,
@@ -1236,16 +1382,16 @@ export function levelInfo(xp: number) {
  * Names scale from beginner to master explorer
  */
 export const LEVEL_NAMES = [
-  "Curious Learner",      // Level 1 (0-399 XP)
-  "Wandering Explorer",   // Level 2 (400-799 XP)
-  "State Scout",          // Level 3 (800-1199 XP)
-  "Regional Navigator",   // Level 4 (1200-1599 XP)
-  "India Voyager",        // Level 5 (1600-1999 XP)
-  "Geography Champion",   // Level 6 (2000+ XP)
-  "Subcontinent Master",  // Level 7
-  "Cultural Ambassador",  // Level 8
-  "National Legend",      // Level 9
-  "India's Greatest",     // Level 10+
+  "Curious Learner", // Level 1 (0-399 XP)
+  "Wandering Explorer", // Level 2 (400-799 XP)
+  "State Scout", // Level 3 (800-1199 XP)
+  "Regional Navigator", // Level 4 (1200-1599 XP)
+  "India Voyager", // Level 5 (1600-1999 XP)
+  "Geography Champion", // Level 6 (2000+ XP)
+  "Subcontinent Master", // Level 7
+  "Cultural Ambassador", // Level 8
+  "National Legend", // Level 9
+  "India's Greatest", // Level 10+
 ];
 
 /**
@@ -1260,13 +1406,13 @@ export function getLevelName(level: number): string {
 
 /**
  * Get all states with their progress status
- * 
+ *
  * ENGAGEMENT OPTIMIZATION: All 36 states unlocked from day 1
  * - Kids can explore freely instead of linear progression
  * - Increases dopamine: freedom + discovery
  * - First state is still marked "current" for guided experience
  * - All others are "available" (not locked)
- * 
+ *
  * This drives higher engagement because:
  * 1. Kids see all 36 states available
  * 2. Ownership feeling: "I can go anywhere!"
@@ -1275,13 +1421,13 @@ export function getLevelName(level: number): string {
  */
 export function statesWithProgress(p: Progress): IndiaState[] {
   let currentUsed = false;
-  
+
   // ENGAGEMENT MODE: All states open from day 1 - free exploration
   // Always mark the first uncompleted state as "current" for guided progression
   return INDIA_STATES.map((s) => {
     const done = p.completed.includes(s.name);
     let status: StateStatus = "available"; // Changed from "locked" to "available"
-    
+
     if (done) {
       status = "done";
     } else if (!currentUsed) {
@@ -1291,7 +1437,7 @@ export function statesWithProgress(p: Progress): IndiaState[] {
       currentUsed = true;
     }
     // All other uncompleted states are "available" (not locked)
-    
+
     return { ...s, status, date: p.stamps[s.name] ?? undefined };
   });
 }
@@ -1352,12 +1498,12 @@ function anyRegionCompleted(p: Progress): number {
   // For simplicity, we'll check if we have completed states from different regions
   // This is a basic implementation - can be refined based on region definitions
   const completedSet = new Set(p.completed);
-  let regionsCompleted = 0;
+  const regionsCompleted = 0;
 
   // Group states by region (simplified - you may need to adjust based on actual region grouping)
   // For now, we'll consider a region "complete" if we've completed 3+ adjacent states
   // This is placeholder logic that can be refined
-  
+
   // For this MVP, return 1 if any completion exists (simplification)
   return p.completed.length > 0 ? Math.min(1, Math.floor(p.completed.length / 4)) : 0;
 }
@@ -1436,7 +1582,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     max: INDIA_STATES.length,
     value: (p) => p.completed.length,
   },
-  
+
   // New 16 achievements
   {
     id: "streak-starter",
@@ -1848,7 +1994,10 @@ export function achievementBadgesFor(p: Progress): AchievementBadge[] {
   });
 }
 
-export function achievementBadgesForTier(p: Progress, tier: AchievementBadgeTier): AchievementBadge[] {
+export function achievementBadgesForTier(
+  p: Progress,
+  tier: AchievementBadgeTier,
+): AchievementBadge[] {
   return achievementBadgesFor(p).filter((b) => b.tier === tier);
 }
 
@@ -1860,21 +2009,25 @@ export function unlockedAchievementBadgeCount(p: Progress): number {
  * Check if streak is at risk (12+ hours since last activity)
  * Returns object with risk status and hours since last active
  */
-export function getStreakStatus(p: Progress): { isAtRisk: boolean; hoursSinceActive: number; lastActiveDate: string } {
+export function getStreakStatus(p: Progress): {
+  isAtRisk: boolean;
+  hoursSinceActive: number;
+  lastActiveDate: string;
+} {
   if (!p.lastActive || p.streak === 0) {
     return { isAtRisk: false, hoursSinceActive: 0, lastActiveDate: "" };
   }
 
   const now = new Date();
-  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-  
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+
   // If played today, no risk
   if (p.lastActive === today) {
     return { isAtRisk: false, hoursSinceActive: 0, lastActiveDate: today };
   }
 
   // Parse last active date and calculate hours difference
-  const [year, month, day] = p.lastActive.split('-').map(Number);
+  const [year, month, day] = p.lastActive.split("-").map(Number);
   const lastActiveTime = new Date(year, month - 1, day, 23, 59, 59); // End of last active day
   const hoursSince = Math.floor((now.getTime() - lastActiveTime.getTime()) / (1000 * 60 * 60));
 
@@ -1883,7 +2036,6 @@ export function getStreakStatus(p: Progress): { isAtRisk: boolean; hoursSinceAct
 
   return { isAtRisk, hoursSinceActive: hoursSince, lastActiveDate: p.lastActive };
 }
-
 
 /**
  * Get the next locked achievement badge (for achievement preview on home)
@@ -1894,21 +2046,22 @@ export function getNextAchievementBadge(p: Progress): AchievementBadge | null {
   return allBadges.find((b) => !b.unlocked) || null;
 }
 
-
 /**
  * Get all postcards as an array sorted by state order
  * Includes total stamp count and percentage
  */
 export function getPostcardsArray(p: Progress): (PostcardData & { stateName: string })[] {
-  return Object.entries(p.postcards).map(([stateName, data]) => ({
-    ...data,
-    stateName,
-  })).sort((a, b) => {
-    // Sort by state order (appearance in INDIA_STATES)
-    const aIndex = INDIA_STATES.findIndex(s => s.name === a.stateName);
-    const bIndex = INDIA_STATES.findIndex(s => s.name === b.stateName);
-    return aIndex - bIndex;
-  });
+  return Object.entries(p.postcards)
+    .map(([stateName, data]) => ({
+      ...data,
+      stateName,
+    }))
+    .sort((a, b) => {
+      // Sort by state order (appearance in INDIA_STATES)
+      const aIndex = INDIA_STATES.findIndex((s) => s.name === a.stateName);
+      const bIndex = INDIA_STATES.findIndex((s) => s.name === b.stateName);
+      return aIndex - bIndex;
+    });
 }
 
 /**
@@ -1918,11 +2071,10 @@ export function getTotalStampCount(): number {
   return TOTAL_STATES;
 }
 
-
 /**
  * Check if a state was completed recently (within last 5 minutes)
  * Used to show celebration banner on home screen
- * 
+ *
  * CRITICAL FIX #1.5: Validate recently completed data with Zod schema
  */
 export function getRecentlyCompletedState(p: Progress): string | null {
@@ -1930,10 +2082,10 @@ export function getRecentlyCompletedState(p: Progress): string | null {
 
   const recentKey = "india-explorer:recently-completed:v1";
   const stored = localStorage.getItem(recentKey);
-  
+
   // CRITICAL FIX #1.5: Validate with Zod schema
   const validated = validateRecentlyCompleted(stored);
-  
+
   if (!validated) return null;
 
   try {
@@ -1954,7 +2106,7 @@ export function getRecentlyCompletedState(p: Progress): string | null {
 
 /**
  * Mark a state as recently completed (called after state completion)
- * 
+ *
  * CRITICAL FIX #1.5: Type-safe storage with Zod validation
  */
 export function markRecentlyCompleted(stateName: string) {
@@ -1962,10 +2114,13 @@ export function markRecentlyCompleted(stateName: string) {
 
   const recentKey = "india-explorer:recently-completed:v1";
   try {
-    localStorage.setItem(recentKey, JSON.stringify({
-      stateName,
-      timestamp: Date.now(),
-    }));
+    localStorage.setItem(
+      recentKey,
+      JSON.stringify({
+        stateName,
+        timestamp: Date.now(),
+      }),
+    );
   } catch (err) {
     // Storage error - fail silently
   }
@@ -1989,12 +2144,12 @@ export function clearRecentlyCompleted() {
 export function updateCeremonyStep(step: number) {
   set((p) => {
     if (!p.pendingCelebrations?.length) return p;
-    
+
     const updated = [...p.pendingCelebrations];
-    if (updated[0].type === 'full') {
+    if (updated[0].type === "full") {
       updated[0] = { ...updated[0], step };
     }
-    
+
     return {
       ...p,
       pendingCelebrations: updated,
@@ -2008,7 +2163,7 @@ export function updateCeremonyStep(step: number) {
 export function dismissPendingCelebration() {
   set((p) => {
     if (!p.pendingCelebrations?.length) return p;
-    
+
     return {
       ...p,
       pendingCelebrations: p.pendingCelebrations.slice(1),
@@ -2016,14 +2171,13 @@ export function dismissPendingCelebration() {
   });
 }
 
-
 /* ========== TESTING UTILITIES (DEV ONLY) ========== */
 
 /**
  * Export testing utilities to window for E2E tests
  * Only enabled in development mode
  */
-if (typeof window !== 'undefined' && (import.meta.env.DEV || (window as any).__TEST_MODE__)) {
+if (typeof window !== "undefined" && (import.meta.env.DEV || (window as any).__TEST_MODE__)) {
   (window as any).getProgressStateForTesting = () => ({
     completed: current.completed,
     xp: current.xp,
@@ -2036,7 +2190,7 @@ if (typeof window !== 'undefined' && (import.meta.env.DEV || (window as any).__T
 
   (window as any).completeStateForTesting = (stateName: string) => {
     // Validate state exists
-    const stateExists = INDIA_STATES.some(s => s.name === stateName);
+    const stateExists = INDIA_STATES.some((s) => s.name === stateName);
     if (!stateExists) {
       console.error(`[TEST] Invalid state: ${stateName}`);
       return;
@@ -2064,7 +2218,7 @@ if (typeof window !== 'undefined' && (import.meta.env.DEV || (window as any).__T
 
   (window as any).getMotivationalMessageForTesting = () => {
     const completionPercentage = Math.round((current.completed.length / 36) * 100);
-    
+
     if (completionPercentage === 0) {
       return "🚀 Start exploring to unlock milestones!";
     } else if (completionPercentage === 100) {
@@ -2079,8 +2233,10 @@ if (typeof window !== 'undefined' && (import.meta.env.DEV || (window as any).__T
   };
 
   (window as any).getMilestoneStateForTesting = () => {
-    return current.completed.length >= 5 ? 'reached' : 'locked';
+    return current.completed.length >= 5 ? "reached" : "locked";
   };
 
-  console.log('[TESTING] Window testing APIs available: getProgressStateForTesting, completeStateForTesting, resetProgressForTesting');
+  console.log(
+    "[TESTING] Window testing APIs available: getProgressStateForTesting, completeStateForTesting, resetProgressForTesting",
+  );
 }

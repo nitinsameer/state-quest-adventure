@@ -20,13 +20,13 @@ export interface CelebrationConfig {
 interface CelebrationStore {
   queue: CelebrationConfig[];
   current: CelebrationConfig | null;
-  
+
   // Show a celebration popup
   show: (config: Omit<CelebrationConfig, "id">) => void;
-  
+
   // Dismiss current popup and show next in queue
   dismiss: () => void;
-  
+
   // Clear all queued popups
   clearQueue: () => void;
 }

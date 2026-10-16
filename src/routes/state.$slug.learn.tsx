@@ -11,7 +11,12 @@ export const Route = createFileRoute("/state/$slug/learn")({
   },
   head: ({ loaderData }) => {
     if (!loaderData) {
-      return { meta: [{ title: "Lesson unavailable — India Explorer" }, { name: "robots", content: "noindex" }] };
+      return {
+        meta: [
+          { title: "Lesson unavailable — India Explorer" },
+          { name: "robots", content: "noindex" },
+        ],
+      };
     }
     const title = `${loaderData.name} Learning Hub — India Explorer`;
     const description = `Learn about ${loaderData.name}: capital, language, food, famous places, animals and fun facts.`;
@@ -35,21 +40,21 @@ function Hub() {
   const { slug } = Route.useParams();
   const { name } = Route.useLoaderData();
   const navigate = useNavigate();
-  console.log('[LearnRoute] Hub component mounted/updated with slug:', slug, 'name:', name);
+  console.log("[LearnRoute] Hub component mounted/updated with slug:", slug, "name:", name);
   return (
     <LearningHubScreen
       key={slug}
       stateName={name}
       onBack={() => {
-        console.log('[LearnRoute] onBack clicked');
+        console.log("[LearnRoute] onBack clicked");
         navigate({ to: "/state/$slug", params: { slug } });
       }}
       onQuiz={() => {
-        console.log('[LearnRoute] onQuiz clicked');
+        console.log("[LearnRoute] onQuiz clicked");
         navigate({ to: "/state/$slug/quiz", params: { slug } });
       }}
       onCard={(index) => {
-        console.log('[LearnRoute] onCard clicked with index:', index);
+        console.log("[LearnRoute] onCard clicked with index:", index);
         navigate({ to: "/state/$slug/card/$index", params: { slug, index: String(index) } });
       }}
     />

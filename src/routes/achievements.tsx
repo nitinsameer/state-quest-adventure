@@ -7,7 +7,8 @@ export const Route = createFileRoute("/achievements")({
       { title: "Achievements — India Explorer" },
       {
         name: "description",
-        content: "Milestones for states explored, badges earned, stamps collected and quiz mastery.",
+        content:
+          "Milestones for states explored, badges earned, stamps collected and quiz mastery.",
       },
       { property: "og:title", content: "Achievements" },
       { property: "og:description", content: "Unlock milestones as you explore more of India." },

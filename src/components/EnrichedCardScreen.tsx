@@ -17,7 +17,7 @@ const extractText = (value: string | AgeTaggedContent): string => {
 
 const extractTextArray = (value: string[] | AgeTaggedContent[]): string[] => {
   if (!value) return [];
-  return value.map(v => typeof v === "string" ? v : v.text);
+  return value.map((v) => (typeof v === "string" ? v : v.text));
 };
 
 const CARD_COLORS = [
@@ -61,7 +61,7 @@ export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: st
   const colors = CARD_COLORS[activeTab];
 
   // Guard: ensure currentCard has required properties
-  if (!currentCard || !('title' in currentCard && 'emoji' in currentCard)) {
+  if (!currentCard || !("title" in currentCard && "emoji" in currentCard)) {
     return (
       <div className="h-full w-full bg-page flex flex-col items-center justify-center gap-(--gap-base) p-(--padding-lg)">
         <div className="text-4xl">❌</div>
@@ -127,17 +127,17 @@ export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: st
           {cards.map((card, index) => {
             const safeCard = card as typeof card & { emoji: string };
             return (
-            <button
-              key={index}
-              onClick={() => handleTabChange(index)}
-              className={`flex-shrink-0 h-14 px-(--padding-sm) rounded-2xl transition-all font-extrabold text-display text-sm ${
-                activeTab === index
-                  ? `${CARD_COLORS[index].bg} border-2 ${CARD_COLORS[index].border} shadow-md scale-105`
-                  : "bg-surface-card/50 border-2 border-transparent hover:bg-surface-card/70"
-              }`}
-            >
-              <span className="text-2xl">{safeCard.emoji}</span>
-            </button>
+              <button
+                key={index}
+                onClick={() => handleTabChange(index)}
+                className={`flex-shrink-0 h-14 px-(--padding-sm) rounded-2xl transition-all font-extrabold text-display text-sm ${
+                  activeTab === index
+                    ? `${CARD_COLORS[index].bg} border-2 ${CARD_COLORS[index].border} shadow-md scale-105`
+                    : "bg-surface-card/50 border-2 border-transparent hover:bg-surface-card/70"
+                }`}
+              >
+                <span className="text-2xl">{safeCard.emoji}</span>
+              </button>
             );
           })}
         </div>
@@ -150,4 +150,3 @@ export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: st
     </div>
   );
 }
-

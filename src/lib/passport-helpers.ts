@@ -36,7 +36,14 @@ export const REGIONS: Record<
     emoji: "🏔️",
     gradient: "bg-warning",
     states: INDIA_STATES.filter((s) =>
-      ["Punjab", "Haryana", "Himachal Pradesh", "Uttarakhand", "Uttar Pradesh", "Rajasthan"].includes(s.name)
+      [
+        "Punjab",
+        "Haryana",
+        "Himachal Pradesh",
+        "Uttarakhand",
+        "Uttar Pradesh",
+        "Rajasthan",
+      ].includes(s.name),
     ),
   },
   south: {
@@ -44,7 +51,7 @@ export const REGIONS: Record<
     emoji: "🌴",
     gradient: "bg-accent-2",
     states: INDIA_STATES.filter((s) =>
-      ["Andhra Pradesh", "Telangana", "Karnataka", "Kerala", "Tamil Nadu"].includes(s.name)
+      ["Andhra Pradesh", "Telangana", "Karnataka", "Kerala", "Tamil Nadu"].includes(s.name),
     ),
   },
   east: {
@@ -52,31 +59,36 @@ export const REGIONS: Record<
     emoji: "🌳",
     gradient: "bg-success",
     states: INDIA_STATES.filter((s) =>
-      ["West Bengal", "Odisha", "Bihar", "Jharkhand"].includes(s.name)
+      ["West Bengal", "Odisha", "Bihar", "Jharkhand"].includes(s.name),
     ),
   },
   central: {
     name: "Central Region",
     emoji: "🏞️",
     gradient: "bg-accent-4",
-    states: INDIA_STATES.filter((s) =>
-      ["Madhya Pradesh", "Chhattisgarh"].includes(s.name)
-    ),
+    states: INDIA_STATES.filter((s) => ["Madhya Pradesh", "Chhattisgarh"].includes(s.name)),
   },
   west: {
     name: "Western Region",
     emoji: "🌊",
     gradient: "bg-accent-2",
-    states: INDIA_STATES.filter((s) =>
-      ["Gujarat", "Maharashtra", "Goa"].includes(s.name)
-    ),
+    states: INDIA_STATES.filter((s) => ["Gujarat", "Maharashtra", "Goa"].includes(s.name)),
   },
   northeast: {
     name: "Northeast Region",
     emoji: "⛰️",
     gradient: "bg-accent-1-soft",
     states: INDIA_STATES.filter((s) =>
-      ["Assam", "Arunachal Pradesh", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Sikkim", "Tripura"].includes(s.name)
+      [
+        "Assam",
+        "Arunachal Pradesh",
+        "Manipur",
+        "Meghalaya",
+        "Mizoram",
+        "Nagaland",
+        "Sikkim",
+        "Tripura",
+      ].includes(s.name),
     ),
   },
   unionTerritories: {
@@ -84,7 +96,16 @@ export const REGIONS: Record<
     emoji: "🏛️",
     gradient: "bg-accent-5",
     states: INDIA_STATES.filter((s) =>
-      ["Delhi", "Jammu & Kashmir", "Ladakh", "Chandigarh", "Puducherry", "Andaman & Nicobar Islands", "Lakshadweep", "Dadra & Nagar Haveli and Daman & Diu"].includes(s.name)
+      [
+        "Delhi",
+        "Jammu & Kashmir",
+        "Ladakh",
+        "Chandigarh",
+        "Puducherry",
+        "Andaman & Nicobar Islands",
+        "Lakshadweep",
+        "Dadra & Nagar Haveli and Daman & Diu",
+      ].includes(s.name),
     ),
   },
 };
@@ -123,7 +144,7 @@ export interface Milestone {
 
 export function getMilestones(progress: Progress): Milestone[] {
   const completed = progress.completed.length;
-  
+
   return [
     {
       id: "ten-states",
@@ -161,10 +182,13 @@ export function getXpToNextLevel(currentXp: number, xpPerLevel: number = 400): n
 /**
  * Get activity summary for week
  */
-export function getWeeklyStats(progress: Progress, today: Date = new Date()): { count: number; dates: string[] } {
+export function getWeeklyStats(
+  progress: Progress,
+  today: Date = new Date(),
+): { count: number; dates: string[] } {
   const weekAgo = new Date(today);
   weekAgo.setDate(weekAgo.getDate() - 7);
-  
+
   // Simplified: would need lastActiveDate per state in real app
   // For now, return placeholder
   return { count: 3, dates: [] };
@@ -175,9 +199,11 @@ export function getWeeklyStats(progress: Progress, today: Date = new Date()): { 
  * @param stateName Name of the state to find
  * @returns Object with regionKey and region data, or null if not found
  */
-export function findRegionForState(stateName: string): { regionKey: keyof typeof REGIONS; region: typeof REGIONS[keyof typeof REGIONS] } | null {
+export function findRegionForState(
+  stateName: string,
+): { regionKey: keyof typeof REGIONS; region: (typeof REGIONS)[keyof typeof REGIONS] } | null {
   for (const [key, region] of Object.entries(REGIONS)) {
-    if (region.states.some(s => s.name === stateName)) {
+    if (region.states.some((s) => s.name === stateName)) {
       return { regionKey: key as keyof typeof REGIONS, region };
     }
   }
@@ -190,9 +216,12 @@ export function findRegionForState(stateName: string): { regionKey: keyof typeof
  * @param completedStates Array of completed state names
  * @returns Number of completed states in this region
  */
-export function countRegionCompleted(regionKey: keyof typeof REGIONS, completedStates: string[]): number {
+export function countRegionCompleted(
+  regionKey: keyof typeof REGIONS,
+  completedStates: string[],
+): number {
   const region = REGIONS[regionKey];
-  return region.states.filter(s => completedStates.includes(s.name)).length;
+  return region.states.filter((s) => completedStates.includes(s.name)).length;
 }
 
 /**
@@ -203,50 +232,61 @@ export function countRegionCompleted(regionKey: keyof typeof REGIONS, completedS
  * @param count How many states to return (default 2)
  * @returns Array of up next states
  */
-export function getUpNext(currentStateName: string, allStates: IndiaState[], count: number = 2): IndiaState[] {
+export function getUpNext(
+  currentStateName: string,
+  allStates: IndiaState[],
+  count: number = 2,
+): IndiaState[] {
   // Find which region the current state belongs to
   let currentRegionKey: keyof typeof REGIONS | null = null;
   for (const [key, region] of Object.entries(REGIONS)) {
-    if (region.states.some(s => s.name === currentStateName)) {
+    if (region.states.some((s) => s.name === currentStateName)) {
       currentRegionKey = key as keyof typeof REGIONS;
       break;
     }
   }
-  
+
   if (!currentRegionKey) return [];
-  
+
   const currentRegion = REGIONS[currentRegionKey];
-  
+
   // Get uncompleted states in the same region (excluding current)
   const sameRegionUp = allStates
-    .filter(s => 
-      currentRegion.states.some(rs => rs.name === s.name) &&
-      s.status !== "done" &&
-      s.name !== currentStateName
+    .filter(
+      (s) =>
+        currentRegion.states.some((rs) => rs.name === s.name) &&
+        s.status !== "done" &&
+        s.name !== currentStateName,
     )
     .slice(0, count);
-  
+
   // If we have enough states from same region, return them
   if (sameRegionUp.length >= count) {
     return sameRegionUp;
   }
-  
+
   // Otherwise, find next region and add states from there
-  const regionOrder: (keyof typeof REGIONS)[] = ["south", "east", "central", "west", "northeast", "north", "unionTerritories"];
+  const regionOrder: (keyof typeof REGIONS)[] = [
+    "south",
+    "east",
+    "central",
+    "west",
+    "northeast",
+    "north",
+    "unionTerritories",
+  ];
   const currentIndex = regionOrder.indexOf(currentRegionKey);
-  const nextRegionKey = currentIndex !== -1 && currentIndex + 1 < regionOrder.length 
-    ? regionOrder[currentIndex + 1]
-    : null;
-  
+  const nextRegionKey =
+    currentIndex !== -1 && currentIndex + 1 < regionOrder.length
+      ? regionOrder[currentIndex + 1]
+      : null;
+
   if (!nextRegionKey) return sameRegionUp;
-  
+
   const nextRegion = REGIONS[nextRegionKey];
   const nextRegionUp = allStates
-    .filter(s => 
-      nextRegion.states.some(rs => rs.name === s.name) &&
-      s.status !== "done"
-    )
+    .filter((s) => nextRegion.states.some((rs) => rs.name === s.name) && s.status !== "done")
     .slice(0, count - sameRegionUp.length);
-  
+
   return [...sameRegionUp, ...nextRegionUp];
 }

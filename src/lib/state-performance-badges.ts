@@ -1,32 +1,32 @@
 /**
  * Per-State Performance Badge System
- * 
+ *
  * For each state, users can earn up to 9 badges:
  * - 3 Core Badges (Monument, Animal, Explorer) - awarded on first completion
  * - 6 Performance Badges (Perfect Quiz, Speed Demon, Bookworm, First Try, Streak Builder, Master Learner)
- * 
+ *
  * Performance badges incentivize replays and deeper engagement with content
  */
 
 import type { Progress } from "./progress";
 
-export type StatePerformanceBadgeId = 
-  | "perfect-quiz"      // 100% quiz score on any attempt
-  | "speed-demon"       // Completed state in <20 mins
-  | "bookworm"          // Read all 6 cards before quiz
-  | "first-try"         // Perfect score on first quiz attempt (no retries)
-  | "streak-builder"    // Completed state while on 7+ day streak
-  | "master-learner";   // Replayed 3+ cards to 100% mastery
+export type StatePerformanceBadgeId =
+  | "perfect-quiz" // 100% quiz score on any attempt
+  | "speed-demon" // Completed state in <20 mins
+  | "bookworm" // Read all 6 cards before quiz
+  | "first-try" // Perfect score on first quiz attempt (no retries)
+  | "streak-builder" // Completed state while on 7+ day streak
+  | "master-learner"; // Replayed 3+ cards to 100% mastery
 
 export type StatePerformanceMetrics = {
   stateName: string;
-  completedAt: string;           // ISO timestamp
-  timeToComplete: number;        // milliseconds
-  quizAttempts: number;          // 1 = first try, 2+ = retries
-  quizScore: number;             // 0-100
-  cardsRead: number;             // 0-6
-  cardsReplayed: number;         // How many cards replayed on this completion
-  currentStreak: number;         // Streak length at time of completion
+  completedAt: string; // ISO timestamp
+  timeToComplete: number; // milliseconds
+  quizAttempts: number; // 1 = first try, 2+ = retries
+  quizScore: number; // 0-100
+  cardsRead: number; // 0-6
+  cardsReplayed: number; // How many cards replayed on this completion
+  currentStreak: number; // Streak length at time of completion
   earnedPerformanceBadges: StatePerformanceBadgeId[]; // Badges earned on this completion
 };
 
@@ -37,14 +37,17 @@ export type StatePerformanceData = {
 /**
  * Badge metadata for displaying info about each badge
  */
-export const STATE_PERFORMANCE_BADGE_DEFS: Record<StatePerformanceBadgeId, {
-  icon: string;
-  name: string;
-  description: string;
-  category: "performance";
-  requirement: string;
-  dopamineType: "mastery" | "speed" | "thoroughness" | "skill" | "discipline" | "expertise";
-}> = {
+export const STATE_PERFORMANCE_BADGE_DEFS: Record<
+  StatePerformanceBadgeId,
+  {
+    icon: string;
+    name: string;
+    description: string;
+    category: "performance";
+    requirement: string;
+    dopamineType: "mastery" | "speed" | "thoroughness" | "skill" | "discipline" | "expertise";
+  }
+> = {
   "perfect-quiz": {
     icon: "⭐⭐⭐",
     name: "Perfect Quiz",
@@ -61,7 +64,7 @@ export const STATE_PERFORMANCE_BADGE_DEFS: Record<StatePerformanceBadgeId, {
     requirement: "Time < 20 minutes",
     dopamineType: "speed",
   },
-  "bookworm": {
+  bookworm: {
     icon: "📚",
     name: "Bookworm",
     description: "Read all 6 cards before taking the quiz",
@@ -97,7 +100,7 @@ export const STATE_PERFORMANCE_BADGE_DEFS: Record<StatePerformanceBadgeId, {
 
 /**
  * Calculate which performance badges should be awarded for a state completion
- * 
+ *
  * This is called when a state is completed to determine what badges user earned
  */
 export function calculatePerformanceBadges(
@@ -179,11 +182,13 @@ export function hasPerformanceBadge(
 /**
  * Get total performance badges earned across all states
  */
-export function getTotalPerformanceBadgesEarned(performance: StatePerformanceData | undefined): number {
+export function getTotalPerformanceBadgesEarned(
+  performance: StatePerformanceData | undefined,
+): number {
   if (!performance) return 0;
-  
+
   let total = 0;
-  Object.values(performance).forEach(metrics => {
+  Object.values(performance).forEach((metrics) => {
     total += metrics.earnedPerformanceBadges?.length ?? 0;
   });
   return total;
@@ -209,7 +214,7 @@ export function getAvailablePerformanceBadges(
 ): StatePerformanceBadgeId[] {
   const earned = getPerformanceBadgesForState(performance, stateName);
   const allBadges = getPerformanceBadgeIds();
-  return allBadges.filter(badge => !earned.includes(badge));
+  return allBadges.filter((badge) => !earned.includes(badge));
 }
 
 /**
@@ -218,24 +223,36 @@ export function getAvailablePerformanceBadges(
 export function getPerformanceBadgeProgress(
   performance: StatePerformanceData | undefined,
   stateName: string,
-): Record<StatePerformanceBadgeId, { earned: boolean; progress: number; max: number; message: string }> {
+): Record<
+  StatePerformanceBadgeId,
+  { earned: boolean; progress: number; max: number; message: string }
+> {
   const metrics = performance?.[stateName];
   if (!metrics) {
     return Object.fromEntries(
-      getPerformanceBadgeIds().map(id => [
+      getPerformanceBadgeIds().map((id) => [
         id,
         { earned: false, progress: 0, max: 1, message: "Not started" },
-      ])
-    ) as Record<StatePerformanceBadgeId, { earned: boolean; progress: number; max: number; message: string }>;
+      ]),
+    ) as Record<
+      StatePerformanceBadgeId,
+      { earned: boolean; progress: number; max: number; message: string }
+    >;
   }
 
   // Initialize all badges with default values
-  const result: Record<StatePerformanceBadgeId, { earned: boolean; progress: number; max: number; message: string }> = Object.fromEntries(
-    getPerformanceBadgeIds().map(id => [
+  const result: Record<
+    StatePerformanceBadgeId,
+    { earned: boolean; progress: number; max: number; message: string }
+  > = Object.fromEntries(
+    getPerformanceBadgeIds().map((id) => [
       id,
       { earned: false, progress: 0, max: 1, message: "Not started" },
-    ])
-  ) as Record<StatePerformanceBadgeId, { earned: boolean; progress: number; max: number; message: string }>;
+    ]),
+  ) as Record<
+    StatePerformanceBadgeId,
+    { earned: boolean; progress: number; max: number; message: string }
+  >;
 
   // Perfect Quiz
   result["perfect-quiz"] = {
@@ -267,7 +284,10 @@ export function getPerformanceBadgeProgress(
     earned: metrics.earnedPerformanceBadges.includes("first-try"),
     progress: metrics.quizAttempts === 1 && metrics.quizScore === 100 ? 1 : 0,
     max: 1,
-    message: metrics.quizAttempts === 1 ? "Perfect on 1st try!" : `${metrics.quizAttempts} attempts (need 1)`,
+    message:
+      metrics.quizAttempts === 1
+        ? "Perfect on 1st try!"
+        : `${metrics.quizAttempts} attempts (need 1)`,
   };
 
   // Streak Builder

@@ -70,7 +70,7 @@ export function useToast() {
     custom: (
       message: string,
       icon: string,
-      options?: { type?: ToastType; subtitle?: string; duration?: number }
+      options?: { type?: ToastType; subtitle?: string; duration?: number },
     ) => {
       show({
         type: options?.type ?? "info",

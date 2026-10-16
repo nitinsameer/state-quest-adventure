@@ -41,22 +41,22 @@ function Card() {
   const { slug } = Route.useParams();
   const { name, index } = Route.useLoaderData();
   const navigate = useNavigate();
-  console.log('[CardRoute] Card component rendering with:', { slug, name, index });
+  console.log("[CardRoute] Card component rendering with:", { slug, name, index });
   return (
     <LearningCardScreen
       key={`${slug}-${index}`}
       stateName={name}
       cardIndex={index}
       onClose={() => {
-        console.log('[CardRoute] onClose - navigating back to learn hub');
+        console.log("[CardRoute] onClose - navigating back to learn hub");
         navigate({ to: "/state/$slug/learn", params: { slug } });
       }}
       onNext={(next) => {
         if (next === null) {
-          console.log('[CardRoute] onNext with null - going to quiz');
+          console.log("[CardRoute] onNext with null - going to quiz");
           navigate({ to: "/state/$slug/quiz", params: { slug } });
         } else {
-          console.log('[CardRoute] onNext with index:', next, '- going to next card');
+          console.log("[CardRoute] onNext with index:", next, "- going to next card");
           navigate({ to: "/state/$slug/card/$index", params: { slug, index: String(next) } });
         }
       }}

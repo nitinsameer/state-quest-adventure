@@ -82,7 +82,10 @@ export function CelebrationPopupProvider() {
   if (!current) return null;
 
   return (
-    <div className="fixed inset-0 pointer-events-auto z-[999]" style={{ pointerEvents: current ? "auto" : "none" }}>
+    <div
+      className="fixed inset-0 pointer-events-auto z-[999]"
+      style={{ pointerEvents: current ? "auto" : "none" }}
+    >
       <CelebrationModal config={current} />
     </div>
   );

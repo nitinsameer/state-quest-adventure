@@ -7,16 +7,16 @@ export function generatePassportNumber(avatarId: string, profileName: string): s
   // Create a simple hash from avatar ID + profile name
   const combined = `${avatarId}:${profileName}`;
   let hash = 0;
-  
+
   for (let i = 0; i < combined.length; i++) {
     const char = combined.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
+    hash = (hash << 5) - hash + char;
     hash = hash & hash; // Convert to 32-bit integer
   }
-  
+
   // Convert hash to positive number and normalize to 0-9999 range
   const passportNum = Math.abs(hash) % 10000;
-  
+
   // Format: IN-YYYY-XXXX where YYYY is year, XXXX is hash
   const year = new Date().getFullYear();
   return `IN-${year}-${String(passportNum).padStart(4, "0")}`;

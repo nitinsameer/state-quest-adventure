@@ -1,7 +1,7 @@
 /**
  * Audio Diagnostics Utility
  * Captures complete audio system state for debugging
- * 
+ *
  * STEP 4 & 5: Verify all runtime settings and Web Speech API availability
  */
 
@@ -13,25 +13,25 @@ export interface AudioDiagnostics {
   timestamp: number;
   platform: string;
   isNativePlatform: boolean;
-  
+
   // Consent & Permissions
   audioNarrationConsent: boolean;
-  
+
   // Sound settings
   soundToggleOn: boolean;
-  
+
   // Web Speech API
   speechSynthesisAvailable: boolean;
   speechSynthesisState: string;
   voicesAvailable: number;
-  
+
   // AudioContext
   audioContextAvailable: boolean;
   audioContextType: string;
-  
+
   // Capacitor Info
   capacitorPlatform: string;
-  
+
   // Environment
   userAgent: string;
   windowDefined: boolean;
@@ -43,32 +43,50 @@ export interface AudioDiagnostics {
 export function captureAudioDiagnostics(): AudioDiagnostics {
   const diagnostics: AudioDiagnostics = {
     timestamp: Date.now(),
-    platform: typeof window !== "undefined" ? (window as any).navigator?.userAgentData?.platform || "unknown" : "ssr",
+    platform:
+      typeof window !== "undefined"
+        ? (window as any).navigator?.userAgentData?.platform || "unknown"
+        : "ssr",
     isNativePlatform: Capacitor.isNativePlatform(),
-    
+
     // Consent & Permissions
-    audioNarrationConsent: hasFeatureConsent('audio'),
-    
+    audioNarrationConsent: hasFeatureConsent("audio"),
+
     // Sound settings
     soundToggleOn: isSoundOn(),
-    
+
     // Web Speech API
     speechSynthesisAvailable: typeof window !== "undefined" && !!window.speechSynthesis,
-    speechSynthesisState: typeof window !== "undefined" && window.speechSynthesis ? window.speechSynthesis.speaking ? "speaking" : "idle" : "unavailable",
-    voicesAvailable: typeof window !== "undefined" && window.speechSynthesis ? window.speechSynthesis.getVoices().length : 0,
-    
+    speechSynthesisState:
+      typeof window !== "undefined" && window.speechSynthesis
+        ? window.speechSynthesis.speaking
+          ? "speaking"
+          : "idle"
+        : "unavailable",
+    voicesAvailable:
+      typeof window !== "undefined" && window.speechSynthesis
+        ? window.speechSynthesis.getVoices().length
+        : 0,
+
     // AudioContext
-    audioContextAvailable: typeof AudioContext !== "undefined" || typeof (window as any).webkitAudioContext !== "undefined",
-    audioContextType: typeof AudioContext !== "undefined" ? "AudioContext" : typeof (window as any).webkitAudioContext !== "undefined" ? "webkitAudioContext" : "unavailable",
-    
+    audioContextAvailable:
+      typeof AudioContext !== "undefined" ||
+      typeof (window as any).webkitAudioContext !== "undefined",
+    audioContextType:
+      typeof AudioContext !== "undefined"
+        ? "AudioContext"
+        : typeof (window as any).webkitAudioContext !== "undefined"
+          ? "webkitAudioContext"
+          : "unavailable",
+
     // Capacitor Info
     capacitorPlatform: Capacitor.getPlatform(),
-    
+
     // Environment
     userAgent: typeof window !== "undefined" ? window.navigator.userAgent : "unknown",
     windowDefined: typeof window !== "undefined",
   };
-  
+
   return diagnostics;
 }
 
@@ -77,7 +95,7 @@ export function captureAudioDiagnostics(): AudioDiagnostics {
  */
 export function logAudioDiagnostics(label?: string): void {
   const diag = captureAudioDiagnostics();
-  
+
   console.log("[AUDIO DEBUG]", "=== AUDIO SYSTEM DIAGNOSTICS ===", label || "");
   console.log("[AUDIO DEBUG] Timestamp:", new Date(diag.timestamp).toISOString());
   console.log("[AUDIO DEBUG]", "PLATFORM");
@@ -85,45 +103,48 @@ export function logAudioDiagnostics(label?: string): void {
   console.log("[AUDIO DEBUG]   Is Native:", diag.isNativePlatform);
   console.log("[AUDIO DEBUG]   Capacitor Platform:", diag.capacitorPlatform);
   console.log("[AUDIO DEBUG]   User Agent:", diag.userAgent.substring(0, 80));
-  
+
   console.log("[AUDIO DEBUG]", "PERMISSIONS & SETTINGS");
-  console.log("[AUDIO DEBUG]   Audio Narration Consent:", diag.audioNarrationConsent ? "✓ YES" : "✗ NO");
+  console.log(
+    "[AUDIO DEBUG]   Audio Narration Consent:",
+    diag.audioNarrationConsent ? "✓ YES" : "✗ NO",
+  );
   console.log("[AUDIO DEBUG]   Sound Toggle:", diag.soundToggleOn ? "ON" : "OFF");
-  
+
   console.log("[AUDIO DEBUG]", "WEB SPEECH API");
   console.log("[AUDIO DEBUG]   Available:", diag.speechSynthesisAvailable ? "✓ YES" : "✗ NO");
   console.log("[AUDIO DEBUG]   State:", diag.speechSynthesisState);
   console.log("[AUDIO DEBUG]   Voices:", diag.voicesAvailable);
-  
+
   console.log("[AUDIO DEBUG]", "AUDIO CONTEXT");
   console.log("[AUDIO DEBUG]   Available:", diag.audioContextAvailable ? "✓ YES" : "✗ NO");
   console.log("[AUDIO DEBUG]   Type:", diag.audioContextType);
-  
+
   console.log("[AUDIO DEBUG]", "=== END DIAGNOSTICS ===");
 }
 
 /**
  * Get Web Speech API voices with diagnostic info
  */
-export function getWebSpeechVoices(): {voices: SpeechSynthesisVoice[], diagnostics: string} {
+export function getWebSpeechVoices(): { voices: SpeechSynthesisVoice[]; diagnostics: string } {
   console.log("[AUDIO DEBUG] getWebSpeechVoices() called");
-  
+
   if (typeof window === "undefined" || !window.speechSynthesis) {
     const msg = "speechSynthesis not available";
     console.log("[AUDIO DEBUG] ✗", msg);
     return { voices: [], diagnostics: msg };
   }
-  
+
   const voices = window.speechSynthesis.getVoices();
   console.log("[AUDIO DEBUG] ✓ Got", voices.length, "voices from speechSynthesis");
-  
+
   // Log available languages
-  const languages = new Set(voices.map(v => v.lang));
+  const languages = new Set(voices.map((v) => v.lang));
   console.log("[AUDIO DEBUG] Available languages:", Array.from(languages).join(", "));
-  
-  return { 
-    voices, 
-    diagnostics: `${voices.length} voices available for languages: ${Array.from(languages).join(", ")}` 
+
+  return {
+    voices,
+    diagnostics: `${voices.length} voices available for languages: ${Array.from(languages).join(", ")}`,
   };
 }
 
@@ -131,9 +152,11 @@ export function getWebSpeechVoices(): {voices: SpeechSynthesisVoice[], diagnosti
  * Test Web Speech API with a simple utterance
  * Returns diagnostics about what happens when speaking
  */
-export function testWebSpeechAPI(text: string = "Hello explorer"): Promise<{success: boolean, message: string}> {
+export function testWebSpeechAPI(
+  text: string = "Hello explorer",
+): Promise<{ success: boolean; message: string }> {
   console.log("[AUDIO DEBUG] testWebSpeechAPI() called with text:", text);
-  
+
   return new Promise((resolve) => {
     if (typeof window === "undefined" || !window.speechSynthesis) {
       const msg = "speechSynthesis not available";
@@ -141,36 +164,36 @@ export function testWebSpeechAPI(text: string = "Hello explorer"): Promise<{succ
       resolve({ success: false, message: msg });
       return;
     }
-    
+
     try {
       const utterance = new SpeechSynthesisUtterance(text);
-      
+
       utterance.onstart = () => {
         console.log("[AUDIO DEBUG] ✓ speechSynthesis.onstart fired");
       };
-      
+
       utterance.onend = () => {
         console.log("[AUDIO DEBUG] ✓ speechSynthesis.onend fired");
         resolve({ success: true, message: "Speech completed successfully" });
       };
-      
+
       utterance.onerror = (event) => {
         console.log("[AUDIO DEBUG] ✗ speechSynthesis.onerror:", event.error);
         resolve({ success: false, message: `Speech error: ${event.error}` });
       };
-      
+
       utterance.onpause = () => {
         console.log("[AUDIO DEBUG] speechSynthesis.onpause fired");
       };
-      
+
       utterance.onresume = () => {
         console.log("[AUDIO DEBUG] speechSynthesis.onresume fired");
       };
-      
+
       console.log("[AUDIO DEBUG] Calling speechSynthesis.speak()...");
       window.speechSynthesis.speak(utterance);
       console.log("[AUDIO DEBUG] speechSynthesis.speak() returned");
-      
+
       // Set timeout in case onend never fires
       setTimeout(() => {
         if (window.speechSynthesis.speaking) {
@@ -178,10 +201,12 @@ export function testWebSpeechAPI(text: string = "Hello explorer"): Promise<{succ
           resolve({ success: false, message: "Speech timeout - still speaking after 10s" });
         }
       }, 10000);
-      
     } catch (error) {
       console.log("[AUDIO DEBUG] ✗ Exception in testWebSpeechAPI:", error);
-      resolve({ success: false, message: `Exception: ${error instanceof Error ? error.message : String(error)}` });
+      resolve({
+        success: false,
+        message: `Exception: ${error instanceof Error ? error.message : String(error)}`,
+      });
     }
   });
 }

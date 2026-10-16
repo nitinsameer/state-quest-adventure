@@ -1,11 +1,11 @@
 /**
  * Audio Permission Dialog - COPPA Compliant
  * Uses StandardModal for consistent design across the app
- * 
+ *
  * Displays a kid-friendly permission request for audio playback
  * Complies with Google Play Families Policy for audio devices
  * Can be triggered at profile creation OR on first app load
- * 
+ *
  * Default: Audio is ENABLED (opt-out model)
  * User can disable in profile settings anytime
  */
@@ -66,9 +66,8 @@ export function AudioPermissionDialog({
     }
 
     // Check if we should show based on context and forceShow flag
-    const hasSeenAudioPermission = localStorage.getItem(
-      "india-explorer:audio-permission-shown:v1"
-    ) === "1";
+    const hasSeenAudioPermission =
+      localStorage.getItem("india-explorer:audio-permission-shown:v1") === "1";
 
     // Only auto-show for first-load context if not seen before
     const shouldShow = forceShow || (!hasSeenAudioPermission && context === "first-load");
@@ -76,7 +75,7 @@ export function AudioPermissionDialog({
     if (shouldShow && !isOpen) {
       debugLog("audio-permission", "Ready to show", { context, forceShow });
       setIsOpen(true);
-      
+
       // Mark as seen (unless in profile contexts with forceShow)
       if (context === "first-load" || !forceShow) {
         localStorage.setItem("india-explorer:audio-permission-shown:v1", "1");
@@ -92,10 +91,10 @@ export function AudioPermissionDialog({
     debugLog("audio-permission", "User accepted audio", { context });
     fxTap();
     grantFeatureConsent("audio");
-    
+
     // Close dialog immediately so it stops rendering
     setIsOpen(false);
-    
+
     // Call callback after dialog closes
     setTimeout(() => {
       onAccept?.();
@@ -104,10 +103,10 @@ export function AudioPermissionDialog({
 
   const handleReject = () => {
     debugLog("audio-permission", "User rejected audio", { context });
-    
+
     // Close dialog immediately so it stops rendering
     setIsOpen(false);
-    
+
     // Call callback after dialog closes
     setTimeout(() => {
       onReject?.();
@@ -115,8 +114,8 @@ export function AudioPermissionDialog({
   };
 
   const isProfileCreation = context === "profile-creation";
-  const headerText = isProfileCreation 
-    ? "Your adventure just got better! 🎵" 
+  const headerText = isProfileCreation
+    ? "Your adventure just got better! 🎵"
     : "Can we play sounds?";
 
   return (
@@ -155,7 +154,8 @@ export function AudioPermissionDialog({
           label: "Yes, turn on sounds! 🔊",
           onClick: handleAccept,
           variant: "primary",
-          customClass: "w-full px-4 py-3 rounded-full bg-success text-on-header font-bold text-sm shadow-lg transition active:scale-95",
+          customClass:
+            "w-full px-4 py-3 rounded-full bg-success text-on-header font-bold text-sm shadow-lg transition active:scale-95",
         },
       ]}
       footer="You can change this anytime in Profile settings"

@@ -34,15 +34,15 @@ function PrivacyPolicyScreen() {
       {/* Content */}
       <div className="px-5 flex-1 overflow-auto py-6 space-y-6">
         {/* Last Updated */}
-        <div className="text-label text-muted-foreground">
-          Last updated: September 2026
-        </div>
+        <div className="text-label text-muted-foreground">Last updated: September 2026</div>
 
         {/* Overview */}
         <section>
           <h2 className="text-h4 mb-3">Overview</h2>
           <p className="text-body text-muted-foreground leading-relaxed">
-            India Explorer ("we," "us," "our," or "the App") is committed to protecting your privacy and your child's privacy. This Privacy Policy explains how we collect, use, and protect information.
+            India Explorer ("we," "us," "our," or "the App") is committed to protecting your privacy
+            and your child's privacy. This Privacy Policy explains how we collect, use, and protect
+            information.
           </p>
         </section>
 
@@ -53,13 +53,15 @@ function PrivacyPolicyScreen() {
             <div>
               <div className="text-body font-bold text-ink">Device Storage Only</div>
               <p className="text-caption text-muted-foreground mt-1">
-                All progress (levels, badges, stamps, quiz answers) is stored locally on your device only. We do NOT upload this data to our servers.
+                All progress (levels, badges, stamps, quiz answers) is stored locally on your device
+                only. We do NOT upload this data to our servers.
               </p>
             </div>
             <div className="border-t pt-3">
               <div className="text-body font-bold text-ink">No Account Required</div>
               <p className="text-caption text-muted-foreground mt-1">
-                We don't require usernames, passwords, or email addresses. Your child can play immediately after entering their name and age.
+                We don't require usernames, passwords, or email addresses. Your child can play
+                immediately after entering their name and age.
               </p>
             </div>
           </div>
@@ -84,7 +86,8 @@ function PrivacyPolicyScreen() {
             <div className="border-t border-accent-1 pt-3">
               <div className="text-body font-bold text-accent-1">Parental Consent</div>
               <p className="text-caption text-accent-1 mt-1">
-                This analytics collection only begins AFTER your child completes onboarding and you see our permission dialogs. You control whether analytics are sent.
+                This analytics collection only begins AFTER your child completes onboarding and you
+                see our permission dialogs. You control whether analytics are sent.
               </p>
             </div>
           </div>
@@ -97,13 +100,15 @@ function PrivacyPolicyScreen() {
             <div>
               <div className="text-body font-bold text-ink">Audio Permission</div>
               <p className="text-caption text-muted-foreground mt-1">
-                We ask permission to play background music and sound effects. If declined, the app works silently.
+                We ask permission to play background music and sound effects. If declined, the app
+                works silently.
               </p>
             </div>
             <div className="border-t pt-3">
               <div className="text-body font-bold text-ink">File Storage Permission</div>
               <p className="text-caption text-muted-foreground mt-1">
-                We ask permission to save postcards that your child creates. This allows sharing achievements with family.
+                We ask permission to save postcards that your child creates. This allows sharing
+                achievements with family.
               </p>
             </div>
             <div className="border-t pt-3">
@@ -132,7 +137,10 @@ function PrivacyPolicyScreen() {
         <section>
           <h2 className="text-h4 mb-3">👪 COPPA & Kids Safety</h2>
           <p className="text-body text-muted-foreground leading-relaxed">
-            India Explorer complies with the Children's Online Privacy Protection Act (COPPA). We ask for parental consent before collecting age-targeted information. We do not allow social sharing, in-app messaging, or user-generated content that could expose children to inappropriate material.
+            India Explorer complies with the Children's Online Privacy Protection Act (COPPA). We
+            ask for parental consent before collecting age-targeted information. We do not allow
+            social sharing, in-app messaging, or user-generated content that could expose children
+            to inappropriate material.
           </p>
         </section>
 
@@ -140,7 +148,8 @@ function PrivacyPolicyScreen() {
         <section>
           <h2 className="text-h4 mb-3">🗑️ Data Deletion</h2>
           <p className="text-body text-muted-foreground leading-relaxed">
-            You can delete all progress at any time by going to Settings → Parent Zone → Reset all progress. This permanently erases all locally stored data.
+            You can delete all progress at any time by going to Settings → Parent Zone → Reset all
+            progress. This permanently erases all locally stored data.
           </p>
         </section>
 
@@ -148,7 +157,8 @@ function PrivacyPolicyScreen() {
         <section>
           <h2 className="text-h4 mb-3">📧 Questions?</h2>
           <p className="text-body text-muted-foreground leading-relaxed">
-            If you have questions about this privacy policy, contact us through the feedback option in the app.
+            If you have questions about this privacy policy, contact us through the feedback option
+            in the app.
           </p>
         </section>
 

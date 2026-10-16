@@ -5,12 +5,12 @@ import { useRouter } from "@tanstack/react-router";
 
 /**
  * Hook to handle Android hardware back button.
- * 
+ *
  * Navigation behavior:
  * 1. On home/welcome/root: exit the app
  * 2. For routes with internal state (like /journey): use onJourneyBack callback to handle internal navigation
  * 3. For all other routes: use router.history.back() to navigate to previous route
- * 
+ *
  * The onJourneyBack callback allows screens to manage their own back behavior before falling back to route history.
  * Example: Journey map screen with card → hub → intro → map internal states.
  */

@@ -10,23 +10,24 @@ import { EMOJI } from "@/constants/emoji";
  * - Beginner (0-3 states): "Complete 1 state today"
  * - Intermediate (4-9 states): "Complete 2 states today"
  * - Advanced (10+ states): "Complete 3 states today"
- * 
+ *
  * Shows progress bar + encouragement + CTA to continue
  */
 export function DailyGoalCard() {
   const p = useProgress();
 
   // Get current state being explored
-  const currentState = p.completed.length === 0
-    ? getState("Andhra Pradesh") // Default to first state if none completed
-    : (() => {
-        // Find the current state in progress
-        const current = INDIA_STATES.find((s: any) => {
-          const cardCount = p.cards?.[s.name]?.length ?? 0;
-          return cardCount > 0 && cardCount < CARDS_PER_STATE;
-        });
-        return current || INDIA_STATES[0];
-      })();
+  const currentState =
+    p.completed.length === 0
+      ? getState("Andhra Pradesh") // Default to first state if none completed
+      : (() => {
+          // Find the current state in progress
+          const current = INDIA_STATES.find((s: any) => {
+            const cardCount = p.cards?.[s.name]?.length ?? 0;
+            return cardCount > 0 && cardCount < CARDS_PER_STATE;
+          });
+          return current || INDIA_STATES[0];
+        })();
 
   // Determine goal level based on completed states
   const completedStates = p.completed.length;
@@ -76,7 +77,9 @@ export function DailyGoalCard() {
 
   return (
     <div className="mt-(--space-2) mb-(--space-2) flex-shrink-0">
-      <div className={`rounded-2xl ${goalColor} p-(--padding-md) shadow-lg relative overflow-hidden`}>
+      <div
+        className={`rounded-2xl ${goalColor} p-(--padding-md) shadow-lg relative overflow-hidden`}
+      >
         {/* Decorative background element */}
         <div className="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full blur-2xl pointer-events-none" />
 
@@ -87,9 +90,7 @@ export function DailyGoalCard() {
             <div className="text-body-sm text-white leading-tight">
               {dailyGoal} State{dailyGoal > 1 ? "s" : ""} Today
             </div>
-            <div className="text-caption text-white/90 mt-1">
-              {getEncouragementMessage()}
-            </div>
+            <div className="text-caption text-white/90 mt-1">{getEncouragementMessage()}</div>
           </div>
 
           {/* Middle: Progress indicator */}

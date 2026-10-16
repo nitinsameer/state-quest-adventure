@@ -35,7 +35,9 @@ function loadCelebrated(): Set<string> {
   try {
     const raw = window.localStorage.getItem(CELEBRATED_KEY);
     const list = raw ? (JSON.parse(raw) as unknown) : [];
-    return new Set(Array.isArray(list) ? list.filter((v): v is string => typeof v === "string") : []);
+    return new Set(
+      Array.isArray(list) ? list.filter((v): v is string => typeof v === "string") : [],
+    );
   } catch {
     return new Set();
   }
@@ -51,11 +53,11 @@ function saveCelebrated(set: Set<string>) {
 }
 
 const COLORS = [
-  "var(--accent-1)",       // Saffron
-  "var(--accent-2)",       // Explorer blue
-  "var(--accent-3)",       // Success green
-  "var(--accent-4)",       // Gold
-  "var(--background)"      // White
+  "var(--accent-1)", // Saffron
+  "var(--accent-2)", // Explorer blue
+  "var(--accent-3)", // Success green
+  "var(--accent-4)", // Gold
+  "var(--background)", // White
 ];
 
 function makePieces(seed: number): Piece[] {
@@ -90,9 +92,12 @@ export function UnlockCelebration() {
     celebrated.current = loadCelebrated();
   }
 
-  useEffect(() => () => {
-    if (timerRef.current) clearTimeout(timerRef.current);
-  }, []);
+  useEffect(
+    () => () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    },
+    [],
+  );
 
   useEffect(() => {
     // GATE: Only show achievement popups AFTER user completes onboarding
@@ -108,12 +113,12 @@ export function UnlockCelebration() {
     const isFirstLogin = progress.xp === 0;
     if (isFirstLogin) {
       console.log("[UnlockCelebration] First login after onboarding - suppressing all popups");
-      
+
       // Still record baseline so we don't celebrate these on future logins
       const achievements = achievementsFor(progress).filter((a) => a.done);
       const achievementIds = new Set(achievements.map((a) => a.id));
       const badges = new Set(badgeKeys(progress.badges));
-      
+
       prevAchievements.current = achievementIds;
       prevBadges.current = badges;
       for (const id of achievementIds) celebrated.current.add(`a:${id}`);
@@ -156,7 +161,7 @@ export function UnlockCelebration() {
     );
 
     console.log("[UnlockCelebration] New unlocks found:", {
-      newAchievements: newAchievements.map(a => a.id),
+      newAchievements: newAchievements.map((a) => a.id),
       newBadges,
     });
 
@@ -212,8 +217,8 @@ export function UnlockCelebration() {
         label: `Awesome! ${EMOJI.action.celebrate}`,
         onClick: () => {
           // Auto-dismissed by celebration system
-        }
-      }
+        },
+      },
     });
 
     // One burst per tick, never stacked.
@@ -225,7 +230,6 @@ export function UnlockCelebration() {
       timerRef.current = null;
       setPieces(null);
     }, 3200);
-
   }, [progress]);
 
   if (!pieces) return null;

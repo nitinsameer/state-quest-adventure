@@ -12,19 +12,17 @@
 /**
  * Read a CSS token value at runtime from the document root.
  * Use for canvas drawing, confetti, and other runtime-computed colours.
- * 
+ *
  * @param tokenName - CSS variable name (e.g., '--color-text-primary')
  * @returns Computed token value (string), or empty string if not found
- * 
+ *
  * @example
  * readToken('--color-text-primary')  // Returns: 'oklch(0.22 0.05 260)'
  * readToken('--color-brand-saffron') // Returns: 'oklch(0.74 0.19 45)'
  */
 export function readToken(tokenName: string): string {
-  if (typeof document === 'undefined') return '';
-  const value = getComputedStyle(document.documentElement)
-    .getPropertyValue(tokenName)
-    .trim();
+  if (typeof document === "undefined") return "";
+  const value = getComputedStyle(document.documentElement).getPropertyValue(tokenName).trim();
   return value;
 }
 
@@ -46,7 +44,7 @@ export function readToken(tokenName: string): string {
  */
 export function tokenToHex(tokenValue: string): string {
   // If already hex, return as-is
-  if (tokenValue.startsWith('#')) return tokenValue;
+  if (tokenValue.startsWith("#")) return tokenValue;
 
   // Parse rgb/rgba: rgb(255, 255, 255) or rgba(255, 255, 255, 0.5)
   const rgbMatch = tokenValue.match(/rgba?\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)/);
@@ -54,16 +52,16 @@ export function tokenToHex(tokenValue: string): string {
     const r = parseInt(rgbMatch[1], 10);
     const g = parseInt(rgbMatch[2], 10);
     const b = parseInt(rgbMatch[3], 10);
-    return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+    return "#" + [r, g, b].map((x) => x.toString(16).padStart(2, "0")).join("");
   }
 
   // Parse oklch() using a temporary canvas to convert to RGB
   // oklch(L C H) where L is lightness, C is chroma, H is hue
-  if (tokenValue.startsWith('oklch(')) {
+  if (tokenValue.startsWith("oklch(")) {
     try {
       // Create a temporary div, set its background to the oklch value,
       // and read back the computed rgb() value
-      const tempDiv = document.createElement('div');
+      const tempDiv = document.createElement("div");
       tempDiv.style.color = tokenValue;
       document.body.appendChild(tempDiv);
       const computed = getComputedStyle(tempDiv).color;
@@ -75,7 +73,7 @@ export function tokenToHex(tokenValue: string): string {
         const r = parseInt(rgbMatch2[1], 10);
         const g = parseInt(rgbMatch2[2], 10);
         const b = parseInt(rgbMatch2[3], 10);
-        return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+        return "#" + [r, g, b].map((x) => x.toString(16).padStart(2, "0")).join("");
       }
     } catch {
       // Fallback: return as-is if conversion fails
@@ -121,11 +119,11 @@ export function readTokenAsHex(tokenName: string): string {
  * }, []);
  */
 export function subscribeThemeChange(cb: () => void): () => void {
-  if (typeof document === 'undefined') return () => {};
+  if (typeof document === "undefined") return () => {};
 
   const observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
-      if (mutation.attributeName === 'data-theme') {
+      if (mutation.attributeName === "data-theme") {
         cb();
       }
     }
@@ -133,7 +131,7 @@ export function subscribeThemeChange(cb: () => void): () => void {
 
   observer.observe(document.documentElement, {
     attributes: true,
-    attributeFilter: ['data-theme'],
+    attributeFilter: ["data-theme"],
   });
 
   return () => observer.disconnect();
