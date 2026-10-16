@@ -1,12 +1,15 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
+// Default background matches Skeumorphism theme default
+const DEFAULT_BACKGROUND = '#F5F5F5';
+
 const config: CapacitorConfig = {
   appId: 'com.nishaantech.exploreindia',
   appName: 'India Explorer',
   webDir: 'dist/client',
   android: {
     preferredStatusBarStyle: 'dark',
-    backgroundColor: '#FFFFFF'
+    backgroundColor: DEFAULT_BACKGROUND
   },
   plugins: {
     SplashScreen: {

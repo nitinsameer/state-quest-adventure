@@ -1941,7 +1941,7 @@ export function StateIntroScreen({
         </div>
 
         <div className="mt-5 grid grid-cols-2 gap-3">
-          <IntroFact label="Capital" value={state.capital} icon="{EMOJI.utility.capital}" />
+          <IntroFact label="Capital" value={state.capital} icon={EMOJI.utility.capital} />
           <IntroFact label="Language" value={state.language} icon={EMOJI.utility.language} />
           <IntroFact label="Population" value={state.population} icon={EMOJI.utility.population} />
           <IntroFact label="Animal" value={state.animalName} icon={state.animal} />
@@ -2965,7 +2965,7 @@ export function LearningCardScreen({
             hasFeatureConsent("audio") ? "Play card content" : "Enable audio in settings to listen"
           }
         >
-          {playingCardIndex === currentCardIndex ? "⏸" : "${EMOJI.action.play}"} Listen
+          {playingCardIndex === currentCardIndex ? "⏸" : EMOJI.action.play} Listen
         </button>
       </div>
 
@@ -3634,8 +3634,7 @@ function Stamp({
           onSelect(stateName);
         }
       }}
-      className="relative aspect-square rounded-2xl bg-accent-2-soft flex flex-col items-center justify-center active:scale-95 transition-transform cursor-pointer"
-      style={{ boxShadow: "inset 0 0 0 1px rgba(0,0,0,0.06)" }}
+      className="relative aspect-square rounded-2xl bg-accent-2-soft flex flex-col items-center justify-center active:scale-95 transition-transform cursor-pointer shadow-inset-subtle"
     >
       <div
         className="h-20 w-20 rounded-full border-[3px] flex flex-col items-center justify-center"
@@ -3649,7 +3648,7 @@ function Stamp({
       </div>
       <div
         className="absolute -top-1 -right-1 text-xs font-bold rotate-12 px-1.5 py-0.5 rounded"
-        style={{ background: color, color: "white" }}
+        style={{ background: color, color: "var(--color-text-inverted)" }}
       >
         ✓
       </div>
@@ -3736,8 +3735,8 @@ function BadgeDetailModal({
         <div className="rounded-2xl bg-info-soft border border-info p-4">
           <p className="text-h5 text-info mb-1">Badge Type</p>
           <p className="text-body text-accent-1">
-            {badge.name === "Monument" && "{EMOJI.utility.capital} Learn about famous landmarks"}
-            {badge.name === "Animal" && "{EMOJI.achievement.animal} Discover local wildlife"}
+            {badge.name === "Monument" && <>{EMOJI.utility.capital} Learn about famous landmarks</>}
+            {badge.name === "Animal" && <>{EMOJI.achievement.animal} Discover local wildlife</>}
             {badge.name === "Explorer" &&
               "{EMOJI.achievement.explorer} Master all cards in this state"}
           </p>
@@ -4407,7 +4406,7 @@ function SoundToggleRow() {
         className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
       >
         <div className="h-12 w-12 rounded-2xl bg-accent-5 flex items-center justify-center text-2xl">
-          ${EMOJI.action.play}
+          {EMOJI.action.play}
         </div>
         <div className="flex-1 text-left">
           <div className="text-display font-extrabold text-[15px] leading-tight">Sound Effects</div>

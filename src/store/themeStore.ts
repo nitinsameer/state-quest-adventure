@@ -16,7 +16,7 @@ type ThemeId = "clay" | "aero" | "cartoon-comic" | "glassmorphism" | "skeumorphi
 
 // Zod validation schema for persisted theme data
 const ThemePersistenceSchema = z.object({
-  theme: z.string().default("clay"),
+  theme: z.string().default("skeumorphism"),
 });
 
 type ThemePersistence = z.infer<typeof ThemePersistenceSchema>;
@@ -80,14 +80,14 @@ function validateTheme(value: unknown): ThemeId {
     return value as ThemeId;
   }
 
-  return "clay"; // Default fallback
+  return "skeumorphism"; // Default fallback
 }
 
 /**
  * Global theme store
  */
 export const useThemeStore = create<ThemeStoreState>((set, get) => ({
-  currentTheme: "clay",
+  currentTheme: "skeumorphism",
 
   setTheme: (themeId: ThemeId) => {
     set({ currentTheme: themeId });
@@ -115,13 +115,13 @@ export const useThemeStore = create<ThemeStoreState>((set, get) => ({
         applyTheme(theme);
       } else {
         // First time: apply default theme
-        applyTheme("clay");
+        applyTheme("skeumorphism");
       }
     } catch (error) {
       console.warn("Failed to load theme from localStorage:", error);
       // Silently fall back to default
-      set({ currentTheme: "clay" });
-      applyTheme("clay");
+      set({ currentTheme: "skeumorphism" });
+      applyTheme("skeumorphism");
     }
   },
 }));

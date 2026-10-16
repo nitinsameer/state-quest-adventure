@@ -88,19 +88,19 @@ export function JourneyDestinationCard({
   };
 
   // Determine button text and handler based on state
-  let buttonText = "Start Exploring {EMOJI.action.play}";
+  let buttonText = `Start Exploring ${EMOJI.action.play}`;
   let buttonHandler = handleStartClick;
   let isButtonDisabled = false;
 
   if (status === "completed" && !isInProgress) {
-    buttonText = "Replay {EMOJI.action.replay}";
+    buttonText = `Replay ${EMOJI.action.replay}`;
     buttonHandler = handleReplayClick;
   } else if (status === "locked") {
     buttonText = "🔥 Locked";
     isButtonDisabled = true;
     buttonHandler = () => {};
   } else if (isInProgress) {
-    buttonText = "Continue {EMOJI.action.play}";
+    buttonText = `Continue ${EMOJI.action.play}`;
     buttonHandler = handleStartClick;
   }
 
