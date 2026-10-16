@@ -819,7 +819,7 @@ function HomeDashboardContent() {
             <div
               className={`flex items-center gap-1.5 ui-chip ui-accent-1-soft transition-transform duration-1000`}
             >
-              <span className="text-2xl">🏆”¥</span>
+              <span className="text-2xl">{EMOJI.feedback.trophy}</span>
               <div className="flex flex-col items-start">
                 <span className="text-ink text-h5 font-black leading-none">{p.streak}</span>
                 <span className="text-ink text-xs font-bold opacity-90 leading-none">
@@ -883,7 +883,8 @@ function HomeDashboardContent() {
                       Last played {streakStatus.hoursSinceActive} hours ago
                     </div>
                     <div className="text-caption mt-1">
-                      Come back within 12 hours to keep your 🏆”¥ {p.streak} day streak!
+                      Come back within 12 hours to keep your {EMOJI.feedback.trophy} {p.streak} day
+                      streak!
                     </div>
                   </div>
                   <button
@@ -1037,7 +1038,7 @@ function HomeDashboardContent() {
                     <div className="space-y-3">
                       <div className="p-4 rounded-2xl bg-orange-soft border-l-4 border-orange shadow-elevated-1 hover:shadow-elevated-2 transition-all">
                         <div className="text-label text-orange uppercase tracking-wider font-bold">
-                          🏆›️ Monument
+                          {EMOJI.utility.capital} Monument
                         </div>
                         <div className="text-body text-orange mt-2 font-semibold">
                           {state.monumentName}
@@ -1046,7 +1047,7 @@ function HomeDashboardContent() {
 
                       <div className="p-4 rounded-2xl bg-success-soft border-l-4 border-success shadow-elevated-1 hover:shadow-elevated-2 transition-all">
                         <div className="text-label text-success uppercase tracking-wider font-bold">
-                          🦁 Wildlife
+                          {EMOJI.achievement.animal} Wildlife
                         </div>
                         <div className="text-body text-success mt-2 font-semibold">
                           {state.animalName}
@@ -1064,7 +1065,7 @@ function HomeDashboardContent() {
 
                       <div className="p-4 rounded-2xl bg-purple-soft border-l-4 border-purple shadow-elevated-1 hover:shadow-elevated-2 transition-all">
                         <div className="text-label text-muted-dark uppercase tracking-wider font-bold">
-                          🏆”“ Unlock Path
+                          {EMOJI.action.lock} Unlock Path
                         </div>
                         <div className="text-body text-muted-dark mt-2 font-semibold">
                           {getUnlockRequirement(state.name)}
@@ -1272,7 +1273,9 @@ function StateDetailModal({
         {/* Sneak Peek Preview for Locked States */}
         {isLocked && (
           <div className="rounded-2xl bg-action-primary/5 border-2 border-warning p-4 space-y-3">
-            <p className="text-h5 text-warning flex items-center gap-2">🏆‘€ Sneak Peek Preview</p>
+            <p className="text-h5 text-warning flex items-center gap-2">
+              {EMOJI.action.lock} Sneak Peek Preview
+            </p>
             <div className="space-y-2 text-sm">
               <div className="flex items-start gap-2">
                 <span className="text-2xl flex-shrink-0">{stateData.animal}</span>
@@ -1299,7 +1302,7 @@ function StateDetailModal({
         {/* Status Information */}
         {isLocked ? (
           <div className="rounded-2xl bg-warning-soft border-2 border-warning p-4">
-            <p className="text-h5 text-warning mb-2">🏆” Locked</p>
+            <p className="text-h5 text-warning mb-2">{EMOJI.action.lock} Locked</p>
             <p className="text-body text-action-primary">
               Complete the previous state to unlock this adventure!
             </p>
@@ -1364,14 +1367,22 @@ export function JourneyMapScreen() {
 
     // Check for milestone achievements
     const milestones = [
-      { threshold: 25, emoji: "🎯", message: "Quarter Way There! 25% Complete!" },
+      { threshold: 25, emoji: EMOJI.milestone.twentyFive, message: "Quarter Way There! 25% Complete!" },
       {
         threshold: 50,
         emoji: EMOJI.utility.worldMap,
         message: "Halfway Around India! 50% Complete!",
       },
-      { threshold: 75, emoji: "🏆", message: "Almost Complete! 75% Explored!" },
-      { threshold: 100, emoji: "🏆‘‘", message: "India Master! 100% Complete!" },
+      {
+        threshold: 75,
+        emoji: "{EMOJI.feedback.trophy}",
+        message: "Almost Complete! 75% Explored!",
+      },
+      {
+        threshold: 100,
+        emoji: "{EMOJI.milestone.hundred}",
+        message: "India Master! 100% Complete!",
+      },
     ];
 
     // Track which milestones have been celebrated in localStorage
@@ -1633,7 +1644,7 @@ export function JourneyMapScreen() {
             <div className="text-sm font-bold text-white flex items-center gap-2">
               {p.streak > 0 && (
                 <span className="inline-flex items-center gap-0.5 px-2 py-1 bg-white/30 rounded-full">
-                  <span>🏆”¥</span>
+                  <span>{EMOJI.feedback.trophy}</span>
                   <span className="font-extrabold">{p.streak}-day streak!</span>
                 </span>
               )}
@@ -1926,7 +1937,7 @@ export function StateIntroScreen({
         </div>
 
         <div className="mt-5 grid grid-cols-2 gap-3">
-          <IntroFact label="Capital" value={state.capital} icon="🏆›️" />
+          <IntroFact label="Capital" value={state.capital} icon="{EMOJI.utility.capital}" />
           <IntroFact label="Language" value={state.language} icon={EMOJI.utility.language} />
           <IntroFact label="Population" value={state.population} icon={EMOJI.utility.population} />
           <IntroFact label="Animal" value={state.animalName} icon={state.animal} />
@@ -2166,7 +2177,7 @@ export function LearningHubScreen({
             <div className="text-display text-xl font-extrabold">{state.name}</div>
             {progress.streak > 0 && (
               <div className="text-xs font-bold text-white/80 mt-0.5">
-                🏆”¥ Day {progress.streak} streak
+                {EMOJI.feedback.trophy} Day {progress.streak} streak
               </div>
             )}
           </div>
@@ -2749,7 +2760,7 @@ export function LearningCardScreen({
         // DISABLED FOR NOW - PHASE 2: Card learning celebration
         // celebration.custom(
         //   `${currentCard.kicker} card learned!`,
-        //   "🏆“š",
+        //   "{EMOJI.feedback.trophy}",
         //   {
         //     subtitle: `+${XP_PER_CARD} XP earned ›¢ ${cardIndexInCategory + 1}/${cardsInCurrentCategory.length} cards in ${currentCard.kicker}`,
         //     confetti: true,
@@ -2779,9 +2790,9 @@ export function LearningCardScreen({
         // DISABLED FOR NOW - PHASE 2: Card learning celebration
         // celebration.custom(
         //   `${currentCard.kicker} card learned!`,
-        //   "🏆“š",
+        //   "{EMOJI.feedback.trophy}",
         //   {
-        //     subtitle: `+${XP_PER_CARD} XP earned ›¢ ${currentCard.kicker} category complete! 🎨“`,
+        //     subtitle: `+${XP_PER_CARD} XP earned ›¢ ${currentCard.kicker} category complete! {EMOJI.audio.stories}`,
         //     confetti: true,
         //     duration: 2000,
         //     type: "success",
@@ -2950,7 +2961,7 @@ export function LearningCardScreen({
             hasFeatureConsent("audio") ? "Play card content" : "Enable audio in settings to listen"
           }
         >
-          {playingCardIndex === currentCardIndex ? "⏸" : "🏆”Š"} Listen
+          {playingCardIndex === currentCardIndex ? "⏸" : "${EMOJI.action.play}"} Listen
         </button>
       </div>
 
@@ -2969,7 +2980,7 @@ export function LearningCardScreen({
         {/* Replay indicator - shown when user is replaying a card */}
         {isReplaying && (
           <div className="mb-3 p-3 bg-accent-2-soft rounded-xl flex items-center gap-2 shadow-sm border border-accent-2">
-            <span className="text-lg">🏆“–</span>
+            <span className="text-lg">{EMOJI.action.replay}</span>
             <div className="flex-1">
               <p className="text-xs font-bold text-accent-5">Replaying this card</p>
               <p className="text-xs text-accent-5 font-medium">
@@ -3057,16 +3068,16 @@ export function LearningCardScreen({
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
           <div className="bg-surface-card rounded-3xl shadow-2xl max-w-sm w-full p-6 space-y-4 animate-in zoom-in-95">
             <div className="text-center">
-              <div className="text-5xl mb-3">🎨§</div>
+              <div className="text-5xl mb-3">{EMOJI.audio.stories}</div>
               <h3 className="text-display text-xl font-extrabold text-ink">Enable Audio?</h3>
               <p className="text-sm text-text-secondary mt-2">
-                Turn on audio to hear the stories read aloud! 🎨µ
+                Turn on audio to hear the stories read aloud! {EMOJI.audio.stories}
               </p>
             </div>
 
             <div className="bg-info-soft rounded-2xl p-4 space-y-2 text-sm">
               <div className="flex gap-2">
-                <span>🎨§</span>
+                <span>{EMOJI.audio.stories}</span>
                 <span className="font-semibold text-info">Stories read aloud</span>
               </div>
               <div className="flex gap-2">
@@ -3337,8 +3348,8 @@ function QuizScreenContent({
           {result === "correct"
             ? "Nailed it! {EMOJI.feedback.success}"
             : result === "wrong"
-              ? "Good try! Let's move on! 🏆‘‰"
-              : "You've got this! 🏆’ª"}
+              ? "Good try! Let's move on! {EMOJI.feedback.encouragement}"
+              : "You've got this! {EMOJI.feedback.encouragement}"}
           <div className="absolute left-0 top-1/2 -translate-x-1 -translate-y-1/2 w-3 h-3 rotate-45 ui-card ui-accent-1-soft" />
         </div>
         {result === "correct" && (
@@ -3721,8 +3732,8 @@ function BadgeDetailModal({
         <div className="rounded-2xl bg-info-soft border border-info p-4">
           <p className="text-h5 text-info mb-1">Badge Type</p>
           <p className="text-body text-accent-1">
-            {badge.name === "Monument" && "🏆›️ Learn about famous landmarks"}
-            {badge.name === "Animal" && "🦁 Discover local wildlife"}
+            {badge.name === "Monument" && "{EMOJI.utility.capital} Learn about famous landmarks"}
+            {badge.name === "Animal" && "{EMOJI.achievement.animal} Discover local wildlife"}
             {badge.name === "Explorer" &&
               "{EMOJI.achievement.explorer} Master all cards in this state"}
           </p>
@@ -4163,7 +4174,7 @@ function ProfileScreenContent() {
             className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
           >
             <div className="h-12 w-12 rounded-2xl gradient-saffron flex items-center justify-center text-2xl">
-              🎨­
+              {EMOJI.audio.stories}
             </div>
             <div className="flex-1 text-left">
               <div className="text-display font-extrabold text-[15px] leading-tight">
@@ -4241,7 +4252,7 @@ function ProfileScreenContent() {
             className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
           >
             <div className="h-12 w-12 rounded-2xl bg-accent-5 flex items-center justify-center text-2xl">
-              🏆“¸
+              {EMOJI.feedback.trophy}
             </div>
             <div className="flex-1 text-left">
               <div className="text-display font-extrabold text-[15px] leading-tight">
@@ -4288,19 +4299,21 @@ function ProfileScreenContent() {
                       Daily Goals
                     </div>
                     <div className="text-[11px] font-bold text-text-secondary">
-                      🏆”¥ {p.streak} day streak
+                      {EMOJI.feedback.trophy} {p.streak} day streak
                     </div>
                   </div>
                 </div>
 
                 {/* Daily Challenge */}
-                <div className="ml-15 text-[13px] font-extrabold text-ink">🏆“ {dailyGoalText}</div>
+                <div className="ml-15 text-[13px] font-extrabold text-ink">
+                  {EMOJI.action.lock} {dailyGoalText}
+                </div>
 
                 {/* Next Reward */}
                 <div className="ml-15 text-[11px] font-bold text-warning">
                   {daysUntilNext === 0
-                    ? "🎨 Claim your milestone reward!"
-                    : `🎨 ${daysUntilNext} day${daysUntilNext !== 1 ? "s" : ""} until ${nextMilestone}-day bonus!`}
+                    ? "{EMOJI.theme.painter} Claim your milestone reward!"
+                    : `{EMOJI.theme.painter} ${daysUntilNext} day${daysUntilNext !== 1 ? "s" : ""} until ${nextMilestone}-day bonus!`}
                 </div>
               </div>
             );
@@ -4390,7 +4403,7 @@ function SoundToggleRow() {
         className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
       >
         <div className="h-12 w-12 rounded-2xl bg-accent-5 flex items-center justify-center text-2xl">
-          🏆”Š
+          ${EMOJI.action.play}
         </div>
         <div className="flex-1 text-left">
           <div className="text-display font-extrabold text-[15px] leading-tight">Sound Effects</div>
@@ -4417,7 +4430,7 @@ function SoundToggleRow() {
         className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
       >
         <div className="h-12 w-12 rounded-2xl bg-accent-5 flex items-center justify-center text-2xl">
-          🎨§
+          {EMOJI.audio.stories}
         </div>
         <div className="flex-1 text-left">
           <div className="text-display font-extrabold text-[15px] leading-tight">
@@ -4498,7 +4511,8 @@ function ParentZonePlaceholder() {
         className="w-full flex items-center gap-3 hover:opacity-80 transition"
       >
         <div className="h-12 w-12 rounded-2xl bg-accent-1 flex items-center justify-center text-2xl flex-shrink-0">
-          🏆‘¨›🏆‘©›🏆‘§
+          {EMOJI.feedback.encouragement}›{EMOJI.feedback.encouragement}›
+          {EMOJI.feedback.encouragement}
         </div>
         <div className="flex-1 text-left">
           <div className="text-display font-extrabold text-[15px] leading-tight text-info">
@@ -4698,7 +4712,9 @@ export function LoadingScreen() {
       </div>
       <div className="mt-8 text-center">
         <div className="text-display text-h2 font-bold">Flying to Gujarat…</div>
-        <div className="text-body text-text-secondary mt-1">Packing camel snacks 🏆ª</div>
+        <div className="text-body text-text-secondary mt-1">
+          Packing camel snacks {EMOJI.feedback.trophy}
+        </div>
       </div>
       <div className="mt-6 w-56 h-2 rounded-full bg-white/70 overflow-hidden">
         <div className="h-full w-2/3 gradient-explorer animate-pulse" />
