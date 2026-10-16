@@ -6,17 +6,14 @@
  * Choice persists to localStorage and applies immediately.
  */
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useThemeStore } from "@/store/themeStore";
-import { getVisibleThemes, getTheme } from "@/lib/themes";
-import { isMusicEnabled, setMusicEnabled, playThemeMusic } from "@/lib/theme-music";
+import { getVisibleThemes } from "@/lib/themes";
 import { fxTap } from "@/lib/fx";
-import { EMOJI } from "@/constants/emoji";
 
 export function ThemesScreen() {
   const { currentTheme, setTheme } = useThemeStore();
   const [isChanging, setIsChanging] = useState(false);
-  const [musicEnabled, setMusicEnabledState] = useState(isMusicEnabled());
   const themes = getVisibleThemes();
 
   const handleThemeSelect = (themeId: string) => {
@@ -24,21 +21,6 @@ export function ThemesScreen() {
     setIsChanging(true);
     setTheme(themeId as "clay" | "aero" | "cartoon-comic" | "glassmorphism" | "skeumorphism");
     setTimeout(() => setIsChanging(false), 200);
-  };
-
-  const handleMusicToggle = () => {
-    fxTap();
-    const newState = !musicEnabled;
-    setMusicEnabled(newState);
-    setMusicEnabledState(newState);
-
-    // If enabling, start playing current theme music
-    if (newState) {
-      const theme = getTheme(currentTheme);
-      if (theme.musicUrl) {
-        playThemeMusic(currentTheme, theme.musicUrl);
-      }
-    }
   };
 
   return (
@@ -62,33 +44,6 @@ export function ThemesScreen() {
         <p className="text-white/90 text-sm text-center mt-2">
           Choose your favorite theme — changes apply instantly
         </p>
-
-        {/* Music Toggle */}
-        <div
-          className="flex items-center justify-center gap-3 mt-4 px-4 py-3 rounded-2xl"
-          style={{ backgroundColor: "var(--blur-overlay)" }}
-        >
-          <span className="text-white text-sm font-bold flex items-center gap-2">
-            <span>{EMOJI.audio.music}</span>
-            <span>Play theme music</span>
-          </span>
-          <button
-            onClick={handleMusicToggle}
-            className="w-12 h-6 rounded-full transition-all"
-            style={{
-              backgroundColor: musicEnabled ? "var(--surface-card)" : "var(--blur-overlay)",
-            }}
-            aria-label={musicEnabled ? "Disable theme music" : "Enable theme music"}
-          >
-            <div
-              className="w-5 h-5 rounded-full transition-transform"
-              style={{
-                backgroundColor: musicEnabled ? "var(--accent-1)" : "var(--surface-muted)",
-                transform: musicEnabled ? "translateX(1.5rem)" : "translateX(0.125rem)",
-              }}
-            />
-          </button>
-        </div>
       </div>
 
       {/* Themes Grid */}

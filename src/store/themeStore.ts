@@ -9,7 +9,6 @@ import { create } from "zustand";
 import { z } from "zod";
 import { Capacitor } from "@capacitor/core";
 import { StatusBar, Style } from "@capacitor/status-bar";
-import { playThemeMusic, stopThemeMusic, isMusicEnabled } from "@/lib/theme-music";
 import { getTheme } from "@/lib/themes";
 
 // Valid theme IDs (must match entries in src/lib/themes.ts)
@@ -103,14 +102,6 @@ export const useThemeStore = create<ThemeStoreState>((set, get) => ({
 
     // Apply theme to DOM
     applyTheme(themeId);
-
-    // Play theme music if enabled
-    const theme = getTheme(themeId);
-    if (isMusicEnabled() && theme.musicUrl) {
-      playThemeMusic(themeId, theme.musicUrl);
-    } else {
-      stopThemeMusic();
-    }
   },
 
   loadTheme: () => {
@@ -122,12 +113,6 @@ export const useThemeStore = create<ThemeStoreState>((set, get) => ({
         const theme = validateTheme(validated.theme);
         set({ currentTheme: theme });
         applyTheme(theme);
-
-        // Play theme music if enabled
-        const themeObj = getTheme(theme);
-        if (isMusicEnabled() && themeObj.musicUrl) {
-          playThemeMusic(theme, themeObj.musicUrl);
-        }
       } else {
         // First time: apply default theme
         applyTheme("clay");
