@@ -49,7 +49,7 @@ const html = `<!DOCTYPE html>
   <link rel="icon" href="/favicon.ico" type="image/x-icon" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800;900&family=Orbitron:wght@500;700;900&family=Inter:wght@400;600;700&family=Bangers&family=Patrick+Hand&family=Poppins:wght@400;600;700;800&family=Roboto:wght@400;500;700&family=Roboto+Slab:wght@600;700;800&family=Comic+Neue:wght@400;700&family=Exo+2:wght@500;700&display=swap" />
   <style>
     html, body { margin: 0; padding: 0; width: 100%; height: 100%; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; background-color: #fff; }
