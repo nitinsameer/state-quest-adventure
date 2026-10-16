@@ -66,7 +66,12 @@ export function ExpandableCard({
       <div className="flex items-start gap-(--gap-base) mb-(--space-3)">
         <div className="text-3xl flex-shrink-0">{emoji}</div>
         <div className="flex-1 min-w-0">
-          <h3 className="text-display font-bold text-xl leading-snug" style={{color: "var(--text-primary)"}}>{title}</h3>
+          <h3
+            className="text-display font-bold text-xl leading-snug"
+            style={{ color: "var(--text-primary)" }}
+          >
+            {title}
+          </h3>
           {/* Main Text positioned just above key facts to preserve space */}
           <p className="text-body-sm font-semibold text-primary leading-relaxed mt-(--space-0-5)">
             {mainText}
@@ -83,7 +88,11 @@ export function ExpandableCard({
             aria-label={isExpanded ? "Hide facts" : "Show facts"}
           >
             <span className="text-label font-bold text-primary">
-              {isExpanded ? <>{EMOJI.icons.facts} Hide Facts</> : <>{EMOJI.action.sparkle} Cool Facts</>}
+              {isExpanded ? (
+                <>{EMOJI.icons.facts} Hide Facts</>
+              ) : (
+                <>{EMOJI.action.sparkle} Cool Facts</>
+              )}
             </span>
             <span
               className="text-lg transition-transform"
@@ -98,7 +107,8 @@ export function ExpandableCard({
               {keyFacts.slice(0, visibleFactsCount).map((fact, index) => (
                 <div
                   key={index}
-                  className="text-caption font-semibold bg-surface-card/60 p-(--padding-sm) rounded-lg border-l-3 border-info animate-fadeIn" style={{color: "var(--text-primary)"}}
+                  className="text-caption font-semibold bg-surface-card/60 p-(--padding-sm) rounded-lg border-l-3 border-info animate-fadeIn"
+                  style={{ color: "var(--text-primary)" }}
                 >
                   {fact}
                 </div>
@@ -146,7 +156,8 @@ export function ExpandableCard({
                   {coolFacts.map((fact, index) => (
                     <div
                       key={index}
-                      className="text-caption font-semibold bg-warning-soft p-(--padding-sm) rounded-lg border-l-3 border-warning" style={{color: "var(--text-primary)"}}
+                      className="text-caption font-semibold bg-warning-soft p-(--padding-sm) rounded-lg border-l-3 border-warning"
+                      style={{ color: "var(--text-primary)" }}
                     >
                       {fact}
                     </div>
@@ -176,7 +187,9 @@ export function ExpandableCard({
 
               {expandedDetailIndex === 1 && (
                 <div className="mt-(--space-1) bg-accent-5-soft p-(--padding-base) rounded-lg border-2 border-accent-5 animate-fadeIn">
-                  <p className="text-caption font-bold text-accent-5 leading-relaxed">{didYouKnow}</p>
+                  <p className="text-caption font-bold text-accent-5 leading-relaxed">
+                    {didYouKnow}
+                  </p>
                 </div>
               )}
             </div>

@@ -23,8 +23,8 @@ export function DailyGoalCard() {
       ? getState("Andhra Pradesh") // Default to first state if none completed
       : (() => {
           // Find the current state in progress
-          const current = INDIA_STATES.find((s: any) => {
-            const cardCount = p.cards?.[s.name]?.length ?? 0;
+          const current = INDIA_STATES.find((s: Record<string, unknown>) => {
+            const cardCount = p.cards?.[s.name as string]?.length ?? 0;
             return cardCount > 0 && cardCount < CARDS_PER_STATE;
           });
           return current || INDIA_STATES[0];
@@ -91,7 +91,9 @@ export function DailyGoalCard() {
             <div className="text-body-sm text-white leading-tight">
               {dailyGoal} State{dailyGoal > 1 ? "s" : ""} Today
             </div>
-            <div className="text-caption text-white/90 mt-(--space-0-5)">{getEncouragementMessage()}</div>
+            <div className="text-caption text-white/90 mt-(--space-0-5)">
+              {getEncouragementMessage()}
+            </div>
           </div>
 
           {/* Middle: Progress indicator */}

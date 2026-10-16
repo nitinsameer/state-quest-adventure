@@ -97,10 +97,13 @@ export function CardNarrationPlayer({
           <div className="bg-surface-card rounded-3xl p-(--padding-lg) max-w-sm shadow-2xl animate-in fade-in scale-in">
             <div className="text-center">
               <div className="text-5xl mb-(--space-2)">🎧</div>
-              <h3 className="text-h4 font-bold mb-(--space-0-5)" style={{color: "var(--text-primary)"}}>
+              <h3
+                className="text-h4 font-bold mb-(--space-0-5)"
+                style={{ color: "var(--text-primary)" }}
+              >
                 Enable Audio?
               </h3>
-              <p className="text-body-sm mb-(--space-2)" style={{color: "var(--text-primary)"}}>
+              <p className="text-body-sm mb-(--space-2)" style={{ color: "var(--text-primary)" }}>
                 Would you like to enable audio to hear this story read aloud?
               </p>
               <div className="flex gap-(--gap-base)">
@@ -111,11 +114,7 @@ export function CardNarrationPlayer({
                 >
                   Not Now
                 </KidsButton>
-                <KidsButton
-                  variant="primary"
-                  size="md"
-                  onClick={handleEnableAudio}
-                >
+                <KidsButton variant="primary" size="md" onClick={handleEnableAudio}>
                   Enable Audio
                 </KidsButton>
               </div>
@@ -136,7 +135,8 @@ export function CardNarrationPlayer({
                 : audioNarrationEnabled
                   ? "bg-action-primary-bg shadow-md hover:shadow-lg"
                   : "bg-action-primary-bg/50 shadow-md hover:shadow-lg"
-            }`} style={{color: "var(--text-on-primary)"}}
+            }`}
+            style={{ color: "var(--text-on-primary)" }}
             title={
               isCurrentPlaying
                 ? "Stop narration"

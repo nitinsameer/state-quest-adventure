@@ -124,37 +124,20 @@ export function AudioTestScreen() {
     <div className="min-h-screen bg-bg-page p-(--padding-md)">
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-lg shadow-lg p-(--padding-lg) mb-(--space-2)">
-          <h1 className="text-h1 text-accent-2 mb-(--space-0-5)">
-            🔊 Audio Test Screen
-          </h1>
+          <h1 className="text-h1 text-accent-2 mb-(--space-0-5)">🔊 Audio Test Screen</h1>
           <p className="text-caption text-muted-foreground mb-(--space-2)">
             Developer-only minimal TTS test
           </p>
 
           {/* Buttons */}
           <div className="grid grid-cols-2 gap-(--gap-base) mb-(--space-2)">
-            <KidsButton
-              variant="success"
-              size="md"
-              onClick={runAllTests}
-              disabled={isRunning}
-            >
+            <KidsButton variant="success" size="md" onClick={runAllTests} disabled={isRunning}>
               {EMOJI.action.rocket} Run All Tests
             </KidsButton>
-            <KidsButton
-              variant="primary"
-              size="md"
-              onClick={testNativeTTS}
-              disabled={isRunning}
-            >
+            <KidsButton variant="primary" size="md" onClick={testNativeTTS} disabled={isRunning}>
               📢 Native TTS
             </KidsButton>
-            <KidsButton
-              variant="primary"
-              size="md"
-              onClick={testWebSpeech}
-              disabled={isRunning}
-            >
+            <KidsButton variant="primary" size="md" onClick={testWebSpeech} disabled={isRunning}>
               🗣️ Web Speech
             </KidsButton>
             <KidsButton
@@ -165,20 +148,10 @@ export function AudioTestScreen() {
             >
               📊 Diagnostics
             </KidsButton>
-            <KidsButton
-              variant="primary"
-              size="md"
-              onClick={showVoices}
-              disabled={isRunning}
-            >
+            <KidsButton variant="primary" size="md" onClick={showVoices} disabled={isRunning}>
               🎤 Show Voices
             </KidsButton>
-            <KidsButton
-              variant="ghost"
-              size="md"
-              onClick={clearResults}
-              disabled={isRunning}
-            >
+            <KidsButton variant="ghost" size="md" onClick={clearResults} disabled={isRunning}>
               🗑️ Clear
             </KidsButton>
           </div>
