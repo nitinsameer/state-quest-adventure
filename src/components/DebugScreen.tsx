@@ -106,8 +106,8 @@ export function DebugScreen() {
             className={`px-2 py-1 rounded ${
               filter === "all"
                 ? "bg-accent-2 text-white"
-                : "bg-surface-raised text-text-secondary hover:bg-surface-elevated"
-            }`}
+                : "bg-surface-raised hover:bg-surface-elevated"
+            }`} style={filter !== "all" ? {color: "var(--text-secondary)"} : undefined}
           >
             All
           </button>
@@ -116,8 +116,8 @@ export function DebugScreen() {
             className={`px-2 py-1 rounded ${
               filter === "error"
                 ? "bg-error text-white"
-                : "bg-surface-raised text-text-secondary hover:bg-surface-elevated"
-            }`}
+                : "bg-surface-raised hover:bg-surface-elevated"
+            }`} style={filter !== "error" ? {color: "var(--text-secondary)"} : undefined}
           >
             Errors
           </button>
@@ -126,8 +126,8 @@ export function DebugScreen() {
             className={`px-2 py-1 rounded ${
               filter === "warn"
                 ? "bg-warning text-white"
-                : "bg-surface-sunken text-text-secondary hover:bg-surface-raised"
-            }`}
+                : "bg-surface-sunken hover:bg-surface-raised"
+            }`} style={filter !== "warn" ? {color: "var(--text-secondary)"} : undefined}
           >
             Warns
           </button>
@@ -136,8 +136,8 @@ export function DebugScreen() {
             className={`px-2 py-1 rounded ${
               filter === "info"
                 ? "bg-success text-white"
-                : "bg-surface-raised text-text-secondary hover:bg-surface-elevated"
-            }`}
+                : "bg-surface-raised hover:bg-surface-elevated"
+            }`} style={filter !== "info" ? {color: "var(--text-secondary)"} : undefined}
           >
             Info
           </button>
@@ -221,7 +221,7 @@ export function DebugScreen() {
       </div>
 
       {/* Footer */}
-      <div className="bg-surface-sunken border-t border-surface-muted p-(--padding-xs) text-text-muted text-xs">
+      <div className="bg-surface-sunken border-t border-surface-muted p-(--padding-xs) text-xs" style={{color: "var(--text-muted)"}}>
         <p>💡 Ctrl+D or tap corner 5x to toggle | Export logs for analysis</p>
       </div>
     </div>

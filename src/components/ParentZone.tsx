@@ -130,7 +130,7 @@ export function ParentZoneScreen() {
   return (
     <div className="h-full w-full bg-surface-raised flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="px-(--padding-base) pt-(--space-0-25) pb-(--space-2) gradient-explorer rounded-b-[32px] text-text-on-header">
+      <div className="px-(--padding-base) pt-(--space-0-25) pb-(--space-2) gradient-explorer rounded-b-[32px]" style={{color: "var(--text-on-header)"}}>
         <div className="flex items-center justify-between">
           <button
             onClick={goBack}
@@ -167,8 +167,8 @@ export function ParentZoneScreen() {
             className={`px-(--padding-md) py-(--space-0-25) font-bold text-sm transition whitespace-nowrap border-b-2 ${
               activeTab === tab.key
                 ? "text-action-primary-bg border-action-primary-bg"
-                : "text-text-muted border-transparent hover:text-action-primary-bg"
-            }`}
+                : "border-transparent hover:text-action-primary-bg"
+            }`} style={activeTab !== tab.key ? {color: "var(--text-muted)"} : undefined}
           >
             {tab.icon} {tab.label}
           </button>
@@ -180,7 +180,7 @@ export function ParentZoneScreen() {
         {/* OVERVIEW TAB */}
         {activeTab === "overview" && (
           <div className="space-y-(--space-2)">
-            <div className="text-display font-extrabold text-sm text-text-muted uppercase">
+            <div className="text-display font-extrabold text-sm uppercase" style={{color: "var(--text-muted)"}}>
               Quick Stats
             </div>
             <div className="grid grid-cols-2 gap-(--gap-base)">
@@ -193,7 +193,7 @@ export function ParentZoneScreen() {
                   <div className="text-display text-lg font-extrabold mt-(--space-0-25)">
                     {s.value}
                   </div>
-                  <div className="text-[10px] font-bold text-text-muted leading-tight">
+                  <div className="text-[10px] font-bold leading-tight" style={{color: "var(--text-muted)"}}>
                     {s.label}
                   </div>
                 </div>
@@ -201,12 +201,12 @@ export function ParentZoneScreen() {
             </div>
 
             <div className="mt-(--space-4)">
-              <div className="text-display font-extrabold text-sm text-text-muted uppercase">
+              <div className="text-display font-extrabold text-sm uppercase" style={{color: "var(--text-muted)"}}>
                 Currently learning
               </div>
               <div className="mt-(--space-2) rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-black/5 space-y-(--space-0-25)">
                 {inProgress.length === 0 ? (
-                  <div className="text-sm font-semibold text-text-muted">
+                  <div className="text-sm font-semibold" style={{color: "var(--text-muted)"}}>
                     No lessons in progress right now.
                   </div>
                 ) : (
@@ -228,7 +228,7 @@ export function ParentZoneScreen() {
                           />
                         </div>
                       </div>
-                      <span className="text-[11px] font-extrabold text-text-muted">
+                      <span className="text-[11px] font-extrabold" style={{color: "var(--text-muted)"}}>
                         {cardsDone(p, s.name)}/{CARDS_PER_STATE}
                       </span>
                     </div>
@@ -242,13 +242,13 @@ export function ParentZoneScreen() {
         {/* ANALYTICS TAB */}
         {activeTab === "analytics" && (
           <div className="space-y-(--space-2)">
-            <div className="text-display font-extrabold text-sm text-text-muted uppercase">
+            <div className="text-display font-extrabold text-sm uppercase" style={{color: "var(--text-muted)"}}>
               Engagement Metrics
             </div>
 
             <div className="rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-black/5 space-y-(--space-2)">
               <div>
-                <div className="text-sm font-bold text-text-muted mb-(--space-0-25)">
+                <div className="text-sm font-bold mb-(--space-0-25)" style={{color: "var(--text-muted)"}}>
                   Overall Progress
                 </div>
                 <div className="flex items-center gap-(--gap-base)">
@@ -265,7 +265,7 @@ export function ParentZoneScreen() {
               </div>
 
               <div>
-                <div className="text-sm font-bold text-text-muted mb-(--space-0-25)">
+                <div className="text-sm font-bold mb-(--space-0-25)" style={{color: "var(--text-muted)"}}>
                   Daily Average XP
                 </div>
                 <div className="text-display text-2xl font-extrabold text-action-primary-bg">
@@ -274,7 +274,7 @@ export function ParentZoneScreen() {
               </div>
 
               <div>
-                <div className="text-sm font-bold text-text-muted mb-(--space-0-25)">
+                <div className="text-sm font-bold mb-(--space-0-25)" style={{color: "var(--text-muted)"}}>
                   Estimated Hours Played
                 </div>
                 <div className="text-display text-2xl font-extrabold text-fb-success-fg">
@@ -283,7 +283,7 @@ export function ParentZoneScreen() {
               </div>
 
               <div>
-                <div className="text-sm font-bold text-text-muted mb-(--space-0-25)">
+                <div className="text-sm font-bold mb-(--space-0-25)" style={{color: "var(--text-muted)"}}>
                   Days Active
                 </div>
                 <div className="text-display text-2xl font-extrabold text-action-primary-fg">
@@ -293,10 +293,10 @@ export function ParentZoneScreen() {
             </div>
 
             <div className="rounded-3xl bg-[var(--surface-subtle)] border border-[var(--border-default)] p-(--padding-md)">
-              <div className="text-sm font-bold text-text-primary mb-(--space-0-5)">
+              <div className="text-sm font-bold mb-(--space-0-5)" style={{color: "var(--text-primary)"}}>
                 💡 Insights
               </div>
-              <div className="text-xs text-text-secondary leading-relaxed">
+              <div className="text-xs leading-relaxed" style={{color: "var(--text-secondary)"}}>
                 {estimatedHours < 5
                   ? "Great balance! Your child is learning at a healthy pace."
                   : "Your child is very engaged! Consider encouraging breaks."}
@@ -315,12 +315,12 @@ export function ParentZoneScreen() {
             <div className="rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-black/5">
               <div className="flex items-center justify-between mb-(--space-0-25)">
                 <div>
-                  <div className="text-sm font-bold text-text-primary">Parental PIN</div>
-                  <div className="text-xs text-text-muted">Protect sensitive settings</div>
+                  <div className="text-sm font-bold" style={{color: "var(--text-primary)"}}>Parental PIN</div>
+                  <div className="text-xs" style={{color: "var(--text-muted)"}}>Protect sensitive settings</div>
                 </div>
                 <button
                   onClick={() => setShowPINSettings(!showPINSettings)}
-                  className="px-3 py-1 rounded-lg bg-action-primary-bg text-text-on-primary text-xs font-bold"
+                  className="px-3 py-1 rounded-lg bg-action-primary-bg text-xs font-bold" style={{color: "var(--text-on-primary)"}}
                 >
                   {showPINSettings ? "Hide" : "Edit"}
                 </button>
@@ -341,9 +341,9 @@ export function ParentZoneScreen() {
                     disabled={newPIN.length !== 4 || pinSaveStatus === "saving"}
                     className={`w-full h-10 rounded-lg font-bold text-sm transition ${
                       pinSaveStatus === "saved"
-                        ? "bg-fb-success-bg text-text-on-primary"
-                        : "bg-action-primary-bg text-text-on-primary disabled:opacity-50"
-                    }`}
+                        ? "bg-fb-success-bg disabled:opacity-50"
+                        : "bg-action-primary-bg disabled:opacity-50"
+                    }`} style={{color: "var(--text-on-primary)"}}
                   >
                     {pinSaveStatus === "saved"
                       ? "✓ Saved"
@@ -358,8 +358,8 @@ export function ParentZoneScreen() {
             <div className="rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-black/5">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-sm font-bold text-text-primary">Audio</div>
-                  <div className="text-xs text-text-muted">Sound effects & narration</div>
+                  <div className="text-sm font-bold" style={{color: "var(--text-primary)"}}>Audio</div>
+                  <div className="text-xs" style={{color: "var(--text-muted)"}}>Sound effects & narration</div>
                 </div>
                 <input type="checkbox" defaultChecked className="h-5 w-5" disabled />
               </div>
@@ -368,8 +368,8 @@ export function ParentZoneScreen() {
             <div className="rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-black/5">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-sm font-bold text-text-primary">File Storage</div>
-                  <div className="text-xs text-text-muted">Save postcards</div>
+                  <div className="text-sm font-bold" style={{color: "var(--text-primary)"}}>File Storage</div>
+                  <div className="text-xs" style={{color: "var(--text-muted)"}}>Save postcards</div>
                 </div>
                 <input type="checkbox" defaultChecked className="h-5 w-5" disabled />
               </div>
@@ -378,10 +378,10 @@ export function ParentZoneScreen() {
             <div className="rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-black/5">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-sm font-bold text-text-primary">
+                  <div className="text-sm font-bold" style={{color: "var(--text-primary)"}}>
                     Include child's name on shared postcards
                   </div>
-                  <div className="text-xs text-text-muted">
+                  <div className="text-xs" style={{color: "var(--text-muted)"}}>
                     When sharing, add child's name to image
                   </div>
                 </div>
@@ -404,15 +404,15 @@ export function ParentZoneScreen() {
         {/* EXPORT TAB */}
         {activeTab === "export" && (
           <div className="space-y-(--space-2)">
-            <div className="text-display font-extrabold text-sm text-text-muted uppercase">
+            <div className="text-display font-extrabold text-sm uppercase" style={{color: "var(--text-muted)"}}>
               Data Export
             </div>
 
             <div className="rounded-3xl bg-info-soft border border-info p-(--padding-md)">
-              <div className="text-sm font-bold text-text-on-primary mb-(--space-0-5)">
+              <div className="text-sm font-bold mb-(--space-0-5)" style={{color: "var(--text-on-primary)"}}>
                 📋 About Export
               </div>
-              <div className="text-xs text-text-on-primary/90 leading-relaxed">
+              <div className="text-xs leading-relaxed" style={{color: "var(--text-on-primary)"}}>
                 Download your child's progress as a CSV file. Useful for school reports or tracking
                 learning over time.
               </div>
@@ -420,14 +420,14 @@ export function ParentZoneScreen() {
 
             <button
               onClick={handleExportData}
-              className="w-full h-12 rounded-2xl bg-action-success-bg text-text-on-primary font-extrabold text-sm shadow-lg hover:shadow-xl active:scale-95 transition"
+              className="w-full h-12 rounded-2xl bg-action-success-bg font-extrabold text-sm shadow-lg hover:shadow-xl active:scale-95 transition" style={{color: "var(--text-on-primary)"}}
             >
               💾 Download Progress Report
             </button>
 
             <div className="rounded-3xl bg-surface-card p-(--padding-md) shadow-soft border border-black/5 space-y-(--space-0-5)">
-              <div className="text-sm font-bold text-text-primary">What's included:</div>
-              <ul className="text-xs text-text-muted space-y-(--space-0-25)">
+              <div className="text-sm font-bold" style={{color: "var(--text-primary)"}}>What's included:</div>
+              <ul className="text-xs space-y-(--space-0-25)" style={{color: "var(--text-muted)"}}>
                 <li>✓ Summary stats (XP, badges, states)</li>
                 <li>✓ States in progress with completion %</li>
                 <li>✓ All completed states list</li>
@@ -440,11 +440,11 @@ export function ParentZoneScreen() {
 
       {/* Data & Privacy Section - Always visible */}
       <div className="px-(--padding-base) pb-(--space-2) border-t border-black/5 pt-(--space-2)">
-        <div className="text-display font-extrabold text-sm uppercase tracking-wider text-text-muted">
+        <div className="text-display font-extrabold text-sm uppercase tracking-wider" style={{color: "var(--text-muted)"}}>
           Data & Privacy
         </div>
         <div className="mt-(--space-0-5) rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-black/5">
-          <p className="text-sm font-semibold text-text-muted">
+          <p className="text-sm font-semibold" style={{color: "var(--text-muted)"}}>
             All progress is stored only on this device. No account, no ads, and nothing is uploaded.
           </p>
           <a
@@ -461,7 +461,7 @@ export function ParentZoneScreen() {
                   resetProgress();
                   setConfirm(false);
                 }}
-                className="flex-1 h-12 rounded-2xl bg-fb-error-bg text-text-on-primary font-extrabold"
+                className="flex-1 h-12 rounded-2xl bg-fb-error-bg font-extrabold" style={{color: "var(--text-on-primary)"}}
               >
                 Yes, erase everything
               </button>

@@ -89,7 +89,7 @@ export function HomeScreen() {
       {/* Scrollable Content Area */}
       <div className="flex-1 overflow-y-auto overflow-x-hidden pt-safe pb-safe">
         {/* HEADER SECTION - Orange gradient with character */}
-        <div className="flex-shrink-0 bg-header px-5 pt-6 pb-8 rounded-b-3xl text-text-on-header">
+        <div className="flex-shrink-0 bg-header px-5 pt-6 pb-8 rounded-b-3xl" style={{color: "var(--text-on-header)"}}>
           {/* Top Row: Character + Streak & Coins */}
           <div className="flex items-start justify-between mb-4">
             {/* Left: Character Avatar Circle */}
@@ -116,8 +116,8 @@ export function HomeScreen() {
 
           {/* Greeting + Level */}
           <div>
-            <h1 className="text-h2 text-text-on-header">Namaste, Explorer! 👋</h1>
-            <p className="text-body-sm font-semibold text-text-on-header/90">
+            <h1 className="text-h2" style={{color: "var(--text-on-header)"}}>Namaste, Explorer! 👋</h1>
+            <p className="text-body-sm font-semibold" style={{color: "var(--text-on-header)"}}>
               Level {level} • {getLevelName(level)} • v3.0
             </p>
           </div>
@@ -128,22 +128,22 @@ export function HomeScreen() {
           {/* States Card */}
           <div className="flex-1 bg-surface-card rounded-2xl shadow-sm p-(--padding-base) text-center">
             <div className="text-2xl mb-1">{EMOJI.nav.map}</div>
-            <div className="text-h5 text-text-primary">{p.completed.length}</div>
-            <div className="text-caption font-semibold text-text-secondary">States</div>
+            <div className="text-h5" style={{color: "var(--text-primary)"}}>{p.completed.length}</div>
+            <div className="text-caption font-semibold" style={{color: "var(--text-secondary)"}}>States</div>
           </div>
 
           {/* Badges Card */}
           <div className="flex-1 bg-surface-card rounded-2xl shadow-sm p-(--padding-base) text-center">
             <div className="text-2xl mb-1">{EMOJI.milestone.hundred}</div>
-            <div className="text-h5 text-text-primary">0</div>
-            <div className="text-caption font-semibold text-text-secondary">Badges</div>
+            <div className="text-h5" style={{color: "var(--text-primary)"}}>0</div>
+            <div className="text-caption font-semibold" style={{color: "var(--text-secondary)"}}>Badges</div>
           </div>
 
           {/* Stamps Card */}
           <div className="flex-1 bg-surface-card rounded-2xl shadow-sm p-(--padding-base) text-center">
             <div className="text-2xl mb-1">🎫</div>
-            <div className="text-h5 text-text-primary">0</div>
-            <div className="text-caption font-semibold text-text-secondary">Stamps</div>
+            <div className="text-h5" style={{color: "var(--text-primary)"}}>0</div>
+            <div className="text-caption font-semibold" style={{color: "var(--text-secondary)"}}>Stamps</div>
           </div>
         </div>
 
@@ -151,7 +151,7 @@ export function HomeScreen() {
         <div className="px-(--padding-md) py-(--space-4) space-y-(--space-5)">
           {/* CONTINUE YOUR JOURNEY */}
           <div>
-            <h2 className="text-h3 text-text-primary mb-3">Continue your journey</h2>
+            <h2 className="text-h3 mb-3" style={{color: "var(--text-primary)"}}>Continue your journey</h2>
 
             {/* Current State Card with IMAGE */}
             <div className="bg-surface-card rounded-2xl shadow-sm p-(--padding-md) flex items-center gap-(--gap-loose)">
@@ -173,14 +173,14 @@ export function HomeScreen() {
                 <div className="text-caption font-semibold text-accent-1 uppercase">
                   Currently Exploring
                 </div>
-                <h3 className="text-h4 text-text-primary">{current.name}</h3>
+                <h3 className="text-h4" style={{color: "var(--text-primary)"}}>{current.name}</h3>
                 <div className="mt-2 h-1.5 bg-progress-track rounded-full overflow-hidden">
                   <div
                     className="h-full bg-progress-fill transition-all duration-300"
                     style={{ width: `${(currentDone / 6) * 100}%` }}
                   />
                 </div>
-                <div className="text-caption font-semibold text-text-secondary mt-1">
+                <div className="text-caption font-semibold mt-1" style={{color: "var(--text-secondary)"}}>
                   {currentDone}/6
                 </div>
               </div>
@@ -198,11 +198,12 @@ export function HomeScreen() {
           {/* UP NEXT - STATE CARDS */}
           <div>
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-h3 text-text-primary">Up next</h2>
+              <h2 className="text-h3" style={{color: "var(--text-primary)"}}>Up next</h2>
               <Link
                 to="/journey"
                 onClick={() => fxTap()}
-                className="text-body-sm font-bold text-text-link"
+                className="text-body-sm font-bold"
+                style={{color: "var(--text-link)"}}
               >
                 View all
               </Link>
@@ -228,9 +229,9 @@ export function HomeScreen() {
                       backgroundPosition: "center",
                     }}
                   />
-                  <h3 className="text-h5 text-text-primary mb-2">{state.name}</h3>
-                  <div className="text-body-sm font-bold text-text-link">✌️ Open</div>
-                  <div className="text-caption font-semibold text-text-secondary">
+                  <h3 className="text-h5 mb-2" style={{color: "var(--text-primary)"}}>{state.name}</h3>
+                  <div className="text-body-sm font-bold" style={{color: "var(--text-link)"}}>✌️ Open</div>
+                  <div className="text-caption font-semibold" style={{color: "var(--text-secondary)"}}>
                     Start exploring
                   </div>
                 </button>
@@ -261,7 +262,7 @@ export function HomeScreen() {
             className="flex flex-col items-center gap-1 py-(--padding-base) px-(--padding-md)"
           >
             <img src={navJourneyIcon} alt="journey" className="w-6 h-6" />
-            <span className="text-label text-text-primary">Journey</span>
+            <span className="text-label" style={{color: "var(--text-primary)"}}>Journey</span>
           </Link>
 
           <Link
@@ -270,7 +271,7 @@ export function HomeScreen() {
             className="flex flex-col items-center gap-1 py-(--padding-base) px-(--padding-md)"
           >
             <img src={navExplorerIcon} alt="explorer" className="w-6 h-6" />
-            <span className="text-label text-text-primary">Explorer</span>
+            <span className="text-label" style={{color: "var(--text-primary)"}}>Explorer</span>
           </Link>
 
           <Link
@@ -279,7 +280,7 @@ export function HomeScreen() {
             className="flex flex-col items-center gap-1 py-(--padding-base) px-(--padding-md)"
           >
             <img src={navBadgesIcon} alt="badges" className="w-6 h-6" />
-            <span className="text-label text-text-primary">Badges</span>
+            <span className="text-label" style={{color: "var(--text-primary)"}}>Badges</span>
           </Link>
 
           <Link
@@ -288,7 +289,7 @@ export function HomeScreen() {
             className="flex flex-col items-center gap-1 py-(--padding-base) px-(--padding-md)"
           >
             <img src={navMeIcon} alt="me" className="w-6 h-6" />
-            <span className="text-label text-text-primary">Me</span>
+            <span className="text-label" style={{color: "var(--text-primary)"}}>Me</span>
           </Link>
         </div>
       </div>

@@ -145,22 +145,22 @@ export function CardNarrationPlayer({
           <div className="bg-surface-card rounded-3xl p-(--padding-lg) max-w-sm shadow-2xl animate-in fade-in scale-in">
             <div className="text-center">
               <div className="text-5xl mb-(--space-2)">🎧</div>
-              <h3 className="text-xl font-bold text-text-primary mb-(--space-0-5)">
+              <h3 className="text-xl font-bold mb-(--space-0-5)" style={{color: "var(--text-primary)"}}>
                 Enable Audio?
               </h3>
-              <p className="text-sm text-text-muted mb-(--space-2)">
+              <p className="text-sm mb-(--space-2)" style={{color: "var(--text-muted)"}}>
                 Would you like to enable audio to hear this story read aloud?
               </p>
               <div className="flex gap-(--gap-base)">
                 <button
                   onClick={() => setShowPermissionPrompt(false)}
-                  className="flex-1 px-(--padding-md) py-(--padding-base) rounded-xl bg-surface-muted text-text-muted font-bold transition active:scale-95"
+                  className="flex-1 px-(--padding-md) py-(--padding-base) rounded-xl bg-surface-muted font-bold transition active:scale-95" style={{color: "var(--text-muted)"}}
                 >
                   Not Now
                 </button>
                 <button
                   onClick={handleEnableAudio}
-                  className="flex-1 px-(--padding-md) py-(--padding-base) rounded-xl bg-action-primary-bg text-text-on-primary font-bold transition active:scale-95"
+                  className="flex-1 px-(--padding-md) py-(--padding-base) rounded-xl bg-action-primary-bg font-bold transition active:scale-95" style={{color: "var(--text-on-primary)"}}
                 >
                   Enable Audio
                 </button>
@@ -178,11 +178,11 @@ export function CardNarrationPlayer({
             onClick={handlePlayClick}
             className={`h-12 w-12 rounded-full flex items-center justify-center text-2xl transition-transform active:scale-95 flex-shrink-0 ${
               isCurrentPlaying
-                ? "bg-fb-warning-bg text-text-on-primary shadow-lg animate-pulse"
+                ? "bg-fb-warning-bg shadow-lg animate-pulse"
                 : audioNarrationEnabled
-                  ? "bg-action-primary-bg text-text-on-primary shadow-md hover:shadow-lg"
-                  : "bg-action-primary-bg/50 text-text-on-primary shadow-md hover:shadow-lg"
-            }`}
+                  ? "bg-action-primary-bg shadow-md hover:shadow-lg"
+                  : "bg-action-primary-bg/50 shadow-md hover:shadow-lg"
+            }`} style={{color: "var(--text-on-primary)"}}
             title={
               isCurrentPlaying
                 ? "Stop narration"
