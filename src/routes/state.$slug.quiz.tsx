@@ -11,7 +11,7 @@ export const Route = createFileRoute("/state/$slug/quiz")({
 
     const progress = getProgress();
     if (cardsDone(progress, state.name) < CARDS_PER_STATE) {
-      console.warn("[QuizRoute] Guard check failed, redirecting — cards not all done");
+      // Not all cards completed yet - redirect to learn hub
       throw redirect({ to: "/state/$slug/learn", params: { slug: params.slug } });
     }
 

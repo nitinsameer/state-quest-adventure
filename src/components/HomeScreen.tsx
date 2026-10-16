@@ -56,14 +56,7 @@ export function HomeScreen() {
   }
 
   const allCards = learningCardsFor(current.name, "en", p.ageBand);
-  console.log(`[HomeScreen] State: ${current.name}`);
-  console.log(`[HomeScreen] allCards.length: ${allCards.length}`);
-  allCards.forEach((card: any, idx: number) => {
-    console.log(`[HomeScreen] Card[${idx}]: mainCardIndex=${card.mainCardIndex}`);
-  });
-
   const currentDone = completedCategoriesCount(p, current.name, allCards);
-  console.log(`[HomeScreen] completedCategoriesCount result: ${currentDone}`);
 
   const nextStates = getUpNext(current.name, journey, 2);
 

@@ -40,21 +40,17 @@ function Hub() {
   const { slug } = Route.useParams();
   const { name } = Route.useLoaderData();
   const navigate = useNavigate();
-  console.log("[LearnRoute] Hub component mounted/updated with slug:", slug, "name:", name);
   return (
     <LearningHubScreen
       key={slug}
       stateName={name}
       onBack={() => {
-        console.log("[LearnRoute] onBack clicked");
         navigate({ to: "/state/$slug", params: { slug } });
       }}
       onQuiz={() => {
-        console.log("[LearnRoute] onQuiz clicked");
         navigate({ to: "/state/$slug/quiz", params: { slug } });
       }}
       onCard={(index) => {
-        console.log("[LearnRoute] onCard clicked with index:", index);
         navigate({ to: "/state/$slug/card/$index", params: { slug, index: String(index) } });
       }}
     />

@@ -1,10 +1,12 @@
 ﻿import { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useProgress, type PostcardData } from "@/lib/progress";
 import { REGIONS, REGION_KEYS, getProgressPercentage } from "@/lib/passport-helpers";
 import { getState } from "@/lib/states";
 import { generatePassportNumber } from "@/lib/passport-number";
 import { STATE_ART } from "@/lib/state-art";
+import { EMOJI } from "@/constants/emoji";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { PostcardModal } from "@/components/PostcardModal";
 import { PostcardCard } from "@/components/PostcardCard";

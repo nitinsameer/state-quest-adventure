@@ -75,6 +75,9 @@ export const EMOJI = {
     replay: "🔄",
     share: "📤",
     save: "💾",
+    stamp: "🎫",
+    analytics: "📊",
+    growth: "📈",
   },
 
   // Utilities

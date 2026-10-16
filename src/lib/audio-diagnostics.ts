@@ -92,8 +92,11 @@ export function captureAudioDiagnostics(): AudioDiagnostics {
 
 /**
  * Log complete audio diagnostics with [AUDIO DEBUG] prefix
+ * Only logs in development builds
  */
 export function logAudioDiagnostics(label?: string): void {
+  if (!import.meta.env.DEV) return;
+
   const diag = captureAudioDiagnostics();
 
   console.log("[AUDIO DEBUG]", "=== AUDIO SYSTEM DIAGNOSTICS ===", label || "");
@@ -127,20 +130,15 @@ export function logAudioDiagnostics(label?: string): void {
  * Get Web Speech API voices with diagnostic info
  */
 export function getWebSpeechVoices(): { voices: SpeechSynthesisVoice[]; diagnostics: string } {
-  console.log("[AUDIO DEBUG] getWebSpeechVoices() called");
-
   if (typeof window === "undefined" || !window.speechSynthesis) {
     const msg = "speechSynthesis not available";
-    console.log("[AUDIO DEBUG] ✗", msg);
     return { voices: [], diagnostics: msg };
   }
 
   const voices = window.speechSynthesis.getVoices();
-  console.log("[AUDIO DEBUG] ✓ Got", voices.length, "voices from speechSynthesis");
 
-  // Log available languages
+  // Get available languages
   const languages = new Set(voices.map((v) => v.lang));
-  console.log("[AUDIO DEBUG] Available languages:", Array.from(languages).join(", "));
 
   return {
     voices,
@@ -155,12 +153,9 @@ export function getWebSpeechVoices(): { voices: SpeechSynthesisVoice[]; diagnost
 export function testWebSpeechAPI(
   text: string = "Hello explorer",
 ): Promise<{ success: boolean; message: string }> {
-  console.log("[AUDIO DEBUG] testWebSpeechAPI() called with text:", text);
-
   return new Promise((resolve) => {
     if (typeof window === "undefined" || !window.speechSynthesis) {
       const msg = "speechSynthesis not available";
-      console.log("[AUDIO DEBUG] ✗", msg);
       resolve({ success: false, message: msg });
       return;
     }
@@ -169,40 +164,40 @@ export function testWebSpeechAPI(
       const utterance = new SpeechSynthesisUtterance(text);
 
       utterance.onstart = () => {
-        console.log("[AUDIO DEBUG] ✓ speechSynthesis.onstart fired");
+        if (import.meta.env.DEV) console.log("[AUDIO DEBUG] ✓ speechSynthesis.onstart fired");
       };
 
       utterance.onend = () => {
-        console.log("[AUDIO DEBUG] ✓ speechSynthesis.onend fired");
+        if (import.meta.env.DEV) console.log("[AUDIO DEBUG] ✓ speechSynthesis.onend fired");
         resolve({ success: true, message: "Speech completed successfully" });
       };
 
       utterance.onerror = (event) => {
-        console.log("[AUDIO DEBUG] ✗ speechSynthesis.onerror:", event.error);
+        if (import.meta.env.DEV) console.log("[AUDIO DEBUG] ✗ speechSynthesis.onerror:", event.error);
         resolve({ success: false, message: `Speech error: ${event.error}` });
       };
 
       utterance.onpause = () => {
-        console.log("[AUDIO DEBUG] speechSynthesis.onpause fired");
+        if (import.meta.env.DEV) console.log("[AUDIO DEBUG] speechSynthesis.onpause fired");
       };
 
       utterance.onresume = () => {
-        console.log("[AUDIO DEBUG] speechSynthesis.onresume fired");
+        if (import.meta.env.DEV) console.log("[AUDIO DEBUG] speechSynthesis.onresume fired");
       };
 
-      console.log("[AUDIO DEBUG] Calling speechSynthesis.speak()...");
+      if (import.meta.env.DEV) console.log("[AUDIO DEBUG] Calling speechSynthesis.speak()...");
       window.speechSynthesis.speak(utterance);
-      console.log("[AUDIO DEBUG] speechSynthesis.speak() returned");
+      if (import.meta.env.DEV) console.log("[AUDIO DEBUG] speechSynthesis.speak() returned");
 
       // Set timeout in case onend never fires
       setTimeout(() => {
         if (window.speechSynthesis.speaking) {
-          console.log("[AUDIO DEBUG] ⚠ Timeout: speechSynthesis still speaking after 10s");
+          if (import.meta.env.DEV) console.log("[AUDIO DEBUG] ⚠ Timeout: speechSynthesis still speaking after 10s");
           resolve({ success: false, message: "Speech timeout - still speaking after 10s" });
         }
       }, 10000);
     } catch (error) {
-      console.log("[AUDIO DEBUG] ✗ Exception in testWebSpeechAPI:", error);
+      if (import.meta.env.DEV) console.log("[AUDIO DEBUG] ✗ Exception in testWebSpeechAPI:", error);
       resolve({
         success: false,
         message: `Exception: ${error instanceof Error ? error.message : String(error)}`,

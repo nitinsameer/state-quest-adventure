@@ -15,6 +15,7 @@ import { useProgress, isHydrated } from "@/lib/progress";
 import { hasFeatureConsent, grantFeatureConsent } from "@/lib/parental-consent";
 import { debugLog } from "@/lib/debug";
 import { fxTap } from "@/lib/fx";
+import { EMOJI } from "@/constants/emoji";
 import { StandardModal } from "@/components/StandardModal";
 
 export interface AudioPermissionDialogProps {
@@ -123,7 +124,7 @@ export function AudioPermissionDialog({
       open={isOpen}
       onClose={handleReject}
       header={{
-        icon: "🎵",
+        icon: EMOJI.audio.music,
         title: headerText,
         floatingIcon: true,
       }}

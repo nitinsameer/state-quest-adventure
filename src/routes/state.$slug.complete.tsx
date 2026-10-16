@@ -14,7 +14,7 @@ export const Route = createFileRoute("/state/$slug/complete")({
     // GUARD: Check that state is actually completed
     const progress = getProgress();
     if (!progress.completed.includes(state.name)) {
-      console.warn("[CompleteRoute] Guard check failed, redirecting — state not completed");
+      // State not completed - redirect to learn hub
       throw redirect({ to: "/state/$slug/learn", params: { slug: params.slug } });
     }
 

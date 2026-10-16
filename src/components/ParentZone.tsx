@@ -47,8 +47,8 @@ export function ParentZoneScreen() {
     },
     { icon: EMOJI.action.star, label: "Total XP", value: p.xp.toLocaleString() },
     { icon: EMOJI.nav.badges, label: "Badges earned", value: String(badgeCount(p)) },
-    { icon: "🎫", label: "Stamps collected", value: String(Object.keys(p.stamps).length) },
-    { icon: "🔥", label: "Day streak", value: String(p.streak) },
+    { icon: EMOJI.action.stamp, label: "Stamps collected", value: String(Object.keys(p.stamps).length) },
+    { icon: EMOJI.action.fire, label: "Day streak", value: String(p.streak) },
     { icon: EMOJI.milestone.hundred, label: "Achievements", value: String(unlocked) },
   ];
 
@@ -156,10 +156,10 @@ export function ParentZoneScreen() {
       {/* Tab Navigation */}
       <div className="flex gap-0 px-(--padding-base) pt-(--space-0-25) pb-0 border-b border-black/5 overflow-x-auto">
         {[
-          { key: "overview", label: "Overview", icon: "📊" },
-          { key: "analytics", label: "Analytics", icon: "📈" },
-          { key: "controls", label: "Controls", icon: "⚙️" },
-          { key: "export", label: "Export", icon: "💾" },
+          { key: "overview", label: "Overview", icon: EMOJI.action.analytics },
+          { key: "analytics", label: "Analytics", icon: EMOJI.action.growth },
+          { key: "controls", label: "Controls", icon: EMOJI.action.gear },
+          { key: "export", label: "Export", icon: EMOJI.action.save },
         ].map((tab) => (
           <button
             key={tab.key}

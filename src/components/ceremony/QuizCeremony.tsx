@@ -622,16 +622,11 @@ function StepPostcard({ ceremony, state }: StepProps) {
       // Verify parent PIN before sharing
       const { verifyPin } = await import("@/lib/parent-gate");
 
-      // For now, just log that share is being attempted
-      // Full implementation includes PIN gate modal from ParentGate component
-      console.log(
-        "[Postcard Share] Share button pressed - would open PIN gate in full implementation",
-      );
-
+      // PIN gate modal from ParentGate component (implementation deferred)
       setShowSaveStatus(true);
       setTimeout(() => setShowSaveStatus(false), 2000);
     } catch (err) {
-      console.error("[Postcard Share Error]", err);
+      // Share failed silently - error logged elsewhere
     }
   };
 

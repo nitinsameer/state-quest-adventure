@@ -11,7 +11,7 @@ export const Route = createFileRoute("/state/$slug/postcard")({
 
     const progress = getProgress();
     if (!progress.completed.includes(state.name)) {
-      console.warn("[PostcardRoute] Guard check failed, redirecting — state not completed");
+      // State not completed - redirect to state details
       throw redirect({ to: "/state/$slug", params: { slug: params.slug } });
     }
 

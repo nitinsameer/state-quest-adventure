@@ -88,7 +88,7 @@ class RootErrorBoundary extends React.Component<
       error,
     );
 
-    console.error("RootErrorBoundary caught error:", error, errorInfo);
+    // Error is already logged to appLogger and Crashlytics via logError()
     reportLovableError(error, { boundary: "root_error_boundary", errorInfo });
   }
 
@@ -161,7 +161,6 @@ function NotFoundComponent() {
 }
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
-  console.error(error);
   const router = useRouter();
   useEffect(() => {
     reportLovableError(error, { boundary: "tanstack_root_error_component" });
@@ -343,7 +342,8 @@ function HydratedApp() {
           metaThemeColor.setAttribute("content", statusbarBg);
         }
       } catch (error) {
-        console.warn("Failed to initialize status bar:", error);
+        // Status bar initialization failed - silently continue
+        // (non-critical for app functionality)
       }
     };
 
@@ -591,9 +591,9 @@ function RootComponent() {
   // This prevents localStorage access from blocking the main thread
   // Also catches hydration errors gracefully
   useEffect(() => {
-    // FIX: Add timeout to force ready state if hydration never completes (DEBUG)
+    // FIX: Add timeout to force ready state if hydration never completes
     const timeoutId = setTimeout(() => {
-      console.warn("[HYDRATION DEBUG] Hydration timeout - forcing ready state");
+      // Hydration timeout - forcing ready state
       setIsReady(true);
     }, 5000); // 5 second timeout
 
@@ -605,7 +605,6 @@ function RootComponent() {
       .catch((error) => {
         clearTimeout(timeoutId);
         // Hydration failed - log it and continue with defaults
-        console.error("[HYDRATION ERROR]", error);
         const { logError } = require("@/lib/error-tracking");
         logError(error, {
           boundary: "hydration",
