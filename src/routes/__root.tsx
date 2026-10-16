@@ -160,7 +160,7 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function ErrorComponent({ error, reset }: { error: unknown; reset: () => void }) {
   const router = useRouter();
   useEffect(() => {
     reportLovableError(error, { boundary: "tanstack_root_error_component" });
@@ -183,7 +183,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
             Error details (for debugging)
           </summary>
           <pre className="mt-2 overflow-auto rounded bg-muted p-2 text-caption text-foreground font-mono max-h-[150px]">
-            {error?.message}
+            {error instanceof Error ? error.message : String(error)}
           </pre>
         </details>
 
