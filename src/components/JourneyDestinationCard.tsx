@@ -1,6 +1,7 @@
 ﻿import { STATE_ART } from "@/lib/state-art";
 import { getState } from "@/lib/states";
 import { fxTap } from "@/lib/fx";
+import { EMOJI } from "@/constants/emoji";
 
 export interface JourneyDestinationCardProps {
   stateName: string;
