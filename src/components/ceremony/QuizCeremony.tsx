@@ -31,24 +31,31 @@ export function QuizCeremony() {
   const navigationInProgressRef = useRef(false);
 
   // Get the first pending celebration (current ceremony)
-  const ceremony = progress.pendingCelebrations?.[0] as PendingCelebration | undefined;
+  const ceremony = progress.pendingCelebrations?.[0];
+
+  // Type guard: only proceed if ceremony is valid "full" type
+  const isValidCeremony = ceremony && ceremony.type === "full";
 
   // If dismissed, navigate to home ONLY if NOT already navigating via button
   useEffect(() => {
-    if (!ceremony && !navigationInProgressRef.current) {
+    if (!isValidCeremony && !navigationInProgressRef.current) {
       navigate({ to: "/" });
     }
-  }, [ceremony, navigate]);
+  }, [isValidCeremony, navigate]);
 
   // Reset stampedState when step changes
   useEffect(() => {
     setStampedState(false);
   }, [ceremony?.step]);
 
-  // If no ceremony, render nothing (will navigate away)
-  if (!ceremony || ceremony.type !== "full") {
+  // CRITICAL: Guard against undefined ceremony (prevents NPE when dismissed during navigation)
+  // This can happen when route guard returns null after dismissPendingCelebration()
+  if (!isValidCeremony) {
     return null;
   }
+
+  // At this point, ceremony is guaranteed to be PendingCelebration with type "full"
+  const typedCeremony = ceremony as PendingCelebration & { type: "full" };
 
   const state = getState(ceremony.stateName);
   const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
