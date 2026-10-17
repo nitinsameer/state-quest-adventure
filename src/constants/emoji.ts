@@ -89,7 +89,7 @@ export const EMOJI = {
     warning: "⚠️",
     language: "🗣️",
     compass: "🧭",
-    tools: "🛠️",
+    tools: "🛠", // No variation selector - matches reference theme
   },
 
   // Learning and content
