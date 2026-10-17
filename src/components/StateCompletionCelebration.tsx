@@ -137,9 +137,7 @@ export function StateCompletionCelebration({
 
           {/* Badge grid - staggered reveals */}
           <div className="mb-6">
-            <p className="text-body-sm text-muted-foreground font-bold mb-3 px-2">
-              Badges Unlocked:
-            </p>
+            <p className="text-body-sm text-white/80 font-bold mb-3 px-2">Badges Unlocked:</p>
             <div className="grid grid-cols-4 gap-3 px-2">
               {badges.map((badge, index) => {
                 const isRevealed = revealedBadges.has(badge.id);
@@ -151,7 +149,7 @@ export function StateCompletionCelebration({
                     }`}
                   >
                     <div
-                      className={`rounded-2xl bg-accent-4/5 p-3 text-center border-3 border-accent-4 transition-all ${
+                      className={`rounded-2xl bg-white/20 p-3 text-center border-3 border-white/50 transition-all ${
                         isRevealed ? "animate-bounce-scale" : ""
                       }`}
                       title={badge.name}
@@ -166,7 +164,7 @@ export function StateCompletionCelebration({
 
           {/* Celebration message */}
           <div
-            className={`text-center text-h5 font-bold text-accent-5 transition-opacity duration-300 ${
+            className={`text-center text-h5 font-bold text-white transition-opacity duration-300 ${
               stage === "celebrate" ? "opacity-100" : "opacity-0"
             }`}
           >
