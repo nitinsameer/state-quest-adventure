@@ -13,7 +13,7 @@
 
 import { useEffect, useState } from "react";
 import { ConfettiBurst } from "./ConfettiBurst";
-import { fxConfetti } from "../lib/fx";
+import { fxConfetti, fxCorrect } from "../lib/fx";
 import { EMOJI } from "@/constants/emoji";
 
 interface Badge {
@@ -33,7 +33,7 @@ interface StateCompletionCelebrationProps {
 
 export function StateCompletionCelebration({
   stateName,
-  stateEmoji = "{EMOJI.nav.map}",
+  stateEmoji = EMOJI.nav.map,
   badges,
   totalXpGained,
   cardsCompleted,
@@ -42,6 +42,11 @@ export function StateCompletionCelebration({
   const [stage, setStage] = useState<"intro" | "reveal" | "celebrate">("intro");
   const [revealedBadges, setRevealedBadges] = useState<Set<string>>(new Set());
   const [confettiTrigger, setConfettiTrigger] = useState(0);
+
+  useEffect(() => {
+    // Play celebration sound immediately on mount
+    fxCorrect();
+  }, []);
 
   useEffect(() => {
     // Timeline for animation stages
@@ -95,22 +100,22 @@ export function StateCompletionCelebration({
       {/* Main celebration card */}
       <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
         <div
-          className={`relative z-10 rounded-3xl bg-white shadow-2xl p-8 max-w-xl mx-4 transition-all duration-500 ${
+          className={`relative z-10 rounded-3xl bg-action-primary shadow-lg p-8 max-w-xl mx-4 transition-all duration-500 ${
             stage === "intro" ? "scale-0 opacity-0 -rotate-12" : "scale-100 opacity-100 rotate-0"
           }`}
         >
           {/* Glowing border */}
           <div
-            className={`absolute inset-0 rounded-3xl border-4 border-accent-1 transition-all duration-300 ${
-              stage === "celebrate" ? "animate-pulse" : ""
+            className={`absolute inset-0 rounded-3xl border-4 border-action-primary-hover transition-all duration-300 ${
+              stage === "celebrate" ? "animate-pulse opacity-75" : "opacity-50"
             }`}
           />
 
           {/* Header: State name and emoji */}
           <div className="text-center mb-6">
             <div className="text-7xl mb-4 transition-transform duration-300">{stateEmoji}</div>
-            <h1 className="text-h1 font-black text-ink mb-2">{stateName}</h1>
-            <p className="text-body text-success font-bold">
+            <h1 className="text-h1 font-black text-white mb-2">{stateName}</h1>
+            <p className="text-body text-white font-bold">
               {EMOJI.action.sparkle} Completely Explored! {EMOJI.action.sparkle}
             </p>
           </div>
@@ -118,15 +123,15 @@ export function StateCompletionCelebration({
           {/* Stats section */}
           <div className="grid grid-cols-2 gap-4 mb-8 px-2">
             {/* Cards completed */}
-            <div className="bg-primary-soft rounded-2xl p-4 text-center border-2 border-primary">
-              <p className="text-h4 font-black text-primary mb-1">{cardsCompleted}</p>
-              <p className="text-body-sm text-muted-foreground">Cards Done</p>
+            <div className="bg-white/30 backdrop-blur rounded-2xl p-4 text-center border-2 border-white/50">
+              <p className="text-h4 font-black text-white mb-1">{cardsCompleted}</p>
+              <p className="text-body-sm text-white/80">Cards Done</p>
             </div>
 
             {/* XP gained */}
-            <div className="bg-accent-4/10 rounded-2xl p-4 text-center border-2 border-accent-4">
-              <p className="text-h4 font-black text-accent-4 mb-1">+{totalXpGained}</p>
-              <p className="text-body-sm text-muted-foreground">XP Earned</p>
+            <div className="bg-white/30 backdrop-blur rounded-2xl p-4 text-center border-2 border-white/50">
+              <p className="text-h4 font-black text-white mb-1">+{totalXpGained}</p>
+              <p className="text-body-sm text-white/80">XP Earned</p>
             </div>
           </div>
 
