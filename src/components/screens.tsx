@@ -3060,10 +3060,10 @@ export function LearningCardScreen({
         >
           {isLastInMainCardSection
             ? currentMainCardIndex === 5
-              ? "Take the Quiz! {EMOJI.milestone.twentyFive}"
+              ? `Take the Quiz! ${EMOJI.milestone.twentyFive}`
               : "Done! Back to Cards"
             : isReplaying
-              ? "Replay Complete {EMOJI.action.sparkle}"
+              ? `Replay Complete ${EMOJI.action.sparkle}`
               : "Got it! Next →"}
         </button>
       </div>
@@ -3351,10 +3351,10 @@ function QuizScreenContent({
         />
         <div className="relative ui-card ui-accent-1-soft px-3 py-2 text-label font-bold">
           {result === "correct"
-            ? "Nailed it! {EMOJI.feedback.success}"
+            ? `Nailed it! ${EMOJI.feedback.success}`
             : result === "wrong"
-              ? "Good try! Let's move on! {EMOJI.feedback.encouragement}"
-              : "You've got this! {EMOJI.feedback.encouragement}"}
+              ? `Good try! Let's move on! ${EMOJI.feedback.encouragement}`
+              : `You've got this! ${EMOJI.feedback.encouragement}`}
           <div className="absolute left-0 top-1/2 -translate-x-1 -translate-y-1/2 w-3 h-3 rotate-45 ui-card ui-accent-1-soft" />
         </div>
         {result === "correct" && (
@@ -3424,7 +3424,7 @@ function QuizScreenContent({
         >
           {result === "correct"
             ? isLastQuestion
-              ? "Finish Quiz {EMOJI.feedback.success}"
+              ? `Finish Quiz ${EMOJI.feedback.success}`
               : "Next Question →"
             : result === "wrong"
               ? isLastQuestion
