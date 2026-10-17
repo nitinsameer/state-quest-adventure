@@ -34,6 +34,7 @@ import { initializeAudioCleanup } from "@/lib/fx";
 import { Capacitor } from "@capacitor/core";
 import { useCelebrationStore } from "@/store/celebrationStore";
 import { EMOJI } from "@/constants/emoji";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 
 // React Error Boundary for catching runtime errors
 // CRITICAL FIX #1.2: Comprehensive error boundary with Crashlytics logging
@@ -304,7 +305,7 @@ function HydratedApp() {
 
   // Initialize and verify Sound toggle state on app load
   useEffect(() => {
-    const SOUND_KEY = "india-explorer:sound:v1";
+    const SOUND_KEY = STORAGE_KEYS.sound;
     const soundState = localStorage.getItem(SOUND_KEY);
     const isSoundOn = soundState === "1";
 
