@@ -21,8 +21,8 @@ import { readTokenAsHex } from "@/lib/theme-tokens";
 import { EMOJI } from "@/constants/emoji";
 
 const BADGE_EMOJI: Record<BadgeId, string> = {
-  monument: "{EMOJI.achievement.monument}",
-  animal: "{EMOJI.achievement.animal}",
+  monument: EMOJI.achievement.monument,
+  animal: EMOJI.achievement.animal,
   explorer: "🎖️",
 };
 
@@ -255,7 +255,7 @@ export function PostcardPreviewModal({
         // Add to postcard library with image data
         library.addPostcard(stateName || "", badgeId, stampDate, now, base64);
 
-        toast.success("{EMOJI.action.sparkle} Saved to your Passport!", {
+        toast.success(`${EMOJI.action.sparkle} Saved to your Passport!`, {
           subtitle: "View anytime from Explorer",
         });
         setIsSaving(false);
@@ -325,7 +325,7 @@ export function PostcardPreviewModal({
         ]}
         buttons={[
           {
-            label: isSaving ? "Saving..." : "{EMOJI.action.save} Save to Passport",
+            label: isSaving ? "Saving..." : `${EMOJI.action.save} Save to Passport`,
             onClick: handleSaveToPassport,
             variant: "primary",
           },

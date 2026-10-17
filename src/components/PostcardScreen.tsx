@@ -15,8 +15,8 @@ import { readTokenAsHex, subscribeThemeChange } from "@/lib/theme-tokens";
 import { EMOJI } from "@/constants/emoji";
 
 const BADGE_EMOJI: Record<BadgeId, string> = {
-  monument: "{EMOJI.achievement.monument}",
-  animal: "{EMOJI.achievement.animal}",
+  monument: EMOJI.achievement.monument,
+  animal: EMOJI.achievement.animal,
   explorer: "🎖️",
 };
 
@@ -296,7 +296,7 @@ export function StatePostcardScreen({
           // User cancelled share sheet, just close
           setBusy(false);
         } else {
-          toast.success("{EMOJI.action.sparkle} Postcard shared!", {
+          toast.success(`${EMOJI.action.sparkle} Postcard shared!`, {
             subtitle: "Parent can view it now",
           });
           setBusy(false);
@@ -359,7 +359,7 @@ export function StatePostcardScreen({
             disabled={busy || !previewUrl}
             className="flex-1 h-12 rounded-2xl ui-button ui-accent-1-soft text-ink text-sm font-bold disabled:opacity-60 active:scale-95 transition-transform"
           >
-            {busy ? "Saving..." : "{EMOJI.action.save} Save"}
+            {busy ? "Saving..." : `${EMOJI.action.save} Save`}
           </button>
 
           {/* Secondary: Share (Parent-gated) */}

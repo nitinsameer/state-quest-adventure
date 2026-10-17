@@ -11,8 +11,8 @@ import { readTokenAsHex } from "@/lib/theme-tokens";
 import { EMOJI } from "@/constants/emoji";
 
 const BADGE_EMOJI: Record<string, string> = {
-  monument: "{EMOJI.achievement.monument}",
-  animal: "{EMOJI.achievement.animal}",
+  monument: EMOJI.achievement.monument,
+  animal: EMOJI.achievement.animal,
   explorer: EMOJI.achievement.explorer,
 };
 

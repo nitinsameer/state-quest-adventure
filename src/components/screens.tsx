@@ -1338,7 +1338,7 @@ function StateDetailModal({
               }}
               className="flex-1 h-12 rounded-2xl bg-accent-1 text-display font-extrabold text-white shadow-lg hover:shadow-xl transition"
             >
-              {isDone ? "{EMOJI.achievement.explorer} Review" : "▶ Play"}
+              {isDone ? `${EMOJI.achievement.explorer} Review` : "▶ Play"}
             </button>
           )}
         </div>
@@ -1380,12 +1380,12 @@ export function JourneyMapScreen() {
       },
       {
         threshold: 75,
-        emoji: "{EMOJI.feedback.trophy}",
+        emoji: EMOJI.feedback.trophy,
         message: "Almost Complete! 75% Explored!",
       },
       {
         threshold: 100,
-        emoji: "{EMOJI.milestone.hundred}",
+        emoji: EMOJI.milestone.hundred,
         message: "India Master! 100% Complete!",
       },
     ];
@@ -3739,7 +3739,7 @@ function BadgeDetailModal({
             {badge.name === "Monument" && <>{EMOJI.utility.capital} Learn about famous landmarks</>}
             {badge.name === "Animal" && <>{EMOJI.achievement.animal} Discover local wildlife</>}
             {badge.name === "Explorer" &&
-              "{EMOJI.achievement.explorer} Master all cards in this state"}
+              `${EMOJI.achievement.explorer} Master all cards in this state`}
           </p>
         </div>
 
@@ -4316,7 +4316,7 @@ function ProfileScreenContent() {
                 {/* Next Reward */}
                 <div className="ml-15 text-[11px] font-bold text-warning">
                   {daysUntilNext === 0
-                    ? "{EMOJI.theme.painter} Claim your milestone reward!"
+                    ? `${EMOJI.theme.painter} Claim your milestone reward!`
                     : `{EMOJI.theme.painter} ${daysUntilNext} day${daysUntilNext !== 1 ? "s" : ""} until ${nextMilestone}-day bonus!`}
                 </div>
               </div>
