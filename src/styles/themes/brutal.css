@@ -1,0 +1,155 @@
+/**
+ * Neobrutalism Theme
+ * Reference: index-theme.html - [data-theme="brutal"]
+ */
+
+[data-theme="brutal"] {
+  --bg: #ffe66d;
+  --bgc: #ffe66d;
+  --card: #fff;
+  --ink: #111;
+  --mute: #444;
+  --accent: #ff3d7f;
+  --accentg: linear-gradient(135deg, #ff3d7f, #ff5d8f);
+  --onacc: #111;
+  --green: #2fbf71;
+  --greeng: linear-gradient(135deg, #4ade80, #2fbf71);
+  --ongr: #111;
+  
+  --r: 14px;
+  --rs: 10px;
+  --bd: 3px solid #111;
+  --bdt: 2px solid #111;
+  --blur: none;
+  --well: #fff;
+  --barfill: #ffe66d;
+  
+  --sh: 6px 6px 0 #111;
+  --shs: 3px 3px 0 #111;
+  --sin: none;
+  --sht: 4px 4px 0 #111;
+  --shbtn: 4px 4px 0 #111;
+  
+  --tilebg: var(--t);
+  --tilec: #111;
+  --curbg: #9be7ff;
+  --curc: #111;
+  --okbg: #b8f5c0;
+  --okc: #111;
+  --badbg: #ffb3b3;
+  --badc: #111;
+  --lvlbg: #ff9f1c;
+  --lvlc: #111;
+  
+  --navbg: #fff;
+  --navsh: none;
+  
+  --font: 'Space Grotesk', system-ui, sans-serif;
+  --fonth: 'Space Grotesk', system-ui, sans-serif;
+  --tsh: none;
+
+  /* === COMPATIBILITY LAYER === */
+  --bg-page: #ffe66d;
+  --bg-header: #ffe66d;
+  --bg-nav: #fff;
+  --nav-active-bg: #ffe66d;
+  
+  --surface-card: #fff;
+  --surface-raised: #fff;
+  --surface-sunken: #f5f5f5;
+  --surface-overlay: #fff;
+  --surface-muted: #f9f9f9;
+  
+  --scrim: rgba(0, 0, 0, 0.7);
+  
+  --text-primary: #111;
+  --text-secondary: #444;
+  --text-muted: #666;
+  --text-on-header: #111;
+  --text-on-primary: #111;
+  --text-link: #ff3d7f;
+  
+  --action-primary-bg: #ff3d7f;
+  --action-primary-fg: #111;
+  --action-primary-hover: #ff5d8f;
+  --action-secondary-bg: #fff;
+  --action-secondary-fg: #111;
+  --action-success-bg: #2fbf71;
+  --action-success-fg: #111;
+  --action-disabled-bg: #e0e0e0;
+  --action-disabled-fg: #999;
+  
+  --accent-1: #ff3d7f;
+  --accent-1-soft: #ffe8f0;
+  --accent-1-ink: #111;
+  --accent-2: #ff5d8f;
+  --accent-2-soft: #ffe8f0;
+  --accent-2-ink: #111;
+  --accent-3: #2fbf71;
+  --accent-3-soft: #e8f8f0;
+  --accent-3-ink: #111;
+  --accent-4: #ffe66d;
+  --accent-4-soft: #fff9e6;
+  --accent-4-ink: #111;
+  --accent-5: #9be7ff;
+  --accent-5-soft: #e8f7ff;
+  --accent-5-ink: #111;
+  --accent-6: #ff9f1c;
+  --accent-6-soft: #fff5e6;
+  --accent-6-ink: #111;
+  
+  --fb-success-bg: #b8f5c0;
+  --fb-success-fg: #111;
+  --fb-success-border: #2fbf71;
+  --fb-success-soft: #e8fced;
+  
+  --fb-warning-bg: #ffdbcc;
+  --fb-warning-fg: #111;
+  --fb-warning-border: #ff9f1c;
+  
+  --fb-error-bg: #ffb3b3;
+  --fb-error-fg: #111;
+  --fb-error-border: #ff3d7f;
+  --fb-error-soft: #ffb3b3;
+  
+  --fb-info-bg: #9be7ff;
+  --fb-info-fg: #111;
+  --fb-info-border: #0b82d6;
+  
+  --progress-track: #e0e0e0;
+  --progress-fill: #ff3d7f;
+  --progress-fill-2: #2fbf71;
+  
+  --border-color: #111;
+  --border-strong: #111;
+  --border-width: 3px;
+  --border-width-ui: 2px;
+  
+  --statusbar-style: light;
+  --statusbar-bg: #ffe66d;
+  
+  --bg-overlay: #fff;
+  --blur-overlay: rgba(0, 0, 0, 0.7);
+  
+  --radius-card: 0.875rem;
+  --radius-button: 0.625rem;
+  --radius-chip: 10px;
+  
+  --shadow-card: 6px 6px 0 #111;
+  --shadow-button: 4px 4px 0 #111;
+  --shadow-raised: 6px 6px 0 #111;
+  --shadow-inset: none;
+  --shadow-pressed: 2px 2px 0 #111;
+  
+  --focus-ring-color: #ff3d7f;
+  --transition-fast: 0.08s;
+  --press-offset: 4px;
+  --press-scale: 1;
+}
+
+/* Tile styling */
+[data-theme="brutal"] .tile,
+[data-theme="brutal"] .ti.sm,
+[data-theme="brutal"] .gi {
+  --tilebg: var(--t);
+}

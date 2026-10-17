@@ -6,11 +6,34 @@
 @import "./styles/tokens.css";
 
 /* Theme Files - Applied AFTER base tokens so colors override :root */
-@import "./styles/themes/clay.css";       /* Default theme */
-@import "./styles/themes/aero.css";
-@import "./styles/themes/cartoon-comic.css";
-@import "./styles/themes/glassmorphism.css";
-@import "./styles/themes/skeumorphism.css";
+/* Default & Light Variants */
+@import "./styles/themes/clay.css";          /* Default - Claymorphism Light */
+@import "./styles/themes/claydark.css";      /* Claymorphism Dark */
+@import "./styles/themes/neu.css";           /* Neumorphism */
+@import "./styles/themes/minimal.css";       /* Minimal/Apple */
+@import "./styles/themes/material.css";      /* Material Design 3 */
+@import "./styles/themes/bento.css";         /* Bento Box */
+@import "./styles/themes/pop.css";           /* Playful/Pop */
+@import "./styles/themes/paper.css";         /* Notebook */
+
+/* Glassmorphic & Skeumorphic */
+@import "./styles/themes/glass.css";         /* Glassmorphism (supports both glass & glassmorphism) */
+@import "./styles/themes/skeuo.css";         /* Skeumorphic */
+
+/* Gradient & Dark Variants */
+@import "./styles/themes/aero.css";          /* Aerospace/Blue */
+@import "./styles/themes/aurora.css";        /* Aurora/Northern Lights */
+@import "./styles/themes/cartoon.css";       /* Cartoon/Comic */
+
+/* Retro & Technical */
+@import "./styles/themes/pixel.css";         /* Retro Pixel */
+@import "./styles/themes/term.css";          /* Terminal/Matrix */
+@import "./styles/themes/oled.css";          /* OLED Dark */
+
+/* High Contrast & Bold */
+@import "./styles/themes/brutal.css";        /* Brutalist */
+@import "./styles/themes/cyber.css";         /* Cyberpunk */
+@import "./styles/themes/synth.css";         /* Synthwave */
 
 @import "./styles/ui.css";
 @import "./styles/celebrations.css";

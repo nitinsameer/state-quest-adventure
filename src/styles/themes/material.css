@@ -1,0 +1,155 @@
+/**
+ * Material Design 3 Theme
+ * Reference: index-theme.html - [data-theme="material"]
+ */
+
+[data-theme="material"] {
+  --bg: #fef7ff;
+  --bgc: #fef7ff;
+  --card: #f3edf7;
+  --ink: #1d1b20;
+  --mute: #49454f;
+  --accent: #6750a4;
+  --accentg: linear-gradient(135deg, #6750a4, #6750a4);
+  --onacc: #fff;
+  --green: #386a20;
+  --greeng: linear-gradient(135deg, #386a20, #386a20);
+  --ongr: #fff;
+  
+  --r: 28px;
+  --rs: 16px;
+  --bd: 0;
+  --bdt: 0;
+  --blur: none;
+  --well: #e7e0ec;
+  --barfill: #ffd8e4;
+  
+  --sh: 0 1px 2px rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 0, 0, 0.1);
+  --shs: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --sin: none;
+  --sht: 0 1px 3px rgba(0, 0, 0, 0.2);
+  --shbtn: 0 2px 6px rgba(103, 80, 164, 0.35);
+  
+  --tilebg: color-mix(in srgb, var(--t) 60%, #fff);
+  --tilec: #1d1b20;
+  --curbg: #e8def8;
+  --curc: #21005d;
+  --okbg: #cdeed3;
+  --okc: #0c3b1a;
+  --badbg: #f9dedc;
+  --badc: #410e0b;
+  --lvlbg: #ffd8e4;
+  --lvlc: #31111d;
+  
+  --navbg: #f3edf7;
+  --navsh: none;
+  
+  --font: Roboto, 'Nunito', system-ui, sans-serif;
+  --fonth: Roboto, 'Nunito', system-ui, sans-serif;
+  --tsh: none;
+
+  /* === COMPATIBILITY LAYER === */
+  --bg-page: #fef7ff;
+  --bg-header: #fef7ff;
+  --bg-nav: #f3edf7;
+  --nav-active-bg: #e8def8;
+  
+  --surface-card: #f3edf7;
+  --surface-raised: #f3edf7;
+  --surface-sunken: #ede7f6;
+  --surface-overlay: #f3edf7;
+  --surface-muted: #faf8ff;
+  
+  --scrim: rgba(0, 0, 0, 0.5);
+  
+  --text-primary: #1d1b20;
+  --text-secondary: #49454f;
+  --text-muted: #635b60;
+  --text-on-header: #1d1b20;
+  --text-on-primary: #1d1b20;
+  --text-link: #6750a4;
+  
+  --action-primary-bg: #6750a4;
+  --action-primary-fg: #fff;
+  --action-primary-hover: #7761b2;
+  --action-secondary-bg: #f3edf7;
+  --action-secondary-fg: #1d1b20;
+  --action-success-bg: #386a20;
+  --action-success-fg: #fff;
+  --action-disabled-bg: #e7e0ec;
+  --action-disabled-fg: #b3adb8;
+  
+  --accent-1: #6750a4;
+  --accent-1-soft: #e8def8;
+  --accent-1-ink: #21005d;
+  --accent-2: #7761b2;
+  --accent-2-soft: #e8def8;
+  --accent-2-ink: #21005d;
+  --accent-3: #386a20;
+  --accent-3-soft: #cdeed3;
+  --accent-3-ink: #0c3b1a;
+  --accent-4: #ffd8e4;
+  --accent-4-soft: #ffe8f0;
+  --accent-4-ink: #7a3a50;
+  --accent-5: #ffb3ba;
+  --accent-5-soft: #ffdddc;
+  --accent-5-ink: #6a1a1f;
+  --accent-6: #ff6f70;
+  --accent-6-soft: #f9dedc;
+  --accent-6-ink: #410e0b;
+  
+  --fb-success-bg: #cdeed3;
+  --fb-success-fg: #0c3b1a;
+  --fb-success-border: #7cc46b;
+  --fb-success-soft: #e5f5eb;
+  
+  --fb-warning-bg: #ffd8e4;
+  --fb-warning-fg: #7a3a50;
+  --fb-warning-border: #ffb0c8;
+  
+  --fb-error-bg: #f9dedc;
+  --fb-error-fg: #410e0b;
+  --fb-error-border: #ffb3ba;
+  --fb-error-soft: #f9dedc;
+  
+  --fb-info-bg: #e8def8;
+  --fb-info-fg: #21005d;
+  --fb-info-border: #9d85d8;
+  
+  --progress-track: #e7e0ec;
+  --progress-fill: #6750a4;
+  --progress-fill-2: #386a20;
+  
+  --border-color: #e0d7f0;
+  --border-strong: #d6cee0;
+  --border-width: 1px;
+  --border-width-ui: 1px;
+  
+  --statusbar-style: light;
+  --statusbar-bg: #fef7ff;
+  
+  --bg-overlay: #f3edf7;
+  --blur-overlay: rgba(0, 0, 0, 0.15);
+  
+  --radius-card: 1.75rem;
+  --radius-button: 1rem;
+  --radius-chip: 16px;
+  
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 0, 0, 0.1);
+  --shadow-button: 0 2px 6px rgba(103, 80, 164, 0.35);
+  --shadow-raised: 0 1px 2px rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 0, 0, 0.1);
+  --shadow-inset: none;
+  --shadow-pressed: 0 1px 3px rgba(0, 0, 0, 0.2);
+  
+  --focus-ring-color: #6750a4;
+  --transition-fast: 0.12s;
+  --press-offset: 0;
+  --press-scale: 0.97;
+}
+
+/* Tile styling */
+[data-theme="material"] .tile,
+[data-theme="material"] .ti.sm,
+[data-theme="material"] .gi {
+  --tilebg: color-mix(in srgb, var(--t) 60%, #fff);
+}

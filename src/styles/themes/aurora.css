@@ -1,0 +1,155 @@
+/**
+ * Aurora Theme
+ * Reference: index-theme.html - [data-theme="aurora"]
+ */
+
+[data-theme="aurora"] {
+  --bg: radial-gradient(circle at 20% 10%, rgba(0, 255, 170, 0.45), transparent 40%), radial-gradient(circle at 85% 30%, rgba(120, 80, 255, 0.55), transparent 45%), radial-gradient(circle at 50% 95%, rgba(0, 170, 255, 0.45), transparent 45%), #0b1020;
+  --bgc: #0b1020;
+  --card: rgba(255, 255, 255, 0.08);
+  --ink: #f2f6ff;
+  --mute: #a9b6d8;
+  --accent: #5ef2c2;
+  --accentg: linear-gradient(135deg, #5ef2c2, #7a6cff);
+  --onacc: #08101f;
+  --green: #5ef2c2;
+  --greeng: linear-gradient(135deg, #5ef2c2, #5ef2c2);
+  --ongr: #08101f;
+  
+  --r: 24px;
+  --rs: 16px;
+  --bd: 1px solid rgba(255, 255, 255, 0.14);
+  --bdt: 1px solid rgba(255, 255, 255, 0.12);
+  --blur: blur(16px);
+  --well: rgba(255, 255, 255, 0.07);
+  --barfill: #5ef2c2;
+  
+  --sh: 0 10px 30px rgba(0, 0, 0, 0.35);
+  --shs: 0 4px 14px rgba(0, 0, 0, 0.3);
+  --sin: inset 0 2px 6px rgba(0, 0, 0, 0.4);
+  --sht: 0 8px 22px rgba(0, 0, 0, 0.3);
+  --shbtn: 0 8px 24px rgba(94, 242, 194, 0.35);
+  
+  --tilebg: color-mix(in srgb, var(--t) 24%, transparent);
+  --tilec: #fff;
+  --curbg: linear-gradient(135deg, rgba(94, 242, 194, 0.35), rgba(122, 108, 255, 0.35));
+  --curc: #fff;
+  --okbg: rgba(94, 242, 194, 0.25);
+  --okc: #bfffe9;
+  --badbg: rgba(255, 100, 130, 0.25);
+  --badc: #ffc2d0;
+  --lvlbg: rgba(255, 255, 255, 0.16);
+  --lvlc: #fff;
+  
+  --navbg: rgba(11, 16, 32, 0.7);
+  --navsh: 0 -6px 24px rgba(0, 0, 0, 0.4);
+  
+  --font: 'Nunito', system-ui, sans-serif;
+  --fonth: 'Nunito', system-ui, sans-serif;
+  --tsh: none;
+
+  /* === COMPATIBILITY LAYER === */
+  --bg-page: #0b1020;
+  --bg-header: #0b1020;
+  --bg-nav: rgba(11, 16, 32, 0.7);
+  --nav-active-bg: rgba(255, 255, 255, 0.12);
+  
+  --surface-card: rgba(255, 255, 255, 0.08);
+  --surface-raised: rgba(255, 255, 255, 0.08);
+  --surface-sunken: rgba(0, 0, 0, 0.2);
+  --surface-overlay: rgba(255, 255, 255, 0.08);
+  --surface-muted: rgba(255, 255, 255, 0.05);
+  
+  --scrim: rgba(0, 0, 0, 0.6);
+  
+  --text-primary: #f2f6ff;
+  --text-secondary: #a9b6d8;
+  --text-muted: #7a8ab8;
+  --text-on-header: #f2f6ff;
+  --text-on-primary: #f2f6ff;
+  --text-link: #5ef2c2;
+  
+  --action-primary-bg: #5ef2c2;
+  --action-primary-fg: #08101f;
+  --action-primary-hover: #7affd4;
+  --action-secondary-bg: rgba(255, 255, 255, 0.08);
+  --action-secondary-fg: #f2f6ff;
+  --action-success-bg: #5ef2c2;
+  --action-success-fg: #08101f;
+  --action-disabled-bg: rgba(255, 255, 255, 0.05);
+  --action-disabled-fg: #6a7a98;
+  
+  --accent-1: #5ef2c2;
+  --accent-1-soft: rgba(94, 242, 194, 0.2);
+  --accent-1-ink: #f2f6ff;
+  --accent-2: #7a6cff;
+  --accent-2-soft: rgba(122, 108, 255, 0.2);
+  --accent-2-ink: #f2f6ff;
+  --accent-3: #5ef2c2;
+  --accent-3-soft: rgba(94, 242, 194, 0.2);
+  --accent-3-ink: #08101f;
+  --accent-4: #4cc2ff;
+  --accent-4-soft: rgba(76, 194, 255, 0.2);
+  --accent-4-ink: #f2f6ff;
+  --accent-5: #ff6b9d;
+  --accent-5-soft: rgba(255, 107, 157, 0.2);
+  --accent-5-ink: #f2f6ff;
+  --accent-6: #ffd70a;
+  --accent-6-soft: rgba(255, 215, 10, 0.2);
+  --accent-6-ink: #08101f;
+  
+  --fb-success-bg: rgba(94, 242, 194, 0.2);
+  --fb-success-fg: #bfffe9;
+  --fb-success-border: rgba(94, 242, 194, 0.5);
+  --fb-success-soft: rgba(94, 242, 194, 0.1);
+  
+  --fb-warning-bg: rgba(255, 200, 50, 0.2);
+  --fb-warning-fg: #ffdb7a;
+  --fb-warning-border: rgba(255, 200, 50, 0.5);
+  
+  --fb-error-bg: rgba(255, 100, 130, 0.2);
+  --fb-error-fg: #ffc2d0;
+  --fb-error-border: rgba(255, 100, 130, 0.5);
+  --fb-error-soft: rgba(255, 100, 130, 0.1);
+  
+  --fb-info-bg: rgba(100, 180, 255, 0.2);
+  --fb-info-fg: #a0d4ff;
+  --fb-info-border: rgba(100, 180, 255, 0.5);
+  
+  --progress-track: rgba(255, 255, 255, 0.1);
+  --progress-fill: #5ef2c2;
+  --progress-fill-2: #5ef2c2;
+  
+  --border-color: rgba(255, 255, 255, 0.12);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --border-width: 1px;
+  --border-width-ui: 1px;
+  
+  --statusbar-style: dark;
+  --statusbar-bg: #0b1020;
+  
+  --bg-overlay: rgba(255, 255, 255, 0.08);
+  --blur-overlay: blur(16px);
+  
+  --radius-card: 1.5rem;
+  --radius-button: 1rem;
+  --radius-chip: 16px;
+  
+  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.35);
+  --shadow-button: 0 8px 24px rgba(94, 242, 194, 0.35);
+  --shadow-raised: 0 10px 30px rgba(0, 0, 0, 0.35);
+  --shadow-inset: inset 0 2px 6px rgba(0, 0, 0, 0.4);
+  --shadow-pressed: 0 8px 22px rgba(0, 0, 0, 0.3);
+  
+  --focus-ring-color: #5ef2c2;
+  --transition-fast: 0.12s;
+  --press-offset: 0;
+  --press-scale: 0.97;
+}
+
+/* Tile styling */
+[data-theme="aurora"] .tile,
+[data-theme="aurora"] .ti.sm,
+[data-theme="aurora"] .gi {
+  --tilebg: color-mix(in srgb, var(--t) 24%, transparent);
+}

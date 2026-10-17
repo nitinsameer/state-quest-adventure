@@ -1,0 +1,155 @@
+/**
+ * Neumorphism Theme
+ * Reference: index-theme.html - [data-theme="neu"]
+ */
+
+[data-theme="neu"] {
+  --bg: #e0e5ec;
+  --bgc: #e0e5ec;
+  --card: #e0e5ec;
+  --ink: #3d4468;
+  --mute: #7b83a3;
+  --accent: #5b6cff;
+  --accentg: linear-gradient(145deg, #6d7dff, #4a5bf0);
+  --onacc: #fff;
+  --green: #4fd08a;
+  --greeng: linear-gradient(145deg, #4fd08a, #2fb56e);
+  --ongr: #fff;
+  
+  --r: 24px;
+  --rs: 18px;
+  --bd: 0;
+  --bdt: 0;
+  --blur: none;
+  --well: #e0e5ec;
+  --barfill: #5b6cff;
+  
+  --sh: 9px 9px 18px #a3b1c6, -9px -9px 18px #fff;
+  --shs: 5px 5px 10px #a3b1c6, -5px -5px 10px #fff;
+  --sin: inset 4px 4px 8px #a3b1c6, inset -4px -4px 8px #fff;
+  --sht: 6px 6px 12px #a3b1c6, -6px -6px 12px #fff;
+  --shbtn: 6px 6px 12px #a3b1c6, -6px -6px 12px #fff;
+  
+  --tilebg: #e0e5ec;
+  --tilec: #3d4468;
+  --curbg: linear-gradient(145deg, #d3d9e4, #eef2f8);
+  --curc: #3d4468;
+  --okbg: #d5eedd;
+  --okc: #1e5a33;
+  --badbg: #f5d8dc;
+  --badc: #7a2230;
+  --lvlbg: #e0e5ec;
+  --lvlc: #b4590a;
+  
+  --navbg: #e0e5ec;
+  --navsh: 0 -6px 16px rgba(163, 177, 198, 0.7);
+  
+  --font: 'Nunito', system-ui, sans-serif;
+  --fonth: 'Nunito', system-ui, sans-serif;
+  --tsh: none;
+
+  /* === COMPATIBILITY LAYER === */
+  --bg-page: #e0e5ec;
+  --bg-header: #e0e5ec;
+  --bg-nav: #e0e5ec;
+  --nav-active-bg: #eef2f8;
+  
+  --surface-card: #e0e5ec;
+  --surface-raised: #e0e5ec;
+  --surface-sunken: #d8dce7;
+  --surface-overlay: #e0e5ec;
+  --surface-muted: #dde1ec;
+  
+  --scrim: rgba(61, 68, 104, 0.5);
+  
+  --text-primary: #3d4468;
+  --text-secondary: #7b83a3;
+  --text-muted: #8b93b3;
+  --text-on-header: #3d4468;
+  --text-on-primary: #3d4468;
+  --text-link: #5b6cff;
+  
+  --action-primary-bg: #5b6cff;
+  --action-primary-fg: #fff;
+  --action-primary-hover: #6d7dff;
+  --action-secondary-bg: #e0e5ec;
+  --action-secondary-fg: #3d4468;
+  --action-success-bg: #4fd08a;
+  --action-success-fg: #fff;
+  --action-disabled-bg: #d8dce7;
+  --action-disabled-fg: #a3b1c6;
+  
+  --accent-1: #5b6cff;
+  --accent-1-soft: #e8ecff;
+  --accent-1-ink: #3d4468;
+  --accent-2: #4a5bf0;
+  --accent-2-soft: #e8ecff;
+  --accent-2-ink: #3d4468;
+  --accent-3: #4fd08a;
+  --accent-3-soft: #d5eedd;
+  --accent-3-ink: #1e5a33;
+  --accent-4: #5b6cff;
+  --accent-4-soft: #e8ecff;
+  --accent-4-ink: #3d4468;
+  --accent-5: #7b9cff;
+  --accent-5-soft: #e8ecff;
+  --accent-5-ink: #3d4468;
+  --accent-6: #6db8ff;
+  --accent-6-soft: #e8f4ff;
+  --accent-6-ink: #1a3a6a;
+  
+  --fb-success-bg: #d5eedd;
+  --fb-success-fg: #1e5a33;
+  --fb-success-border: #7ccc99;
+  --fb-success-soft: #e8f5ed;
+  
+  --fb-warning-bg: #ffe8cc;
+  --fb-warning-fg: #8a5a00;
+  --fb-warning-border: #ffb266;
+  
+  --fb-error-bg: #f5d8dc;
+  --fb-error-fg: #7a2230;
+  --fb-error-border: #d88a99;
+  --fb-error-soft: #f5d8dc;
+  
+  --fb-info-bg: #e0ecff;
+  --fb-info-fg: #1a3a7a;
+  --fb-info-border: #7cb3ff;
+  
+  --progress-track: #d8dce7;
+  --progress-fill: #5b6cff;
+  --progress-fill-2: #4fd08a;
+  
+  --border-color: #d3d9e4;
+  --border-strong: #c8cfe0;
+  --border-width: 1px;
+  --border-width-ui: 1px;
+  
+  --statusbar-style: light;
+  --statusbar-bg: #e0e5ec;
+  
+  --bg-overlay: #e0e5ec;
+  --blur-overlay: rgba(163, 177, 198, 0.2);
+  
+  --radius-card: 1.5rem;
+  --radius-button: 1.125rem;
+  --radius-chip: 18px;
+  
+  --shadow-card: 9px 9px 18px #a3b1c6, -9px -9px 18px #fff;
+  --shadow-button: 6px 6px 12px #a3b1c6, -6px -6px 12px #fff;
+  --shadow-raised: 9px 9px 18px #a3b1c6, -9px -9px 18px #fff;
+  --shadow-inset: inset 4px 4px 8px #a3b1c6, inset -4px -4px 8px #fff;
+  --shadow-pressed: 6px 6px 12px #a3b1c6, -6px -6px 12px #fff;
+  
+  --focus-ring-color: #5b6cff;
+  --transition-fast: 0.12s;
+  --press-offset: 0;
+  --press-scale: 0.97;
+}
+
+/* Tile styling */
+[data-theme="neu"] .tile,
+[data-theme="neu"] .ti.sm,
+[data-theme="neu"] .gi {
+  --tilebg: #e0e5ec;
+}

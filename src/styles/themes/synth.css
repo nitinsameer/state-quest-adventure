@@ -1,0 +1,155 @@
+/**
+ * Synthwave Theme
+ * Reference: index-theme.html - [data-theme="synth"]
+ */
+
+[data-theme="synth"] {
+  --bg: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.04) 0 2px, transparent 2px 40px), linear-gradient(180deg, #1a0536, #4a0a6b 50%, #c2186b);
+  --bgc: #1a0536;
+  --card: rgba(26, 5, 54, 0.72);
+  --ink: #ffe8ff;
+  --mute: #d89cf0;
+  --accent: #2ee6ff;
+  --accentg: linear-gradient(135deg, #ff2a8a, #ff9e2c);
+  --onacc: #1a0536;
+  --green: #2ee6ff;
+  --greeng: linear-gradient(135deg, #00f5a0, #00c27a);
+  --ongr: #1a0536;
+  
+  --r: 14px;
+  --rs: 10px;
+  --bd: 2px solid #ff2a8a;
+  --bdt: 1px solid rgba(255, 42, 138, 0.7);
+  --blur: none;
+  --well: rgba(0, 0, 0, 0.35);
+  --barfill: #2ee6ff;
+  
+  --sh: 0 0 18px rgba(255, 42, 138, 0.5);
+  --shs: 0 0 10px rgba(255, 42, 138, 0.5);
+  --sin: inset 0 0 8px rgba(0, 0, 0, 0.6);
+  --sht: 0 0 14px rgba(255, 42, 138, 0.55);
+  --shbtn: 0 0 22px rgba(255, 158, 44, 0.6);
+  
+  --tilebg: color-mix(in srgb, var(--t) 20%, #1a0536);
+  --tilec: #fff;
+  --curbg: linear-gradient(135deg, rgba(46, 230, 255, 0.35), rgba(255, 42, 138, 0.35));
+  --curc: #fff;
+  --okbg: rgba(0, 230, 150, 0.25);
+  --okc: #9dffd8;
+  --badbg: rgba(255, 60, 90, 0.3);
+  --badc: #ffb0c0;
+  --lvlbg: #2ee6ff;
+  --lvlc: #1a0536;
+  
+  --navbg: #1a0536;
+  --navsh: 0 -4px 20px rgba(255, 42, 138, 0.4);
+  
+  --font: 'Space Grotesk', system-ui, sans-serif;
+  --fonth: 'Orbitron', system-ui, sans-serif;
+  --tsh: 0 0 10px rgba(255, 42, 138, 0.8);
+
+  /* === COMPATIBILITY LAYER === */
+  --bg-page: #1a0536;
+  --bg-header: #1a0536;
+  --bg-nav: #1a0536;
+  --nav-active-bg: rgba(26, 5, 54, 0.9);
+  
+  --surface-card: rgba(26, 5, 54, 0.72);
+  --surface-raised: rgba(26, 5, 54, 0.8);
+  --surface-sunken: rgba(0, 0, 0, 0.3);
+  --surface-overlay: rgba(26, 5, 54, 0.85);
+  --surface-muted: rgba(26, 5, 54, 0.6);
+  
+  --scrim: rgba(0, 0, 0, 0.7);
+  
+  --text-primary: #ffe8ff;
+  --text-secondary: #d89cf0;
+  --text-muted: #b878c8;
+  --text-on-header: #ffe8ff;
+  --text-on-primary: #ffe8ff;
+  --text-link: #2ee6ff;
+  
+  --action-primary-bg: #2ee6ff;
+  --action-primary-fg: #1a0536;
+  --action-primary-hover: #66eeff;
+  --action-secondary-bg: rgba(26, 5, 54, 0.72);
+  --action-secondary-fg: #ffe8ff;
+  --action-success-bg: #2ee6ff;
+  --action-success-fg: #1a0536;
+  --action-disabled-bg: rgba(255, 255, 255, 0.1);
+  --action-disabled-fg: #8a6aa8;
+  
+  --accent-1: #2ee6ff;
+  --accent-1-soft: rgba(46, 230, 255, 0.2);
+  --accent-1-ink: #ffe8ff;
+  --accent-2: #ff2a8a;
+  --accent-2-soft: rgba(255, 42, 138, 0.2);
+  --accent-2-ink: #ffe8ff;
+  --accent-3: #2ee6ff;
+  --accent-3-soft: rgba(46, 230, 255, 0.2);
+  --accent-3-ink: #1a0536;
+  --accent-4: #ff9e2c;
+  --accent-4-soft: rgba(255, 158, 44, 0.2);
+  --accent-4-ink: #1a0536;
+  --accent-5: #ff6b9d;
+  --accent-5-soft: rgba(255, 107, 157, 0.2);
+  --accent-5-ink: #ffe8ff;
+  --accent-6: #ffaa00;
+  --accent-6-soft: rgba(255, 170, 0, 0.2);
+  --accent-6-ink: #1a0536;
+  
+  --fb-success-bg: rgba(46, 230, 255, 0.2);
+  --fb-success-fg: #9dffd8;
+  --fb-success-border: rgba(46, 230, 255, 0.5);
+  --fb-success-soft: rgba(46, 230, 255, 0.1);
+  
+  --fb-warning-bg: rgba(255, 158, 44, 0.2);
+  --fb-warning-fg: #ffcc66;
+  --fb-warning-border: rgba(255, 158, 44, 0.5);
+  
+  --fb-error-bg: rgba(255, 60, 90, 0.2);
+  --fb-error-fg: #ffb0c0;
+  --fb-error-border: rgba(255, 60, 90, 0.5);
+  --fb-error-soft: rgba(255, 60, 90, 0.1);
+  
+  --fb-info-bg: rgba(46, 230, 255, 0.2);
+  --fb-info-fg: #99ffee;
+  --fb-info-border: rgba(46, 230, 255, 0.5);
+  
+  --progress-track: rgba(0, 0, 0, 0.3);
+  --progress-fill: #2ee6ff;
+  --progress-fill-2: #2ee6ff;
+  
+  --border-color: rgba(255, 42, 138, 0.5);
+  --border-strong: rgba(255, 42, 138, 0.7);
+  --border-width: 2px;
+  --border-width-ui: 1px;
+  
+  --statusbar-style: dark;
+  --statusbar-bg: #1a0536;
+  
+  --bg-overlay: rgba(26, 5, 54, 0.8);
+  --blur-overlay: rgba(0, 0, 0, 0.7);
+  
+  --radius-card: 0.875rem;
+  --radius-button: 0.625rem;
+  --radius-chip: 10px;
+  
+  --shadow-card: 0 0 18px rgba(255, 42, 138, 0.5);
+  --shadow-button: 0 0 22px rgba(255, 158, 44, 0.6);
+  --shadow-raised: 0 0 18px rgba(255, 42, 138, 0.5);
+  --shadow-inset: inset 0 0 8px rgba(0, 0, 0, 0.6);
+  --shadow-pressed: 0 0 14px rgba(255, 42, 138, 0.55);
+  
+  --focus-ring-color: #2ee6ff;
+  --transition-fast: 0.12s;
+  --press-offset: 0;
+  --press-scale: 0.97;
+}
+
+/* Tile styling */
+[data-theme="synth"] .tile,
+[data-theme="synth"] .ti.sm,
+[data-theme="synth"] .gi {
+  --tilebg: color-mix(in srgb, var(--t) 20%, #1a0536);
+}

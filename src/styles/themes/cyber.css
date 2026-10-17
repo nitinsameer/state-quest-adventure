@@ -1,0 +1,155 @@
+/**
+ * Cyberpunk Neon Theme
+ * Reference: index-theme.html - [data-theme="cyber"]
+ */
+
+[data-theme="cyber"] {
+  --bg: radial-gradient(circle at 15% 0%, #3a1060, transparent 50%), radial-gradient(circle at 90% 90%, #07405a, transparent 45%), #07071a;
+  --bgc: #07071a;
+  --card: #12122e;
+  --ink: #e8f0ff;
+  --mute: #8fa0d0;
+  --accent: #00f5d4;
+  --accentg: linear-gradient(135deg, #00f5d4, #00a8ff);
+  --onacc: #021018;
+  --green: #00f5a0;
+  --greeng: linear-gradient(135deg, #00f5a0, #00c27a);
+  --ongr: #021018;
+  
+  --r: 18px;
+  --rs: 14px;
+  --bd: 1px solid rgba(0, 245, 212, 0.55);
+  --bdt: 1px solid rgba(0, 245, 212, 0.4);
+  --blur: none;
+  --well: #0a0a22;
+  --barfill: #ff2ec8;
+  
+  --sh: 0 0 18px rgba(0, 245, 212, 0.22), inset 0 0 14px rgba(0, 245, 212, 0.07);
+  --shs: 0 0 10px rgba(0, 245, 212, 0.25);
+  --sin: inset 0 0 8px rgba(0, 0, 0, 0.7);
+  --sht: 0 0 14px rgba(0, 245, 212, 0.3), inset 0 0 12px rgba(0, 245, 212, 0.08);
+  --shbtn: 0 0 20px rgba(0, 245, 212, 0.55);
+  
+  --tilebg: color-mix(in srgb, var(--t) 16%, #0c0c24);
+  --tilec: #fff;
+  --curbg: linear-gradient(135deg, rgba(255, 46, 200, 0.35), rgba(0, 245, 212, 0.25));
+  --curc: #fff;
+  --okbg: rgba(0, 245, 150, 0.2);
+  --okc: #7dffc4;
+  --badbg: rgba(255, 50, 100, 0.2);
+  --badc: #ff8fb0;
+  --lvlbg: #ff2ec8;
+  --lvlc: #fff;
+  
+  --navbg: #07071a;
+  --navsh: 0 -4px 20px rgba(0, 245, 212, 0.25);
+  
+  --font: 'Space Grotesk', system-ui, sans-serif;
+  --fonth: 'Orbitron', 'Space Grotesk', system-ui, sans-serif;
+  --tsh: 0 0 12px rgba(0, 245, 212, 0.6);
+
+  /* === COMPATIBILITY LAYER === */
+  --bg-page: #07071a;
+  --bg-header: #07071a;
+  --bg-nav: #07071a;
+  --nav-active-bg: #12122e;
+  
+  --surface-card: #12122e;
+  --surface-raised: #12122e;
+  --surface-sunken: #0a0a22;
+  --surface-overlay: #12122e;
+  --surface-muted: #0f0f2a;
+  
+  --scrim: rgba(0, 0, 0, 0.8);
+  
+  --text-primary: #e8f0ff;
+  --text-secondary: #8fa0d0;
+  --text-muted: #6a7aa0;
+  --text-on-header: #e8f0ff;
+  --text-on-primary: #e8f0ff;
+  --text-link: #00f5d4;
+  
+  --action-primary-bg: #00f5d4;
+  --action-primary-fg: #021018;
+  --action-primary-hover: #00fff0;
+  --action-secondary-bg: #12122e;
+  --action-secondary-fg: #e8f0ff;
+  --action-success-bg: #00f5a0;
+  --action-success-fg: #021018;
+  --action-disabled-bg: #1a1a32;
+  --action-disabled-fg: #4a5a80;
+  
+  --accent-1: #00f5d4;
+  --accent-1-soft: #0a3a30;
+  --accent-1-ink: #e8f0ff;
+  --accent-2: #00a8ff;
+  --accent-2-soft: #0a2a5a;
+  --accent-2-ink: #e8f0ff;
+  --accent-3: #00f5a0;
+  --accent-3-soft: #0a3a20;
+  --accent-3-ink: #021018;
+  --accent-4: #ff2ec8;
+  --accent-4-soft: #3a0a2a;
+  --accent-4-ink: #e8f0ff;
+  --accent-5: #ff6b9d;
+  --accent-5-soft: #3a1a2a;
+  --accent-5-ink: #e8f0ff;
+  --accent-6: #ffaa00;
+  --accent-6-soft: #3a2a0a;
+  --accent-6-ink: #021018;
+  
+  --fb-success-bg: rgba(0, 245, 160, 0.2);
+  --fb-success-fg: #7dffc4;
+  --fb-success-border: rgba(0, 245, 160, 0.6);
+  --fb-success-soft: rgba(0, 245, 160, 0.1);
+  
+  --fb-warning-bg: rgba(255, 170, 0, 0.2);
+  --fb-warning-fg: #ffcc66;
+  --fb-warning-border: rgba(255, 170, 0, 0.6);
+  
+  --fb-error-bg: rgba(255, 50, 100, 0.2);
+  --fb-error-fg: #ff8fb0;
+  --fb-error-border: rgba(255, 50, 100, 0.6);
+  --fb-error-soft: rgba(255, 50, 100, 0.1);
+  
+  --fb-info-bg: rgba(0, 165, 255, 0.2);
+  --fb-info-fg: #66ccff;
+  --fb-info-border: rgba(0, 165, 255, 0.6);
+  
+  --progress-track: #1a1a32;
+  --progress-fill: #00f5d4;
+  --progress-fill-2: #00f5a0;
+  
+  --border-color: rgba(0, 245, 212, 0.4);
+  --border-strong: rgba(0, 245, 212, 0.6);
+  --border-width: 1px;
+  --border-width-ui: 1px;
+  
+  --statusbar-style: dark;
+  --statusbar-bg: #07071a;
+  
+  --bg-overlay: #12122e;
+  --blur-overlay: rgba(0, 0, 0, 0.8);
+  
+  --radius-card: 1.125rem;
+  --radius-button: 0.875rem;
+  --radius-chip: 14px;
+  
+  --shadow-card: 0 0 18px rgba(0, 245, 212, 0.22), inset 0 0 14px rgba(0, 245, 212, 0.07);
+  --shadow-button: 0 0 20px rgba(0, 245, 212, 0.55);
+  --shadow-raised: 0 0 18px rgba(0, 245, 212, 0.22), inset 0 0 14px rgba(0, 245, 212, 0.07);
+  --shadow-inset: inset 0 0 8px rgba(0, 0, 0, 0.7);
+  --shadow-pressed: 0 0 14px rgba(0, 245, 212, 0.3), inset 0 0 12px rgba(0, 245, 212, 0.08);
+  
+  --focus-ring-color: #00f5d4;
+  --transition-fast: 0.12s;
+  --press-offset: 0;
+  --press-scale: 0.97;
+}
+
+/* Tile styling */
+[data-theme="cyber"] .tile,
+[data-theme="cyber"] .ti.sm,
+[data-theme="cyber"] .gi {
+  --tilebg: color-mix(in srgb, var(--t) 16%, #0c0c24);
+}

@@ -1,120 +1,155 @@
 /**
- * Futura Aero Theme
- *
- * Clean, futuristic, and streamlined. Modern aerospace-inspired design.
- * Minimalist with sleek lines, cool blues and grays, and subtle gradients.
+ * Aero Theme (Frutiger Aero)
+ * Reference: index-theme.html - [data-theme="aero"]
  */
 
 [data-theme="aero"] {
-  /* Page */
-  --bg-header: oklch(0.15 0.02 250);
-  --bg-nav: oklch(1 0 0);
-  --nav-active-bg: oklch(0.95 0.02 250);
+  --bg: radial-gradient(circle at 18% 28%, rgba(255, 255, 255, 0.85) 0 16px, transparent 17px), radial-gradient(circle at 82% 62%, rgba(255, 255, 255, 0.7) 0 26px, transparent 27px), linear-gradient(180deg, #5fc8ff, #bff0ff 45%, #e6ffd9);
+  --bgc: #bff0ff;
+  --card: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.5));
+  --ink: #0b3a5a;
+  --mute: #3b6b8a;
+  --accent: #0b82d6;
+  --accentg: linear-gradient(180deg, #8ae0ff, #1a9be6 50%, #0b82d6 51%, #4cc2ff);
+  --onacc: #fff;
+  --green: #3bb44a;
+  --greeng: linear-gradient(180deg, #9cf08e, #3bb44a 50%, #2f9d3d 51%, #62d96d);
+  --ongr: #fff;
+  
+  --r: 22px;
+  --rs: 16px;
+  --bd: 1px solid rgba(255, 255, 255, 0.95);
+  --bdt: 1px solid rgba(255, 255, 255, 0.9);
+  --blur: blur(10px);
+  --well: rgba(255, 255, 255, 0.55);
+  --barfill: #fff27a;
+  
+  --sh: 0 8px 20px rgba(0, 100, 160, 0.3), inset 0 1px 0 #fff, inset 0 -8px 14px rgba(120, 200, 255, 0.35);
+  --shs: 0 4px 10px rgba(0, 100, 160, 0.3), inset 0 1px 0 #fff, inset 0 -5px 8px rgba(120, 200, 255, 0.3);
+  --sin: inset 0 2px 5px rgba(0, 100, 160, 0.3);
+  --sht: 0 6px 14px rgba(0, 100, 160, 0.3), inset 0 1px 0 #fff, inset 0 -6px 10px rgba(120, 200, 255, 0.3);
+  --shbtn: 0 4px 10px rgba(0, 80, 150, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  
+  --tilebg: color-mix(in srgb, var(--t) 55%, rgba(255, 255, 255, 0.6));
+  --tilec: #0b3a5a;
+  --curbg: linear-gradient(180deg, #d6f4ff, #7fd0ff);
+  --curc: #063a5e;
+  --okbg: rgba(140, 235, 140, 0.75);
+  --okc: #0b4a14;
+  --badbg: rgba(255, 160, 160, 0.8);
+  --badc: #6a1010;
+  --lvlbg: #fff27a;
+  --lvlc: #5a4400;
+  
+  --navbg: rgba(255, 255, 255, 0.6);
+  --navsh: 0 -4px 14px rgba(0, 100, 160, 0.25);
+  
+  --font: 'Nunito', system-ui, sans-serif;
+  --fonth: 'Nunito', system-ui, sans-serif;
+  --tsh: none;
 
-  /* Surfaces */
-  --surface-card: oklch(1 0 0);
-  --surface-raised: oklch(0.98 0.003 260);
-  --surface-sunken: oklch(0.94 0.01 260);
-  --surface-overlay: oklch(1 0 0);
-  --scrim: rgba(21, 32, 60, 0.7);
-
-  /* Text */
-  --text-primary: oklch(0.15 0.02 250);
-  --text-secondary: oklch(0.35 0.06 250);
-  --text-muted: oklch(0.55 0.05 260);
-  --text-on-header: oklch(1 0 0);
-  --text-on-primary: oklch(1 0 0);
-  --text-link: oklch(0.45 0.15 250);
-
-  /* Actions */
-  --action-primary-bg: oklch(0.45 0.15 250);
-  --action-primary-fg: oklch(1 0 0);
-  --action-secondary-bg: oklch(0.95 0.02 260);
-  --action-secondary-fg: oklch(0.15 0.02 250);
-  --action-success-bg: oklch(0.65 0.18 150);
-  --action-success-fg: oklch(0.22 0.05 260);
-  --action-disabled-bg: oklch(0.92 0.01 260);
-  --action-disabled-fg: oklch(0.6 0.04 260);
-
-  /* Accents */
-  --accent-1: oklch(0.45 0.15 250);
-  --accent-1-soft: oklch(0.92 0.03 250);
-  --accent-1-ink: oklch(1 0 0);
-  --accent-2: oklch(0.65 0.18 150);
-  --accent-2-soft: oklch(0.94 0.04 150);
-  --accent-2-ink: oklch(0.22 0.05 260);
-  --accent-3: oklch(0.72 0.15 60);
-  --accent-3-soft: oklch(0.96 0.02 60);
-  --accent-3-ink: oklch(0.22 0.05 260);
-  --accent-4: oklch(0.58 0.2 290);
-  --accent-4-soft: oklch(0.94 0.05 290);
-  --accent-4-ink: oklch(1 0 0);
-  --accent-5: oklch(0.55 0.15 40);
-  --accent-5-soft: oklch(0.95 0.03 40);
-  --accent-5-ink: oklch(1 0 0);
-  --accent-6: oklch(0.65 0.18 200);
-  --accent-6-soft: oklch(0.94 0.04 200);
-  --accent-6-ink: oklch(1 0 0);
-
-  /* Feedback */
-  --fb-success-bg: oklch(0.95 0.06 150);
-  --fb-success-fg: oklch(0.35 0.1 150);
-  --fb-success-border: oklch(0.72 0.19 150);
-  --fb-warning-bg: oklch(0.96 0.06 60);
-  --fb-warning-fg: oklch(0.4 0.1 50);
-  --fb-warning-border: oklch(0.75 0.16 50);
-  --fb-error-bg: oklch(0.96 0.08 27);
-  --fb-error-fg: oklch(0.35 0.1 27);
-  --fb-error-border: oklch(0.62 0.24 27);
-  --fb-info-bg: oklch(0.95 0.05 250);
-  --fb-info-fg: oklch(0.35 0.1 250);
-  --fb-info-border: oklch(0.62 0.2 250);
-
-  /* Progress */
-  --progress-track: oklch(0.92 0.01 260);
-  --progress-fill: oklch(0.45 0.15 250);
-  --progress-fill-2: oklch(0.65 0.18 150);
-
-  /* Border */
-  --border-color: oklch(0.92 0.01 260);
-  --border-strong: oklch(0.75 0.04 250);
-
-  /* Status Bar */
-  --statusbar-style: light;
-  --statusbar-bg: oklch(0.15 0.02 250);
-
-  /* Surface muted */
-  --surface-muted: oklch(0.96 0.01 260);
-  --action-primary-hover: oklch(0.55 0.16 250);
-  --bg-overlay: oklch(1 0 0);
-  --blur-overlay: rgba(255, 255, 255, 0.8);
-  --fb-error-soft: oklch(0.96 0.08 27);
-
-  /* Typography */
-  --font-display: 'Orbitron', 'Exo 2', sans-serif;
-  --font-sans: 'Inter', sans-serif;
-
-  /* Gradient background */
-  --bg-page: linear-gradient(160deg, #F0F4FF 0%, #E0E8FF 100%);
-
-  /* Shadows */
-  --shadow-card: 0 2px 8px rgba(0, 100, 200, 0.12), 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-button: 0 2px 6px rgba(0, 100, 200, 0.25), 0 0 0 1px rgba(0, 100, 200, 0.1);
-
-  /* Radii */
-  --radius-card: 0.5rem;
-  --radius-button: 0.375rem;
-
-  /* Border width */
+  /* === COMPATIBILITY LAYER === */
+  --bg-page: #bff0ff;
+  --bg-header: #bff0ff;
+  --bg-nav: rgba(255, 255, 255, 0.6);
+  --nav-active-bg: rgba(255, 255, 255, 0.8);
+  
+  --surface-card: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.5));
+  --surface-raised: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.5));
+  --surface-sunken: rgba(255, 255, 255, 0.4);
+  --surface-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.5));
+  --surface-muted: rgba(255, 255, 255, 0.7);
+  
+  --scrim: rgba(0, 0, 0, 0.3);
+  
+  --text-primary: #0b3a5a;
+  --text-secondary: #3b6b8a;
+  --text-muted: #5a8aaa;
+  --text-on-header: #0b3a5a;
+  --text-on-primary: #0b3a5a;
+  --text-link: #0b82d6;
+  
+  --action-primary-bg: #0b82d6;
+  --action-primary-fg: #fff;
+  --action-primary-hover: #1a9be6;
+  --action-secondary-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.5));
+  --action-secondary-fg: #0b3a5a;
+  --action-success-bg: #3bb44a;
+  --action-success-fg: #fff;
+  --action-disabled-bg: rgba(255, 255, 255, 0.5);
+  --action-disabled-fg: #7a9aaa;
+  
+  --accent-1: #0b82d6;
+  --accent-1-soft: #d6f0ff;
+  --accent-1-ink: #063a5e;
+  --accent-2: #1a9be6;
+  --accent-2-soft: #d6f0ff;
+  --accent-2-ink: #063a5e;
+  --accent-3: #3bb44a;
+  --accent-3-soft: #d6f5e8;
+  --accent-3-ink: #0b4a14;
+  --accent-4: #fff27a;
+  --accent-4-soft: #fffbd6;
+  --accent-4-ink: #5a4400;
+  --accent-5: #ffb347;
+  --accent-5-soft: #ffe8cc;
+  --accent-5-ink: #5a3a00;
+  --accent-6: #ff6b6b;
+  --accent-6-soft: #ffe0e0;
+  --accent-6-ink: #6a1010;
+  
+  --fb-success-bg: rgba(140, 235, 140, 0.5);
+  --fb-success-fg: #0b4a14;
+  --fb-success-border: rgba(140, 235, 140, 0.8);
+  --fb-success-soft: rgba(140, 235, 140, 0.25);
+  
+  --fb-warning-bg: rgba(255, 242, 122, 0.5);
+  --fb-warning-fg: #5a4400;
+  --fb-warning-border: rgba(255, 242, 122, 0.8);
+  
+  --fb-error-bg: rgba(255, 160, 160, 0.5);
+  --fb-error-fg: #6a1010;
+  --fb-error-border: rgba(255, 160, 160, 0.8);
+  --fb-error-soft: rgba(255, 160, 160, 0.3);
+  
+  --fb-info-bg: rgba(141, 224, 255, 0.5);
+  --fb-info-fg: #0b3a5a;
+  --fb-info-border: rgba(141, 224, 255, 0.8);
+  
+  --progress-track: rgba(255, 255, 255, 0.5);
+  --progress-fill: #0b82d6;
+  --progress-fill-2: #3bb44a;
+  
+  --border-color: rgba(255, 255, 255, 0.8);
+  --border-strong: rgba(255, 255, 255, 0.9);
+  --border-width: 1px;
   --border-width-ui: 1px;
-
-  /* Focus ring color */
-  --focus-ring-color: oklch(0.45 0.15 250);
+  
+  --statusbar-style: light;
+  --statusbar-bg: #bff0ff;
+  
+  --bg-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.5));
+  --blur-overlay: blur(10px);
+  
+  --radius-card: 1.375rem;
+  --radius-button: 1rem;
+  --radius-chip: 16px;
+  
+  --shadow-card: 0 8px 20px rgba(0, 100, 160, 0.3), inset 0 1px 0 #fff, inset 0 -8px 14px rgba(120, 200, 255, 0.35);
+  --shadow-button: 0 4px 10px rgba(0, 80, 150, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  --shadow-raised: 0 8px 20px rgba(0, 100, 160, 0.3), inset 0 1px 0 #fff, inset 0 -8px 14px rgba(120, 200, 255, 0.35);
+  --shadow-inset: inset 0 2px 5px rgba(0, 100, 160, 0.3);
+  --shadow-pressed: 0 4px 10px rgba(0, 100, 160, 0.3), inset 0 1px 0 #fff, inset 0 -5px 8px rgba(120, 200, 255, 0.3);
+  
+  --focus-ring-color: #0b82d6;
+  --transition-fast: 0.12s;
+  --press-offset: 0;
+  --press-scale: 0.97;
 }
 
-/* Aero-specific card effects */
-[data-theme='aero'] .card,
-[data-theme='aero'] [class*='card'] {
-  box-shadow: var(--shadow-card);
-  border-radius: var(--radius-card);
+/* Tile styling */
+[data-theme="aero"] .tile,
+[data-theme="aero"] .ti.sm,
+[data-theme="aero"] .gi {
+  --tilebg: color-mix(in srgb, var(--t) 55%, rgba(255, 255, 255, 0.6));
 }

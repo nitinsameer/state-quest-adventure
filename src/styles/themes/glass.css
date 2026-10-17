@@ -1,0 +1,157 @@
+/**
+ * Glass Theme
+ * Reference: index-theme.html - [data-theme="glass"]
+ * 
+ * Glassmorphism - frosted translucent glass effect.
+ */
+
+[data-theme="glass"] {
+  --bg: radial-gradient(circle at 12% 15%, rgba(76, 215, 255, 0.75), transparent 42%), radial-gradient(circle at 88% 72%, rgba(255, 95, 163, 0.7), transparent 46%), linear-gradient(135deg, #5b4bff, #9b4fe0 55%, #ff8a5c);
+  --bgc: #6a4fe0;
+  --card: rgba(255, 255, 255, 0.18);
+  --ink: #fff;
+  --mute: rgba(255, 255, 255, 0.78);
+  --accent: #fff;
+  --accentg: linear-gradient(135deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0.16));
+  --onacc: #fff;
+  --green: #5ff0a0;
+  --greeng: linear-gradient(135deg, rgba(90, 230, 150, 0.6), rgba(40, 190, 120, 0.4));
+  --ongr: #fff;
+  
+  --r: 28px;
+  --rs: 20px;
+  --bd: 1px solid rgba(255, 255, 255, 0.4);
+  --bdt: 1px solid rgba(255, 255, 255, 0.3);
+  --blur: blur(18px) saturate(1.5);
+  --well: rgba(0, 0, 0, 0.2);
+  --barfill: #ffe38a;
+  
+  --sh: 0 8px 32px rgba(31, 20, 90, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  --shs: 0 4px 16px rgba(31, 20, 90, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  --sin: inset 0 2px 6px rgba(0, 0, 0, 0.25);
+  --sht: 0 8px 24px rgba(31, 20, 90, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  --shbtn: 0 8px 24px rgba(31, 20, 90, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  
+  --tilebg: color-mix(in srgb, var(--t) 38%, transparent);
+  --tilec: #fff;
+  --curbg: rgba(255, 255, 255, 0.4);
+  --curc: #fff;
+  --okbg: rgba(80, 220, 140, 0.5);
+  --okc: #fff;
+  --badbg: rgba(255, 90, 110, 0.5);
+  --badc: #fff;
+  --lvlbg: rgba(255, 255, 255, 0.32);
+  --lvlc: #fff;
+  
+  --navbg: rgba(255, 255, 255, 0.16);
+  --navsh: 0 -6px 24px rgba(31, 20, 90, 0.3);
+  
+  --font: 'Nunito', system-ui, sans-serif;
+  --fonth: 'Nunito', system-ui, sans-serif;
+  --tsh: none;
+
+  /* === COMPATIBILITY LAYER === */
+  --bg-page: #6a4fe0;
+  --bg-header: #6a4fe0;
+  --bg-nav: rgba(255, 255, 255, 0.16);
+  --nav-active-bg: rgba(255, 255, 255, 0.25);
+  
+  --surface-card: rgba(255, 255, 255, 0.18);
+  --surface-raised: rgba(255, 255, 255, 0.18);
+  --surface-sunken: rgba(0, 0, 0, 0.1);
+  --surface-overlay: rgba(255, 255, 255, 0.18);
+  --surface-muted: rgba(255, 255, 255, 0.12);
+  
+  --scrim: rgba(0, 0, 0, 0.4);
+  
+  --text-primary: #fff;
+  --text-secondary: rgba(255, 255, 255, 0.78);
+  --text-muted: rgba(255, 255, 255, 0.6);
+  --text-on-header: #fff;
+  --text-on-primary: #fff;
+  --text-link: #fff;
+  
+  --action-primary-bg: #fff;
+  --action-primary-fg: #6a4fe0;
+  --action-primary-hover: rgba(255, 255, 255, 0.9);
+  --action-secondary-bg: rgba(255, 255, 255, 0.18);
+  --action-secondary-fg: #fff;
+  --action-success-bg: #5ff0a0;
+  --action-success-fg: #1a2a1f;
+  --action-disabled-bg: rgba(255, 255, 255, 0.1);
+  --action-disabled-fg: rgba(255, 255, 255, 0.5);
+  
+  --accent-1: #fff;
+  --accent-1-soft: rgba(255, 255, 255, 0.2);
+  --accent-1-ink: #6a4fe0;
+  --accent-2: #5ff0a0;
+  --accent-2-soft: rgba(95, 240, 160, 0.2);
+  --accent-2-ink: #1a2a1f;
+  --accent-3: #4cc2ff;
+  --accent-3-soft: rgba(76, 194, 255, 0.2);
+  --accent-3-ink: #1a2a5f;
+  --accent-4: #ffe38a;
+  --accent-4-soft: rgba(255, 227, 138, 0.2);
+  --accent-4-ink: #6a5a00;
+  --accent-5: #ff6b9d;
+  --accent-5-soft: rgba(255, 107, 157, 0.2);
+  --accent-5-ink: #fff;
+  --accent-6: #d0a8ff;
+  --accent-6-soft: rgba(208, 168, 255, 0.2);
+  --accent-6-ink: #6a4fe0;
+  
+  --fb-success-bg: rgba(80, 220, 140, 0.3);
+  --fb-success-fg: #fff;
+  --fb-success-border: rgba(95, 240, 160, 0.6);
+  --fb-success-soft: rgba(95, 240, 160, 0.15);
+  
+  --fb-warning-bg: rgba(255, 200, 100, 0.3);
+  --fb-warning-fg: #fff;
+  --fb-warning-border: rgba(255, 200, 100, 0.6);
+  
+  --fb-error-bg: rgba(255, 90, 110, 0.3);
+  --fb-error-fg: #fff;
+  --fb-error-border: rgba(255, 107, 157, 0.6);
+  --fb-error-soft: rgba(255, 107, 157, 0.15);
+  
+  --fb-info-bg: rgba(100, 150, 255, 0.3);
+  --fb-info-fg: #fff;
+  --fb-info-border: rgba(150, 180, 255, 0.6);
+  
+  --progress-track: rgba(0, 0, 0, 0.2);
+  --progress-fill: #fff;
+  --progress-fill-2: #5ff0a0;
+  
+  --border-color: rgba(255, 255, 255, 0.3);
+  --border-strong: rgba(255, 255, 255, 0.4);
+  --border-width: 1px;
+  --border-width-ui: 1px;
+  
+  --statusbar-style: light;
+  --statusbar-bg: #6a4fe0;
+  
+  --bg-overlay: rgba(255, 255, 255, 0.18);
+  --blur-overlay: blur(18px);
+  
+  --radius-card: 1.75rem;
+  --radius-button: 1rem;
+  --radius-chip: 22px;
+  
+  --shadow-card: 0 8px 32px rgba(31, 20, 90, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  --shadow-button: 0 8px 24px rgba(31, 20, 90, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  --shadow-raised: 0 8px 32px rgba(31, 20, 90, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  --shadow-inset: inset 0 2px 6px rgba(0, 0, 0, 0.25);
+  --shadow-pressed: 0 8px 24px rgba(31, 20, 90, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  
+  --focus-ring-color: #fff;
+  --transition-fast: 0.12s;
+  --press-offset: 0;
+  --press-scale: 0.97;
+}
+
+/* Tile styling */
+[data-theme="glass"] .tile,
+[data-theme="glass"] .ti.sm,
+[data-theme="glass"] .gi {
+  --tilebg: color-mix(in srgb, var(--t) 38%, transparent);
+}

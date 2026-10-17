@@ -1,0 +1,173 @@
+/**
+ * Cartoon Comic Theme
+ * Reference: index-theme.html - [data-theme="cartoon"]
+ * 
+ * Note: This theme includes font-size overrides in html[data-theme="cartoon"]
+ */
+
+[data-theme="cartoon"] {
+  --bg: radial-gradient(rgba(0, 0, 0, 0.13) 2px, transparent 2.5px) 0 0/18px 18px, #7ad7ff;
+  --bgc: #7ad7ff;
+  --card: #fff;
+  --ink: #1b1b1b;
+  --mute: #4a4a4a;
+  --accent: #ff4757;
+  --accentg: linear-gradient(135deg, #ff4757, #ff4757);
+  --onacc: #fff;
+  --green: #2ecc71;
+  --greeng: linear-gradient(135deg, #2ecc71, #2ecc71);
+  --ongr: #fff;
+  
+  --r: 22px;
+  --rs: 16px;
+  --bd: 4px solid #1b1b1b;
+  --bdt: 3px solid #1b1b1b;
+  --blur: none;
+  --well: #fff;
+  --barfill: #ffe14d;
+  
+  --sh: 5px 5px 0 #1b1b1b;
+  --shs: 3px 3px 0 #1b1b1b;
+  --sin: none;
+  --sht: 4px 4px 0 #1b1b1b;
+  --shbtn: 4px 4px 0 #1b1b1b;
+  
+  --tilebg: var(--t);
+  --tilec: #1b1b1b;
+  --curbg: #ffe14d;
+  --curc: #1b1b1b;
+  --okbg: #9af0a4;
+  --okc: #1b1b1b;
+  --badbg: #ff9aa2;
+  --badc: #1b1b1b;
+  --lvlbg: #ff4757;
+  --lvlc: #fff;
+  
+  --navbg: #fff;
+  --navsh: none;
+  
+  --font: 'Comic Neue', 'Nunito', cursive;
+  --fonth: 'Bangers', 'Comic Neue', cursive;
+  --tsh: none;
+
+  /* === COMPATIBILITY LAYER === */
+  --bg-page: #7ad7ff;
+  --bg-header: #7ad7ff;
+  --bg-nav: #fff;
+  --nav-active-bg: #7ad7ff;
+  
+  --surface-card: #fff;
+  --surface-raised: #fff;
+  --surface-sunken: #f5f5f5;
+  --surface-overlay: #fff;
+  --surface-muted: #f9f9f9;
+  
+  --scrim: rgba(0, 0, 0, 0.6);
+  
+  --text-primary: #1b1b1b;
+  --text-secondary: #4a4a4a;
+  --text-muted: #666;
+  --text-on-header: #1b1b1b;
+  --text-on-primary: #1b1b1b;
+  --text-link: #ff4757;
+  
+  --action-primary-bg: #ff4757;
+  --action-primary-fg: #fff;
+  --action-primary-hover: #ff6675;
+  --action-secondary-bg: #fff;
+  --action-secondary-fg: #1b1b1b;
+  --action-success-bg: #2ecc71;
+  --action-success-fg: #fff;
+  --action-disabled-bg: #e0e0e0;
+  --action-disabled-fg: #999;
+  
+  --accent-1: #ff4757;
+  --accent-1-soft: #ffe8ea;
+  --accent-1-ink: #1b1b1b;
+  --accent-2: #ff6675;
+  --accent-2-soft: #ffe8ea;
+  --accent-2-ink: #1b1b1b;
+  --accent-3: #2ecc71;
+  --accent-3-soft: #e8fced;
+  --accent-3-ink: #1b1b1b;
+  --accent-4: #ffe14d;
+  --accent-4-soft: #fff8e6;
+  --accent-4-ink: #1b1b1b;
+  --accent-5: #7ad7ff;
+  --accent-5-soft: #e8f7ff;
+  --accent-5-ink: #1b1b1b;
+  --accent-6: #a4d65e;
+  --accent-6-soft: #f2f9e6;
+  --accent-6-ink: #1b1b1b;
+  
+  --fb-success-bg: #9af0a4;
+  --fb-success-fg: #1b1b1b;
+  --fb-success-border: #2ecc71;
+  --fb-success-soft: #e8fced;
+  
+  --fb-warning-bg: #ffe14d;
+  --fb-warning-fg: #1b1b1b;
+  --fb-warning-border: #ffb347;
+  
+  --fb-error-bg: #ff9aa2;
+  --fb-error-fg: #1b1b1b;
+  --fb-error-border: #ff4757;
+  --fb-error-soft: #ff9aa2;
+  
+  --fb-info-bg: #7ad7ff;
+  --fb-info-fg: #1b1b1b;
+  --fb-info-border: #0b82d6;
+  
+  --progress-track: #e0e0e0;
+  --progress-fill: #ff4757;
+  --progress-fill-2: #2ecc71;
+  
+  --border-color: #1b1b1b;
+  --border-strong: #1b1b1b;
+  --border-width: 4px;
+  --border-width-ui: 3px;
+  
+  --statusbar-style: light;
+  --statusbar-bg: #7ad7ff;
+  
+  --bg-overlay: #fff;
+  --blur-overlay: rgba(0, 0, 0, 0.6);
+  
+  --radius-card: 1.375rem;
+  --radius-button: 1rem;
+  --radius-chip: 16px;
+  
+  --shadow-card: 5px 5px 0 #1b1b1b;
+  --shadow-button: 4px 4px 0 #1b1b1b;
+  --shadow-raised: 5px 5px 0 #1b1b1b;
+  --shadow-inset: none;
+  --shadow-pressed: 2px 2px 0 #1b1b1b;
+  
+  --focus-ring-color: #ff4757;
+  --transition-fast: 0.1s;
+  --press-offset: 3px;
+  --press-scale: 1;
+}
+
+/* Cartoon-specific font size overrides */
+html[data-theme="cartoon"] h1 {
+  font-size: 27px;
+  letter-spacing: 1px;
+}
+
+html[data-theme="cartoon"] h2 {
+  font-size: 26px;
+  letter-spacing: 1px;
+}
+
+html[data-theme="cartoon"] h3 {
+  font-size: 21px;
+  letter-spacing: 1px;
+}
+
+/* Tile styling */
+[data-theme="cartoon"] .tile,
+[data-theme="cartoon"] .ti.sm,
+[data-theme="cartoon"] .gi {
+  --tilebg: var(--t);
+}

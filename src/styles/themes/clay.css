@@ -1,120 +1,160 @@
 /**
- * Claymorphism Theme
- *
+ * Clay Theme (Default)
+ * Reference: index-theme.html - :root,[data-theme]
+ * 
  * Default theme - soft, warm, and friendly.
  * Soft shadows, rounded shapes, tactile feel.
  */
 
+:root,
 [data-theme="clay"] {
-  /* Page */
-  --bg-header: oklch(0.82 0.14 55);
-  --bg-nav: oklch(1 0 0);
-  --nav-active-bg: oklch(0.95 0.06 55);
+  /* === REFERENCE SYSTEM VARIABLES === */
+  --bg: #ece8fb;
+  --bgc: #ece8fb;
+  --card: #f7f4ff;
+  --ink: #2d2650;
+  --mute: #7a72a8;
+  --accent: #7c5cf0;
+  --accentg: linear-gradient(135deg, #8b6cf6, #6a4fe0);
+  --onacc: #fff;
+  --green: #5cc46b;
+  --greeng: linear-gradient(135deg, #6fd37e, #4cb85c);
+  --ongr: #fff;
+  
+  --r: 26px;
+  --rs: 20px;
+  --bd: 0;
+  --bdt: 0;
+  --blur: none;
+  --well: #ece8fb;
+  --barfill: #ffd66b;
+  
+  --sh: 9px 9px 20px rgba(124, 100, 200, 0.26), -7px -7px 16px rgba(255, 255, 255, 0.95), inset -4px -4px 9px rgba(110, 90, 190, 0.13), inset 4px 4px 9px rgba(255, 255, 255, 0.8);
+  --shs: 5px 5px 11px rgba(124, 100, 200, 0.26), -3px -3px 8px rgba(255, 255, 255, 0.95), inset -3px -3px 7px rgba(110, 90, 190, 0.13), inset 3px 3px 7px rgba(255, 255, 255, 0.8);
+  --sin: inset 3px 3px 7px rgba(110, 90, 190, 0.16), inset -3px -3px 7px rgba(255, 255, 255, 0.85);
+  --sht: 7px 7px 15px rgba(124, 100, 200, 0.26), -5px -5px 11px rgba(255, 255, 255, 0.95), inset -5px -5px 10px rgba(0, 0, 0, 0.1), inset 5px 5px 10px rgba(255, 255, 255, 0.55);
+  --shbtn: 7px 7px 15px rgba(124, 100, 200, 0.26), -5px -5px 11px rgba(255, 255, 255, 0.95), inset -5px -5px 10px rgba(0, 0, 0, 0.22), inset 5px 5px 10px rgba(255, 255, 255, 0.3);
+  
+  --tilebg: var(--t);
+  --tilec: #2d2650;
+  --curbg: linear-gradient(135deg, #d9ccff, #c4b2ff);
+  --curc: #2d2650;
+  --okbg: #c9f2d3;
+  --okc: #173d20;
+  --badbg: #ffd0d0;
+  --badc: #5a1a1a;
+  --lvlbg: #ffd9b0;
+  --lvlc: #7a3d00;
+  
+  --navbg: #ece8fb;
+  --navsh: 0 -8px 20px rgba(124, 100, 200, 0.26);
+  
+  --font: 'Nunito', system-ui, sans-serif;
+  --fonth: 'Nunito', system-ui, sans-serif;
+  --tsh: none;
 
-  /* Surfaces */
-  --surface-card: oklch(1 0 0);
-  --surface-raised: oklch(1 0 0);
-  --surface-sunken: oklch(0.95 0 0);
-  --surface-overlay: oklch(1 0 0);
+  /* === COMPATIBILITY LAYER === */
+  --bg-page: #ece8fb;
+  --bg-header: #ece8fb;
+  --bg-nav: #ece8fb;
+  --nav-active-bg: #f0ecff;
+  
+  --surface-card: #f7f4ff;
+  --surface-raised: #f7f4ff;
+  --surface-sunken: #f0ecff;
+  --surface-overlay: #f7f4ff;
+  --surface-muted: #f7f4ff;
+  
   --scrim: rgba(0, 0, 0, 0.5);
-
-  /* Text */
-  --text-primary: oklch(0.22 0.05 260);
-  --text-secondary: oklch(0.4 0.06 260);
-  --text-muted: oklch(0.42 0.04 260);
-  --text-on-header: oklch(0.22 0.05 260);
-  --text-on-primary: oklch(0.22 0.05 260);
-  --text-link: oklch(0.45 0.15 250);
-
-  /* Actions */
-  --action-primary-bg: oklch(0.72 0.19 45);
-  --action-primary-fg: oklch(0.22 0.05 260);
-  --action-secondary-bg: oklch(1 0 0);
-  --action-secondary-fg: oklch(0.22 0.05 260);
-  --action-success-bg: oklch(0.72 0.19 150);
-  --action-success-fg: oklch(0.22 0.05 260);
-  --action-disabled-bg: oklch(0.92 0 0);
-  --action-disabled-fg: oklch(0.6 0.04 260);
-
-  /* Accents */
-  --accent-1: oklch(0.72 0.19 45);
-  --accent-1-soft: oklch(0.95 0.06 55);
-  --accent-1-ink: oklch(0.22 0.05 260);
-  --accent-2: oklch(0.62 0.2 250);
-  --accent-2-soft: oklch(0.95 0.05 250);
-  --accent-2-ink: oklch(0.22 0.05 260);
-  --accent-3: oklch(0.72 0.19 150);
-  --accent-3-soft: oklch(0.95 0.06 150);
-  --accent-3-ink: oklch(0.22 0.05 260);
-  --accent-4: oklch(0.82 0.17 85);
-  --accent-4-soft: oklch(0.97 0.04 85);
-  --accent-4-ink: oklch(0.22 0.05 260);
-  --accent-5: oklch(0.68 0.21 40);
-  --accent-5-soft: oklch(0.95 0.06 50);
-  --accent-5-ink: oklch(0.22 0.05 260);
-  --accent-6: oklch(0.75 0.2 180);
-  --accent-6-soft: oklch(0.95 0.06 180);
-  --accent-6-ink: oklch(1 0 0);
-
-  /* Feedback */
-  --fb-success-bg: oklch(0.95 0.06 150);
-  --fb-success-fg: oklch(0.35 0.1 150);
-  --fb-success-border: oklch(0.72 0.19 150);
-  --fb-warning-bg: oklch(0.96 0.06 55);
-  --fb-warning-fg: oklch(0.4 0.1 50);
-  --fb-warning-border: oklch(0.75 0.16 50);
-  --fb-error-bg: oklch(0.96 0.08 27);
-  --fb-error-fg: oklch(0.35 0.1 27);
-  --fb-error-border: oklch(0.62 0.24 27);
-  --fb-info-bg: oklch(0.95 0.05 250);
-  --fb-info-fg: oklch(0.35 0.1 250);
-  --fb-info-border: oklch(0.62 0.2 250);
-
-  /* Progress */
-  --progress-track: oklch(0.92 0.01 260);
-  --progress-fill: oklch(0.72 0.19 45);
-  --progress-fill-2: oklch(0.72 0.19 150);
-
-  /* Border */
-  --border-color: oklch(0.92 0.015 260);
-  --border-strong: oklch(0.75 0.04 260);
-
-  /* Status Bar */
-  --statusbar-style: light;
-  --statusbar-bg: oklch(0.82 0.14 55);
-
-  /* Surface muted */
-  --surface-muted: oklch(0.96 0.01 260);
-  --action-primary-hover: oklch(0.78 0.2 45);
-  --bg-overlay: oklch(1 0 0);
-  --blur-overlay: rgba(255, 200, 100, 0.3);
-  --fb-error-soft: oklch(0.96 0.08 27);
-
-  /* Typography */
-  --font-display: 'Baloo 2', 'Nunito', cursive;
-  --font-sans: 'Nunito', sans-serif;
-
-  /* Gradient background */
-  --bg-page: linear-gradient(135deg, #FFF9F0 0%, #FFE8CC 100%);
-
-  /* Shadows */
-  --shadow-card: 0 8px 24px rgba(255, 150, 50, 0.18), inset 0 -4px 0 rgba(180, 80, 0, 0.08);
-  --shadow-button: 0 6px 0 rgba(180, 80, 0, 0.25), 0 8px 16px rgba(255, 150, 50, 0.2);
-
-  /* Radii */
-  --radius-card: 2rem;
-  --radius-button: 1.5rem;
-
-  /* Border width */
+  
+  --text-primary: #2d2650;
+  --text-secondary: #7a72a8;
+  --text-muted: #7a72a8;
+  --text-on-header: #2d2650;
+  --text-on-primary: #2d2650;
+  --text-link: #7c5cf0;
+  
+  --action-primary-bg: #7c5cf0;
+  --action-primary-fg: #fff;
+  --action-primary-hover: #8b6cf6;
+  --action-secondary-bg: #f7f4ff;
+  --action-secondary-fg: #2d2650;
+  --action-success-bg: #5cc46b;
+  --action-success-fg: #fff;
+  --action-disabled-bg: #f0ecff;
+  --action-disabled-fg: #9a9199;
+  
+  --accent-1: #7c5cf0;
+  --accent-1-soft: #f0ecff;
+  --accent-1-ink: #2d2650;
+  --accent-2: #6a4fe0;
+  --accent-2-soft: #f0ecff;
+  --accent-2-ink: #2d2650;
+  --accent-3: #5cc46b;
+  --accent-3-soft: #e8f5eb;
+  --accent-3-ink: #2d2650;
+  --accent-4: #ffd66b;
+  --accent-4-soft: #fff9e6;
+  --accent-4-ink: #2d2650;
+  --accent-5: #d4a5ff;
+  --accent-5-soft: #f0ecff;
+  --accent-5-ink: #2d2650;
+  --accent-6: #4db8ff;
+  --accent-6-soft: #e6f2ff;
+  --accent-6-ink: #fff;
+  
+  --fb-success-bg: #c9f2d3;
+  --fb-success-fg: #173d20;
+  --fb-success-border: #7cc46b;
+  --fb-success-soft: #e8f5eb;
+  
+  --fb-warning-bg: #ffe6cc;
+  --fb-warning-fg: #7a4a00;
+  --fb-warning-border: #ffc266;
+  
+  --fb-error-bg: #ffd0d0;
+  --fb-error-fg: #5a1a1a;
+  --fb-error-border: #ff6b6b;
+  --fb-error-soft: #ffd0d0;
+  
+  --fb-info-bg: #e6f0ff;
+  --fb-info-fg: #003a7a;
+  --fb-info-border: #7c9cff;
+  
+  --progress-track: #f0ecff;
+  --progress-fill: #7c5cf0;
+  --progress-fill-2: #5cc46b;
+  
+  --border-color: #e8e0f5;
+  --border-strong: #d0c8e8;
+  --border-width: 1px;
   --border-width-ui: 1px;
-
-  /* Focus ring color */
-  --focus-ring-color: oklch(0.72 0.19 45);
+  
+  --statusbar-style: light;
+  --statusbar-bg: #ece8fb;
+  
+  --bg-overlay: #f7f4ff;
+  --blur-overlay: rgba(255, 200, 100, 0.3);
+  
+  --radius-card: 1.5rem;
+  --radius-button: 1rem;
+  --radius-chip: 20px;
+  
+  --shadow-card: 9px 9px 20px rgba(124, 100, 200, 0.26), -7px -7px 16px rgba(255, 255, 255, 0.95), inset -4px -4px 9px rgba(110, 90, 190, 0.13), inset 4px 4px 9px rgba(255, 255, 255, 0.8);
+  --shadow-button: 7px 7px 15px rgba(124, 100, 200, 0.26), -5px -5px 11px rgba(255, 255, 255, 0.95), inset -5px -5px 10px rgba(0, 0, 0, 0.22), inset 5px 5px 10px rgba(255, 255, 255, 0.3);
+  --shadow-raised: 9px 9px 20px rgba(124, 100, 200, 0.26), -7px -7px 16px rgba(255, 255, 255, 0.95), inset -4px -4px 9px rgba(110, 90, 190, 0.13), inset 4px 4px 9px rgba(255, 255, 255, 0.8);
+  --shadow-inset: inset 3px 3px 7px rgba(110, 90, 190, 0.16), inset -3px -3px 7px rgba(255, 255, 255, 0.85);
+  --shadow-pressed: 7px 7px 15px rgba(124, 100, 200, 0.26), -5px -5px 11px rgba(255, 255, 255, 0.95), inset -5px -5px 10px rgba(0, 0, 0, 0.22), inset 5px 5px 10px rgba(255, 255, 255, 0.3);
+  
+  --focus-ring-color: #7c5cf0;
+  --transition-fast: 0.12s;
+  --press-offset: 0;
+  --press-scale: 0.97;
 }
 
-/* Clay-specific card effects */
-[data-theme='clay'] .card,
-[data-theme='clay'] [class*='card'] {
-  box-shadow: var(--shadow-card);
-  border-radius: var(--radius-card);
+/* Tile styling */
+[data-theme="clay"] .tile,
+[data-theme="clay"] .ti.sm,
+[data-theme="clay"] .gi {
+  --tilebg: var(--t);
 }

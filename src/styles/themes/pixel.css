@@ -1,0 +1,187 @@
+/**
+ * Retro Pixel Theme
+ * Reference: index-theme.html - [data-theme="pixel"]
+ * 
+ * Note: This theme includes font-size overrides in html[data-theme="pixel"]
+ */
+
+[data-theme="pixel"] {
+  --bg: #1a1c2c;
+  --bgc: #1a1c2c;
+  --card: #29366f;
+  --ink: #f4f4f4;
+  --mute: #a7b4ff;
+  --accent: #ffcd75;
+  --accentg: linear-gradient(135deg, #ffcd75, #ef7d57);
+  --onacc: #1a1c2c;
+  --green: #38b764;
+  --greeng: linear-gradient(135deg, #38b764, #38b764);
+  --ongr: #1a1c2c;
+  
+  --r: 0;
+  --rs: 0;
+  --bd: 4px solid #f4f4f4;
+  --bdt: 3px solid #f4f4f4;
+  --blur: none;
+  --well: #1a1c2c;
+  --barfill: #ffcd75;
+  
+  --sh: 6px 6px 0 #000;
+  --shs: 3px 3px 0 #000;
+  --sin: none;
+  --sht: 5px 5px 0 #000;
+  --shbtn: 4px 4px 0 #000;
+  
+  --tilebg: color-mix(in srgb, var(--t) 75%, #29366f);
+  --tilec: #1a1c2c;
+  --curbg: #ffcd75;
+  --curc: #1a1c2c;
+  --okbg: #38b764;
+  --okc: #fff;
+  --badbg: #b13e53;
+  --badc: #fff;
+  --lvlbg: #41a6f6;
+  --lvlc: #1a1c2c;
+  
+  --navbg: #29366f;
+  --navsh: none;
+  
+  --font: 'VT323', monospace;
+  --fonth: 'Press Start 2P', 'VT323', monospace;
+  --tsh: none;
+
+  /* === COMPATIBILITY LAYER === */
+  --bg-page: #1a1c2c;
+  --bg-header: #1a1c2c;
+  --bg-nav: #29366f;
+  --nav-active-bg: #3a4a7f;
+  
+  --surface-card: #29366f;
+  --surface-raised: #29366f;
+  --surface-sunken: #1f2a5f;
+  --surface-overlay: #29366f;
+  --surface-muted: #2a3a6f;
+  
+  --scrim: rgba(0, 0, 0, 0.8);
+  
+  --text-primary: #f4f4f4;
+  --text-secondary: #a7b4ff;
+  --text-muted: #7a8aff;
+  --text-on-header: #f4f4f4;
+  --text-on-primary: #f4f4f4;
+  --text-link: #ffcd75;
+  
+  --action-primary-bg: #ffcd75;
+  --action-primary-fg: #1a1c2c;
+  --action-primary-hover: #ffdd88;
+  --action-secondary-bg: #29366f;
+  --action-secondary-fg: #f4f4f4;
+  --action-success-bg: #38b764;
+  --action-success-fg: #1a1c2c;
+  --action-disabled-bg: #3a3a5f;
+  --action-disabled-fg: #7a7a9a;
+  
+  --accent-1: #ffcd75;
+  --accent-1-soft: #3a3a1f;
+  --accent-1-ink: #1a1c2c;
+  --accent-2: #ef7d57;
+  --accent-2-soft: #3a2a1f;
+  --accent-2-ink: #1a1c2c;
+  --accent-3: #38b764;
+  --accent-3-soft: #1a3a2a;
+  --accent-3-ink: #1a1c2c;
+  --accent-4: #41a6f6;
+  --accent-4-soft: #1a2a3a;
+  --accent-4-ink: #1a1c2c;
+  --accent-5: #ff6b9d;
+  --accent-5-soft: #3a1a2a;
+  --accent-5-ink: #f4f4f4;
+  --accent-6: #ffaa00;
+  --accent-6-soft: #3a2a0a;
+  --accent-6-ink: #1a1c2c;
+  
+  --fb-success-bg: rgba(56, 183, 100, 0.3);
+  --fb-success-fg: #38b764;
+  --fb-success-border: rgba(56, 183, 100, 0.6);
+  --fb-success-soft: rgba(56, 183, 100, 0.15);
+  
+  --fb-warning-bg: rgba(255, 205, 117, 0.3);
+  --fb-warning-fg: #ffdd88;
+  --fb-warning-border: rgba(255, 205, 117, 0.6);
+  
+  --fb-error-bg: rgba(177, 62, 83, 0.3);
+  --fb-error-fg: #ff8fa8;
+  --fb-error-border: rgba(177, 62, 83, 0.6);
+  --fb-error-soft: rgba(177, 62, 83, 0.15);
+  
+  --fb-info-bg: rgba(65, 166, 246, 0.3);
+  --fb-info-fg: #7acc ff;
+  --fb-info-border: rgba(65, 166, 246, 0.6);
+  
+  --progress-track: #3a3a5f;
+  --progress-fill: #ffcd75;
+  --progress-fill-2: #38b764;
+  
+  --border-color: #f4f4f4;
+  --border-strong: #f4f4f4;
+  --border-width: 4px;
+  --border-width-ui: 3px;
+  
+  --statusbar-style: dark;
+  --statusbar-bg: #1a1c2c;
+  
+  --bg-overlay: #29366f;
+  --blur-overlay: rgba(0, 0, 0, 0.8);
+  
+  --radius-card: 0;
+  --radius-button: 0;
+  --radius-chip: 0;
+  
+  --shadow-card: 6px 6px 0 #000;
+  --shadow-button: 4px 4px 0 #000;
+  --shadow-raised: 6px 6px 0 #000;
+  --shadow-inset: none;
+  --shadow-pressed: 2px 2px 0 #000;
+  
+  --focus-ring-color: #ffcd75;
+  --transition-fast: 0.08s;
+  --press-offset: 4px;
+  --press-scale: 1;
+}
+
+/* Pixel-specific font size overrides */
+html[data-theme="pixel"] body {
+  font-size: 20px;
+}
+
+html[data-theme="pixel"] h1 {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+html[data-theme="pixel"] h2 {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+html[data-theme="pixel"] h3 {
+  font-size: 11px;
+}
+
+html[data-theme="pixel"] .av,
+html[data-theme="pixel"] .let,
+html[data-theme="pixel"] .num,
+html[data-theme="pixel"] .back,
+html[data-theme="pixel"] .star,
+html[data-theme="pixel"] .lvl,
+html[data-theme="pixel"] .bar,
+html[data-theme="pixel"] .bar i {
+  border-radius: 0;
+}
+
+/* Tile styling */
+[data-theme="pixel"] .tile,
+[data-theme="pixel"] .ti.sm,
+[data-theme="pixel"] .gi {
+  --tilebg: color-mix(in srgb, var(--t) 75%, #29366f);
+}

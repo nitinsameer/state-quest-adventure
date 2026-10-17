@@ -1,0 +1,158 @@
+/**
+ * Clay Dark Theme
+ * Reference: index-theme.html - [data-theme="claydark"]
+ * 
+ * Dark variant of clay theme - warm and cozy for evening.
+ */
+
+[data-theme="claydark"] {
+  /* === REFERENCE SYSTEM VARIABLES === */
+  --bg: #1e1a36;
+  --bgc: #1e1a36;
+  --card: #27224a;
+  --ink: #f0ecff;
+  --mute: #a69fd6;
+  --accent: #9b82ff;
+  --accentg: linear-gradient(135deg, #9b82ff, #9b82ff);
+  --onacc: #1e1a36;
+  --green: #6fd37e;
+  --greeng: linear-gradient(135deg, #6fd37e, #6fd37e);
+  --ongr: #1e1a36;
+  
+  --r: 26px;
+  --rs: 20px;
+  --bd: 0;
+  --bdt: 0;
+  --blur: none;
+  --well: #1e1a36;
+  --barfill: #ffd66b;
+  
+  --sh: 9px 9px 20px rgba(0, 0, 0, 0.5), -6px -6px 14px rgba(255, 255, 255, 0.05), inset -4px -4px 9px rgba(0, 0, 0, 0.3), inset 4px 4px 9px rgba(255, 255, 255, 0.07);
+  --shs: 5px 5px 11px rgba(0, 0, 0, 0.5), -3px -3px 8px rgba(255, 255, 255, 0.05), inset -3px -3px 7px rgba(0, 0, 0, 0.3), inset 3px 3px 7px rgba(255, 255, 255, 0.07);
+  --sin: inset 3px 3px 7px rgba(0, 0, 0, 0.45), inset -3px -3px 7px rgba(255, 255, 255, 0.06);
+  --sht: 7px 7px 15px rgba(0, 0, 0, 0.5), -5px -5px 11px rgba(255, 255, 255, 0.05), inset -5px -5px 10px rgba(0, 0, 0, 0.25), inset 5px 5px 10px rgba(255, 255, 255, 0.12);
+  --shbtn: 7px 7px 15px rgba(0, 0, 0, 0.5), -5px -5px 11px rgba(255, 255, 255, 0.05), inset -5px -5px 10px rgba(0, 0, 0, 0.3), inset 5px 5px 10px rgba(255, 255, 255, 0.25);
+  
+  --tilebg: color-mix(in srgb, var(--t) 50%, #27224a);
+  --tilec: #fff;
+  --curbg: linear-gradient(135deg, #4a3d8f, #5b49b3);
+  --curc: #fff;
+  --okbg: #1f4a2c;
+  --okc: #c9f2d3;
+  --badbg: #5a2530;
+  --badc: #ffd0d0;
+  --lvlbg: #5a3f1f;
+  --lvlc: #ffd9b0;
+  
+  --navbg: #1e1a36;
+  --navsh: 0 -8px 20px rgba(0, 0, 0, 0.5);
+  
+  --font: 'Nunito', system-ui, sans-serif;
+  --fonth: 'Nunito', system-ui, sans-serif;
+  --tsh: none;
+
+  /* === COMPATIBILITY LAYER === */
+  --bg-page: #1e1a36;
+  --bg-header: #1e1a36;
+  --bg-nav: #1e1a36;
+  --nav-active-bg: #27224a;
+  
+  --surface-card: #27224a;
+  --surface-raised: #27224a;
+  --surface-sunken: #1f1a33;
+  --surface-overlay: #27224a;
+  --surface-muted: #27224a;
+  
+  --scrim: rgba(0, 0, 0, 0.7);
+  
+  --text-primary: #f0ecff;
+  --text-secondary: #a69fd6;
+  --text-muted: #a69fd6;
+  --text-on-header: #f0ecff;
+  --text-on-primary: #f0ecff;
+  --text-link: #9b82ff;
+  
+  --action-primary-bg: #9b82ff;
+  --action-primary-fg: #1e1a36;
+  --action-primary-hover: #a890ff;
+  --action-secondary-bg: #27224a;
+  --action-secondary-fg: #f0ecff;
+  --action-success-bg: #6fd37e;
+  --action-success-fg: #1e1a36;
+  --action-disabled-bg: #2a2547;
+  --action-disabled-fg: #6a6480;
+  
+  --accent-1: #9b82ff;
+  --accent-1-soft: #3d3466;
+  --accent-1-ink: #f0ecff;
+  --accent-2: #7c6ce8;
+  --accent-2-soft: #3d3466;
+  --accent-2-ink: #f0ecff;
+  --accent-3: #6fd37e;
+  --accent-3-soft: #2a4a2f;
+  --accent-3-ink: #f0ecff;
+  --accent-4: #ffd66b;
+  --accent-4-soft: #5a4a1f;
+  --accent-4-ink: #1e1a36;
+  --accent-5: #c4a8ff;
+  --accent-5-soft: #3d3466;
+  --accent-5-ink: #f0ecff;
+  --accent-6: #7cc0ff;
+  --accent-6-soft: #2a3f5a;
+  --accent-6-ink: #1e1a36;
+  
+  --fb-success-bg: #1f4a2c;
+  --fb-success-fg: #c9f2d3;
+  --fb-success-border: #4cb85c;
+  --fb-success-soft: #2a5a3a;
+  
+  --fb-warning-bg: #5a4a1f;
+  --fb-warning-fg: #ffc266;
+  --fb-warning-border: #8a6a00;
+  
+  --fb-error-bg: #5a2530;
+  --fb-error-fg: #ffd0d0;
+  --fb-error-border: #aa5566;
+  --fb-error-soft: #5a2530;
+  
+  --fb-info-bg: #2a3a5a;
+  --fb-info-fg: #a8c0ff;
+  --fb-info-border: #5a7aaa;
+  
+  --progress-track: #2a2547;
+  --progress-fill: #9b82ff;
+  --progress-fill-2: #6fd37e;
+  
+  --border-color: #3a3557;
+  --border-strong: #4a4567;
+  --border-width: 1px;
+  --border-width-ui: 1px;
+  
+  --statusbar-style: dark;
+  --statusbar-bg: #1e1a36;
+  
+  --bg-overlay: #27224a;
+  --blur-overlay: rgba(0, 0, 0, 0.5);
+  
+  --radius-card: 1.5rem;
+  --radius-button: 1rem;
+  --radius-chip: 20px;
+  
+  --shadow-card: 9px 9px 20px rgba(0, 0, 0, 0.5), -6px -6px 14px rgba(255, 255, 255, 0.05), inset -4px -4px 9px rgba(0, 0, 0, 0.3), inset 4px 4px 9px rgba(255, 255, 255, 0.07);
+  --shadow-button: 7px 7px 15px rgba(0, 0, 0, 0.5), -5px -5px 11px rgba(255, 255, 255, 0.05), inset -5px -5px 10px rgba(0, 0, 0, 0.3), inset 5px 5px 10px rgba(255, 255, 255, 0.25);
+  --shadow-raised: 9px 9px 20px rgba(0, 0, 0, 0.5), -6px -6px 14px rgba(255, 255, 255, 0.05), inset -4px -4px 9px rgba(0, 0, 0, 0.3), inset 4px 4px 9px rgba(255, 255, 255, 0.07);
+  --shadow-inset: inset 3px 3px 7px rgba(0, 0, 0, 0.45), inset -3px -3px 7px rgba(255, 255, 255, 0.06);
+  --shadow-pressed: 7px 7px 15px rgba(0, 0, 0, 0.5), -5px -5px 11px rgba(255, 255, 255, 0.05), inset -5px -5px 10px rgba(0, 0, 0, 0.3), inset 5px 5px 10px rgba(255, 255, 255, 0.25);
+  
+  --focus-ring-color: #9b82ff;
+  --transition-fast: 0.12s;
+  --press-offset: 0;
+  --press-scale: 0.97;
+}
+
+/* Tile styling */
+[data-theme="claydark"] .tile,
+[data-theme="claydark"] .ti.sm,
+[data-theme="claydark"] .gi {
+  --tilebg: color-mix(in srgb, var(--t) 50%, #27224a);
+}

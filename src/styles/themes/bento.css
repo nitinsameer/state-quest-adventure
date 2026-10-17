@@ -1,0 +1,155 @@
+/**
+ * Bento Box Theme
+ * Reference: index-theme.html - [data-theme="bento"]
+ */
+
+[data-theme="bento"] {
+  --bg: #f2f2f0;
+  --bgc: #f2f2f0;
+  --card: #fff;
+  --ink: #111;
+  --mute: #6b6b6b;
+  --accent: #ff5a1f;
+  --accentg: linear-gradient(135deg, #ff5a1f, #ff5a1f);
+  --onacc: #fff;
+  --green: #22b455;
+  --greeng: linear-gradient(135deg, #22b455, #22b455);
+  --ongr: #fff;
+  
+  --r: 30px;
+  --rs: 20px;
+  --bd: 1px solid #e6e6e2;
+  --bdt: 1px solid #e6e6e2;
+  --blur: none;
+  --well: #f0f0ec;
+  --barfill: #ffd23f;
+  
+  --sh: none;
+  --shs: none;
+  --sin: inset 0 0 0 1px #e6e6e2;
+  --sht: none;
+  --shbtn: none;
+  
+  --tilebg: color-mix(in srgb, var(--t) 75%, #fff);
+  --tilec: #111;
+  --curbg: #111;
+  --curc: #fff;
+  --okbg: #d8f5dc;
+  --okc: #14532d;
+  --badbg: #ffe0dc;
+  --badc: #7f1d1d;
+  --lvlbg: #111;
+  --lvlc: #fff;
+  
+  --navbg: #fff;
+  --navsh: none;
+  
+  --font: 'Nunito', system-ui, sans-serif;
+  --fonth: 'Nunito', system-ui, sans-serif;
+  --tsh: none;
+
+  /* === COMPATIBILITY LAYER === */
+  --bg-page: #f2f2f0;
+  --bg-header: #f2f2f0;
+  --bg-nav: #fff;
+  --nav-active-bg: #f2f2f0;
+  
+  --surface-card: #fff;
+  --surface-raised: #fff;
+  --surface-sunken: #f0f0ec;
+  --surface-overlay: #fff;
+  --surface-muted: #f9f9f7;
+  
+  --scrim: rgba(0, 0, 0, 0.5);
+  
+  --text-primary: #111;
+  --text-secondary: #6b6b6b;
+  --text-muted: #8a8a8a;
+  --text-on-header: #111;
+  --text-on-primary: #111;
+  --text-link: #ff5a1f;
+  
+  --action-primary-bg: #ff5a1f;
+  --action-primary-fg: #fff;
+  --action-primary-hover: #ff7030;
+  --action-secondary-bg: #fff;
+  --action-secondary-fg: #111;
+  --action-success-bg: #22b455;
+  --action-success-fg: #fff;
+  --action-disabled-bg: #e6e6e2;
+  --action-disabled-fg: #999;
+  
+  --accent-1: #ff5a1f;
+  --accent-1-soft: #ffe8dc;
+  --accent-1-ink: #111;
+  --accent-2: #ff7030;
+  --accent-2-soft: #ffe8dc;
+  --accent-2-ink: #111;
+  --accent-3: #22b455;
+  --accent-3-soft: #d8f5dc;
+  --accent-3-ink: #111;
+  --accent-4: #111;
+  --accent-4-soft: #f2f2f0;
+  --accent-4-ink: #111;
+  --accent-5: #ffd23f;
+  --accent-5-soft: #fff8e6;
+  --accent-5-ink: #111;
+  --accent-6: #0071e3;
+  --accent-6-soft: #e8f1ff;
+  --accent-6-ink: #111;
+  
+  --fb-success-bg: #d8f5dc;
+  --fb-success-fg: #14532d;
+  --fb-success-border: #7cc46b;
+  --fb-success-soft: #eff7f4;
+  
+  --fb-warning-bg: #ffd23f;
+  --fb-warning-fg: #7a4a00;
+  --fb-warning-border: #ffb347;
+  
+  --fb-error-bg: #ffe0dc;
+  --fb-error-fg: #7f1d1d;
+  --fb-error-border: #ff6b6b;
+  --fb-error-soft: #ffe0dc;
+  
+  --fb-info-bg: #e8f1ff;
+  --fb-info-fg: #0b3d91;
+  --fb-info-border: #7cb3ff;
+  
+  --progress-track: #e6e6e2;
+  --progress-fill: #ff5a1f;
+  --progress-fill-2: #22b455;
+  
+  --border-color: #e6e6e2;
+  --border-strong: #d6d6d2;
+  --border-width: 1px;
+  --border-width-ui: 1px;
+  
+  --statusbar-style: light;
+  --statusbar-bg: #f2f2f0;
+  
+  --bg-overlay: #fff;
+  --blur-overlay: rgba(0, 0, 0, 0.15);
+  
+  --radius-card: 1.875rem;
+  --radius-button: 1.25rem;
+  --radius-chip: 20px;
+  
+  --shadow-card: none;
+  --shadow-button: none;
+  --shadow-raised: none;
+  --shadow-inset: inset 0 0 0 1px #e6e6e2;
+  --shadow-pressed: none;
+  
+  --focus-ring-color: #ff5a1f;
+  --transition-fast: 0.12s;
+  --press-offset: 0;
+  --press-scale: 0.97;
+}
+
+/* Tile styling */
+[data-theme="bento"] .tile,
+[data-theme="bento"] .ti.sm,
+[data-theme="bento"] .gi {
+  --tilebg: color-mix(in srgb, var(--t) 75%, #fff);
+}

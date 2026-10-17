@@ -1,0 +1,155 @@
+/**
+ * Minimal/Apple Theme
+ * Reference: index-theme.html - [data-theme="minimal"]
+ */
+
+[data-theme="minimal"] {
+  --bg: #f5f5f7;
+  --bgc: #f5f5f7;
+  --card: #fff;
+  --ink: #1d1d1f;
+  --mute: #6e6e73;
+  --accent: #0071e3;
+  --accentg: linear-gradient(135deg, #0071e3, #0071e3);
+  --onacc: #fff;
+  --green: #30b857;
+  --greeng: linear-gradient(135deg, #30b857, #30b857);
+  --ongr: #fff;
+  
+  --r: 18px;
+  --rs: 12px;
+  --bd: 1px solid #e5e5ea;
+  --bdt: 1px solid #e5e5ea;
+  --blur: none;
+  --well: #ececf0;
+  --barfill: #ffd60a;
+  
+  --sh: 0 2px 12px rgba(0, 0, 0, 0.06);
+  --shs: 0 1px 5px rgba(0, 0, 0, 0.08);
+  --sin: inset 0 0 0 1px #e5e5ea;
+  --sht: 0 1px 6px rgba(0, 0, 0, 0.08);
+  --shbtn: 0 4px 14px rgba(0, 113, 227, 0.3);
+  
+  --tilebg: color-mix(in srgb, var(--t) 55%, #fff);
+  --tilec: #1d1d1f;
+  --curbg: #e8f1ff;
+  --curc: #0b3d91;
+  --okbg: #e3f6e8;
+  --okc: #14532d;
+  --badbg: #fde8e8;
+  --badc: #7f1d1d;
+  --lvlbg: #fff0d6;
+  --lvlc: #7a4a00;
+  
+  --navbg: rgba(255, 255, 255, 0.85);
+  --navsh: 0 -1px 0 #e5e5ea;
+  
+  --font: -apple-system, 'Segoe UI', Roboto, system-ui, sans-serif;
+  --fonth: -apple-system, 'Segoe UI', Roboto, system-ui, sans-serif;
+  --tsh: none;
+
+  /* === COMPATIBILITY LAYER === */
+  --bg-page: #f5f5f7;
+  --bg-header: #f5f5f7;
+  --bg-nav: rgba(255, 255, 255, 0.85);
+  --nav-active-bg: #fff;
+  
+  --surface-card: #fff;
+  --surface-raised: #fff;
+  --surface-sunken: #ececf0;
+  --surface-overlay: #fff;
+  --surface-muted: #f9f9fb;
+  
+  --scrim: rgba(0, 0, 0, 0.5);
+  
+  --text-primary: #1d1d1f;
+  --text-secondary: #6e6e73;
+  --text-muted: #86868b;
+  --text-on-header: #1d1d1f;
+  --text-on-primary: #1d1d1f;
+  --text-link: #0071e3;
+  
+  --action-primary-bg: #0071e3;
+  --action-primary-fg: #fff;
+  --action-primary-hover: #0077ed;
+  --action-secondary-bg: #fff;
+  --action-secondary-fg: #1d1d1f;
+  --action-success-bg: #30b857;
+  --action-success-fg: #fff;
+  --action-disabled-bg: #e5e5ea;
+  --action-disabled-fg: #b3b3b8;
+  
+  --accent-1: #0071e3;
+  --accent-1-soft: #e8f1ff;
+  --accent-1-ink: #0b3d91;
+  --accent-2: #0077ed;
+  --accent-2-soft: #e8f1ff;
+  --accent-2-ink: #0b3d91;
+  --accent-3: #30b857;
+  --accent-3-soft: #e3f6e8;
+  --accent-3-ink: #14532d;
+  --accent-4: #ffd60a;
+  --accent-4-soft: #fff0d6;
+  --accent-4-ink: #7a4a00;
+  --accent-5: #ff9500;
+  --accent-5-soft: #ffe8cc;
+  --accent-5-ink: #8a5a00;
+  --accent-6: #ff3b30;
+  --accent-6-soft: #fde8e8;
+  --accent-6-ink: #7f1d1d;
+  
+  --fb-success-bg: #e3f6e8;
+  --fb-success-fg: #14532d;
+  --fb-success-border: #7cc46b;
+  --fb-success-soft: #eff7f4;
+  
+  --fb-warning-bg: #fff0d6;
+  --fb-warning-fg: #7a4a00;
+  --fb-warning-border: #ffc266;
+  
+  --fb-error-bg: #fde8e8;
+  --fb-error-fg: #7f1d1d;
+  --fb-error-border: #ff9999;
+  --fb-error-soft: #fde8e8;
+  
+  --fb-info-bg: #e8f1ff;
+  --fb-info-fg: #0b3d91;
+  --fb-info-border: #7cb3ff;
+  
+  --progress-track: #ececf0;
+  --progress-fill: #0071e3;
+  --progress-fill-2: #30b857;
+  
+  --border-color: #e5e5ea;
+  --border-strong: #d5d5da;
+  --border-width: 1px;
+  --border-width-ui: 1px;
+  
+  --statusbar-style: light;
+  --statusbar-bg: #f5f5f7;
+  
+  --bg-overlay: #fff;
+  --blur-overlay: rgba(0, 0, 0, 0.1);
+  
+  --radius-card: 1.125rem;
+  --radius-button: 0.75rem;
+  --radius-chip: 12px;
+  
+  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.06);
+  --shadow-button: 0 4px 14px rgba(0, 113, 227, 0.3);
+  --shadow-raised: 0 2px 12px rgba(0, 0, 0, 0.06);
+  --shadow-inset: inset 0 0 0 1px #e5e5ea;
+  --shadow-pressed: 0 1px 6px rgba(0, 0, 0, 0.08);
+  
+  --focus-ring-color: #0071e3;
+  --transition-fast: 0.12s;
+  --press-offset: 0;
+  --press-scale: 0.97;
+}
+
+/* Tile styling */
+[data-theme="minimal"] .tile,
+[data-theme="minimal"] .ti.sm,
+[data-theme="minimal"] .gi {
+  --tilebg: color-mix(in srgb, var(--t) 55%, #fff);
+}

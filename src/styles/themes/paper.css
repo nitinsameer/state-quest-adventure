@@ -1,0 +1,170 @@
+/**
+ * Paper Notebook Theme
+ * Reference: index-theme.html - [data-theme="paper"]
+ * 
+ * Note: This theme includes font-size overrides in html[data-theme="paper"]
+ */
+
+[data-theme="paper"] {
+  --bg: repeating-linear-gradient(transparent 0 31px, rgba(80, 120, 200, 0.2) 31px 32px), #f6efe0;
+  --bgc: #f6efe0;
+  --card: #fffdf6;
+  --ink: #3a3a4a;
+  --mute: #7a7566;
+  --accent: #d9534f;
+  --accentg: linear-gradient(135deg, #e35d4f, #d9534f);
+  --onacc: #fff;
+  --green: #58a55c;
+  --greeng: linear-gradient(135deg, #58a55c, #58a55c);
+  --ongr: #fff;
+  
+  --r: 10px;
+  --rs: 8px;
+  --bd: 2px solid #3a3a4a;
+  --bdt: 1.5px solid #3a3a4a;
+  --blur: none;
+  --well: #efe6d0;
+  --barfill: #ffd966;
+  
+  --sh: 3px 3px 0 rgba(58, 58, 74, 0.35);
+  --shs: 2px 2px 0 rgba(58, 58, 74, 0.35);
+  --sin: inset 1px 1px 0 rgba(58, 58, 74, 0.3);
+  --sht: 3px 3px 0 rgba(58, 58, 74, 0.35);
+  --shbtn: 3px 3px 0 #3a3a4a;
+  
+  --tilebg: color-mix(in srgb, var(--t) 55%, #fffdf6);
+  --tilec: #3a3a4a;
+  --curbg: #fff3b0;
+  --curc: #3a3a4a;
+  --okbg: #dff3d2;
+  --okc: #2a4a1c;
+  --badbg: #fbd5d0;
+  --badc: #6a2a20;
+  --lvlbg: #ffe08a;
+  --lvlc: #3a3a4a;
+  
+  --navbg: #fffdf6;
+  --navsh: none;
+  
+  --font: 'Patrick Hand', 'Nunito', cursive;
+  --fonth: 'Caveat', 'Patrick Hand', cursive;
+  --tsh: none;
+
+  /* === COMPATIBILITY LAYER === */
+  --bg-page: #f6efe0;
+  --bg-header: #f6efe0;
+  --bg-nav: #fffdf6;
+  --nav-active-bg: #f3eee0;
+  
+  --surface-card: #fffdf6;
+  --surface-raised: #fffdf6;
+  --surface-sunken: #f3eee0;
+  --surface-overlay: #fffdf6;
+  --surface-muted: #faf7f0;
+  
+  --scrim: rgba(0, 0, 0, 0.5);
+  
+  --text-primary: #3a3a4a;
+  --text-secondary: #7a7566;
+  --text-muted: #8a8078;
+  --text-on-header: #3a3a4a;
+  --text-on-primary: #3a3a4a;
+  --text-link: #d9534f;
+  
+  --action-primary-bg: #d9534f;
+  --action-primary-fg: #fff;
+  --action-primary-hover: #e35d4f;
+  --action-secondary-bg: #fffdf6;
+  --action-secondary-fg: #3a3a4a;
+  --action-success-bg: #58a55c;
+  --action-success-fg: #fff;
+  --action-disabled-bg: #efe6d0;
+  --action-disabled-fg: #a8a099;
+  
+  --accent-1: #d9534f;
+  --accent-1-soft: #ffe8e5;
+  --accent-1-ink: #3a3a4a;
+  --accent-2: #e35d4f;
+  --accent-2-soft: #ffe8e5;
+  --accent-2-ink: #3a3a4a;
+  --accent-3: #58a55c;
+  --accent-3-soft: #e8f5e8;
+  --accent-3-ink: #2a4a1c;
+  --accent-4: #ffd966;
+  --accent-4-soft: #fff8e6;
+  --accent-4-ink: #3a3a4a;
+  --accent-5: #ffb347;
+  --accent-5-soft: #ffe8cc;
+  --accent-5-ink: #5a3a00;
+  --accent-6: #7db3d5;
+  --accent-6-soft: #e8f4ff;
+  --accent-6-ink: #3a3a4a;
+  
+  --fb-success-bg: #dff3d2;
+  --fb-success-fg: #2a4a1c;
+  --fb-success-border: #7cc46b;
+  --fb-success-soft: #eff7eb;
+  
+  --fb-warning-bg: #ffe8cc;
+  --fb-warning-fg: #6a3a00;
+  --fb-warning-border: #ffaa00;
+  
+  --fb-error-bg: #fbd5d0;
+  --fb-error-fg: #6a2a20;
+  --fb-error-border: #d9534f;
+  --fb-error-soft: #fbd5d0;
+  
+  --fb-info-bg: #e8f4ff;
+  --fb-info-fg: #3a5a7a;
+  --fb-info-border: #7cb3ff;
+  
+  --progress-track: #efe6d0;
+  --progress-fill: #d9534f;
+  --progress-fill-2: #58a55c;
+  
+  --border-color: #3a3a4a;
+  --border-strong: #3a3a4a;
+  --border-width: 2px;
+  --border-width-ui: 1.5px;
+  
+  --statusbar-style: light;
+  --statusbar-bg: #f6efe0;
+  
+  --bg-overlay: #fffdf6;
+  --blur-overlay: rgba(0, 0, 0, 0.2);
+  
+  --radius-card: 0.625rem;
+  --radius-button: 0.5rem;
+  --radius-chip: 8px;
+  
+  --shadow-card: 3px 3px 0 rgba(58, 58, 74, 0.35);
+  --shadow-button: 3px 3px 0 #3a3a4a;
+  --shadow-raised: 3px 3px 0 rgba(58, 58, 74, 0.35);
+  --shadow-inset: inset 1px 1px 0 rgba(58, 58, 74, 0.3);
+  --shadow-pressed: 2px 2px 0 rgba(58, 58, 74, 0.35);
+  
+  --focus-ring-color: #d9534f;
+  --transition-fast: 0.1s;
+  --press-offset: 2px;
+  --press-scale: 1;
+}
+
+/* Paper-specific font size overrides */
+html[data-theme="paper"] body {
+  font-size: 19px;
+}
+
+html[data-theme="paper"] h1 {
+  font-size: 28px;
+}
+
+html[data-theme="paper"] h2 {
+  font-size: 26px;
+}
+
+/* Tile styling */
+[data-theme="paper"] .tile,
+[data-theme="paper"] .ti.sm,
+[data-theme="paper"] .gi {
+  --tilebg: color-mix(in srgb, var(--t) 55%, #fffdf6);
+}

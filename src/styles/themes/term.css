@@ -1,0 +1,162 @@
+/**
+ * Terminal Theme
+ * Reference: index-theme.html - [data-theme="term"]
+ * 
+ * Note: This theme includes font-size overrides in html[data-theme="term"]
+ */
+
+[data-theme="term"] {
+  --bg: #0a0f0a;
+  --bgc: #0a0f0a;
+  --card: #0d140d;
+  --ink: #33ff66;
+  --mute: #1fae45;
+  --accent: #33ff66;
+  --accentg: linear-gradient(135deg, #33ff66, #33ff66);
+  --onacc: #001a07;
+  --green: #33ff66;
+  --greeng: linear-gradient(135deg, #33ff66, #33ff66);
+  --ongr: #001a07;
+  
+  --r: 4px;
+  --rs: 3px;
+  --bd: 1px solid #33ff66;
+  --bdt: 1px solid #1fae45;
+  --blur: none;
+  --well: #050a05;
+  --barfill: #ffd33d;
+  
+  --sh: 0 0 10px rgba(51, 255, 102, 0.25);
+  --shs: 0 0 6px rgba(51, 255, 102, 0.25);
+  --sin: none;
+  --sht: 0 0 8px rgba(51, 255, 102, 0.25);
+  --shbtn: 0 0 14px rgba(51, 255, 102, 0.45);
+  
+  --tilebg: #0d140d;
+  --tilec: #33ff66;
+  --curbg: #0f3a1a;
+  --curc: #aaffc4;
+  --okbg: #0f3a1a;
+  --okc: #aaffc4;
+  --badbg: #3a0f0f;
+  --badc: #ff8a8a;
+  --lvlbg: #33ff66;
+  --lvlc: #001a07;
+  
+  --navbg: #050a05;
+  --navsh: none;
+  
+  --font: 'Share Tech Mono', monospace;
+  --fonth: 'Share Tech Mono', monospace;
+  --tsh: 0 0 8px rgba(51, 255, 102, 0.6);
+
+  /* === COMPATIBILITY LAYER === */
+  --bg-page: #0a0f0a;
+  --bg-header: #0a0f0a;
+  --bg-nav: #050a05;
+  --nav-active-bg: #0d140d;
+  
+  --surface-card: #0d140d;
+  --surface-raised: #0d140d;
+  --surface-sunken: #090d09;
+  --surface-overlay: #0d140d;
+  --surface-muted: #0a0f0a;
+  
+  --scrim: rgba(0, 0, 0, 0.9);
+  
+  --text-primary: #33ff66;
+  --text-secondary: #1fae45;
+  --text-muted: #0f7f30;
+  --text-on-header: #33ff66;
+  --text-on-primary: #33ff66;
+  --text-link: #33ff66;
+  
+  --action-primary-bg: #33ff66;
+  --action-primary-fg: #001a07;
+  --action-primary-hover: #66ff99;
+  --action-secondary-bg: #0d140d;
+  --action-secondary-fg: #33ff66;
+  --action-success-bg: #33ff66;
+  --action-success-fg: #001a07;
+  --action-disabled-bg: #0f1f0f;
+  --action-disabled-fg: #1f6f3f;
+  
+  --accent-1: #33ff66;
+  --accent-1-soft: rgba(51, 255, 102, 0.2);
+  --accent-1-ink: #33ff66;
+  --accent-2: #1fae45;
+  --accent-2-soft: rgba(31, 174, 69, 0.2);
+  --accent-2-ink: #33ff66;
+  --accent-3: #33ff66;
+  --accent-3-soft: rgba(51, 255, 102, 0.2);
+  --accent-3-ink: #001a07;
+  --accent-4: #33ff66;
+  --accent-4-soft: rgba(51, 255, 102, 0.2);
+  --accent-4-ink: #33ff66;
+  --accent-5: #aaffc4;
+  --accent-5-soft: rgba(170, 255, 196, 0.2);
+  --accent-5-ink: #001a07;
+  --accent-6: #ff8a8a;
+  --accent-6-soft: rgba(255, 138, 138, 0.2);
+  --accent-6-ink: #ff8a8a;
+  
+  --fb-success-bg: rgba(51, 255, 102, 0.2);
+  --fb-success-fg: #aaffc4;
+  --fb-success-border: rgba(51, 255, 102, 0.5);
+  --fb-success-soft: rgba(51, 255, 102, 0.1);
+  
+  --fb-warning-bg: rgba(255, 211, 61, 0.2);
+  --fb-warning-fg: #ffdd99;
+  --fb-warning-border: rgba(255, 211, 61, 0.5);
+  
+  --fb-error-bg: rgba(255, 138, 138, 0.2);
+  --fb-error-fg: #ff8a8a;
+  --fb-error-border: rgba(255, 138, 138, 0.5);
+  --fb-error-soft: rgba(255, 138, 138, 0.1);
+  
+  --fb-info-bg: rgba(51, 255, 102, 0.2);
+  --fb-info-fg: #99ffdd;
+  --fb-info-border: rgba(51, 255, 102, 0.5);
+  
+  --progress-track: #0f1f0f;
+  --progress-fill: #33ff66;
+  --progress-fill-2: #33ff66;
+  
+  --border-color: #33ff66;
+  --border-strong: #1fae45;
+  --border-width: 1px;
+  --border-width-ui: 1px;
+  
+  --statusbar-style: dark;
+  --statusbar-bg: #0a0f0a;
+  
+  --bg-overlay: #0d140d;
+  --blur-overlay: rgba(0, 0, 0, 0.9);
+  
+  --radius-card: 0.25rem;
+  --radius-button: 0.1875rem;
+  --radius-chip: 3px;
+  
+  --shadow-card: 0 0 10px rgba(51, 255, 102, 0.25);
+  --shadow-button: 0 0 14px rgba(51, 255, 102, 0.45);
+  --shadow-raised: 0 0 10px rgba(51, 255, 102, 0.25);
+  --shadow-inset: none;
+  --shadow-pressed: 0 0 8px rgba(51, 255, 102, 0.25);
+  
+  --focus-ring-color: #33ff66;
+  --transition-fast: 0.08s;
+  --press-offset: 0;
+  --press-scale: 0.97;
+}
+
+/* Terminal-specific font size overrides */
+html[data-theme="term"] body {
+  font-size: 15px;
+}
+
+/* Tile styling */
+[data-theme="term"] .tile,
+[data-theme="term"] .ti.sm,
+[data-theme="term"] .gi {
+  --tilebg: #0d140d;
+}
