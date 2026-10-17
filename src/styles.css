@@ -17,7 +17,7 @@
 @import "./styles/themes/paper.css";         /* Notebook */
 
 /* Glassmorphic & Skeumorphic */
-@import "./styles/themes/glass.css";         /* Glassmorphism (supports both glass & glassmorphism) */
+@import "./styles/themes/glass.css";         /* Glassmorphism */
 @import "./styles/themes/skeuo.css";         /* Skeumorphic */
 
 /* Gradient & Dark Variants */
