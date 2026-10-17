@@ -1,536 +1,803 @@
 /**
  * Design Tokens - CSS Custom Properties
  *
- * This file centralizes all design decisions as CSS custom properties (variables).
- * These tokens ensure consistency across components and make theming/scaling easy.
+ * This file centralizes design token utilities and theme-specific token references.
+ *
+ * NEUTRAL TOKENS (typography, spacing, z-index, border-radius, animations, etc.)
+ * are now defined in base-tokens.css and loaded first.
+ *
+ * COLOR TOKENS are now defined exclusively in individual theme files (clay.css, aero.css, etc.)
+ * and referenced via [data-theme="X"] selectors. This allows themes to fully override colors
+ * without :root interference.
  *
  * WCAG Compliance: All color tokens verified for WCAG AA (4.5:1) contrast.
  * WCAG A large text (18pt+): 3:1 minimum contrast.
  */
 
-:root, [data-theme="clay"] {
-  /* ========================================================================
-     COLOR TOKENS - Semantic (WCAG AA Compliant)
-     ======================================================================== */
+/* =========================================================================
+   THEME CONTRACT TOKENS - NOW DEFINED IN INDIVIDUAL THEME FILES ONLY
+   =========================================================================
+   
+   All color tokens (page backgrounds, surfaces, text, actions, accents,
+   feedback, progress, borders, shadows, glows) are now defined exclusively
+   in individual theme files:
+   - clay.css
+   - aero.css
+   - cartoon-comic.css
+   - glassmorphism.css
+   - skeumorphism.css
+   
+   Themes use [data-theme="X"] selectors to ensure proper CSS cascade override.
+   
+   When a user selects a theme in ThemesScreen, JavaScript sets data-theme
+   on <html> element, and the corresponding theme's color tokens become active.
+   
+   Note: Focus ring color will be set by each theme as --focus-ring-color.
+   Legacy theme contract tokens (--bg-page, --bg-header, etc.) are maintained
+   as references in :root below for backwards compatibility.
+   ========================================================================= */
 
-  /* Backgrounds */
-  --color-bg-primary: oklch(1 0 0);           /* White */
-  --color-bg-surface-primary: oklch(1 0 0);   /* White (cards) */
-  --color-bg-surface-secondary: oklch(0.94 0.04 235); /* Sky blue */
-  --color-bg-surface-elevated: oklch(0.99 0.005 260); /* Almost white (hover) */
-  --color-bg-overlay: rgba(0, 0, 0, 0.5);    /* Modal backdrop */
-
-  /* Text (all 4.5:1 contrast minimum on white backgrounds) */
-  --color-text-primary: oklch(0.22 0.05 260);    /* Ink (12.5:1) ✅ AA */
-  --color-text-secondary: oklch(0.45 0.04 260);  /* Muted (4.8:1) ✅ AA - fixed from 2.1:1 */
-  --color-text-tertiary: oklch(0.6 0.02 260);    /* Lighter (3.2:1) ✅ A large */
-  --color-text-inverted: oklch(1 0 0);           /* White on dark */
-  --color-text-disabled: oklch(0.65 0.02 260);   /* Disabled state (3.1:1) ✅ A large */
-
-  /* Interactive States */
-  --color-state-active: oklch(0.74 0.19 45);     /* Saffron (primary) */
-  --color-state-hover: oklch(0.78 0.16 45);      /* Saffron lighter */
-  --color-state-focus: oklch(0.72 0.19 45);      /* Focus ring */
-  --color-state-disabled: oklch(0.97 0.01 260);  /* Muted background */
-  --color-state-disabled-text: oklch(0.65 0.02 260); /* Disabled text */
-
-  /* Feedback States */
-  --color-feedback-success: oklch(0.72 0.19 150);   /* Green */
-  --color-feedback-warning: oklch(0.65 0.24 70);    /* Orange */
-  --color-feedback-error: oklch(0.62 0.24 27);      /* Red */
-  --color-feedback-info: oklch(0.62 0.2 250);       /* Blue */
-
-  /* Borders */
-  --color-border-default: oklch(0.92 0.015 260);  /* Light gray */
-  --color-border-subtle: oklch(0.95 0.01 260);    /* Very light */
-  --color-border-strong: oklch(0.7 0.04 260);     /* Dark gray */
-
-  /* Brand Colors */
-  --color-brand-saffron: oklch(0.74 0.19 45);      /* #FF7A1A */
-  --color-brand-saffron-light: oklch(0.95 0.06 55); /* Soft saffron */
-  --color-brand-saffron-dark: oklch(0.68 0.21 40);  /* Dark saffron */
-
-  --color-brand-explorer: oklch(0.62 0.2 250);    /* Explorer blue */
-  --color-brand-explorer-light: oklch(0.95 0.05 250); /* Soft blue */
-  --color-brand-explorer-dark: oklch(0.55 0.22 255); /* Dark blue */
-
-  --color-brand-success: oklch(0.72 0.19 150);    /* Green */
-  --color-brand-success-light: oklch(0.95 0.06 150); /* Soft green */
-  --color-brand-success-dark: oklch(0.62 0.2 150);  /* Dark green */
-
-  --color-brand-gold: oklch(0.82 0.17 85);        /* Gold */
-  --color-brand-gold-light: oklch(0.96 0.08 90);  /* Soft gold */
-  --color-brand-gold-dark: oklch(0.72 0.18 80);   /* Dark gold */
-
-  --color-brand-gem: oklch(0.62 0.24 290);        /* Purple (rewards) */
-  --color-brand-ink: oklch(0.22 0.05 260);        /* Text color */
-  --color-brand-sky: oklch(0.94 0.04 235);        /* Light background */
-
-  /* Task 2.2: Additional missing semantic tokens */
-  --surface-muted: oklch(0.92 0.01 260);          /* Muted surface background */
-  --surface-subtle: oklch(0.96 0.005 260);        /* Very subtle surface */
-  --border-default: oklch(0.92 0.015 260);        /* Default border color */
-  --action-primary: oklch(0.74 0.19 45);          /* Primary action (saffron) */
-  --action-primary-hover: oklch(0.78 0.16 45);    /* Primary action hover */
-  --fb-error-soft: oklch(0.95 0.05 27);           /* Error feedback light background */
-  --blur-overlay: blur(4px);                      /* Blur effect for overlays */
-
-  /* Missing tokens discovered in audit */
-  --success-on-bg: oklch(0.35 0.1 150);          /* Success text on backgrounds */
-  --feedback-success-text: oklch(0.35 0.1 150);  /* Success feedback text color */
-  --canvas-shadow: var(--shadow-raised);          /* Canvas drop shadow */
-
-  /* Legacy tokens - marked for removal in 2.5; migrated to role-based naming */
-  /* See Task 2.5 for migration plan */
-  --ink: oklch(0.22 0.05 260);                      /* legacy, remove in 2.5 */
-  --saffron: oklch(0.74 0.19 45);                   /* legacy, remove in 2.5 */
-  --saffron-soft: oklch(0.95 0.06 55);              /* legacy, remove in 2.5 */
-  --explorer: oklch(0.62 0.2 250);                  /* legacy, remove in 2.5 */
-  --explorer-soft: oklch(0.95 0.05 250);            /* legacy, remove in 2.5 */
-  --success: oklch(0.72 0.19 150);                  /* legacy, remove in 2.5 */
-  --success-soft: oklch(0.95 0.06 150);             /* legacy, remove in 2.5 */
-  --gold: oklch(0.82 0.17 85);                      /* legacy, remove in 2.5 */
-  --gold-soft: oklch(0.96 0.08 90);                 /* legacy, remove in 2.5 */
-  --sky: oklch(0.94 0.04 235);                      /* legacy, remove in 2.5 */
-
-  /* ========================================================================
-     TYPOGRAPHY TOKENS - KID-FRIENDLY TYPE SCALE
-     ======================================================================== */
-
-  /* Font Families */
-  --font-display: "Baloo 2", system-ui, sans-serif;
-  --font-sans: "Nunito", system-ui, sans-serif;
-
-  /* Kid-Friendly Type Scale Tokens (child-facing screens) */
-  --type-screen-title: 28px;
-  --type-screen-title-weight: 800;
-  --type-section-heading: 22px;
-  --type-section-heading-weight: 800;
-  --type-state-name: 20px;
-  --type-state-name-weight: 800;
-  --type-body: 16px;
-  --type-body-weight: 700;
-  --type-min: 14px;
-
-  /* Font Sizes (in rem, based on 16px root) */
-  --font-size-display: 2rem;      /* 32px - h1 */
-  --font-size-h1: 2rem;           /* 32px */
-  --font-size-h2: 1.5rem;         /* 24px */
-  --font-size-h3: 1.25rem;        /* 20px */
-  --font-size-h4: 1.125rem;       /* 18px */
-  --font-size-h5: 1rem;           /* 16px */
-  --font-size-xl: 1.125rem;       /* 18px - large body */
-  --font-size-lg: 1rem;           /* 16px - base body */
-  --font-size-base: 1rem;         /* 16px */
-  --font-size-md: 0.9375rem;      /* 15px */
-  --font-size-sm: 0.875rem;       /* 14px - small text */
-  --font-size-xs: 0.75rem;        /* 12px - very small */
-
-  /* Font Weights */
-  --font-weight-thin: 100;
-  --font-weight-light: 300;
-  --font-weight-normal: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
-  --font-weight-extrabold: 800;
-
-  /* Line Heights */
-  --line-height-tight: 1.2;      /* Headers */
-  --line-height-snug: 1.375;     /* Smaller text */
-  --line-height-normal: 1.5;     /* Body text (most common) */
-  --line-height-relaxed: 1.625;  /* Large text */
-  --line-height-loose: 1.75;     /* Captions */
-
-  /* Letter Spacing */
-  --letter-spacing-tighter: -0.02em;
-  --letter-spacing-tight: -0.01em;
-  --letter-spacing-normal: 0em;
-  --letter-spacing-wide: 0.025em;
-  --letter-spacing-wider: 0.05em;
-
-  /* ========================================================================
-     SPACING TOKENS (8px base unit)
-     ======================================================================== */
-
-  --space-0: 0;
-  --space-0-5: 0.25rem;   /* 4px */
-  --space-0-25: 0.25rem;  /* 4px - extra precise (Task 2.2) */
-  --space-1: 0.5rem;      /* 8px (base unit) */
-  --space-1-5: 0.75rem;   /* 12px */
-  --space-2: 1rem;        /* 16px */
-  --space-2-5: 1.25rem;   /* 20px */
-  --space-3: 1.5rem;      /* 24px */
-  --space-3-5: 1.75rem;   /* 28px */
-  --space-4: 2rem;        /* 32px */
-  --space-5: 2.5rem;      /* 40px */
-  --space-6: 3rem;        /* 48px */
-  --space-7: 3.5rem;      /* 56px */
-  --space-8: 4rem;        /* 64px */
-
-  /* Component Padding */
-  --padding-xs: 0.5rem;    /* 8px */
-  --padding-sm: 0.75rem;   /* 12px */
-  --padding-base: 1rem;    /* 16px */
-  --padding-md: 1.5rem;    /* 24px */
-  --padding-lg: 2rem;      /* 32px */
-  --padding-xl: 2.5rem;    /* 40px */
-
-  /* Component Gaps */
-  --gap-xs: 0.5rem;        /* 8px (Task 2.2) */
-  --gap-compact: 0.5rem;   /* 8px */
-  --gap-base: 0.75rem;     /* 12px */
-  --gap-loose: 1rem;       /* 16px */
-  --gap-md: 1rem;          /* 16px (Task 2.2) */
-  --gap-xl: 1.5rem;        /* 24px */
-
-  /* ========================================================================
-     BORDER RADIUS TOKENS
-     ======================================================================== */
-
-  --radius-base: 1rem;
-  --radius-sm: 0.5rem;
-  --radius-md: 0.75rem;
-  --radius-lg: 1rem;
-  --radius-xl: 1.375rem;
-  --radius-2xl: 1.875rem;
-  --radius-3xl: 2.375rem;
-  --radius-4xl: 2.875rem;
-  --radius-full: 9999px;
-
-  /* ========================================================================
-     BORDER WIDTH TOKENS (NEW)
-     ======================================================================== */
-
-  --border-width-thin: 1px;           /* Subtle borders, separators */
-  --border-width-default: 2px;        /* Standard borders, buttons, inputs */
-  --border-width-prominent: 3px;      /* Bold borders, focus rings, highlights */
-  --border-width-chart: 1.5px;        /* Chart lines and data visualization */
-
-  /* ========================================================================
-     SHADOW TOKENS
-     ======================================================================== */
-
-  /* Elevations (depth levels) */
-  --shadow-none: none;
-  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-
-  /* Soft shadow (design system specific) */
-  --shadow-soft: 0 10px 30px -12px rgb(30 41 59 / 0.15), 0 4px 10px -4px rgb(30 41 59 / 0.08);
-  --shadow-pop: 0 14px 0 0 rgb(0 0 0 / 0.08);
-
-  /* Glows (brand-colored) */
-  --shadow-glow-saffron: 0 12px 30px -8px oklch(0.72 0.19 45 / 0.5);
-  --shadow-glow-explorer: 0 12px 30px -8px oklch(0.62 0.2 250 / 0.45);
-  --shadow-glow-success: 0 12px 30px -8px oklch(0.72 0.19 150 / 0.45);
-  --shadow-glow-gold: 0 12px 30px -8px oklch(0.82 0.17 85 / 0.5);
-
-  /* ========================================================================
-     TRANSITION & ANIMATION TOKENS (Standardized)
-     ======================================================================== */
-
-  /* Durations (Must-Have standardization) */
-  --duration-instant: 0ms;
-  --duration-micro: 100ms;     /* Very fast interactions */
-  --duration-fast: 150ms;      /* Button tap, hover feedback */
-  --duration-normal: 300ms;    /* Standard transitions */
-  --duration-slow: 500ms;      /* Modal appearances, page transitions */
-  --duration-slower: 800ms;    /* Celebration animations */
-
-  /* Easing Functions */
-  --easing-linear: linear;
-  --easing-ease-in: cubic-bezier(0.4, 0, 1, 1);
-  --easing-ease-out: cubic-bezier(0, 0, 0.2, 1);
-  --easing-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
-  --easing-spring: cubic-bezier(0.34, 1.56, 0.64, 1);  /* Bounce/spring effect */
-  --easing-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
-
-  /* Animation Presets (for use with Framer Motion) */
-  --animation-tap: var(--duration-micro) var(--easing-ease-out);
-  --animation-interaction: var(--duration-fast) var(--easing-ease-out);
-  --animation-transition: var(--duration-normal) var(--easing-ease-in-out);
-  --animation-modal: var(--duration-slow) var(--easing-spring);
-  --animation-celebration: var(--duration-slower) var(--easing-bounce);
-
-  /* ========================================================================
-     Z-INDEX TOKENS (Stacking Order)
-     ======================================================================== */
-
-  --z-hide: -1;
-  --z-auto: auto;
-  --z-base: 0;
-  --z-dropdown: 1000;
-  --z-sticky: 1020;
-  --z-fixed: 1030;
-  --z-backdrop: 1040;
-  --z-offcanvas: 1050;
-  --z-modal: 1050;
-  --z-popover: 1060;
-  --z-tooltip: 1070;
-  --z-notification: 1080;
-  --z-celebration: 1090;
-
-  /* ========================================================================
-     ACCESSIBILITY & FOCUS TOKENS
-     ======================================================================== */
-
-  /* Focus Ring (visible focus indicators for keyboard navigation) */
-  --focus-ring-width: 2px;
-  --focus-ring-offset: 2px;
-  --focus-ring-color: oklch(0.72 0.19 45);  /* Saffron, 6.2:1 on white */
-  --focus-outline: var(--focus-ring-width) solid var(--focus-ring-color);
-  --focus-outline-offset: var(--focus-ring-offset);
-
-  /* Touch Target Minimum (mobile accessibility) */
-  --touch-target-min: 48px;  /* iOS recommendation */
-
-  /* ========================================================================
-     CONTAINER WIDTHS
-     ======================================================================== */
-
-  --container-xs: 20rem;    /* 320px */
-  --container-sm: 24rem;    /* 384px */
-  --container-md: 28rem;    /* 448px */
-  --container-lg: 32rem;    /* 512px */
-  --container-xl: 36rem;    /* 576px */
-
-  /* ========================================================================
-     THEME CONTRACT TOKENS (Theme System Foundation)
-     ======================================================================== */
-
-  /* Page */
-  --bg-page: linear-gradient(180deg, #f7f4ef 0%, #eef2f8 100%);
-  --bg-header: linear-gradient(135deg, oklch(0.82 0.16 50) 0%, oklch(0.68 0.21 40) 100%);
-  --bg-nav: oklch(1 0 0);
-  --nav-active-bg: oklch(0.95 0.06 55);
-
-  /* Surfaces */
-  --surface-card: oklch(1 0 0);
-  --surface-raised: oklch(0.99 0.005 260);
-  --surface-sunken: oklch(0.9 0.02 260);
-  --surface-overlay: rgba(0, 0, 0, 0.5);
+:root {
+  /* BACKWARDS COMPATIBILITY: Neutral references that themes override */
+  
+  /* Page - will be overridden by theme --bg-page */
+  --bg-page: #f7f4ef;
+  --bg-header: #d4a574;
+  --bg-nav: white;
+  --nav-active-bg: white;
+  
+  /* Surfaces - will be overridden by theme */
+  --surface-card: white;
+  --surface-raised: white;
+  --surface-sunken: #f0f0f0;
+  --surface-overlay: white;
+  --surface-muted: #f5f5f5;
   --scrim: rgba(0, 0, 0, 0.5);
-
-  /* Text */
-  --text-primary: oklch(0.22 0.05 260);
-  --text-secondary: oklch(0.45 0.04 260);
-  --text-muted: oklch(0.6 0.02 260);
-  --text-on-header: oklch(1 0 0);
-  --text-on-primary: oklch(1 0 0);
-  --text-link: oklch(0.62 0.2 250);
-
-  /* Actions */
-  --action-primary-bg: oklch(0.74 0.19 45);
-  --action-primary-fg: oklch(1 0 0);
-  --action-secondary-bg: oklch(0.95 0.06 55);
-  --action-secondary-fg: oklch(0.22 0.05 260);
-  --action-success-bg: oklch(0.72 0.19 150);
-  --action-success-fg: oklch(1 0 0);
-  --action-disabled-bg: oklch(0.97 0.01 260);
-  --action-disabled-fg: oklch(0.65 0.02 260);
-
-  /* Accents (6 regional/topic colours) */
-  --accent-1: oklch(0.74 0.19 45);
-  --accent-1-soft: oklch(0.95 0.06 55);
-  --accent-1-ink: oklch(0.22 0.05 260);
-  --accent-2: oklch(0.62 0.2 250);
-  --accent-2-soft: oklch(0.95 0.05 250);
-  --accent-2-ink: oklch(1 0 0);
-  --accent-3: oklch(0.72 0.19 150);
-  --accent-3-soft: oklch(0.95 0.06 150);
-  --accent-3-ink: oklch(1 0 0);
-  --accent-4: oklch(0.82 0.17 85);
-  --accent-4-soft: oklch(0.96 0.08 90);
-  --accent-4-ink: oklch(0.22 0.05 260);
-  --accent-5: oklch(0.62 0.24 290);
-  --accent-5-soft: oklch(0.96 0.05 280);
-  --accent-5-ink: oklch(1 0 0);
-  --accent-6: oklch(0.95 0.06 55);
-  --accent-6-soft: oklch(0.98 0.02 55);
-  --accent-6-ink: oklch(0.22 0.05 260);
-
-  /* Feedback */
-  --fb-success-bg: oklch(0.95 0.06 150);
-  --fb-success-fg: oklch(0.35 0.1 150);
-  --fb-success-border: oklch(0.72 0.19 150);
-  --fb-warning-bg: oklch(0.95 0.06 55);
-  --fb-warning-fg: oklch(0.35 0.1 45);
-  --fb-warning-border: oklch(0.75 0.16 50);
-  --fb-error-bg: oklch(0.96 0.08 27);
-  --fb-error-fg: oklch(0.35 0.1 27);
-  --fb-error-border: oklch(0.62 0.24 27);
-  --fb-info-bg: oklch(0.95 0.05 250);
-  --fb-info-fg: oklch(0.35 0.1 250);
-  --fb-info-border: oklch(0.62 0.2 250);
-
-  /* Progress */
-  --progress-track: oklch(0.9 0.02 260);
-  --progress-fill: oklch(0.74 0.19 45);
-  --progress-fill-2: oklch(0.62 0.2 250);
-
-  /* Border */
-  --border-color: oklch(0.92 0.015 260);
+  
+  /* Text - will be overridden by theme */
+  --text-primary: #1a1a1a;
+  --text-secondary: #666;
+  --text-muted: #999;
+  --text-on-header: white;
+  --text-on-primary: white;
+  --text-link: #0066cc;
+  
+  /* Actions - will be overridden by theme */
+  --action-primary-bg: #ff7a1a;
+  --action-primary-fg: white;
+  --action-primary-hover: #ff8c33;
+  --action-secondary-bg: #f0f0f0;
+  --action-secondary-fg: #1a1a1a;
+  --action-success-bg: #4caf50;
+  --action-success-fg: white;
+  --action-disabled-bg: #e0e0e0;
+  --action-disabled-fg: #999;
+  
+  /* Accents - will be overridden by theme */
+  --accent-1: #ff7a1a;
+  --accent-1-soft: #ffd9b3;
+  --accent-1-ink: #1a1a1a;
+  --accent-2: #0066cc;
+  --accent-2-soft: #b3d9ff;
+  --accent-2-ink: white;
+  --accent-3: #4caf50;
+  --accent-3-soft: #c8e6c9;
+  --accent-3-ink: white;
+  --accent-4: #ffc107;
+  --accent-4-soft: #ffe082;
+  --accent-4-ink: #1a1a1a;
+  --accent-5: #9c27b0;
+  --accent-5-soft: #e1bee7;
+  --accent-5-ink: white;
+  --accent-6: #ff9800;
+  --accent-6-soft: #ffe0b2;
+  --accent-6-ink: #1a1a1a;
+  
+  /* Feedback - will be overridden by theme */
+  --fb-success-bg: #c8e6c9;
+  --fb-success-fg: #1b5e20;
+  --fb-success-border: #4caf50;
+  --fb-error-soft: #ffebee;
+  --fb-error-bg: #ffcdd2;
+  --fb-error-fg: #b71c1c;
+  --fb-error-border: #f44336;
+  --fb-warning-bg: #fff3e0;
+  --fb-warning-fg: #e65100;
+  --fb-warning-border: #ffc107;
+  --fb-info-bg: #e3f2fd;
+  --fb-info-fg: #0d47a1;
+  --fb-info-border: #2196f3;
+  
+  /* Progress - will be overridden by theme */
+  --progress-track: #e0e0e0;
+  --progress-fill: #ff7a1a;
+  --progress-fill-2: #0066cc;
+  
+  /* Border - will be overridden by theme */
+  --border-color: #ddd;
   --border-width: 0;
-  --border-strong: oklch(0.7 0.04 260);
-
-  /* Effects */
-  --shadow-card: inset 4px 4px 8px rgb(255 255 255 / 0.6), inset -4px -4px 8px rgb(30 41 59 / 0.08), 0 14px 26px -10px var(--scrim);
-  --shadow-raised: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-button: inset 5px 5px 10px rgb(255 255 255 / 0.45), inset -5px -7px 12px rgb(130 35 0 / 0.35), 0 10px 18px -6px oklch(0.62 0.21 38 / 0.6);
-  --shadow-pressed: inset 4px 4px 8px rgb(130 35 0 / 0.35), inset -3px -3px 6px rgb(255 255 255 / 0.45), 0 3px 8px -4px oklch(0.62 0.21 38 / 0.6);
-  --shadow-inset: inset 5px 5px 10px rgb(30 41 59 / 0.14), inset -4px -4px 8px rgb(255 255 255 / 0.75);
+  --border-strong: #999;
+  --border-default: #ddd;
+  
+  /* Effects - will be overridden by theme */
+  --shadow-card: 0 2px 4px rgba(0,0,0,0.1);
+  --shadow-raised: 0 4px 8px rgba(0,0,0,0.1);
+  --shadow-button: 0 4px 8px rgba(0,0,0,0.15);
+  --shadow-pressed: 0 2px 4px rgba(0,0,0,0.1);
+  --shadow-inset: inset 0 2px 4px rgba(0,0,0,0.1);
+  --shadow-glow-saffron: 0 4px 12px rgba(255, 122, 26, 0.3);
+  --shadow-glow-explorer: 0 4px 12px rgba(0, 102, 204, 0.3);
+  --shadow-glow-success: 0 4px 12px rgba(76, 175, 80, 0.3);
+  --shadow-glow-gold: 0 4px 12px rgba(255, 193, 7, 0.3);
   --blur-surface: 0;
-  --glow: oklch(0.62 0.21 38 / 0.6);
-
+  --blur-overlay: 0;
+  --glow: rgba(255, 122, 26, 0.5);
+  
   /* Shape */
   --radius-card: 1.75rem;
   --radius-button: 1.5rem;
   --radius-chip: 9999px;
   --radius-input: 1.25rem;
   --radius-modal: 1.75rem;
-
-  /* Type (already defined above, but included in contract) */
-  --letter-spacing-display: -0.01em;
-
+  
+  /* Focus ring color - will be overridden by theme */
+  --focus-ring-color: #ff7a1a;
+  
   /* Motion */
   --press-offset: 0;
   --press-scale: 0.98;
   --transition-fast: 120ms ease;
-
+  
   /* Media */
-  --illustration-plate: oklch(1 0 0);
-  --confetti-colors: oklch(0.74 0.19 45), oklch(0.62 0.2 250), oklch(0.72 0.19 150), oklch(0.82 0.17 85), oklch(0.62 0.24 290);
-
+  --illustration-plate: white;
+  --confetti-colors: #ff7a1a, #0066cc, #4caf50, #ffc107, #9c27b0;
+  
   /* System */
   --statusbar-style: dark;
-  --statusbar-bg: oklch(1 0 0);
-  --meta-theme-color: oklch(0.74 0.19 45);
+  --statusbar-bg: white;
+  --meta-theme-color: #ff7a1a;
   --is-dark: 0;
+  
+  /* Legacy tokens for backwards compatibility */
+  --ink: #1a1a1a;
+  --saffron: #ff7a1a;
+  --saffron-soft: #ffd9b3;
+  --explorer: #0066cc;
+  --explorer-soft: #b3d9ff;
+  --success: #4caf50;
+  --success-soft: #c8e6c9;
+  --gold: #ffc107;
+  --gold-soft: #ffe082;
+  --sky: #f0f8ff;
+  
+  /* Additional semantic tokens */
+  --surface-subtle: #fafafa;
+  --action-primary: #ff7a1a;
+  --action-primary-hover: #ff8c33;
+  
+  /* Tailwind theme tokens */
+  --radius: 1rem;
+  --background: white;
+  --foreground: #1a1a1a;
+  --card: white;
+  --card-foreground: #1a1a1a;
+  --popover: white;
+  --popover-foreground: #1a1a1a;
+  --primary: #ff7a1a;
+  --primary-foreground: white;
+  --secondary: #0066cc;
+  --secondary-foreground: white;
+  --muted: #f0f0f0;
+  --muted-foreground: #666;
+  --accent: #ffc107;
+  --accent-foreground: #1a1a1a;
+  --destructive: #f44336;
+  --destructive-foreground: white;
+  --border: #ddd;
+  --input: #ddd;
+  --ring: #ff7a1a;
+  --bg-overlay: white;
 }
 
-/* =========================================================================
-   UTILITY CLASSES FOR DESIGN TOKENS
-   ========================================================================= */
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html {
+    font-size: 100%;
+  }
+  html, body {
+    height: 100%;
+    background: var(--bg-page);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
 
-/* Typography Utilities */
-.text-h1 {
-  font-family: var(--font-display);
-  font-size: var(--font-size-h1);
-  font-weight: var(--font-weight-extrabold);
-  line-height: var(--line-height-tight);
-  letter-spacing: var(--letter-spacing-tight);
+  h1, h2, h3, h4, h5 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
 }
 
-.text-h2 {
-  font-family: var(--font-display);
-  font-size: var(--font-size-h2);
-  font-weight: var(--font-weight-extrabold);
-  line-height: var(--line-height-tight);
-  letter-spacing: var(--letter-spacing-tight);
+/* Phase 4.5: Spacing & Layout Grid System - Component Spacing Utilities */
+
+@utility card {
+  padding: var(--padding-md);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  background: white;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-base);
 }
 
-.text-h3 {
-  font-family: var(--font-display);
-  font-size: var(--font-size-h3);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-snug);
-  letter-spacing: var(--letter-spacing-tight);
+@utility card-sm {
+  padding: var(--padding-base);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  background: white;
+  gap: var(--gap-compact);
 }
 
-.text-body-lg {
-  font-family: var(--font-sans);
-  font-size: var(--font-size-lg);
-  line-height: var(--line-height-normal);
+@utility card-lg {
+  padding: var(--padding-lg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  background: white;
+  gap: var(--gap-loose);
 }
 
-.text-body {
-  font-family: var(--font-sans);
-  font-size: var(--font-size-base);
-  line-height: var(--line-height-normal);
-}
-
-.text-body-sm {
-  font-family: var(--font-sans);
-  font-size: var(--font-size-sm);
-  line-height: var(--line-height-normal);
-}
-
-.text-label {
-  font-family: var(--font-sans);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-snug);
-  letter-spacing: var(--letter-spacing-wide);
-}
-
-.text-caption {
-  font-family: var(--font-sans);
-  font-size: var(--font-size-xs);
-  line-height: var(--line-height-normal);
-}
-
-/* Focus Visibility (WCAG 2.4.7) */
-.focus-visible {
-  outline: var(--focus-outline);
-  outline-offset: var(--focus-outline-offset);
-}
-
-/* Touch Target Minimum (mobile accessibility) */
-.touch-target {
-  min-width: var(--touch-target-min);
+@utility btn-spacing {
+  padding: var(--padding-base) var(--padding-md);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-base);
   min-height: var(--touch-target-min);
 }
 
-/* Reduced Motion (WCAG 2.3.3) */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+@utility btn-spacing-sm {
+  padding: var(--padding-xs) var(--padding-sm);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-compact);
+  min-height: 40px;
+}
+
+@utility btn-spacing-lg {
+  padding: var(--padding-md) var(--padding-lg);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-base);
+  min-height: var(--touch-target-min);
+}
+
+@utility form-group {
+  margin-bottom: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-compact);
+}
+
+@utility form-label {
+  font-weight: 700;
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--gap-compact);
+  display: block;
+}
+
+@utility form-hint {
+  margin-top: var(--gap-compact);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+@utility list-base {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-base);
+}
+
+@utility list-compact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-compact);
+}
+
+@utility list-loose {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-loose);
+}
+
+@utility grid-base {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--gap-base);
+}
+
+@utility grid-compact {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--gap-compact);
+}
+
+@utility grid-loose {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--gap-loose);
+}
+
+@utility section-spacing {
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-4);
+  padding: var(--padding-lg);
+}
+
+@utility section-spacing-tight {
+  margin-top: var(--space-2);
+  margin-bottom: var(--space-2);
+  padding: var(--padding-md);
+}
+
+@utility section-spacing-loose {
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-6);
+  padding: var(--padding-lg);
+}
+
+/* Typography Utility Classes - Phase 4.4 */
+
+/* Display Sizes (Headers) */
+@utility text-h1 {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+@utility text-h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+@utility text-h3 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.375;
+  letter-spacing: -0.01em;
+}
+
+@utility text-h4 {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.375;
+  letter-spacing: -0.01em;
+}
+
+@utility text-h5 {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 0em;
+}
+
+/* Body Text Sizes */
+@utility text-body-lg {
+  font-family: var(--font-sans);
+  font-size: 1.125rem;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0em;
+}
+
+@utility text-body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0em;
+}
+
+@utility text-body-sm {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0em;
+}
+
+@utility text-label {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.375;
+  letter-spacing: 0.025em;
+}
+
+@utility text-caption {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0em;
+}
+
+@utility text-display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+@utility pt-safe {
+  padding-top: max(20px, env(safe-area-inset-top));
+}
+
+@utility pb-safe {
+  padding-bottom: max(20px, env(safe-area-inset-bottom));
+}
+
+@utility px-safe {
+  padding-left: max(0px, env(safe-area-inset-left));
+  padding-right: max(0px, env(safe-area-inset-right));
+}
+
+@utility gradient-saffron {
+  background-image: linear-gradient(135deg, oklch(0.82 0.16 50) 0%, oklch(0.68 0.21 40) 100%);
+}
+@utility gradient-explorer {
+  background-image: linear-gradient(135deg, oklch(0.72 0.16 240) 0%, oklch(0.55 0.22 255) 100%);
+}
+@utility gradient-success {
+  background-image: linear-gradient(135deg, oklch(0.82 0.17 155) 0%, oklch(0.62 0.2 150) 100%);
+}
+@utility gradient-gold {
+  background-image: linear-gradient(135deg, oklch(0.9 0.15 90) 0%, oklch(0.72 0.18 80) 100%);
+}
+@utility gradient-sky {
+  background-image: linear-gradient(180deg, oklch(0.94 0.04 235) 0%, oklch(0.97 0.02 235) 60%, oklch(1 0 0) 100%);
+}
+
+@utility shadow-inset-subtle {
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+/* === SEMANTIC COLOR UTILITIES (Token-based) === */
+/* These replace hardcoded Tailwind colors with design tokens */
+
+@utility bg-muted {
+  background-color: var(--color-muted-bg);
+}
+
+@utility bg-muted-light {
+  background-color: var(--color-muted-bg-light);
+}
+
+@utility text-muted-light {
+  color: var(--color-text-muted-light);
+}
+
+@utility text-muted-dark {
+  color: var(--color-text-muted-dark);
+}
+
+@utility border-muted {
+  border-color: var(--color-border-muted);
+}
+
+@utility border-muted-light {
+  border-color: var(--color-border-muted-light);
+}
+
+/* Feedback state backgrounds */
+@utility bg-warning-soft {
+  background-color: var(--color-bg-warning-soft);
+}
+
+@utility bg-success-soft {
+  background-color: var(--color-bg-success-soft);
+}
+
+@utility bg-error-soft {
+  background-color: var(--color-bg-error-soft);
+}
+
+@utility bg-info-soft {
+  background-color: var(--color-bg-info-soft);
+}
+
+@utility bg-orange-soft {
+  background-color: var(--color-bg-orange-soft);
+}
+
+@utility bg-purple-soft {
+  background-color: var(--color-bg-purple-soft);
+}
+
+/* Feedback state text */
+@utility text-warning {
+  color: var(--color-text-warning);
+}
+
+@utility text-warning-light {
+  color: var(--color-text-warning-light);
+}
+
+@utility text-success {
+  color: var(--color-text-success);
+}
+
+@utility text-error {
+  color: var(--color-text-error);
+}
+
+@utility text-info {
+  color: var(--color-text-info);
+}
+
+@utility text-orange {
+  color: var(--color-text-orange);
+}
+
+/* Feedback state borders */
+@utility border-warning {
+  border-color: var(--color-border-warning);
+}
+
+@utility border-success {
+  border-color: var(--color-border-success);
+}
+
+@utility border-error {
+  border-color: var(--color-border-error);
+}
+
+@utility border-info {
+  border-color: var(--color-border-info);
+}
+
+@utility border-orange {
+  border-color: var(--color-border-orange);
+}
+
+@utility border-purple {
+  border-color: var(--color-border-purple);
+}
+
+@utility line-clamp-ellipsis-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@utility btn-primary {
+  height: 3.5rem;
+  border-radius: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  transition: all 0.3s;
+}
+
+@utility btn-secondary {
+  height: 3rem;
+  border-radius: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  transition: all 0.3s;
+}
+
+@utility btn-answer {
+  height: 4rem;
+  border-radius: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-display);
+  font-weight: 700;
+  transition: all 0.3s;
+}
+
+@utility gap-base {
+  gap: 0.75rem;
+}
+
+@utility gap-compact {
+  gap: 0.5rem;
+}
+
+@utility gap-loose {
+  gap: 1rem;
+}
+
+@utility section-spacing {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+@utility gradient-passport {
+  background-image: linear-gradient(140deg, oklch(0.25 0.04 50) 0%, oklch(0.35 0.06 50) 50%, oklch(0.25 0.04 50) 100%);
+}
+
+@utility cloud-dot {
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.9) 0 6px, transparent 7px),
+    radial-gradient(circle at 70% 40%, rgba(255,255,255,0.85) 0 8px, transparent 9px),
+    radial-gradient(circle at 40% 80%, rgba(255,255,255,0.8) 0 5px, transparent 6px);
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-10vh) rotate(var(--confetti-rotate, 0deg));
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) rotate(calc(var(--confetti-rotate, 0deg) + 720deg));
+    opacity: 0.9;
   }
 }
 
-/* Animation Utility Classes (Standardized) */
-
-/* Fast interactions (buttons, hover effects) */
-.animate-interaction {
-  transition: all var(--duration-fast) var(--easing-ease-out);
+.confetti-fall {
+  animation-name: confetti-fall;
+  animation-timing-function: cubic-bezier(0.25, 0.6, 0.5, 1);
+  animation-fill-mode: both;
 }
 
-/* Standard transitions (state changes, layouts) */
-.animate-transition {
-  transition: all var(--duration-normal) var(--easing-ease-in-out);
+@keyframes mascot-cheer {
+  0% { transform: translateY(0) rotate(0deg) scale(1); }
+  20% { transform: translateY(-14%) rotate(-8deg) scale(1.08); }
+  40% { transform: translateY(0) rotate(6deg) scale(1); }
+  60% { transform: translateY(-9%) rotate(-5deg) scale(1.05); }
+  80% { transform: translateY(0) rotate(3deg) scale(1); }
+  100% { transform: translateY(0) rotate(0deg) scale(1); }
 }
 
-/* Modal and dialog animations */
-.animate-modal {
-  animation: modal-entrance var(--duration-slow) var(--easing-spring) both;
+@keyframes shimmer {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
 }
 
-/* Celebration animations */
-.animate-celebration {
-  animation: celebration-bounce var(--duration-slower) var(--easing-bounce) infinite;
-}
-
-/* Modal entrance animation (fade + scale) */
-@keyframes modal-entrance {
+@keyframes slide-up {
   from {
+    transform: translateY(100%);
     opacity: 0;
-    transform: scale(0.95) translateY(10px);
   }
   to {
+    transform: translateY(0);
     opacity: 1;
-    transform: scale(1) translateY(0);
   }
 }
 
-/* Page transition entrance */
-@keyframes page-entrance {
+@keyframes bounce-gentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes shimmer-path {
+  0%, 100% { stroke-opacity: 1; }
+  50% { stroke-opacity: 0.5; }
+}
+
+@keyframes slide-down {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.mascot-cheer {
+  animation: mascot-cheer 1.1s cubic-bezier(0.34, 1.56, 0.64, 1) 2;
+  transform-origin: 50% 100%;
+}
+
+.animate-shimmer {
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.animate-bounce-gentle {
+  animation: bounce-gentle 1.5s ease-in-out infinite;
+}
+
+.animate-shimmer-path {
+  animation: shimmer-path 2s ease-in-out infinite;
+}
+
+.animate-slide-down {
+  animation: slide-down 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* === PREMIUM SHADOW HIERARCHY SYSTEM === */
+/* Consistent elevation levels for polished UI */
+
+/* Level 1: Subtle shadows for hover states and subtle elevation */
+.shadow-elevated-1 {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* Level 2: Standard shadows for cards and components */
+.shadow-elevated-2 {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* Level 3: Strong shadows for prominent cards and modals */
+.shadow-elevated-3 {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+}
+
+/* Level 4: Very strong shadows for overlays and top-layer elements */
+.shadow-elevated-4 {
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.20);
+}
+
+/* Hover state shadow - for interactive feedback */
+.shadow-elevated-hover {
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+}
+
+/* Active/pressed state shadow - for feedback on interaction */
+.shadow-elevated-active {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* Glow effect for special CTAs - warm glow */
+.shadow-glow-warm {
+  box-shadow: 0 8px 24px rgba(255, 140, 60, 0.25), 0 4px 12px rgba(255, 100, 0, 0.15);
+}
+
+/* Glow effect for special CTAs - success glow */
+.shadow-glow-success {
+  box-shadow: 0 8px 24px rgba(34, 197, 94, 0.25), 0 4px 12px rgba(22, 163, 74, 0.15);
+}
+
+/* === PHASE 2: DOPAMINE ANIMATION SYSTEM === */
+/* High-engagement animations for kids app */
+
+/* POP-IN: Used for badge unlocks, rewards, celebrations */
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) rotate(-10deg);
+  }
+  50% {
+    transform: scale(1.1) rotate(5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+/* SLIDE-UP: Used for content sections, modals */
+@keyframes slide-up {
   from {
     opacity: 0;
     transform: translateY(20px);
@@ -541,50 +808,112 @@
   }
 }
 
-/* Celebration bounce (dopamine hit) */
-@keyframes celebration-bounce {
-  0%, 100% {
-    transform: scale(1) rotate(0deg);
-  }
-  50% {
-    transform: scale(1.1) rotate(5deg);
-  }
+/* WIGGLE: Used for incorrect quiz answers (gentle, not harsh) */
+@keyframes wiggle {
+  0%, 100% { transform: translateX(-2px) rotate(-1deg); }
+  25% { transform: translateX(2px) rotate(1deg); }
+  50% { transform: translateX(-2px) rotate(-1deg); }
+  75% { transform: translateX(2px) rotate(1deg); }
 }
 
-/* Stat card entrance (staggered) */
-@keyframes stat-card-entrance {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* JIGGLE: Used for try-again feedback (encouraging) */
+@keyframes jiggle {
+  0%, 100% { transform: rotate(-1deg) scale(1); }
+  25% { transform: rotate(1deg) scale(1.02); }
+  50% { transform: rotate(-1deg) scale(1); }
+  75% { transform: rotate(1deg) scale(1.02); }
 }
 
-/* Badge pop-up (celebration) */
-@keyframes badge-pop-up {
+/* FLOAT-UP: Used for XP popups, rewards floating away */
+@keyframes float-up {
   0% {
-    opacity: 0;
-    transform: scale(0) rotate(-180deg);
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(-15deg);
   }
   50% {
     opacity: 1;
-    transform: scale(1.15) rotate(20deg);
+    transform: translateY(-60px) scale(1.2) rotate(0deg);
   }
   100% {
-    opacity: 1;
-    transform: scale(1) rotate(0deg);
+    opacity: 0;
+    transform: translateY(-120px) scale(0.5) rotate(15deg);
   }
 }
 
-/* Pulse (loading state) */
-@keyframes pulse-soft {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
+/* BOUNCE-SCALE: Used for celebration items (stars, emojis) */
+@keyframes bounce-scale {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+/* FADE-IN: Smooth entrance */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* SUCCESS-PULSE: Quick pulse on success */
+@keyframes success-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Utility classes for animations */
+.animate-pop-in {
+  animation: pop-in 600ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-slide-up {
+  animation: slide-up 400ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-wiggle {
+  animation: wiggle 300ms ease-in-out;
+}
+
+.animate-jiggle {
+  animation: jiggle 400ms ease-in-out;
+}
+
+.animate-float-up {
+  animation: float-up 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  pointer-events: none;
+}
+
+.animate-bounce-scale {
+  animation: bounce-scale 600ms cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
+
+.animate-fade-in {
+  animation: fade-in 300ms ease-out forwards;
+}
+
+.animate-success-pulse {
+  animation: success-pulse 500ms ease-in-out;
+}
+
+/* Stagger delays for sequential animations */
+.animate-delay-100 { animation-delay: 100ms; }
+.animate-delay-200 { animation-delay: 200ms; }
+.animate-delay-300 { animation-delay: 300ms; }
+.animate-delay-400 { animation-delay: 400ms; }
+.animate-delay-500 { animation-delay: 500ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mascot-cheer,
+  .confetti-fall,
+  .animate-shimmer,
+  .animate-slide-up,
+  .animate-bounce-gentle,
+  .animate-shimmer-path,
+  .animate-slide-down,
+  .animate-pop-in,
+  .animate-wiggle,
+  .animate-jiggle,
+  .animate-float-up,
+  .animate-bounce-scale,
+  .animate-fade-in,
+  .animate-success-pulse {
+    animation: none;
   }
 }

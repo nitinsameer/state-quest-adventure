@@ -2,16 +2,18 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
+@import "./styles/base-tokens.css";
 @import "./styles/tokens.css";
-@import "./styles/ui.css";
-@import "./styles/celebrations.css";
 
-/* Theme Files */
-@import "./styles/themes/clay.css";
+/* Theme Files - Applied AFTER base tokens so colors override :root */
+@import "./styles/themes/clay.css";       /* Default theme */
 @import "./styles/themes/aero.css";
 @import "./styles/themes/cartoon-comic.css";
 @import "./styles/themes/glassmorphism.css";
 @import "./styles/themes/skeumorphism.css";
+
+@import "./styles/ui.css";
+@import "./styles/celebrations.css";
 
 @custom-variant dark (&:is(.dark *));
 
