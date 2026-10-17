@@ -107,6 +107,9 @@
 
   /* Border width */
   --border-width-ui: 1px;
+
+  /* Focus ring color */
+  --focus-ring-color: oklch(0.67 0.2 270);
 }
 
 /* Glassmorphism-specific card effects */

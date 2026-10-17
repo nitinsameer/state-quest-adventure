@@ -107,6 +107,9 @@
 
   /* Border width */
   --border-width-ui: 1px;
+
+  /* Focus ring color */
+  --focus-ring-color: oklch(0.45 0.15 250);
 }
 
 /* Aero-specific card effects */

@@ -108,6 +108,9 @@
   /* Border width */
   --border-width-ui: 3px;
   --border-color: #000000;
+
+  /* Focus ring color */
+  --focus-ring-color: oklch(0 0 0);
 }
 
 /* Cartoon-comic-specific card effects */

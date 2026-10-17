@@ -107,6 +107,9 @@
 
   /* Border width */
   --border-width-ui: 1px;
+
+  /* Focus ring color */
+  --focus-ring-color: oklch(0.72 0.19 45);
 }
 
 /* Clay-specific card effects */
