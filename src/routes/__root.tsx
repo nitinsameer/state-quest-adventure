@@ -496,7 +496,7 @@ function HydratedApp() {
       window.addEventListener("storage", handleStorageChange);
       return () => window.removeEventListener("storage", handleStorageChange);
     }
-  }, [location.pathname]);
+  }, []); // Empty deps - storage listeners should persist across route changes
 
   // Start ambient music only on home/authenticated routes after user consents
   // Do NOT start on splash/welcome/create screens
@@ -540,7 +540,7 @@ function HydratedApp() {
       pauseHandle?.remove().catch(() => {});
       resumeHandle?.remove().catch(() => {});
     };
-  }, [location.pathname]);
+  }, []); // Empty deps - app pause/resume listeners should persist across route changes
 
   // Monitor consent changes - re-render if consent status changes
   useEffect(() => {
