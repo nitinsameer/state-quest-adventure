@@ -140,9 +140,9 @@ export function AudioPermissionDialog({
         {
           type: "badgeGrid",
           badges: [
-            { emoji: "🎮", label: "Tap Sounds" },
-            { emoji: "🎵", label: "Music" },
-            { emoji: "🎧", label: "Stories" },
+            { emoji: EMOJI.audio.sounds, label: "Tap Sounds" },
+            { emoji: EMOJI.audio.music, label: "Music" },
+            { emoji: EMOJI.audio.stories, label: "Stories" },
           ],
         },
       ]}

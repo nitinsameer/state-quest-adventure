@@ -446,7 +446,7 @@ function HydratedApp() {
       showCelebration({
         title: `🎉 Level ${currentLevel} - ${levelName}!`,
         subtitle: `You're now a "${levelName}"!\nKeep exploring to reach the next milestone! 🚀`,
-        icon: "⭐",
+        icon: EMOJI.action.star,
         confetti: true,
         duration: 3500,
         type: "success",

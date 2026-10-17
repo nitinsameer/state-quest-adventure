@@ -88,6 +88,8 @@ export const EMOJI = {
     food: "🍛",
     warning: "⚠️",
     language: "🗣️",
+    compass: "🧭",
+    tools: "🛠️",
   },
 
   // Learning and content
@@ -96,6 +98,7 @@ export const EMOJI = {
     brain: "🧠",
     game: "🎮",
     state: "🗺️",
+    book: "📚",
   },
 
   // Debug and logging (for console only - not for UI)
@@ -135,6 +138,7 @@ export const EMOJI = {
     sticker1: "😋",
     sticker2: "🎉",
     sticker3: "🎉",
+    question: "❓",
   },
 
   // Postcard and celebrations
@@ -196,6 +200,7 @@ export const EMOJI = {
     music: "🎵",
     stories: "🎧",
     switch: "🌍",
+    speaker: "🔊",
   },
 
   // Other icons

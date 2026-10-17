@@ -55,7 +55,7 @@ export function FirstSessionTutorial({ onComplete, isVisible = true }: FirstSess
   const steps = [
     {
       title: "Learn About States",
-      emoji: "📚",
+      emoji: EMOJI.learning.book,
       description: "Tap 'Play' to read fun facts about each state. Each fact is a card!",
       tips: [
         { emoji: EMOJI.audio.music, text: "Tap the speaker icon to hear the story" },
@@ -66,10 +66,10 @@ export function FirstSessionTutorial({ onComplete, isVisible = true }: FirstSess
     },
     {
       title: "Take Quizzes & Earn XP",
-      emoji: "❓",
+      emoji: EMOJI.quiz.question,
       description: "After reading all the cards, take the quiz! Answer correctly to earn big XP.",
       tips: [
-        { emoji: "✅", text: "Right answers give you 50 XP" },
+        { emoji: EMOJI.action.checkButton, text: "Right answers give you 50 XP" },
         { emoji: EMOJI.feedback.encouragement, text: "You've got this! It's okay to learn" },
         { emoji: EMOJI.feedback.success, text: "Finish the quiz to complete the state" },
       ],
@@ -82,7 +82,7 @@ export function FirstSessionTutorial({ onComplete, isVisible = true }: FirstSess
         "Complete states to unlock the next adventure. Each state = 1 stamp for your passport!",
       tips: [
         { emoji: EMOJI.feedback.trophy, text: "Collect all 36 state stamps" },
-        { emoji: "🔥", text: "Build a daily streak" },
+        { emoji: EMOJI.action.fire, text: "Build a daily streak" },
         { emoji: EMOJI.achievement.badge, text: "Earn special badges" },
       ],
       gradient: undefined,

@@ -1,4 +1,5 @@
 import { Link, useRouter } from "@tanstack/react-router";
+import { EMOJI } from "@/constants/emoji";
 
 function Shell({ emoji, title, body }: { emoji: string; title: string; body: string }) {
   const router = useRouter();
@@ -26,7 +27,7 @@ function Shell({ emoji, title, body }: { emoji: string; title: string; body: str
 export function NotFoundPlace() {
   return (
     <Shell
-      emoji="🧭"
+      emoji={EMOJI.utility.compass}
       title="Place not found"
       body="We couldn't find that state or union territory on the map."
     />
@@ -36,7 +37,7 @@ export function NotFoundPlace() {
 export function PlaceError() {
   return (
     <Shell
-      emoji="🛠️"
+      emoji={EMOJI.utility.tools}
       title="Something went wrong"
       body="This place couldn't be loaded right now."
     />

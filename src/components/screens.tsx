@@ -3514,7 +3514,7 @@ export function StateUnlockScreen({
     ? getState(stateName)
     : INDIA_STATES && INDIA_STATES.length > 1
       ? INDIA_STATES[1]
-      : INDIA_STATES[0] || { name: "India", emoji: "🇮🇳", nickname: "Incredible India" };
+      : INDIA_STATES[0] || { name: "India", emoji: EMOJI.language.indFlag, nickname: "Incredible India" };
   const art = STATE_ART[state.name];
 
   // PHASE 1b: Play sound effect when state unlocks

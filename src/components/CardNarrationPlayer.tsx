@@ -19,6 +19,7 @@ import {
   grantFeatureConsent,
 } from "@/lib/parental-consent";
 import { KidsButton } from "./KidsButton";
+import { EMOJI } from "@/constants/emoji";
 
 export interface CardNarrationPlayerProps {
   narrationId: string;
@@ -31,7 +32,7 @@ export function CardNarrationPlayer({
   narrationId,
   text,
   title,
-  emoji = "🔊",
+  emoji = EMOJI.audio.speaker,
 }: CardNarrationPlayerProps) {
   const [audioNarrationEnabled, setAudioNarrationEnabled] = useState(() => {
     const hasConsent = hasFeatureConsent("audio");
