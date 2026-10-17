@@ -28,13 +28,14 @@ export function QuizCeremony() {
   const progress = useProgress();
   const navigate = useNavigate();
   const [stampedState, setStampedState] = useState(false);
+  const navigationInProgressRef = useRef(false);
 
   // Get the first pending celebration (current ceremony)
   const ceremony = progress.pendingCelebrations?.[0] as PendingCelebration | undefined;
 
-  // If dismissed, navigate to home
+  // If dismissed, navigate to home ONLY if NOT already navigating via button
   useEffect(() => {
-    if (!ceremony) {
+    if (!ceremony && !navigationInProgressRef.current) {
       navigate({ to: "/" });
     }
   }, [ceremony, navigate]);
@@ -172,6 +173,7 @@ export function QuizCeremony() {
             {/* Primary: Next State */}
             <button
               onClick={() => {
+                navigationInProgressRef.current = true;
                 fxTap();
                 dismissPendingCelebration();
                 const nextState = nextStateAfter(ceremony.stateName);
@@ -188,6 +190,7 @@ export function QuizCeremony() {
             {parseInt(ceremony.stars) < 3 && (
               <button
                 onClick={() => {
+                  navigationInProgressRef.current = true;
                   fxTap();
                   dismissPendingCelebration();
                   navigate({ to: `/state/${state.short}/quiz` });
@@ -201,6 +204,7 @@ export function QuizCeremony() {
             {/* Text-style: Home button */}
             <button
               onClick={() => {
+                navigationInProgressRef.current = true;
                 fxTap();
                 dismissPendingCelebration();
                 navigate({ to: "/" });
