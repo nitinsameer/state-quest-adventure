@@ -51,9 +51,11 @@ function Complete() {
   const progress = useProgress();
 
   // Guard: If no pending celebration, redirect to learn
-  if (!progress.pendingCelebrations?.length) {
-    // Navigate away if ceremony is not in progress
-    navigate({ to: "/state/$slug/learn", params: { slug } });
+  // BUT: Don't redirect immediately if there ARE pending celebrations
+  // This prevents race condition when buttons dismiss celebration while navigating
+  if (!progress.pendingCelebrations?.length && progress.onboarded) {
+    // Only redirect if we're sure there's no ceremony in progress
+    // (if celebration was just dismissed, wait for next render)
     return null;
   }
 
