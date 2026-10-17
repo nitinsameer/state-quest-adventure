@@ -98,7 +98,7 @@ export function ThemesScreen() {
                     Aa
                   </div>
                   <div
-                    className="text-[10px] px-2 py-0.5 rounded"
+                    className="text-xs px-2 py-0.5 rounded"
                     style={{
                       backgroundColor: theme.previewTokens.accent,
                       color: theme.previewTokens.bg,

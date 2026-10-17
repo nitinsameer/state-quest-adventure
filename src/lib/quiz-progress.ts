@@ -9,8 +9,9 @@
 
 import { validateQuizProgress, QuizProgressEntry, QuizProgress } from "./localStorage-schema";
 import { debugError } from "./debug";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 
-const QUIZ_PROGRESS_KEY = "india-explorer:quiz-progress:v1";
+const QUIZ_PROGRESS_KEY = STORAGE_KEYS.quizProgress;
 const EXPIRY_DAYS = 7;
 const EXPIRY_MS = EXPIRY_DAYS * 24 * 60 * 60 * 1000;
 

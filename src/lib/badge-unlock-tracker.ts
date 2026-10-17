@@ -5,8 +5,10 @@
  */
 
 import type { AchievementBadge } from "@/lib/progress";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 
-const SEEN_BADGES_KEY = "india-explorer:seen-badges:v1";
+// Use centralized storage key
+const SEEN_BADGES_KEY = STORAGE_KEYS.seenBadges;
 
 /**
  * Get all badges the user has seen notifications for

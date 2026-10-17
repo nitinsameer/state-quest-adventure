@@ -5,7 +5,9 @@
  * All settings default to OFF (child-safe defaults).
  */
 
-const STORAGE_KEY = "india-explorer:parent-zone-settings:v1";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
+
+const STORAGE_KEY = STORAGE_KEYS.parentZoneSettings;
 
 export interface ParentZoneSettings {
   // Postcard sharing: include child's name on shared postcards

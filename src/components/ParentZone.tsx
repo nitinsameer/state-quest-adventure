@@ -193,7 +193,7 @@ export function ParentZoneScreen() {
                   <div className="text-display text-lg font-extrabold mt-(--space-0-25)">
                     {s.value}
                   </div>
-                  <div className="text-[10px] font-bold leading-tight" style={{color: "var(--text-muted)"}}>
+                  <div className="text-xs font-bold leading-tight" style={{color: "var(--text-muted)"}}>
                     {s.label}
                   </div>
                 </div>

@@ -115,7 +115,7 @@ export function PassportSapling() {
                   loading="lazy"
                   decoding="async"
                 />
-                <div className="text-[9px] leading-tight">{state.name}</div>
+                <div className="text-xs leading-tight">{state.name}</div>
               </button>
             );
           })}

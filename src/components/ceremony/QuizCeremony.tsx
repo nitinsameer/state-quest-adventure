@@ -14,6 +14,7 @@ import { playTts } from "@/lib/tts";
 import { hasFeatureConsent } from "@/lib/parental-consent";
 import { PostcardFrame } from "@/components/PostcardFrame";
 import { EMOJI } from "@/constants/emoji";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 import mascot from "@/assets/mascot.webp";
 
 /**
@@ -603,7 +604,7 @@ function StepPostcard({ ceremony, state }: StepProps) {
 
     // Persist sticker choice
     try {
-      const STORAGE_KEY = "india-explorer:progress:v2";
+      const STORAGE_KEY = STORAGE_KEYS.progress;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
     } catch {
       // Storage error - fail silently

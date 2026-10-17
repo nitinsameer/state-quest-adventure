@@ -16,6 +16,7 @@ import { hasFeatureConsent, grantFeatureConsent } from "@/lib/parental-consent";
 import { debugLog } from "@/lib/debug";
 import { fxTap } from "@/lib/fx";
 import { EMOJI } from "@/constants/emoji";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { StandardModal } from "@/components/StandardModal";
 
 export interface AudioPermissionDialogProps {
@@ -68,7 +69,7 @@ export function AudioPermissionDialog({
 
     // Check if we should show based on context and forceShow flag
     const hasSeenAudioPermission =
-      localStorage.getItem("india-explorer:audio-permission-shown:v1") === "1";
+      localStorage.getItem(STORAGE_KEYS.audioPermissionShown) === "1";
 
     // Only auto-show for first-load context if not seen before
     const shouldShow = forceShow || (!hasSeenAudioPermission && context === "first-load");
@@ -79,7 +80,7 @@ export function AudioPermissionDialog({
 
       // Mark as seen (unless in profile contexts with forceShow)
       if (context === "first-load" || !forceShow) {
-        localStorage.setItem("india-explorer:audio-permission-shown:v1", "1");
+        localStorage.setItem(STORAGE_KEYS.audioPermissionShown, "1");
       }
     }
   }, [isHydrated(), isOpen, forceShow, context]);

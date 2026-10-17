@@ -6,6 +6,8 @@
  * Events are queued locally and retried when connection is restored
  */
 
+import { STORAGE_KEYS } from "@/constants/storageKeys";
+
 export interface QueuedEvent {
   id: string;
   eventName: string;
@@ -14,7 +16,7 @@ export interface QueuedEvent {
   retryCount: number;
 }
 
-const QUEUE_STORAGE_KEY = "india-explorer:event-queue:v1";
+const QUEUE_STORAGE_KEY = STORAGE_KEYS.eventQueue;
 const MAX_QUEUE_SIZE = 100;
 const MAX_RETRIES = 3;
 const RETRY_DELAY_MS = 5000; // 5 seconds before retry

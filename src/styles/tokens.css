@@ -199,6 +199,15 @@
   --radius-full: 9999px;
 
   /* ========================================================================
+     BORDER WIDTH TOKENS (NEW)
+     ======================================================================== */
+
+  --border-width-thin: 1px;           /* Subtle borders, separators */
+  --border-width-default: 2px;        /* Standard borders, buttons, inputs */
+  --border-width-prominent: 3px;      /* Bold borders, focus rings, highlights */
+  --border-width-chart: 1.5px;        /* Chart lines and data visualization */
+
+  /* ========================================================================
      SHADOW TOKENS
      ======================================================================== */
 

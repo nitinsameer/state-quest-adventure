@@ -3,6 +3,7 @@ import { useCelebration } from "@/hooks/useCelebration";
 import { useProgress, achievementsFor, STATE_BADGES, type BadgeId } from "@/lib/progress";
 import { fxConfetti } from "@/lib/fx";
 import { EMOJI } from "@/constants/emoji";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 
 const BADGE_ICON: Record<BadgeId, string> = {
   monument: "🏛️",
@@ -28,7 +29,7 @@ type Piece = {
   rotate: number;
 };
 
-const CELEBRATED_KEY = "india-explorer:celebrated:v1";
+const CELEBRATED_KEY = STORAGE_KEYS.celebratedUnlocks;
 
 function loadCelebrated(): Set<string> {
   if (typeof window === "undefined") return new Set();

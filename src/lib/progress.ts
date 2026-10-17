@@ -8,6 +8,7 @@ import {
   validateAppVersion,
   validateRecentlyCompleted,
 } from "./localStorage-schema";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 
 export type BadgeId = "monument" | "animal" | "explorer";
 
@@ -136,7 +137,8 @@ export const STATE_BADGES: { id: BadgeId; name: string; xp: number }[] = [
 
 const ALL_BADGE_IDS: BadgeId[] = STATE_BADGES.map((b) => b.id);
 
-const STORAGE_KEY = "india-explorer:progress:v2";
+// Use centralized storage key from constants
+const STORAGE_KEY = STORAGE_KEYS.progress;
 const APP_VERSION = "3.0"; // Increment when you need to clear old cache
 export const XP_PER_LEVEL = 400;
 export const CARDS_PER_STATE = 6;
@@ -232,7 +234,7 @@ function migrateProgressVersion(oldData: any): Progress {
 
   // Backup the raw old data in case we need to investigate corruption
   try {
-    localStorage.setItem("india-explorer:progress:v2:backup", JSON.stringify(oldData));
+    localStorage.setItem(STORAGE_KEYS.progressBackup, JSON.stringify(oldData));
   } catch {
     // Backup failed - storage issue, continue with migration
   }
@@ -345,7 +347,7 @@ function hydrate() {
   hydrated = true;
   try {
     // Check app version in localStorage to migrate old data if needed
-    const storedVersion = localStorage.getItem("india-explorer:app-version");
+    const storedVersion = localStorage.getItem(STORAGE_KEYS.appVersion);
     if (storedVersion !== APP_VERSION) {
       // Version mismatch - migrate old data instead of clearing
       const oldProgressRaw = localStorage.getItem(STORAGE_KEY);
@@ -365,7 +367,7 @@ function hydrate() {
       }
 
       // Update version marker
-      localStorage.setItem("india-explorer:app-version", APP_VERSION);
+      localStorage.setItem(STORAGE_KEYS.appVersion, APP_VERSION);
       emit();
       return;
     }
@@ -412,7 +414,7 @@ function hydrate() {
         // Corrupted data - create backup and fall back to defaults
         try {
           const rawData = JSON.parse(storageData);
-          localStorage.setItem("india-explorer:progress:v2:backup", JSON.stringify(rawData));
+          localStorage.setItem(STORAGE_KEYS.progressBackup, JSON.stringify(rawData));
         } catch {
           // Couldn't even parse the raw data - skip backup
         }
@@ -1356,7 +1358,7 @@ export function setLastPlayedState(stateName: string) {
 export function resetProgress() {
   if (typeof window !== "undefined") {
     try {
-      window.localStorage.removeItem("india-explorer:celebrated:v1");
+      window.localStorage.removeItem(STORAGE_KEYS.celebratedUnlocks);
     } catch {
       /* ignore */
     }
@@ -2080,7 +2082,7 @@ export function getTotalStampCount(): number {
 export function getRecentlyCompletedState(p: Progress): string | null {
   if (typeof window === "undefined") return null;
 
-  const recentKey = "india-explorer:recently-completed:v1";
+  const recentKey = STORAGE_KEYS.recentlyCompleted;
   const stored = localStorage.getItem(recentKey);
 
   // CRITICAL FIX #1.5: Validate with Zod schema
@@ -2112,7 +2114,7 @@ export function getRecentlyCompletedState(p: Progress): string | null {
 export function markRecentlyCompleted(stateName: string) {
   if (typeof window === "undefined") return;
 
-  const recentKey = "india-explorer:recently-completed:v1";
+  const recentKey = STORAGE_KEYS.recentlyCompleted;
   try {
     localStorage.setItem(
       recentKey,
@@ -2132,7 +2134,7 @@ export function markRecentlyCompleted(stateName: string) {
 export function clearRecentlyCompleted() {
   if (typeof window === "undefined") return;
   try {
-    localStorage.removeItem("india-explorer:recently-completed:v1");
+    localStorage.removeItem(STORAGE_KEYS.recentlyCompleted);
   } catch {
     // Storage error - fail silently
   }

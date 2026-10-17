@@ -24,6 +24,7 @@ import {
   getPostcardStats,
 } from "@/lib/postcard-library";
 import { validatePostcardLibrary } from "@/lib/localStorage-schema";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 
 export type PostcardLibrarySortBy = "date-newest" | "date-oldest" | "state-asc" | "state-desc";
 
@@ -77,7 +78,7 @@ interface PostcardLibraryStore {
   clearLibrary: () => void;
 }
 
-const STORAGE_KEY = "india-explorer:postcard-library:v1";
+const STORAGE_KEY = STORAGE_KEYS.postcards;
 
 const createPostcardLibraryStore = (): PostcardLibraryStore => {
   // Initialize with empty state

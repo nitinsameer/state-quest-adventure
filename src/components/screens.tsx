@@ -43,6 +43,7 @@ import { JourneyDestinationCard } from "@/components/JourneyDestinationCard";
 
 import { DailyGoalCard } from "@/components/DailyGoalCard";
 import { EMOJI } from "@/constants/emoji";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { lazy, Suspense } from "react";
 
 const IndiaProgressMapLazy = lazy(() =>
@@ -772,7 +773,7 @@ function HomeDashboardContent() {
   const handleTutorialClose = () => {
     fxTap();
     // Mark tutorial as seen so it doesn't auto-show again
-    localStorage.setItem("india-explorer:tutorial-seen:v1", "true");
+    localStorage.setItem(STORAGE_KEYS.tutorialSeen, "true");
     setShowTutorial(false);
   };
 
@@ -1203,7 +1204,7 @@ function MiniStateCard({
         />
       </div>
       <div className="mt-2 text-display font-extrabold text-sm">{name}</div>
-      <div className="text-[10px] font-bold text-text-secondary">
+      <div className="text-xs font-bold text-text-secondary">
         {locked ? "🏆 Locked" : "Unlocked"}
       </div>
     </div>
@@ -1390,7 +1391,7 @@ export function JourneyMapScreen() {
     ];
 
     // Track which milestones have been celebrated in localStorage
-    const celebratedKey = "india-explorer:milestones-celebrated:v1";
+    const celebratedKey = STORAGE_KEYS.celebratedMilestones;
     const celebrated =
       typeof window !== "undefined" ? JSON.parse(localStorage.getItem(celebratedKey) || "[]") : [];
 
@@ -3640,7 +3641,7 @@ function Stamp({
         className="h-20 w-20 rounded-full border-[3px] flex flex-col items-center justify-center"
         style={{ borderColor: color, color }}
       >
-        <div className="text-[9px] font-black tracking-widest opacity-80">VISITED</div>
+        <div className="text-xs font-black tracking-widest opacity-80">VISITED</div>
         <div className="text-display font-extrabold text-[11px] leading-tight text-center px-1">
           {name}
         </div>
@@ -4543,7 +4544,7 @@ function ParentZonePlaceholder() {
               placeholder="Enter 4-digit PIN"
               className="w-full h-10 rounded-lg border-2 border-info px-3 font-extrabold text-center text-lg tracking-widest text-info"
             />
-            <div className="text-[10px] text-accent-1 mt-1">
+            <div className="text-xs text-accent-1 mt-1">
               🎯 Used to reset progress. Default: 1234
             </div>
           </div>

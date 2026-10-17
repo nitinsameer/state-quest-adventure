@@ -5,6 +5,7 @@ import { initAudioMixer, getEffectsGain, getAmbientGain } from "./audio-mixer";
 import { debugLog, debugError } from "./debug";
 import { hasFeatureConsent } from "./parental-consent";
 import { validateSoundToggle } from "./localStorage-schema";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 
 // Sound + haptics FX using Web Audio API, navigator.vibrate, and Capacitor Haptics.
 // On native (Android/iOS), uses Capacitor.Haptics for richer haptic feedback.
@@ -12,7 +13,7 @@ import { validateSoundToggle } from "./localStorage-schema";
 
 /* ---------- sound preference (persisted) ---------- */
 
-const SOUND_KEY = "india-explorer:sound:v1";
+const SOUND_KEY = STORAGE_KEYS.sound;
 let soundOn = false; // Sound toggle (separate from audio narration permission)
 let soundHydrated = false;
 const soundListeners = new Set<() => void>();

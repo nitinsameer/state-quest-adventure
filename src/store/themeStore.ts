@@ -10,6 +10,7 @@ import { z } from "zod";
 import { Capacitor } from "@capacitor/core";
 import { StatusBar, Style } from "@capacitor/status-bar";
 import { getTheme } from "@/lib/themes";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 
 // Valid theme IDs (must match entries in src/lib/themes.ts)
 type ThemeId = "clay" | "aero" | "cartoon-comic" | "glassmorphism" | "skeumorphism";
@@ -27,7 +28,7 @@ interface ThemeStoreState {
   loadTheme: () => void;
 }
 
-const THEME_STORAGE_KEY = "india-explorer:theme:v1";
+const THEME_STORAGE_KEY = STORAGE_KEYS.theme;
 
 /**
  * Apply theme to the DOM

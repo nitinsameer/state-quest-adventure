@@ -159,7 +159,7 @@ function StateDetailBadgeCard({ state, progress, onSelect }: any) {
             className="h-8 w-8 rounded-full bg-text-muted border-2 border-text-muted flex items-center justify-center text-xs opacity-50 flex-shrink-0 relative"
             title={`${STATE_PERFORMANCE_BADGE_DEFS[badge]?.name}`}
           >
-            <span className="absolute text-[10px]">🔥</span>
+            <span className="absolute text-xs">🔥</span>
           </div>
         ))}
       </div>

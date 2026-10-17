@@ -18,8 +18,9 @@
  */
 
 import { validateConsentStorage, type ConsentRecord } from "./localStorage-schema";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 
-const CONSENT_STORAGE_KEY = "india-explorer:parental-consent:v1";
+const CONSENT_STORAGE_KEY = STORAGE_KEYS.parentalConsent;
 const CONSENT_VERSION = 1;
 const consentListeners = new Set<(feature: "audio" | "file" | "analytics") => void>();
 

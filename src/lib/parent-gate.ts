@@ -9,11 +9,13 @@
  * - Migration from plain text to hashed storage
  */
 
-const STORAGE_KEY_HASH = "india-explorer:parent-pin-hash:v1";
-const STORAGE_KEY_SALT = "india-explorer:parent-pin-salt:v1";
-const STORAGE_KEY_LEGACY = "india-explorer:parent-pin:v1"; // Old plain text key
-const STORAGE_KEY_LOCKOUT = "india-explorer:parent-lockout:v1";
-const STORAGE_KEY_ATTEMPTS = "india-explorer:parent-attempts:v1";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
+
+const STORAGE_KEY_HASH = STORAGE_KEYS.parentPinHash;
+const STORAGE_KEY_SALT = STORAGE_KEYS.parentPinSalt;
+const STORAGE_KEY_LEGACY = STORAGE_KEYS.parentPinLegacy; // Old plain text key
+const STORAGE_KEY_LOCKOUT = STORAGE_KEYS.parentLockout;
+const STORAGE_KEY_ATTEMPTS = STORAGE_KEYS.parentAttempts;
 
 const PBKDF2_ITERATIONS = 100000; // NIST recommendation
 const PBKDF2_HASH_LENGTH = 32; // 256 bits

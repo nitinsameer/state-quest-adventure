@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import { fxTap } from "@/lib/fx";
 import { StandardModal } from "@/components/StandardModal";
 import { EMOJI } from "@/constants/emoji";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 import mascot from "@/assets/mascot.webp";
 
 export interface FirstSessionTutorialProps {
@@ -25,7 +26,7 @@ export function FirstSessionTutorial({ onComplete, isVisible = true }: FirstSess
 
   // Check if user has already seen tutorial
   useEffect(() => {
-    const seen = localStorage.getItem("india-explorer:first-session-tutorial-shown:v1") === "1";
+    const seen = localStorage.getItem(STORAGE_KEYS.tutorialShown) === "1";
     setHasSeenTutorial(seen);
   }, []);
 
@@ -35,7 +36,7 @@ export function FirstSessionTutorial({ onComplete, isVisible = true }: FirstSess
 
   const handleSkip = () => {
     fxTap();
-    localStorage.setItem("india-explorer:first-session-tutorial-shown:v1", "1");
+    localStorage.setItem(STORAGE_KEYS.tutorialShown, "1");
     setHasSeenTutorial(true);
     onComplete?.();
   };
@@ -43,7 +44,7 @@ export function FirstSessionTutorial({ onComplete, isVisible = true }: FirstSess
   const handleNext = () => {
     fxTap();
     if (step === 2) {
-      localStorage.setItem("india-explorer:first-session-tutorial-shown:v1", "1");
+      localStorage.setItem(STORAGE_KEYS.tutorialShown, "1");
       setHasSeenTutorial(true);
       onComplete?.();
     } else {
