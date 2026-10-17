@@ -98,8 +98,8 @@ export const THEMES: Theme[] = [
     id: "glass",
     name: "Glassmorphism",
     description: "Modern and translucent. Frosted glass effect with blur.",
-    isDark: false,
-    effects: { blur: true, glow: false, heavy: true },
+    isDark: true,
+    effects: { blur: true, glow: false, heavy: false },
     previewTokens: { bg: "#6a4fe0", surface: "rgba(255,255,255,.18)", text: "#fff", accent: "#fff" },
   },
   {
@@ -123,7 +123,7 @@ export const THEMES: Theme[] = [
     name: "Aurora",
     description: "Northern lights inspired. Radiant gradients with glow.",
     isDark: true,
-    effects: { blur: true, glow: true, heavy: true },
+    effects: { blur: true, glow: true, heavy: false },
     previewTokens: { bg: "#0b1020", surface: "rgba(255,255,255,.08)", text: "#f2f6ff", accent: "#5ef2c2" },
   },
   {
@@ -175,7 +175,7 @@ export const THEMES: Theme[] = [
     name: "Cyberpunk",
     description: "Neon glow and cyber aesthetic. Bright accents on dark.",
     isDark: true,
-    effects: { blur: false, glow: true, heavy: true },
+    effects: { blur: false, glow: true, heavy: false },
     previewTokens: { bg: "#07071a", surface: "#12122e", text: "#e8f0ff", accent: "#00f5d4" },
   },
   {
@@ -183,7 +183,7 @@ export const THEMES: Theme[] = [
     name: "Synthwave",
     description: "Retro-futuristic neon. Bright pink and cyan on dark.",
     isDark: true,
-    effects: { blur: false, glow: true, heavy: true },
+    effects: { blur: false, glow: true, heavy: false },
     previewTokens: { bg: "#1a0536", surface: "rgba(26,5,54,.72)", text: "#ffe8ff", accent: "#2ee6ff" },
   },
 ];
