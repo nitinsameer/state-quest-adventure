@@ -4148,7 +4148,7 @@ function ProfileScreenContent() {
                   className="h-8 w-8 rounded-lg bg-white/20 hover:bg-white/30 text-white flex items-center justify-center text-sm transition"
                   title="Edit name"
                 >
-                  âœ️
+                  ✏️
                 </button>
               </div>
               <div className="text-white/90 text-xs font-extrabold uppercase tracking-widest">

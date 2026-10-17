@@ -7,7 +7,6 @@
 
 [data-theme="cartoon-comic"] {
   /* Page */
-  --bg-page: oklch(0.98 0.08 55);
   --bg-header: oklch(0.2 0.15 40);
   --bg-nav: oklch(1 0 0);
   --nav-active-bg: oklch(0.95 0.08 40);

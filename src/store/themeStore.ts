@@ -17,7 +17,7 @@ type ThemeId = "clay" | "aero" | "cartoon-comic" | "glassmorphism" | "skeumorphi
 
 // Zod validation schema for persisted theme data
 const ThemePersistenceSchema = z.object({
-  theme: z.string().default("skeumorphism"),
+  theme: z.string().default("clay"),
 });
 
 type ThemePersistence = z.infer<typeof ThemePersistenceSchema>;
@@ -81,14 +81,14 @@ function validateTheme(value: unknown): ThemeId {
     return value as ThemeId;
   }
 
-  return "skeumorphism"; // Default fallback
+  return "clay"; // Default fallback — must match wrap-html.mjs's no-flash script default
 }
 
 /**
  * Global theme store
  */
 export const useThemeStore = create<ThemeStoreState>((set, get) => ({
-  currentTheme: "skeumorphism",
+  currentTheme: "clay",
 
   setTheme: (themeId: ThemeId) => {
     set({ currentTheme: themeId });
@@ -115,14 +115,14 @@ export const useThemeStore = create<ThemeStoreState>((set, get) => ({
         set({ currentTheme: theme });
         applyTheme(theme);
       } else {
-        // First time: apply default theme
-        applyTheme("skeumorphism");
+        // First time: apply default theme (must match wrap-html.mjs's no-flash script default)
+        applyTheme("clay");
       }
     } catch (error) {
       console.warn("Failed to load theme from localStorage:", error);
-      // Silently fall back to default
-      set({ currentTheme: "skeumorphism" });
-      applyTheme("skeumorphism");
+      // Silently fall back to default (must match wrap-html.mjs's no-flash script default)
+      set({ currentTheme: "clay" });
+      applyTheme("clay");
     }
   },
 }));

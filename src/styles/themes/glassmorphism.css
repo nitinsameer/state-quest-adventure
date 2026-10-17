@@ -7,7 +7,6 @@
 
 [data-theme="glassmorphism"] {
   /* Page */
-  --bg-page: oklch(0.98 0.01 260);
   --bg-header: oklch(1 0 0 / 0.7);
   --bg-nav: oklch(1 0 0 / 0.6);
   --nav-active-bg: oklch(0.67 0.2 270 / 0.3);
@@ -47,9 +46,9 @@
   --accent-3: oklch(0.72 0.15 60);
   --accent-3-soft: oklch(0.96 0.05 60 / 0.3);
   --accent-3-ink: oklch(0.22 0.05 260);
-  --accent-4: oklch(0.62 0.2 290);
+  --accent-4: oklch(0.58 0.2 290);
   --accent-4-soft: oklch(0.94 0.07 290 / 0.3);
-  --accent-4-ink: oklch(0.22 0.05 260);
+  --accent-4-ink: oklch(1 0 0);
   --accent-5: oklch(0.55 0.15 40);
   --accent-5-soft: oklch(0.95 0.06 40 / 0.3);
   --accent-5-ink: oklch(1 0 0);
