@@ -124,7 +124,9 @@ export function AudioTestScreen() {
     <div className="min-h-screen bg-bg-page p-(--padding-md)">
       <div className="max-w-2xl mx-auto">
         <div className="bg-surface-card rounded-lg shadow-lg p-(--padding-lg) mb-(--space-2)">
-          <h1 className="text-h1 text-accent-2 mb-(--space-0-5)">{EMOJI.action.analytics} Audio Test Screen</h1>
+          <h1 className="text-h1 text-accent-2 mb-(--space-0-5)">
+            {EMOJI.action.analytics} Audio Test Screen
+          </h1>
           <p className="text-caption text-muted-foreground mb-(--space-2)">
             Developer-only minimal TTS test
           </p>
@@ -135,10 +137,10 @@ export function AudioTestScreen() {
               {EMOJI.action.rocket} Run All Tests
             </KidsButton>
             <KidsButton variant="primary" size="md" onClick={testNativeTTS} disabled={isRunning}>
-              📢 Native TTS
+              {EMOJI.action.share} Native TTS
             </KidsButton>
             <KidsButton variant="primary" size="md" onClick={testWebSpeech} disabled={isRunning}>
-              🗣️ Web Speech
+              {EMOJI.utility.language} Web Speech
             </KidsButton>
             <KidsButton
               variant="secondary"
@@ -146,13 +148,13 @@ export function AudioTestScreen() {
               onClick={showDiagnostics}
               disabled={isRunning}
             >
-              📊 Diagnostics
+              {EMOJI.action.analytics} Diagnostics
             </KidsButton>
             <KidsButton variant="primary" size="md" onClick={showVoices} disabled={isRunning}>
-              🎤 Show Voices
+              {EMOJI.audio.speaker} Show Voices
             </KidsButton>
             <KidsButton variant="ghost" size="md" onClick={clearResults} disabled={isRunning}>
-              🗑️ Clear
+              {EMOJI.icons.deleteIcon} Clear
             </KidsButton>
           </div>
 
@@ -172,7 +174,7 @@ export function AudioTestScreen() {
           {/* Instructions */}
           <div className="mt-(--space-2) p-(--padding-md) bg-warning/10 border-l-4 border-warning">
             <p className="text-label text-warning font-semibold mb-(--space-0-25)">
-              📝 Testing Instructions:
+              {EMOJI.learning.book} Testing Instructions:
             </p>
             <ol className="text-caption text-warning list-decimal list-inside space-y-(--space-0-25)">
               <li>Click "Run All Tests" to test everything</li>
