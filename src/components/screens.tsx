@@ -1065,7 +1065,7 @@ function HomeDashboardContent() {
 
                       <div className="p-4 rounded-2xl bg-info-soft border-l-4 border-info shadow-elevated-1 hover:shadow-elevated-2 transition-all">
                         <div className="text-label text-info uppercase tracking-wider font-bold">
-                          {EMOJI.action.goal} Fun Fact
+                          {EMOJI.learning.funFact} Fun Fact
                         </div>
                         <div className="text-body text-info mt-2 font-semibold">
                           {state.funFact}
@@ -3522,7 +3522,11 @@ export function StateUnlockScreen({
     ? getState(stateName)
     : INDIA_STATES && INDIA_STATES.length > 1
       ? INDIA_STATES[1]
-      : INDIA_STATES[0] || { name: "India", emoji: EMOJI.language.indFlag, nickname: "Incredible India" };
+      : INDIA_STATES[0] || {
+          name: "India",
+          emoji: EMOJI.language.indFlag,
+          nickname: "Incredible India",
+        };
   const art = STATE_ART[state.name];
 
   // PHASE 1b: Play sound effect when state unlocks
