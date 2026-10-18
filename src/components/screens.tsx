@@ -1065,7 +1065,7 @@ function HomeDashboardContent() {
 
                       <div className="p-4 rounded-2xl bg-info-soft border-l-4 border-info shadow-elevated-1 hover:shadow-elevated-2 transition-all">
                         <div className="text-label text-info uppercase tracking-wider font-bold">
-                          🎯 Fun Fact
+                          {EMOJI.action.goal} Fun Fact
                         </div>
                         <div className="text-body text-info mt-2 font-semibold">
                           {state.funFact}
