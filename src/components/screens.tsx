@@ -1638,9 +1638,9 @@ export function JourneyMapScreen() {
   }
 
   return (
-    <div className="h-full w-full gradient-sky relative overflow-hidden flex flex-col">
+    <div className="h-full w-full bg-bg-page relative overflow-hidden flex flex-col">
       {/* Header with orange gradient - matching Home screen with sticky positioning */}
-      <div className="sticky top-0 z-40 px-6 pt-3 pb-4 gradient-saffron rounded-b-3xl relative overflow-hidden animate-fade-in shadow-elevated-2">
+      <div className="sticky top-0 z-40 px-6 pt-4 pb-5 bg-bg-header rounded-b-[32px] relative overflow-hidden animate-fade-in shadow-elevated-2">
         <Cloud className="absolute top-2 right-4 w-14 opacity-40 pointer-events-none" />
 
         {/* Journey Info */}

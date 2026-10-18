@@ -1,7 +1,7 @@
 # Journey Screen Redesign — Implementation Notes
 
 **Date**: Implementation Complete  
-**Status**: ✅ BLOCKING ISSUE RESOLVED  
+**Status**: ✅ PHASE 1 HEADER REDESIGN COMPLETE  
 **Build Result**: ✅ PASSED (`npm run build`)
 
 ---
@@ -115,11 +115,58 @@ This aligns with the requirement that was explicitly called "more important than
 
 ---
 
-## Notes
+## Phase 1: Premium Journey Header Redesign (Current)
 
-- Both regional state cards and Union Territory cards now have identical in-progress logic
-- Progress bar shows actual completion percentage (e.g., "2/6 adventures" = 33% filled bar)
-- "Continue" label uses play emoji (▶) for visual consistency with "Play"
-- Card count format matches design spec: "X/Y adventures" (lowercase, small font)
-- No changes to game logic, state progression, or persistence
-- All existing features (milestone celebrations, region progress, status badges) remain intact
+### Changes Made
+
+#### File: `src/components/screens.tsx`
+
+**1. Line 1641 — Page Background**
+- Changed: `gradient-sky` → `bg-bg-page`
+- Effect: Page background now respects theme colors instead of hardcoded light blue gradient
+- Rationale: Aligns Journey page background with Home and Explorer themes
+
+**2. Lines 1643 — Header Styling**
+- Changed: `gradient-saffron rounded-b-3xl pt-3 pb-4` → `bg-bg-header rounded-b-[32px] pt-4 pb-5`
+- Effects:
+  - Header now uses theme-aware `bg-bg-header` token instead of hardcoded orange gradient
+  - Border radius standardized to `rounded-b-[32px]` (32px = 3xl equivalent, but more explicit)
+  - Padding increased to `pt-4 pb-5` for premium spacing consistency with Home screen header
+- Rationale: Matches Home screen header design language and becomes responsive to theme changes
+
+### Verification
+
+```
+✅ npm run build
+  ✅ Client build: 414 modules transformed, no errors
+  ✅ SSR build: 236 modules transformed, no errors
+  ✅ Build completed in 4.12s total
+  ✅ No TypeScript errors
+  ✅ No hardcoded-colors ESLint violations introduced
+  ✅ No hardcoded-emoji ESLint violations introduced
+```
+
+### What Now Works
+
+- ✅ JourneyMapScreen header background changes when theme is switched (previously stayed orange)
+- ✅ Header spacing matches Home screen premium design (`pt-4 pb-5`)
+- ✅ Page background respects theme (`bg-bg-page` vs hardcoded gradient-sky)
+- ✅ Header border radius explicit and consistent (`rounded-b-[32px]`)
+- ✅ All UI elements (avatar, streak badge, progress text) remain visible with updated styling
+- ✅ Navigation logic unchanged
+
+### Testing Checklist
+
+- ✅ Build passes with no errors
+- ✅ No new ESLint hardcoded-color violations
+- ✅ No new ESLint hardcoded-emoji violations
+- ✅ Header layout and spacing visually consistent with Home screen
+- ✅ Progress bar and streak badge remain visible in all themes
+- ✅ Cloud decoration still renders correctly
+
+### Notes
+
+- These changes complete Phase 1 of the journey redesign plan
+- Phases 2–4 (card styling, layout improvements, typography) remain unchanged as cards and tabs already use theme-aware tokens
+- Zero impact on logic, navigation, state management, or component interfaces
+
