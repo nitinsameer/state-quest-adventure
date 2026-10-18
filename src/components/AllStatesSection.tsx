@@ -44,9 +44,10 @@ export function AllStatesSection() {
               }}
               className={`rounded-lg px-(--padding-md) py-(--padding-xs) text-sm font-extrabold border-2 transition-colors flex items-center gap-(--gap-base) ${
                 isActive
-                  ? "gradient-saffron text-white border-transparent shadow-[var(--shadow-glow-orange)]"
+                  ? "gradient-saffron border-transparent shadow-[var(--shadow-glow-orange)]"
                   : "bg-card text-foreground border-border hover:border-saffron"
               }`}
+              style={isActive ? { color: "var(--action-primary-fg)" } : {}}
             >
               <img
                 src={STATE_ART[s.name]}

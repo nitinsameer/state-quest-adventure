@@ -206,8 +206,9 @@ export function PostcardModal({
       onClick={onClose}
     >
       <div
-        className="w-full bg-surface-card rounded-t-3xl p-(--padding-lg) max-h-[90vh] overflow-y-auto flex flex-col gap-(--gap-md) animate-slide-up shadow-elevated-3"
+        className="w-full bg-surface-card rounded-t-3xl max-h-[90vh] overflow-y-auto flex flex-col animate-slide-up shadow-elevated-3"
         onClick={(e) => e.stopPropagation()}
+        style={{ padding: 'var(--padding-lg)', gap: 'var(--gap-md)' }}
       >
         {/* Close Button */}
         <button
@@ -219,37 +220,46 @@ export function PostcardModal({
 
         {/* Header */}
         <div className="text-center pt-2">
-          <h2 className="text-display font-extrabold text-2xl text-text-primary">Achievement Unlocked!</h2>
-          <p className="text-sm text-text-secondary mt-(--space-0-25)">You completed {state.name}</p>
+          <h2 className="text-display font-extrabold text-2xl text-text-primary">
+            Achievement Unlocked!
+          </h2>
+          <p className="text-sm text-text-secondary" style={{ marginTop: 'var(--space-0-25)' }}>
+            You completed {state.name}
+          </p>
         </div>
 
         {/* Badge Display */}
-        <div className="flex flex-col items-center gap-(--gap-base)">
+        <div className="flex flex-col items-center" style={{ gap: 'var(--gap-base)' }}>
           <div className="text-6xl">{badgeEmoji}</div>
           <div className="text-center">
             <div className="text-sm font-extrabold text-text-primary">
               {postcard.badge.toUpperCase()} BADGE
             </div>
-            <div className="text-display font-extrabold text-lg text-text-primary mt-(--space-0-25)">
+            <div className="text-display font-extrabold text-lg text-text-primary" style={{ marginTop: 'var(--space-0-25)' }}>
               {state.name} Explorer
             </div>
-            <div className="text-xs text-text-secondary mt-(--space-0-25)">{postcard.stampDate}</div>
+            <div className="text-xs text-text-secondary" style={{ marginTop: 'var(--space-0-25)' }}>
+              {postcard.stampDate}
+            </div>
           </div>
         </div>
 
         {/* Fun Fact Section */}
-        <div className="ui-card ui-accent-4 rounded-2xl p-(--padding-md) my-(--space-0-5)">
+        <div className="ui-card ui-accent-4 rounded-2xl" style={{ padding: 'var(--padding-md)', marginTop: 'var(--space-0-5)', marginBottom: 'var(--space-0-5)' }}>
           <div className="text-xs font-extrabold text-text-primary uppercase tracking-wider">
             Did You Know?
           </div>
-          <p className="text-sm text-text-primary mt-(--space-2) leading-relaxed">{state.funFact}</p>
+          <p className="text-sm text-text-primary leading-relaxed" style={{ marginTop: 'var(--space-2)' }}>
+            {state.funFact}
+          </p>
         </div>
 
         {/* Save Button */}
         <button
           onClick={handleSaveToPassport}
           disabled={isSaving}
-          className="w-full h-12 rounded-2xl ui-button ui-accent-1 text-text-primary font-extrabold flex items-center justify-center gap-(--gap-base) disabled:opacity-60 disabled:cursor-not-allowed transition"
+          className="w-full h-12 rounded-2xl ui-button ui-accent-1 text-text-primary font-extrabold flex items-center justify-center disabled:opacity-60 disabled:cursor-not-allowed transition"
+          style={{ gap: 'var(--gap-base)' }}
         >
           {isSaving ? (
             <>

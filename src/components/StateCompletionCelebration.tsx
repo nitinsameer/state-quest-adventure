@@ -113,9 +113,19 @@ export function StateCompletionCelebration({
 
           {/* Header: State name and emoji */}
           <div className="text-center mb-6">
-            <div className="text-7xl mb-4 transition-transform duration-300">{stateEmoji}</div>
-            <h1 className="text-h1 font-black text-white mb-2">{stateName}</h1>
-            <p className="text-body text-white font-bold">
+            <div className="text-7xl mb-4 transition-transform duration-300">
+              {stateEmoji}
+            </div>
+            <h1
+              className="text-h1 font-black mb-2"
+              style={{ color: "var(--action-primary-fg)" }}
+            >
+              {stateName}
+            </h1>
+            <p
+              className="text-body font-bold"
+              style={{ color: "var(--action-primary-fg)" }}
+            >
               {EMOJI.action.sparkle} Completely Explored! {EMOJI.action.sparkle}
             </p>
           </div>
@@ -123,21 +133,62 @@ export function StateCompletionCelebration({
           {/* Stats section */}
           <div className="grid grid-cols-2 gap-4 mb-8 px-2">
             {/* Cards completed */}
-            <div className="bg-white/30 backdrop-blur rounded-2xl p-4 text-center border-2 border-white/50">
-              <p className="text-h4 font-black text-white mb-1">{cardsCompleted}</p>
-              <p className="text-body-sm text-white/80">Cards Done</p>
+            <div
+              className="backdrop-blur rounded-2xl p-4 text-center border-2"
+              style={{
+                backgroundColor: "var(--action-primary-fg)",
+                opacity: 0.3,
+                borderColor: "var(--action-primary-fg)",
+                borderOpacity: 0.5,
+              }}
+            >
+              <p
+                className="text-h4 font-black mb-1"
+                style={{ color: "var(--action-primary-fg)" }}
+              >
+                {cardsCompleted}
+              </p>
+              <p
+                className="text-body-sm"
+                style={{ color: "var(--action-primary-fg)", opacity: 0.8 }}
+              >
+                Cards Done
+              </p>
             </div>
 
             {/* XP gained */}
-            <div className="bg-white/30 backdrop-blur rounded-2xl p-4 text-center border-2 border-white/50">
-              <p className="text-h4 font-black text-white mb-1">+{totalXpGained}</p>
-              <p className="text-body-sm text-white/80">XP Earned</p>
+            <div
+              className="backdrop-blur rounded-2xl p-4 text-center border-2"
+              style={{
+                backgroundColor: "var(--action-primary-fg)",
+                opacity: 0.3,
+                borderColor: "var(--action-primary-fg)",
+                borderOpacity: 0.5,
+              }}
+            >
+              <p
+                className="text-h4 font-black mb-1"
+                style={{ color: "var(--action-primary-fg)" }}
+              >
+                +{totalXpGained}
+              </p>
+              <p
+                className="text-body-sm"
+                style={{ color: "var(--action-primary-fg)", opacity: 0.8 }}
+              >
+                XP Earned
+              </p>
             </div>
           </div>
 
           {/* Badge grid - staggered reveals */}
           <div className="mb-6">
-            <p className="text-body-sm text-white/80 font-bold mb-3 px-2">Badges Unlocked:</p>
+            <p
+              className="text-body-sm font-bold mb-3 px-2"
+              style={{ color: "var(--action-primary-fg)", opacity: 0.8 }}
+            >
+              Badges Unlocked:
+            </p>
             <div className="grid grid-cols-4 gap-3 px-2">
               {badges.map((badge, index) => {
                 const isRevealed = revealedBadges.has(badge.id);
@@ -149,9 +200,15 @@ export function StateCompletionCelebration({
                     }`}
                   >
                     <div
-                      className={`rounded-2xl bg-white/20 p-3 text-center border-3 border-white/50 transition-all ${
+                      className={`rounded-2xl p-3 text-center border-3 transition-all ${
                         isRevealed ? "animate-bounce-scale" : ""
                       }`}
+                      style={{
+                        backgroundColor: "var(--action-primary-fg)",
+                        opacity: 0.2,
+                        borderColor: "var(--action-primary-fg)",
+                        borderOpacity: 0.5,
+                      }}
                       title={badge.name}
                     >
                       <div className="text-3xl">{badge.emoji}</div>
@@ -164,9 +221,10 @@ export function StateCompletionCelebration({
 
           {/* Celebration message */}
           <div
-            className={`text-center text-h5 font-bold text-white transition-opacity duration-300 ${
+            className={`text-center text-h5 font-bold transition-opacity duration-300 ${
               stage === "celebrate" ? "opacity-100" : "opacity-0"
             }`}
+            style={{ color: "var(--action-primary-fg)" }}
           >
             {EMOJI.milestone.hundred} Amazing Achievement! {EMOJI.milestone.hundred}
           </div>

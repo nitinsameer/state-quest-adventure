@@ -34,14 +34,27 @@ export function ThemesScreen() {
               window.history.back();
             }}
             aria-label="Go back"
-            className="h-10 w-10 rounded-full bg-white/25 flex items-center justify-center text-white text-xl"
+            className="h-10 w-10 rounded-full flex items-center justify-center text-xl"
+            style={{
+              backgroundColor: "var(--text-on-header)",
+              opacity: 0.25,
+              color: "var(--text-on-header)",
+            }}
           >
             ‹
           </button>
-          <h1 className="text-display font-extrabold text-white text-center flex-1">My Style</h1>
+          <h1
+            className="text-display font-extrabold text-center flex-1"
+            style={{ color: "var(--text-on-header)" }}
+          >
+            My Style
+          </h1>
           <div className="w-10" />
         </div>
-        <p className="text-white/90 text-sm text-center mt-2">
+        <p
+          className="text-sm text-center mt-2"
+          style={{ color: "var(--text-on-header)", opacity: 0.9 }}
+        >
           Choose your favorite theme — changes apply instantly
         </p>
       </div>
@@ -62,7 +75,13 @@ export function ThemesScreen() {
             >
               {/* Tick icon for selected */}
               {currentTheme === theme.id && (
-                <div className="absolute top-2 right-2 h-6 w-6 rounded-full bg-accent-1 flex items-center justify-center text-white text-sm font-bold">
+                <div
+                  className="absolute top-2 right-2 h-6 w-6 rounded-full flex items-center justify-center text-sm font-bold"
+                  style={{
+                    backgroundColor: "var(--accent-1)",
+                    color: "var(--accent-1-ink)",
+                  }}
+                >
                   ✓
                 </div>
               )}

@@ -44,9 +44,14 @@ export function StatePerformanceBadgesView() {
               className="w-full h-full object-cover"
             />
           </div>
-          <div className="flex-1 text-white">
-            <div className="text-display text-lg font-bold leading-tight">{progress.name}</div>
-            <div className="text-xs font-bold text-white/80">
+          <div className="flex-1" style={{ color: "var(--text-on-header)" }}>
+            <div className="text-display text-lg font-bold leading-tight">
+              {progress.name}
+            </div>
+            <div
+              className="text-xs font-bold"
+              style={{ color: "var(--text-on-header)", opacity: 0.8 }}
+            >
               {EMOJI.action.celebrate} {totalBadgesEarned} Amazing State Badges!
             </div>
           </div>

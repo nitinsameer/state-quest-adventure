@@ -77,28 +77,40 @@ export function DailyGoalCard() {
   };
 
   return (
-    <div className="mt-(--space-2) mb-(--space-2) flex-shrink-0">
+    <div className="flex-shrink-0" style={{ marginTop: 'var(--space-2)', marginBottom: 'var(--space-2)' }}>
       <div
-        className={`rounded-2xl ${goalColor} p-(--padding-md) shadow-lg relative overflow-hidden`}
+        className={`rounded-2xl ${goalColor} shadow-lg relative overflow-hidden`}
+        style={{ padding: 'var(--padding-md)' }}
       >
         {/* Decorative background element */}
-        <div className="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+        <div
+          className="absolute top-0 right-0 w-16 h-16 rounded-full blur-2xl pointer-events-none"
+          style={{ backgroundColor: "var(--accent-1-soft)" }}
+        />
 
-        <div className="relative z-10 flex items-center justify-between gap-(--gap-base)">
+        <div className="relative z-10 flex items-center justify-between" style={{ gap: 'var(--gap-base)' }}>
           {/* Left: Goal info (compact) */}
           <div className="flex-1 min-w-0">
-            <div className="text-caption" style={{ color: "var(--accent-1-ink)" }}>{goalLabel}</div>
+            <div className="text-caption" style={{ color: "var(--accent-1-ink)" }}>
+              {goalLabel}
+            </div>
             <div className="text-body-sm leading-tight" style={{ color: "var(--accent-1-ink)" }}>
               {dailyGoal} State{dailyGoal > 1 ? "s" : ""} Today
             </div>
-            <div className="text-caption mt-(--space-0-5)" style={{ color: "var(--accent-1-ink)", opacity: 0.9 }}>
+            <div
+              className="text-caption"
+              style={{ color: "var(--accent-1-ink)", marginTop: 'var(--space-0-5)', opacity: 0.9 }}
+            >
               {getEncouragementMessage()}
             </div>
           </div>
 
           {/* Middle: Progress indicator */}
           <div className="flex-shrink-0">
-            <div className="h-12 w-12 rounded-full bg-white/20 flex items-center justify-center">
+            <div
+              className="h-12 w-12 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "var(--accent-1-soft)" }}
+            >
               <div className="text-2xl">{goalMet ? EMOJI.goal.met : EMOJI.goal.progress}</div>
             </div>
           </div>
@@ -117,7 +129,16 @@ export function DailyGoalCard() {
               </Link>
             )}
             {goalMet && (
-              <div className="h-12 px-(--padding-base) rounded-full bg-white/20 border border-white text-white text-label font-bold flex items-center justify-center">
+              <div
+                className="h-12 rounded-full border text-label font-bold flex items-center justify-center"
+                style={{
+                  paddingLeft: 'var(--padding-base)',
+                  paddingRight: 'var(--padding-base)',
+                  backgroundColor: "var(--accent-1-soft)",
+                  borderColor: "var(--accent-1-ink)",
+                  color: "var(--accent-1-ink)",
+                }}
+              >
                 ✓ Done
               </div>
             )}
