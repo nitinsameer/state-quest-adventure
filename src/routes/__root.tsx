@@ -102,7 +102,7 @@ class RootErrorBoundary extends React.Component<
         <div className="flex min-h-screen items-center justify-center bg-accent-1-soft px-4">
           <div className="max-w-md text-center">
             {/* Error Icon */}
-            <div className="text-6xl mb-4">💥</div>
+            <div className="text-6xl mb-4">{EMOJI.action.error}</div>
 
             <h1 className="text-h2">App encountered an error</h1>
             <p className="mt-3 text-body text-muted-foreground leading-relaxed">
@@ -125,12 +125,12 @@ class RootErrorBoundary extends React.Component<
                 onClick={() => window.location.reload()}
                 className="w-full h-14 rounded-2xl bg-accent-1 text-text-on-primary text-h4 shadow-lg transition-all hover:shadow-xl active:scale-95"
               >
-                🔄 Reload App
+                {EMOJI.action.reload} Reload App
               </button>
             </div>
 
             {/* Reassuring message */}
-            <p className="mt-6 text-caption text-muted-foreground">Your progress is saved! 💾</p>
+            <p className="mt-6 text-caption text-muted-foreground">Your progress is saved! {EMOJI.action.save}</p>
           </div>
         </div>
       );
@@ -198,7 +198,7 @@ function ErrorComponent({ error, reset }: { error: unknown; reset: () => void })
             }}
             className="w-full h-14 rounded-2xl bg-accent-1 text-text-on-primary text-h4 shadow-lg transition-all hover:shadow-xl active:scale-95"
           >
-            🔄 Try Again
+            {EMOJI.action.reload} Try Again
           </button>
           <a
             href="/"
@@ -210,7 +210,7 @@ function ErrorComponent({ error, reset }: { error: unknown; reset: () => void })
 
         {/* Reassuring message */}
         <p className="mt-6 text-caption text-muted-foreground">
-          If this keeps happening, talk to an adult about what's going on! 👋
+          If this keeps happening, talk to an adult about what's going on! {EMOJI.action.wave}
         </p>
       </div>
     </div>

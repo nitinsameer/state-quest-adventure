@@ -818,7 +818,7 @@ function HomeDashboardContent() {
             {/* Greeting - Single line, cleaner */}
             <div className="text-text-on-header">
               <div className="text-h4 text-display leading-tight">
-                Namaste, {p?.name?.split(" ")[0] || "Explorer"}! 👋
+                Namaste, {p?.name?.split(" ")[0] || "Explorer"}! {EMOJI.action.wave}
               </div>
               <div className="text-body-sm opacity-95 mt-1">Level {level} · Explorer</div>
             </div>

@@ -97,7 +97,7 @@ export function CardNarrationPlayer({
         <div className="fixed inset-0 flex items-center justify-center z-50 p-(--padding-base)" style={{backgroundColor: 'var(--scrim)'}}>
           <div className="bg-surface-card rounded-3xl p-(--padding-lg) max-w-sm shadow-2xl animate-in fade-in scale-in">
             <div className="text-center">
-              <div className="text-5xl mb-(--space-2)">🎧</div>
+              <div className="text-5xl mb-(--space-2)">{EMOJI.audio.headphones}</div>
               <h3
                 className="text-h4 font-bold mb-(--space-0-5)"
                 style={{ color: "var(--text-primary)" }}
@@ -152,25 +152,25 @@ export function CardNarrationPlayer({
           {/* Info Section */}
           <div className="flex-1 min-w-0">
             <div className="text-label font-bold text-action-primary-bg uppercase tracking-wide">
-              🎧 Listen to Story
+              {EMOJI.audio.headphones} Listen to Story
             </div>
             <div className="text-body-sm font-bold text-action-primary-bg mt-(--space-0-25)">
               {title}
             </div>
             {audioNarrationEnabled ? (
               <div className="text-caption text-action-primary-bg mt-(--space-0-25)">
-                {isCurrentPlaying ? "🎵 Playing... tap to stop" : "Tap play to hear! 👂"}
+                {isCurrentPlaying ? `${EMOJI.audio.music} Playing... tap to stop` : `Tap play to hear! ${EMOJI.action.listen}`}
               </div>
             ) : (
               <div className="text-caption text-action-primary-bg font-semibold mt-(--space-0-25)">
-                📢 Tap to enable audio
+                {EMOJI.audio.speaker} Tap to enable audio
               </div>
             )}
           </div>
 
           {/* Mute Indicator */}
           {!audioNarrationEnabled && (
-            <div className="text-2xl animate-bounce flex-shrink-0">🔇</div>
+            <div className="text-2xl animate-bounce flex-shrink-0">{EMOJI.audio.muted}</div>
           )}
         </div>
 

@@ -410,7 +410,7 @@ export function ParentZoneScreen() {
 
             <div className="rounded-3xl bg-info-soft border border-info p-(--padding-md)">
               <div className="text-sm font-bold mb-(--space-0-5)" style={{color: "var(--text-on-primary)"}}>
-                📋 About Export
+                {EMOJI.action.document} About Export
               </div>
               <div className="text-xs leading-relaxed" style={{color: "var(--text-on-primary)"}}>
                 Download your child's progress as a CSV file. Useful for school reports or tracking

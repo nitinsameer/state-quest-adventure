@@ -97,7 +97,7 @@ export function DebugScreen() {
       {/* Header */}
       <div className="bg-surface-sunken border-b border-surface-muted p-(--padding-xs) flex justify-between items-center flex-wrap gap-(--gap-xs)">
         <div className="flex items-center gap-(--gap-xs)">
-          <h1 className="font-bold text-sm">🐛 DEBUG CONSOLE</h1>
+          <h1 className="font-bold text-sm">{EMOJI.utility.debug} DEBUG CONSOLE</h1>
           <span className="text-muted-light">Logs: {logs.length}</span>
         </div>
         <div className="flex gap-(--gap-xs) flex-wrap">

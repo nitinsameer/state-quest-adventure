@@ -81,6 +81,12 @@ export const EMOJI = {
     growth: "📈",
     thinking: "🤔",
     encouragement: "💪",
+    wave: "👋",
+    error: "💥",
+    reload: "🔄",
+    document: "📋",
+    delete: "🗑️",
+    listen: "👂",
   },
 
   // Utilities
@@ -93,6 +99,7 @@ export const EMOJI = {
     language: "🗣️",
     compass: "🧭",
     tools: "🛠", // No variation selector - matches reference theme
+    debug: "🐛",
   },
 
   // Learning and content
@@ -108,6 +115,7 @@ export const EMOJI = {
   debug: {
     clapboard: "🎬",
     timer: "⏱️",
+    info: "🔵",
   },
 
   // Feedback and encouragement
@@ -172,6 +180,21 @@ export const EMOJI = {
     indFlag: "🇮🇳",
   },
 
+  // Hardware
+  hardware: {
+    phone: "📱",
+  },
+
+  // Family and social
+  family: {
+    group: "👪",
+  },
+
+  // Communication
+  communication: {
+    email: "📧",
+  },
+
   // Progress states
   progress: {
     streamStart: "🚀",
@@ -204,6 +227,8 @@ export const EMOJI = {
     stories: "🎧",
     switch: "🌍",
     speaker: "🔊",
+    headphones: "🎧",
+    muted: "🔇",
   },
 
   // UI elements

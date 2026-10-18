@@ -27,7 +27,7 @@ export function AudioTestScreen() {
   };
 
   const testNativeTTS = async () => {
-    log("🔵 Starting Native TTS test...");
+    log(`${EMOJI.debug.info} Starting Native TTS test...`);
     log(`Platform: ${Capacitor.getPlatform()}`);
     log(`Is Native: ${Capacitor.isNativePlatform()}`);
 
@@ -37,7 +37,7 @@ export function AudioTestScreen() {
     }
 
     try {
-      log("📢 Calling TextToSpeech.speak('Hello explorer')...");
+      log(`${EMOJI.audio.speaker} Calling TextToSpeech.speak('Hello explorer')...`);
       const result = await TextToSpeech.speak({
         text: "Hello explorer",
         lang: "en",
@@ -55,14 +55,14 @@ export function AudioTestScreen() {
   };
 
   const testWebSpeech = async () => {
-    log("🔵 Starting Web Speech API test...");
+    log(`${EMOJI.debug.info} Starting Web Speech API test...`);
 
     const result = await testWebSpeechAPI("Hello explorer");
     log(result.success ? `✅ ${result.message}` : `❌ ${result.message}`);
   };
 
   const showDiagnostics = () => {
-    log("🔵 Capturing diagnostics...");
+    log(`${EMOJI.debug.info} Capturing diagnostics...`);
     logAudioDiagnostics("MANUAL TRIGGER");
     const diag = captureAudioDiagnostics();
 
@@ -76,7 +76,7 @@ export function AudioTestScreen() {
   };
 
   const showVoices = () => {
-    log("🔵 Checking Web Speech voices...");
+    log(`${EMOJI.debug.info} Checking Web Speech voices...`);
     const { voices, diagnostics } = getWebSpeechVoices();
     log(`Found ${voices.length} voices`);
     log(diagnostics);

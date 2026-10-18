@@ -49,7 +49,7 @@ function PrivacyPolicyScreen() {
 
         {/* Data Storage */}
         <section>
-          <h2 className="text-h4 mb-3">📱 How We Store Your Data</h2>
+          <h2 className="text-h4 mb-3">{EMOJI.hardware.phone} How We Store Your Data</h2>
           <div className="bg-surface-card rounded-2xl p-4 border border-border-subtle space-y-3">
             <div>
               <div className="text-body font-bold text-ink">Device Storage Only</div>
@@ -96,7 +96,7 @@ function PrivacyPolicyScreen() {
 
         {/* Permissions */}
         <section>
-          <h2 className="text-h4 mb-3">🔐 Permissions</h2>
+          <h2 className="text-h4 mb-3">{EMOJI.action.lock} Permissions</h2>
           <div className="bg-surface-card rounded-2xl p-4 border border-border-subtle space-y-3">
             <div>
               <div className="text-body font-bold text-ink">Audio Permission</div>
@@ -136,7 +136,7 @@ function PrivacyPolicyScreen() {
 
         {/* COPPA Compliance */}
         <section>
-          <h2 className="text-h4 mb-3">👪 COPPA & Kids Safety</h2>
+          <h2 className="text-h4 mb-3">{EMOJI.family.group} COPPA & Kids Safety</h2>
           <p className="text-body text-muted-foreground leading-relaxed">
             India Explorer complies with the Children's Online Privacy Protection Act (COPPA). We
             ask for parental consent before collecting age-targeted information. We do not allow
@@ -147,7 +147,7 @@ function PrivacyPolicyScreen() {
 
         {/* Data Deletion */}
         <section>
-          <h2 className="text-h4 mb-3">🗑️ Data Deletion</h2>
+          <h2 className="text-h4 mb-3">{EMOJI.action.delete} Data Deletion</h2>
           <p className="text-body text-muted-foreground leading-relaxed">
             You can delete all progress at any time by going to Settings → Parent Zone → Reset all
             progress. This permanently erases all locally stored data.
@@ -156,7 +156,7 @@ function PrivacyPolicyScreen() {
 
         {/* Contact */}
         <section>
-          <h2 className="text-h4 mb-3">📧 Questions?</h2>
+          <h2 className="text-h4 mb-3">{EMOJI.communication.email} Questions?</h2>
           <p className="text-body text-muted-foreground leading-relaxed">
             If you have questions about this privacy policy, contact us through the feedback option
             in the app.
