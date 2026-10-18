@@ -94,7 +94,7 @@ export function CardNarrationPlayer({
     <div className="w-full">
       {/* Permission Prompt Modal */}
       {showPermissionPrompt && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-(--padding-base)">
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-(--padding-base)">
           <div className="bg-surface-card rounded-3xl p-(--padding-lg) max-w-sm shadow-2xl animate-in fade-in scale-in">
             <div className="text-center">
               <div className="text-5xl mb-(--space-2)">🎧</div>

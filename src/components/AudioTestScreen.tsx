@@ -123,8 +123,8 @@ export function AudioTestScreen() {
   return (
     <div className="min-h-screen bg-bg-page p-(--padding-md)">
       <div className="max-w-2xl mx-auto">
-        <div className="bg-white rounded-lg shadow-lg p-(--padding-lg) mb-(--space-2)">
-          <h1 className="text-h1 text-accent-2 mb-(--space-0-5)">🔊 Audio Test Screen</h1>
+        <div className="bg-surface-card rounded-lg shadow-lg p-(--padding-lg) mb-(--space-2)">
+          <h1 className="text-h1 text-accent-2 mb-(--space-0-5)">{EMOJI.action.analytics} Audio Test Screen</h1>
           <p className="text-caption text-muted-foreground mb-(--space-2)">
             Developer-only minimal TTS test
           </p>

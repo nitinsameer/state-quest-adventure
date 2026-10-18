@@ -123,7 +123,7 @@ class RootErrorBoundary extends React.Component<
             <div className="mt-8">
               <button
                 onClick={() => window.location.reload()}
-                className="w-full h-14 rounded-2xl bg-accent-1 text-white text-h4 shadow-lg transition-all hover:shadow-xl active:scale-95"
+                className="w-full h-14 rounded-2xl bg-accent-1 text-text-on-primary text-h4 shadow-lg transition-all hover:shadow-xl active:scale-95"
               >
                 🔄 Reload App
               </button>
@@ -196,7 +196,7 @@ function ErrorComponent({ error, reset }: { error: unknown; reset: () => void })
               router.invalidate();
               reset();
             }}
-            className="w-full h-14 rounded-2xl bg-accent-1 text-white text-h4 shadow-lg transition-all hover:shadow-xl active:scale-95"
+            className="w-full h-14 rounded-2xl bg-accent-1 text-text-on-primary text-h4 shadow-lg transition-all hover:shadow-xl active:scale-95"
           >
             🔄 Try Again
           </button>
@@ -458,7 +458,7 @@ function HydratedApp() {
 
       // Show celebration with confetti via celebration store
       showCelebration({
-        title: `🎉 Level ${currentLevel} - ${levelName}!`,
+        title: `${EMOJI.feedback.success} Level ${currentLevel} - ${levelName}!`,
         subtitle: `You're now a "${levelName}"!\nKeep exploring to reach the next milestone! 🚀`,
         icon: EMOJI.action.star,
         confetti: true,

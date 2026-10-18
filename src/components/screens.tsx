@@ -180,13 +180,13 @@ function Cloud({ className = "" }: { className?: string }) {
 function XPBar({ value, max = 100 }: { value: number; max?: number }) {
   const pct = Math.min(100, (value / max) * 100);
   return (
-    <div className="relative h-3 w-full rounded-full bg-black/10 overflow-hidden">
+    <div className="relative h-3 w-full rounded-full bg-text-primary/10 overflow-hidden">
       <div
         className="h-full rounded-full gradient-gold transition-all duration-1000 ease-out"
         style={{ width: `${pct}%` }}
       />
       <div
-        className="absolute top-0 h-1 rounded-full bg-white/70 transition-all duration-1000 ease-out"
+        className="absolute top-0 h-1 rounded-full bg-text-on-header/70 transition-all duration-1000 ease-out"
         style={{ width: `${pct * 0.9}%`, left: "5%" }}
       />
     </div>
@@ -284,7 +284,7 @@ function HeaderBar({
   return (
     <div
       className={`flex items-center justify-between px-5 pt-3 pb-2 ${
-        tone === "white" ? "bg-white" : ""
+        tone === "white" ? "bg-surface-card" : ""
       }`}
     >
       {onBack ? (
@@ -309,8 +309,8 @@ function HeaderBar({
 export function SplashScreen() {
   return (
     <div className="h-full w-full gradient-saffron relative overflow-hidden flex flex-col items-center justify-center">
-      <div className="absolute -top-10 -left-10 w-56 h-56 rounded-full bg-white/15 blur-2xl" />
-      <div className="absolute -bottom-16 -right-16 w-72 h-72 rounded-full bg-white/10 blur-2xl" />
+      <div className="absolute -top-10 -left-10 w-56 h-56 rounded-full bg-accent-1-soft/40 blur-2xl" />
+      <div className="absolute -bottom-16 -right-16 w-72 h-72 rounded-full bg-accent-1-soft/30 blur-2xl" />
       <Cloud className="absolute top-16 left-4 w-24 opacity-80" />
       <Cloud className="absolute top-40 right-2 w-16 opacity-70" />
       <Cloud className="absolute bottom-40 left-6 w-20 opacity-60" />
@@ -321,20 +321,20 @@ export function SplashScreen() {
         className="w-52 h-52 object-contain drop-shadow-2xl relative z-10"
       />
       <div className="mt-4 text-center relative z-10 px-8">
-        <h1 className="text-h1 text-white leading-relaxed">
+        <h1 className="text-h1 text-text-on-header leading-relaxed">
           India
           <br />
           Explorer
         </h1>
-        <p className="mt-3 text-white/95 font-bold">
+        <p className="mt-3 text-text-on-header/95 font-bold">
           Travel Across India,
           <br /> One State at a Time
         </p>
       </div>
-      <div className="absolute bottom-20 flex items-center gap-2 text-white/90 text-body">
-        <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
-        <span className="h-2 w-2 rounded-full bg-white/60" />
-        <span className="h-2 w-2 rounded-full bg-white/40" />
+      <div className="absolute bottom-20 flex items-center gap-2 text-text-on-header/90 text-body">
+        <span className="h-2 w-2 rounded-full bg-text-on-header animate-pulse" />
+        <span className="h-2 w-2 rounded-full bg-text-on-header/60" />
+        <span className="h-2 w-2 rounded-full bg-text-on-header/40" />
         <span className="ml-2">Loading adventure…</span>
       </div>
     </div>
@@ -351,7 +351,7 @@ export function WelcomeScreen() {
 
   return (
     <div
-      className="w-screen h-screen overflow-hidden select-none relative cursor-pointer fixed inset-0 bg-white"
+      className="w-screen h-screen overflow-hidden select-none relative cursor-pointer fixed inset-0 bg-surface-card"
       onClick={handleButtonClick}
     >
       <img
@@ -437,7 +437,7 @@ export function CreateProfileScreen() {
     >
       <div className="px-5 flex-1 overflow-auto">
         {/* Step 1: Avatar Selection */}
-        <div className="rounded-3xl bg-accent-1 p-7 text-white relative overflow-hidden shadow-elevated-2 min-h-[140px] flex flex-col justify-center">
+        <div className="rounded-3xl bg-accent-1 p-7 text-text-on-primary relative overflow-hidden shadow-elevated-2 min-h-[140px] flex flex-col justify-center">
           <Cloud className="absolute -top-5 right-3 w-20 opacity-25" />
           <div className="relative z-10">
             <div className="text-3xl font-black leading-normal">Pick your avatar</div>
@@ -474,11 +474,11 @@ export function CreateProfileScreen() {
             const selectedAvatar = avatarImages.find((a) => a.id === avatar);
             const avatarName = getAvatarName(avatar);
             return selectedAvatar ? (
-              <div className="mt-4 rounded-2xl bg-action-primary p-4 text-white animate-fade-in flex items-center gap-4 shadow-elevated-2">
+              <div className="mt-4 rounded-2xl bg-action-primary p-4 text-text-on-primary animate-fade-in flex items-center gap-4 shadow-elevated-2">
                 <img
                   src={selectedAvatar.image}
                   alt={avatarName}
-                  className="w-20 h-20 rounded-full border-3 border-white shadow-elevated-2 flex-shrink-0"
+                  className="w-20 h-20 rounded-full border-3 border-text-on-primary shadow-elevated-2 flex-shrink-0"
                 />
                 <div>
                   <div className="text-xs opacity-90 font-semibold">Your explorer!</div>
@@ -503,7 +503,7 @@ export function CreateProfileScreen() {
                   onClick={() => handleAgeSelect(band.value, idx)}
                   className={`w-full h-14 rounded-xl flex items-center justify-between px-4 font-bold transition-all duration-300 transform ${
                     isSelected
-                      ? `${band.gradient} text-white shadow-elevated-2 scale-100 border-2 border-white`
+                      ? `${band.gradient} text-text-on-primary shadow-elevated-2 scale-100 border-2 border-text-on-primary`
                       : "bg-surface-card border-2 border-surface-sunken text-text-primary hover:border-surface-sunken hover:shadow-elevated-1"
                   }`}
                 >
@@ -511,7 +511,7 @@ export function CreateProfileScreen() {
                   <div className="flex-1 text-center">
                     <div className="text-sm font-black">{band.value}</div>
                     <div
-                      className={`text-xs transition-colors ${isSelected ? "text-white/90" : "text-text-secondary"}`}
+                      className={`text-xs transition-colors ${isSelected ? "text-text-on-primary/90" : "text-text-secondary"}`}
                     >
                       {band.label}
                     </div>
@@ -530,7 +530,7 @@ export function CreateProfileScreen() {
       <div className="p-4 pb-safe bg-surface-card border-t border-border-color">
         <button
           onClick={handleProfileSave}
-          className={`w-full h-12 rounded-xl bg-success text-white text-sm font-black shadow-elevated-2 transition-all duration-300 transform ${
+          className={`w-full h-12 rounded-xl bg-success text-text-on-primary text-sm font-black shadow-elevated-2 transition-all duration-300 transform ${
             saved
               ? "scale-95 opacity-80"
               : "hover:shadow-elevated-3 hover:scale-102 active:scale-95"
@@ -646,11 +646,11 @@ function RecentlyCompletedCelebration({
       <div className="absolute inset-0" onClick={handleDismiss} aria-label="Close celebration" />
 
       {/* Celebration Card */}
-      <div className="relative bg-action-primary text-white rounded-3xl p-6 shadow-2xl max-w-sm w-full animate-scale-in border-2 border-action-primary">
+      <div className="relative bg-action-primary text-text-on-primary rounded-3xl p-6 shadow-2xl max-w-sm w-full animate-scale-in border-2 border-action-primary">
         {/* Prominent Close Button - Top Right */}
         <button
           onClick={handleDismiss}
-          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/30 hover:bg-white/50 flex items-center justify-center text-white text-lg transition-all duration-200 z-10"
+          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-text-on-primary/30 hover:bg-text-on-primary/50 flex items-center justify-center text-text-on-primary text-lg transition-all duration-200 z-10"
           aria-label="Close"
         >
           {EMOJI.ui.close}
@@ -659,7 +659,7 @@ function RecentlyCompletedCelebration({
         <div className="relative z-10 flex flex-col gap-4">
           {/* Title - Celebration message */}
           <div className="text-center">
-            <div className="text-lg font-bold opacity-95 text-ink">🏆 STATE MASTERED! 🏆</div>
+            <div className="text-lg font-bold opacity-95 text-ink">{EMOJI.milestone.hundred} STATE MASTERED! {EMOJI.milestone.hundred}</div>
             <div className="text-3xl font-black mt-2 drop-shadow-lg text-ink">{stateName}</div>
           </div>
 
@@ -691,7 +691,7 @@ function RecentlyCompletedCelebration({
           <div className="flex gap-3 mt-2">
             <button
               onClick={handleDismiss}
-              className="flex-1 h-11 rounded-xl ui-button ui-accent-1-soft border border-white/40 text-ink text-sm font-bold hover:bg-white/30 transition-all duration-200"
+              className="flex-1 h-11 rounded-xl ui-button ui-accent-1-soft border border-text-on-primary/40 text-ink text-sm font-bold hover:bg-text-on-primary/30 transition-all duration-200"
             >
               Dismiss
             </button>
@@ -1203,7 +1203,7 @@ function MiniStateCard({
   tone?: "orange" | "blue";
 }) {
   return (
-    <div className="relative rounded-3xl bg-white border border-black/5 shadow-soft p-3">
+    <div className="relative rounded-3xl bg-surface-card border border-border-subtle shadow-soft p-3">
       <div
         className={`h-20 rounded-2xl flex items-center justify-center overflow-hidden ${
           locked ? "bg-muted" : "gradient-sky"
@@ -1217,7 +1217,7 @@ function MiniStateCard({
       </div>
       <div className="mt-2 text-display font-extrabold text-sm">{name}</div>
       <div className="text-xs font-bold text-text-secondary">
-        {locked ? "🏆 Locked" : "Unlocked"}
+        {locked ? `${EMOJI.milestone.hundred} Locked` : "Unlocked"}
       </div>
     </div>
   );
@@ -1252,7 +1252,7 @@ function StateDetailModal({
       onClick={onClose}
     >
       <div
-        className="w-full bg-white rounded-t-3xl p-6 flex flex-col gap-4 max-h-[90vh] overflow-y-auto animate-slide-up"
+        className="w-full bg-surface-card rounded-t-3xl p-6 flex flex-col gap-4 max-h-[90vh] overflow-y-auto animate-slide-up"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
@@ -1348,7 +1348,7 @@ function StateDetailModal({
                 fxTap();
                 onPlay();
               }}
-              className="flex-1 h-12 rounded-2xl bg-accent-1 text-display font-extrabold text-white shadow-lg hover:shadow-xl transition"
+              className="flex-1 h-12 rounded-2xl bg-accent-1 text-display font-extrabold text-text-on-primary shadow-lg hover:shadow-xl transition"
             >
               {isDone ? `${EMOJI.achievement.explorer} Review` : `${EMOJI.action.play} Play`}
             </button>
@@ -1877,13 +1877,13 @@ export function StateIntroScreen({
   }, [state.name]);
 
   return (
-    <div className="h-full w-full flex flex-col bg-white">
+    <div className="h-full w-full flex flex-col bg-surface-card">
       <div className={`relative py-12 ${grad} overflow-hidden`}>
         <Cloud className="absolute top-6 left-2 w-20 opacity-80" />
         <Cloud className="absolute top-14 right-2 w-16 opacity-70" />
 
         {/* Breadcrumb Navigation */}
-        <div className="absolute top-3 left-16 flex items-center gap-1 text-white text-xs font-bold">
+        <div className="absolute top-3 left-16 flex items-center gap-1 text-text-on-header text-xs font-bold">
           <span className="opacity-75">Journey</span>
           <span className="opacity-50">›</span>
           {currentRegion && (
@@ -1917,11 +1917,11 @@ export function StateIntroScreen({
               goBack();
             }
           }}
-          className="absolute top-3 left-4 h-12 w-12 rounded-full bg-white/25 backdrop-blur flex items-center justify-center text-white text-xl"
+          className="absolute top-3 left-4 h-12 w-12 rounded-full bg-text-on-header/25 backdrop-blur flex items-center justify-center text-text-on-header text-xl"
         >
           ‹
         </button>
-        <div className="absolute top-4 right-4 flex items-center gap-1.5 bg-white/25 backdrop-blur rounded-full px-3 py-1.5 text-white text-xs font-extrabold">
+        <div className="absolute top-4 right-4 flex items-center gap-1.5 bg-text-on-header/25 backdrop-blur rounded-full px-3 py-1.5 text-text-on-header text-xs font-extrabold">
           State {stateIndex(state.name) + 1} of {TOTAL_STATES}
         </div>
         {art ? (
@@ -1939,7 +1939,7 @@ export function StateIntroScreen({
         )}
       </div>
 
-      <div className="-mt-8 rounded-t-[36px] bg-white flex-1 px-5 pt-6 pb-5 relative z-10">
+      <div className="-mt-8 rounded-t-[36px] bg-surface-card flex-1 px-5 pt-6 pb-5 relative z-10">
         <div className="text-xs font-black uppercase tracking-widest text-saffron">Welcome to</div>
         <h1 className="text-h1 leading-snug mt-1">{state.name}</h1>
         <div className="text-body text-text-secondary mt-1">
@@ -2205,13 +2205,13 @@ export function LearningHubScreen({
 
         {/* Journey Progress Bar */}
         <div className="mt-3 flex items-center gap-3">
-          <div className="flex-1 h-2.5 bg-white/30 rounded-full overflow-hidden">
+          <div className="flex-1 h-2.5 bg-text-on-header/30 rounded-full overflow-hidden">
             <div
-              className="h-full bg-white rounded-full transition-all duration-300"
+              className="h-full bg-text-on-header rounded-full transition-all duration-300"
               style={{ width: `${(completedCategories / 6) * 100}%` }}
             />
           </div>
-          <div className="text-sm font-extrabold text-white whitespace-nowrap">
+          <div className="text-sm font-extrabold text-text-on-header whitespace-nowrap">
             {completedCategories} / 6
           </div>
         </div>
@@ -2366,7 +2366,7 @@ function HubCard({
       )}
       {locked && (
         <div className="absolute top-2 right-2 h-7 w-7 rounded-full bg-black/50 text-white flex items-center justify-center text-xs">
-          🏆
+          {EMOJI.milestone.hundred}
         </div>
       )}
     </button>
@@ -3641,7 +3641,7 @@ function Stamp({
   if (!filled) {
     return (
       <div className="aspect-square rounded-2xl border-2 border-dashed border-muted-foreground/30 flex flex-col items-center justify-center text-text-secondary">
-        <div className="text-3xl opacity-40">🏆</div>
+        <div className="text-3xl opacity-40">{EMOJI.milestone.hundred}</div>
         <div className="text-[11px] font-extrabold mt-1">{name}</div>
       </div>
     );
@@ -3875,7 +3875,7 @@ export function BadgesScreen() {
               : "text-text-secondary hover:text-muted-dark"
           }`}
         >
-          🏆 Achievement Badges
+          {EMOJI.milestone.hundred} Achievement Badges
         </button>
         <button
           onClick={() => {
@@ -4166,8 +4166,8 @@ function ProfileScreenContent() {
                     saveStatus === "saved"
                       ? "bg-success"
                       : saveStatus === "saving"
-                        ? "bg-white/50"
-                        : "bg-white/80 hover:bg-white"
+                        ? "bg-surface-raised/50"
+                        : "bg-surface-raised/80 hover:bg-surface-raised"
                   }`}
                 >
                   {saveStatus === "saved"
@@ -4332,7 +4332,7 @@ function ProfileScreenContent() {
               className={`h-7 w-12 rounded-full flex items-center px-1 transition ${hasFileConsent ? "gradient-success" : "bg-muted"}`}
             >
               <span
-                className={`h-5 w-5 rounded-full bg-white shadow transition-transform ${hasFileConsent ? "translate-x-5" : "translate-x-0"}`}
+                className={`h-5 w-5 rounded-full bg-text-on-header shadow transition-transform ${hasFileConsent ? "translate-x-5" : "translate-x-0"}`}
               />
             </span>
           </button>
@@ -4350,7 +4350,7 @@ function ProfileScreenContent() {
                 {/* Header Row */}
                 <div className="flex items-center gap-3">
                   <div className="h-12 w-12 rounded-2xl gradient-success flex items-center justify-center text-2xl">
-                    🎯
+                    {EMOJI.milestone.twentyFive}
                   </div>
                   <div className="flex-1">
                     <div className="text-display font-extrabold text-[15px] leading-tight">
@@ -4385,7 +4385,7 @@ function ProfileScreenContent() {
             className="ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
           >
             <div className="h-12 w-12 rounded-2xl gradient-explorer flex items-center justify-center text-2xl">
-              🏆
+              {EMOJI.milestone.hundred}
             </div>
             <div className="flex-1">
               <div className="text-display font-extrabold text-[15px] leading-tight">
@@ -4473,7 +4473,7 @@ function SoundToggleRow() {
           className={`h-7 w-12 rounded-full flex items-center px-1 transition ${soundOn ? "gradient-success" : "bg-muted"}`}
         >
           <span
-            className={`h-5 w-5 rounded-full bg-white shadow transition-transform ${soundOn ? "translate-x-5" : "translate-x-0"}`}
+            className={`h-5 w-5 rounded-full bg-text-on-header shadow transition-transform ${soundOn ? "translate-x-5" : "translate-x-0"}`}
           />
         </span>
       </button>
@@ -4510,7 +4510,7 @@ function SoundToggleRow() {
           className={`h-7 w-12 rounded-full flex items-center px-1 transition ${audioEnabled ? "gradient-success" : "bg-muted"}`}
         >
           <span
-            className={`h-5 w-5 rounded-full bg-white shadow transition-transform ${audioEnabled ? "translate-x-5" : "translate-x-0"}`}
+            className={`h-5 w-5 rounded-full bg-text-on-header shadow transition-transform ${audioEnabled ? "translate-x-5" : "translate-x-0"}`}
           />
         </span>
       </button>
@@ -4601,7 +4601,7 @@ function ParentZonePlaceholder() {
               className="w-full h-10 rounded-lg border-2 border-info px-3 font-extrabold text-center text-lg tracking-widest text-info"
             />
             <div className="text-xs text-accent-1 mt-1">
-              🎯 Used to reset progress. Default: 1234
+              {EMOJI.milestone.twentyFive} Used to reset progress. Default: 1234
             </div>
           </div>
           <button
@@ -4626,7 +4626,7 @@ function ParentZonePlaceholder() {
               setNewPIN("");
               setPinSaveStatus("idle");
             }}
-            className="w-full h-10 rounded-lg font-bold text-sm bg-white text-info hover:bg-info-soft border border-info"
+            className="w-full h-10 rounded-lg font-bold text-sm bg-surface-card text-info hover:bg-info-soft border border-info"
           >
             Close
           </button>
@@ -4788,7 +4788,7 @@ export function LoadingScreen() {
 
 export function EmptyStateScreen() {
   return (
-    <div className="h-full w-full bg-white flex flex-col">
+    <div className="h-full w-full bg-surface-card flex flex-col">
       <HeaderBar title="Friends" />
       <div className="flex-1 flex flex-col items-center justify-center px-8 text-center">
         <div className="relative">

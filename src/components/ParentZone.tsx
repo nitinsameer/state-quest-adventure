@@ -154,7 +154,7 @@ export function ParentZoneScreen() {
       </div>
 
       {/* Tab Navigation */}
-      <div className="flex gap-0 px-(--padding-base) pt-(--space-0-25) pb-0 border-b border-black/5 overflow-x-auto">
+      <div className="flex gap-0 px-(--padding-base) pt-(--space-0-25) pb-0 border-b border-border-subtle overflow-x-auto">
         {[
           { key: "overview", label: "Overview", icon: EMOJI.action.analytics },
           { key: "analytics", label: "Analytics", icon: EMOJI.action.growth },
@@ -187,7 +187,7 @@ export function ParentZoneScreen() {
               {stats.map((s) => (
                 <div
                   key={s.label}
-                  className="rounded-3xl bg-surface-card p-(--padding-base) shadow-[var(--shadow-card)] border border-black/5"
+                  className="rounded-3xl bg-surface-card p-(--padding-base) shadow-[var(--shadow-card)] border border-border-subtle"
                 >
                   <div className="text-2xl">{s.icon}</div>
                   <div className="text-display text-lg font-extrabold mt-(--space-0-25)">
@@ -204,7 +204,7 @@ export function ParentZoneScreen() {
               <div className="text-display font-extrabold text-sm uppercase" style={{color: "var(--text-muted)"}}>
                 Currently learning
               </div>
-              <div className="mt-(--space-2) rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-black/5 space-y-(--space-0-25)">
+              <div className="mt-(--space-2) rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-border-subtle space-y-(--space-0-25)">
                 {inProgress.length === 0 ? (
                   <div className="text-sm font-semibold" style={{color: "var(--text-muted)"}}>
                     No lessons in progress right now.
@@ -246,7 +246,7 @@ export function ParentZoneScreen() {
               Engagement Metrics
             </div>
 
-            <div className="rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-black/5 space-y-(--space-2)">
+            <div className="rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-border-subtle space-y-(--space-2)">
               <div>
                 <div className="text-sm font-bold mb-(--space-0-25)" style={{color: "var(--text-muted)"}}>
                   Overall Progress
@@ -312,7 +312,7 @@ export function ParentZoneScreen() {
               Parental Controls
             </div>
 
-            <div className="rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-black/5">
+            <div className="rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-border-subtle">
               <div className="flex items-center justify-between mb-(--space-0-25)">
                 <div>
                   <div className="text-sm font-bold" style={{color: "var(--text-primary)"}}>Parental PIN</div>
@@ -355,7 +355,7 @@ export function ParentZoneScreen() {
               )}
             </div>
 
-            <div className="rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-black/5">
+            <div className="rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-border-subtle">
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-sm font-bold" style={{color: "var(--text-primary)"}}>Audio</div>
@@ -365,7 +365,7 @@ export function ParentZoneScreen() {
               </div>
             </div>
 
-            <div className="rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-black/5">
+            <div className="rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-border-subtle">
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-sm font-bold" style={{color: "var(--text-primary)"}}>File Storage</div>
@@ -375,7 +375,7 @@ export function ParentZoneScreen() {
               </div>
             </div>
 
-            <div className="rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-black/5">
+            <div className="rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-border-subtle">
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-sm font-bold" style={{color: "var(--text-primary)"}}>
@@ -425,7 +425,7 @@ export function ParentZoneScreen() {
               {EMOJI.action.save} Download Progress Report
             </button>
 
-            <div className="rounded-3xl bg-surface-card p-(--padding-md) shadow-soft border border-black/5 space-y-(--space-0-5)">
+            <div className="rounded-3xl bg-surface-card p-(--padding-md) shadow-soft border border-border-subtle space-y-(--space-0-5)">
               <div className="text-sm font-bold" style={{color: "var(--text-primary)"}}>What's included:</div>
               <ul className="text-xs space-y-(--space-0-25)" style={{color: "var(--text-muted)"}}>
                 <li>✓ Summary stats (XP, badges, states)</li>
@@ -443,7 +443,7 @@ export function ParentZoneScreen() {
         <div className="text-display font-extrabold text-sm uppercase tracking-wider" style={{color: "var(--text-muted)"}}>
           Data & Privacy
         </div>
-        <div className="mt-(--space-0-5) rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-black/5">
+        <div className="mt-(--space-0-5) rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-border-subtle">
           <p className="text-sm font-semibold" style={{color: "var(--text-muted)"}}>
             All progress is stored only on this device. No account, no ads, and nothing is uploaded.
           </p>

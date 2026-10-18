@@ -48,7 +48,7 @@ export function IndiaProgressMap() {
   };
 
   return (
-    <div className="w-full bg-white rounded-3xl shadow-soft border border-black/5 overflow-hidden">
+    <div className="w-full bg-surface-card rounded-3xl shadow-soft border border-border-subtle overflow-hidden">
       {/* Main card content */}
       <div className="p-5">
         {/* Title row with flag and count */}
@@ -94,7 +94,7 @@ export function IndiaProgressMap() {
                 <div
                   className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-500 ${
                     reached
-                      ? "bg-action-primary text-white shadow-md"
+                      ? "bg-action-primary text-text-on-primary shadow-md"
                       : isNearby
                         ? "bg-surface-sunken text-text-secondary shadow-lg"
                         : "bg-surface-sunken text-text-muted"

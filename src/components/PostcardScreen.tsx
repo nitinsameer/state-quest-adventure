@@ -324,15 +324,15 @@ export function StatePostcardScreen({
 
       {/* Header */}
       <div className="pt-5 text-center px-(--padding-lg) relative z-10">
-        <div className="text-white/90 text-xs font-bold tracking-wide">Your Stamp</div>
-        <div className="text-white text-xs font-semibold mt-1">
+        <div className="text-text-on-header/90 text-xs font-bold tracking-wide">Your Stamp</div>
+        <div className="text-text-on-header text-xs font-semibold mt-1">
           Show your friends you beat {state.name}! ??
         </div>
       </div>
 
       {/* Postcard Preview */}
       <div className="flex-1 px-5 pt-(--padding-base) pb-1 relative z-10 overflow-y-auto">
-        <div className="w-full rounded-[28px] ui-card ui-accent-1-soft border-4 border-white overflow-hidden animate-in zoom-in-95">
+        <div className="w-full rounded-[28px] ui-card ui-accent-1-soft border-4 border-text-on-header overflow-hidden animate-in zoom-in-95">
           {/* Preview Image (Loading or Generated) */}
           <div className="relative bg-muted aspect-[3/4] overflow-hidden flex items-center justify-center">
             {previewUrl ? (

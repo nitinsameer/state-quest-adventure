@@ -59,8 +59,8 @@ export function ParentConsentGate({ onComplete }: ParentConsentGateProps = {}): 
 
         {/* Title and Description */}
         <div>
-          <h1 className="text-h2 text-white">Before you explore...</h1>
-          <p className="text-body text-white/90 mt-3 leading-relaxed">
+          <h1 className="text-h2 text-text-on-header">Before you explore...</h1>
+          <p className="text-body text-text-on-header/90 mt-3 leading-relaxed">
             We use the data your child creates to help them learn better and stay safe. We never share personal information.
           </p>
         </div>
@@ -72,9 +72,9 @@ export function ParentConsentGate({ onComplete }: ParentConsentGateProps = {}): 
               type="checkbox"
               checked={isAgreed}
               onChange={handleAgreedChange}
-              className="mt-2 w-5 h-5 accent-white flex-shrink-0"
+              className="mt-2 w-5 h-5 accent-text-on-header flex-shrink-0"
             />
-            <span className="text-body text-white/90">
+            <span className="text-body text-text-on-header/90">
               I am a parent or guardian. I agree to this app collecting learning data for my child.
             </span>
           </label>
@@ -84,13 +84,13 @@ export function ParentConsentGate({ onComplete }: ParentConsentGateProps = {}): 
         <button
           onClick={handleConfirm}
           disabled={!isAgreed}
-          className="w-full h-14 rounded-2xl bg-white text-accent-1 text-h4 font-bold shadow-lg transition-all hover:shadow-xl active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full h-14 rounded-2xl bg-surface-card text-action-primary text-h4 font-bold shadow-lg transition-all hover:shadow-xl active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Let's Explore!
         </button>
 
         {/* Footer Text */}
-        <p className="text-caption text-white/70">
+        <p className="text-caption text-text-on-header/70">
           We follow strict child safety rules (COPPA)
         </p>
       </div>

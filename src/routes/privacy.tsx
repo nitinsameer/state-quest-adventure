@@ -17,12 +17,12 @@ function PrivacyPolicyScreen() {
   return (
     <div className="h-full w-full bg-surface-card flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="px-5 pt-3 pb-6 gradient-explorer rounded-b-[32px] text-white">
+      <div className="px-5 pt-3 pb-6 gradient-explorer rounded-b-[32px] text-text-on-header">
         <div className="flex items-center justify-between">
           <button
             onClick={() => window.history.back()}
             aria-label="Go back"
-            className="h-10 w-10 rounded-full bg-white/25 flex items-center justify-center text-2xl"
+            className="h-10 w-10 rounded-full bg-text-on-header/25 flex items-center justify-center text-2xl"
           >
             ‹
           </button>
@@ -49,7 +49,7 @@ function PrivacyPolicyScreen() {
         {/* Data Storage */}
         <section>
           <h2 className="text-h4 mb-3">📱 How We Store Your Data</h2>
-          <div className="bg-white rounded-2xl p-4 border border-black/5 space-y-3">
+          <div className="bg-surface-card rounded-2xl p-4 border border-border-subtle space-y-3">
             <div>
               <div className="text-body font-bold text-ink">Device Storage Only</div>
               <p className="text-caption text-muted-foreground mt-1">
@@ -69,7 +69,7 @@ function PrivacyPolicyScreen() {
 
         {/* Analytics */}
         <section>
-          <h2 className="text-h4 mb-3">📊 Analytics & Telemetry</h2>
+          <h2 className="text-h4 mb-3">{EMOJI.action.analytics} Analytics & Telemetry</h2>
           <div className="bg-accent-1-soft rounded-2xl p-4 border border-accent-1 space-y-3">
             <div>
               <div className="text-body font-bold text-accent-1">Firebase Analytics</div>
@@ -96,7 +96,7 @@ function PrivacyPolicyScreen() {
         {/* Permissions */}
         <section>
           <h2 className="text-h4 mb-3">🔐 Permissions</h2>
-          <div className="bg-white rounded-2xl p-4 border border-black/5 space-y-3">
+          <div className="bg-surface-card rounded-2xl p-4 border border-border-subtle space-y-3">
             <div>
               <div className="text-body font-bold text-ink">Audio Permission</div>
               <p className="text-caption text-muted-foreground mt-1">

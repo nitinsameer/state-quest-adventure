@@ -26,7 +26,7 @@ export function PhoneFrame({
             "0 40px 80px -30px var(--shadow-raised), 0 10px 25px -10px var(--shadow-raised), inset 0 0 0 2px var(--border-strong)",
         }}
       >
-        <div className="relative w-full h-full rounded-[44px] overflow-hidden bg-white">
+        <div className="relative w-full h-full rounded-[44px] overflow-hidden bg-surface-card">
           {/* notch */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 z-40 w-32 h-7 bg-surface-sunken rounded-b-[18px]" />
           {/* status bar */}

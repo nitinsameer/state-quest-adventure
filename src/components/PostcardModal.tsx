@@ -202,7 +202,7 @@ export function PostcardModal({
 
   return (
     <div
-      className="fixed inset-0 bg-black/50 z-50 flex items-end animate-fade-in"
+      className="fixed inset-0 bg-black/40 z-50 flex items-end animate-fade-in"
       onClick={onClose}
     >
       <div

@@ -93,7 +93,7 @@ export function DebugScreen() {
   };
 
   return (
-    <div className="fixed inset-0 z-[9999] flex flex-col bg-black text-white font-mono text-xs overflow-hidden">
+    <div className="fixed inset-0 z-[9999] flex flex-col bg-surface-sunken text-text-primary font-mono text-xs overflow-hidden">
       {/* Header */}
       <div className="bg-surface-sunken border-b border-surface-muted p-(--padding-xs) flex justify-between items-center flex-wrap gap-(--gap-xs)">
         <div className="flex items-center gap-(--gap-xs)">
@@ -105,7 +105,7 @@ export function DebugScreen() {
             onClick={() => setFilter("all")}
             className={`px-2 py-1 rounded ${
               filter === "all"
-                ? "bg-accent-2 text-white"
+                ? "bg-accent-2 text-text-on-primary"
                 : "bg-surface-raised hover:bg-surface-elevated"
             }`} style={filter !== "all" ? {color: "var(--text-secondary)"} : undefined}
           >
@@ -115,7 +115,7 @@ export function DebugScreen() {
             onClick={() => setFilter("error")}
             className={`px-2 py-1 rounded ${
               filter === "error"
-                ? "bg-error text-white"
+                ? "bg-error text-text-on-primary"
                 : "bg-surface-raised hover:bg-surface-elevated"
             }`} style={filter !== "error" ? {color: "var(--text-secondary)"} : undefined}
           >
@@ -125,7 +125,7 @@ export function DebugScreen() {
             onClick={() => setFilter("warn")}
             className={`px-2 py-1 rounded ${
               filter === "warn"
-                ? "bg-warning text-white"
+                ? "bg-warning text-text-on-primary"
                 : "bg-surface-sunken hover:bg-surface-raised"
             }`} style={filter !== "warn" ? {color: "var(--text-secondary)"} : undefined}
           >
@@ -135,7 +135,7 @@ export function DebugScreen() {
             onClick={() => setFilter("info")}
             className={`px-2 py-1 rounded ${
               filter === "info"
-                ? "bg-success text-white"
+                ? "bg-success text-text-on-primary"
                 : "bg-surface-raised hover:bg-surface-elevated"
             }`} style={filter !== "info" ? {color: "var(--text-secondary)"} : undefined}
           >
@@ -173,7 +173,7 @@ export function DebugScreen() {
       {/* Logs Container */}
       <div
         id="debug-logs-container"
-        className="flex-1 overflow-y-auto bg-black p-(--padding-xs) space-y-(--space-0-25)"
+        className="flex-1 overflow-y-auto bg-surface-card p-(--padding-xs) space-y-(--space-0-25)"
       >
         {logs.length === 0 ? (
           <div className="text-muted-light">

@@ -44,7 +44,7 @@ export function StatePerformanceBadgeModal({
 
   return (
     <div
-      className="fixed inset-0 bg-black/50 z-50 flex items-end"
+      className="fixed inset-0 bg-black/40 z-50 flex items-end"
       onClick={() => {
         fxTap();
         onClose();
@@ -78,7 +78,7 @@ export function StatePerformanceBadgeModal({
         {earnedBadges.length > 0 && (
           <div>
             <h3 className="text-display font-extrabold text-lg mb-3 text-text-primary">
-              🎉 You Did It!
+              {EMOJI.feedback.success} You Did It!
             </h3>
             <div className="space-y-3">
               {earnedBadges.map((badgeId) => (
@@ -163,7 +163,7 @@ function BadgeDetailCard({ badgeId, progress }: BadgeDetailCardProps) {
           <div className="mt-3 pt-3 border-t border-border-subtle">
             {progress.earned ? (
               <div className="flex flex-col gap-1">
-                <div className="text-lg font-extrabold text-text-primary">🎉 You Did It!</div>
+                <div className="text-lg font-extrabold text-text-primary">{EMOJI.feedback.success} You Did It!</div>
               </div>
             ) : (
               <div className="flex flex-col gap-2">

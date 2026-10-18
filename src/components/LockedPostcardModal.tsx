@@ -28,7 +28,7 @@ export function LockedPostcardModal({ destination, onClose }: LockedPostcardModa
       onClick={onClose}
     >
       <div
-        className="w-full bg-white rounded-t-3xl p-6 shadow-2xl animate-in slide-in-from-bottom-5"
+        className="w-full bg-surface-card rounded-t-3xl p-6 shadow-2xl animate-in slide-in-from-bottom-5"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -49,7 +49,7 @@ export function LockedPostcardModal({ destination, onClose }: LockedPostcardModa
         <div className="flex gap-3 flex-col">
           <button
             onClick={handleExplore}
-            className="w-full py-3 px-4 rounded-xl font-extrabold text-white bg-accent-1 shadow-lg hover:shadow-xl transition-all active:scale-95"
+            className="w-full py-3 px-4 rounded-xl font-extrabold text-text-on-primary bg-accent-1 shadow-lg hover:shadow-xl transition-all active:scale-95"
           >
             {EMOJI.nav.map} Explore State
           </button>
