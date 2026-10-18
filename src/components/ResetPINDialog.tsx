@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { fxTap, fxWrong } from "@/lib/fx";
 import { verifyPin, isGated } from "@/lib/parent-gate";
+import { EMOJI } from "@/constants/emoji";
 
 interface ResetPINDialogProps {
   open: boolean;
@@ -69,7 +70,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
             onConfirm();
           }, 500);
         } else {
-          setError("❌ Incorrect PIN");
+          setError(`${EMOJI.ui.delete} Incorrect PIN`);
           fxWrong();
           setPin("");
           setTimeout(() => setError(""), 2000);
@@ -98,7 +99,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
       <div className="bg-surface-card rounded-3xl p-(--padding-lg) w-[90%] max-w-sm shadow-2xl">
         {/* Header */}
         <div className="text-center mb-(--space-4)">
-          <div className="text-4xl mb-(--space-0-5)">🔐</div>
+          <div className="text-4xl mb-(--space-0-5)">{EMOJI.action.lock}</div>
           <h2 className="text-display text-xl font-extrabold text-text-primary">
             Parent PIN Required
           </h2>
@@ -109,7 +110,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
 
         {/* Timer */}
         <div className="text-center mb-(--space-2)">
-          <div className="text-xs font-bold text-text-muted">⏱️ {timeLeft}s remaining</div>
+          <div className="text-xs font-bold text-text-muted">{EMOJI.debug.timer} {timeLeft}s remaining</div>
           <div className="h-1.5 bg-progress-track rounded-full overflow-hidden mt-(--space-0-25)">
             <div
               className="h-full bg-fb-error-bg transition-all"
@@ -196,7 +197,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
 
         {/* PIN Info */}
         <div className="text-xs text-text-muted text-center mt-(--space-2) p-(--padding-base) bg-fb-info-bg rounded-lg">
-          <span>🔐 Secure parent PIN (set in Parent Zone)</span>
+          <span>{`${EMOJI.action.lock} Secure parent PIN (set in Parent Zone)`}</span>
         </div>
       </div>
     </div>

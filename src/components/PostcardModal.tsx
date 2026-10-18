@@ -214,7 +214,7 @@ export function PostcardModal({
           onClick={onClose}
           className="absolute top-4 right-4 h-8 w-8 rounded-full ui-button ui-accent-1-soft text-ink flex items-center justify-center"
         >
-          ✕
+          {EMOJI.ui.close}
         </button>
 
         {/* Header */}

@@ -9,6 +9,7 @@
  */
 
 import type { Progress } from "./progress";
+import { EMOJI } from "@/constants/emoji";
 
 export type StatePerformanceBadgeId =
   | "perfect-quiz" // 100% quiz score on any attempt
@@ -49,7 +50,7 @@ export const STATE_PERFORMANCE_BADGE_DEFS: Record<
   }
 > = {
   "perfect-quiz": {
-    icon: "⭐⭐⭐",
+    icon: EMOJI.action.stars,
     name: "Perfect Quiz",
     description: "Score 100% on any quiz",
     category: "performance",
@@ -73,7 +74,7 @@ export const STATE_PERFORMANCE_BADGE_DEFS: Record<
     dopamineType: "thoroughness",
   },
   "first-try": {
-    icon: "🎯",
+    icon: EMOJI.action.goal,
     name: "First Try",
     description: "Perfect score on first quiz attempt",
     category: "performance",
@@ -81,7 +82,7 @@ export const STATE_PERFORMANCE_BADGE_DEFS: Record<
     dopamineType: "skill",
   },
   "streak-builder": {
-    icon: "🔥",
+    icon: EMOJI.action.fire,
     name: "Streak Builder",
     description: "Complete while on 7+ day streak",
     category: "performance",
@@ -89,7 +90,7 @@ export const STATE_PERFORMANCE_BADGE_DEFS: Record<
     dopamineType: "discipline",
   },
   "master-learner": {
-    icon: "🧠",
+    icon: EMOJI.learning.brain,
     name: "Master Learner",
     description: "Replay 3+ cards and achieve 100%",
     category: "performance",

@@ -103,7 +103,7 @@ export function HomeScreen() {
             {/* Right: Streak + Coins */}
             <div className="flex items-center gap-(--gap-base)">
               <div className="bg-surface-card/80 rounded-full w-12 h-12 flex items-center justify-center shadow-md text-lg">
-                🔥
+                {EMOJI.action.fire}
               </div>
               <div className="bg-surface-card/80 rounded-full w-12 h-12 flex items-center justify-center shadow-md text-lg">
                 ❓
@@ -148,7 +148,7 @@ export function HomeScreen() {
 
           {/* Stamps Card */}
           <div className="flex-1 bg-surface-card rounded-2xl shadow-sm p-(--padding-base) text-center">
-            <div className="text-2xl mb-1">🎫</div>
+            <div className="text-2xl mb-1">{EMOJI.action.stamp}</div>
             <div className="text-h5" style={{ color: "var(--text-primary)" }}>
               0
             </div>

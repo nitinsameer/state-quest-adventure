@@ -422,7 +422,7 @@ export function ParentZoneScreen() {
               onClick={handleExportData}
               className="w-full h-12 rounded-2xl bg-action-success-bg font-extrabold text-sm shadow-lg hover:shadow-xl active:scale-95 transition" style={{color: "var(--text-on-primary)"}}
             >
-              💾 Download Progress Report
+              {EMOJI.action.save} Download Progress Report
             </button>
 
             <div className="rounded-3xl bg-surface-card p-(--padding-md) shadow-soft border border-black/5 space-y-(--space-0-5)">

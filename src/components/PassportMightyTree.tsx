@@ -54,7 +54,7 @@ export function PassportMightyTree() {
 
       {/* Header */}
       <div className="px-5 pt-4 pb-3 bg-bg-header rounded-b-3xl shadow-lg" style={{color: "var(--text-on-header)"}}>
-        <div className="text-2xl font-extrabold">My Stamps 🎫</div>
+        <div className="text-2xl font-extrabold">{`My Stamps ${EMOJI.action.stamp}`}</div>
       </div>
 
       {/* Profile & Detailed Stats */}
@@ -78,7 +78,7 @@ export function PassportMightyTree() {
               Level {level} · {progress.xp} XP ({xpToNextLevel} to next level)
             </div>
             <div className="flex items-center gap-2 mt-2">
-              <span className="text-lg">🔥</span>
+              <span className="text-lg">{EMOJI.action.fire}</span>
               <span>{streak}-day streak</span>
               <span className="text-xs">✓ Played today</span>
             </div>

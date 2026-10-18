@@ -351,7 +351,7 @@ function StepResult({ ceremony, state, art }: StepProps) {
             aria-valuemax={1}
             aria-label={i < filledStars ? "earned star" : "empty star"}
           >
-            {i < filledStars ? "⭐" : "☆"}
+            {i < filledStars ? EMOJI.action.star : EMOJI.action.emptyStar}
           </div>
         ))}
       </div>
@@ -549,7 +549,7 @@ function StepStamp({ ceremony, state, art, stamped = false, onStamped }: StepPro
             </div>
 
             {/* Stamp emoji overlay (top-right) */}
-            <div className="absolute -top-1 -right-1 text-3xl">🎫</div>
+            <div className="absolute -top-1 -right-1 text-3xl">{EMOJI.action.stamp}</div>
           </button>
         </div>
 

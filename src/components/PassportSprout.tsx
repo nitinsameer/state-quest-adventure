@@ -56,7 +56,7 @@ export function PassportSprout() {
 
       {/* Header */}
       <div className="px-5 pt-4 pb-3 bg-bg-header rounded-b-3xl shadow-lg" style={{color: "var(--text-on-header)"}}>
-        <div className="text-2xl font-extrabold">My Stamps 🎫</div>
+        <div className="text-2xl font-extrabold">{`My Stamps ${EMOJI.action.stamp}`}</div>
       </div>
 
       {/* Profile Card */}

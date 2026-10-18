@@ -11,6 +11,7 @@
  */
 
 import React, { ReactNode } from "react";
+import { EMOJI } from "@/constants/emoji";
 
 export interface StandardModalProps {
   /** Whether modal is open */
@@ -101,7 +102,7 @@ export function StandardModal({
                       className="absolute top-3 right-3 w-8 h-8 rounded-full ui-button-soft flex items-center justify-center text-lg transition-all duration-200 z-10"
                       aria-label="Close"
                     >
-                      ✕
+                      {EMOJI.ui.close}
                     </button>
                   )}
                   <h2 className="text-2xl font-extrabold" style={{ color: "var(--ink)" }}>
@@ -123,7 +124,7 @@ export function StandardModal({
                     className="absolute top-3 right-3 w-8 h-8 rounded-full ui-button-soft flex items-center justify-center text-lg transition-all duration-200 z-10"
                     aria-label="Close"
                   >
-                    ✕
+                    {EMOJI.ui.close}
                   </button>
                 )}
                 <div className="text-5xl mb-(--space-3)">{header.icon}</div>

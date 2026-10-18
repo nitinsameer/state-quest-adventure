@@ -79,6 +79,8 @@ export const EMOJI = {
     stamp: "🎫",
     analytics: "📊",
     growth: "📈",
+    thinking: "🤔",
+    encouragement: "💪",
   },
 
   // Utilities

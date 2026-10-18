@@ -71,7 +71,7 @@ export function QuizAnswerFeedback({
           // ✅ CORRECT ANSWER - MAXIMUM DOPAMINE HIT
           <>
             {/* Large animated checkmark */}
-            <div className="animate-pop-in text-9xl mb-8 drop-shadow-2xl">✅</div>
+            <div className="animate-pop-in text-9xl mb-8 drop-shadow-2xl">{EMOJI.action.checkButton}</div>
 
             {/* Success message with slide-up animation */}
             <div className="animate-slide-up text-center px-6">
@@ -123,7 +123,7 @@ export function QuizAnswerFeedback({
           <>
             {/* Thinking emoji with gentle jiggle */}
             <div className="animate-jiggle mb-6">
-              <div className="text-8xl">🤔</div>
+              <div className="text-8xl">{EMOJI.action.thinking}</div>
             </div>
 
             {/* Try-again message with slide-up */}
@@ -138,7 +138,7 @@ export function QuizAnswerFeedback({
               )}
 
               <p className="text-body text-muted-foreground mb-2">
-                Don't worry, you're learning! 💪
+                {`Don't worry, you're learning! ${EMOJI.feedback.encouragement}`}
               </p>
               <p className="text-body-sm text-success">Try the next one!</p>
             </div>

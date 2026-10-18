@@ -129,7 +129,7 @@ export function PassportSeedling() {
           }}
           className="text-ink"
         >
-          🎫 My Explorer
+          {`${EMOJI.action.stamp} My Explorer`}
         </h1>
       </div>
 
@@ -146,7 +146,7 @@ export function PassportSeedling() {
           </div>
           <div className="flex-1">
             <div className="text-lg font-extrabold">{progress.name}</div>
-            <div className="text-sm font-bold">🎫 {progress.completed.length} of 36 stamps</div>
+            <div className="text-sm font-bold">{`${EMOJI.action.stamp} ${progress.completed.length} of 36 stamps`}</div>
           </div>
         </div>
 

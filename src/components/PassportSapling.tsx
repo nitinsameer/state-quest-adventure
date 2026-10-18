@@ -80,7 +80,7 @@ export function PassportSapling() {
         {/* Streak & Engagement */}
         <div className="grid grid-cols-2 gap-2">
           <div className="p-3 rounded-2xl bg-accent-1 text-text-on-primary shadow-md">
-            <div className="text-2xl">🔥</div>
+            <div className="text-2xl">{EMOJI.action.fire}</div>
             <div className="text-xs font-extrabold mt-1">{streak}-day streak!</div>
           </div>
           <div className="p-3 rounded-2xl bg-accent-2 text-text-on-primary shadow-md">

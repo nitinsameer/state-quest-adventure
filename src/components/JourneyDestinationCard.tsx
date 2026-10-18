@@ -96,7 +96,7 @@ export function JourneyDestinationCard({
     buttonText = `Replay ${EMOJI.action.replay}`;
     buttonHandler = handleReplayClick;
   } else if (status === "locked") {
-    buttonText = "🔥 Locked";
+    buttonText = `${EMOJI.action.fire} Locked`;
     isButtonDisabled = true;
     buttonHandler = () => {};
   } else if (isInProgress) {
@@ -132,7 +132,7 @@ export function JourneyDestinationCard({
       {/* Status indicator */}
       {status === "locked" && (
         <div className="mb-2 flex items-center gap-1 text-sm font-bold" style={{color: "var(--text-secondary)"}}>
-          <span>🔥</span>
+          <span>{EMOJI.action.fire}</span>
           <span>Locked</span>
         </div>
       )}
@@ -170,7 +170,7 @@ export function JourneyDestinationCard({
       >
         {status === "locked" ? (
           <>
-            <span>🔥</span>
+            <span>{EMOJI.action.fire}</span>
             <span>Locked</span>
           </>
         ) : status === "completed" && !isInProgress ? (

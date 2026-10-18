@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useToastStore, type ToastConfig } from "@/store/toastStore";
+import { EMOJI } from "@/constants/emoji";
 
 /**
  * Minimal bottom toast notification for errors and info messages
@@ -55,7 +56,7 @@ function ToastNotification({ config }: { config: ToastConfig }) {
           className="flex-shrink-0 text-xl hover:opacity-80 active:scale-90 transition-all duration-200 drop-shadow"
           aria-label="Dismiss"
         >
-          ✕
+          {EMOJI.ui.close}
         </button>
       </div>
     </div>

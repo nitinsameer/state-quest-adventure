@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { fxTap } from "@/lib/fx";
+import { EMOJI } from "@/constants/emoji";
 
 interface PostcardCardProps {
   destination: string;
@@ -86,7 +87,7 @@ export function PostcardCard({
               </span>
             ) : (
               <span className="inline-flex items-center gap-1">
-                <span>🎫</span>
+                <span>{EMOJI.action.stamp}</span>
                 <span>Visit to collect</span>
               </span>
             )}

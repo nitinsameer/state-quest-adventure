@@ -68,7 +68,7 @@ export function StatePerformanceBadgeModal({
             }}
             className="text-2xl text-muted-light hover:text-muted-foreground transition"
           >
-            ✕
+            {EMOJI.ui.close}
           </button>
         </div>
 

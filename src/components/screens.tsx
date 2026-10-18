@@ -653,7 +653,7 @@ function RecentlyCompletedCelebration({
           className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/30 hover:bg-white/50 flex items-center justify-center text-white text-lg transition-all duration-200 z-10"
           aria-label="Close"
         >
-          ✕
+          {EMOJI.ui.close}
         </button>
 
         <div className="relative z-10 flex flex-col gap-4">
@@ -901,7 +901,7 @@ function HomeDashboardContent() {
                     onClick={() => setDismissStreakWarning(true)}
                     className="text-warning opacity-70 hover:opacity-100 text-xl flex-shrink-0 transition-all duration-200"
                   >
-                    ✕
+                    {EMOJI.ui.close}
                   </button>
                 </div>
               </div>
@@ -947,7 +947,7 @@ function HomeDashboardContent() {
               onClick={() => fxTap()}
               className="h-12 px-4 rounded-2xl ui-button ui-accent-1 text-ink text-display font-bold text-sm flex items-center transition-all duration-300 hover:scale-105 active:scale-95"
             >
-              Play ▶
+              {`Play ${EMOJI.action.play}`}
             </Link>
           </div>
         </div>
@@ -1026,7 +1026,7 @@ function HomeDashboardContent() {
                       onClick={() => setShowLockedPreview(null)}
                       className="absolute top-4 right-4 text-muted-light hover:text-text-secondary text-xl"
                     >
-                      ✕
+                      {EMOJI.ui.close}
                     </button>
 
                     {/* State preview */}
@@ -1260,7 +1260,7 @@ function StateDetailModal({
           onClick={onClose}
           className="absolute top-4 right-4 h-8 w-8 rounded-full bg-muted flex items-center justify-center text-text-secondary hover:bg-muted"
         >
-          ✕
+          {EMOJI.ui.close}
         </button>
 
         {/* State Display */}
@@ -1327,7 +1327,7 @@ function StateDetailModal({
           </div>
         ) : (
           <div className="roundepppd-2xl bg-info-soft border-2 border-info p-4">
-            <p className="text-h5 text-info mb-2">▶ In Progress</p>
+            <p className="text-h5 text-info mb-2">{`${EMOJI.action.play} In Progress`}</p>
             <p className="text-body text-accent-1">
               Complete 3 cards and take the quiz to unlock the next state!
             </p>
@@ -1350,7 +1350,7 @@ function StateDetailModal({
               }}
               className="flex-1 h-12 rounded-2xl bg-accent-1 text-display font-extrabold text-white shadow-lg hover:shadow-xl transition"
             >
-              {isDone ? `${EMOJI.achievement.explorer} Review` : "▶ Play"}
+              {isDone ? `${EMOJI.achievement.explorer} Review` : `${EMOJI.action.play} Play`}
             </button>
           )}
         </div>
