@@ -202,7 +202,8 @@ export function PostcardModal({
 
   return (
     <div
-      className="fixed inset-0 bg-black/30 z-50 flex items-end animate-fade-in"
+      className="fixed inset-0 z-50 flex items-end animate-fade-in"
+      style={{backgroundColor: 'var(--scrim)'}}
       onClick={onClose}
     >
       <div

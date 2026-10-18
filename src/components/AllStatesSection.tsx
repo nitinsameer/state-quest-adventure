@@ -11,18 +11,19 @@ import {
 import { INDIA_STATES } from "@/lib/states";
 import { STATE_ART } from "@/lib/state-art";
 import { fxTap } from "@/lib/fx";
+import { EMOJI } from "@/constants/emoji";
 
 export function AllStatesSection() {
   const [active, setActive] = useState(INDIA_STATES[0].name);
 
   return (
     <section>
-      <div className="mb-(--space-2) md:mb-(--space-3) flex items-end justify-between gap-(--gap-md) flex-wrap">
+      <div className="mb-8 md:mb-12 flex items-end justify-between gap-4 flex-wrap">
         <div>
           <h2 className="text-display text-2xl md:text-3xl font-extrabold">
             All {INDIA_STATES.length} State Screens
           </h2>
-          <p className="mt-(--space-0-25) text-sm font-bold text-muted-foreground">
+          <p className="mt-1 text-sm font-bold text-muted-foreground">
             Pick a state to see its full six-screen set — Intro, Learning Hub, Learning Card, Quiz,
             Correct Answer, Completed and Unlock — all generated from that state's own data.
           </p>
@@ -32,7 +33,7 @@ export function AllStatesSection() {
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-(--gap-base) mb-(--space-3) justify-center">
+      <div className="flex flex-wrap gap-3 mb-12 justify-center">
         {INDIA_STATES.map((s) => {
           const isActive = s.name === active;
           return (
@@ -42,12 +43,11 @@ export function AllStatesSection() {
                 fxTap();
                 setActive(s.name);
               }}
-              className={`rounded-lg px-(--padding-md) py-(--padding-xs) text-sm font-extrabold border-2 transition-colors flex items-center gap-(--gap-base) ${
+              className={`rounded-lg px-4 py-2 text-sm font-extrabold border-2 transition-colors flex items-center gap-3 ${
                 isActive
-                  ? "gradient-saffron border-transparent shadow-[var(--shadow-glow-orange)]"
-                  : "bg-card text-foreground border-border hover:border-saffron"
+                  ? "bg-accent-1 border-transparent shadow-elevated-2 text-accent-1-ink"
+                  : "bg-surface-card text-text-primary border-border-subtle hover:border-accent-1"
               }`}
-              style={isActive ? { color: "var(--action-primary-fg)" } : {}}
             >
               <img
                 src={STATE_ART[s.name]}
@@ -62,7 +62,7 @@ export function AllStatesSection() {
         })}
       </div>
 
-      <div className="flex flex-wrap gap-(--gap-xl) md:gap-(--gap-xl-plus) justify-center">
+      <div className="flex flex-wrap gap-12 md:gap-16 justify-center">
         <PhoneFrame label="State Intro" sublabel={active}>
           <StateIntroScreen key={active} stateName={active} />
         </PhoneFrame>

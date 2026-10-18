@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { EMOJI } from "@/constants/emoji";
 
 export const Route = createFileRoute("/privacy")({
   head: () => ({

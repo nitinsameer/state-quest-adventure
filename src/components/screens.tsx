@@ -13,6 +13,7 @@ import avatarSkiGoggles from "@/assets/avatars/avatar-ski-goggles.png";
 import avatarFarmerHat from "@/assets/avatars/avatar-farmer-hat.png";
 import avatarSportsCap from "@/assets/avatars/avatar-sports-cap.png";
 import avatarGirlFlower from "@/assets/avatars/avatar-girl-flower.png";
+import { EMOJI } from "@/constants/emoji";
 import { STATE_ART, TONE_GRADIENT, preloadStateArt } from "@/lib/state-art";
 import {
   getStateContent,
@@ -42,7 +43,6 @@ import { CardProgressBar } from "@/components/CardProgressBar";
 import { JourneyDestinationCard } from "@/components/JourneyDestinationCard";
 
 import { DailyGoalCard } from "@/components/DailyGoalCard";
-import { EMOJI } from "@/constants/emoji";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { lazy, Suspense } from "react";
 
@@ -641,7 +641,7 @@ function RecentlyCompletedCelebration({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 animate-fade-in">
+    <div className="fixed inset-0 flex items-center justify-center z-50 p-4 animate-fade-in" style={{backgroundColor: 'var(--scrim)'}}>
       {/* Backdrop click to close */}
       <div className="absolute inset-0" onClick={handleDismiss} aria-label="Close celebration" />
 
@@ -1013,7 +1013,7 @@ function HomeDashboardContent() {
 
         {/* Locked Card Preview Modal */}
         {showLockedPreview && (
-          <div className="fixed inset-0 bg-black/50 flex items-end justify-center z-50 p-4 animate-fade-in">
+          <div className="fixed inset-0 flex items-end justify-center z-50 p-4 animate-fade-in" style={{backgroundColor: 'var(--scrim)'}}>
             <div className="w-full max-w-sm bg-surface-card rounded-3xl shadow-2xl p-6 max-h-[80vh] overflow-y-auto animate-slide-up">
               {(() => {
                 const state = journey.find((s) => s.name === showLockedPreview);
@@ -1248,7 +1248,8 @@ function StateDetailModal({
 
   return (
     <div
-      className="fixed inset-0 bg-black/50 z-50 flex items-end animate-fade-in"
+      className="fixed inset-0 z-50 flex items-end animate-fade-in"
+      style={{backgroundColor: 'var(--scrim)'}}
       onClick={onClose}
     >
       <div
@@ -2254,7 +2255,7 @@ export function LearningHubScreen({
 
       {/* "All 6 cards done!" Decision Modal */}
       {showDecisionModal && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in">
+        <div className="fixed inset-0 z-50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in" style={{backgroundColor: 'var(--scrim)'}}>
           <div className="bg-action-primary rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden animate-in zoom-in-95 flex flex-col">
             {/* Header */}
             <div className="p-6 text-center">
@@ -2365,7 +2366,7 @@ function HubCard({
         </div>
       )}
       {locked && (
-        <div className="absolute top-2 right-2 h-7 w-7 rounded-full bg-black/50 text-text-primary flex items-center justify-center text-xs">
+        <div className="absolute top-2 right-2 h-7 w-7 rounded-full text-text-primary flex items-center justify-center text-xs" style={{backgroundColor: 'var(--scrim)'}}>
           {EMOJI.milestone.hundred}
         </div>
       )}
@@ -3081,7 +3082,7 @@ export function LearningCardScreen({
 
       {/* Audio Permission Prompt */}
       {showAudioPermissionPrompt && (
-        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{backgroundColor: 'var(--scrim)'}}>
           <div className="bg-surface-card rounded-3xl shadow-2xl max-w-sm w-full p-6 space-y-4 animate-in zoom-in-95">
             <div className="text-center">
               <div className="text-5xl mb-3">{EMOJI.audio.stories}</div>
@@ -3716,7 +3717,8 @@ function BadgeDetailModal({
 
   return (
     <div
-      className="fixed inset-0 bg-black/50 z-50 flex items-end animate-fade-in"
+      className="fixed inset-0 z-50 flex items-end animate-fade-in"
+      style={{backgroundColor: 'var(--scrim)'}}
       onClick={onClose}
     >
       <div
