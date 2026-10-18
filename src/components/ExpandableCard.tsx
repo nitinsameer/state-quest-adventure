@@ -203,7 +203,7 @@ export function ExpandableCard({
                 className="w-full flex items-center justify-between p-(--padding-sm) rounded-lg hover:bg-surface-sunken active:scale-95 transition bg-success-soft border border-success min-h-12 min-w-12"
               >
                 <span className="text-label font-bold text-success">
-                  {EMOJI.action.game} Try This Activity
+                  {EMOJI.learning.game} Try This Activity
                 </span>
                 <span
                   className="text-lg transition-transform"

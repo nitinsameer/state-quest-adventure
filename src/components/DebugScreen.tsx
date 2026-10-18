@@ -207,7 +207,7 @@ export function DebugScreen() {
               </div>
               {log.data && (
                 <div className="ml-2 text-muted-light text-xs mt-1">
-                  📊 {JSON.stringify(log.data).substring(0, 150)}
+                  {EMOJI.action.analytics} {JSON.stringify(log.data).substring(0, 150)}
                 </div>
               )}
               {log.stack && (
@@ -222,7 +222,7 @@ export function DebugScreen() {
 
       {/* Footer */}
       <div className="bg-surface-sunken border-t border-surface-muted p-(--padding-xs) text-xs" style={{color: "var(--text-muted)"}}>
-        <p>💡 Ctrl+D or tap corner 5x to toggle | Export logs for analysis</p>
+        <p>{EMOJI.learning.funFact} Ctrl+D or tap corner 5x to toggle | Export logs for analysis</p>
       </div>
     </div>
   );

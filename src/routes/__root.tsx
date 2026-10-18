@@ -459,7 +459,7 @@ function HydratedApp() {
       // Show celebration with confetti via celebration store
       showCelebration({
         title: `${EMOJI.feedback.success} Level ${currentLevel} - ${levelName}!`,
-        subtitle: `You're now a "${levelName}"!\nKeep exploring to reach the next milestone! 🚀`,
+        subtitle: `You're now a "${levelName}"!\nKeep exploring to reach the next milestone! ${EMOJI.action.rocket}`,
         icon: EMOJI.action.star,
         confetti: true,
         duration: 3500,

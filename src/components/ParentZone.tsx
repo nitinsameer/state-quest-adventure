@@ -294,7 +294,7 @@ export function ParentZoneScreen() {
 
             <div className="rounded-3xl bg-[var(--surface-subtle)] border border-[var(--border-default)] p-(--padding-md)">
               <div className="text-sm font-bold mb-(--space-0-5)" style={{color: "var(--text-primary)"}}>
-                💡 Insights
+                {EMOJI.learning.funFact} Insights
               </div>
               <div className="text-xs leading-relaxed" style={{color: "var(--text-secondary)"}}>
                 {estimatedHours < 5
