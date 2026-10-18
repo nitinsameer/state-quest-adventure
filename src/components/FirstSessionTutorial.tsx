@@ -147,7 +147,7 @@ export function FirstSessionTutorial({ onComplete, isVisible = true }: FirstSess
           variant: "primary",
         },
       ]}
-      footer={`💡 You can always come back to learn more by tapping the state cards!`}
+      footer={`${EMOJI.learning.funFact} You can always come back to learn more by tapping the state cards!`}
       maxWidth="max-w-sm"
     />
   );

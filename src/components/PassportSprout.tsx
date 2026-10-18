@@ -112,7 +112,7 @@ export function PassportSprout() {
                   decoding="async"
                 />
                 {isUnlocked && <div className="text-xs font-bold text-warning">Tap!</div>}
-                {!isUnlocked && <div className="text-lg">🔒</div>}
+                {!isUnlocked && <div className="text-lg">{EMOJI.action.lock}</div>}
               </button>
             );
           })}
@@ -122,7 +122,7 @@ export function PassportSprout() {
         {statesThisPage.some((s) => !progress.completed.includes(s.name)) && (
           <div className="bg-accent-5-soft border-2 border-accent-5 rounded-2xl p-3 text-center">
             <div className="text-sm font-bold text-accent-5-ink">
-              🌟 Complete quizzes to unlock more!
+              {EMOJI.action.star} Complete quizzes to unlock more!
             </div>
           </div>
         )}

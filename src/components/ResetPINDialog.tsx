@@ -59,7 +59,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
         const result = await verifyPin(newPin);
 
         if (result.lockout) {
-          setError(`🔒 Locked. Try again in ${result.remainingMinutes}m`);
+          setError(`${EMOJI.action.lock} Locked. Try again in ${result.remainingMinutes}m`);
           fxWrong();
           setPin("");
         } else if (result.success) {

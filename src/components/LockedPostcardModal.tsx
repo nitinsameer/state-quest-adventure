@@ -33,7 +33,7 @@ export function LockedPostcardModal({ destination, onClose }: LockedPostcardModa
       >
         {/* Header */}
         <div className="text-center mb-6">
-          <div className="text-5xl mb-3">🔒</div>
+          <div className="text-5xl mb-3">{EMOJI.action.lock}</div>
           <h2 className="text-2xl font-extrabold text-ink">Postcard Locked</h2>
         </div>
 

@@ -1660,7 +1660,7 @@ export function JourneyMapScreen() {
             <div className="text-display font-extrabold text-text-on-header">India Journey</div>
             <div className="text-sm font-bold text-text-on-header flex items-center gap-2">
               {p.streak > 0 && (
-                <span className="inline-flex items-center gap-0.5 px-2 py-1 bg-white/30 rounded-full">
+                <span className="inline-flex items-center gap-0.5 px-2 py-1 bg-text-on-header/30 rounded-full">
                   <span>{EMOJI.feedback.trophy}</span>
                   <span className="font-extrabold">{p.streak}-day streak!</span>
                 </span>
@@ -1674,7 +1674,7 @@ export function JourneyMapScreen() {
 
         {/* Progress Bar - inside header */}
         <div className="mt-3 animate-fade-in" style={{ animationDelay: "50ms" }}>
-          <div className="h-3 bg-white/30 rounded-full overflow-hidden shadow-inner mb-2">
+          <div className="h-3 bg-text-on-header/30 rounded-full overflow-hidden shadow-inner mb-2">
             <div
               className="h-full bg-accent-2-soft rounded-full transition-all duration-500"
               style={{ width: `${(completedStates / totalStates) * 100}%` }}
@@ -3495,7 +3495,7 @@ export function CorrectAnswerScreen({
 
       <div className="flex-1 flex flex-col items-center justify-center px-6 relative">
         <div className="relative">
-          <div className="absolute inset-0 blur-2xl bg-white/40 rounded-full" />
+          <div className="absolute inset-0 blur-2xl bg-accent-3-soft rounded-full" />
           <div className="relative h-32 w-32 rounded-full ui-card ui-accent-3 flex items-center justify-center shadow-2xl">
             <div className="text-6xl">{EMOJI.action.checkButton}</div>
           </div>
@@ -3951,7 +3951,7 @@ export function BadgesScreen() {
                   </div>
 
                   {/* Status - Kid Friendly */}
-                  <div className="mt-1 pt-3 border-t border-white/20 w-full">
+                  <div className="mt-1 pt-3 border-t border-text-on-header/20 w-full">
                     {badge.unlocked ? (
                       <div className="flex flex-col gap-1">
                         <div className="text-lg font-extrabold">✓ You Did It!</div>
@@ -4779,7 +4779,7 @@ export function LoadingScreen() {
           Packing camel snacks {EMOJI.feedback.trophy}
         </div>
       </div>
-      <div className="mt-6 w-56 h-2 rounded-full bg-white/70 overflow-hidden">
+      <div className="mt-6 w-56 h-2 rounded-full bg-text-on-header/70 overflow-hidden">
         <div className="h-full w-2/3 gradient-explorer animate-pulse" />
       </div>
     </div>

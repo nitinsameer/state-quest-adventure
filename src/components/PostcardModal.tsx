@@ -263,7 +263,7 @@ export function PostcardModal({
         >
           {isSaving ? (
             <>
-              <span className="animate-spin">⏳</span>
+              <span className="animate-spin">{EMOJI.ui.pending}</span>
               Saving...
             </>
           ) : (
