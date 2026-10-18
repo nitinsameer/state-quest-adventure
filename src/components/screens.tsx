@@ -381,6 +381,14 @@ export function CreateProfileScreen() {
 
   const p = useProgress();
   const navigate = useNavigate();
+
+  // CRITICAL FIX #1: Guard against re-entry post-onboarding
+  // If user already has a profile, redirect to home (shouldn't access profile creation again)
+  useEffect(() => {
+    if (p.onboarded) {
+      navigate({ to: "/home" });
+    }
+  }, [p.onboarded, navigate]);
   const [avatar, setAvatar] = useState<AvatarId>((p.avatar as AvatarId) || avatarImages[0].id);
   const [ageBand, setAgeBand] = useState(p.ageBand);
   const [saved, setSaved] = useState(false);

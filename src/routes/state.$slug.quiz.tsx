@@ -48,6 +48,13 @@ function Quiz() {
   const { slug } = Route.useParams();
   const { name } = Route.useLoaderData();
   const navigate = useNavigate();
+  
+  // FIX #4: Handle back button in quiz - back cancels quiz and goes to learn hub
+  // Quiz progress is NOT saved when back is pressed
+  const handleQuizBack = () => {
+    navigate({ to: "/state/$slug/learn", params: { slug } });
+  };
+
   return (
     <QuizScreen
       key={slug}

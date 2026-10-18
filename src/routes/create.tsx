@@ -1,7 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CreateProfileScreen } from "@/components/screens";
+import { getProgress } from "@/lib/progress";
 
 export const Route = createFileRoute("/create")({
+  beforeLoad: async ({ navigate }) => {
+    // CRITICAL FIX #1: Prevent re-entry to age selection after onboarding
+    // If user is already onboarded, they shouldn't be able to re-access /create
+    const progress = getProgress();
+    if (progress.onboarded) {
+      navigate({ to: "/home" });
+    }
+  },
   head: () => ({
     meta: [
       { title: "Create Your Explorer — India Explorer" },

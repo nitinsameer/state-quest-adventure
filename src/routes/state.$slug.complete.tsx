@@ -59,9 +59,10 @@ function Complete() {
     return null;
   }
 
-  // Android back button: navigate to learning hub, not back into quiz
+  // Android back button: FIX #3 - Back from celebration goes to /home, not back into quiz
+  // This prevents users from going back through quiz navigation history
   useAndroidBackButton(() => {
-    goToReplay();
+    navigate({ to: "/home" });
   });
 
   const goToPostcard = () => navigate({ to: "/state/$slug/postcard", params: { slug } });
