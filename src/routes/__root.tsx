@@ -289,6 +289,9 @@ function HydratedApp() {
   // This ensures hook count/order is consistent across renders
   const progress = useProgress();
 
+  // Track consent granted state to re-render when gate completes
+  const [consentGranted, setConsentGranted] = useState(hasFeatureConsent("analytics"));
+
   // Get celebration store show method at top level (hooks must be called before any conditionals)
   const showCelebration = useCelebrationStore((state) => state.show);
 
@@ -560,41 +563,44 @@ function HydratedApp() {
   }, []);
 
   const innerComponent = (
-    <>
-      {/* COPPA Compliance: Parent consent gate BEFORE any app features */}
-      <ParentConsentGate />
-      <QueryClientProvider client={queryClient}>
-        <div
-          className="h-full w-full flex flex-col bg-surface-raised relative"
+    <QueryClientProvider client={queryClient}>
+      <div
+        className="h-full w-full flex flex-col bg-surface-raised relative"
+        suppressHydrationWarning
+      >
+        {/* Scrollable content area - conditional padding: pb-safe for pre-auth, pb-[80px] for authenticated */}
+        <main
+          className={`flex-1 overflow-auto pt-safe px-safe ${scrollContainerPadding}`}
           suppressHydrationWarning
         >
-          {/* Scrollable content area - conditional padding: pb-safe for pre-auth, pb-[80px] for authenticated */}
-          <main
-            className={`flex-1 overflow-auto pt-safe px-safe ${scrollContainerPadding}`}
-            suppressHydrationWarning
-          >
-            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-            <Outlet />
-          </main>
+          {/* Parent Consent Gate - conditional on ageBand set AND no consent yet */}
+          {progress.ageBand && !consentGranted ? (
+            <ParentConsentGate onComplete={() => setConsentGranted(true)} />
+          ) : (
+            <>
+              {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+              <Outlet />
+            </>
+          )}
+        </main>
+      </div>
+
+      {/* Global BottomNav - positioned fixed OUTSIDE flex container to prevent flex layout interference */}
+      {shouldShowBottomNav && (
+        <div
+          ref={navRef}
+          className="fixed bottom-0 left-0 right-0 z-20 bg-surface-raised pb-[env(safe-area-inset-bottom)]"
+        >
+          <BottomNav active={getActiveTab()} />
         </div>
+      )}
 
-        {/* Global BottomNav - positioned fixed OUTSIDE flex container to prevent flex layout interference */}
-        {shouldShowBottomNav && (
-          <div
-            ref={navRef}
-            className="fixed bottom-0 left-0 right-0 z-20 bg-surface-raised pb-[env(safe-area-inset-bottom)]"
-          >
-            <BottomNav active={getActiveTab()} />
-          </div>
-        )}
-
-        <UnlockCelebration />
-        <CelebrationPopupProvider />
-        <BottomToastProvider />
-        {/* FIX #19: Debug screen only in development mode */}
-        {import.meta.env.DEV && <DebugScreen />}
-      </QueryClientProvider>
-    </>
+      <UnlockCelebration />
+      <CelebrationPopupProvider />
+      <BottomToastProvider />
+      {/* FIX #19: Debug screen only in development mode */}
+      {import.meta.env.DEV && <DebugScreen />}
+    </QueryClientProvider>
   );
 
   return <RootErrorBoundary>{innerComponent}</RootErrorBoundary>;
