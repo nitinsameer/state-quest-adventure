@@ -1,242 +1,258 @@
-# Journey Screen Redesign — Implementation Plan
+# Journey Map Screen Redesign Plan
 
-**Status**: Ready for implementation  
-**Scope**: Visual + UX polish only (no logic changes)  
-**Single Source of Truth**: `p.completed` is the authoritative progress marker  
+## Problem Statement
+JourneyMapScreen currently uses hardcoded `gradient-saffron` (orange) for the header, making it non-responsive to theme changes. When users select different themes, the header remains orange while other screens (Home, Explorer) update correctly. Additionally, the overall layout and spacing lacks the premium polish seen in ExplorerScreen (PassportSeedling component).
+
+## Target Outcome
+JourneyMapScreen should:
+1. Use theme-aware header styling matching Home screen's `bg-bg-header` token approach
+2. Match Explorer's premium visual design (spacing, shadows, card styling)
+3. Apply premium typography and layout patterns
+4. Maintain all existing functionality (region tabs, card navigation, state display)
 
 ---
 
-## Key Findings
+## Design Decisions
 
-### Existing Architecture
-- **Progress source**: `p.completed` (string array of state names) in `src/lib/progress.ts`
-- **States data**: `INDIA_STATES` in `src/lib/states.ts`; 36 items (28 states + 8 UTs), alphabetically sorted by category
-- **State names**: Abbreviated in some cases (e.g., "A. Pradesh", "H. Pradesh"); full names stored in `state.name`
-- **Regions**: Defined in `src/lib/passport-helpers.ts` as `REGIONS` object with 6 regions + 1 UT region
-- **Milestone logic**: Already exists in `IndiaProgressMap.tsx` using count thresholds [5, 10, 15, 20, 25, 30, 36]
-- **Current header**: Uses percentage-based milestone messaging, needs replacement with count-based approach
-- **State status**: Already implemented as "done" | "current" | "available" (via `statesWithProgress`)
-- **BottomNav**: Located in `screens.tsx` line ~207; labels are: Home, Journey, Explorer, Badges, Me
-- **Bottom padding**: States grid may be hidden behind navigation; needs explicit bottom padding
+### 1. Header Styling Strategy
+**Decision**: Replace `gradient-saffron` with `bg-bg-header` CSS token reference
+**Rationale**: 
+- Home screen uses `bg-bg-header` which is theme-aware and defined per theme in clay.css, aero.css, etc.
+- This is the established pattern in the codebase for headers that respond to theme changes
+- Maintains visual consistency across Home, Journey, and other screens
+- No new class creation needed; uses existing design token system
 
-### No Breaking Changes Needed
-- All existing state logic works; only UI text and styling change
-- `statesWithProgress(p)` already marks states as available/current/done correctly
-- No new progress tracking system needed
-- Region collapse/expand already has `expandedRegion` state variable (defined but not wired)
+### 2. Background Styling Strategy
+**Decision**: Replace `gradient-sky` with `bg-bg-page` CSS token
+**Rationale**:
+- `gradient-sky` is hardcoded (light blue gradient)
+- `bg-bg-page` is theme-aware and designed for page backgrounds
+- Ensures Journey page respects theme color scheme
+- Matches Home and Explorer page backgrounds
+
+### 3. Premium Layout Improvements
+**Decision**: Match Home screen header structure and spacing exactly
+**Rationale**:
+- Home header: `px-6 pt-4 pb-5 bg-bg-header rounded-b-[32px]`
+- Journey header: currently `px-6 pt-3 pb-4 gradient-saffron rounded-b-3xl`
+- Standardizing spacing ensures consistent visual hierarchy
+- Rounded corners already match (32px vs 3xl = ~30px)
+
+### 4. Card Styling (JourneyDestinationCard)
+**Decision**: Cards already use tone-specific CSS tokens; no changes needed to card backgrounds
+**Rationale**:
+- Cards use `var(--accent-1-soft)`, `var(--accent-2-soft)` etc., which are theme-aware
+- Status indicators (locked/completed) already use token references
+- Buttons already use `ui-accent-1`, `ui-accent-3` classes which are theme-aware
+- No additional changes needed for card theming
+
+### 5. Region Tab Pills
+**Decision**: Keep existing styling; already uses `ui-accent-1` and `ui-accent-1-soft` classes
+**Rationale**:
+- These classes are theme-aware and respond to CSS token changes
+- Styling already matches Home and Explorer region tabs
+- No changes required
+
+### 6. Typography and Spacing
+**Decision**: Maintain all existing typography but ensure premium feel through consistent spacing
+**Rationale**:
+- Journey text is already using semantic CSS variables (font-bold, font-extrabold, etc.)
+- Spacing improvements come from header restructuring, not typography changes
+- Card layout already has good premium spacing with padding variables
 
 ---
 
 ## Implementation Plan
 
-### 1. Create Motivational Message Function
-**What**: Add `getJourneyMotivationalMessage(completed: number)` helper function that returns both line 1 and line 2 text based on count milestones.
+### Phase 1: Update JourneyMapScreen Header
+**What**: Replace hardcoded orange gradient header with theme-aware styling
+**Files**: `src/components/screens.tsx`
+**Changes**:
+- Line ~1590: Change `gradient-saffron rounded-b-3xl` to `bg-bg-header rounded-b-[32px]`
+- Change `pt-3 pb-4` to `pt-4 pb-5` for premium spacing consistency with Home
+- Verify progress bar styling remains visible (white/translucent colors are still appropriate)
+- Keep all other header elements unchanged (avatar, streak badge, progress info)
 
-**File**: `src/lib/journey-messaging.ts` (new file)
-
-**Details**:
-```typescript
-export function getJourneyMotivationalMessage(completed: number): { line1: string; line2: string } {
-  const MILESTONES = [5, 10, 15, 20, 25, 30, 36];
-  
-  if (completed === 0) {
-    return { line1: "🚀 Start exploring!", line2: "🌱 Next milestone: 5 states" };
-  } else if (completed === 36) {
-    return { line1: "👑 India Master!", line2: "🎉 You explored all 36 destinations!" };
-  } else if (completed === 35) {
-    return { line1: "🏆 Almost there!", line2: "👑 1 more state to become India Master!" };
-  } else if (completed >= 30) {
-    return { line1: "🏆 Almost there!", line2: "👑 Next milestone: 36 states" };
-  } else if (completed === 27 || completed === 28 || completed === 29) {
-    return { line1: "🏆 Almost there!", line2: "👑 Next milestone: 30 states" };
-  } else if (completed >= 25) {
-    return { line1: "🌳 Halfway there!", line2: "🏆 Next milestone: 30 states" };
-  } else if (completed === 20 || completed === 21 || completed === 22 || completed === 23 || completed === 24) {
-    return { line1: "🌳 Halfway there!", line2: "🏆 Next milestone: 25 states" };
-  } else if (completed >= 15) {
-    return { line1: "🌿 Great start! Keep going!", line2: "🏆 Next milestone: 20 states" };
-  } else if (completed >= 10) {
-    return { line1: "🌿 Great start! Keep going!", line2: "🌿 Next milestone: 15 states" };
-  } else if (completed >= 5) {
-    return { line1: "🌱 Great start! Keep going!", line2: "🌿 Next milestone: 10 states" };
-  } else {
-    return { line1: "🌱 Start exploring!", line2: "🌱 Next milestone: 5 states" };
-  }
-}
+**Verify**: 
+```bash
+npm run build
+npm run lint -- src/components/screens.tsx
 ```
+- Build succeeds with no CSS errors
+- Header displays with correct theme-aware background color
+- No hardcoded colors flagged by `no-hardcoded-colors` ESLint rule
 
-**Verify**: `npx vitest run src/lib` — function exports correctly and returns correct messages for all thresholds (0, 1-4, 5, 6-9, 10, 11-14, 15, 16-19, 20, 21-24, 25, 26-29, 30, 31-34, 35, 36).
+### Phase 2: Update Background Color
+**What**: Replace `gradient-sky` with theme-aware page background
+**Files**: `src/components/screens.tsx`
+**Changes**:
+- Line ~1543: Change `gradient-sky` to `bg-bg-page`
+- This change makes the entire Journey page background theme-responsive
+
+**Verify**:
+```bash
+npm run build
+npm run lint -- src/components/screens.tsx
+```
+- Build succeeds
+- Background color changes when theme is switched in ThemesScreen
+- No ESLint color warnings
+
+### Phase 3: Verify Card and Tab Styling
+**What**: Confirm JourneyDestinationCard and region tabs are already theme-aware
+**Files**: `src/components/JourneyDestinationCard.tsx` (review only, no changes)
+**Verification Steps**:
+- Open JourneyMapScreen in browser
+- Switch themes in Profile → Themes
+- Verify: header background changes, cards update accent colors, tabs are responsive
+- All elements adapt to theme without manual color overwrites
+
+**Verify**:
+```bash
+npm run build
+npm run lint
+```
+- No linting errors related to hardcoded colors
+- No new CSS warnings
+
+### Phase 4: Cross-Theme Testing
+**What**: Ensure redesigned header works across all themes
+**Verification Steps**:
+1. Start the app and navigate to Journey Map
+2. Open Profile → Themes
+3. Test each theme: Clay, Aero, Cartoon/Comic, Glassmorphism, Skeumorphism
+4. For each theme verify:
+   - Header background color is correct and distinct from Home/Explorer
+   - Progress bar is visible and readable
+   - Avatar and streak badge are visible
+   - Region tabs are styled correctly
+   - Cards display with appropriate accent colors
+5. Navigate Home → Journey → Explorer → Home and verify no visual regressions
+6. Check that Journey header matches Home header design language
+
+**Verify**:
+```bash
+npm run build && npm start
+```
+- All themes render correctly without layout breaks
+- No CSS warnings in console
+- Visual consistency across screens
 
 ---
 
-### 2. Update Top Header — Progress Section
-**What**: Replace percentage-based milestone text with count-based motivational messages using the new helper.
+## Risk Assessment
 
-**File**: `src/components/screens.tsx` lines ~1380–1395
+### Low Risk
+- Header color change: `gradient-saffron` → `bg-bg-header` is a direct CSS token swap with no logic changes
+- Background color change: `gradient-sky` → `bg-bg-page` is a direct CSS token swap
+- These are the same patterns used throughout the codebase
 
-**Current code**:
-```jsx
-{completedStates < 9 && `🎯 25% milestone: ${Math.max(0, 9 - completedStates)} more states`}
-{completedStates >= 9 && completedStates < 18 && `🌎 50% milestone: ${Math.max(0, 18 - completedStates)} more states`}
-{completedStates >= 18 && completedStates < 27 && `🏁 75% milestone: ${Math.max(0, 27 - completedStates)} more states`}
-{completedStates >= 27 && `👑 Explore the final states to become India Master!`}
-```
+### Verified Not Broken
+- Card component styling: Already uses CSS tokens throughout
+- Region tabs: Already use `ui-accent-*` classes (theme-aware)
+- All buttons and interactive elements: Already use token-based classes
+- No emoji or hardcoded colors in changes
 
-**New code**:
-```jsx
-import { getJourneyMotivationalMessage } from "@/lib/journey-messaging";
-
-// At component top, after other hooks:
-const motivational = getJourneyMotivationalMessage(completedStates);
-
-// In JSX, replace the milestone text with:
-<div className="text-xs font-bold text-white/80 mt-2">
-  <div>{motivational.line1}</div>
-  <div>{motivational.line2}</div>
-</div>
-```
-
-**Verify**: Run dev server, navigate to `/journey`, check that header shows correct messages for 0, 5, 10, 15, 20, 25, 30, 35, 36 states completed.
+### What Will NOT Change
+- Region tab functionality and behavior
+- Card interaction patterns (onStart, onReplay callbacks)
+- Progress calculation and display
+- State navigation logic
+- StateIntroScreen, LearningHubScreen entry points
 
 ---
 
-### 3. Replace State Short Names with Full Names
-**What**: Change all state card labels from abbreviated form (e.g., "A. Pradesh") to full names (e.g., "Andhra Pradesh").
+## Compliance with ESLint Rules
 
-**File**: `src/components/screens.tsx` lines ~1704, ~1784
+### No-Hardcoded-Colors Rule
+- ✅ Changes remove hardcoded gradients (oklch values in gradient-saffron)
+- ✅ Replace with CSS var() tokens: `bg-bg-header` resolves to `var(--bg-header)`
+- ✅ No new inline style objects with hardcoded colors added
+- ✅ All changes use existing CSS utility classes
 
-**Current code**:
-```jsx
-<div className="text-xs font-extrabold leading-tight">{state.short}</div>
+### No-Hardcoded-Emoji Rule
+- ✅ Header already uses EMOJI constants (EMOJI.feedback.trophy for streak)
+- ✅ No changes to emoji in this redesign
+- ✅ JourneyDestinationCard already uses EMOJI constants (EMOJI.action.play, EMOJI.action.replay)
+
+---
+
+## Verification Checklist
+
+- [ ] Header gradient class changed from `gradient-saffron` to `bg-bg-header`
+- [ ] Header spacing updated to `pt-4 pb-5` (from `pt-3 pb-4`)
+- [ ] Header border-radius is `rounded-b-[32px]`
+- [ ] Page background changed from `gradient-sky` to `bg-bg-page`
+- [ ] `npm run build` passes with no errors
+- [ ] `npm run lint` finds no hardcoded-color or hardcoded-emoji violations
+- [ ] Journey header visually matches Home header design
+- [ ] Theme switching works correctly (header background changes per theme)
+- [ ] All region tabs display correctly
+- [ ] Cards render with correct accent colors
+- [ ] Navigation (home → journey → explorer → home) works without visual regressions
+- [ ] Progress bar and streak badge remain visible in all themes
+
+---
+
+## Files to Modify
+
+1. **src/components/screens.tsx**
+   - Line ~1543: Page background
+   - Line ~1590: Header styling (sticky div with gradient-saffron)
+   - Total changes: 2 CSS class updates
+   - No logic changes
+
+2. **No other files need modification**
+   - JourneyDestinationCard already uses theme-aware tokens
+   - Region tab styling already uses theme-aware classes
+   - Region pill styling already uses ui-accent-* classes
+
+---
+
+## Before/After Code Snippets
+
+### Change 1: Page Background
+**Before**:
+```tsx
+<div className="h-full w-full gradient-sky relative overflow-hidden flex flex-col">
 ```
 
-**New code**:
-```jsx
-<div className="text-xs font-extrabold leading-tight">{state.name}</div>
+**After**:
+```tsx
+<div className="h-full w-full bg-bg-page relative overflow-hidden flex flex-col">
 ```
 
-**Also update**: `src/components/PassportSapling.tsx` line ~116 and `src/components/PassportMightyTree.tsx` line ~170 (same change).
-
-**Verify**: `npm run build` succeeds; navigate to `/journey`, `/explorer`, and `/badges` screens and confirm full state names display without text overflow (may need to adjust card height or use 2-line text with `line-clamp-2`).
-
----
-
-### 4. Fix Bottom Navigation Label (Optional)
-**What**: If routing allows, rename "Explorer" tab to "Explore" for consistency.
-
-**File**: `src/components/screens.tsx` line ~213
-
-**Current code**:
-```typescript
-{ id: "explorer", icon: "🔍", label: "Explorer", to: "/explorer" },
+### Change 2: Header Styling
+**Before**:
+```tsx
+<div className="sticky top-0 z-40 px-6 pt-3 pb-4 gradient-saffron rounded-b-3xl relative overflow-hidden animate-fade-in shadow-elevated-2">
 ```
 
-**New code**:
-```typescript
-{ id: "explorer", icon: "🔍", label: "Explore", to: "/explorer" },
+**After**:
+```tsx
+<div className="sticky top-0 z-40 px-6 pt-4 pb-5 bg-bg-header rounded-b-[32px] relative overflow-hidden animate-fade-in shadow-elevated-2">
 ```
 
-**Risk**: Routing to `/explorer` must remain the same. Label change is UI only.
-
-**Verify**: `npm run build` and test navigation — verify that clicking "Explore" still navigates to `/explorer` (route handler).
-
 ---
 
-### 5. Add Bottom Padding to Journey Scroll Container
-**What**: Ensure the final state card and Union Territories section can scroll completely above the bottom navigation without being hidden.
+## Testing Commands
 
-**File**: `src/components/screens.tsx` line ~1561 (the scroll container div)
+```bash
+# Run full build (catches Tailwind and type errors)
+npm run build
 
-**Current code**:
-```jsx
-<div className="relative flex-1 mx-3 mt-2 rounded-[28px] overflow-y-auto overflow-x-hidden animate-fade-in" style={{ animationDelay: "200ms" }}>
-  {/* Regional sections ... */}
-  <div className="relative w-full px-4 space-y-6 py-6">
+# Run linter (checks ESLint rules including hardcoded-colors and hardcoded-emoji)
+npm run lint
+
+# Run specific file linting
+npx eslint src/components/screens.tsx
+
+# Start dev server for manual theme testing
+npm start
 ```
 
-**New code**:
-```jsx
-<div className="relative flex-1 mx-3 mt-2 rounded-[28px] overflow-y-auto overflow-x-hidden animate-fade-in" style={{ animationDelay: "200ms" }}>
-  {/* Regional sections ... */}
-  <div className="relative w-full px-4 space-y-6 py-6 pb-24">
-```
-
-**Why**: `pb-24` (6rem / 96px) provides clearance for the fixed bottom nav (which is ~60px) plus safe area padding.
-
-**Verify**: Run dev server on mobile viewport (~375px width), scroll to bottom of Journey screen, confirm Union Territories section and final state cards are fully visible above the bottom nav with no overlap.
-
 ---
 
-### 6. Display Full State Names in Regional Progress
-**What**: State cards in grid should show full state name on one or two lines. Adjust card height if needed to fit text.
+## Summary
 
-**File**: `src/components/screens.tsx` lines ~1703–1704 (state card rendering)
-
-**Current approach**: `state.short` is used, which abbreviates names.
-
-**New approach**: Use `state.name` instead. For long names (e.g., "Dadra & Nagar Haveli and Daman & Diu"), the card will wrap to 2 lines if needed.
-
-**CSS adjustment** (if text overflows):
-- Increase card padding slightly or reduce image size
-- Use `line-clamp-2` on the text div to prevent overflow
-- Adjust grid gap if necessary using existing `gap-[--gap-base]` token
-
-**Verify**: Visual inspection on `/journey` — all state names display clearly, cards remain aligned in grid, no text cutoff.
-
----
-
-### 7. Ensure Region Progress Uses Shared State Source
-**What**: Confirm that region progress calculations use the same `p.completed` source.
-
-**File**: `src/components/screens.tsx` lines ~1660–1682 (region header rendering)
-
-**Current logic**:
-```typescript
-const regionDone = regionStates.filter((s) => s.status === "done").length;
-```
-
-**Status quo**: This is correct — `s.status === "done"` is set by `statesWithProgress(p)` which uses `p.completed.includes(s.name)`. No change needed.
-
-**Verify**: Confirm that region progress percentages always match the individual state statuses by checking `/journey` at 5, 10, 15, 20 completed states.
-
----
-
-### 8. Wire Expand/Collapse (Deferred)
-**What**: The `expandedRegion` state variable exists but is not wired to region headers. If collapse/expand is desired, it can be added after this redesign.
-
-**Current status**: Not implemented. Chevron icons would be interactive if this were enabled.
-
-**Verify**: This is a deferred feature. Plan does not include it. Future task only.
-
----
-
-## Terminology & Style Guide
-
-Use throughout the redesign:
-- **"states & UTs explored"** instead of "places explored"
-- **Full state names**: Andhra Pradesh (not A. Pradesh), Himachal Pradesh (not H. Pradesh), Uttar Pradesh (not U. Pradesh), Madhya Pradesh (not M. Pradesh), West Bengal (not W. Bengal), Jammu & Kashmir (not J & K), Dadra & Nagar Haveli and Daman & Diu (not DNH & DD)
-- **Spacing**: Use existing tokens: `--padding-base` (16px), `--gap-base` (12px)
-- **Colors & gradients**: Reuse existing region gradients from `REGIONS` object
-- **Icons**: Use existing emojis from state data
-
----
-
-## Testing Checklist
-
-- [ ] Header motivational messages update correctly at all count thresholds
-- [ ] Full state names display without overflow on all state cards
-- [ ] Bottom nav does not overlap content; scroll to bottom shows entire Union Territories section
-- [ ] Region progress bars update as states are marked complete
-- [ ] "Explorer" → "Explore" label change (if implemented) does not break routing
-- [ ] Build completes without errors: `npm run build`
-- [ ] Milestone celebration popups still trigger at 25%, 50%, 75%, 100% (legacy feature, no change)
-
----
-
-## Notes
-
-- **No changes to progression logic**: `p.completed` remains the single source of truth
-- **No new state management**: `expandedRegion` exists but is not wired in this redesign
-- **Non-breaking**: All changes are UI/styling only
-- **Educational focus**: Using full state names reinforces learning goal
-- **Accessibility**: Full names are more readable for children; existing ARIA labels remain
+This plan makes JourneyMapScreen theme-responsive by replacing two hardcoded gradient classes with existing CSS token references. The changes are minimal (2 lines), follow established codebase patterns, and align Journey design with Home screen premium styling. No logic changes, no component refactoring, and no risk to existing functionality.

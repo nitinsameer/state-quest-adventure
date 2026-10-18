@@ -203,6 +203,13 @@ export const EMOJI = {
     speaker: "🔊",
   },
 
+  // UI elements
+  ui: {
+    close: "✕",
+    pause: "⏸️",
+    delete: "❌",
+  },
+
   // Other icons
   icons: {
     language: "🌍",

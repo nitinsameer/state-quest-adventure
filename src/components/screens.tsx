@@ -167,7 +167,7 @@ function getAvatarName(avatarId: string): string {
 function Cloud({ className = "" }: { className?: string }) {
   return (
     <svg viewBox="0 0 120 60" className={className}>
-      <g fill="#ffffff">
+      <g fill="var(--surface-raised)">
         <ellipse cx="30" cy="38" rx="24" ry="18" />
         <ellipse cx="58" cy="28" rx="28" ry="22" />
         <ellipse cx="88" cy="40" rx="22" ry="16" />
@@ -1045,11 +1045,11 @@ function HomeDashboardContent() {
 
                     {/* State facts */}
                     <div className="space-y-3">
-                      <div className="p-4 rounded-2xl bg-orange-soft border-l-4 border-orange shadow-elevated-1 hover:shadow-elevated-2 transition-all">
-                        <div className="text-label text-orange uppercase tracking-wider font-bold">
+                      <div className="p-4 rounded-2xl bg-warning-soft border-l-4 border-warning shadow-elevated-1 hover:shadow-elevated-2 transition-all">
+                        <div className="text-label text-warning uppercase tracking-wider font-bold">
                           {EMOJI.utility.capital} Monument
                         </div>
-                        <div className="text-body text-orange mt-2 font-semibold">
+                        <div className="text-body text-warning mt-2 font-semibold">
                           {state.monumentName}
                         </div>
                       </div>
@@ -1072,11 +1072,11 @@ function HomeDashboardContent() {
                         </div>
                       </div>
 
-                      <div className="p-4 rounded-2xl bg-purple-soft border-l-4 border-purple shadow-elevated-1 hover:shadow-elevated-2 transition-all">
-                        <div className="text-label text-muted-dark uppercase tracking-wider font-bold">
+                      <div className="p-4 rounded-2xl bg-purple-soft border-l-4 border-accent-5 shadow-elevated-1 hover:shadow-elevated-2 transition-all">
+                        <div className="text-label text-accent-5-ink uppercase tracking-wider font-bold">
                           {EMOJI.action.lock} Unlock Path
                         </div>
-                        <div className="text-body text-muted-dark mt-2 font-semibold">
+                        <div className="text-body text-accent-5-ink mt-2 font-semibold">
                           {getUnlockRequirement(state.name)}
                         </div>
                       </div>
@@ -3827,7 +3827,7 @@ export function BadgesScreen() {
           }}
           className={`px-4 py-3 rounded-t-lg font-bold text-sm transition ${
             activeTab === "achievements"
-              ? "bg-transparent border-b-2 border-orange text-orange"
+              ? "bg-transparent border-b-2 border-warning text-warning"
               : "text-text-secondary hover:text-muted-dark"
           }`}
         >
@@ -3840,7 +3840,7 @@ export function BadgesScreen() {
           }}
           className={`px-4 py-3 rounded-t-lg font-bold text-sm transition ${
             activeTab === "states"
-              ? "bg-transparent border-b-2 border-orange text-orange"
+              ? "bg-transparent border-b-2 border-warning text-warning"
               : "text-text-secondary hover:text-muted-dark"
           }`}
         >
