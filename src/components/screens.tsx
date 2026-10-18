@@ -666,16 +666,16 @@ function RecentlyCompletedCelebration({
           {/* Stats Grid - Show earned rewards (real values) */}
           <div className="grid grid-cols-3 gap-3 text-center">
             {earnedBadgeIds.length > 0 && (
-              <div className="bg-white/90 backdrop-blur rounded-xl p-3">
+              <div className="bg-surface-raised backdrop-blur rounded-xl p-3">
                 <div className="text-sm opacity-90 font-semibold text-ink">Badges</div>
                 <div className="text-2xl font-bold mt-1 text-ink">+{earnedBadgeIds.length}</div>
               </div>
             )}
-            <div className="bg-white/90 backdrop-blur rounded-xl p-3">
+            <div className="bg-surface-raised backdrop-blur rounded-xl p-3">
               <div className="text-sm opacity-90 font-semibold text-ink">XP</div>
               <div className="text-2xl font-bold mt-1 text-ink">+{totalXp}</div>
             </div>
-            <div className="bg-white/90 backdrop-blur rounded-xl p-3">
+            <div className="bg-surface-raised backdrop-blur rounded-xl p-3">
               <div className="text-sm opacity-90 font-semibold text-ink">Stamp</div>
               <img
                 src={STATE_ART[stateName]}
@@ -2365,7 +2365,7 @@ function HubCard({
         </div>
       )}
       {locked && (
-        <div className="absolute top-2 right-2 h-7 w-7 rounded-full bg-black/50 text-white flex items-center justify-center text-xs">
+        <div className="absolute top-2 right-2 h-7 w-7 rounded-full bg-black/50 text-text-primary flex items-center justify-center text-xs">
           {EMOJI.milestone.hundred}
         </div>
       )}
