@@ -2886,7 +2886,7 @@ export function LearningCardScreen({
           aria-label="Close learning card"
           className="h-12 w-12 rounded-full bg-surface-card shadow-soft flex items-center justify-center text-h4"
         >
-          ✕
+          {EMOJI.ui.close}
         </button>
 
         {/* Card counter and progress bar */}
@@ -3470,7 +3470,7 @@ export function CorrectAnswerScreen({
         className="absolute top-3 right-3 ui-button ui-accent-1-soft text-ink w-8 h-8 rounded-full flex items-center justify-center text-lg transition-all duration-200 z-10"
         aria-label="Close"
       >
-        ✕
+        {EMOJI.ui.close}
       </button>
 
       {/* confetti dots */}
@@ -3554,7 +3554,7 @@ export function StateUnlockScreen({
         className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/30 hover:bg-white/50 text-white flex items-center justify-center text-lg transition-all duration-200 z-10"
         aria-label="Close"
       >
-        ✕
+        {EMOJI.ui.close}
       </button>
 
       <Cloud className="absolute top-10 left-2 w-28 opacity-90" />
