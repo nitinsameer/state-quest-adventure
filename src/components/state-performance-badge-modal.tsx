@@ -27,7 +27,8 @@ interface StatePerformanceBadgeModalProps {
 const getProgressStars = (progress: number, max: number): string => {
   if (max === 0) return "";
   const filledCount = Math.min(Math.ceil((progress / max) * 3), 3);
-  const stars = "⭐".repeat(filledCount) + "☆".repeat(3 - filledCount);
+  const stars =
+    EMOJI.action.star.repeat(filledCount) + EMOJI.action.emptyStar.repeat(3 - filledCount);
   return stars;
 };
 

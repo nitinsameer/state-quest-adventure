@@ -146,7 +146,7 @@ export function CardNarrationPlayer({
                   : "Enable audio to play narration"
             }
           >
-            {isCurrentPlaying ? "⏸️" : "▶️"}
+            {isCurrentPlaying ? EMOJI.ui.pause : EMOJI.action.play}
           </button>
 
           {/* Info Section */}

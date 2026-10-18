@@ -1723,7 +1723,7 @@ export function JourneyMapScreen() {
                   title={`${regionDone}/${regionStates.length} explored`}
                 >
                   {region.emoji} {region.name.split(" ")[0]}{" "}
-                  {isSelected && regionDone === regionStates.length && "✓"}
+                  {isSelected && regionDone === regionStates.length && EMOJI.action.done}
                 </button>
               );
             })}
@@ -2974,7 +2974,7 @@ export function LearningCardScreen({
             hasFeatureConsent("audio") ? "Play card content" : "Enable audio in settings to listen"
           }
         >
-          {playingCardIndex === currentCardIndex ? "⏸" : EMOJI.action.play} Listen
+          {playingCardIndex === currentCardIndex ? EMOJI.ui.pause : EMOJI.action.play} Listen
         </button>
       </div>
 
@@ -3411,7 +3411,13 @@ function QuizScreenContent({
                         : "bg-muted text-text-secondary"
                 }`}
               >
-                {isCorrectPick ? "✓" : isWrongPick ? "✕" : isSelected ? "✓" : ""}
+                {isCorrectPick
+                  ? EMOJI.action.done
+                  : isWrongPick
+                    ? EMOJI.ui.close
+                    : isSelected
+                      ? EMOJI.action.done
+                      : ""}
               </span>
             </button>
           );
@@ -3729,7 +3735,7 @@ function BadgeDetailModal({
               badge.done ? "gradient-saffron shadow-lg" : "bg-surface-sunken opacity-60"
             }`}
           >
-            {badge.done ? badge.icon : "🏆"}
+            {badge.done ? badge.icon : EMOJI.feedback.trophy}
           </div>
 
           <h2 className="text-display text-2xl font-extrabold text-ink">{badge.name}</h2>
@@ -3816,7 +3822,8 @@ export function BadgesScreen() {
   // Helper to generate progress stars
   const getProgressStars = (progress: number, max: number): string => {
     const filledCount = Math.min(Math.ceil((progress / max) * 3), 3);
-    const stars = EMOJI.action.star.repeat(filledCount) + "☆".repeat(3 - filledCount);
+    const stars =
+      EMOJI.action.star.repeat(filledCount) + EMOJI.action.emptyStar.repeat(3 - filledCount);
     return stars;
   };
 
@@ -4200,7 +4207,9 @@ function ProfileScreenContent() {
                 {getAvatarName(p.avatar)} · Tap to select
               </div>
             </div>
-            <div className="text-text-secondary text-xl">{isSelectingAvatar ? "✕" : "›"}</div>
+            <div className="text-text-secondary text-xl">
+              {isSelectingAvatar ? EMOJI.ui.close : EMOJI.action.chevron}
+            </div>
           </button>
 
           {/* Avatar Selection Grid */}
@@ -4538,7 +4547,9 @@ function ParentZonePlaceholder() {
             Tap to configure PIN & parental settings
           </div>
         </div>
-        <div className="text-info text-lg">{showSettings ? "▼" : "›"}</div>
+        <div className="text-info text-lg">
+          {showSettings ? EMOJI.ui.chevronDown : EMOJI.action.chevron}
+        </div>
       </button>
 
       {/* PIN Settings Panel */}

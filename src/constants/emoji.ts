@@ -54,6 +54,7 @@ export const EMOJI = {
     sparkle: "✨",
     arrow: "→",
     leftArrow: "←",
+    chevron: "›",
     pointingFinger: "👉",
     birthday: "🎂",
     celebration: "🎉",
@@ -208,6 +209,9 @@ export const EMOJI = {
     close: "✕",
     pause: "⏸️",
     delete: "❌",
+    checkButton: "✅",
+    pending: "⏳",
+    chevronDown: "▼",
   },
 
   // Other icons

@@ -102,7 +102,18 @@ export function QuizAnswerFeedback({
                     animationDelay: `${i * 50}ms`,
                   }}
                 >
-                  {["🎉", "⭐", "🌟", "💫", "✨", "🎊", "🏆", "👏"][i]}
+                  {
+                    [
+                      EMOJI.action.celebrate,
+                      EMOJI.action.star,
+                      EMOJI.feedback.sparkles,
+                      EMOJI.action.sparkle,
+                      EMOJI.action.sparkle,
+                      EMOJI.feedback.newLevel,
+                      EMOJI.feedback.trophy,
+                      EMOJI.action.celebrate,
+                    ][i]
+                  }
                 </div>
               ))}
             </div>

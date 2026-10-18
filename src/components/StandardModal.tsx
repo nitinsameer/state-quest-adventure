@@ -104,7 +104,9 @@ export function StandardModal({
                       ✕
                     </button>
                   )}
-                  <h2 className="text-2xl font-extrabold" style={{ color: "var(--ink)" }}>{header.title}</h2>
+                  <h2 className="text-2xl font-extrabold" style={{ color: "var(--ink)" }}>
+                    {header.title}
+                  </h2>
                   {header.subtitle && (
                     <p className="text-sm text-muted-foreground mt-1">{header.subtitle}</p>
                   )}
@@ -125,9 +127,13 @@ export function StandardModal({
                   </button>
                 )}
                 <div className="text-5xl mb-(--space-3)">{header.icon}</div>
-                <h2 className="text-2xl font-extrabold" style={{ color: "var(--text-on-header)" }}>{header.title}</h2>
+                <h2 className="text-2xl font-extrabold" style={{ color: "var(--text-on-header)" }}>
+                  {header.title}
+                </h2>
                 {header.subtitle && (
-                  <p className="text-sm mt-1" style={{ color: "var(--text-on-header, oklch(1 0 0))" }}>{header.subtitle}</p>
+                  <p className="text-sm mt-1" style={{ color: "var(--text-on-header)" }}>
+                    {header.subtitle}
+                  </p>
                 )}
               </div>
             )}
@@ -143,7 +149,10 @@ export function StandardModal({
             : content?.map((item, idx) => (
                 <div key={idx}>
                   {item.type === "text" && (
-                    <p className={`text-sm leading-relaxed ${item.className}`} style={{ color: "var(--text-primary)" }}>
+                    <p
+                      className={`text-sm leading-relaxed ${item.className}`}
+                      style={{ color: "var(--text-primary)" }}
+                    >
                       {item.emoji && <span className="mr-2">{item.emoji}</span>}
                       {item.text}
                     </p>
@@ -152,7 +161,10 @@ export function StandardModal({
                   {item.type === "bullet" && (
                     <div className={`flex items-start gap-(--gap-compact) ${item.className}`}>
                       <span className="text-lg flex-shrink-0 mt-0.5">{item.emoji || "•"}</span>
-                      <p className="text-sm leading-relaxed pt-0.5" style={{ color: "var(--text-primary)" }}>
+                      <p
+                        className="text-sm leading-relaxed pt-0.5"
+                        style={{ color: "var(--text-primary)" }}
+                      >
                         {item.text}
                       </p>
                     </div>

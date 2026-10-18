@@ -63,7 +63,7 @@ export function PostcardFrame({
                 decoding="async"
               />
             ) : (
-              <div className="text-4xl">{state.emoji || "🇮🇳"}</div>
+              <div className="text-4xl">{state.emoji || EMOJI.language.indFlag}</div>
             )}
           </div>
 
