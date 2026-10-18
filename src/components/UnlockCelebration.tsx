@@ -6,9 +6,9 @@ import { EMOJI } from "@/constants/emoji";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 
 const BADGE_ICON: Record<BadgeId, string> = {
-  monument: "🏛️",
-  animal: "🐾",
-  explorer: "🧭",
+  monument: EMOJI.achievement.monument,
+  animal: EMOJI.achievement.animal,
+  explorer: EMOJI.achievement.explorer,
 };
 
 function badgeKeys(badges: Record<string, BadgeId[]> | undefined) {

@@ -206,11 +206,12 @@ function Chip({
     orange: "bg-saffron-soft text-saffron",
     blue: "bg-explorer-soft text-explorer",
     green: "bg-success-soft text-success",
-    gold: "bg-gold-soft text-[color:var(--gold)]",
+    gold: "bg-gold-soft",
   } as const;
   return (
     <span
       className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-label ${map[tone]}`}
+      style={tone === "gold" ? { color: "var(--gold)" } : undefined}
     >
       <span>{icon}</span>
       {children}
@@ -1072,7 +1073,7 @@ function HomeDashboardContent() {
                         </div>
                       </div>
 
-                      <div className="p-4 rounded-2xl bg-purple-soft border-l-4 border-accent-5 shadow-elevated-1 hover:shadow-elevated-2 transition-all">
+                      <div className="p-4 rounded-2xl border-l-4 border-accent-5 shadow-elevated-1 hover:shadow-elevated-2 transition-all" style={{ backgroundColor: "var(--accent-5-soft)" }}>
                         <div className="text-label text-accent-5-ink uppercase tracking-wider font-bold">
                           {EMOJI.action.lock} Unlock Path
                         </div>
@@ -1123,13 +1124,13 @@ function StatCard({
   label: string;
   tone: "orange" | "gold" | "green";
 }) {
-  const border = {
-    orange: "border-saffron/25",
-    gold: "border-[color:var(--gold)]/30",
-    green: "border-success/25",
-  }[tone];
+  const borderColorMap = {
+    orange: "rgba(255, 122, 26, 0.25)",
+    gold: "rgba(255, 193, 7, 0.3)",
+    green: "rgba(76, 175, 80, 0.25)",
+  };
   return (
-    <div className={`rounded-2xl ui-card ui-accent-1-soft border ${border} p-3`}>
+    <div className="rounded-2xl ui-card ui-accent-1-soft border p-3" style={{ borderColor: borderColorMap[tone] }}>
       <div className="text-lg">{icon}</div>
       <div className="text-display text-h2 leading-snug mt-1">{value}</div>
       <div className="text-label text-text-secondary">{label}</div>
@@ -2328,12 +2329,12 @@ function HubCard({
     green: "bg-success-soft",
     gold: "bg-gold-soft",
   }[tone];
-  const ring = {
-    orange: "border-saffron",
-    blue: "border-explorer",
-    green: "border-success",
-    gold: "border-[color:var(--gold)]",
-  }[tone];
+  const borderColorMap = {
+    orange: "var(--saffron)",
+    blue: "var(--explorer)",
+    green: "var(--success)",
+    gold: "var(--gold)",
+  };
   return (
     <button
       type="button"
@@ -2342,9 +2343,8 @@ function HubCard({
         fxTap();
         onOpen?.();
       }}
-      className={`relative text-left ui-card ${locked ? "ui-accent-1-soft opacity-70 pointer-events-none cursor-not-allowed" : done ? "ui-accent-3" : "ui-accent-1-soft"} p-4 border-2 transition active:scale-[0.98] ${
-        active ? ring : "border-transparent"
-      }`}
+      className={`relative text-left ui-card ${locked ? "ui-accent-1-soft opacity-70 pointer-events-none cursor-not-allowed" : done ? "ui-accent-3" : "ui-accent-1-soft"} p-4 border-2 transition active:scale-[0.98]`}
+      style={active ? { borderColor: borderColorMap[tone] } : undefined}
     >
       <div className="text-h1">{icon}</div>
       <div className="text-h5 text-display mt-1 leading-tight">{title}</div>
@@ -3717,43 +3717,50 @@ function BadgeDetailModal({
       onClick={onClose}
     >
       <div
-        className="w-full bg-white rounded-t-3xl p-6 flex flex-col gap-4 animate-slide-up"
+        className="w-full bg-surface-card rounded-t-3xl shadow-elevated-4 p-6 flex flex-col gap-4 animate-slide-up"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 h-8 w-8 rounded-full bg-muted flex items-center justify-center text-text-secondary hover:bg-muted"
+          className="absolute top-4 right-4 h-8 w-8 rounded-full flex items-center justify-center text-text-secondary hover:shadow-elevated-1 transition"
+          style={{ backgroundColor: "var(--surface-raised)" }}
+          title="Close"
         >
-          ✕
+          {EMOJI.ui.close}
         </button>
 
         {/* Badge Display */}
         <div className="flex flex-col items-center pt-2">
           <div
-            className={`h-20 w-20 rounded-full flex items-center justify-center text-5xl mb-4 ${
-              badge.done ? "gradient-saffron shadow-lg" : "bg-surface-sunken opacity-60"
+            className={`h-20 w-20 rounded-full flex items-center justify-center text-5xl mb-4 shadow-elevated-2 ${
+              badge.done ? "gradient-saffron" : "opacity-60"
             }`}
+            style={!badge.done ? { backgroundColor: "var(--surface-muted)" } : undefined}
           >
             {badge.done ? badge.icon : EMOJI.feedback.trophy}
           </div>
 
-          <h2 className="text-display text-2xl font-extrabold text-ink">{badge.name}</h2>
-          <p className="text-sm text-text-secondary mt-1">{state}</p>
+          <h2 className="text-display text-2xl font-extrabold" style={{ color: "var(--text-primary)" }}>{badge.name}</h2>
+          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+            {state}
+          </p>
         </div>
 
         {/* Unlock Information */}
         {!badge.done && (
-          <div className="rounded-2xl bg-warning-soft border-2 border-warning p-4">
-            <p className="text-h5 text-warning mb-2">How to Unlock</p>
-            <p className="text-body text-warning-light">{unlockText}</p>
+          <div className="rounded-2xl p-4 border-l-4" style={{ backgroundColor: "var(--fb-warning-bg)", borderColor: "var(--fb-warning-border)" }}>
+            <p className="text-h5 font-bold mb-2" style={{ color: "var(--fb-warning-fg)" }}>How to Unlock</p>
+            <p className="text-body" style={{ color: "var(--fb-warning-fg)" }}>
+              {unlockText}
+            </p>
           </div>
         )}
 
         {/* Badge Info */}
-        <div className="rounded-2xl bg-info-soft border border-info p-4">
-          <p className="text-h5 text-info mb-1">Badge Type</p>
-          <p className="text-body text-accent-1">
+        <div className="rounded-2xl p-4 border-l-4 shadow-elevated-1" style={{ backgroundColor: "var(--fb-info-bg)", borderColor: "var(--fb-info-border)" }}>
+          <p className="text-h5 font-bold mb-1" style={{ color: "var(--fb-info-fg)" }}>Badge Type</p>
+          <p className="text-body" style={{ color: "var(--text-primary)" }}>
             {badge.name === "Monument" && <>{EMOJI.utility.capital} Learn about famous landmarks</>}
             {badge.name === "Animal" && <>{EMOJI.achievement.animal} Discover local wildlife</>}
             {badge.name === "Explorer" &&
@@ -3765,7 +3772,8 @@ function BadgeDetailModal({
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 h-12 rounded-2xl bg-muted text-display font-extrabold text-text-secondary hover:bg-muted transition"
+            className="flex-1 h-12 rounded-2xl font-extrabold transition shadow-elevated-1 hover:shadow-elevated-2 active:shadow-elevated-0"
+            style={{ backgroundColor: "var(--surface-raised)", color: "var(--text-primary)" }}
           >
             Close
           </button>
@@ -3775,7 +3783,8 @@ function BadgeDetailModal({
                 fxConfetti();
                 onClose();
               }}
-              className="flex-1 h-12 rounded-2xl bg-success text-display font-extrabold text-white shadow-lg hover:shadow-xl transition"
+              className="flex-1 h-12 rounded-2xl text-display font-extrabold text-white shadow-elevated-2 hover:shadow-elevated-3 transition active:shadow-elevated-1"
+              style={{ backgroundColor: "var(--accent-3)" }}
             >
               {EMOJI.feedback.success} Celebrate!
             </button>
@@ -4685,7 +4694,7 @@ export function AchievementsScreen() {
               <div className="flex items-center gap-2">
                 <div className="text-display font-extrabold text-[16px]">{a.title}</div>
                 {a.done && (
-                  <span className="text-xs font-bold tracking-wider bg-gold-soft text-[color:var(--gold)] px-1.5 py-0.5 rounded-full">
+                  <span className="text-xs font-bold tracking-wider bg-gold-soft px-1.5 py-0.5 rounded-full" style={{ color: "var(--gold)" }}>
                     Unlocked
                   </span>
                 )}

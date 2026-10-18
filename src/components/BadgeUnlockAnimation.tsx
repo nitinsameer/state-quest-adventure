@@ -69,15 +69,19 @@ export function BadgeUnlockAnimation({
       {/* Badge reveal card */}
       <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
         <div
-          className={`relative z-10 rounded-3xl bg-surface-card shadow-2xl p-8 max-w-sm mx-4 transition-all duration-500 ${
+          className={`relative z-10 rounded-3xl bg-surface-card shadow-elevated-4 p-8 max-w-sm mx-4 transition-all duration-500 ${
             stage === "intro" ? "scale-0 opacity-0 rotate-180" : "scale-100 opacity-100 rotate-0"
           }`}
+          style={{
+            boxShadow: stage === "celebrate" ? "0 0 40px rgba(255, 122, 26, 0.3)" : undefined,
+          }}
         >
           {/* Animated border glow */}
           <div
-            className={`absolute inset-0 rounded-3xl border-4 border-accent-4 transition-all duration-300 ${
+            className={`absolute inset-0 rounded-3xl border-4 transition-all duration-300 ${
               stage === "celebrate" ? "animate-pulse" : ""
             }`}
+            style={{ borderColor: "var(--accent-4)" }}
           />
 
           {/* Badge emoji - bounces in celebrate stage */}
@@ -94,14 +98,17 @@ export function BadgeUnlockAnimation({
 
           {/* Badge description */}
           {badgeDescription && (
-            <p className="text-body text-center text-muted-foreground mb-4">{badgeDescription}</p>
+            <p className="text-body text-center" style={{ color: "var(--text-secondary)" }}>
+              {badgeDescription}
+            </p>
           )}
 
           {/* "Unlocked!" celebration text - fades in at celebrate stage */}
           <div
-            className={`text-center text-h5 font-bold text-success transition-opacity duration-300 ${
+            className={`text-center text-h5 font-bold transition-opacity duration-300 ${
               stage === "celebrate" ? "opacity-100" : "opacity-0"
             }`}
+            style={{ color: "var(--accent-3)" }}
           >
             {EMOJI.action.star} Unlocked! {EMOJI.action.star}
           </div>

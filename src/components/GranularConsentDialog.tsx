@@ -169,7 +169,7 @@ export function GranularConsentDialog({
           {/* Privacy Note */}
           <div className="bg-fb-info-bg rounded-2xl p-(--padding-md) border border-fb-info-border">
             <div className="flex gap-(--gap-base)">
-              <span className="text-lg flex-shrink-0">🔐</span>
+              <span className="text-lg flex-shrink-0">{EMOJI.action.lock}</span>
               <div className="text-xs" style={{ color: "var(--text-on-primary)" }}>
                 <strong>You're in control:</strong> You can change your mind anytime. We never share
                 your stamps without your permission.
