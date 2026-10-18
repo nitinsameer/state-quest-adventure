@@ -84,7 +84,7 @@ export function StatePerformanceBadgesView() {
         {lockedStates.length > 0 && (
           <div>
             <h2 className="text-display font-extrabold text-lg mb-4 text-text-primary">
-              🔥 Not Started ({lockedStates.length})
+              {EMOJI.action.fire} Not Started ({lockedStates.length})
             </h2>
 
             <div className="space-y-4">
@@ -94,7 +94,7 @@ export function StatePerformanceBadgesView() {
                   className="rounded-2xl p-4 bg-surface-card shadow-soft border border-border-subtle"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="text-4xl">🔥</div>
+                    <div className="text-4xl">{EMOJI.action.fire}</div>
                     <div className="flex-1">
                       <h3 className="text-display font-extrabold text-text-primary">
                         {state.name}
@@ -159,7 +159,7 @@ function StateDetailBadgeCard({ state, progress, onSelect }: any) {
             className="h-8 w-8 rounded-full bg-text-muted border-2 border-text-muted flex items-center justify-center text-xs opacity-50 flex-shrink-0 relative"
             title={`${STATE_PERFORMANCE_BADGE_DEFS[badge]?.name}`}
           >
-            <span className="absolute text-xs">🔥</span>
+            <span className="absolute text-xs">{EMOJI.action.fire}</span>
           </div>
         ))}
       </div>

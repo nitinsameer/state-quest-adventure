@@ -176,7 +176,7 @@ export function StandardModal({
                       {item.badges.map((badge, badgeIdx) => (
                         <div
                           key={badgeIdx}
-                          className="flex items-center gap-1.5 bg-surface-card border border-black/5 rounded-full px-3 py-1.5 text-sm font-bold shadow-sm"
+                          className="flex items-center gap-1.5 bg-surface-card border border-border-subtle rounded-full px-3 py-1.5 text-sm font-bold shadow-sm"
                         >
                           <span className="text-base">{badge.emoji}</span>
                           <span style={{ color: "var(--text-primary)" }}>{badge.label}</span>

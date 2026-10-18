@@ -206,50 +206,50 @@ export function PostcardModal({
       onClick={onClose}
     >
       <div
-        className="w-full bg-white rounded-t-3xl p-(--padding-lg) max-h-[90vh] overflow-y-auto flex flex-col gap-(--gap-md) animate-slide-up"
+        className="w-full bg-surface-card rounded-t-3xl p-(--padding-lg) max-h-[90vh] overflow-y-auto flex flex-col gap-(--gap-md) animate-slide-up shadow-elevated-3"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 h-8 w-8 rounded-full ui-button ui-accent-1-soft text-ink flex items-center justify-center"
+          className="absolute top-4 right-4 h-8 w-8 rounded-full ui-button ui-accent-1-soft text-text-primary flex items-center justify-center"
         >
           {EMOJI.ui.close}
         </button>
 
         {/* Header */}
         <div className="text-center pt-2">
-          <h2 className="text-display font-extrabold text-2xl text-ink">Achievement Unlocked!</h2>
-          <p className="text-sm text-ink mt-(--space-0-25)">You completed {state.name}</p>
+          <h2 className="text-display font-extrabold text-2xl text-text-primary">Achievement Unlocked!</h2>
+          <p className="text-sm text-text-secondary mt-(--space-0-25)">You completed {state.name}</p>
         </div>
 
         {/* Badge Display */}
         <div className="flex flex-col items-center gap-(--gap-base)">
           <div className="text-6xl">{badgeEmoji}</div>
           <div className="text-center">
-            <div className="text-sm font-extrabold text-ink">
+            <div className="text-sm font-extrabold text-text-primary">
               {postcard.badge.toUpperCase()} BADGE
             </div>
-            <div className="text-display font-extrabold text-lg text-ink mt-(--space-0-25)">
+            <div className="text-display font-extrabold text-lg text-text-primary mt-(--space-0-25)">
               {state.name} Explorer
             </div>
-            <div className="text-xs text-ink mt-(--space-0-25)">{postcard.stampDate}</div>
+            <div className="text-xs text-text-secondary mt-(--space-0-25)">{postcard.stampDate}</div>
           </div>
         </div>
 
         {/* Fun Fact Section */}
         <div className="ui-card ui-accent-4 rounded-2xl p-(--padding-md) my-(--space-0-5)">
-          <div className="text-xs font-extrabold text-ink uppercase tracking-wider">
+          <div className="text-xs font-extrabold text-text-primary uppercase tracking-wider">
             Did You Know?
           </div>
-          <p className="text-sm text-ink mt-(--space-2) leading-relaxed">{state.funFact}</p>
+          <p className="text-sm text-text-primary mt-(--space-2) leading-relaxed">{state.funFact}</p>
         </div>
 
         {/* Save Button */}
         <button
           onClick={handleSaveToPassport}
           disabled={isSaving}
-          className="w-full h-12 rounded-2xl ui-button ui-accent-1 text-ink font-extrabold flex items-center justify-center gap-(--gap-base) disabled:opacity-60 disabled:cursor-not-allowed transition"
+          className="w-full h-12 rounded-2xl ui-button ui-accent-1 text-text-primary font-extrabold flex items-center justify-center gap-(--gap-base) disabled:opacity-60 disabled:cursor-not-allowed transition"
         >
           {isSaving ? (
             <>
@@ -262,7 +262,7 @@ export function PostcardModal({
         </button>
 
         {/* Info Text */}
-        <p className="text-xs text-center text-ink">
+        <p className="text-xs text-center text-text-secondary">
           Keep it in your Passport! {EMOJI.postcard.keepIt}
         </p>
 
@@ -273,7 +273,7 @@ export function PostcardModal({
             onClose();
             navigate({ to: "/home" });
           }}
-          className="w-full h-12 rounded-2xl ui-button ui-accent-2 text-ink font-extrabold transition-all duration-200 active:scale-95"
+          className="w-full h-12 rounded-2xl ui-button ui-accent-2 text-text-primary font-extrabold transition-all duration-200 active:scale-95"
         >
           {EMOJI.nav.home} Home
         </button>
@@ -285,7 +285,7 @@ export function PostcardModal({
             onClose();
             navigate({ to: "/journey" });
           }}
-          className="w-full h-12 rounded-2xl ui-button ui-accent-1 text-ink font-extrabold transition-all duration-200 active:scale-95"
+          className="w-full h-12 rounded-2xl ui-button ui-accent-1 text-text-primary font-extrabold transition-all duration-200 active:scale-95"
         >
           {EMOJI.postcard.nextState} Next State
         </button>
@@ -293,7 +293,7 @@ export function PostcardModal({
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="w-full h-12 rounded-2xl ui-button ui-accent-1-soft text-ink font-extrabold"
+          className="w-full h-12 rounded-2xl ui-button ui-accent-1-soft text-text-primary font-extrabold"
         >
           Close
         </button>

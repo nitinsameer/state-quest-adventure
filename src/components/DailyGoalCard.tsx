@@ -87,11 +87,11 @@ export function DailyGoalCard() {
         <div className="relative z-10 flex items-center justify-between gap-(--gap-base)">
           {/* Left: Goal info (compact) */}
           <div className="flex-1 min-w-0">
-            <div className="text-caption text-white/80">{goalLabel}</div>
-            <div className="text-body-sm text-white leading-tight">
+            <div className="text-caption" style={{ color: "var(--accent-1-ink)" }}>{goalLabel}</div>
+            <div className="text-body-sm leading-tight" style={{ color: "var(--accent-1-ink)" }}>
               {dailyGoal} State{dailyGoal > 1 ? "s" : ""} Today
             </div>
-            <div className="text-caption text-white/90 mt-(--space-0-5)">
+            <div className="text-caption mt-(--space-0-5)" style={{ color: "var(--accent-1-ink)", opacity: 0.9 }}>
               {getEncouragementMessage()}
             </div>
           </div>

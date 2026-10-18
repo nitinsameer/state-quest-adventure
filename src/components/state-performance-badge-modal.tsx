@@ -51,13 +51,13 @@ export function StatePerformanceBadgeModal({
       }}
     >
       <div
-        className="w-full bg-white rounded-t-4xl p-5 max-h-[90vh] overflow-auto flex flex-col gap-5 animate-slide-up"
+        className="w-full bg-surface-card rounded-t-4xl p-5 max-h-[90vh] overflow-auto flex flex-col gap-5 animate-slide-up shadow-elevated-3"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-display font-extrabold text-2xl text-muted-dark">
+            <h2 className="text-display font-extrabold text-2xl text-text-primary">
               {stateName} Badges
             </h2>
           </div>
@@ -66,7 +66,7 @@ export function StatePerformanceBadgeModal({
               fxTap();
               onClose();
             }}
-            className="text-2xl text-muted-light hover:text-muted-foreground transition"
+            className="text-2xl text-text-secondary hover:text-text-primary transition"
           >
             {EMOJI.ui.close}
           </button>
@@ -77,8 +77,8 @@ export function StatePerformanceBadgeModal({
         {/* Earned Badges */}
         {earnedBadges.length > 0 && (
           <div>
-            <h3 className="text-display font-extrabold text-lg mb-3 text-muted-dark">
-              �S“ You Did It!
+            <h3 className="text-display font-extrabold text-lg mb-3 text-text-primary">
+              🎉 You Did It!
             </h3>
             <div className="space-y-3">
               {earnedBadges.map((badgeId) => (
@@ -95,7 +95,7 @@ export function StatePerformanceBadgeModal({
         {/* Locked Badges */}
         {availableBadges.length > 0 && (
           <div>
-            <h3 className="text-display font-extrabold text-lg mb-3 text-muted-dark">
+            <h3 className="text-display font-extrabold text-lg mb-3 text-text-primary">
               Keep Exploring! {EMOJI.action.star}
             </h3>
             <div className="space-y-3">
@@ -116,7 +116,7 @@ export function StatePerformanceBadgeModal({
             fxTap();
             onClose();
           }}
-          className="mt-4 w-full h-11 rounded-2xl ui-button ui-accent-1-soft text-ink font-bold transition active:scale-95"
+          className="mt-4 w-full h-11 rounded-2xl ui-button ui-accent-1-soft text-text-primary font-bold transition active:scale-95"
         >
           Close
         </button>
@@ -151,24 +151,24 @@ function BadgeDetailCard({ badgeId, progress }: BadgeDetailCardProps) {
         <div className="flex-1">
           <div className="flex items-center gap-2">
             <h4
-              className={`text-display font-extrabold text-lg ${progress.earned ? "text-ink" : "text-muted-foreground"}`}
+              className={`text-display font-extrabold text-lg ${progress.earned ? "text-text-primary" : "text-text-secondary"}`}
             >
               {badgeDef.name}
             </h4>
           </div>
 
-          <p className="text-xs font-bold text-muted-foreground mt-1">{badgeDef.description}</p>
+          <p className="text-xs font-bold text-text-secondary mt-1">{badgeDef.description}</p>
 
           {/* Status Section */}
-          <div className="mt-3 pt-3 border-t border-white/20">
+          <div className="mt-3 pt-3 border-t border-border-subtle">
             {progress.earned ? (
               <div className="flex flex-col gap-1">
-                <div className="text-lg font-extrabold text-ink">�S“ You Did It!</div>
+                <div className="text-lg font-extrabold text-text-primary">🎉 You Did It!</div>
               </div>
             ) : (
               <div className="flex flex-col gap-2">
                 <div className="text-lg">{getProgressStars(progress.progress, progress.max)}</div>
-                <div className="text-[11px] font-bold text-muted-foreground">
+                <div className="text-[11px] font-bold text-text-secondary">
                   Keep going! {EMOJI.action.star}
                 </div>
               </div>

@@ -536,7 +536,7 @@ export function CreateProfileScreen() {
               : "hover:shadow-elevated-3 hover:scale-102 active:scale-95"
           }`}
         >
-          {saved ? "🎉 Saved ✓" : "Continue → Let's Explore!"}
+          {saved ? `${EMOJI.feedback.success} Saved ✓` : "Continue → Let's Explore!"}
         </button>
       </div>
 
@@ -1657,8 +1657,8 @@ export function JourneyMapScreen() {
             />
           </div>
           <div className="flex-1">
-            <div className="text-display font-extrabold text-white">India Journey</div>
-            <div className="text-sm font-bold text-white flex items-center gap-2">
+            <div className="text-display font-extrabold text-text-on-header">India Journey</div>
+            <div className="text-sm font-bold text-text-on-header flex items-center gap-2">
               {p.streak > 0 && (
                 <span className="inline-flex items-center gap-0.5 px-2 py-1 bg-white/30 rounded-full">
                   <span>{EMOJI.feedback.trophy}</span>
@@ -1681,7 +1681,7 @@ export function JourneyMapScreen() {
             />
           </div>
           {/* Single line milestone hint */}
-          <div className="text-sm font-bold text-white">
+          <div className="text-sm font-bold text-text-on-header">
             {(() => {
               const msg = getJourneyMotivationalMessage(completedStates);
               const milestoneCount = 36 - completedStates;
@@ -3497,7 +3497,7 @@ export function CorrectAnswerScreen({
         <div className="relative">
           <div className="absolute inset-0 blur-2xl bg-white/40 rounded-full" />
           <div className="relative h-32 w-32 rounded-full ui-card ui-accent-3 flex items-center justify-center shadow-2xl">
-            <div className="text-6xl">✅</div>
+            <div className="text-6xl">{EMOJI.action.checkButton}</div>
           </div>
         </div>
         <h1 className="mt-6 text-h1 text-white text-center leading-relaxed">Awesome!</h1>
@@ -3863,7 +3863,7 @@ export function BadgesScreen() {
   return (
     <div className="h-full w-full bg-surface-card flex flex-col">
       {/* Tab Switcher - Before Header */}
-      <div className="px-5 pt-4 pb-0 flex gap-2 border-b border-muted bg-white z-10">
+      <div className="px-5 pt-4 pb-0 flex gap-2 border-b border-muted bg-surface-card z-10">
         <button
           onClick={() => {
             fxTap();
