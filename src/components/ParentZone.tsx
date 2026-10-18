@@ -439,7 +439,7 @@ export function ParentZoneScreen() {
       </div>
 
       {/* Data & Privacy Section - Always visible */}
-      <div className="px-(--padding-base) pb-(--space-2) border-t border-black/5 pt-(--space-2)">
+      <div className="px-(--padding-base) pb-(--space-2) border-t border-border-subtle pt-(--space-2)">
         <div className="text-display font-extrabold text-sm uppercase tracking-wider" style={{color: "var(--text-muted)"}}>
           Data & Privacy
         </div>

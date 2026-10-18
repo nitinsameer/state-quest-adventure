@@ -95,7 +95,7 @@ export function ResetPINDialog({ open, onConfirm, onCancel }: ResetPINDialogProp
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 backdrop-blur-sm">
+    <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 backdrop-blur-sm">
       <div className="bg-surface-card rounded-3xl p-(--padding-lg) w-[90%] max-w-sm shadow-2xl">
         {/* Header */}
         <div className="text-center mb-(--space-4)">

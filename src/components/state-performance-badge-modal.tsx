@@ -44,7 +44,7 @@ export function StatePerformanceBadgeModal({
 
   return (
     <div
-      className="fixed inset-0 bg-black/40 z-50 flex items-end"
+      className="fixed inset-0 bg-black/30 z-50 flex items-end"
       onClick={() => {
         fxTap();
         onClose();

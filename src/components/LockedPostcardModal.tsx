@@ -24,7 +24,7 @@ export function LockedPostcardModal({ destination, onClose }: LockedPostcardModa
 
   return (
     <div
-      className="fixed inset-0 bg-black/40 flex items-end z-50 animate-in fade-in"
+      className="fixed inset-0 bg-black/30 flex items-end z-50 animate-in fade-in"
       onClick={onClose}
     >
       <div

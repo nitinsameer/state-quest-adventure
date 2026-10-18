@@ -2150,7 +2150,7 @@ export function LearningHubScreen({
     <div className="h-full w-full bg-surface-card flex flex-col">
       <div className={`px-5 pt-3 pb-4 ${grad} rounded-b-[32px] relative`}>
         {/* Breadcrumb Navigation Context */}
-        <div className="mb-2 flex items-center gap-1 text-white text-xs font-bold px-12">
+        <div className="mb-2 flex items-center gap-1 text-text-on-header text-xs font-bold px-12">
           <span className="opacity-75">Journey</span>
           <span className="opacity-50">›</span>
           {currentRegion && (
@@ -2185,20 +2185,20 @@ export function LearningHubScreen({
                 goBack();
               }
             }}
-            className="h-12 w-12 rounded-full bg-white/25 flex items-center justify-center text-white text-xl"
+            className="h-12 w-12 rounded-full bg-text-on-header/20 flex items-center justify-center text-text-on-header text-xl"
           >
             ‹
           </button>
-          <div className="flex-1 text-white">
-            <div className="text-xs font-bold text-white/90">Learning Hub</div>
+          <div className="flex-1 text-text-on-header">
+            <div className="text-xs font-bold text-text-on-header/90">Learning Hub</div>
             <div className="text-display text-xl font-extrabold">{state.name}</div>
             {progress.streak > 0 && (
-              <div className="text-xs font-bold text-white/80 mt-0.5">
+              <div className="text-xs font-bold text-text-on-header/80 mt-0.5">
                 {EMOJI.feedback.trophy} Day {progress.streak} streak
               </div>
             )}
           </div>
-          <div className="flex items-center gap-1 text-white text-display font-extrabold">
+          <div className="flex items-center gap-1 text-text-on-header text-display font-extrabold">
             <span>{EMOJI.action.star}</span> {completedCategories * XP_PER_CARD}
           </div>
         </div>
@@ -2360,7 +2360,7 @@ function HubCard({
         </div>
       )}
       {done && (
-        <div className="absolute top-2 right-2 h-8 w-8 rounded-full bg-success text-white flex items-center justify-center text-h5 font-black shadow-lg animate-bounce">
+        <div className="absolute top-2 right-2 h-8 w-8 rounded-full bg-success text-text-on-primary flex items-center justify-center text-h5 font-black shadow-lg animate-bounce">
           ✓
         </div>
       )}
@@ -2968,7 +2968,7 @@ export function LearningCardScreen({
           }}
           className={`h-9 px-3 rounded-full shadow-soft flex items-center justify-center gap-2 text-label transition-all active:scale-95 whitespace-nowrap ${
             playingCardIndex === currentCardIndex
-              ? "bg-action-primary text-white shadow-lg animate-pulse"
+              ? "bg-action-primary text-text-on-primary shadow-lg animate-pulse"
               : hasFeatureConsent("audio")
                 ? "bg-accent-1-soft text-accent-1 hover:shadow-md border border-accent-1"
                 : "bg-muted text-muted-light border border-muted cursor-not-allowed"
@@ -3118,7 +3118,7 @@ export function LearningCardScreen({
                   fxTap();
                   setShowAudioPermissionPrompt(false);
                 }}
-                className="flex-1 h-12 rounded-xl bg-accent-1 text-white font-bold text-sm flex items-center justify-center"
+                className="flex-1 h-12 rounded-xl bg-accent-1 text-text-on-primary font-bold text-sm flex items-center justify-center"
               >
                 Go to Settings
               </Link>
@@ -3406,11 +3406,11 @@ function QuizScreenContent({
               <span
                 className={`h-8 w-8 rounded-full flex items-center justify-center text-sm ${
                   isCorrectPick
-                    ? "bg-fb-success-bg text-white"
+                    ? "bg-fb-success-bg text-text-on-primary"
                     : isWrongPick
-                      ? "bg-fb-error-bg text-white"
+                      ? "bg-fb-error-bg text-text-on-primary"
                       : isSelected
-                        ? "gradient-explorer text-white"
+                        ? "gradient-explorer text-text-on-header"
                         : "bg-muted text-text-secondary"
                 }`}
               >
@@ -3500,8 +3500,8 @@ export function CorrectAnswerScreen({
             <div className="text-6xl">{EMOJI.action.checkButton}</div>
           </div>
         </div>
-        <h1 className="mt-6 text-h1 text-white text-center leading-relaxed">Awesome!</h1>
-        <p className="mt-2 text-white/95 font-bold text-center">
+        <h1 className="mt-6 text-h1 text-text-on-primary text-center leading-relaxed">Awesome!</h1>
+        <p className="mt-2 text-text-on-primary/95 font-bold text-center">
           You got it right ›” {state.capital} is the capital of {state.name}!
         </p>
 
@@ -3551,7 +3551,7 @@ export function StateUnlockScreen({
           fxTap();
           onContinue?.();
         }}
-        className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/30 hover:bg-white/50 text-white flex items-center justify-center text-lg transition-all duration-200 z-10"
+        className="absolute top-3 right-3 w-8 h-8 rounded-full bg-text-on-primary/20 hover:bg-text-on-primary/30 text-text-on-primary flex items-center justify-center text-lg transition-all duration-200 z-10"
         aria-label="Close"
       >
         {EMOJI.ui.close}
@@ -3562,16 +3562,16 @@ export function StateUnlockScreen({
       <Cloud className="absolute bottom-56 left-0 w-32 opacity-80" />
 
       <div className="text-center pt-8 relative z-10 px-6">
-        <div className="text-white/90 text-xs font-black uppercase tracking-[0.3em]">
+        <div className="text-text-on-primary/90 text-xs font-black uppercase tracking-[0.3em]">
           New State Unlocked
         </div>
-        <h1 className="text-h1 text-white mt-1 drop-shadow leading-relaxed">{state.name}!</h1>
-        <p className="text-white/90 font-bold mt-1">{state.nickname}</p>
+        <h1 className="text-h1 text-text-on-primary mt-1 drop-shadow leading-relaxed">{state.name}!</h1>
+        <p className="text-text-on-primary/90 font-bold mt-1">{state.nickname}</p>
       </div>
 
       <div className="relative flex-1 flex items-center justify-center">
-        <div className="absolute inset-x-6 top-1/2 -translate-y-1/2 h-72 rounded-[40px] bg-white/10 backdrop-blur border border-white/20" />
-        <div className="absolute inset-x-16 bottom-24 h-8 rounded-full bg-black/20 blur-xl" />
+        <div className="absolute inset-x-6 top-1/2 -translate-y-1/2 h-72 rounded-[40px] bg-text-on-primary/10 backdrop-blur border border-text-on-primary/20" />
+        <div className="absolute inset-x-16 bottom-24 h-8 rounded-full bg-text-primary/20 blur-xl" />
         {art ? (
           <img
             src={art}
@@ -3807,7 +3807,7 @@ function BadgeDetailModal({
                 fxConfetti();
                 onClose();
               }}
-              className="flex-1 h-12 rounded-2xl text-display font-extrabold text-white shadow-elevated-2 hover:shadow-elevated-3 transition active:shadow-elevated-1"
+              className="flex-1 h-12 rounded-2xl text-display font-extrabold text-text-on-primary shadow-elevated-2 hover:shadow-elevated-3 transition active:shadow-elevated-1"
               style={{ backgroundColor: "var(--accent-3)" }}
             >
               {EMOJI.feedback.success} Celebrate!
@@ -3907,9 +3907,9 @@ export function BadgesScreen() {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="flex-1 text-white">
+              <div className="flex-1 text-text-on-primary">
                 <div className="text-h4 text-display leading-tight">{progress.name}</div>
-                <div className="text-xs font-bold text-white/80">
+                <div className="text-xs font-bold text-text-on-primary/80">
                   {EMOJI.action.celebrate} {unlockedCount} Amazing Badges Collected!
                 </div>
               </div>
@@ -4122,11 +4122,11 @@ function ProfileScreenContent() {
           <button
             onClick={goBack}
             aria-label="Go back"
-            className="h-10 w-10 rounded-full bg-white/20 text-white flex items-center justify-center"
+            className="h-10 w-10 rounded-full bg-text-on-primary/20 text-text-on-primary flex items-center justify-center"
           >
             ‹
           </button>
-          <div className="text-display font-extrabold text-white">Profile</div>
+          <div className="text-display font-extrabold text-text-on-primary">Profile</div>
           <div className="w-10" /> {/* Spacer for alignment */}
         </div>
         <div className="flex flex-col items-center mt-4">
@@ -4138,7 +4138,7 @@ function ProfileScreenContent() {
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="absolute -bottom-2 -right-2 h-9 w-9 rounded-full gradient-gold text-white flex items-center justify-center text-display text-h5 border-4 border-white">
+            <div className="absolute -bottom-2 -right-2 h-9 w-9 rounded-full gradient-gold text-text-on-primary flex items-center justify-center text-display text-h5 border-4 border-text-on-primary">
               {level}
             </div>
           </div>
@@ -4162,7 +4162,7 @@ function ProfileScreenContent() {
                 <button
                   onClick={handleSaveName}
                   disabled={saveStatus === "saving"}
-                  className={`flex-1 h-10 rounded-lg text-display font-extrabold text-white text-sm transition ${
+                  className={`flex-1 h-10 rounded-lg text-display font-extrabold text-text-on-primary text-sm transition ${
                     saveStatus === "saved"
                       ? "bg-success"
                       : saveStatus === "saving"
@@ -4178,7 +4178,7 @@ function ProfileScreenContent() {
                 </button>
                 <button
                   onClick={handleCancelEdit}
-                  className="flex-1 h-10 rounded-lg text-display font-extrabold text-white text-sm bg-white/30 hover:bg-white/40 transition"
+                  className="flex-1 h-10 rounded-lg text-display font-extrabold text-text-on-primary text-sm bg-text-on-primary/20 hover:bg-text-on-primary/30 transition"
                 >
                   Cancel
                 </button>
@@ -4190,20 +4190,20 @@ function ProfileScreenContent() {
               style={{ animationDelay: "100ms" }}
             >
               <div className="flex items-center gap-2">
-                <div className="text-display text-2xl font-extrabold text-white">{p.name}</div>
+                <div className="text-display text-2xl font-extrabold text-text-on-primary">{p.name}</div>
                 <button
                   onClick={() => {
                     fxTap();
                     setTempName(p.name);
                     setIsEditing(true);
                   }}
-                  className="h-8 w-8 rounded-lg bg-white/20 hover:bg-white/30 text-white flex items-center justify-center text-sm transition"
+                  className="h-8 w-8 rounded-lg bg-text-on-primary/20 hover:bg-text-on-primary/30 text-text-on-primary flex items-center justify-center text-sm transition"
                   title="Edit name"
                 >
                   ✏️
                 </button>
               </div>
-              <div className="text-white/90 text-xs font-extrabold uppercase tracking-widest">
+              <div className="text-text-on-primary/90 text-xs font-extrabold uppercase tracking-widest">
                 Junior Explorer · Age {p.ageBand}
               </div>
             </div>
@@ -4607,7 +4607,7 @@ function ParentZonePlaceholder() {
           <button
             onClick={handleSavePIN}
             disabled={newPIN.length !== 4 || pinSaveStatus === "saving"}
-            className={`w-full h-10 rounded-lg font-bold text-sm transition text-white ${
+            className={`w-full h-10 rounded-lg font-bold text-sm transition text-text-on-primary ${
               pinSaveStatus === "saved"
                 ? "bg-success-soft0"
                 : "bg-accent-1 disabled:opacity-50 hover:bg-accent-1/90"
@@ -4799,7 +4799,7 @@ export function EmptyStateScreen() {
         <p className="mt-2 text-body text-text-secondary max-w-[260px]">
           Invite a friend to join your adventure and travel across India together.
         </p>
-        <button className="mt-6 h-14 px-6 rounded-2xl gradient-saffron text-white text-display text-lg font-extrabold shadow-[var(--shadow-glow-orange)]">
+        <button className="mt-6 h-14 px-6 rounded-2xl gradient-saffron text-text-on-header text-display text-lg font-extrabold shadow-[var(--shadow-glow-orange)]">
           Invite a Friend {EMOJI.action.sparkle}
         </button>
         <button className="mt-2 h-12 px-6 rounded-2xl bg-muted text-ink text-display font-extrabold">
