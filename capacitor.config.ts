@@ -7,9 +7,14 @@ const config: CapacitorConfig = {
   appId: 'com.nishaantech.exploreindia',
   appName: 'India Explorer',
   webDir: 'dist/client',
+  server: {
+    allowNavigation: []
+  },
   android: {
     preferredStatusBarStyle: 'dark',
-    backgroundColor: DEFAULT_BACKGROUND
+    backgroundColor: DEFAULT_BACKGROUND,
+    allowMixedContent: false,
+    webContentsDebuggingEnabled: false
   },
   plugins: {
     SplashScreen: {

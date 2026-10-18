@@ -29,7 +29,8 @@ import {
   getLevelName,
 } from "@/lib/progress";
 import { pauseTts, resumeTts } from "@/lib/tts";
-import { ensureAudioConsentGranted } from "@/lib/parental-consent";
+import { ensureAudioConsentGranted, hasFeatureConsent } from "@/lib/parental-consent";
+import { ParentConsentGate } from "@/components/ParentConsentGate";
 import { initializeAudioCleanup } from "@/lib/fx";
 import { Capacitor } from "@capacitor/core";
 import { useCelebrationStore } from "@/store/celebrationStore";
@@ -384,14 +385,24 @@ function HydratedApp() {
     return cleanup; // Cleanup on component unmount
   }, []);
 
-  // COPPA-compliant: Log Firebase events after user is onboarded
+  // COPPA-compliant: Log Firebase events after user is onboarded AND parent consent given
   // Permissions are now deferred (requested when features are used)
   useEffect(() => {
     if (!progress.onboarded) {
       return;
     }
 
-    // User is onboarded - log session/analytics (delay to not block initial render)
+    // CRITICAL FIX: Check parent consent before firing ANY Firebase events
+    // This prevents COPPA violations
+    if (!hasFeatureConsent("analytics")) {
+      appLogger.debug(
+        "app_lifecycle",
+        "Skipping Firebase events - parent consent not yet granted"
+      );
+      return;
+    }
+
+    // User is onboarded AND parent consented - log session/analytics (delay to not block initial render)
     const isReturningUser = true; // If onboarded, they're returning
 
     // Defer Firebase events until after initial render completes
@@ -549,37 +560,41 @@ function HydratedApp() {
   }, []);
 
   const innerComponent = (
-    <QueryClientProvider client={queryClient}>
-      <div
-        className="h-full w-full flex flex-col bg-surface-raised relative"
-        suppressHydrationWarning
-      >
-        {/* Scrollable content area - conditional padding: pb-safe for pre-auth, pb-[80px] for authenticated */}
-        <main
-          className={`flex-1 overflow-auto pt-safe px-safe ${scrollContainerPadding}`}
+    <>
+      {/* COPPA Compliance: Parent consent gate BEFORE any app features */}
+      <ParentConsentGate />
+      <QueryClientProvider client={queryClient}>
+        <div
+          className="h-full w-full flex flex-col bg-surface-raised relative"
           suppressHydrationWarning
         >
-          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-          <Outlet />
-        </main>
-      </div>
-
-      {/* Global BottomNav - positioned fixed OUTSIDE flex container to prevent flex layout interference */}
-      {shouldShowBottomNav && (
-        <div
-          ref={navRef}
-          className="fixed bottom-0 left-0 right-0 z-20 bg-surface-raised pb-[env(safe-area-inset-bottom)]"
-        >
-          <BottomNav active={getActiveTab()} />
+          {/* Scrollable content area - conditional padding: pb-safe for pre-auth, pb-[80px] for authenticated */}
+          <main
+            className={`flex-1 overflow-auto pt-safe px-safe ${scrollContainerPadding}`}
+            suppressHydrationWarning
+          >
+            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+            <Outlet />
+          </main>
         </div>
-      )}
 
-      <UnlockCelebration />
-      <CelebrationPopupProvider />
-      <BottomToastProvider />
-      {/* FIX #19: Debug screen only in development mode */}
-      {import.meta.env.DEV && <DebugScreen />}
-    </QueryClientProvider>
+        {/* Global BottomNav - positioned fixed OUTSIDE flex container to prevent flex layout interference */}
+        {shouldShowBottomNav && (
+          <div
+            ref={navRef}
+            className="fixed bottom-0 left-0 right-0 z-20 bg-surface-raised pb-[env(safe-area-inset-bottom)]"
+          >
+            <BottomNav active={getActiveTab()} />
+          </div>
+        )}
+
+        <UnlockCelebration />
+        <CelebrationPopupProvider />
+        <BottomToastProvider />
+        {/* FIX #19: Debug screen only in development mode */}
+        {import.meta.env.DEV && <DebugScreen />}
+      </QueryClientProvider>
+    </>
   );
 
   return <RootErrorBoundary>{innerComponent}</RootErrorBoundary>;
