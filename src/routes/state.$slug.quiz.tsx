@@ -3,6 +3,7 @@ import { QuizScreen } from "@/components/screens";
 import { getStateBySlug } from "@/lib/states";
 import { NotFoundPlace, PlaceError } from "@/components/PlaceFallbacks";
 import { getProgress, cardsDone, CARDS_PER_STATE, finishQuiz } from "@/lib/progress";
+import { useAndroidBackButton } from "@/hooks/useAndroidBackButton";
 
 export const Route = createFileRoute("/state/$slug/quiz")({
   loader: ({ params }) => {
@@ -49,11 +50,11 @@ function Quiz() {
   const { name } = Route.useLoaderData();
   const navigate = useNavigate();
   
-  // FIX #4: Handle back button in quiz - back cancels quiz and goes to learn hub
+  // FIX #4: Hardware back button in quiz - back cancels quiz and goes to learn hub
   // Quiz progress is NOT saved when back is pressed
-  const handleQuizBack = () => {
+  useAndroidBackButton(() => {
     navigate({ to: "/state/$slug/learn", params: { slug } });
-  };
+  });
 
   return (
     <QuizScreen

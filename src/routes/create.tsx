@@ -1,6 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { CreateProfileScreen } from "@/components/screens";
-import { getProgress } from "@/lib/progress";
+import { getProgress, useProgress } from "@/lib/progress";
 
 export const Route = createFileRoute("/create")({
   beforeLoad: async ({ navigate }) => {
@@ -28,5 +29,19 @@ export const Route = createFileRoute("/create")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: CreateProfileScreen,
+  component: CreateRoute,
 });
+
+function CreateRoute() {
+  const navigate = useNavigate();
+  const p = useProgress();
+
+  // Double-check: if user completes onboarding, redirect to home
+  useEffect(() => {
+    if (p.onboarded) {
+      navigate({ to: "/home" });
+    }
+  }, [p.onboarded, navigate]);
+
+  return <CreateProfileScreen />;
+}

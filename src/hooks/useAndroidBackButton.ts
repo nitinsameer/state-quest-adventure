@@ -44,41 +44,26 @@ export function useAndroidBackButton(onJourneyBack?: () => void) {
         // FIX #2: Smart route-aware back navigation
         // Prevents confusing history-based back in branching state routes
 
-        // Extract state slug if we're in a state route
-        const stateMatch = currentPath.match(/\/state\/([^/]+)/);
-        if (stateMatch) {
-          const stateSlug = stateMatch[1];
+        // If on a completion/celebration screen: go home
+        if (currentPath.includes("/state/") && currentPath.endsWith("/complete")) {
+          router.navigate({ to: "/home" });
+          return;
+        }
 
-          // Celebration screen: back goes to /home, not back into quiz
-          if (currentPath.endsWith("/complete")) {
-            router.navigate({ to: "/home" });
-            return;
-          }
-
-          // Quiz/Learn/Cards/Postcard screens: back goes to state intro, not quiz history
-          if (
-            currentPath.includes("/quiz") ||
-            currentPath.includes("/learn") ||
-            currentPath.includes("/cards") ||
-            currentPath.includes("/postcard")
-          ) {
-            router.navigate({ to: `/state/${stateSlug}` });
-            return;
-          }
-
-          // State intro screen: back goes to /home
-          if (currentPath === `/state/${stateSlug}`) {
-            router.navigate({ to: "/home" });
+        // If in any state sub-route (quiz, learn, cards, postcard, etc.): go to state intro
+        if (currentPath.includes("/state/")) {
+          const segments = currentPath.split("/");
+          const slug = segments[2]; // e.g. '/state/delhi/quiz' → 'delhi'
+          if (slug) {
+            router.navigate({ to: "/state/$slug", params: { slug } });
             return;
           }
         }
 
-        // Fallback: use browser history for other routes
-        // This works because TanStack Router tracks history for all route changes
+        // Fallback: browser history or home
         if (router.history.length > 1) {
           router.history.back();
         } else {
-          // If no history, go to home
           router.navigate({ to: "/home" });
         }
       });
