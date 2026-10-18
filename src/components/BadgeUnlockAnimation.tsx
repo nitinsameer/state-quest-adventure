@@ -73,7 +73,7 @@ export function BadgeUnlockAnimation({
             stage === "intro" ? "scale-0 opacity-0 rotate-180" : "scale-100 opacity-100 rotate-0"
           }`}
           style={{
-            boxShadow: stage === "celebrate" ? "0 0 40px rgba(255, 122, 26, 0.3)" : undefined,
+            boxShadow: stage === "celebrate" ? "var(--shadow-glow-saffron)" : undefined,
           }}
         >
           {/* Animated border glow */}

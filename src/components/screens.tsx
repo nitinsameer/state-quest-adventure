@@ -1073,7 +1073,10 @@ function HomeDashboardContent() {
                         </div>
                       </div>
 
-                      <div className="p-4 rounded-2xl border-l-4 border-accent-5 shadow-elevated-1 hover:shadow-elevated-2 transition-all" style={{ backgroundColor: "var(--accent-5-soft)" }}>
+                      <div
+                        className="p-4 rounded-2xl border-l-4 border-accent-5 shadow-elevated-1 hover:shadow-elevated-2 transition-all"
+                        style={{ backgroundColor: "var(--accent-5-soft)" }}
+                      >
                         <div className="text-label text-accent-5-ink uppercase tracking-wider font-bold">
                           {EMOJI.action.lock} Unlock Path
                         </div>
@@ -1125,12 +1128,12 @@ function StatCard({
   tone: "orange" | "gold" | "green";
 }) {
   const borderColorMap = {
-    orange: "rgba(255, 122, 26, 0.25)",
-    gold: "rgba(255, 193, 7, 0.3)",
-    green: "rgba(76, 175, 80, 0.25)",
+    orange: "border-accent-1-soft",
+    gold: "border-accent-4-soft",
+    green: "border-accent-3-soft",
   };
   return (
-    <div className="rounded-2xl ui-card ui-accent-1-soft border p-3" style={{ borderColor: borderColorMap[tone] }}>
+    <div className={`rounded-2xl ui-card ui-accent-1-soft border ${borderColorMap[tone]} p-3`}>
       <div className="text-lg">{icon}</div>
       <div className="text-display text-h2 leading-snug mt-1">{value}</div>
       <div className="text-label text-text-secondary">{label}</div>
@@ -3741,7 +3744,12 @@ function BadgeDetailModal({
             {badge.done ? badge.icon : EMOJI.feedback.trophy}
           </div>
 
-          <h2 className="text-display text-2xl font-extrabold" style={{ color: "var(--text-primary)" }}>{badge.name}</h2>
+          <h2
+            className="text-display text-2xl font-extrabold"
+            style={{ color: "var(--text-primary)" }}
+          >
+            {badge.name}
+          </h2>
           <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
             {state}
           </p>
@@ -3749,8 +3757,16 @@ function BadgeDetailModal({
 
         {/* Unlock Information */}
         {!badge.done && (
-          <div className="rounded-2xl p-4 border-l-4" style={{ backgroundColor: "var(--fb-warning-bg)", borderColor: "var(--fb-warning-border)" }}>
-            <p className="text-h5 font-bold mb-2" style={{ color: "var(--fb-warning-fg)" }}>How to Unlock</p>
+          <div
+            className="rounded-2xl p-4 border-l-4"
+            style={{
+              backgroundColor: "var(--fb-warning-bg)",
+              borderColor: "var(--fb-warning-border)",
+            }}
+          >
+            <p className="text-h5 font-bold mb-2" style={{ color: "var(--fb-warning-fg)" }}>
+              How to Unlock
+            </p>
             <p className="text-body" style={{ color: "var(--fb-warning-fg)" }}>
               {unlockText}
             </p>
@@ -3758,8 +3774,16 @@ function BadgeDetailModal({
         )}
 
         {/* Badge Info */}
-        <div className="rounded-2xl p-4 border-l-4 shadow-elevated-1" style={{ backgroundColor: "var(--fb-info-bg)", borderColor: "var(--fb-info-border)" }}>
-          <p className="text-h5 font-bold mb-1" style={{ color: "var(--fb-info-fg)" }}>Badge Type</p>
+        <div
+          className="rounded-2xl p-4 border-l-4 shadow-elevated-1"
+          style={{
+            backgroundColor: "var(--fb-info-bg)",
+            borderColor: "var(--fb-info-border)",
+          }}
+        >
+          <p className="text-h5 font-bold mb-1" style={{ color: "var(--fb-info-fg)" }}>
+            Badge Type
+          </p>
           <p className="text-body" style={{ color: "var(--text-primary)" }}>
             {badge.name === "Monument" && <>{EMOJI.utility.capital} Learn about famous landmarks</>}
             {badge.name === "Animal" && <>{EMOJI.achievement.animal} Discover local wildlife</>}
@@ -4694,7 +4718,10 @@ export function AchievementsScreen() {
               <div className="flex items-center gap-2">
                 <div className="text-display font-extrabold text-[16px]">{a.title}</div>
                 {a.done && (
-                  <span className="text-xs font-bold tracking-wider bg-gold-soft px-1.5 py-0.5 rounded-full" style={{ color: "var(--gold)" }}>
+                  <span
+                    className="text-xs font-bold tracking-wider bg-gold-soft px-1.5 py-0.5 rounded-full"
+                    style={{ color: "var(--gold)" }}
+                  >
                     Unlocked
                   </span>
                 )}

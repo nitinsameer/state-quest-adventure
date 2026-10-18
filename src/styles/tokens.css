@@ -578,6 +578,19 @@
   border-color: var(--color-border-purple);
 }
 
+/* Soft accent borders (for card highlights with transparency) */
+@utility border-accent-1-soft {
+  border-color: color-mix(in srgb, var(--accent-1) 25%, transparent);
+}
+
+@utility border-accent-3-soft {
+  border-color: color-mix(in srgb, var(--accent-3) 25%, transparent);
+}
+
+@utility border-accent-4-soft {
+  border-color: color-mix(in srgb, var(--accent-4) 30%, transparent);
+}
+
 @utility line-clamp-ellipsis-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -737,6 +750,11 @@
 
 /* === PREMIUM SHADOW HIERARCHY SYSTEM === */
 /* Consistent elevation levels for polished UI */
+
+/* Level 0: Minimal shadow for pressed/active states */
+.shadow-elevated-0 {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
 
 /* Level 1: Subtle shadows for hover states and subtle elevation */
 .shadow-elevated-1 {
