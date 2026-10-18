@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, Link } from "@tanstack/react-router";
 import mascot from "@/assets/mascot.webp";
 import { getState } from "@/lib/states";
@@ -17,7 +17,7 @@ import { EMOJI } from "@/constants/emoji";
 const BADGE_EMOJI: Record<BadgeId, string> = {
   monument: EMOJI.achievement.monument,
   animal: EMOJI.achievement.animal,
-  explorer: "🎖️",
+  explorer: "???�",
 };
 
 function loadImage(src: string): Promise<HTMLImageElement> {
@@ -236,11 +236,11 @@ export function StatePostcardScreen({
         const library = usePostcardLibrary.getState();
         const now = new Date().toISOString();
 
-        // Generate a stamp date like "12 · MAR"
+        // Generate a stamp date like "12 � MAR"
         const date = new Date();
         const day = date.getDate();
         const month = date.toLocaleString("en-US", { month: "short" }).toUpperCase();
-        const stampDate = `${day} · ${month}`;
+        const stampDate = `${day} � ${month}`;
 
         // Determine badge earned
         const earned = badgesFor(progress, state.name);
@@ -249,7 +249,7 @@ export function StatePostcardScreen({
         // Add to postcard library with image data
         library.addPostcard(state.name, badgeId, stampDate, now, base64);
 
-        toast.success("💾 Saved to your Passport!", {
+        toast.success("?? Saved to your Passport!", {
           subtitle: "View anytime from Explorer",
         });
         setBusy(false);
@@ -326,7 +326,7 @@ export function StatePostcardScreen({
       <div className="pt-5 text-center px-(--padding-lg) relative z-10">
         <div className="text-white/90 text-xs font-bold tracking-wide">Your Stamp</div>
         <div className="text-white text-xs font-semibold mt-1">
-          Show your friends you beat {state.name}! 🎫
+          Show your friends you beat {state.name}! ??
         </div>
       </div>
 

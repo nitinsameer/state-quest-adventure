@@ -1,4 +1,4 @@
-﻿/**
+/**
  * PostcardPreviewModal - Uses StandardModal for consistent design
  *
  * Auto-shows postcard preview after quiz completion with two CTAs:
@@ -23,7 +23,7 @@ import { EMOJI } from "@/constants/emoji";
 const BADGE_EMOJI: Record<BadgeId, string> = {
   monument: EMOJI.achievement.monument,
   animal: EMOJI.achievement.animal,
-  explorer: "🎖️",
+  explorer: "???�",
 };
 
 function loadImage(src: string): Promise<HTMLImageElement> {
@@ -239,11 +239,11 @@ export function PostcardPreviewModal({
         const library = usePostcardLibrary.getState();
         const now = new Date().toISOString();
 
-        // Generate a stamp date like "12 · MAR"
+        // Generate a stamp date like "12 � MAR"
         const date = new Date();
         const day = date.getDate();
         const month = date.toLocaleString("en-US", { month: "short" }).toUpperCase();
-        const stampDate = `${day} · ${month}`;
+        const stampDate = `${day} � ${month}`;
 
         // Determine badge earned
         const earned = badgesFor(
@@ -330,7 +330,7 @@ export function PostcardPreviewModal({
             variant: "primary",
           },
           {
-            label: "⏰ Later",
+            label: "? Later",
             onClick: handleLater,
             variant: "tertiary",
           },
