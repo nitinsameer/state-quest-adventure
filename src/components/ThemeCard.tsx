@@ -8,6 +8,7 @@
  * - Unlock badge fade-in animation
  * - Sparkle/pulse on selection
  * - Full prefers-reduced-motion support
+ * - Enhanced lock icon with tap-to-unlock hint
  */
 
 import { useState, useEffect } from "react";
@@ -24,6 +25,7 @@ interface ThemeCardProps {
 export function ThemeCard({ theme, isUnlocked, isSelected, onSelect }: ThemeCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [sparkle, setSparkle] = useState(false);
+  const [showUnlockHint, setShowUnlockHint] = useState(false);
 
   // Respect prefers-reduced-motion for all animations
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -36,6 +38,23 @@ export function ThemeCard({ theme, isUnlocked, isSelected, onSelect }: ThemeCard
       return () => clearTimeout(t);
     }
   }, [isSelected]);
+
+  // Auto-hide unlock hint after 2 seconds
+  useEffect(() => {
+    if (showUnlockHint) {
+      const timer = setTimeout(() => setShowUnlockHint(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [showUnlockHint]);
+
+  // Handle click on locked card to show unlock hint
+  const handleCardClick = () => {
+    if (isUnlocked) {
+      onSelect();
+    } else if (!isUnlocked && theme.unlockRule) {
+      setShowUnlockHint(true);
+    }
+  };
 
   // Glow color from theme accent with 40% opacity
   const glowColor = theme.previewTokens.accent + "66";
@@ -66,6 +85,21 @@ export function ThemeCard({ theme, isUnlocked, isSelected, onSelect }: ThemeCard
           }
         }
 
+        @keyframes fadeInOut {
+          0% {
+            opacity: 0;
+          }
+          10% {
+            opacity: 1;
+          }
+          90% {
+            opacity: 1;
+          }
+          100% {
+            opacity: 0;
+          }
+        }
+
         @media (prefers-reduced-motion: no-preference) {
           .badge-anim {
             animation: fadeInBadge 0.4s ease forwards;
@@ -73,15 +107,20 @@ export function ThemeCard({ theme, isUnlocked, isSelected, onSelect }: ThemeCard
           .card-sparkle {
             animation: ringPulse 0.6s cubic-bezier(0.4, 0, 0.6, 1);
           }
+          .unlock-hint {
+            animation: fadeInOut 2s ease-out forwards;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .unlock-hint {
+            opacity: 1;
+          }
         }
       `}</style>
 
       <button
-        onClick={() => {
-          if (isUnlocked) {
-            onSelect();
-          }
-        }}
+        onClick={handleCardClick}
         disabled={!isUnlocked}
         className={`rounded-2xl p-3 flex flex-col min-h-[200px] border-4 ${
           isSelected && isUnlocked ? "border-accent-1" : "border-transparent"
@@ -117,8 +156,35 @@ export function ThemeCard({ theme, isUnlocked, isSelected, onSelect }: ThemeCard
           }}
           onMouseLeave={() => setIsHovered(false)}
         >
-          {/* Lock Icon - Top Left of Preview Box */}
-          {!isUnlocked && <div className="absolute top-2 left-2 text-lg">{EMOJI.action.lock}</div>}
+          {/* Enhanced Lock Icon - Top Left of Preview Box */}
+          {!isUnlocked && (
+            <div className="absolute top-2 left-2 flex items-center justify-center">
+              {/* Gold background circle */}
+              <div
+                className="absolute w-8 h-8 rounded-full flex items-center justify-center text-lg"
+                style={{
+                  backgroundColor: "var(--accent-4)",
+                  opacity: 0.4,
+                }}
+              />
+              {/* Lock emoji on top */}
+              <div className="relative z-10 text-lg">{EMOJI.action.lock}</div>
+
+              {/* Unlock hint tooltip - appears on tap */}
+              {showUnlockHint && (
+                <div
+                  className="absolute top-full mt-1 left-1/2 transform -translate-x-1/2 whitespace-nowrap text-xs font-bold rounded px-2 py-1 unlock-hint"
+                  style={{
+                    backgroundColor: "var(--text-primary)",
+                    color: "var(--surface-card)",
+                    zIndex: 20,
+                  }}
+                >
+                  {formatUnlockCondition(theme.unlockRule)}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Checkmark - Top Right of Preview Box */}
           {isSelected && isUnlocked && (

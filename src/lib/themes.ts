@@ -10,6 +10,8 @@
  * eslint-disable no-hardcoded-colors/no-hardcoded-colors
  */
 
+import { EMOJI } from "@/constants/emoji";
+
 export type ThemeCategory = "bright" | "night" | "fancy" | "clean" | "classic";
 
 export interface Theme {
@@ -36,51 +38,29 @@ export interface Theme {
 // Per-theme music removed — no real audio assets exist yet. To re-add: restore musicUrl field in Theme type, add real licensed loop files to public/music/, restore the toggle in ThemesScreen.tsx.
 
 export const THEMES: Theme[] = [
-  // Light & Clean
+  // BRIGHT category - free first
   {
-    id: "clay",
-    name: "Claymorphism",
-    description: "Soft, warm, and friendly. The default India Explorer theme.",
+    id: "pop",
+    name: "Bubblegum Pop",
+    description: "Playful and vibrant. Bold gradients and colors.",
     isDark: false,
     effects: { blur: false, glow: false, heavy: false },
-    // eslint-disable-next-line no-hardcoded-colors/no-hardcoded-colors
-    previewTokens: { bg: "#ece8fb", surface: "#f7f4ff", text: "#2d2650", accent: "#7c5cf0" },
-    category: "fancy",
+    previewTokens: { bg: "#fff7fb", surface: "#fff", text: "#2a2140", accent: "#c471ed" },
+    category: "bright",
   },
   {
-    id: "neu",
-    name: "Neumorphism",
-    description: "Subtle depth with soft shadows. Minimalist soft-UI design.",
+    id: "brutal",
+    name: "Paintbrush Bold",
+    description: "Bold and stark. Yellow and pink with thick black borders.",
     isDark: false,
     effects: { blur: false, glow: false, heavy: false },
-    // eslint-disable-next-line no-hardcoded-colors/no-hardcoded-colors
-    previewTokens: { bg: "#e0e5ec", surface: "#e0e5ec", text: "#3d4468", accent: "#5b6cff" },
-    unlockRule: { type: "states", value: 25 },
-    category: "clean",
-  },
-  {
-    id: "minimal",
-    name: "Minimal",
-    description: "Clean and minimal. Apple-inspired simplicity.",
-    isDark: false,
-    effects: { blur: false, glow: false, heavy: false },
-    // eslint-disable-next-line no-hardcoded-colors/no-hardcoded-colors
-    previewTokens: { bg: "#f5f5f7", surface: "#fff", text: "#1d1d1f", accent: "#0071e3" },
-    category: "clean",
-  },
-  {
-    id: "material",
-    name: "Material Design 3",
-    description: "Modern Material Design. Google's design language.",
-    isDark: false,
-    effects: { blur: false, glow: false, heavy: false },
-    previewTokens: { bg: "#fef7ff", surface: "#f3edf7", text: "#1d1b20", accent: "#6750a4" },
-    unlockRule: { type: "states", value: 20 },
-    category: "clean",
+    previewTokens: { bg: "#ffe66d", surface: "#fff", text: "#111", accent: "#ff3d7f" },
+    unlockRule: { type: "states", value: 6 },
+    category: "bright",
   },
   {
     id: "bento",
-    name: "Bento Box",
+    name: "Rainbow Box",
     description: "Clean grids and sharp edges. Modern app layout.",
     isDark: false,
     effects: { blur: false, glow: false, heavy: false },
@@ -89,29 +69,19 @@ export const THEMES: Theme[] = [
     category: "bright",
   },
   {
-    id: "pop",
-    name: "Pop",
-    description: "Playful and vibrant. Bold gradients and colors.",
+    id: "cartoon",
+    name: "Comic Book",
+    description: "Playful and vibrant. Bold lines, bright colors, comic book style.",
     isDark: false,
     effects: { blur: false, glow: false, heavy: false },
-    previewTokens: { bg: "#fff7fb", surface: "#fff", text: "#2a2140", accent: "#c471ed" },
+    previewTokens: { bg: "#7ad7ff", surface: "#fff", text: "#1b1b1b", accent: "#ff4757" },
     category: "bright",
   },
-  {
-    id: "paper",
-    name: "Paper",
-    description: "Notebook and handwritten feel. Warm and organic.",
-    isDark: false,
-    effects: { blur: false, glow: false, heavy: false },
-    previewTokens: { bg: "#f6efe0", surface: "#fffdf6", text: "#3a3a4a", accent: "#d9534f" },
-    unlockRule: { type: "states", value: 15 },
-    category: "clean",
-  },
 
-  // Dark & Specialized
+  // NIGHT category - free first
   {
     id: "claydark",
-    name: "Claymorphism Dark",
+    name: "Twilight Clay",
     description: "Dark variant of Claymorphism. Soft shadows on dark.",
     isDark: true,
     effects: { blur: false, glow: false, heavy: false },
@@ -119,56 +89,50 @@ export const THEMES: Theme[] = [
     category: "night",
   },
   {
-    id: "glass",
-    name: "Glassmorphism",
-    description: "Modern and translucent. Frosted glass effect with blur.",
+    id: "oled",
+    name: "Night Sky",
+    description: "Pure black OLED optimized. Zero shadows for efficiency.",
     isDark: true,
-    effects: { blur: true, glow: false, heavy: false },
-    previewTokens: { bg: "#6a4fe0", surface: "rgba(255,255,255,.18)", text: "#fff", accent: "#fff" },
-    unlockRule: { type: "states", value: 36 },
-    category: "fancy",
-  },
-  {
-    id: "skeuo",
-    name: "Skeumorphism",
-    description: "Realistic and tactile. Detailed shadows and textures.",
-    isDark: false,
     effects: { blur: false, glow: false, heavy: false },
-    previewTokens: { bg: "#d8d2c4", surface: "#fcfcfc", text: "#3b2a1e", accent: "#1f6fd6" },
-    unlockRule: { type: "states", value: 30 },
-    category: "fancy",
+    previewTokens: { bg: "#000", surface: "#0b0b0b", text: "#f5f5f5", accent: "#4de1c1" },
+    unlockRule: { type: "streak", value: 3 },
+    category: "night",
   },
   {
-    id: "aero",
-    name: "Futura Aero",
-    description: "Clean, futuristic, and streamlined. Aerospace-inspired.",
-    isDark: false,
-    effects: { blur: false, glow: false, heavy: false },
-    previewTokens: { bg: "#bff0ff", surface: "#fff", text: "#0b3a5a", accent: "#0b82d6" },
-    unlockRule: { type: "states", value: 3 },
-    category: "classic",
-  },
-  {
-    id: "aurora",
-    name: "Aurora",
-    description: "Northern lights inspired. Radiant gradients with glow.",
+    id: "term",
+    name: "Hacker Mode",
+    description: "Matrix green terminal. Classic hacker aesthetic.",
     isDark: true,
-    effects: { blur: true, glow: true, heavy: false },
-    previewTokens: { bg: "#0b1020", surface: "rgba(255,255,255,.08)", text: "#f2f6ff", accent: "#5ef2c2" },
-    unlockRule: { type: "streak", value: 7 },
-    category: "fancy",
+    effects: { blur: false, glow: true, heavy: false },
+    previewTokens: { bg: "#0a0f0a", surface: "#0d140d", text: "#33ff66", accent: "#33ff66" },
+    unlockRule: { type: "firstBadge", value: 1 },
+    category: "night",
   },
   {
-    id: "cartoon",
-    name: "Cartoon Comic",
-    description: "Playful and vibrant. Bold lines, bright colors, comic book style.",
-    isDark: false,
-    effects: { blur: false, glow: false, heavy: false },
-    previewTokens: { bg: "#7ad7ff", surface: "#fff", text: "#1b1b1b", accent: "#ff4757" },
-    category: "classic",
+    id: "cyber",
+    name: "Neon Lights",
+    description: "Neon glow and cyber aesthetic. Bright accents on dark.",
+    isDark: true,
+    effects: { blur: false, glow: true, heavy: false },
+    previewTokens: { bg: "#07071a", surface: "#12122e", text: "#e8f0ff", accent: "#00f5d4" },
+    unlockRule: { type: "streak", value: 14 },
+    category: "night",
   },
-
-  // Retro & Technical
+  {
+    id: "synth",
+    name: "Electric Dream",
+    description: "Retro-futuristic neon. Bright pink and cyan on dark.",
+    isDark: true,
+    effects: { blur: false, glow: true, heavy: false },
+    previewTokens: {
+      bg: "#1a0536",
+      surface: "rgba(26,5,54,.72)",
+      text: "#ffe8ff",
+      accent: "#2ee6ff",
+    },
+    unlockRule: { type: "badges", value: 10 },
+    category: "night",
+  },
   {
     id: "pixel",
     name: "Pixel Retro",
@@ -179,57 +143,112 @@ export const THEMES: Theme[] = [
     unlockRule: { type: "badges", value: 25 },
     category: "night",
   },
-  {
-    id: "term",
-    name: "Terminal",
-    description: "Matrix green terminal. Classic hacker aesthetic.",
-    isDark: true,
-    effects: { blur: false, glow: true, heavy: false },
-    previewTokens: { bg: "#0a0f0a", surface: "#0d140d", text: "#33ff66", accent: "#33ff66" },
-    unlockRule: { type: "firstBadge", value: 1 },
-    category: "night",
-  },
-  {
-    id: "oled",
-    name: "OLED",
-    description: "Pure black OLED optimized. Zero shadows for efficiency.",
-    isDark: true,
-    effects: { blur: false, glow: false, heavy: false },
-    previewTokens: { bg: "#000", surface: "#0b0b0b", text: "#f5f5f5", accent: "#4de1c1" },
-    unlockRule: { type: "streak", value: 3 },
-    category: "night",
-  },
 
-  // Bold & High-Contrast
+  // FANCY category - no free starter
   {
-    id: "brutal",
-    name: "Brutalist",
-    description: "Bold and stark. Yellow and pink with thick black borders.",
+    id: "glass",
+    name: "Glassmorph Magic",
+    description: "Modern and translucent. Frosted glass effect with blur.",
+    isDark: true,
+    effects: { blur: true, glow: false, heavy: false },
+    previewTokens: {
+      bg: "#6a4fe0",
+      surface: "rgba(255,255,255,.18)",
+      text: "#fff",
+      accent: "#fff",
+    },
+    unlockRule: { type: "states", value: 36 },
+    category: "fancy",
+  },
+  {
+    id: "aurora",
+    name: "Aurora Glow",
+    description: "Northern lights inspired. Radiant gradients with glow.",
+    isDark: true,
+    effects: { blur: true, glow: true, heavy: false },
+    previewTokens: {
+      bg: "#0b1020",
+      surface: "rgba(255,255,255,.08)",
+      text: "#f2f6ff",
+      accent: "#5ef2c2",
+    },
+    unlockRule: { type: "streak", value: 7 },
+    category: "fancy",
+  },
+  {
+    id: "skeuo",
+    name: "Leather Luxury",
+    description: "Realistic and tactile. Detailed shadows and textures.",
     isDark: false,
     effects: { blur: false, glow: false, heavy: false },
-    previewTokens: { bg: "#ffe66d", surface: "#fff", text: "#111", accent: "#ff3d7f" },
-    unlockRule: { type: "states", value: 6 },
-    category: "bright",
+    previewTokens: { bg: "#d8d2c4", surface: "#fcfcfc", text: "#3b2a1e", accent: "#1f6fd6" },
+    unlockRule: { type: "states", value: 30 },
+    category: "fancy",
+  },
+
+  // CLEAN category - free first
+  {
+    id: "minimal",
+    name: "Cloud Simple",
+    description: "Clean and minimal. Apple-inspired simplicity.",
+    isDark: false,
+    effects: { blur: false, glow: false, heavy: false },
+
+    previewTokens: { bg: "#f5f5f7", surface: "#fff", text: "#1d1d1f", accent: "#0071e3" },
+    category: "clean",
   },
   {
-    id: "cyber",
-    name: "Cyberpunk",
-    description: "Neon glow and cyber aesthetic. Bright accents on dark.",
-    isDark: true,
-    effects: { blur: false, glow: true, heavy: false },
-    previewTokens: { bg: "#07071a", surface: "#12122e", text: "#e8f0ff", accent: "#00f5d4" },
-    unlockRule: { type: "streak", value: 14 },
-    category: "night",
+    id: "material",
+    name: "Paper Pages",
+    description: "Modern Material Design. Google's design language.",
+    isDark: false,
+    effects: { blur: false, glow: false, heavy: false },
+    previewTokens: { bg: "#fef7ff", surface: "#f3edf7", text: "#1d1b20", accent: "#6750a4" },
+    unlockRule: { type: "states", value: 20 },
+    category: "clean",
   },
   {
-    id: "synth",
-    name: "Synthwave",
-    description: "Retro-futuristic neon. Bright pink and cyan on dark.",
-    isDark: true,
-    effects: { blur: false, glow: true, heavy: false },
-    previewTokens: { bg: "#1a0536", surface: "rgba(26,5,54,.72)", text: "#ffe8ff", accent: "#2ee6ff" },
-    unlockRule: { type: "badges", value: 10 },
-    category: "night",
+    id: "paper",
+    name: "Notebook Paper",
+    description: "Notebook and handwritten feel. Warm and organic.",
+    isDark: false,
+    effects: { blur: false, glow: false, heavy: false },
+    previewTokens: { bg: "#f6efe0", surface: "#fffdf6", text: "#3a3a4a", accent: "#d9534f" },
+    unlockRule: { type: "states", value: 15 },
+    category: "clean",
+  },
+  {
+    id: "neu",
+    name: "Soft Buttons",
+    description: "Subtle depth with soft shadows. Minimalist soft-UI design.",
+    isDark: false,
+    effects: { blur: false, glow: false, heavy: false },
+
+    previewTokens: { bg: "#e0e5ec", surface: "#e0e5ec", text: "#3d4468", accent: "#5b6cff" },
+    unlockRule: { type: "states", value: 25 },
+    category: "clean",
+  },
+
+  // CLASSIC category - free first
+  {
+    id: "clay",
+    name: "Warm Clay",
+    description: "Soft, warm, and friendly. The default India Explorer theme.",
+    isDark: false,
+    effects: { blur: false, glow: false, heavy: false },
+
+    previewTokens: { bg: "#ece8fb", surface: "#f7f4ff", text: "#2d2650", accent: "#7c5cf0" },
+    category: "classic",
+  },
+  {
+    id: "aero",
+    name: "Sky Blue",
+    description: "Clean, futuristic, and streamlined. Aerospace-inspired.",
+    isDark: false,
+    effects: { blur: false, glow: false, heavy: false },
+    previewTokens: { bg: "#bff0ff", surface: "#fff", text: "#0b3a5a", accent: "#0b82d6" },
+    unlockRule: { type: "states", value: 3 },
+    category: "classic",
   },
 ];
 
@@ -312,9 +331,11 @@ export function isThemeUnlocked(
  * @param progress Player progress object
  * @returns Array of unlocked themes
  */
-export function getUnlockedThemes(
-  progress: { completed: string[]; streak: number; badges: Record<string, string[]> },
-): Theme[] {
+export function getUnlockedThemes(progress: {
+  completed: string[];
+  streak: number;
+  badges: Record<string, string[]>;
+}): Theme[] {
   return THEMES.filter((t) => isThemeUnlocked(t, progress));
 }
 
@@ -322,15 +343,28 @@ export function getUnlockedThemes(
  * Get badge info for a theme's unlock rule.
  * Used by the theme picker UI to color-code unlock badges.
  */
-export function getUnlockBadgeInfo(unlockRule?: Theme["unlockRule"]): { color: string; icon: string; text: string } {
+export function getUnlockBadgeInfo(unlockRule?: Theme["unlockRule"]): {
+  color: string;
+  icon: string;
+  text: string;
+} {
   if (!unlockRule) return { color: "var(--color-surface-primary)", icon: "✓", text: "Unlocked" };
-  // eslint-disable-next-line no-hardcoded-colors/no-hardcoded-colors
+
   switch (unlockRule.type) {
-    case "states":    return { color: "#3b82f6", icon: "📊", text: `Explore ${unlockRule.value} states` };
-    case "streak":    return { color: "#f97316", icon: "🔥", text: `${unlockRule.value}-day streak` };
-    case "badges":    return { color: "#eab308", icon: "🏆", text: `Earn ${unlockRule.value} badges` };
-    case "firstBadge":return { color: "#94a3b8", icon: "🎯", text: "First badge" };
-    default:          return { color: "#94a3b8", icon: "🔒", text: "Locked" };
+    case "states":
+      return { color: "#3b82f6", icon: "📊", text: `Explore ${unlockRule.value} states` };
+    case "streak":
+      return { color: "#f97316", icon: "🔥", text: `${unlockRule.value}-day streak` };
+    case "badges":
+      return {
+        color: "#eab308",
+        icon: EMOJI.milestone.hundred,
+        text: `Earn ${unlockRule.value} badges`,
+      };
+    case "firstBadge":
+      return { color: "#94a3b8", icon: EMOJI.milestone.twentyFive, text: "First badge" };
+    default:
+      return { color: "#94a3b8", icon: EMOJI.action.lock, text: "Locked" };
   }
 }
 
@@ -340,10 +374,15 @@ export function getUnlockBadgeInfo(unlockRule?: Theme["unlockRule"]): { color: s
 export function formatUnlockCondition(rule?: Theme["unlockRule"]): string {
   if (!rule) return "";
   switch (rule.type) {
-    case "states":    return `Complete ${rule.value} places!`;
-    case "streak":    return `Keep a ${rule.value}-day streak!`;
-    case "badges":    return `Collect ${rule.value} badges!`;
-    case "firstBadge":return "Earn your first badge!";
-    default:          return "";
+    case "states":
+      return `Complete ${rule.value} places!`;
+    case "streak":
+      return `Keep a ${rule.value}-day streak!`;
+    case "badges":
+      return `Collect ${rule.value} badges!`;
+    case "firstBadge":
+      return "Earn your first badge!";
+    default:
+      return "";
   }
 }
