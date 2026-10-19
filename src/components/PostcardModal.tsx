@@ -1,14 +1,13 @@
-import { useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
 import { getState } from "@/lib/states";
-import { STATE_ART, TONE_GRADIENT, TONE_HEX } from "@/lib/state-art";
+import { STATE_ART, TONE_HEX } from "@/lib/state-art";
 import { type PostcardData } from "@/lib/progress";
 import { fxTap } from "@/lib/fx";
-import { useCelebration } from "@/hooks/useCelebration";
 import { useToast } from "@/hooks/useToast";
 import { usePostcardLibrary } from "@/store/postcard-library-store";
 import { readTokenAsHex } from "@/lib/theme-tokens";
 import { EMOJI } from "@/constants/emoji";
+import { ConfettiBurst } from "@/components/ConfettiBurst";
 
 const BADGE_EMOJI: Record<string, string> = {
   monument: EMOJI.achievement.monument,
@@ -148,11 +147,19 @@ export function PostcardModal({
   postcard: PostcardData;
   onClose: () => void;
 }) {
-  const navigate = useNavigate();
   const state = getState(postcard.state);
-  const celebration = useCelebration();
   const toast = useToast();
   const [isSaving, setIsSaving] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+  const [confettiKey, setConfettiKey] = useState(0);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setConfettiKey((k) => k + 1);
+    }, 200);
+
+    return () => clearTimeout(timeout);
+  }, []);
 
   const handleSaveToPassport = async () => {
     setIsSaving(true);
@@ -198,69 +205,146 @@ export function PostcardModal({
     }
   };
 
+  const handleDismiss = () => {
+    setIsClosing(true);
+    setTimeout(() => onClose(), 300);
+  };
+
   const badgeEmoji = BADGE_EMOJI[postcard.badge] || EMOJI.achievement.explorer;
+  const heroImageUrl = STATE_ART[state.name];
+  const [fromHex, toHex] = TONE_HEX[state.tone] ?? TONE_HEX.orange;
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end animate-fade-in"
-      style={{backgroundColor: 'var(--scrim)'}}
-      onClick={onClose}
+      className={`fixed inset-0 z-50 flex items-center justify-center ${
+        isClosing ? "animate-fade-out" : "animate-fade-in"
+      }`}
+      style={{ backgroundColor: "var(--scrim)" }}
+      onClick={handleDismiss}
     >
-      <div
-        className="w-full bg-surface-card rounded-t-3xl max-h-[90vh] overflow-y-auto flex flex-col animate-slide-up shadow-elevated-3"
-        onClick={(e) => e.stopPropagation()}
-        style={{ padding: 'var(--padding-lg)', gap: 'var(--gap-md)' }}
-      >
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 h-8 w-8 rounded-full ui-button ui-accent-1-soft text-text-primary flex items-center justify-center"
-        >
-          {EMOJI.ui.close}
-        </button>
+      {/* Confetti Burst */}
+      <ConfettiBurst trigger={confettiKey} size="big" />
 
-        {/* Header */}
-        <div className="text-center pt-2">
-          <h2 className="text-display font-extrabold text-2xl text-text-primary">
-            Achievement Unlocked!
-          </h2>
-          <p className="text-sm text-text-secondary" style={{ marginTop: 'var(--space-0-25)' }}>
-            You completed {state.name}
-          </p>
+      {/* Modal Content Container */}
+      <div
+        className="relative z-10 flex flex-col items-center max-w-[360px] w-full"
+        style={{ padding: "24px", gap: "16px" }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* State Name Label (outside postcard) */}
+        <div className="text-xs font-extrabold uppercase tracking-widest text-text-secondary">
+          {state.name}
         </div>
 
-        {/* Badge Display */}
-        <div className="flex flex-col items-center" style={{ gap: 'var(--gap-base)' }}>
-          <div className="text-6xl">{badgeEmoji}</div>
-          <div className="text-center">
-            <div className="text-sm font-extrabold text-text-primary">
-              {postcard.badge.toUpperCase()} BADGE
+        {/* Postcard Card */}
+        <div
+          className="relative w-[328px] h-[420px] rounded-[20px] overflow-hidden animate-postcard-enter"
+          style={{
+            backgroundColor: "white",
+            boxShadow:
+              "0 8px 32px rgba(0, 0, 0, 0.18), 0 0 0 0 transparent",
+            "--glow-color": `${fromHex}59`,
+          } as React.CSSProperties}
+        >
+          {/* Hero Image Section (top 60% = 252px) */}
+          <div
+            className="absolute inset-0"
+            style={{
+              height: "60%",
+              backgroundImage: heroImageUrl ? `url(${heroImageUrl})` : undefined,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundColor: fromHex,
+            }}
+          >
+            {/* Gradient Overlay */}
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                background: `linear-gradient(to bottom, transparent 30%, ${fromHex}60 100%)`,
+              }}
+            />
+          </div>
+
+          {/* Content Area (bottom 40% = 168px) */}
+          <div
+            className="absolute inset-0 top-3/5 flex flex-col items-center justify-center"
+            style={{
+              backgroundColor: "white",
+              padding: "16px 20px",
+              gap: "8px",
+            }}
+          >
+            {/* Badge Type Label */}
+            <div className="text-[11px] font-extrabold uppercase tracking-widest text-text-secondary">
+              {postcard.badge} Badge
             </div>
-            <div className="text-display font-extrabold text-lg text-text-primary" style={{ marginTop: 'var(--space-0-25)' }}>
-              {state.name} Explorer
+
+            {/* Badge Emoji */}
+            <div
+              className="text-[56px] animate-badge-float"
+              style={{ lineHeight: 1 }}
+            >
+              {badgeEmoji}
             </div>
-            <div className="text-xs text-text-secondary" style={{ marginTop: 'var(--space-0-25)' }}>
+
+            {/* State Name */}
+            <div className="text-[20px] font-bold text-text-primary text-center">
+              {state.name}
+            </div>
+
+            {/* Capital City */}
+            {state.capital && (
+              <div className="text-[13px] text-text-secondary">
+                ⊕ {state.capital}
+              </div>
+            )}
+
+            {/* Date */}
+            <div className="text-[12px] text-text-secondary">
               {postcard.stampDate}
             </div>
           </div>
         </div>
 
-        {/* Fun Fact Section */}
-        <div className="ui-card ui-accent-4 rounded-2xl" style={{ padding: 'var(--padding-md)', marginTop: 'var(--space-0-5)', marginBottom: 'var(--space-0-5)' }}>
-          <div className="text-xs font-extrabold text-text-primary uppercase tracking-wider">
-            Did You Know?
+        {/* Fun Fact Box */}
+        <div
+          className="rounded-xl"
+          style={{
+            maxWidth: "360px",
+            padding: "12px 16px",
+            backgroundColor: "var(--accent-4-soft)",
+          }}
+        >
+          <div className="text-[11px] font-bold uppercase tracking-widest text-text-primary">
+            ✨ Did You Know?
           </div>
-          <p className="text-sm text-text-primary leading-relaxed" style={{ marginTop: 'var(--space-2)' }}>
+          <p
+            className="text-[13px] text-text-primary leading-relaxed"
+            style={{
+              marginTop: "8px",
+              display: "-webkit-box",
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+            }}
+          >
             {state.funFact}
           </p>
         </div>
 
-        {/* Save Button */}
+        {/* Save to Passport Button */}
         <button
           onClick={handleSaveToPassport}
           disabled={isSaving}
-          className="w-full h-12 rounded-2xl ui-button ui-accent-1 text-text-primary font-extrabold flex items-center justify-center disabled:opacity-60 disabled:cursor-not-allowed transition"
-          style={{ gap: 'var(--gap-base)' }}
+          className="w-full h-12 rounded-2xl font-bold flex items-center justify-center disabled:opacity-60 disabled:cursor-not-allowed transition-all animate-cta-breathe"
+          style={{
+            maxWidth: "360px",
+            backgroundColor: "var(--accent-1)",
+            color: "var(--text-primary)",
+            gap: "8px",
+          }}
         >
           {isSaving ? (
             <>
@@ -268,46 +352,14 @@ export function PostcardModal({
               Saving...
             </>
           ) : (
-            <>{EMOJI.achievement.explorer} Save to Passport</>
+            <>✨ Save to Passport</>
           )}
         </button>
 
-        {/* Info Text */}
+        {/* Dismiss Hint */}
         <p className="text-xs text-center text-text-secondary">
-          Keep it in your Passport! {EMOJI.postcard.keepIt}
+          Tap anywhere to close
         </p>
-
-        {/* Home Button */}
-        <button
-          onClick={() => {
-            fxTap();
-            onClose();
-            navigate({ to: "/home" });
-          }}
-          className="w-full h-12 rounded-2xl ui-button ui-accent-2 text-text-primary font-extrabold transition-all duration-200 active:scale-95"
-        >
-          {EMOJI.nav.home} Home
-        </button>
-
-        {/* Next State Button */}
-        <button
-          onClick={() => {
-            fxTap();
-            onClose();
-            navigate({ to: "/journey" });
-          }}
-          className="w-full h-12 rounded-2xl ui-button ui-accent-1 text-text-primary font-extrabold transition-all duration-200 active:scale-95"
-        >
-          {EMOJI.postcard.nextState} Next State
-        </button>
-
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="w-full h-12 rounded-2xl ui-button ui-accent-1-soft text-text-primary font-extrabold"
-        >
-          Close
-        </button>
       </div>
     </div>
   );
