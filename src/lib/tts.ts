@@ -141,6 +141,9 @@ export async function playTtsWithFallback(
     }
 
     // Try fallback to English
+    debugLog("tts-fallback", "Falling back to English", {
+      attemptedLanguage: langCode,
+    });
     debugLog("tts", "First language failed, attempting English fallback", {
       failedLanguage: langCode,
     });

@@ -37,6 +37,7 @@ import {
 import { LanguageToggle, type LanguageCode } from "@/components/LanguageToggle";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { useLanguageFallbackNotice } from "@/components/LanguageFallbackNotice";
 import { PostcardModal } from "@/components/PostcardModal";
 import { PostcardPreviewModal } from "@/components/PostcardPreviewModal";
 import { PostcardFrame } from "@/components/PostcardFrame";
@@ -62,7 +63,7 @@ import { setJourneyBackHandler } from "@/lib/journeyBackHandler";
 import { useCelebration } from "@/hooks/useCelebration";
 import { appLogger } from "@/lib/logger";
 import { firebaseEvents } from "@/lib/firebase-events";
-import { isBilingual, getAvailableLanguages } from "@/lib/bilingual-config";
+import { isBilingual, getAvailableLanguages, getNativeLanguage } from "@/lib/bilingual-config";
 import {
   getNewlyUnlockedBadges,
   markBadgeAsSeen,
@@ -2601,6 +2602,10 @@ export function LearningCardScreen({
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [playingCardIndex, setPlayingCardIndex] = useState<number | null>(null);
   const [showAudioPermissionPrompt, setShowAudioPermissionPrompt] = useState(false);
+
+  // Detect unsupported language and show fallback notification
+  const nativeLanguageCode = getNativeLanguage(state.name);
+  useLanguageFallbackNotice(state.name, nativeLanguageCode);
 
   // Now compute cards using displayLanguage and ageBand (which are now declared)
   const cards = useMemo(() => {

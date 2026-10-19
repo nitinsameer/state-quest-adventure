@@ -335,3 +335,62 @@ export function getNativeLanguage(stateName: string): LanguageCode {
 export function getBilingualStateConfig(stateName: string): BilingualStateConfig | undefined {
   return BILINGUAL_STATES.find((s) => s.stateName === stateName);
 }
+
+/**
+ * The TTS-supported language codes
+ *
+ * The native Android TTS engine supports only these ISO 639-1 language codes.
+ * States with native languages outside this list will automatically trigger
+ * a fallback to English with a user notification.
+ *
+ * Unsupported 6 states (will show fallback notice):
+ * 1. Chhattisgarh → hne (Chhattisgarhi)
+ * 2. Manipur → mni (Meitei)
+ * 3. Meghalaya → kha (Khasi)
+ * 4. Mizoram → miz (Mizo)
+ * 5. Ladakh → lbj (Ladakhi)
+ * 6. Haryana → hi (fallback to English due to device limitation)
+ *
+ * See: https://developer.android.com/reference/android/speech/tts/TextToSpeech
+ */
+export const TTS_SUPPORTED_LANGUAGES: string[] = [
+  "en", // English
+  "hi", // Hindi
+  "te", // Telugu
+  "ta", // Tamil
+  "gu", // Gujarati
+  "mr", // Marathi
+  "kn", // Kannada
+  "ml", // Malayalam
+  "or", // Odia
+  "bn", // Bengali
+  "pa", // Punjabi
+  "as", // Assamese
+];
+
+/**
+ * Check if a language code has TTS support on Android
+ *
+ * @param languageCode - ISO 639-1 code (e.g., "te", "hne", "mni")
+ * @returns true if language is supported by native Android TTS
+ *
+ * Usage:
+ * ```tsx
+ * const supported = isTtsLanguageSupported("hne"); // false
+ * const supported = isTtsLanguageSupported("te");  // true
+ * ```
+ */
+export function isTtsLanguageSupported(languageCode: string): boolean {
+  return TTS_SUPPORTED_LANGUAGES.includes(languageCode);
+}
+
+/**
+ * Get display name of native language for a state
+ * Useful for error messages and logging
+ *
+ * @param stateName - State name
+ * @returns Display name (e.g., "Telugu", "Chhattisgarhi")
+ */
+export function getNativeLanguageName(stateName: string): string {
+  return getBilingualStateConfig(stateName)?.nativeLanguageName ?? "English";
+}
