@@ -375,8 +375,8 @@ function StepResult({ ceremony, state, art }: StepProps) {
           <div className="mt-4 space-y-2">
             <div className="relative h-4 w-full rounded-full bg-ink/10 overflow-hidden">
               <div
-                className="h-full rounded-full gradient-gold transition-all duration-1000 ease-out"
-                style={{ width: `${(xpInCurrentLevel / nextLevelXp) * 100}%` }}
+                className="h-full rounded-full transition-all duration-1000 ease-out"
+                style={{ width: `${(xpInCurrentLevel / nextLevelXp) * 100}%`, backgroundColor: "var(--accent-4)" }}
               />
               <div
                 className="absolute top-0 h-1 rounded-full bg-default/70 transition-all duration-1000 ease-out"

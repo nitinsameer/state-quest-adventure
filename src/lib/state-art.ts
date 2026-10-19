@@ -76,10 +76,10 @@ export const STATE_ART: Record<string, string> = {
 };
 
 export const TONE_GRADIENT: Record<string, string> = {
-  orange: "gradient-saffron",
-  blue: "gradient-explorer",
-  green: "gradient-success",
-  gold: "gradient-gold",
+  orange: "var(--accent-1)",
+  blue: "var(--accent-5)",
+  green: "var(--accent-3)",
+  gold: "var(--accent-4)",
 };
 
 /** Flat hex pairs matching the gradient utilities, for canvas rendering. */

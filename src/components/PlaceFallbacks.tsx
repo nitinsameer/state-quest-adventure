@@ -10,7 +10,8 @@ function Shell({ emoji, title, body }: { emoji: string; title: string; body: str
       <p className="mt-(--space-0-5) text-muted-foreground font-semibold">{body}</p>
       <Link
         to="/journey"
-        className="mt-(--space-2) h-12 px-(--padding-lg) rounded-2xl gradient-saffron text-on-header text-display font-extrabold flex items-center"
+        className="mt-(--space-2) h-12 px-(--padding-lg) rounded-2xl text-display font-extrabold flex items-center"
+        style={{backgroundColor: "var(--accent-1)", color: "var(--accent-1-ink)"}}
       >
         Back to the map
       </Link>

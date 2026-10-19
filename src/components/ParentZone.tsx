@@ -130,7 +130,7 @@ export function ParentZoneScreen() {
   return (
     <div className="h-full w-full bg-surface-raised flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="px-(--padding-base) pt-(--space-0-25) pb-(--space-2) gradient-explorer rounded-b-[32px]" style={{color: "var(--text-on-header)"}}>
+      <div className="px-(--padding-base) pt-(--space-0-25) pb-(--space-2) rounded-b-[32px]" style={{backgroundColor: "var(--accent-5)", color: "var(--accent-5-ink)"}}>
         <div className="flex items-center justify-between">
           <button
             onClick={goBack}
@@ -223,8 +223,8 @@ export function ParentZoneScreen() {
                         <div className="text-display font-extrabold text-sm">{s.name}</div>
                         <div className="h-1.5 mt-(--space-0-25) rounded-full bg-text-muted overflow-hidden">
                           <div
-                            className="h-full gradient-explorer"
-                            style={{ width: `${(cardsDone(p, s.name) / CARDS_PER_STATE) * 100}%` }}
+                            className="h-full"
+                            style={{ width: `${(cardsDone(p, s.name) / CARDS_PER_STATE) * 100}%`, backgroundColor: "var(--accent-5)" }}
                           />
                         </div>
                       </div>
@@ -254,8 +254,8 @@ export function ParentZoneScreen() {
                 <div className="flex items-center gap-(--gap-base)">
                   <div className="flex-1 h-3 bg-progress-track rounded-full overflow-hidden">
                     <div
-                      className="h-full gradient-saffron"
-                      style={{ width: `${(p.completed.length / TOTAL_STATES) * 100}%` }}
+                      className="h-full"
+                      style={{ width: `${(p.completed.length / TOTAL_STATES) * 100}%`, backgroundColor: "var(--accent-1)" }}
                     />
                   </div>
                   <span className="text-sm font-extrabold text-action-primary-bg">

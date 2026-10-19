@@ -45,29 +45,40 @@ export function JourneyDestinationCard({
     blue: "var(--accent-2-soft)",
   };
 
-  // Gradient button class mapping per tone
+  // Gradient button color mapping per tone (now uses CSS tokens)
   const toneGradients: Record<string, string> = {
-    orange: "gradient-saffron",
-    gold: "gradient-gold",
-    green: "gradient-success",
-    blue: "gradient-explorer",
+    orange: "var(--accent-1)",
+    gold: "var(--accent-4)",
+    green: "var(--accent-3)",
+    blue: "var(--accent-5)",
+  };
+
+  // Text color mapping for gradient backgrounds
+  const toneBackgroundInkMap: Record<string, string> = {
+    orange: "var(--accent-1-ink)",
+    gold: "var(--accent-4-ink)",
+    green: "var(--accent-3-ink)",
+    blue: "var(--accent-5-ink)",
   };
 
   // Determine card styling based on status and tone
   let cardBgColor = toneBackgrounds[state.tone] || toneBackgrounds.orange;
   let textColorStyle: React.CSSProperties = {color: "var(--text-primary)"};
-  let buttonGradientClass = toneGradients[state.tone] || "gradient-saffron";
+  let buttonBackgroundColor = toneGradients[state.tone] || "var(--accent-1)";
+  let buttonTextColor = toneBackgroundInkMap[state.tone] || "var(--accent-1-ink)";
   let buttonTextClass = "text-on-header";
 
   if (status === "completed") {
     cardBgColor = toneBackgrounds[state.tone] || toneBackgrounds.orange;
     textColorStyle = {color: "var(--text-primary)"};
-    buttonGradientClass = toneGradients[state.tone] || "gradient-saffron";
+    buttonBackgroundColor = toneGradients[state.tone] || "var(--accent-1)";
+    buttonTextColor = toneBackgroundInkMap[state.tone] || "var(--accent-1-ink)";
     buttonTextClass = "text-on-header";
   } else if (status === "locked") {
     cardBgColor = "var(--surface-sunken)";
     textColorStyle = {color: "var(--text-secondary)"};
-    buttonGradientClass = "bg-surface-sunken";
+    buttonBackgroundColor = "var(--surface-sunken)";
+    buttonTextColor = "var(--text-secondary)";
     buttonTextClass = "text-text-secondary";
   }
 
@@ -166,7 +177,11 @@ export function JourneyDestinationCard({
       <button
         onClick={buttonHandler}
         disabled={isButtonDisabled}
-        className={`w-full py-3 ui-button ${status === "locked" ? "ui-accent-1-soft" : status === "completed" ? "ui-accent-3" : "ui-accent-1"} transition-all active:scale-95 flex items-center justify-center gap-2 font-bold ${isButtonDisabled ? "opacity-60 cursor-not-allowed" : ""}`}
+        style={{
+          backgroundColor: status === "locked" ? "var(--surface-sunken)" : buttonBackgroundColor,
+          color: status === "locked" ? "var(--text-secondary)" : buttonTextColor,
+        }}
+        className={`w-full py-3 rounded-2xl transition-all active:scale-95 flex items-center justify-center gap-2 font-bold ${isButtonDisabled ? "opacity-60 cursor-not-allowed" : ""}`}
       >
         {status === "locked" ? (
           <>

@@ -85,7 +85,7 @@ export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: st
   return (
     <div className="h-full w-full bg-page flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="relative gradient-explorer px-5 pt-(--padding-base) pb-(--padding-base) rounded-b-[36px] flex-shrink-0">
+      <div className="relative px-5 pt-(--padding-base) pb-(--padding-base) rounded-b-[36px] flex-shrink-0" style={{backgroundColor: "var(--accent-5)", color: "var(--accent-5-ink)"}}>
         <div className="flex items-center justify-between">
           <button
             onClick={() => {

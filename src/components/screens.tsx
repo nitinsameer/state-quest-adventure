@@ -182,8 +182,8 @@ function XPBar({ value, max = 100 }: { value: number; max?: number }) {
   return (
     <div className="relative h-3 w-full rounded-full bg-text-primary/10 overflow-hidden">
       <div
-        className="h-full rounded-full gradient-gold transition-all duration-1000 ease-out"
-        style={{ width: `${pct}%` }}
+        className="h-full rounded-full transition-all duration-1000 ease-out"
+        style={{ width: `${pct}%`, backgroundColor: "var(--accent-4)" }}
       />
       <div
         className="absolute top-0 h-1 rounded-full bg-text-on-header/70 transition-all duration-1000 ease-out"
@@ -308,7 +308,7 @@ function HeaderBar({
 
 export function SplashScreen() {
   return (
-    <div className="h-full w-full gradient-saffron relative overflow-hidden flex flex-col items-center justify-center">
+    <div className="h-full w-full relative overflow-hidden flex flex-col items-center justify-center" style={{backgroundColor: "var(--accent-1)"}}>
       <div className="absolute -top-10 -left-10 w-56 h-56 rounded-full bg-accent-1-soft/40 blur-2xl" />
       <div className="absolute -bottom-16 -right-16 w-72 h-72 rounded-full bg-accent-1-soft/30 blur-2xl" />
       <Cloud className="absolute top-16 left-4 w-24 opacity-80" />
@@ -932,8 +932,8 @@ function HomeDashboardContent() {
               <div className="mt-1 flex items-center gap-1.5">
                 <div className="h-2.5 flex-1 rounded-full bg-muted overflow-hidden">
                   <div
-                    className="h-full gradient-saffron transition-all duration-1000 ease-out"
-                    style={{ width: `${(currentDone / CARDS_PER_STATE) * 100}%` }}
+                    className="h-full transition-all duration-1000 ease-out"
+                    style={{ width: `${(currentDone / CARDS_PER_STATE) * 100}%`, backgroundColor: "var(--accent-1)" }}
                   />
                 </div>
                 <span className="text-label text-text-secondary">
@@ -1031,7 +1031,8 @@ function HomeDashboardContent() {
 
                     {/* State preview */}
                     <div
-                      className={`rounded-2xl gradient-saffron text-text-on-primary p-4 text-center mb-4`}
+                      className={`rounded-2xl p-4 text-center mb-4`}
+                      style={{backgroundColor: "var(--accent-1)", color: "var(--accent-1-ink)"}}
                     >
                       <div className="w-20 h-20 mx-auto mb-2 rounded-lg overflow-hidden">
                         <img
@@ -1205,9 +1206,8 @@ function MiniStateCard({
   return (
     <div className="relative rounded-3xl bg-surface-card border border-border-subtle shadow-soft p-3">
       <div
-        className={`h-20 rounded-2xl flex items-center justify-center overflow-hidden ${
-          locked ? "bg-muted" : "gradient-sky"
-        }`}
+        className="h-20 rounded-2xl flex items-center justify-center overflow-hidden"
+        style={{backgroundColor: locked ? "var(--color-muted-bg)" : "var(--accent-2)"}}
       >
         <img
           src={img}
@@ -1268,12 +1268,11 @@ function StateDetailModal({
         <div className="flex flex-col items-center pt-2">
           <div
             className={`h-20 w-20 rounded-full flex items-center justify-center text-5xl mb-4 ${
-              isDone
-                ? "gradient-saffron shadow-lg"
-                : isLocked
-                  ? "bg-surface-sunken opacity-60"
-                  : "gradient-saffron shadow-lg"
+              isLocked
+                ? "opacity-60"
+                : "shadow-lg"
             }`}
+            style={{backgroundColor: isLocked ? "var(--surface-sunken)" : "var(--accent-1)", color: isLocked ? "var(--text-secondary)" : "var(--accent-1-ink)"}}
           >
             {stateData.emoji}
           </div>
@@ -2477,7 +2476,7 @@ export function learningCardsFor(
       chip: def.chip,
       body: body,
       type: "main",
-      gradient: "gradient-sky",
+      gradient: "var(--accent-2)",
       chipTone: "orange",
       mainCardIndex: mainIndex,
     });
@@ -2494,7 +2493,7 @@ export function learningCardsFor(
             chip: "Cool Fact",
             body: getText(fact),
             type: "coolFact",
-            gradient: "gradient-amber",
+            gradient: "var(--accent-6)",
             chipTone: "amber",
             mainCardIndex: mainIndex,
           });
@@ -2510,7 +2509,7 @@ export function learningCardsFor(
           chip: "Did You Know?",
           body: getText(cardContent.didYouKnow),
           type: "didYouKnow",
-          gradient: "gradient-purple",
+          gradient: "var(--accent-5)",
           chipTone: "purple",
           mainCardIndex: mainIndex,
         });
@@ -2525,7 +2524,7 @@ export function learningCardsFor(
           chip: "Try This Activity",
           body: getText(cardContent.tryThis),
           type: "tryThis",
-          gradient: "gradient-green",
+          gradient: "var(--accent-3)",
           chipTone: "green",
           mainCardIndex: mainIndex,
         });
@@ -3411,9 +3410,10 @@ function QuizScreenContent({
                     : isWrongPick
                       ? "bg-fb-error-bg text-text-on-primary"
                       : isSelected
-                        ? "gradient-explorer text-text-on-header"
+                        ? "text-text-on-header"
                         : "bg-muted text-text-secondary"
                 }`}
+                style={isSelected ? {backgroundColor: "var(--accent-5)"} : undefined}
               >
                 {isCorrectPick
                   ? EMOJI.action.done
@@ -3464,7 +3464,7 @@ export function CorrectAnswerScreen({
     fxCorrect();
   }, []);
   return (
-    <div className="h-full w-full gradient-success relative overflow-hidden flex flex-col">
+    <div className="h-full w-full relative overflow-hidden flex flex-col" style={{backgroundColor: "var(--accent-3)"}}>
       {/* Premium Close Button - Top Right */}
       <button
         onClick={onDismiss}
@@ -3545,7 +3545,7 @@ export function StateUnlockScreen({
     fxCorrect();
   }, []);
   return (
-    <div className="h-full w-full gradient-explorer relative overflow-hidden flex flex-col">
+    <div className="h-full w-full relative overflow-hidden flex flex-col" style={{backgroundColor: "var(--accent-5)"}}>
       {/* Premium Close Button - Top Right */}
       <button
         onClick={() => {
@@ -3739,9 +3739,9 @@ function BadgeDetailModal({
         <div className="flex flex-col items-center pt-2">
           <div
             className={`h-20 w-20 rounded-full flex items-center justify-center text-5xl mb-4 shadow-elevated-2 ${
-              badge.done ? "gradient-saffron" : "opacity-60"
+              badge.done ? "" : "opacity-60"
             }`}
-            style={!badge.done ? { backgroundColor: "var(--surface-muted)" } : undefined}
+            style={badge.done ? {backgroundColor: "var(--accent-1)", color: "var(--accent-1-ink)"} : { backgroundColor: "var(--surface-muted)" }}
           >
             {badge.done ? badge.icon : EMOJI.feedback.trophy}
           </div>
@@ -4118,7 +4118,7 @@ function ProfileScreenContent() {
 
   return (
     <div className="h-full w-full bg-bg-page flex flex-col">
-      <div className="relative gradient-explorer px-5 pt-4 pb-14 rounded-b-[36px] animate-fade-in">
+      <div className="relative px-5 pt-4 pb-14 rounded-b-[36px] animate-fade-in" style={{backgroundColor: "var(--accent-5)", color: "var(--accent-5-ink)"}}>
         <Cloud className="absolute top-2 right-2 w-16 opacity-40" />
         <div className="flex items-center justify-between">
           <button
@@ -4140,7 +4140,10 @@ function ProfileScreenContent() {
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="absolute -bottom-2 -right-2 h-9 w-9 rounded-full gradient-gold text-text-on-primary flex items-center justify-center text-display text-h5 border-4 border-text-on-primary">
+            <div
+              className="absolute -bottom-2 -right-2 h-9 w-9 rounded-full flex items-center justify-center text-display text-h5 border-4"
+              style={{backgroundColor: "var(--accent-4)", color: "var(--accent-4-ink)", borderColor: "var(--accent-4-ink)"}}
+            >
               {level}
             </div>
           </div>
@@ -4231,7 +4234,7 @@ function ProfileScreenContent() {
             }}
             className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
           >
-            <div className="h-12 w-12 rounded-2xl gradient-saffron flex items-center justify-center text-2xl">
+            <div className="h-12 w-12 rounded-2xl flex items-center justify-center text-2xl" style={{backgroundColor: "var(--accent-1)", color: "var(--accent-1-ink)"}}>
               {EMOJI.audio.stories}
             </div>
             <div className="flex-1 text-left">
@@ -4331,7 +4334,8 @@ function ProfileScreenContent() {
               </div>
             </div>
             <span
-              className={`h-7 w-12 rounded-full flex items-center px-1 transition ${hasFileConsent ? "gradient-success" : "bg-muted"}`}
+              className="h-7 w-12 rounded-full flex items-center px-1 transition"
+              style={hasFileConsent ? {backgroundColor: "var(--accent-3)"} : {backgroundColor: "var(--color-muted-bg)"}}
             >
               <span
                 className={`h-5 w-5 rounded-full bg-text-on-header shadow transition-transform ${hasFileConsent ? "translate-x-5" : "translate-x-0"}`}
@@ -4351,7 +4355,7 @@ function ProfileScreenContent() {
               <div className="ui-card ui-accent-1-soft p-3 flex flex-col gap-2 transition">
                 {/* Header Row */}
                 <div className="flex items-center gap-3">
-                  <div className="h-12 w-12 rounded-2xl gradient-success flex items-center justify-center text-2xl">
+                  <div className="h-12 w-12 rounded-2xl flex items-center justify-center text-2xl" style={{backgroundColor: "var(--accent-3)", color: "var(--accent-3-ink)"}}>
                     {EMOJI.milestone.twentyFive}
                   </div>
                   <div className="flex-1">
@@ -4386,7 +4390,7 @@ function ProfileScreenContent() {
             onClick={() => fxTap()}
             className="ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
           >
-            <div className="h-12 w-12 rounded-2xl gradient-explorer flex items-center justify-center text-2xl">
+            <div className="h-12 w-12 rounded-2xl flex items-center justify-center text-2xl" style={{backgroundColor: "var(--accent-5)", color: "var(--accent-5-ink)"}}>
               {EMOJI.milestone.hundred}
             </div>
             <div className="flex-1">
@@ -4472,7 +4476,8 @@ function SoundToggleRow() {
           </div>
         </div>
         <span
-          className={`h-7 w-12 rounded-full flex items-center px-1 transition ${soundOn ? "gradient-success" : "bg-muted"}`}
+          className="h-7 w-12 rounded-full flex items-center px-1 transition"
+          style={soundOn ? {backgroundColor: "var(--accent-3)"} : {backgroundColor: "var(--color-muted-bg)"}}
         >
           <span
             className={`h-5 w-5 rounded-full bg-text-on-header shadow transition-transform ${soundOn ? "translate-x-5" : "translate-x-0"}`}
@@ -4509,7 +4514,8 @@ function SoundToggleRow() {
           </div>
         </div>
         <span
-          className={`h-7 w-12 rounded-full flex items-center px-1 transition ${audioEnabled ? "gradient-success" : "bg-muted"}`}
+          className="h-7 w-12 rounded-full flex items-center px-1 transition"
+          style={audioEnabled ? {backgroundColor: "var(--accent-3)"} : {backgroundColor: "var(--color-muted-bg)"}}
         >
           <span
             className={`h-5 w-5 rounded-full bg-text-on-header shadow transition-transform ${audioEnabled ? "translate-x-5" : "translate-x-0"}`}
@@ -4651,19 +4657,25 @@ function RowLink({
   sub: string;
   to: "/explorer" | "/achievements" | "/parent" | "/badges" | "/journey";
 }) {
-  const bg = {
-    orange: "gradient-saffron",
-    blue: "gradient-explorer",
-    green: "gradient-success",
-    gold: "gradient-gold",
-  }[tone];
+  const bgMap = {
+    orange: "var(--accent-1)",
+    blue: "var(--accent-5)",
+    green: "var(--accent-3)",
+    gold: "var(--accent-4)",
+  };
+  const inkMap = {
+    orange: "var(--accent-1-ink)",
+    blue: "var(--accent-5-ink)",
+    green: "var(--accent-3-ink)",
+    gold: "var(--accent-4-ink)",
+  };
   return (
     <Link
       to={to}
       onClick={() => fxTap()}
       className="ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
     >
-      <div className={`h-12 w-12 rounded-2xl ${bg} flex items-center justify-center text-2xl`}>
+      <div className="h-12 w-12 rounded-2xl flex items-center justify-center text-2xl" style={{backgroundColor: bgMap[tone], color: inkMap[tone]}}>
         {icon}
       </div>
       <div className="flex-1">
@@ -4702,17 +4714,19 @@ export function AchievementsScreen() {
             }`}
           >
             <div
-              className={`h-16 w-16 rounded-2xl flex items-center justify-center text-3xl ${
-                a.done
-                  ? "gradient-gold"
+              className="h-16 w-16 rounded-2xl flex items-center justify-center text-3xl"
+              style={{
+                backgroundColor: a.done 
+                  ? "var(--accent-4)"
                   : a.tone === "orange"
-                    ? "bg-saffron-soft"
+                    ? "var(--accent-1-soft)"
                     : a.tone === "blue"
-                      ? "bg-explorer-soft"
+                      ? "var(--accent-5-soft)"
                       : a.tone === "green"
-                        ? "bg-success-soft"
-                        : "bg-gold-soft"
-              }`}
+                        ? "var(--accent-3-soft)"
+                        : "var(--accent-4-soft)",
+                color: a.done ? "var(--accent-4-ink)" : "inherit"
+              }}
             >
               {a.icon}
             </div>
@@ -4733,16 +4747,16 @@ export function AchievementsScreen() {
                 <div className="mt-2 flex items-center gap-2">
                   <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden">
                     <div
-                      className={`h-full ${
-                        a.tone === "orange"
-                          ? "gradient-saffron"
+                      style={{
+                        width: `${(a.prog / a.max) * 100}%`,
+                        backgroundColor: a.tone === "orange"
+                          ? "var(--accent-1)"
                           : a.tone === "blue"
-                            ? "gradient-explorer"
+                            ? "var(--accent-5)"
                             : a.tone === "green"
-                              ? "gradient-success"
-                              : "gradient-gold"
-                      }`}
-                      style={{ width: `${(a.prog / a.max) * 100}%` }}
+                              ? "var(--accent-3)"
+                              : "var(--accent-4)"
+                      }}
                     />
                   </div>
                   <span className="text-[11px] font-extrabold text-text-secondary">
@@ -4760,7 +4774,7 @@ export function AchievementsScreen() {
 
 export function LoadingScreen() {
   return (
-    <div className="h-full w-full gradient-sky relative overflow-hidden flex flex-col items-center justify-center">
+    <div className="h-full w-full relative overflow-hidden flex flex-col items-center justify-center" style={{backgroundColor: "var(--accent-2)"}}>
       <Cloud className="absolute top-14 left-2 w-24 opacity-90 animate-pulse" />
       <Cloud className="absolute top-32 right-4 w-20 opacity-80" />
       <Cloud className="absolute bottom-40 left-6 w-28 opacity-85 animate-pulse" />
@@ -4782,7 +4796,7 @@ export function LoadingScreen() {
         </div>
       </div>
       <div className="mt-6 w-56 h-2 rounded-full bg-text-on-header/70 overflow-hidden">
-        <div className="h-full w-2/3 gradient-explorer animate-pulse" />
+        <div className="h-full w-2/3 animate-pulse" style={{backgroundColor: "var(--accent-5)"}} />
       </div>
     </div>
   );
@@ -4801,7 +4815,7 @@ export function EmptyStateScreen() {
         <p className="mt-2 text-body text-text-secondary max-w-[260px]">
           Invite a friend to join your adventure and travel across India together.
         </p>
-        <button className="mt-6 h-14 px-6 rounded-2xl gradient-saffron text-text-on-header text-display text-lg font-extrabold shadow-[var(--shadow-glow-orange)]">
+        <button className="mt-6 h-14 px-6 rounded-2xl text-text-on-header text-display text-lg font-extrabold shadow-[var(--shadow-glow-orange)]" style={{backgroundColor: "var(--accent-1)", color: "var(--accent-1-ink)"}}>
           Invite a Friend {EMOJI.action.sparkle}
         </button>
         <button className="mt-2 h-12 px-6 rounded-2xl bg-muted text-ink text-display font-extrabold">
