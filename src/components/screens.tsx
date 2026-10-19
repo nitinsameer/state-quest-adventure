@@ -217,11 +217,7 @@ function Chip({
   );
 }
 
-export function BottomNav({
-  active,
-}: {
-  active: "home" | "map" | "explorer" | "profile";
-}) {
+export function BottomNav({ active }: { active: "home" | "map" | "explorer" | "profile" }) {
   const items = [
     { id: "home", icon: EMOJI.nav.home, label: "Home", to: "/home" },
     { id: "map", icon: EMOJI.nav.map, label: "Journey", to: "/journey" },
@@ -876,9 +872,7 @@ function HomeDashboardContent() {
               <span className="text-2xl">{EMOJI.action.star}</span>
               <div className="flex flex-col items-start">
                 <span className="text-ink text-h5 font-black leading-none">{level}</span>
-                <span className="text-ink text-xs font-bold opacity-90 leading-none">
-                  Level
-                </span>
+                <span className="text-ink text-xs font-bold opacity-90 leading-none">Level</span>
               </div>
             </div>
           </div>
@@ -986,7 +980,9 @@ function HomeDashboardContent() {
 
             {/* Streak Card - Center position, fire spin if >= 7 */}
             <div className="flex-1 ui-chip ui-accent-2-soft rounded-xl p-3 flex flex-col justify-center items-center animate-stat-slide-in-bottom shadow-soft hover:shadow-md transition-all">
-              <div className={`text-lg ${p.streak >= 7 ? "animate-fire-spin inline-block" : "inline-block"}`}>
+              <div
+                className={`text-lg ${p.streak >= 7 ? "animate-fire-spin inline-block" : "inline-block"}`}
+              >
                 {EMOJI.action.fire}
               </div>
               <div className="text-h2 font-black text-accent-2 mt-1">{p.streak}</div>
@@ -1626,6 +1622,7 @@ export function JourneyMapScreen() {
 
           .animate-journey-xp-pop-in {
             animation: journey-xp-pop-in 600ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            animation-delay: var(--animation-delay, 0ms);
           }
 
           .animate-journey-xp-pulse {
@@ -1638,6 +1635,7 @@ export function JourneyMapScreen() {
 
           .animate-journey-card-slide-up {
             animation: journey-card-slide-up 600ms var(--easing-ease-out, ease-out) forwards;
+            animation-delay: var(--animation-delay, 0ms);
           }
 
           .animate-journey-back-slide-in {
@@ -1669,12 +1667,10 @@ export function JourneyMapScreen() {
           {/* XP Chip - right side */}
           <div
             className="flex items-center gap-1.5 ui-chip ui-accent-4-soft flex-shrink-0 animate-journey-xp-pop-in"
-            style={{ animationDelay: "100ms" }}
+            style={{ "--animation-delay": "100ms" } as React.CSSProperties}
           >
             <span className="text-lg">{EMOJI.action.star}</span>
-            <span className="text-h5 font-black" style={{ color: "var(--accent-4)" }}>
-              {p.xp}
-            </span>
+            <span className="text-h5 font-black text-accent-4-ink">{p.xp}</span>
           </div>
         </div>
 
@@ -1683,10 +1679,12 @@ export function JourneyMapScreen() {
           <div className="h-2 bg-surface-muted rounded-full overflow-hidden mb-2">
             <div
               className="h-full bg-accent-1 rounded-full animate-journey-progress-fill"
-              style={{
-                "--progress-percent": `${(completedStates / totalStates) * 100}%`,
-              } as React.CSSProperties}
-              />
+              style={
+                {
+                  "--progress-percent": `${(completedStates / totalStates) * 100}%`,
+                } as React.CSSProperties
+              }
+            />
           </div>
           <div className="text-sm font-bold text-text-on-header text-right">
             {completedStates}/{totalStates} states
@@ -1805,7 +1803,7 @@ export function JourneyMapScreen() {
                     <div
                       key={state.name}
                       className="animate-journey-card-slide-up"
-                      style={{ animationDelay: `${index * 100}ms` }}
+                      style={{ "--animation-delay": `${index * 100}ms` } as React.CSSProperties}
                     >
                       <JourneyDestinationCard
                         stateName={state.name}
