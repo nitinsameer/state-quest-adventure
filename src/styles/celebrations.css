@@ -270,3 +270,45 @@
   transform: translate(-50%, -50%);
   z-index: 51;
 }
+
+/* === Success Toast Animations === */
+@keyframes toast-bounce-up {
+  0% { opacity: 0; transform: translateX(-50%) translateY(120px) scale(0.8); }
+  60% { transform: translateX(-50%) translateY(-12px) scale(1.03); }
+  80% { transform: translateX(-50%) translateY(6px) scale(0.98); }
+  100% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+}
+
+@keyframes toast-bounce-down {
+  0% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+  30% { transform: translateX(-50%) translateY(-8px) scale(1.02); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(120px) scale(0.8); }
+}
+
+@keyframes toast-icon-pulse {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.3); }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+
+@keyframes toast-emoji-particle {
+  0% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-60px) scale(0.6); }
+}
+
+.toast-bounce-up {
+  animation: toast-bounce-up 400ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.toast-bounce-down {
+  animation: toast-bounce-down 350ms ease-in forwards;
+}
+
+.toast-icon-pulse {
+  animation: toast-icon-pulse 400ms ease-out forwards;
+}
+
+.toast-emoji-particle {
+  animation: toast-emoji-particle 1.2s ease-out forwards;
+}

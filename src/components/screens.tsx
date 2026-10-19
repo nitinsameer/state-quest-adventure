@@ -49,6 +49,7 @@ import { DailyGoalCard } from "@/components/DailyGoalCard";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 
 import { useToastStore } from "@/store/toastStore";
+import { showSuccessToast } from "@/hooks/useSuccessToast";
 import { AVATAR_CONFIG, type AvatarId } from "@/lib/avatar-config";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouter, Navigate } from "@tanstack/react-router";
@@ -597,119 +598,40 @@ function RecentlyCompletedCelebration({
   // Read from pending celebrations (persistent, no auto-dismiss, no expiry)
   const pendingCelebration = p.pendingCelebrations?.[0];
 
-  // Play celebration sound on mount
+  // Use effect to trigger the toast instead of showing a modal
   useEffect(() => {
-    if (pendingCelebration) {
-      fxCorrect();
-    }
-  }, [pendingCelebration]);
+    if (!showCelebrationPopup || !pendingCelebration) return;
 
-  // Check if this celebration has already been shown in this session
-  if (!showCelebrationPopup || !pendingCelebration) return null;
+    // Type guard: only "full" type has quizXp/bonusXp
+    if (pendingCelebration.type !== "full") return;
 
-  // Type guard: only "full" type has quizXp/bonusXp
-  if (pendingCelebration.type !== "full") return null;
+    const celebrationId = `${pendingCelebration.stateName}_${pendingCelebration.quizXp + pendingCelebration.bonusXp}`;
 
-  const totalXp = pendingCelebration.quizXp + pendingCelebration.bonusXp;
-  const celebrationId = `${pendingCelebration.stateName}_${totalXp}`;
+    // If already shown in this session, don't show again
+    if (shownCelebrationsRef.current.has(celebrationId)) return;
 
-  // If already shown in this session, don't show again
-  if (shownCelebrationsRef.current.has(celebrationId)) return null;
-
-  const { stateName, quizXp, bonusXp, earnedBadgeIds } = pendingCelebration;
-  const state = INDIA_STATES.find((s) => s.name === stateName);
-  if (!state) return null;
-
-  const handleDismiss = () => {
-    fxTap();
-    // Mark as shown in session to prevent duplicate displays
+    // Mark as shown
     shownCelebrationsRef.current.add(celebrationId);
-    onDismiss();
-    // Remove from pending celebrations when dismissed
-    dismissPendingCelebration();
-  };
 
-  const handleNextState = () => {
-    fxTap();
-    // Mark as shown in session to prevent duplicate displays
-    shownCelebrationsRef.current.add(celebrationId);
-    onDismiss();
-    // Remove from pending celebrations when proceeding
-    dismissPendingCelebration();
-    navigate({ to: "/journey" });
-  };
+    // Play sound
+    fxCorrect();
 
-  return (
-    <div
-      className="fixed inset-0 flex items-center justify-center z-50 p-4 animate-fade-in"
-      style={{ backgroundColor: "var(--scrim)" }}
-    >
-      {/* Backdrop click to close */}
-      <div className="absolute inset-0" onClick={handleDismiss} aria-label="Close celebration" />
+    // Show toast instead of modal
+    const { stateName, quizXp, bonusXp } = pendingCelebration;
+    const totalXp = quizXp + bonusXp;
 
-      {/* Celebration Card */}
-      <div className="relative bg-action-primary text-text-on-primary rounded-3xl p-6 shadow-2xl max-w-sm w-full animate-scale-in border-2 border-action-primary">
-        {/* Prominent Close Button - Top Right */}
-        <button
-          onClick={handleDismiss}
-          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-text-on-primary/30 hover:bg-text-on-primary/50 flex items-center justify-center text-text-on-primary text-lg transition-all duration-200 z-10"
-          aria-label="Close"
-        >
-          {EMOJI.ui.close}
-        </button>
+    showSuccessToast(`${stateName} Mastered! 🎉`, {
+      duration: 3000,
+      icon: "🏆",
+      onDismiss: () => {
+        onDismiss();
+        dismissPendingCelebration();
+        navigate({ to: "/journey" });
+      },
+    });
+  }, [pendingCelebration?.stateName, showCelebrationPopup]);
 
-        <div className="relative z-10 flex flex-col gap-4">
-          {/* Title - Celebration message */}
-          <div className="text-center">
-            <div className="text-lg font-bold opacity-95 text-ink">
-              {EMOJI.milestone.hundred} STATE MASTERED! {EMOJI.milestone.hundred}
-            </div>
-            <div className="text-3xl font-black mt-2 drop-shadow-lg text-ink">{stateName}</div>
-          </div>
-
-          {/* Stats Grid - Show earned rewards (real values) */}
-          <div className="grid grid-cols-3 gap-3 text-center">
-            {earnedBadgeIds.length > 0 && (
-              <div className="bg-surface-raised backdrop-blur rounded-xl p-3">
-                <div className="text-sm opacity-90 font-semibold text-ink">Badges</div>
-                <div className="text-2xl font-bold mt-1 text-ink">+{earnedBadgeIds.length}</div>
-              </div>
-            )}
-            <div className="bg-surface-raised backdrop-blur rounded-xl p-3">
-              <div className="text-sm opacity-90 font-semibold text-ink">XP</div>
-              <div className="text-2xl font-bold mt-1 text-ink">+{totalXp}</div>
-            </div>
-            <div className="bg-surface-raised backdrop-blur rounded-xl p-3">
-              <div className="text-sm opacity-90 font-semibold text-ink">Stamp</div>
-              <img
-                src={STATE_ART[stateName]}
-                alt={stateName}
-                className="w-10 h-10 object-cover rounded mx-auto mt-1"
-                loading="eager"
-                decoding="auto"
-              />
-            </div>
-          </div>
-
-          {/* Action buttons - Clear hierarchy */}
-          <div className="flex gap-3 mt-2">
-            <button
-              onClick={handleDismiss}
-              className="flex-1 h-11 rounded-xl ui-button ui-accent-1-soft border border-text-on-primary/40 text-sm font-bold hover:bg-text-on-primary/30 transition-all duration-200"
-            >
-              Dismiss
-            </button>
-            <button
-              onClick={handleNextState}
-              className="flex-1 h-11 rounded-xl bg-surface-card text-action-primary text-sm font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 active:scale-95"
-            >
-              Next State →
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  return null;
 }
 
 export function HomeDashboardScreen() {

@@ -1017,6 +1017,58 @@
   animation: fade-out 0.3s ease-out forwards;
 }
 
+/* === SUCCESS TOAST ANIMATIONS (Bottom Position) === */
+
+@keyframes toast-bounce-up-from-bottom {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(120px);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.05) translateY(-8px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes icon-pulse-scale {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes toast-bounce-down-to-bottom {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.8) translateY(120px);
+  }
+}
+
+.animate-toast-bounce-up-from-bottom {
+  animation: toast-bounce-up-from-bottom 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-toast-bounce-down-to-bottom {
+  animation: toast-bounce-down-to-bottom 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-icon-pulse-scale {
+  animation: icon-pulse-scale 0.6s ease-in-out;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .mascot-cheer,
   .confetti-fall,
@@ -1036,7 +1088,10 @@
   .animate-badge-float,
   .animate-postcard-glow,
   .animate-cta-breathe,
-  .animate-fade-out {
+  .animate-fade-out,
+  .animate-toast-bounce-up-from-bottom,
+  .animate-toast-bounce-down-to-bottom,
+  .animate-icon-pulse-scale {
     animation: none;
   }
 }

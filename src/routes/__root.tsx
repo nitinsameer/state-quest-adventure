@@ -16,6 +16,7 @@ import { getJourneyBackHandler } from "../lib/journeyBackHandler";
 import { UnlockCelebration } from "@/components/UnlockCelebration";
 import { CelebrationPopupProvider } from "@/components/CelebrationPopup";
 import { BottomToastProvider } from "@/components/BottomToast";
+import { SuccessToast } from "@/components/SuccessToast";
 import { DebugScreen } from "@/components/DebugScreen";
 import { BottomNav } from "@/components/screens";
 import { appLogger } from "@/lib/logger";
@@ -593,6 +594,7 @@ function HydratedApp() {
       <UnlockCelebration />
       <CelebrationPopupProvider />
       <BottomToastProvider />
+      <SuccessToast />
       {/* FIX #19: Debug screen only in development mode */}
       {import.meta.env.DEV && <DebugScreen />}
     </QueryClientProvider>

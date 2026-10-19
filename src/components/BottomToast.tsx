@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useToastStore, type ToastConfig } from "@/store/toastStore";
 import { EMOJI } from "@/constants/emoji";
+import { SuccessToast } from "@/components/SuccessToast";
+import { playSuccessChime } from "@/lib/tone-generator";
 
 /**
  * Minimal bottom toast notification for errors and info messages
@@ -67,12 +69,32 @@ function ToastNotification({ config }: { config: ToastConfig }) {
  * Bottom Toast Provider
  * Place this at the root level (in __root.tsx)
  * Manages the queue and renders current toast
+ * Renders SuccessToast for success type, ToastNotification for others
  */
 export function BottomToastProvider() {
   const current = useToastStore((state) => state.current);
+  const dismiss = useToastStore((state) => state.dismiss);
 
   if (!current) return null;
 
+  // Render success toast for success type
+  if (current.type === "success") {
+    return (
+      <div
+        className="fixed inset-0 pointer-events-none z-[998]"
+        style={{ pointerEvents: "auto" }}
+      >
+        <SuccessToast
+          message={current.message}
+          icon={current.icon}
+          duration={current.duration ?? 2500}
+          onDismiss={() => dismiss()}
+        />
+      </div>
+    );
+  }
+
+  // Render regular toast for other types
   return (
     <div
       className="fixed inset-0 pointer-events-none z-[998]"
