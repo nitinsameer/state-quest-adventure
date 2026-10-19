@@ -138,8 +138,7 @@ export function StateCompletionCelebration({
               style={{
                 backgroundColor: "var(--action-primary-fg)",
                 opacity: 0.3,
-                borderColor: "var(--action-primary-fg)",
-                borderOpacity: 0.5,
+                borderColor: "color-mix(in srgb, var(--action-primary-fg) 50%, transparent)",
               }}
             >
               <p
@@ -162,8 +161,7 @@ export function StateCompletionCelebration({
               style={{
                 backgroundColor: "var(--action-primary-fg)",
                 opacity: 0.3,
-                borderColor: "var(--action-primary-fg)",
-                borderOpacity: 0.5,
+                borderColor: "color-mix(in srgb, var(--action-primary-fg) 50%, transparent)",
               }}
             >
               <p
@@ -206,8 +204,7 @@ export function StateCompletionCelebration({
                       style={{
                         backgroundColor: "var(--action-primary-fg)",
                         opacity: 0.2,
-                        borderColor: "var(--action-primary-fg)",
-                        borderOpacity: 0.5,
+                        borderColor: "color-mix(in srgb, var(--action-primary-fg) 50%, transparent)",
                       }}
                       title={badge.name}
                     >
