@@ -10,7 +10,7 @@
 
 import { useState, useMemo } from "react";
 import { useThemeStore } from "@/store/themeStore";
-import { getVisibleThemes, isThemeUnlocked, formatUnlockCondition, type Theme, type ThemeCategory } from "@/lib/themes";
+import { getVisibleThemes, isThemeUnlocked, formatUnlockCondition, getUnlockBadgeInfo, type Theme, type ThemeCategory } from "@/lib/themes";
 import { useProgress } from "@/lib/progress";
 import { fxTap } from "@/lib/fx";
 import { EMOJI, CATEGORY_LABELS } from "@/constants/emoji";
@@ -126,7 +126,7 @@ export function ThemesScreen() {
               }}
             >
               <span className="text-base">{info.emoji}</span>
-              <span className="hidden sm:inline">{info.label}</span>
+              <span>{info.fun}</span>
               <span
                 className="text-xs font-bold px-1.5 py-0.5 rounded-full"
                 style={{
@@ -157,7 +157,7 @@ export function ThemesScreen() {
                   }
                 }}
                 disabled={!isUnlocked}
-                className={`rounded-2xl p-4 transition-all duration-200 relative border-4 ${
+                className={`rounded-2xl p-3 transition-all duration-200 flex flex-col min-h-[200px] border-4 ${
                   isSelected && isUnlocked
                     ? "border-accent-1 shadow-lg scale-105"
                     : "border-transparent hover:shadow-md"
@@ -166,103 +166,109 @@ export function ThemesScreen() {
                   backgroundColor: theme.previewTokens.bg,
                 }}
               >
-                {/* Tick icon for selected unlocked theme */}
-                {isSelected && isUnlocked && (
-                  <div
-                    className="absolute top-2 right-2 h-6 w-6 rounded-full flex items-center justify-center text-sm font-bold"
-                    style={{
-                      backgroundColor: "var(--accent-1)",
-                      color: "var(--accent-1-ink)",
-                    }}
-                  >
-                    ✓
-                  </div>
-                )}
-
-                {/* Locked overlay */}
-                {!isUnlocked && (
-                  <div
-                    className="absolute inset-0 rounded-2xl flex flex-col items-center justify-center gap-2 p-3"
-                    style={{
-                      backgroundColor: "rgba(0,0,0,0.5)",
-                      backdropFilter: "grayscale(1) opacity(0.8)",
-                    }}
-                  >
-                    <div className="text-2xl">{EMOJI.action.lock}</div>
-                    <p
-                      className="text-xs font-semibold text-center"
-                      style={{ color: "var(--text-on-header)" }}
-                    >
-                      {formatUnlockCondition(theme.unlockRule)}
-                    </p>
-                  </div>
-                )}
-
-                {/* Live Preview Card */}
-                <div className={`space-y-3 mb-3 ${!isUnlocked ? "opacity-40" : ""}`}>
-                  {/* Mini card preview */}
-                  <div
-                    className="h-20 rounded-xl p-3 flex flex-col items-center justify-center gap-1"
-
-                    style={{
-                      backgroundColor: theme.previewTokens.accent + "20",
-                      border: `2px solid ${theme.previewTokens.accent}`,
-                    }}
-                  >
-                    {/* Accent color dots */}
-                    <div className="flex gap-1.5">
-                      <div
-                        className="h-2 w-2 rounded-full"
-
-                        style={{ backgroundColor: theme.previewTokens.accent }}
-                      />
-                      <div
-                        className="h-2 w-2 rounded-full opacity-60"
-
-                        style={{ backgroundColor: theme.previewTokens.accent }}
-                      />
-                      <div
-                        className="h-2 w-2 rounded-full opacity-30"
-
-                        style={{ backgroundColor: theme.previewTokens.accent }}
-                      />
-                    </div>
-
-                    {/* Text preview */}
-                    {}
-                    <div className="text-xs font-bold" style={{ color: theme.previewTokens.text }}>
-                      Aa
-                    </div>
-                    {}
+                {/* Preview Box - Fixed Height with relative positioning */}
+                <div
+                  className={`relative h-24 rounded-xl p-3 flex flex-col items-center justify-center gap-1 mb-2 ${
+                    !isUnlocked ? "opacity-50 grayscale" : ""
+                  }`}
+                  style={{
+                    backgroundColor: theme.previewTokens.accent + "20",
+                    border: `2px solid ${theme.previewTokens.accent}`,
+                  }}
+                >
+                  {/* Lock Icon - Top Left of Preview Box */}
+                  {!isUnlocked && (
                     <div
-                      className="text-xs px-2 py-0.5 rounded"
+                      className="absolute top-2 left-2 text-lg"
+                    >
+                      {EMOJI.action.lock}
+                    </div>
+                  )}
+
+                  {/* Checkmark - Top Right of Preview Box */}
+                  {isSelected && isUnlocked && (
+                    <div
+                      className="absolute top-2 right-2 h-6 w-6 rounded-full flex items-center justify-center text-sm font-bold"
                       style={{
-                        backgroundColor: theme.previewTokens.accent,
-                        color: theme.previewTokens.bg,
+                        backgroundColor: "var(--accent-1)",
+                        color: "var(--accent-1-ink)",
                       }}
                     >
-                      Play
+                      ✓
                     </div>
+                  )}
+
+                  {/* Accent color dots */}
+                  <div className="flex gap-1.5">
+                    <div
+                      className="h-2 w-2 rounded-full"
+                      style={{ backgroundColor: theme.previewTokens.accent }}
+                    />
+                    <div
+                      className="h-2 w-2 rounded-full opacity-60"
+                      style={{ backgroundColor: theme.previewTokens.accent }}
+                    />
+                    <div
+                      className="h-2 w-2 rounded-full opacity-30"
+                      style={{ backgroundColor: theme.previewTokens.accent }}
+                    />
+                  </div>
+
+                  {/* Text preview */}
+                  <div className="text-xs font-bold" style={{ color: theme.previewTokens.text }}>
+                    Aa
+                  </div>
+
+                  {/* Button preview */}
+                  <div
+                    className="text-xs px-2 py-0.5 rounded"
+                    style={{
+                      backgroundColor: theme.previewTokens.accent,
+                      color: theme.previewTokens.bg,
+                    }}
+                  >
+                    Play
                   </div>
                 </div>
 
-                {/* Theme Name and Description */}
-                <div className="text-left">
-                  {}
-                  <h3
-                    className="text-sm font-extrabold"
-                    style={{ color: theme.previewTokens.text }}
-                  >
-                    {theme.name}
-                  </h3>
-                  {}
-                  <p
-                    className="text-xs opacity-70 mt-1"
-                    style={{ color: theme.previewTokens.text }}
-                  >
-                    {theme.description}
-                  </p>
-                </div>
+                {/* Theme Name - 1 line, no overflow */}
+                <h3
+                  className="text-sm font-extrabold line-clamp-1"
+                  style={{ color: theme.previewTokens.text }}
+                >
+                  {theme.name}
+                </h3>
+
+                {/* Description - 2 lines max */}
+                <p
+                  className="text-xs mt-1 overflow-hidden"
+                  style={{
+                    color: theme.previewTokens.text,
+                    opacity: isUnlocked ? 0.8 : 0.6,
+                    display: "-webkit-box",
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: "vertical",
+                  }}
+                >
+                  {theme.description}
+                </p>
+
+                {/* Unlock Badge Pill - Only if locked */}
+                {!isUnlocked && theme.unlockRule && (
+                  <div className="mt-auto pt-2 flex items-center gap-1">
+                    <span
+                      className="text-xs font-semibold px-2 py-0.5 rounded-full flex items-center gap-1"
+                      style={{
+                        backgroundColor: getUnlockBadgeInfo(theme.unlockRule).color + "22",
+                        color: getUnlockBadgeInfo(theme.unlockRule).color,
+                        border: `1px solid ${getUnlockBadgeInfo(theme.unlockRule).color}44`,
+                      }}
+                    >
+                      <span>{getUnlockBadgeInfo(theme.unlockRule).icon}</span>
+                      <span>{formatUnlockCondition(theme.unlockRule)}</span>
+                    </span>
+                  </div>
+                )}
               </button>
             );
           })}
