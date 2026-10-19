@@ -49,6 +49,15 @@ export const THEMES: Theme[] = [
     category: "bright",
   },
   {
+    id: "cartoon",
+    name: "Comic Book",
+    description: "Playful and vibrant. Bold lines, bright colors, comic book style.",
+    isDark: false,
+    effects: { blur: false, glow: false, heavy: false },
+    previewTokens: { bg: "#7ad7ff", surface: "#fff", text: "#1b1b1b", accent: "#ff4757" },
+    category: "bright",
+  },
+  {
     id: "brutal",
     name: "Paintbrush Bold",
     description: "Bold and stark. Yellow and pink with thick black borders.",
@@ -66,15 +75,6 @@ export const THEMES: Theme[] = [
     effects: { blur: false, glow: false, heavy: false },
     previewTokens: { bg: "#f2f2f0", surface: "#fff", text: "#111", accent: "#ff5a1f" },
     unlockRule: { type: "states", value: 10 },
-    category: "bright",
-  },
-  {
-    id: "cartoon",
-    name: "Comic Book",
-    description: "Playful and vibrant. Bold lines, bright colors, comic book style.",
-    isDark: false,
-    effects: { blur: false, glow: false, heavy: false },
-    previewTokens: { bg: "#7ad7ff", surface: "#fff", text: "#1b1b1b", accent: "#ff4757" },
     category: "bright",
   },
 
