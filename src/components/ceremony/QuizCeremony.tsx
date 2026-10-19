@@ -50,32 +50,37 @@ export function QuizCeremony() {
     }
   }, [isValidCeremony, navigate]);
 
+  // CRITICAL: Guard against undefined ceremony (prevents NPE when dismissed during navigation)
+  if (!isValidCeremony) {
+    return null;
+  }
+
+  // At this point, ceremony is guaranteed to be PendingCelebration with type "full"
+  const typedCeremony = ceremony as PendingCelebration & { type: "full" };
+  const currentStep = typedCeremony.step ?? 0;
+
   // Reset interaction state when step changes
   useEffect(() => {
-    if (!isValidCeremony) return;
     setUserInteractedStep1(false);
-  }, [isValidCeremony, ceremony?.step]);
+  }, [currentStep]);
 
   // Auto-advance timer logic
   useEffect(() => {
-    if (!isValidCeremony) return;
-
     if (timerRef.current) {
       clearTimeout(timerRef.current);
     }
 
-    const step = ceremony.step ?? 0;
     let autoAdvanceMs = 0;
 
-    if (step === 0) {
+    if (currentStep === 0) {
       autoAdvanceMs = 3000;
-    } else if (step === 1 && !userInteractedStep1) {
+    } else if (currentStep === 1 && !userInteractedStep1) {
       autoAdvanceMs = 2000;
     }
 
     if (autoAdvanceMs > 0) {
       timerRef.current = setTimeout(() => {
-        updateCeremonyStep(step + 1);
+        updateCeremonyStep(currentStep + 1);
       }, autoAdvanceMs);
     }
 
@@ -84,20 +89,12 @@ export function QuizCeremony() {
         clearTimeout(timerRef.current);
       }
     };
-  }, [isValidCeremony, ceremony?.step, userInteractedStep1]);
-
-  // CRITICAL: Guard against undefined ceremony (prevents NPE when dismissed during navigation)
-  if (!isValidCeremony) {
-    return null;
-  }
-
-  // At this point, ceremony is guaranteed to be PendingCelebration with type "full"
-  const typedCeremony = ceremony as PendingCelebration & { type: "full" };
+  }, [currentStep, userInteractedStep1]);
 
   const state = getState(ceremony.stateName);
   const grad = TONE_GRADIENT[state.tone] ?? "var(--accent-1)";
   const art = STATE_ART[state.name];
-  const step = ceremony.step ?? 0;
+  const step = currentStep;
 
   const advanceStep = () => {
     fxTap();
@@ -516,7 +513,7 @@ function StepNextAdventure({
       {isRegionComplete && (
         <div className="ui-card ui-accent-3 px-6 py-4 rounded-2xl border-2 border-success/30">
           <div className="flex items-center justify-center gap-2">
-            <span className="text-3xl">{EMOJI.action.trophy}</span>
+            <span className="text-3xl">{EMOJI.feedback.trophy}</span>
             <div className="text-center">
               <div className="text-sm font-bold text-ink">Region Master!</div>
               <div className="text-xs font-semibold text-ink/80">You've completed the region!</div>
