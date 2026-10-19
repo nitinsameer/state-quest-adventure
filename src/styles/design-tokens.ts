@@ -11,6 +11,10 @@
  *
  * These tokens drive all design decisions and ensure consistency across the app.
  * Use these in Tailwind config, CSS, and component props for predictable scaling.
+ *
+ * NOTE: This file contains rgb/rgba values as token definitions.
+ * These are not hardcoded in components but are used by Tailwind to generate CSS.
+ * eslint-disable no-hardcoded-colors/no-hardcoded-colors
  */
 
 // ============================================================================

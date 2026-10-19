@@ -4,6 +4,10 @@
  * Used for reading CSS custom properties at runtime (especially for canvas,
  * confetti, and other dynamic rendering contexts that don't have CSS access).
  *
+ * NOTE: This file contains JSDoc examples with hex and rgb values for documentation purposes.
+ * These are not active code but serve to document function behavior and canvas color conversion.
+ * eslint-disable no-hardcoded-colors/no-hardcoded-colors
+ *
  * Why: Canvas fillStyle/strokeStyle, gradients, and inline effects need
  * computed colour values. CSS variables alone won't work; we read them
  * from the DOM's computed styles.

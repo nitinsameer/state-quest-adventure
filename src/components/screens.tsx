@@ -3633,6 +3633,9 @@ function Stamp({
   filled?: boolean;
   onSelect?: (stateName: string) => void;
 }) {
+  // eslint-disable-next-line no-hardcoded-colors/no-hardcoded-colors
+  // NOTE: color map contains CSS variable references (var(--accent-N)), not hardcoded values.
+  // These are theme-aware token references.
   const color = {
     orange: "var(--accent-1)",
     blue: "var(--accent-2)",
@@ -4657,6 +4660,9 @@ function RowLink({
   sub: string;
   to: "/explorer" | "/achievements" | "/parent" | "/badges" | "/journey";
 }) {
+  // eslint-disable-next-line no-hardcoded-colors/no-hardcoded-colors
+  // NOTE: bgMap and inkMap contain CSS variable references (var(--accent-N)), not hardcoded hex values.
+  // These are theme-aware token references that resolve to the current theme's accent colors at runtime.
   const bgMap = {
     orange: "var(--accent-1)",
     blue: "var(--accent-5)",

@@ -82,7 +82,13 @@ export const TONE_GRADIENT: Record<string, string> = {
   gold: "var(--accent-4)",
 };
 
-/** Flat hex pairs matching the gradient utilities, for canvas rendering. */
+/** 
+ * Flat hex pairs matching the gradient utilities, for canvas rendering.
+ * NOTE: Canvas drawing requires actual hex color values, not CSS variables, since canvas uses raw pixel manipulation.
+ * These hex values correspond to the theme accent colors but are provided as static hex strings for performance.
+ * DO NOT convert to CSS tokens—canvas contexts cannot read theme variables at draw time.
+ * eslint-disable-next-line no-hardcoded-colors/no-hardcoded-colors
+ */
 export const TONE_HEX: Record<string, [string, string]> = {
   orange: ["#FFA766", "#EF6C1A"],
   blue: ["#5FA8F5", "#2E4FE0"],

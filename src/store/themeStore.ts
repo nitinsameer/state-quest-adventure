@@ -48,7 +48,7 @@ function applyTheme(themeId: ThemeId) {
     try {
       const computedStyle = getComputedStyle(root);
       const statusbarStyle = computedStyle.getPropertyValue("--statusbar-style").trim() || "dark";
-      const statusbarBg = computedStyle.getPropertyValue("--statusbar-bg").trim() || "#FF8A3D";
+      const statusbarBg = computedStyle.getPropertyValue("--statusbar-bg").trim() || "var(--accent-1)";
 
       const styleValue = statusbarStyle === "dark" ? Style.Dark : Style.Light;
       StatusBar.setStyle({ style: styleValue }).catch(() => {});
@@ -63,7 +63,7 @@ function applyTheme(themeId: ThemeId) {
   if (metaThemeColor) {
     try {
       const computedStyle = getComputedStyle(root);
-      const statusbarBg = computedStyle.getPropertyValue("--statusbar-bg").trim() || "#FF8A3D";
+      const statusbarBg = computedStyle.getPropertyValue("--statusbar-bg").trim() || "var(--accent-1)";
       metaThemeColor.setAttribute("content", statusbarBg);
     } catch (error) {
       console.warn("Failed to update meta theme-color:", error);

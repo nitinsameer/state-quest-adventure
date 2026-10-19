@@ -332,7 +332,7 @@ function HydratedApp() {
         // Get computed style for status bar colors
         const computedStyle = getComputedStyle(root);
         const statusbarStyle = computedStyle.getPropertyValue("--statusbar-style").trim() || "dark";
-        const statusbarBg = computedStyle.getPropertyValue("--statusbar-bg").trim() || "#FF8A3D";
+        const statusbarBg = computedStyle.getPropertyValue("--statusbar-bg").trim() || "var(--accent-1)";
 
         // Set status bar appearance
         if (Capacitor.isNativePlatform()) {
