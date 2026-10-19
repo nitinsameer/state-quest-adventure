@@ -733,6 +733,7 @@ function HomeDashboardContent() {
   const [dismissStreakWarning, setDismissStreakWarning] = useState(false);
   // Auto-dismiss celebration popup after 3 seconds
   const [showCelebrationPopup, setShowCelebrationPopup] = useState(true);
+  const [rippleKey, setRippleKey] = useState(0);
 
   const { level, toNext, pct } = levelInfo(p.xp);
   const postcards = Object.keys(p.postcards).length;
@@ -770,9 +771,142 @@ function HomeDashboardContent() {
       className="h-full w-full bg-bg-page flex flex-col overflow-hidden"
       data-testid="home-screen"
     >
-      {/* Header with fade-in animation - Premium spacing */}
+      {/* CSS Keyframes for dopamine animations */}
+      <style>{`
+        @media (prefers-reduced-motion: no-preference) {
+          @keyframes hero-pop-in {
+            0% {
+              opacity: 0;
+              transform: scale(0.92) translateY(20px);
+            }
+            100% {
+              opacity: 1;
+              transform: scale(1) translateY(0);
+            }
+          }
+
+          @keyframes hero-glow-pulse {
+            0%, 100% {
+              box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            }
+            50% {
+              box-shadow: 0 8px 24px rgba(0, 0, 0, 0.20);
+            }
+          }
+
+          @keyframes stat-slide-in-left {
+            0% {
+              opacity: 0;
+              transform: translateX(-20px);
+            }
+            100% {
+              opacity: 1;
+              transform: translateX(0);
+            }
+          }
+
+          @keyframes stat-slide-in-bottom {
+            0% {
+              opacity: 0;
+              transform: translateY(20px);
+            }
+            100% {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+
+          @keyframes stat-slide-in-right {
+            0% {
+              opacity: 0;
+              transform: translateX(20px);
+            }
+            100% {
+              opacity: 1;
+              transform: translateX(0);
+            }
+          }
+
+          @keyframes fire-spin {
+            0% {
+              transform: rotate(0deg) scale(1);
+            }
+            50% {
+              transform: rotate(180deg) scale(1.2);
+            }
+            100% {
+              transform: rotate(360deg) scale(1);
+            }
+          }
+
+          @keyframes header-slide-down {
+            0% {
+              opacity: 0;
+              transform: translateY(-10px);
+            }
+            100% {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+
+          @keyframes tap-ripple {
+            0% {
+              opacity: 0.5;
+              transform: scale(0);
+            }
+            100% {
+              opacity: 0;
+              transform: scale(2);
+            }
+          }
+
+          .animate-hero-pop-in {
+            animation: hero-pop-in 600ms ease-out forwards;
+          }
+
+          .animate-hero-glow-pulse {
+            animation: hero-glow-pulse 1.5s ease-in-out infinite 600ms;
+          }
+
+          .animate-stat-slide-in-left {
+            animation: stat-slide-in-left 600ms ease-out forwards 200ms;
+            opacity: 0;
+          }
+
+          .animate-stat-slide-in-bottom {
+            animation: stat-slide-in-bottom 600ms ease-out forwards 300ms;
+            opacity: 0;
+          }
+
+          .animate-stat-slide-in-right {
+            animation: stat-slide-in-right 600ms ease-out forwards 400ms;
+            opacity: 0;
+          }
+
+          .animate-fire-spin {
+            animation: fire-spin 600ms ease-out forwards;
+          }
+
+          .animate-header-slide-down {
+            animation: header-slide-down 300ms ease-out forwards;
+          }
+
+          .hero-card-ripple::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: rgba(255, 255, 255, 0.3);
+            animation: tap-ripple 600ms ease-out forwards;
+            pointer-events: none;
+          }
+        }
+      `}</style>
+
+      {/* Header with slide-down animation - Premium spacing */}
       <div
-        className={`flex-shrink-0 px-6 pt-4 pb-5 bg-bg-header rounded-b-[32px] relative overflow-hidden transition-opacity duration-500 ${statsVisible ? "opacity-100" : "opacity-0"}`}
+        className={`flex-shrink-0 px-6 pt-4 pb-5 bg-bg-header rounded-b-[32px] relative overflow-hidden transition-opacity duration-500 ${statsVisible ? "animate-header-slide-down" : ""}`}
       >
         <Cloud className="absolute top-2 right-4 w-14 opacity-40" />
         <div className="flex items-center gap-4 relative mb-3">
@@ -794,7 +928,7 @@ function HomeDashboardContent() {
               <div className="text-h4 text-display leading-tight">
                 Namaste, {p?.name?.split(" ")[0] || "Explorer"}! {EMOJI.action.wave}
               </div>
-              <div className="text-body-sm opacity-95 mt-1">Level {level} · Explorer</div>
+              <div className="text-body-sm opacity-90 mt-1">Explorer</div>
             </div>
           </div>
 
@@ -863,12 +997,23 @@ function HomeDashboardContent() {
           );
         })()}
 
-        {/* HERO CARD: Next State - Flex fills available space */}
+        {/* HERO CARD: Next State - Entire card is tappable */}
         <div
           className="flex-1 min-h-0 flex flex-col"
           style={{ padding: "var(--space-1-5) var(--space-1-5) 0" }}
         >
-          <div className="rounded-3xl overflow-hidden shadow-elevated-3 relative h-full flex flex-col">
+          <Link
+            to="/state/$slug/learn"
+            params={{ slug: stateSlug(current.name) }}
+            onClick={() => fxTap()}
+            className={`flex-1 min-h-0 flex flex-col rounded-3xl overflow-hidden shadow-elevated-3 relative text-white no-underline transition-all duration-300 hover:shadow-elevated-hover hover:-translate-y-1 active:scale-95 cursor-pointer ${
+              rippleKey > 0 ? "hero-card-ripple" : ""
+            } animate-hero-pop-in animate-hero-glow-pulse`}
+            onMouseDown={() => {
+              setRippleKey((k) => k + 1);
+              setTimeout(() => setRippleKey(0), 700);
+            }}
+          >
             {/* Background Image Layer */}
             <img
               src={STATE_ART[current.name]}
@@ -884,66 +1029,39 @@ function HomeDashboardContent() {
               style={{ background: "linear-gradient(180deg, transparent 30%, var(--scrim) 100%)" }}
             />
 
-            {/* Content Layer */}
-            <div className="absolute bottom-0 left-0 right-0 p-4 flex flex-col justify-end h-full text-white">
-              {/* "PLAY NEXT" Label */}
-              <div className="text-xs font-black uppercase tracking-widest opacity-80 mb-2">
-                Play Next
-              </div>
-
-              {/* State Name - Large and Bold */}
-              <div className="text-4xl font-black mb-3 leading-tight text-white">
+            {/* Content Layer - Centered State Name */}
+            <div className="absolute inset-0 flex items-end justify-center pb-8">
+              <div className="text-5xl font-black text-white text-center leading-tight">
                 {current.name}
               </div>
-
-              {/* Info Row - Cards to learn & XP reward */}
-              <div className="flex flex-col gap-2 mb-3 text-sm font-semibold opacity-90">
-                <div className="flex items-center gap-2">
-                  <span>{EMOJI.learning.game}</span>
-                  <span>{CARDS_PER_STATE} cards to learn</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span>{EMOJI.action.star}</span>
-                  <span>Earn {XP_PER_CARD * CARDS_PER_STATE} XP + stamp</span>
-                </div>
-              </div>
-
-              {/* PLAY NOW Button - Full Width, Bold */}
-              <Link
-                to="/state/$slug/learn"
-                params={{ slug: stateSlug(current.name) }}
-                onClick={() => fxTap()}
-                className="h-14 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300 hover:scale-105 active:scale-95 w-full text-white"
-                style={{
-                  backgroundColor: "var(--accent-1)",
-                  color: "var(--accent-1-ink)",
-                }}
-              >
-                PLAY NOW {EMOJI.action.play}
-              </Link>
             </div>
-          </div>
+          </Link>
         </div>
 
-        {/* STAT CARDS ROW: Compact 3-card layout (XP, Level, Badges) */}
+        {/* STAT CARDS ROW: Compact 3-card layout (XP, Streak, Level) with animations */}
         <div style={{ padding: "var(--space-1) var(--space-1-5) var(--space-1-5)" }}>
           <div className="flex flex-row gap-2">
             {/* XP Card */}
-            <div className="flex-1 h-14 bg-surface-card border border-border-subtle rounded-xl p-2 flex flex-col justify-center items-center">
+            <div className="flex-1 h-14 bg-surface-card border border-border-subtle rounded-xl p-2 flex flex-col justify-center items-center animate-stat-slide-in-left">
               <div className="text-xs font-bold text-text-secondary">XP</div>
               <div className="text-lg font-black text-text-primary">{p.xp}</div>
             </div>
 
-            {/* Level Card */}
-            <div className="flex-1 h-14 bg-surface-card border border-border-subtle rounded-xl p-2 flex flex-col justify-center items-center">
-              <div className="text-xs font-bold text-text-secondary">Lv</div>
-              <div className="text-lg font-black text-text-primary">{level}</div>
+            {/* Streak Card - Center position, fire spin if >= 7 */}
+            <div className="flex-1 h-14 bg-surface-card border border-border-subtle rounded-xl p-2 flex flex-col justify-center items-center animate-stat-slide-in-bottom">
+              <div className="text-xs font-bold text-text-secondary flex items-center gap-1">
+                <span className={p.streak >= 7 ? "animate-fire-spin inline-block" : "inline-block"}>
+                  {EMOJI.action.fire}
+                </span>
+                Streak
+              </div>
+              <div className="text-lg font-black text-text-primary">{p.streak}</div>
             </div>
 
-            {/* Badges Card */}
-            <div className="flex-1 h-14 bg-surface-card border border-border-subtle rounded-xl p-2 flex flex-col justify-center items-center">
-              <div className="text-xs font-bold text-text-secondary">Badges</div>
-              <div className="text-lg font-black text-text-primary">{badgeCount(p)}</div>
+            {/* Level Card */}
+            <div className="flex-1 h-14 bg-surface-card border border-border-subtle rounded-xl p-2 flex flex-col justify-center items-center animate-stat-slide-in-right">
+              <div className="text-xs font-bold text-text-secondary">Level</div>
+              <div className="text-lg font-black text-text-primary">{level}</div>
             </div>
           </div>
         </div>

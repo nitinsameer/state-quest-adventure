@@ -25,12 +25,12 @@ const soundListeners = new Set<() => void>();
  * Returns the AudioContext or null if initialization failed
  */
 export function ensureAudioContext(): AudioContext | null {
-  console.log("[AUDIO DEBUG] ensureAudioContext() called");
+  if (import.meta.env.DEV) console.log("[AUDIO DEBUG] ensureAudioContext() called");
 
   const ctx = ac();
 
   if (ctx) {
-    console.log("[AUDIO DEBUG] ✓ AudioContext available", {
+    if (import.meta.env.DEV) console.log("[AUDIO DEBUG] ✓ AudioContext available", {
       state: ctx.state,
       sampleRate: ctx.sampleRate,
       baseLatency: (ctx as any).baseLatency,
@@ -41,7 +41,7 @@ export function ensureAudioContext(): AudioContext | null {
       sampleRate: ctx.sampleRate,
     });
   } else {
-    console.log("[AUDIO DEBUG] ✗ AudioContext is NULL");
+    if (import.meta.env.DEV) console.log("[AUDIO DEBUG] ✗ AudioContext is NULL");
     debugError("fx", "Failed to ensure AudioContext - audio operations may fail");
   }
   return ctx;
