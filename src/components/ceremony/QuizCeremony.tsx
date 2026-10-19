@@ -527,7 +527,7 @@ function StepStamp({ ceremony, state, art, stamped = false, onStamped }: StepPro
           <button
             onClick={handleStampTap}
             disabled={stamped}
-            className="relative w-32 h-32 rounded-full transition-all active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[--color-saffron]"
+            className="relative w-32 h-32 rounded-full transition-all active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--accent-1)]"
             style={
               {
                 transform: `scale(${stampScale}) rotate(${stampRotation}deg)`,
