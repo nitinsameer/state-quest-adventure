@@ -1255,6 +1255,7 @@ function StateDetailModal({
 export function JourneyMapScreen() {
   const navigate = useNavigate();
   const p = useProgress();
+  const goBack = useGoBack();
   const states = statesWithProgress(p);
   const [view, setView] = useState<{
     screen: "intro" | "hub" | "card" | "quiz";
@@ -1536,52 +1537,159 @@ export function JourneyMapScreen() {
 
   return (
     <div className="h-full w-full bg-bg-page relative overflow-hidden flex flex-col">
+      {/* CSS Keyframes for Journey Header animations */}
+      <style>{`
+        @media (prefers-reduced-motion: no-preference) {
+          @keyframes journey-header-slide-down {
+            0% {
+              opacity: 0;
+              transform: translateY(-20px);
+            }
+            100% {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+
+          @keyframes journey-progress-fill {
+            0% {
+              width: 0%;
+            }
+            100% {
+              width: var(--progress-percent, 16.67%);
+            }
+          }
+
+          @keyframes journey-xp-pop-in {
+            0% {
+              opacity: 0;
+              transform: scale(0.8) rotate(-10deg);
+            }
+            50% {
+              transform: scale(1.1) rotate(2deg);
+            }
+            100% {
+              opacity: 1;
+              transform: scale(1) rotate(0deg);
+            }
+          }
+
+          @keyframes journey-xp-pulse {
+            0%, 100% {
+              filter: brightness(1);
+              transform: scale(1);
+            }
+            50% {
+              filter: brightness(1.1);
+              transform: scale(1.05);
+            }
+          }
+
+          @keyframes journey-state-glow-pulse {
+            0%, 100% {
+              text-shadow: 0 0 0 transparent;
+            }
+            50% {
+              text-shadow: 0 0 12px var(--accent-1);
+            }
+          }
+
+          @keyframes journey-card-slide-up {
+            0% {
+              opacity: 0;
+              transform: translateY(20px);
+            }
+            100% {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+
+          @keyframes journey-back-slide-in {
+            0% {
+              opacity: 0;
+              transform: translateX(-20px);
+            }
+            100% {
+              opacity: 1;
+              transform: translateX(0);
+            }
+          }
+
+          .animate-journey-header-slide-down {
+            animation: journey-header-slide-down 600ms var(--easing-ease-out, ease-out) forwards;
+          }
+
+          .animate-journey-progress-fill {
+            animation: journey-progress-fill 800ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+          }
+
+          .animate-journey-xp-pop-in {
+            animation: journey-xp-pop-in 600ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+          }
+
+          .animate-journey-xp-pulse {
+            animation: journey-xp-pulse 2000ms ease-in-out infinite;
+          }
+
+          .animate-journey-state-glow-pulse {
+            animation: journey-state-glow-pulse 2500ms ease-in-out infinite;
+          }
+
+          .animate-journey-card-slide-up {
+            animation: journey-card-slide-up 600ms var(--easing-ease-out, ease-out) forwards;
+          }
+
+          .animate-journey-back-slide-in {
+            animation: journey-back-slide-in 600ms var(--easing-ease-out, ease-out) forwards;
+          }
+        }
+      `}</style>
+
       {/* Header with orange gradient - matching Home screen with sticky positioning */}
-      <div className="sticky top-0 z-40 px-6 pt-4 pb-5 bg-bg-header rounded-b-[32px] relative overflow-hidden animate-fade-in shadow-elevated-2">
+      <div className="sticky top-0 z-40 px-6 pt-4 pb-4 bg-bg-header rounded-b-[32px] relative overflow-hidden shadow-elevated-2">
         <Cloud className="absolute top-2 right-4 w-14 opacity-40 pointer-events-none" />
 
-        {/* Journey Info */}
-        <div className="flex items-center gap-3 relative z-10">
-          <div className="h-11 w-11 rounded-2xl ui-card ui-accent-1-soft p-1 flex items-center justify-center overflow-hidden">
-            <img
-              src={getAvatarImage(p.avatar)}
-              alt={getAvatarName(p.avatar)}
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <div className="flex-1">
-            <div className="text-display font-extrabold text-text-on-header">India Journey</div>
-            <div className="text-sm font-bold text-text-on-header flex items-center gap-2">
-              {p.streak > 0 && (
-                <span className="inline-flex items-center gap-0.5 px-2 py-1 bg-text-on-header/30 rounded-full">
-                  <span>{EMOJI.feedback.trophy}</span>
-                  <span className="font-extrabold">{p.streak}-day streak!</span>
-                </span>
-              )}
-              <span>
-                {completedStates}/{totalStates} states
-              </span>
-            </div>
+        {/* Row 1: Back button + State name + XP chip */}
+        <div className="flex items-center gap-3 relative z-10 mb-4">
+          {/* Back Button */}
+          <button
+            onClick={goBack}
+            aria-label="Go back"
+            className="h-12 w-12 rounded-full ui-button ui-accent-1-soft flex items-center justify-center text-2xl flex-shrink-0 transition-all duration-300 hover:scale-110 active:scale-95 animate-journey-back-slide-in"
+          >
+            ‹
+          </button>
+
+          {/* State Name - centered */}
+          <h3 className="flex-1 text-center text-h3 text-display text-text-on-header animate-journey-header-slide-down animate-journey-state-glow-pulse font-extrabold">
+            India Journey
+          </h3>
+
+          {/* XP Chip - right side */}
+          <div
+            className="flex items-center gap-1.5 ui-chip ui-accent-4-soft flex-shrink-0 animate-journey-xp-pop-in"
+            style={{ animationDelay: "100ms" }}
+          >
+            <span className="text-lg">{EMOJI.action.star}</span>
+            <span className="text-h5 font-black" style={{ color: "var(--accent-4)" }}>
+              {p.xp}
+            </span>
           </div>
         </div>
 
-        {/* Progress Bar - inside header */}
-        <div className="mt-3 animate-fade-in" style={{ animationDelay: "50ms" }}>
-          <div className="h-3 bg-text-on-header/30 rounded-full overflow-hidden shadow-inner mb-2">
+        {/* Row 2: Progress bar with counter */}
+        <div className="relative z-10">
+          <div className="h-2 bg-surface-muted rounded-full overflow-hidden mb-2">
             <div
-              className="h-full bg-accent-2-soft rounded-full transition-all duration-500"
-              style={{ width: `${(completedStates / totalStates) * 100}%` }}
-            />
+              className="h-full bg-accent-1 rounded-full animate-journey-progress-fill"
+              style={{
+                "--progress-percent": `${(completedStates / totalStates) * 100}%`,
+              } as React.CSSProperties}
+              />
           </div>
-          {/* Single line milestone hint */}
-          <div className="text-sm font-bold text-text-on-header">
-            {(() => {
-              const msg = getJourneyMotivationalMessage(completedStates);
-              const milestoneCount = 36 - completedStates;
-              return milestoneCount > 0
-                ? `${milestoneCount} more to grow your tree`
-                : `${EMOJI.ageBand.mid} You grew the tree!`;
-            })()}
+          <div className="text-sm font-bold text-text-on-header text-right">
+            {completedStates}/{totalStates} states
           </div>
         </div>
       </div>
@@ -1672,7 +1780,7 @@ export function JourneyMapScreen() {
 
             return (
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 animate-fade-in">
-                {regionStates.map((state, stateIndex) => {
+                {regionStates.map((state, index) => {
                   const isLocked = state.status === "locked";
                   const isDone = state.status === "done";
                   const isCurrent = state.status === "current";
@@ -1694,25 +1802,30 @@ export function JourneyMapScreen() {
                   }
 
                   return (
-                    <JourneyDestinationCard
+                    <div
                       key={state.name}
-                      stateName={state.name}
-                      status={cardStatus}
-                      cardIndex={stateIndex}
-                      isInProgress={isInProgress}
-                      cardsDone={cardsRead}
-                      totalCards={totalCards}
-                      onStart={() => {
-                        fxTap();
-                        if (!isLocked) {
+                      className="animate-journey-card-slide-up"
+                      style={{ animationDelay: `${index * 100}ms` }}
+                    >
+                      <JourneyDestinationCard
+                        stateName={state.name}
+                        status={cardStatus}
+                        cardIndex={index}
+                        isInProgress={isInProgress}
+                        cardsDone={cardsRead}
+                        totalCards={totalCards}
+                        onStart={() => {
+                          fxTap();
+                          if (!isLocked) {
+                            setView({ screen: "intro", name: state.name });
+                          }
+                        }}
+                        onReplay={() => {
+                          fxTap();
                           setView({ screen: "intro", name: state.name });
-                        }
-                      }}
-                      onReplay={() => {
-                        fxTap();
-                        setView({ screen: "intro", name: state.name });
-                      }}
-                    />
+                        }}
+                      />
+                    </div>
                   );
                 })}
               </div>
