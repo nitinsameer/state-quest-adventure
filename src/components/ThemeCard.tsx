@@ -75,28 +75,41 @@ export function ThemeCard({ theme, isUnlocked, isSelected, onSelect }: ThemeCard
 
         @keyframes ringPulse {
           0% {
-            box-shadow: 0 0 0 0 ${theme.previewTokens.accent}40;
+            box-shadow: 0 0 0 0 ${theme.previewTokens.accent}66;
           }
           70% {
-            box-shadow: 0 0 0 4px ${theme.previewTokens.accent}00;
+            box-shadow: 0 0 0 10px ${theme.previewTokens.accent}00;
           }
           100% {
-            box-shadow: 0 0 0 4px ${theme.previewTokens.accent}00;
+            box-shadow: 0 0 0 10px ${theme.previewTokens.accent}00;
+          }
+        }
+
+        @keyframes glowPulse {
+          0%, 100% {
+            box-shadow: 0 0 8px 2px ${theme.previewTokens.accent}66;
+          }
+          50% {
+            box-shadow: 0 0 16px 4px ${theme.previewTokens.accent}88;
           }
         }
 
         @keyframes fadeInOut {
           0% {
             opacity: 0;
+            transform: translateY(-4px);
           }
           10% {
             opacity: 1;
+            transform: translateY(0);
           }
           90% {
             opacity: 1;
+            transform: translateY(0);
           }
           100% {
             opacity: 0;
+            transform: translateY(-4px);
           }
         }
 
@@ -107,8 +120,11 @@ export function ThemeCard({ theme, isUnlocked, isSelected, onSelect }: ThemeCard
           .card-sparkle {
             animation: ringPulse 0.6s cubic-bezier(0.4, 0, 0.6, 1);
           }
+          .preview-glow {
+            animation: glowPulse 1.5s ease-in-out;
+          }
           .unlock-hint {
-            animation: fadeInOut 2s ease-out forwards;
+            animation: fadeInOut 2.4s ease-out forwards;
           }
         }
 
@@ -119,37 +135,34 @@ export function ThemeCard({ theme, isUnlocked, isSelected, onSelect }: ThemeCard
         }
       `}</style>
 
-      <button
-        onClick={handleCardClick}
-        disabled={!isUnlocked}
-        className={`rounded-2xl p-3 flex flex-col min-h-[200px] border-4 ${
-          isSelected && isUnlocked ? "border-accent-1" : "border-transparent"
-        } ${!isUnlocked ? "cursor-not-allowed" : ""} ${!prefersReducedMotion ? "transition-all duration-200" : ""}`}
-        style={{
-          backgroundColor: theme.previewTokens.bg,
-          transform: isSelected && isUnlocked ? "scale(1.04)" : "scale(1)",
-          boxShadow:
-            isSelected && isUnlocked
-              ? "0 10px 25px -5px rgba(0, 0, 0, 0.1)"
-              : "0 4px 6px -1px rgba(0, 0, 0, 0.05)",
-          ...(sparkle && {
-            animation: `ringPulse 0.6s cubic-bezier(0.4, 0, 0.6, 1)`,
-          }),
-        }}
-      >
+      <div className="relative">
+        <button
+          onClick={handleCardClick}
+          disabled={!isUnlocked}
+          className={`rounded-2xl p-3 flex flex-col min-h-[200px] border-4 w-full ${
+            isSelected && isUnlocked ? "border-accent-1" : "border-transparent"
+          } ${!isUnlocked ? "cursor-not-allowed" : ""} ${!prefersReducedMotion ? "transition-all duration-200" : ""} ${
+            sparkle ? "card-sparkle" : ""
+          }`}
+          style={{
+            backgroundColor: theme.previewTokens.bg,
+            transform: isSelected && isUnlocked ? "scale(1.04)" : "scale(1)",
+            boxShadow:
+              isSelected && isUnlocked
+                ? "0 10px 25px -5px rgba(0, 0, 0, 0.1)"
+                : "0 4px 6px -1px rgba(0, 0, 0, 0.05)",
+          }}
+        >
         {/* Preview Box - Fixed Height with glow effect */}
         <div
           className={`relative h-24 rounded-xl p-3 flex flex-col items-center justify-center gap-1 mb-2 ${
             !isUnlocked ? "opacity-50 grayscale" : ""
-          } ${!prefersReducedMotion ? "transition-all duration-200" : ""}`}
+          } ${!prefersReducedMotion ? "transition-all duration-200" : ""} ${
+            isHovered && isUnlocked && !prefersReducedMotion ? "preview-glow" : ""
+          }`}
           style={{
             backgroundColor: theme.previewTokens.accent + "20",
             border: `2px solid ${theme.previewTokens.accent}`,
-            ...(isHovered &&
-              isUnlocked &&
-              !prefersReducedMotion && {
-                boxShadow: `0 0 16px 4px ${glowColor}`,
-              }),
           }}
           onMouseEnter={() => {
             if (isUnlocked) setIsHovered(true);
@@ -169,20 +182,6 @@ export function ThemeCard({ theme, isUnlocked, isSelected, onSelect }: ThemeCard
               />
               {/* Lock emoji on top */}
               <div className="relative z-10 text-lg">{EMOJI.action.lock}</div>
-
-              {/* Unlock hint tooltip - appears on tap */}
-              {showUnlockHint && (
-                <div
-                  className="absolute top-full mt-1 left-1/2 transform -translate-x-1/2 whitespace-nowrap text-xs font-bold rounded px-2 py-1 unlock-hint"
-                  style={{
-                    backgroundColor: "var(--text-primary)",
-                    color: "var(--surface-card)",
-                    zIndex: 20,
-                  }}
-                >
-                  {formatUnlockCondition(theme.unlockRule)}
-                </div>
-              )}
             </div>
           )}
 
@@ -232,10 +231,10 @@ export function ThemeCard({ theme, isUnlocked, isSelected, onSelect }: ThemeCard
           </div>
         </div>
 
-        {/* Theme Name - 1 line, no overflow */}
+        {/* Theme Name - Wrap text, don't truncate */}
         <h3
-          className="text-sm font-extrabold line-clamp-1"
-          style={{ color: theme.previewTokens.text }}
+          className="text-sm font-extrabold text-center"
+          style={{ color: theme.previewTokens.text, wordWrap: "break-word" }}
         >
           {theme.name}
         </h3>
@@ -270,7 +269,23 @@ export function ThemeCard({ theme, isUnlocked, isSelected, onSelect }: ThemeCard
             </span>
           </div>
         )}
-      </button>
+
+        {/* Unlock hint tooltip - appears on tap, positioned below card */}
+        {showUnlockHint && !isUnlocked && theme.unlockRule && (
+          <div
+            className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 text-xs font-bold rounded px-3 py-1 whitespace-nowrap unlock-hint pointer-events-none"
+            style={{
+              backgroundColor: getUnlockBadgeInfo(theme.unlockRule).color + "ee",
+              color: "white",
+              zIndex: 50,
+              boxShadow: `0 2px 8px rgba(0, 0, 0, 0.15)`,
+            }}
+          >
+            {getUnlockBadgeInfo(theme.unlockRule).icon} {formatUnlockCondition(theme.unlockRule)}
+          </div>
+        )}
+        </button>
+      </div>
     </>
   );
 }
