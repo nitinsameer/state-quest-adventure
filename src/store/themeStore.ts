@@ -9,7 +9,7 @@ import { create } from "zustand";
 import { z } from "zod";
 import { Capacitor } from "@capacitor/core";
 import { StatusBar, Style } from "@capacitor/status-bar";
-import { getTheme } from "@/lib/themes";
+import { getTheme, THEMES } from "@/lib/themes";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 
 // Valid theme IDs (must match entries in src/lib/themes.ts)
@@ -75,7 +75,7 @@ function applyTheme(themeId: ThemeId) {
  * Safe theme validation - unknown IDs fall back to 'clay'
  */
 function validateTheme(value: unknown): ThemeId {
-  const validThemes: ThemeId[] = ["clay", "aero", "cartoon-comic", "glassmorphism", "skeumorphism"];
+  const validThemes = THEMES.map((t) => t.id) as ThemeId[];
 
   if (typeof value === "string" && validThemes.includes(value as ThemeId)) {
     return value as ThemeId;
