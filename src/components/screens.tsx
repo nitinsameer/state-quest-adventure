@@ -3898,7 +3898,7 @@ export function BadgesScreen() {
       {activeTab === "achievements" && (
         <>
           {/* Header with Avatar + Celebration Tone */}
-          <div className="px-5 pt-3 pb-4 gradient-gold rounded-b-[32px] relative overflow-hidden animate-fade-in">
+          <div className="px-5 pt-3 pb-4 bg-accent-4 rounded-b-[32px] relative overflow-hidden animate-fade-in" style={{backgroundColor: "var(--accent-4)", color: "var(--accent-4-ink)"}}>
             <Cloud className="absolute top-2 right-4 w-14 opacity-40 pointer-events-none" />
 
             <div className="flex items-center gap-3 relative z-10">
@@ -3909,9 +3909,9 @@ export function BadgesScreen() {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="flex-1 text-text-on-primary">
+              <div className="flex-1" style={{color: "var(--accent-4-ink)"}}>
                 <div className="text-h4 text-display leading-tight">{progress.name}</div>
-                <div className="text-xs font-bold text-text-on-primary/80">
+                <div className="text-xs font-bold opacity-80">
                   {EMOJI.action.celebrate} {unlockedCount} Amazing Badges Collected!
                 </div>
               </div>
