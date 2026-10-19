@@ -9,6 +9,7 @@ import {
   validateRecentlyCompleted,
 } from "./localStorage-schema";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
+import { THEMES, isThemeUnlocked } from "./themes";
 
 export type BadgeId = "monument" | "animal" | "explorer";
 
@@ -39,6 +40,11 @@ export type PendingCelebration =
       newStars: "1" | "2" | "3";
       stampDate: string;
       step: number;
+    }
+  | {
+      type: "theme-unlock";
+      themeId: string;
+      themeName: string;
     };
 
 /** Achievement-based badge system - 20 badges across 4 tiers */
@@ -548,8 +554,35 @@ export function touchStreak() {
     const yesterday = new Date(now.getTime() - 86400000);
     const yesterdayStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, "0")}-${String(yesterday.getDate()).padStart(2, "0")}`;
 
-    const streak = p.lastActive === yesterdayStr ? p.streak + 1 : 1;
-    return { ...p, lastActive: today, streak };
+    const newStreak = p.lastActive === yesterdayStr ? p.streak + 1 : 1;
+
+    // Check for theme unlocks based on new streak
+    if (newStreak !== p.streak) {
+      const previouslyUnlocked = new Set(
+        THEMES.filter((t) => isThemeUnlocked(t, p)).map((t) => t.id),
+      );
+
+      const tempUpdated = {
+        ...p,
+        streak: newStreak,
+      };
+
+      const themeUnlockCelebrations = THEMES.filter(
+        (t) =>
+          t.unlockRule?.type === "streak" &&
+          !previouslyUnlocked.has(t.id) &&
+          isThemeUnlocked(t, tempUpdated),
+      ).map((t) => ({ type: "theme-unlock" as const, themeId: t.id, themeName: t.name }));
+
+      return {
+        ...p,
+        lastActive: today,
+        streak: newStreak,
+        pendingCelebrations: [...(p.pendingCelebrations ?? []), ...themeUnlockCelebrations],
+      };
+    }
+
+    return { ...p, lastActive: today, streak: newStreak };
   });
 }
 
@@ -1202,7 +1235,25 @@ export function finishQuiz(
     const leveledUp = newLevel > oldLevel;
     const levelName = leveledUp ? getLevelName(newLevel) : undefined;
 
-    // 8. Return atomic update with all state changes
+    // 8. Calculate newly-unlocked themes for this quiz completion
+    const previouslyUnlocked = new Set(
+      THEMES.filter((t) => isThemeUnlocked(t, p)).map((t) => t.id),
+    );
+
+    // Build temp updated progress to check theme unlocks against
+    const tempUpdated = {
+      ...p,
+      xp: p.xp + xpReward,
+      completed: [...p.completed, stateName],
+      badges: { ...p.badges, [stateName]: earnedQuizBadges },
+      streak: p.streak,
+    };
+
+    const themeUnlockCelebrations = THEMES.filter(
+      (t) => t.unlockRule && !previouslyUnlocked.has(t.id) && isThemeUnlocked(t, tempUpdated),
+    ).map((t) => ({ type: "theme-unlock" as const, themeId: t.id, themeName: t.name }));
+
+    // 9. Return atomic update with all state changes
     const updated: Progress = {
       ...p,
       // From completeState
@@ -1253,6 +1304,7 @@ export function finishQuiz(
           levelName,
           step: 0,
         },
+        ...themeUnlockCelebrations,
       ],
     };
 
@@ -1321,6 +1373,23 @@ export function completeState(name: string, xpReward = 100) {
         console.error("[completeState] Failed to sync postcard to library", err);
       });
 
+    // Calculate newly-unlocked themes for this state completion
+    const previouslyUnlocked = new Set(
+      THEMES.filter((t) => isThemeUnlocked(t, p)).map((t) => t.id),
+    );
+
+    const tempUpdated = {
+      ...p,
+      xp: p.xp + xpReward,
+      completed: [...p.completed, name],
+      badges: { ...p.badges, [name]: earnedBadges },
+      streak: p.streak,
+    };
+
+    const themeUnlockCelebrations = THEMES.filter(
+      (t) => t.unlockRule && !previouslyUnlocked.has(t.id) && isThemeUnlocked(t, tempUpdated),
+    ).map((t) => ({ type: "theme-unlock" as const, themeId: t.id, themeName: t.name }));
+
     return {
       ...p,
       xp: p.xp + xpReward,
@@ -1332,6 +1401,7 @@ export function completeState(name: string, xpReward = 100) {
       },
       badges: { ...p.badges, [name]: earnedBadges },
       lastPlayedState: name,
+      pendingCelebrations: [...(p.pendingCelebrations ?? []), ...themeUnlockCelebrations],
     };
   });
 }

@@ -1,5 +1,6 @@
 import { createFileRoute, notFound, useNavigate, redirect } from "@tanstack/react-router";
 import { QuizCeremony } from "@/components/ceremony/QuizCeremony";
+import { ThemeUnlockCelebration } from "@/components/ThemeUnlockCelebration";
 import { getStateBySlug } from "@/lib/states";
 import { statesWithProgress, setLastPlayedState, getProgress } from "@/lib/progress";
 import { useProgress } from "@/lib/progress";
@@ -87,5 +88,25 @@ function Complete() {
     }
   };
 
-  return <QuizCeremony />;
+  // Dispatch based on celebration type
+  const pendingCelebration = progress.pendingCelebrations?.[0];
+  
+  if (!pendingCelebration) {
+    return null;
+  }
+
+  if (pendingCelebration.type === "full" || pendingCelebration.type === "stars-improved") {
+    return <QuizCeremony />;
+  }
+
+  if (pendingCelebration.type === "theme-unlock") {
+    return (
+      <ThemeUnlockCelebration
+        themeId={pendingCelebration.themeId}
+        themeName={pendingCelebration.themeName}
+      />
+    );
+  }
+
+  return null;
 }

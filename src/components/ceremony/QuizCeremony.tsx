@@ -43,11 +43,6 @@ export function QuizCeremony() {
     }
   }, [isValidCeremony, navigate]);
 
-  // Reset stampedState when step changes
-  useEffect(() => {
-    setStampedState(false);
-  }, [ceremony?.step]);
-
   // CRITICAL: Guard against undefined ceremony (prevents NPE when dismissed during navigation)
   // This can happen when route guard returns null after dismissPendingCelebration()
   if (!isValidCeremony) {
@@ -56,6 +51,11 @@ export function QuizCeremony() {
 
   // At this point, ceremony is guaranteed to be PendingCelebration with type "full"
   const typedCeremony = ceremony as PendingCelebration & { type: "full" };
+
+  // Reset stampedState when step changes
+  useEffect(() => {
+    setStampedState(false);
+  }, [typedCeremony.step]);
 
   const state = getState(ceremony.stateName);
   const grad = TONE_GRADIENT[state.tone] ?? "var(--accent-1)";
