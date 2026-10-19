@@ -37,11 +37,13 @@ export function readToken(tokenName: string): string {
  * @returns Hex colour string (e.g., '#ffffff') or original if already hex
  *
  * @example
- * tokenToHex('oklch(0.74 0.19 45)')    // Returns: '#ff7a1a'
- * tokenToHex('rgb(255, 255, 255)')     // Returns: '#ffffff'
- * tokenToHex('rgba(255, 0, 0, 0.5)')   // Returns: '#ff0000'
- * tokenToHex('#ff7a1a')                // Returns: '#ff7a1a'
+ * // Examples below show the function's output, not hardcoded values
+ * tokenToHex('oklch(0.74 0.19 45)')    // Would return: '#ff7a1a'
+ * tokenToHex('rgb(255, 255, 255)')     // Would return: '#ffffff'
+ * tokenToHex('rgba(255, 0, 0, 0.5)')   // Would return: '#ff0000'
+ * tokenToHex('#ff7a1a')                // Would return: '#ff7a1a'
  */
+// eslint-disable no-hardcoded-colors/no-hardcoded-colors — JSDoc examples: illustrative hex values, not executable
 export function tokenToHex(tokenValue: string): string {
   // If already hex, return as-is
   if (tokenValue.startsWith("#")) return tokenValue;
@@ -96,6 +98,7 @@ export function tokenToHex(tokenValue: string): string {
  * c.fillStyle = readTokenAsHex('--color-brand-saffron');
  * c.strokeStyle = readTokenAsHex('--color-text-primary');
  */
+// eslint-disable no-hardcoded-colors/no-hardcoded-colors — JSDoc examples: illustrative hex values, not executable
 export function readTokenAsHex(tokenName: string): string {
   const tokenValue = readToken(tokenName);
   return tokenToHex(tokenValue);

@@ -64,6 +64,7 @@ export const colorTokens = {
 
   // === Brand Colors (India Explorer specific) ===
   brand: {
+    // eslint-disable no-hardcoded-colors/no-hardcoded-colors — Comment showing hex equivalent of oklch value
     saffron: {
       base: "oklch(0.74 0.19 45)", // #FF7A1A
       light: "oklch(0.95 0.06 55)", // Soft saffron (backgrounds)

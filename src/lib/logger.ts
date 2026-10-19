@@ -167,6 +167,7 @@ class Logger {
     const time = new Date(entry.timestamp).toISOString();
     const prefix = `[${time}] [${entry.level.toUpperCase()}] [${entry.category}]`;
 
+    // eslint-disable no-hardcoded-colors/no-hardcoded-colors — Console logging styles: not user-facing, dev debugging only
     const style = {
       debug: "color: #888; font-weight: normal;",
       info: "color: #0066cc; font-weight: bold;",

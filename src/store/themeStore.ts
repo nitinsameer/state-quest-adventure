@@ -48,6 +48,7 @@ function applyTheme(themeId: ThemeId) {
     try {
       const computedStyle = getComputedStyle(root);
       const statusbarStyle = computedStyle.getPropertyValue("--statusbar-style").trim() || "dark";
+      // eslint-disable no-hardcoded-colors/no-hardcoded-colors — Fallback statusbar color only used if --statusbar-bg token unavailable (defined in all theme files)
       const statusbarBg = computedStyle.getPropertyValue("--statusbar-bg").trim() || "#FF8A3D";
 
       const styleValue = statusbarStyle === "dark" ? Style.Dark : Style.Light;
@@ -63,6 +64,7 @@ function applyTheme(themeId: ThemeId) {
   if (metaThemeColor) {
     try {
       const computedStyle = getComputedStyle(root);
+      // eslint-disable no-hardcoded-colors/no-hardcoded-colors — Fallback statusbar color only used if --statusbar-bg token unavailable (defined in all theme files)
       const statusbarBg = computedStyle.getPropertyValue("--statusbar-bg").trim() || "#FF8A3D";
       metaThemeColor.setAttribute("content", statusbarBg);
     } catch (error) {
