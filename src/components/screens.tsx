@@ -1853,7 +1853,7 @@ export function StateIntroScreen({
   const state = getState(stateName);
   const goBack = useGoBack();
   const art = STATE_ART[state.name];
-  const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
+  const grad = TONE_GRADIENT[state.tone] ?? "var(--accent-1)";
 
   // Determine current region for breadcrumb navigation
   const currentRegion = useMemo(() => {
@@ -2028,7 +2028,7 @@ export function LearningHubScreen({
       status,
   );
   const read = cardsRead(progress, state.name);
-  const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
+  const grad = TONE_GRADIENT[state.tone] ?? "var(--accent-1)";
 
   // Determine current region for breadcrumb navigation
   const currentRegion = useMemo(() => {
@@ -2582,7 +2582,7 @@ export function LearningCardScreen({
   const progress = useProgress();
   const state = getState(stateName);
   const art = STATE_ART[state.name];
-  const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
+  const grad = TONE_GRADIENT[state.tone] ?? "var(--accent-1)";
   const celebration = useCelebration();
   const level = levelInfo(progress.xp);
 

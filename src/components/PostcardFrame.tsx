@@ -33,7 +33,7 @@ export function PostcardFrame({
 }: PostcardFrameProps) {
   const state = getState(stateName);
   const art = STATE_ART[state.name];
-  const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
+  const grad = TONE_GRADIENT[state.tone] ?? "var(--accent-1)";
 
   // Format date for postcard (e.g., "15 · Jan")
   const [day, month] = date.split(" ").slice(0, 2).join(" ").split(" ").filter(Boolean);

@@ -58,7 +58,7 @@ export function StatePostcardScreen({
   const celebration = useCelebration();
   const toast = useToast();
   const art = STATE_ART[state.name];
-  const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
+  const grad = TONE_GRADIENT[state.tone] ?? "var(--accent-1)";
   const earned = badgesFor(progress, state.name);
   const badge = STATE_BADGES.find((b) => b.id === earned[earned.length - 1]) ?? STATE_BADGES[0];
 

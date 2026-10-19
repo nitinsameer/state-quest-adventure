@@ -58,7 +58,7 @@ export function QuizCeremony() {
   const typedCeremony = ceremony as PendingCelebration & { type: "full" };
 
   const state = getState(ceremony.stateName);
-  const grad = TONE_GRADIENT[state.tone] ?? "gradient-saffron";
+  const grad = TONE_GRADIENT[state.tone] ?? "var(--accent-1)";
   const art = STATE_ART[state.name];
   const step = ceremony.step ?? 0;
 
