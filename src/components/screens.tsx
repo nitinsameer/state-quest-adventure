@@ -850,6 +850,17 @@ function HomeDashboardContent() {
             }
           }
 
+          @keyframes hero-pulse-border {
+            0%, 100% {
+              border-color: var(--accent-1);
+              box-shadow: 0 0 0 0 var(--accent-1);
+            }
+            50% {
+              border-color: var(--accent-1);
+              box-shadow: 0 0 20px 2px var(--accent-1);
+            }
+          }
+
           @keyframes tap-ripple {
             0% {
               opacity: 0.5;
@@ -892,6 +903,10 @@ function HomeDashboardContent() {
             animation: header-slide-down 300ms ease-out forwards;
           }
 
+          .animate-hero-pulse-border {
+            animation: hero-pulse-border 2.5s ease-in-out infinite;
+          }
+
           .hero-card-ripple::after {
             content: '';
             position: absolute;
@@ -932,16 +947,16 @@ function HomeDashboardContent() {
             </div>
           </div>
 
-          {/* Right side: Streak badge */}
+          {/* Right side: Level badge */}
           <div className="flex items-center gap-2 flex-shrink-0">
             <div
-              className={`flex items-center gap-1.5 ui-chip ui-accent-1-soft transition-transform duration-1000`}
+              className={`flex items-center gap-1.5 ui-chip ui-accent-3-soft transition-transform duration-1000`}
             >
-              <span className="text-2xl">{EMOJI.feedback.trophy}</span>
+              <span className="text-2xl">{EMOJI.action.star}</span>
               <div className="flex flex-col items-start">
-                <span className="text-ink text-h5 font-black leading-none">{p.streak}</span>
+                <span className="text-ink text-h5 font-black leading-none">{level}</span>
                 <span className="text-ink text-xs font-bold opacity-90 leading-none">
-                  day streak
+                  Level
                 </span>
               </div>
             </div>
@@ -1006,9 +1021,9 @@ function HomeDashboardContent() {
             to="/state/$slug/learn"
             params={{ slug: stateSlug(current.name) }}
             onClick={() => fxTap()}
-            className={`flex-1 min-h-0 flex flex-col rounded-3xl overflow-hidden shadow-elevated-3 relative text-white no-underline transition-all duration-300 hover:shadow-elevated-hover hover:-translate-y-1 active:scale-95 cursor-pointer ${
+            className={`flex-1 min-h-0 flex flex-col rounded-3xl overflow-hidden shadow-elevated-3 relative text-white no-underline transition-all duration-300 hover:shadow-elevated-hover hover:-translate-y-1 active:scale-95 cursor-pointer border-2 border-accent-1 animate-hero-pulse-border ${
               rippleKey > 0 ? "hero-card-ripple" : ""
-            } animate-hero-pop-in animate-hero-glow-pulse`}
+            } animate-hero-pop-in`}
             onMouseDown={() => {
               setRippleKey((k) => k + 1);
               setTimeout(() => setRippleKey(0), 700);
@@ -1042,26 +1057,26 @@ function HomeDashboardContent() {
         <div style={{ padding: "var(--space-1) var(--space-1-5) var(--space-1-5)" }}>
           <div className="flex flex-row gap-2">
             {/* XP Card */}
-            <div className="flex-1 h-14 bg-surface-card border border-border-subtle rounded-xl p-2 flex flex-col justify-center items-center animate-stat-slide-in-left">
-              <div className="text-xs font-bold text-text-secondary">XP</div>
-              <div className="text-lg font-black text-text-primary">{p.xp}</div>
+            <div className="flex-1 ui-chip ui-accent-1-soft rounded-xl p-3 flex flex-col justify-center items-center animate-stat-slide-in-left shadow-soft hover:shadow-md transition-all">
+              <div className="text-lg">{EMOJI.action.sparkle}</div>
+              <div className="text-h2 font-black text-accent-1 mt-1">{p.xp}</div>
+              <div className="text-label text-text-secondary mt-0.5">XP</div>
             </div>
 
             {/* Streak Card - Center position, fire spin if >= 7 */}
-            <div className="flex-1 h-14 bg-surface-card border border-border-subtle rounded-xl p-2 flex flex-col justify-center items-center animate-stat-slide-in-bottom">
-              <div className="text-xs font-bold text-text-secondary flex items-center gap-1">
-                <span className={p.streak >= 7 ? "animate-fire-spin inline-block" : "inline-block"}>
-                  {EMOJI.action.fire}
-                </span>
-                Streak
+            <div className="flex-1 ui-chip ui-accent-2-soft rounded-xl p-3 flex flex-col justify-center items-center animate-stat-slide-in-bottom shadow-soft hover:shadow-md transition-all">
+              <div className={`text-lg ${p.streak >= 7 ? "animate-fire-spin inline-block" : "inline-block"}`}>
+                {EMOJI.action.fire}
               </div>
-              <div className="text-lg font-black text-text-primary">{p.streak}</div>
+              <div className="text-h2 font-black text-accent-2 mt-1">{p.streak}</div>
+              <div className="text-label text-text-secondary mt-0.5">Streak</div>
             </div>
 
             {/* Level Card */}
-            <div className="flex-1 h-14 bg-surface-card border border-border-subtle rounded-xl p-2 flex flex-col justify-center items-center animate-stat-slide-in-right">
-              <div className="text-xs font-bold text-text-secondary">Level</div>
-              <div className="text-lg font-black text-text-primary">{level}</div>
+            <div className="flex-1 ui-chip ui-accent-3-soft rounded-xl p-3 flex flex-col justify-center items-center animate-stat-slide-in-right shadow-soft hover:shadow-md transition-all">
+              <div className="text-lg">{EMOJI.action.star}</div>
+              <div className="text-h2 font-black text-accent-3 mt-1">{level}</div>
+              <div className="text-label text-text-secondary mt-0.5">Level</div>
             </div>
           </div>
         </div>
