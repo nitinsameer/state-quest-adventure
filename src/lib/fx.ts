@@ -145,10 +145,10 @@ export function cleanupAudioContext() {
 
       // Close the context to free all resources
       void ctx.close();
-      console.log("[AUDIO DEBUG] ✓ AudioContext closed successfully");
+      if (import.meta.env.DEV) console.log("[AUDIO DEBUG] ✓ AudioContext closed successfully");
       debugLog("fx", "AudioContext closed and resources freed");
     } catch (error) {
-      console.log("[AUDIO DEBUG] ✗ Error closing AudioContext:", error);
+      if (import.meta.env.DEV) console.log("[AUDIO DEBUG] ✗ Error closing AudioContext:", error);
       debugError("fx", "Error closing AudioContext", error);
     } finally {
       ctx = null;
@@ -174,7 +174,7 @@ export function initializeAudioCleanup() {
   // Also cleanup when visibility changes (user leaves tab)
   const handleVisibilityChange = () => {
     if (document.hidden) {
-      console.log("[AUDIO DEBUG] Page hidden - stopping audio");
+      if (import.meta.env.DEV) console.log("[AUDIO DEBUG] Page hidden - stopping audio");
       stopAllActiveSounds();
     }
   };
@@ -185,7 +185,7 @@ export function initializeAudioCleanup() {
   // Expose a manual cleanup function if needed
   (window as any).__cleanupAudio = cleanupAudioContext;
 
-  console.log("[AUDIO DEBUG] Audio cleanup handlers initialized");
+  if (import.meta.env.DEV) console.log("[AUDIO DEBUG] Audio cleanup handlers initialized");
   debugLog("fx", "Audio cleanup handlers initialized on window unload");
 
   return () => {
@@ -225,19 +225,19 @@ function stopAllActiveSounds() {
  * @returns AudioContext if successfully created, null otherwise
  */
 function ac(): AudioContext | null {
-  console.log("[AUDIO DEBUG] ac() called");
+  if (import.meta.env.DEV) console.log("[AUDIO DEBUG] ac() called");
 
   if (typeof window === "undefined") {
-    console.log("[AUDIO DEBUG] ✗ window is undefined (SSR)");
+    if (import.meta.env.DEV) console.log("[AUDIO DEBUG] ✗ window is undefined (SSR)");
     return null;
   }
 
   if (ctx) {
-    console.log("[AUDIO DEBUG] ✓ AudioContext already exists", { state: ctx.state });
+    if (import.meta.env.DEV) console.log("[AUDIO DEBUG] ✓ AudioContext already exists", { state: ctx.state });
     return ctx;
   }
 
-  console.log("[AUDIO DEBUG] AudioContext does not exist yet - creating...");
+  if (import.meta.env.DEV) console.log("[AUDIO DEBUG] AudioContext does not exist yet - creating...");
 
   const AC =
     (
@@ -249,40 +249,40 @@ function ac(): AudioContext | null {
     (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
 
   if (!AC) {
-    console.log("[AUDIO DEBUG] ✗ AudioContext constructor not available on window");
+    if (import.meta.env.DEV) console.log("[AUDIO DEBUG] ✗ AudioContext constructor not available on window");
     return null;
   }
 
-  console.log("[AUDIO DEBUG] AudioContext constructor available - creating new instance");
+  if (import.meta.env.DEV) console.log("[AUDIO DEBUG] AudioContext constructor available - creating new instance");
 
   try {
     ctx = new AC();
-    console.log("[AUDIO DEBUG] ✓ AudioContext created successfully", {
+    if (import.meta.env.DEV) console.log("[AUDIO DEBUG] ✓ AudioContext created successfully", {
       state: ctx.state,
       sampleRate: ctx.sampleRate,
     });
 
     // Initialize audio mixer on first AudioContext creation
     initAudioMixer(ctx);
-    console.log("[AUDIO DEBUG] ✓ Audio mixer initialized");
+    if (import.meta.env.DEV) console.log("[AUDIO DEBUG] ✓ Audio mixer initialized");
 
     debugLog("fx", "AudioContext created and mixer initialized", {
       state: ctx.state,
       sampleRate: ctx.sampleRate,
     });
   } catch (error) {
-    console.log("[AUDIO DEBUG] ✗ Exception creating AudioContext", error);
+    if (import.meta.env.DEV) console.log("[AUDIO DEBUG] ✗ Exception creating AudioContext", error);
     debugError("fx", "Failed to create AudioContext", error);
     return null;
   }
 
   // Resume context if suspended (required for user interaction on web)
   if (ctx && ctx.state === "suspended") {
-    console.log("[AUDIO DEBUG] AudioContext suspended - attempting resume...");
+    if (import.meta.env.DEV) console.log("[AUDIO DEBUG] AudioContext suspended - attempting resume...");
     void ctx
       .resume()
-      .then(() => console.log("[AUDIO DEBUG] ✓ AudioContext resumed"))
-      .catch((err) => console.log("[AUDIO DEBUG] ✗ AudioContext resume failed", err));
+      .then(() => { if (import.meta.env.DEV) console.log("[AUDIO DEBUG] ✓ AudioContext resumed"); })
+      .catch((err) => { if (import.meta.env.DEV) console.log("[AUDIO DEBUG] ✗ AudioContext resume failed", err); });
   }
 
   return ctx;
