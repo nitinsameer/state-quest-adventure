@@ -144,7 +144,7 @@ export const THEMES: Theme[] = [
     category: "night",
   },
 
-  // FANCY category - no free starter
+  // FANCY category - free first
   {
     id: "glass",
     name: "Glassmorph Magic",
@@ -157,7 +157,6 @@ export const THEMES: Theme[] = [
       text: "#fff",
       accent: "#fff",
     },
-    unlockRule: { type: "states", value: 36 },
     category: "fancy",
   },
   {
