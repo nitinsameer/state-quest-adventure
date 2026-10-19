@@ -33,7 +33,7 @@ describe("Task 12.2: Save Ceremony Data - Extended Pending Celebration", () => {
       expect(celebration.stars).toBe("3");
       expect(celebration.correctCount).toBe(6);
       expect(celebration.totalQuestions).toBe(6);
-      expect(celebration.quizXp).toBe(120); // 6 correct � 20
+      expect(celebration.quizXp).toBe(120); // 6 correct * 20
       expect(celebration.bonusXp).toBe(100);
       expect(celebration.stampDate).toBeDefined();
       expect(celebration.earnedBadgeIds).toBeDefined();
@@ -58,7 +58,7 @@ describe("Task 12.2: Save Ceremony Data - Extended Pending Celebration", () => {
       const p = JSON.parse(stored!);
       const celebration = p.pendingCelebrations[0];
 
-      expect(celebration.quizXp).toBe(80); // 4 � 20
+      expect(celebration.quizXp).toBe(80); // 4 * 20
     });
 
     it("should set bonusXp to 100 always", () => {
@@ -336,7 +336,7 @@ describe("Task 12.2: Save Ceremony Data - Extended Pending Celebration", () => {
     });
   });
 
-  describe("Round-Trip Validation: Save � Load � Validate", () => {
+  describe("Round-Trip Validation: Save & Load & Validate", () => {
     it("should pass Zod validation after first completion", () => {
       finishQuiz("Rajasthan", {
         timeToComplete: 60000,
@@ -378,7 +378,7 @@ describe("Task 12.2: Save Ceremony Data - Extended Pending Celebration", () => {
       expect(celebration.stars).toBe("2");
       expect(celebration.correctCount).toBe(5);
       expect(celebration.totalQuestions).toBe(6);
-      expect(celebration.quizXp).toBe(100); // 5 � 20
+      expect(celebration.quizXp).toBe(100); // 5 * 20
       expect(celebration.bonusXp).toBe(100);
     });
 
@@ -439,10 +439,15 @@ describe("Task 12.2: Save Ceremony Data - Extended Pending Celebration", () => {
       const stored = localStorage.getItem("india-explorer:progress:v2");
       const validated = validateProgress(stored!);
 
-      expect(validated?.pendingCelebrations?.length).toBe(3);
-      expect(validated?.pendingCelebrations![0].stateName).toBe("Punjab");
-      expect(validated?.pendingCelebrations![1].stateName).toBe("Haryana");
-      expect(validated?.pendingCelebrations![2].stateName).toBe("Himachal Pradesh");
+      // Filter for "full" type celebrations (theme-unlock celebrations may also be present)
+      const fullCelebrations = (validated?.pendingCelebrations || []).filter(
+        (c: any): c is any => c.type === "full"
+      );
+
+      expect(fullCelebrations.length).toBe(3);
+      expect(fullCelebrations[0].stateName).toBe("Punjab");
+      expect(fullCelebrations[1].stateName).toBe("Haryana");
+      expect(fullCelebrations[2].stateName).toBe("Himachal Pradesh");
     });
   });
 
@@ -516,10 +521,10 @@ describe("Task 12.2: Save Ceremony Data - Extended Pending Celebration", () => {
       let stored = localStorage.getItem("india-explorer:progress:v2");
       const p = JSON.parse(stored!);
 
-      // Add sticker
+      // Add sticker and advance to step 3
       const celebration = p.pendingCelebrations[0];
       if (celebration.type === "full") {
-        celebration.sticker = "<�";
+        celebration.sticker = "=";
       }
       p.pendingCelebrations[0].step = 3;
       localStorage.setItem("india-explorer:progress:v2", JSON.stringify(p));
@@ -527,11 +532,11 @@ describe("Task 12.2: Save Ceremony Data - Extended Pending Celebration", () => {
       stored = localStorage.getItem("india-explorer:progress:v2");
       const validated = validateProgress(stored!);
 
-      const finalCelebration = validated?.pendingCelebrations![0];
+      const finalCelebration = validated?.pendingCelebrations?.[0];
       if (finalCelebration?.type === "full") {
-        expect(finalCelebration.sticker).toBe("<�");
+        expect(finalCelebration.sticker).toBe("=");
+        expect(finalCelebration.step).toBe(3);
       }
-      expect(finalCelebration?.step).toBe(3);
     });
   });
 
@@ -557,7 +562,15 @@ describe("Task 12.2: Save Ceremony Data - Extended Pending Celebration", () => {
 
         const stored = localStorage.getItem("india-explorer:progress:v2");
         const p = JSON.parse(stored!);
-        const ceremony = p.pendingCelebrations[p.pendingCelebrations.length - 1];
+        // Find the last "full" type celebration (skip theme-unlock celebrations)
+        let ceremony: any = undefined;
+        for (let i = p.pendingCelebrations.length - 1; i >= 0; i--) {
+          if (p.pendingCelebrations[i].type === "full") {
+            ceremony = p.pendingCelebrations[i];
+            break;
+          }
+        }
+        expect(ceremony).toBeDefined();
 
         // On the last state (6th), region should be complete
         if (index === 5) {
@@ -583,7 +596,15 @@ describe("Task 12.2: Save Ceremony Data - Extended Pending Celebration", () => {
 
         const stored = localStorage.getItem("india-explorer:progress:v2");
         const p = JSON.parse(stored!);
-        const ceremony = p.pendingCelebrations[p.pendingCelebrations.length - 1];
+        // Find the last "full" type celebration (skip theme-unlock celebrations)
+        let ceremony: any = undefined;
+        for (let i = p.pendingCelebrations.length - 1; i >= 0; i--) {
+          if (p.pendingCelebrations[i].type === "full") {
+            ceremony = p.pendingCelebrations[i];
+            break;
+          }
+        }
+        expect(ceremony).toBeDefined();
 
         if (index === 4) {
           expect(ceremony.earnedBadgeIds).toContain("region-master-south");
@@ -616,8 +637,15 @@ describe("Task 12.2: Save Ceremony Data - Extended Pending Celebration", () => {
       let stored = localStorage.getItem("india-explorer:progress:v2");
       let p = JSON.parse(stored!);
 
-      // Verify badge was awarded
-      const lastCeremony = p.pendingCelebrations[p.pendingCelebrations.length - 1];
+      // Verify badge was awarded - find the last "full" type celebration
+      let lastCeremony: any = undefined;
+      for (let i = p.pendingCelebrations.length - 1; i >= 0; i--) {
+        if (p.pendingCelebrations[i].type === "full") {
+          lastCeremony = p.pendingCelebrations[i];
+          break;
+        }
+      }
+      expect(lastCeremony).toBeDefined();
       expect(lastCeremony.earnedBadgeIds).toContain("region-master-north");
 
       // Now replay Punjab

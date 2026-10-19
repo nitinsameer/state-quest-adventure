@@ -135,9 +135,20 @@ const StarsImprovedCelebrationSchema = z.object({
   type: z.literal("stars-improved"),
 });
 
+/**
+ * THEME UNLOCK CELEBRATION - Shown when a theme is unlocked (Task 3)
+ * Triggers the ThemeUnlockCelebration modal
+ */
+const ThemeUnlockCelebrationSchema = z.object({
+  type: z.literal("theme-unlock"),
+  themeId: z.string().min(1),
+  themeName: z.string().min(1),
+});
+
 const AnyPendingCelebrationSchema = z.union([
   PendingCelebrationSchema,
   StarsImprovedCelebrationSchema,
+  ThemeUnlockCelebrationSchema,
 ]);
 
 export const ProgressSchema = z.object({
