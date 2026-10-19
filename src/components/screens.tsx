@@ -43,16 +43,11 @@ import { PostcardPreviewModal } from "@/components/PostcardPreviewModal";
 import { PostcardFrame } from "@/components/PostcardFrame";
 import { CardProgressBar } from "@/components/CardProgressBar";
 import { JourneyDestinationCard } from "@/components/JourneyDestinationCard";
+import { IndiaProgressMap } from "@/components/IndiaProgressMap";
 
 import { DailyGoalCard } from "@/components/DailyGoalCard";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
-import { lazy, Suspense } from "react";
 
-const IndiaProgressMapLazy = lazy(() =>
-  import("@/components/IndiaProgressMap").then((m) => ({
-    default: m.IndiaProgressMap,
-  })),
-);
 import { useToastStore } from "@/store/toastStore";
 import { AVATAR_CONFIG, type AvatarId } from "@/lib/avatar-config";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
@@ -310,7 +305,10 @@ function HeaderBar({
 
 export function SplashScreen() {
   return (
-    <div className="h-full w-full relative overflow-hidden flex flex-col items-center justify-center" style={{backgroundColor: "var(--accent-1)"}}>
+    <div
+      className="h-full w-full relative overflow-hidden flex flex-col items-center justify-center"
+      style={{ backgroundColor: "var(--accent-1)" }}
+    >
       <div className="absolute -top-10 -left-10 w-56 h-56 rounded-full bg-accent-1-soft/40 blur-2xl" />
       <div className="absolute -bottom-16 -right-16 w-72 h-72 rounded-full bg-accent-1-soft/30 blur-2xl" />
       <Cloud className="absolute top-16 left-4 w-24 opacity-80" />
@@ -643,7 +641,10 @@ function RecentlyCompletedCelebration({
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 p-4 animate-fade-in" style={{backgroundColor: 'var(--scrim)'}}>
+    <div
+      className="fixed inset-0 flex items-center justify-center z-50 p-4 animate-fade-in"
+      style={{ backgroundColor: "var(--scrim)" }}
+    >
       {/* Backdrop click to close */}
       <div className="absolute inset-0" onClick={handleDismiss} aria-label="Close celebration" />
 
@@ -661,7 +662,9 @@ function RecentlyCompletedCelebration({
         <div className="relative z-10 flex flex-col gap-4">
           {/* Title - Celebration message */}
           <div className="text-center">
-            <div className="text-lg font-bold opacity-95 text-ink">{EMOJI.milestone.hundred} STATE MASTERED! {EMOJI.milestone.hundred}</div>
+            <div className="text-lg font-bold opacity-95 text-ink">
+              {EMOJI.milestone.hundred} STATE MASTERED! {EMOJI.milestone.hundred}
+            </div>
             <div className="text-3xl font-black mt-2 drop-shadow-lg text-ink">{stateName}</div>
           </div>
 
@@ -727,12 +730,7 @@ function HomeDashboardContent() {
   const navigate = useNavigate();
   const celebration = useCelebration();
   const [statsVisible, setStatsVisible] = useState(false);
-  const [animateStats, setAnimateStats] = useState(false);
-  const [showLockedPreview, setShowLockedPreview] = useState<string | null>(null);
   const [dismissStreakWarning, setDismissStreakWarning] = useState(false);
-  const [showCompletionCelebration, setShowCompletionCelebration] = useState<string | null>(null);
-  // Auto-show tutorial on first session, allow dismiss
-  const [showTutorial, setShowTutorial] = useState(false);
   // Auto-dismiss celebration popup after 3 seconds
   const [showCelebrationPopup, setShowCelebrationPopup] = useState(true);
 
@@ -741,9 +739,6 @@ function HomeDashboardContent() {
   const journey = statesWithProgress(p);
   const current = journey.find((s) => s.status === "current") ?? journey[journey.length - 1];
   const currentDone = cardsDone(p, current.name);
-  const upNext = journey
-    .filter((s) => s.name !== current.name && s.status !== "done" && s.status !== "current")
-    .slice(0, 2);
 
   useEffect(() => {
     touchStreak();
@@ -768,30 +763,7 @@ function HomeDashboardContent() {
 
     // Trigger animations on mount
     setTimeout(() => setStatsVisible(true), 100);
-    setTimeout(() => setAnimateStats(true), 500);
   }, [p.streak]);
-
-  const handleLockedCardTap = (stateName: string) => {
-    fxTap();
-    setShowLockedPreview(stateName);
-  };
-
-  const handleTutorialToggle = () => {
-    fxTap();
-    setShowTutorial(true);
-  };
-
-  const handleTutorialClose = () => {
-    fxTap();
-    // Mark tutorial as seen so it doesn't auto-show again
-    localStorage.setItem(STORAGE_KEYS.tutorialSeen, "true");
-    setShowTutorial(false);
-  };
-
-  const getUnlockRequirement = (stateName: string): string => {
-    // All states unlocked from day 1 - free exploration mode
-    return `${EMOJI.utility.worldMap} All states open - explore freely!`;
-  };
 
   return (
     <div
@@ -844,27 +816,7 @@ function HomeDashboardContent() {
       </div>
 
       {/* Scrollable content area */}
-      <div className="min-h-0 flex-1 overflow-y-auto">
-        {/* India Journey Meta-Game Card - Separate featured section */}
-        <div
-          className={`px-6 pt-5 pb-4 transition-opacity duration-700 ${statsVisible ? "opacity-100" : "opacity-0"}`}
-        >
-          <Suspense
-            fallback={
-              <div className="w-full ui-card ui-accent-1-soft rounded-3xl p-6 animate-pulse">
-                <div className="h-8 bg-muted rounded w-1/3 mb-4" />
-                <div className="space-y-3">
-                  {[1, 2, 3].map((i) => (
-                    <div key={i} className="h-3 bg-muted rounded" />
-                  ))}
-                </div>
-              </div>
-            }
-          >
-            <IndiaProgressMapLazy />
-          </Suspense>
-        </div>
-
+      <div className="min-h-0 flex-1 flex flex-col overflow-hidden">
         {/* Recently Completed State Celebration - Premium Popup */}
         <RecentlyCompletedCelebration
           p={p}
@@ -885,8 +837,8 @@ function HomeDashboardContent() {
           if (!streakStatus.isAtRisk || dismissStreakWarning) return null;
 
           return (
-            <div className="px-5 mt-5 animate-fade-in">
-              <div className="rounded-2xl bg-warning-soft text-warning p-4 shadow-elevated-2 transition-all hover:shadow-elevated-3 border border-warning">
+            <div className="absolute top-0 left-0 right-0 z-40 px-5 pt-5 animate-fade-in pointer-events-none">
+              <div className="rounded-2xl bg-warning-soft text-warning p-4 shadow-elevated-2 transition-all hover:shadow-elevated-3 border border-warning pointer-events-auto">
                 <div className="flex items-start gap-3">
                   <div className="text-2xl flex-shrink-0">{EMOJI.utility.warning}</div>
                   <div className="flex-1 min-w-0">
@@ -911,206 +863,90 @@ function HomeDashboardContent() {
           );
         })()}
 
-        {/* Continue journey - with pulse on play button */}
-        <div className="px-5 mt-5 mb-4 flex-shrink-0">
-          <h2 className="text-display font-bold text-sm text-text-secondary mb-2">
-            Continue your journey
-          </h2>
-          <div className="mt-2 rounded-3xl ui-card ui-accent-1-soft p-4 flex items-center gap-3">
-            <div className="h-16 w-16 rounded-2xl overflow-hidden flex-shrink-0">
-              <img
-                src={STATE_ART[current.name]}
-                alt={current.name}
-                className="w-full h-full object-cover"
-                loading="eager"
-                decoding="auto"
-              />
-            </div>
-            <div className="flex-1">
-              <div className="text-label text-saffron">
-                {current.kind === "ut" ? "Union Territory" : "Currently Exploring"}
-              </div>
-              <div className="text-h4 font-bold leading-tight">{current.name}</div>
-              <div className="mt-1 flex items-center gap-1.5">
-                <div className="h-2.5 flex-1 rounded-full bg-muted overflow-hidden">
-                  <div
-                    className="h-full transition-all duration-1000 ease-out"
-                    style={{ width: `${(currentDone / CARDS_PER_STATE) * 100}%`, backgroundColor: "var(--accent-1)" }}
-                  />
-                </div>
-                <span className="text-label text-text-secondary">
-                  {currentDone}/{CARDS_PER_STATE}
-                </span>
-              </div>
-            </div>
-            <Link
-              to="/state/$slug/learn"
-              params={{ slug: stateSlug(current.name) }}
-              onClick={() => fxTap()}
-              className="h-12 px-4 rounded-2xl ui-button ui-accent-1 text-display font-bold text-sm flex items-center transition-all duration-300 hover:scale-105 active:scale-95"
-            >
-              {`Play ${EMOJI.action.play}`}
-            </Link>
-          </div>
-        </div>
+        {/* HERO CARD: Next State - Flex fills available space */}
+        <div
+          className="flex-1 min-h-0 flex flex-col"
+          style={{ padding: "var(--space-1-5) var(--space-1-5) 0" }}
+        >
+          <div className="rounded-3xl overflow-hidden shadow-elevated-3 relative h-full flex flex-col">
+            {/* Background Image Layer */}
+            <img
+              src={STATE_ART[current.name]}
+              alt={current.name}
+              className="absolute inset-0 w-full h-full object-cover"
+              loading="eager"
+              decoding="auto"
+            />
 
-        {/* Up next - with interactive locked cards */}
-        <div className="px-5 mt-5 mb-6 flex-shrink-0">
-          <div className="flex items-center justify-between mb-2">
-            <h2 className="text-display font-bold text-sm text-text-secondary">Up next</h2>
-            <Link
-              to="/journey"
-              className="text-xs font-extrabold text-explorer"
-              aria-label="View all states"
-            >
-              View all
-            </Link>
-          </div>
-          <div className="mt-2 grid grid-cols-2 gap-3">
-            {upNext.map((s, idx) => (
-              <button
-                key={s.name}
-                onClick={() => handleLockedCardTap(s.name)}
-                className={`rounded-3xl ui-card ui-accent-1-soft p-3 flex flex-col items-center gap-2 transition-all duration-300 overflow-hidden hover:scale-105 ${
-                  animateStats ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
-                }`}
-                style={{ transitionDelay: `${idx * 100}ms` }}
-                aria-label={`Next state to explore: ${s.name}`}
-                role="button"
-                tabIndex={0}
-                onKeyPress={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    handleLockedCardTap(s.name);
-                  }
+            {/* Gradient Overlay */}
+            <div
+              className="absolute inset-0"
+              style={{ background: "linear-gradient(180deg, transparent 30%, var(--scrim) 100%)" }}
+            />
+
+            {/* Content Layer */}
+            <div className="absolute bottom-0 left-0 right-0 p-4 flex flex-col justify-end h-full text-white">
+              {/* "PLAY NEXT" Label */}
+              <div className="text-xs font-black uppercase tracking-widest opacity-80 mb-2">
+                Play Next
+              </div>
+
+              {/* State Name - Large and Bold */}
+              <div className="text-4xl font-black mb-3 leading-tight text-white">
+                {current.name}
+              </div>
+
+              {/* Info Row - Cards to learn & XP reward */}
+              <div className="flex flex-col gap-2 mb-3 text-sm font-semibold opacity-90">
+                <div className="flex items-center gap-2">
+                  <span>{EMOJI.learning.game}</span>
+                  <span>{CARDS_PER_STATE} cards to learn</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span>{EMOJI.action.star}</span>
+                  <span>Earn {XP_PER_CARD * CARDS_PER_STATE} XP + stamp</span>
+                </div>
+              </div>
+
+              {/* PLAY NOW Button - Full Width, Bold */}
+              <Link
+                to="/state/$slug/learn"
+                params={{ slug: stateSlug(current.name) }}
+                onClick={() => fxTap()}
+                className="h-14 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300 hover:scale-105 active:scale-95 w-full text-white"
+                style={{
+                  backgroundColor: "var(--accent-1)",
+                  color: "var(--accent-1-ink)",
                 }}
               >
-                <div className="w-12 h-12 rounded-xl overflow-hidden">
-                  <img
-                    src={STATE_ART[s.name]}
-                    alt={s.name}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-                <div className="text-display font-bold text-sm text-center leading-tight line-clamp-ellipsis-2">
-                  {s.name}
-                </div>
-                <Link
-                  to="/state/$slug/learn"
-                  params={{ slug: stateSlug(s.name) }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    fxTap();
-                  }}
-                  className="mt-1 px-4 py-2 rounded-lg ui-button ui-accent-1 text-label font-bold transition-all duration-200 hover:scale-105 active:scale-95"
-                  aria-label={`Start exploring ${s.name}`}
-                >
-                  Start exploring
-                </Link>
-              </button>
-            ))}
+                PLAY NOW {EMOJI.action.play}
+              </Link>
+            </div>
           </div>
         </div>
 
-        {/* Locked Card Preview Modal */}
-        {showLockedPreview && (
-          <div className="fixed inset-0 flex items-end justify-center z-50 p-4 animate-fade-in" style={{backgroundColor: 'var(--scrim)'}}>
-            <div className="w-full max-w-sm bg-surface-card rounded-3xl shadow-2xl p-6 max-h-[80vh] overflow-y-auto animate-slide-up">
-              {(() => {
-                const state = journey.find((s) => s.name === showLockedPreview);
-                if (!state) return null;
+        {/* STAT CARDS ROW: Compact 3-card layout (XP, Level, Badges) */}
+        <div style={{ padding: "var(--space-1) var(--space-1-5) var(--space-1-5)" }}>
+          <div className="flex flex-row gap-2">
+            {/* XP Card */}
+            <div className="flex-1 h-14 bg-surface-card border border-border-subtle rounded-xl p-2 flex flex-col justify-center items-center">
+              <div className="text-xs font-bold text-text-secondary">XP</div>
+              <div className="text-lg font-black text-text-primary">{p.xp}</div>
+            </div>
 
-                return (
-                  <div>
-                    {/* Close button */}
-                    <button
-                      onClick={() => setShowLockedPreview(null)}
-                      className="absolute top-4 right-4 text-muted-light hover:text-text-secondary text-xl"
-                    >
-                      {EMOJI.ui.close}
-                    </button>
+            {/* Level Card */}
+            <div className="flex-1 h-14 bg-surface-card border border-border-subtle rounded-xl p-2 flex flex-col justify-center items-center">
+              <div className="text-xs font-bold text-text-secondary">Lv</div>
+              <div className="text-lg font-black text-text-primary">{level}</div>
+            </div>
 
-                    {/* State preview */}
-                    <div
-                      className={`rounded-2xl p-4 text-center mb-4`}
-                      style={{backgroundColor: "var(--accent-1)", color: "var(--accent-1-ink)"}}
-                    >
-                      <div className="w-20 h-20 mx-auto mb-2 rounded-lg overflow-hidden">
-                        <img
-                          src={STATE_ART[state.name]}
-                          alt={state.name}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <div className="text-display text-xl font-extrabold">{state.name}</div>
-                      <div className="text-sm opacity-90 mt-1">{state.nickname}</div>
-                    </div>
-
-                    {/* State facts */}
-                    <div className="space-y-3">
-                      <div className="p-4 rounded-2xl bg-warning-soft border-l-4 border-warning shadow-elevated-1 hover:shadow-elevated-2 transition-all">
-                        <div className="text-label text-warning uppercase tracking-wider font-bold">
-                          {EMOJI.utility.capital} Monument
-                        </div>
-                        <div className="text-body text-warning mt-2 font-semibold">
-                          {state.monumentName}
-                        </div>
-                      </div>
-
-                      <div className="p-4 rounded-2xl bg-success-soft border-l-4 border-success shadow-elevated-1 hover:shadow-elevated-2 transition-all">
-                        <div className="text-label text-success uppercase tracking-wider font-bold">
-                          {EMOJI.achievement.animal} Wildlife
-                        </div>
-                        <div className="text-body text-success mt-2 font-semibold">
-                          {state.animalName}
-                        </div>
-                      </div>
-
-                      <div className="p-4 rounded-2xl bg-info-soft border-l-4 border-info shadow-elevated-1 hover:shadow-elevated-2 transition-all">
-                        <div className="text-label text-info uppercase tracking-wider font-bold">
-                          {EMOJI.learning.funFact} Fun Fact
-                        </div>
-                        <div className="text-body text-info mt-2 font-semibold">
-                          {state.funFact}
-                        </div>
-                      </div>
-
-                      <div
-                        className="p-4 rounded-2xl border-l-4 border-accent-5 shadow-elevated-1 hover:shadow-elevated-2 transition-all"
-                        style={{ backgroundColor: "var(--accent-5-soft)" }}
-                      >
-                        <div className="text-label text-accent-5-ink uppercase tracking-wider font-bold">
-                          {EMOJI.action.lock} Unlock Path
-                        </div>
-                        <div className="text-body text-accent-5-ink mt-2 font-semibold">
-                          {getUnlockRequirement(state.name)}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Action buttons */}
-                    <div className="mt-5 space-y-2">
-                      <Link
-                        to="/journey"
-                        className="w-full h-12 rounded-2xl ui-button ui-accent-1 font-extrabold flex items-center justify-center hover:scale-105 transition-all active:scale-95"
-                        onClick={() => fxTap()}
-                      >
-                        View Journey Map
-                      </Link>
-                      <button
-                        onClick={() => setShowLockedPreview(null)}
-                        className="w-full h-11 rounded-2xl ui-button ui-accent-1-soft font-bold hover:scale-105 transition-all active:scale-95"
-                      >
-                        Close
-                      </button>
-                    </div>
-                  </div>
-                );
-              })()}
+            {/* Badges Card */}
+            <div className="flex-1 h-14 bg-surface-card border border-border-subtle rounded-xl p-2 flex flex-col justify-center items-center">
+              <div className="text-xs font-bold text-text-secondary">Badges</div>
+              <div className="text-lg font-black text-text-primary">{badgeCount(p)}</div>
             </div>
           </div>
-        )}
+        </div>
 
         {/* First Session Tutorial removed from onboarding flow */}
       </div>
@@ -1209,7 +1045,7 @@ function MiniStateCard({
     <div className="relative rounded-3xl bg-surface-card border border-border-subtle shadow-soft p-3">
       <div
         className="h-20 rounded-2xl flex items-center justify-center overflow-hidden"
-        style={{backgroundColor: locked ? "var(--color-muted-bg)" : "var(--accent-2)"}}
+        style={{ backgroundColor: locked ? "var(--color-muted-bg)" : "var(--accent-2)" }}
       >
         <img
           src={img}
@@ -1251,7 +1087,7 @@ function StateDetailModal({
   return (
     <div
       className="fixed inset-0 z-50 flex items-end animate-fade-in"
-      style={{backgroundColor: 'var(--scrim)'}}
+      style={{ backgroundColor: "var(--scrim)" }}
       onClick={onClose}
     >
       <div
@@ -1270,11 +1106,12 @@ function StateDetailModal({
         <div className="flex flex-col items-center pt-2">
           <div
             className={`h-20 w-20 rounded-full flex items-center justify-center text-5xl mb-4 ${
-              isLocked
-                ? "opacity-60"
-                : "shadow-lg"
+              isLocked ? "opacity-60" : "shadow-lg"
             }`}
-            style={{backgroundColor: isLocked ? "var(--surface-sunken)" : "var(--accent-1)", color: isLocked ? "var(--text-secondary)" : "var(--accent-1-ink)"}}
+            style={{
+              backgroundColor: isLocked ? "var(--surface-sunken)" : "var(--accent-1)",
+              color: isLocked ? "var(--text-secondary)" : "var(--accent-1-ink)",
+            }}
           >
             {stateData.emoji}
           </div>
@@ -1699,6 +1536,11 @@ export function JourneyMapScreen() {
       <Cloud className="absolute top-96 left-2 w-24 opacity-90 pointer-events-none animate-fade-in" />
       <Cloud className="absolute top-[500px] right-1 w-20 opacity-85 pointer-events-none animate-fade-in" />
 
+      {/* India Progress Map Card - Between header and region tabs */}
+      <div className="px-4 pt-4 pb-2">
+        <IndiaProgressMap />
+      </div>
+
       {/* Explorable States Map with Regional Organization */}
       <div
         className="relative flex-1 flex flex-col overflow-hidden animate-fade-in"
@@ -1721,9 +1563,7 @@ export function JourneyMapScreen() {
                     setExpandedRegion(regionKey);
                   }}
                   className={`px-4 py-3 rounded-full font-extrabold whitespace-nowrap transition active:scale-95 ${
-                    isSelected
-                      ? "ui-button ui-accent-1"
-                      : "ui-button ui-accent-1-soft"
+                    isSelected ? "ui-button ui-accent-1" : "ui-button ui-accent-1-soft"
                   }`}
                   style={{ fontSize: "var(--type-body)", fontWeight: "var(--type-body-weight)" }}
                   title={`${regionDone}/${regionStates.length} explored`}
@@ -2256,7 +2096,10 @@ export function LearningHubScreen({
 
       {/* "All 6 cards done!" Decision Modal */}
       {showDecisionModal && (
-        <div className="fixed inset-0 z-50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in" style={{backgroundColor: 'var(--scrim)'}}>
+        <div
+          className="fixed inset-0 z-50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in"
+          style={{ backgroundColor: "var(--scrim)" }}
+        >
           <div className="bg-action-primary rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden animate-in zoom-in-95 flex flex-col">
             {/* Header */}
             <div className="p-6 text-center">
@@ -2367,7 +2210,10 @@ function HubCard({
         </div>
       )}
       {locked && (
-        <div className="absolute top-2 right-2 h-7 w-7 rounded-full text-text-primary flex items-center justify-center text-xs" style={{backgroundColor: 'var(--scrim)'}}>
+        <div
+          className="absolute top-2 right-2 h-7 w-7 rounded-full text-text-primary flex items-center justify-center text-xs"
+          style={{ backgroundColor: "var(--scrim)" }}
+        >
           {EMOJI.milestone.hundred}
         </div>
       )}
@@ -2918,9 +2764,7 @@ export function LearningCardScreen({
               fxTap();
               const availableLangs = getAvailableLanguages(state.name);
               const langCode =
-                newLang === "en"
-                  ? "en"
-                  : availableLangs.find((l) => l !== "en") ?? "en";
+                newLang === "en" ? "en" : (availableLangs.find((l) => l !== "en") ?? "en");
               setDisplayLanguage(langCode);
             }}
           />
@@ -3081,7 +2925,10 @@ export function LearningCardScreen({
 
       {/* Audio Permission Prompt */}
       {showAudioPermissionPrompt && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{backgroundColor: 'var(--scrim)'}}>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ backgroundColor: "var(--scrim)" }}
+        >
           <div className="bg-surface-card rounded-3xl shadow-2xl max-w-sm w-full p-6 space-y-4 animate-in zoom-in-95">
             <div className="text-center">
               <div className="text-5xl mb-3">{EMOJI.audio.stories}</div>
@@ -3413,7 +3260,7 @@ function QuizScreenContent({
                         ? "text-text-on-header"
                         : "bg-muted text-text-secondary"
                 }`}
-                style={isSelected ? {backgroundColor: "var(--accent-5)"} : undefined}
+                style={isSelected ? { backgroundColor: "var(--accent-5)" } : undefined}
               >
                 {isCorrectPick
                   ? EMOJI.action.done
@@ -3464,7 +3311,10 @@ export function CorrectAnswerScreen({
     fxCorrect();
   }, []);
   return (
-    <div className="h-full w-full relative overflow-hidden flex flex-col" style={{backgroundColor: "var(--accent-3)"}}>
+    <div
+      className="h-full w-full relative overflow-hidden flex flex-col"
+      style={{ backgroundColor: "var(--accent-3)" }}
+    >
       {/* Premium Close Button - Top Right */}
       <button
         onClick={onDismiss}
@@ -3545,7 +3395,10 @@ export function StateUnlockScreen({
     fxCorrect();
   }, []);
   return (
-    <div className="h-full w-full relative overflow-hidden flex flex-col" style={{backgroundColor: "var(--accent-5)"}}>
+    <div
+      className="h-full w-full relative overflow-hidden flex flex-col"
+      style={{ backgroundColor: "var(--accent-5)" }}
+    >
       {/* Premium Close Button - Top Right */}
       <button
         onClick={() => {
@@ -3566,7 +3419,9 @@ export function StateUnlockScreen({
         <div className="text-text-on-primary/90 text-xs font-black uppercase tracking-[0.3em]">
           New State Unlocked
         </div>
-        <h1 className="text-h1 text-text-on-primary mt-1 drop-shadow leading-relaxed">{state.name}!</h1>
+        <h1 className="text-h1 text-text-on-primary mt-1 drop-shadow leading-relaxed">
+          {state.name}!
+        </h1>
         <p className="text-text-on-primary/90 font-bold mt-1">{state.nickname}</p>
       </div>
 
@@ -3633,7 +3488,6 @@ function Stamp({
   filled?: boolean;
   onSelect?: (stateName: string) => void;
 }) {
-  // eslint-disable-next-line no-hardcoded-colors/no-hardcoded-colors
   // NOTE: color map contains CSS variable references like var(--accent-1), not hardcoded values.
   // These are theme-aware token references.
   const color = {
@@ -3721,7 +3575,7 @@ function BadgeDetailModal({
   return (
     <div
       className="fixed inset-0 z-50 flex items-end animate-fade-in"
-      style={{backgroundColor: 'var(--scrim)'}}
+      style={{ backgroundColor: "var(--scrim)" }}
       onClick={onClose}
     >
       <div
@@ -3744,7 +3598,11 @@ function BadgeDetailModal({
             className={`h-20 w-20 rounded-full flex items-center justify-center text-5xl mb-4 shadow-elevated-2 ${
               badge.done ? "" : "opacity-60"
             }`}
-            style={badge.done ? {backgroundColor: "var(--accent-1)", color: "var(--accent-1-ink)"} : { backgroundColor: "var(--surface-muted)" }}
+            style={
+              badge.done
+                ? { backgroundColor: "var(--accent-1)", color: "var(--accent-1-ink)" }
+                : { backgroundColor: "var(--surface-muted)" }
+            }
           >
             {badge.done ? badge.icon : EMOJI.feedback.trophy}
           </div>
@@ -3901,7 +3759,10 @@ export function BadgesScreen() {
       {activeTab === "achievements" && (
         <>
           {/* Header with Avatar + Celebration Tone */}
-          <div className="px-5 pt-3 pb-4 bg-accent-4 rounded-b-[32px] relative overflow-hidden animate-fade-in" style={{backgroundColor: "var(--accent-4)", color: "var(--accent-4-ink)"}}>
+          <div
+            className="px-5 pt-3 pb-4 bg-accent-4 rounded-b-[32px] relative overflow-hidden animate-fade-in"
+            style={{ backgroundColor: "var(--accent-4)", color: "var(--accent-4-ink)" }}
+          >
             <Cloud className="absolute top-2 right-4 w-14 opacity-40 pointer-events-none" />
 
             <div className="flex items-center gap-3 relative z-10">
@@ -3912,7 +3773,7 @@ export function BadgesScreen() {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="flex-1" style={{color: "var(--accent-4-ink)"}}>
+              <div className="flex-1" style={{ color: "var(--accent-4-ink)" }}>
                 <div className="text-h4 text-display leading-tight">{progress.name}</div>
                 <div className="text-xs font-bold opacity-80">
                   {EMOJI.action.celebrate} {unlockedCount} Amazing Badges Collected!
@@ -4121,7 +3982,10 @@ function ProfileScreenContent() {
 
   return (
     <div className="h-full w-full bg-bg-page flex flex-col">
-      <div className="relative px-5 pt-4 pb-14 rounded-b-[36px] animate-fade-in" style={{backgroundColor: "var(--accent-5)", color: "var(--accent-5-ink)"}}>
+      <div
+        className="relative px-5 pt-4 pb-14 rounded-b-[36px] animate-fade-in"
+        style={{ backgroundColor: "var(--accent-5)", color: "var(--accent-5-ink)" }}
+      >
         <Cloud className="absolute top-2 right-2 w-16 opacity-40" />
         <div className="flex items-center justify-between">
           <button
@@ -4145,7 +4009,11 @@ function ProfileScreenContent() {
             </div>
             <div
               className="absolute -bottom-2 -right-2 h-9 w-9 rounded-full flex items-center justify-center text-display text-h5 border-4"
-              style={{backgroundColor: "var(--accent-4)", color: "var(--accent-4-ink)", borderColor: "var(--accent-4-ink)"}}
+              style={{
+                backgroundColor: "var(--accent-4)",
+                color: "var(--accent-4-ink)",
+                borderColor: "var(--accent-4-ink)",
+              }}
             >
               {level}
             </div>
@@ -4198,7 +4066,9 @@ function ProfileScreenContent() {
               style={{ animationDelay: "100ms" }}
             >
               <div className="flex items-center gap-2">
-                <div className="text-display text-2xl font-extrabold text-text-on-primary">{p.name}</div>
+                <div className="text-display text-2xl font-extrabold text-text-on-primary">
+                  {p.name}
+                </div>
                 <button
                   onClick={() => {
                     fxTap();
@@ -4237,7 +4107,10 @@ function ProfileScreenContent() {
             }}
             className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
           >
-            <div className="h-12 w-12 rounded-2xl flex items-center justify-center text-2xl" style={{backgroundColor: "var(--accent-1)", color: "var(--accent-1-ink)"}}>
+            <div
+              className="h-12 w-12 rounded-2xl flex items-center justify-center text-2xl"
+              style={{ backgroundColor: "var(--accent-1)", color: "var(--accent-1-ink)" }}
+            >
               {EMOJI.audio.stories}
             </div>
             <div className="flex-1 text-left">
@@ -4338,7 +4211,11 @@ function ProfileScreenContent() {
             </div>
             <span
               className="h-7 w-12 rounded-full flex items-center px-1 transition"
-              style={hasFileConsent ? {backgroundColor: "var(--accent-3)"} : {backgroundColor: "var(--color-muted-bg)"}}
+              style={
+                hasFileConsent
+                  ? { backgroundColor: "var(--accent-3)" }
+                  : { backgroundColor: "var(--color-muted-bg)" }
+              }
             >
               <span
                 className={`h-5 w-5 rounded-full bg-text-on-header shadow transition-transform ${hasFileConsent ? "translate-x-5" : "translate-x-0"}`}
@@ -4358,7 +4235,10 @@ function ProfileScreenContent() {
               <div className="ui-card ui-accent-1-soft p-3 flex flex-col gap-2 transition">
                 {/* Header Row */}
                 <div className="flex items-center gap-3">
-                  <div className="h-12 w-12 rounded-2xl flex items-center justify-center text-2xl" style={{backgroundColor: "var(--accent-3)", color: "var(--accent-3-ink)"}}>
+                  <div
+                    className="h-12 w-12 rounded-2xl flex items-center justify-center text-2xl"
+                    style={{ backgroundColor: "var(--accent-3)", color: "var(--accent-3-ink)" }}
+                  >
                     {EMOJI.milestone.twentyFive}
                   </div>
                   <div className="flex-1">
@@ -4393,7 +4273,10 @@ function ProfileScreenContent() {
             onClick={() => fxTap()}
             className="ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
           >
-            <div className="h-12 w-12 rounded-2xl flex items-center justify-center text-2xl" style={{backgroundColor: "var(--accent-5)", color: "var(--accent-5-ink)"}}>
+            <div
+              className="h-12 w-12 rounded-2xl flex items-center justify-center text-2xl"
+              style={{ backgroundColor: "var(--accent-5)", color: "var(--accent-5-ink)" }}
+            >
               {EMOJI.milestone.hundred}
             </div>
             <div className="flex-1">
@@ -4480,7 +4363,11 @@ function SoundToggleRow() {
         </div>
         <span
           className="h-7 w-12 rounded-full flex items-center px-1 transition"
-          style={soundOn ? {backgroundColor: "var(--accent-3)"} : {backgroundColor: "var(--color-muted-bg)"}}
+          style={
+            soundOn
+              ? { backgroundColor: "var(--accent-3)" }
+              : { backgroundColor: "var(--color-muted-bg)" }
+          }
         >
           <span
             className={`h-5 w-5 rounded-full bg-text-on-header shadow transition-transform ${soundOn ? "translate-x-5" : "translate-x-0"}`}
@@ -4518,7 +4405,11 @@ function SoundToggleRow() {
         </div>
         <span
           className="h-7 w-12 rounded-full flex items-center px-1 transition"
-          style={audioEnabled ? {backgroundColor: "var(--accent-3)"} : {backgroundColor: "var(--color-muted-bg)"}}
+          style={
+            audioEnabled
+              ? { backgroundColor: "var(--accent-3)" }
+              : { backgroundColor: "var(--color-muted-bg)" }
+          }
         >
           <span
             className={`h-5 w-5 rounded-full bg-text-on-header shadow transition-transform ${audioEnabled ? "translate-x-5" : "translate-x-0"}`}
@@ -4660,7 +4551,6 @@ function RowLink({
   sub: string;
   to: "/explorer" | "/achievements" | "/parent" | "/badges" | "/journey";
 }) {
-  // eslint-disable-next-line no-hardcoded-colors/no-hardcoded-colors
   // NOTE: bgMap and inkMap contain CSS variable references like var(--accent-1), not hardcoded hex values.
   // These are theme-aware token references that resolve to the current theme's accent colors at runtime.
   const bgMap = {
@@ -4681,7 +4571,10 @@ function RowLink({
       onClick={() => fxTap()}
       className="ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
     >
-      <div className="h-12 w-12 rounded-2xl flex items-center justify-center text-2xl" style={{backgroundColor: bgMap[tone], color: inkMap[tone]}}>
+      <div
+        className="h-12 w-12 rounded-2xl flex items-center justify-center text-2xl"
+        style={{ backgroundColor: bgMap[tone], color: inkMap[tone] }}
+      >
         {icon}
       </div>
       <div className="flex-1">
@@ -4722,7 +4615,7 @@ export function AchievementsScreen() {
             <div
               className="h-16 w-16 rounded-2xl flex items-center justify-center text-3xl"
               style={{
-                backgroundColor: a.done 
+                backgroundColor: a.done
                   ? "var(--accent-4)"
                   : a.tone === "orange"
                     ? "var(--accent-1-soft)"
@@ -4731,7 +4624,7 @@ export function AchievementsScreen() {
                       : a.tone === "green"
                         ? "var(--accent-3-soft)"
                         : "var(--accent-4-soft)",
-                color: a.done ? "var(--accent-4-ink)" : "inherit"
+                color: a.done ? "var(--accent-4-ink)" : "inherit",
               }}
             >
               {a.icon}
@@ -4755,13 +4648,14 @@ export function AchievementsScreen() {
                     <div
                       style={{
                         width: `${(a.prog / a.max) * 100}%`,
-                        backgroundColor: a.tone === "orange"
-                          ? "var(--accent-1)"
-                          : a.tone === "blue"
-                            ? "var(--accent-5)"
-                            : a.tone === "green"
-                              ? "var(--accent-3)"
-                              : "var(--accent-4)"
+                        backgroundColor:
+                          a.tone === "orange"
+                            ? "var(--accent-1)"
+                            : a.tone === "blue"
+                              ? "var(--accent-5)"
+                              : a.tone === "green"
+                                ? "var(--accent-3)"
+                                : "var(--accent-4)",
                       }}
                     />
                   </div>
@@ -4780,7 +4674,10 @@ export function AchievementsScreen() {
 
 export function LoadingScreen() {
   return (
-    <div className="h-full w-full relative overflow-hidden flex flex-col items-center justify-center" style={{backgroundColor: "var(--accent-2)"}}>
+    <div
+      className="h-full w-full relative overflow-hidden flex flex-col items-center justify-center"
+      style={{ backgroundColor: "var(--accent-2)" }}
+    >
       <Cloud className="absolute top-14 left-2 w-24 opacity-90 animate-pulse" />
       <Cloud className="absolute top-32 right-4 w-20 opacity-80" />
       <Cloud className="absolute bottom-40 left-6 w-28 opacity-85 animate-pulse" />
@@ -4802,7 +4699,10 @@ export function LoadingScreen() {
         </div>
       </div>
       <div className="mt-6 w-56 h-2 rounded-full bg-text-on-header/70 overflow-hidden">
-        <div className="h-full w-2/3 animate-pulse" style={{backgroundColor: "var(--accent-5)"}} />
+        <div
+          className="h-full w-2/3 animate-pulse"
+          style={{ backgroundColor: "var(--accent-5)" }}
+        />
       </div>
     </div>
   );
@@ -4821,7 +4721,10 @@ export function EmptyStateScreen() {
         <p className="mt-2 text-body text-text-secondary max-w-[260px]">
           Invite a friend to join your adventure and travel across India together.
         </p>
-        <button className="mt-6 h-14 px-6 rounded-2xl text-text-on-header text-display text-lg font-extrabold shadow-[var(--shadow-glow-orange)]" style={{backgroundColor: "var(--accent-1)", color: "var(--accent-1-ink)"}}>
+        <button
+          className="mt-6 h-14 px-6 rounded-2xl text-text-on-header text-display text-lg font-extrabold shadow-[var(--shadow-glow-orange)]"
+          style={{ backgroundColor: "var(--accent-1)", color: "var(--accent-1-ink)" }}
+        >
           Invite a Friend {EMOJI.action.sparkle}
         </button>
         <button className="mt-2 h-12 px-6 rounded-2xl bg-muted text-ink text-display font-extrabold">

@@ -2,9 +2,6 @@
  * Tailwind Configuration - India Explorer
  *
  * This file extends the default Tailwind theme with design tokens.
- * @lovable.dev/vite-tanstack-config automatically detects and applies this.
- *
- * Do NOT add plugins here — Lovable pre-configures all necessary plugins.
  */
 
 import type { Config } from "tailwindcss";

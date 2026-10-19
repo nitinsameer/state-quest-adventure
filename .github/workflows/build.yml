@@ -4,7 +4,7 @@ name: Build Android APK
 
 on:
   push:
-    branches: [main, develop, feature/claude-theme-build]
+    branches: [main, develop]
   pull_request:
     branches: [main, develop]
   workflow_dispatch:

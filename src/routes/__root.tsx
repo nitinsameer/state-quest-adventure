@@ -11,7 +11,6 @@ import React from "react";
 import { App } from "@capacitor/app";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
 import { useAndroidBackButton } from "../hooks/useAndroidBackButton";
 import { getJourneyBackHandler } from "../lib/journeyBackHandler";
 import { UnlockCelebration } from "@/components/UnlockCelebration";
@@ -90,8 +89,7 @@ class RootErrorBoundary extends React.Component<
       error,
     );
 
-    // Error is already logged to appLogger and Crashlytics via logError()
-    reportLovableError(error, { boundary: "root_error_boundary", errorInfo });
+
   }
 
   render() {
@@ -164,9 +162,6 @@ function NotFoundComponent() {
 
 function ErrorComponent({ error, reset }: { error: unknown; reset: () => void }) {
   const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-accent-1-soft px-4">
