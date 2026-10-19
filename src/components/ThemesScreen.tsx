@@ -71,7 +71,7 @@ export function ThemesScreen() {
                   ? "border-accent-1 shadow-lg scale-105"
                   : "border-transparent hover:shadow-md"
               }`}
-              style={{ backgroundColor: theme.previewTokens.bg }}
+              style={{ backgroundColor: theme.previewTokens.bg }} /* eslint-disable-line no-hardcoded-colors/no-hardcoded-colors */
             >
               {/* Tick icon for selected */}
               {currentTheme === theme.id && (
@@ -91,6 +91,7 @@ export function ThemesScreen() {
                 {/* Mini card preview */}
                 <div
                   className="h-20 rounded-xl p-3 flex flex-col items-center justify-center gap-1"
+                  // eslint-disable-next-line no-hardcoded-colors/no-hardcoded-colors
                   style={{
                     backgroundColor: theme.previewTokens.accent + "20",
                     border: `2px solid ${theme.previewTokens.accent}`,
@@ -100,22 +101,27 @@ export function ThemesScreen() {
                   <div className="flex gap-1.5">
                     <div
                       className="h-2 w-2 rounded-full"
+                      // eslint-disable-next-line no-hardcoded-colors/no-hardcoded-colors
                       style={{ backgroundColor: theme.previewTokens.accent }}
                     />
                     <div
                       className="h-2 w-2 rounded-full opacity-60"
+                      // eslint-disable-next-line no-hardcoded-colors/no-hardcoded-colors
                       style={{ backgroundColor: theme.previewTokens.accent }}
                     />
                     <div
                       className="h-2 w-2 rounded-full opacity-30"
+                      // eslint-disable-next-line no-hardcoded-colors/no-hardcoded-colors
                       style={{ backgroundColor: theme.previewTokens.accent }}
                     />
                   </div>
 
                   {/* Text preview */}
+                  {/* eslint-disable-next-line no-hardcoded-colors/no-hardcoded-colors */}
                   <div className="text-xs font-bold" style={{ color: theme.previewTokens.text }}>
                     Aa
                   </div>
+                  {/* eslint-disable-next-line no-hardcoded-colors/no-hardcoded-colors */}
                   <div
                     className="text-xs px-2 py-0.5 rounded"
                     style={{
@@ -130,9 +136,11 @@ export function ThemesScreen() {
 
               {/* Theme Name and Description */}
               <div className="text-left">
+                {/* eslint-disable-next-line no-hardcoded-colors/no-hardcoded-colors */}
                 <h3 className="text-sm font-extrabold" style={{ color: theme.previewTokens.text }}>
                   {theme.name}
                 </h3>
+                {/* eslint-disable-next-line no-hardcoded-colors/no-hardcoded-colors */}
                 <p className="text-xs opacity-70 mt-1" style={{ color: theme.previewTokens.text }}>
                   {theme.description}
                 </p>

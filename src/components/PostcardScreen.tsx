@@ -144,10 +144,9 @@ export function StatePostcardScreen({
         const dw = img.width * scale;
         const dh = img.height * scale;
         c.save();
-        // Canvas shadow: rgba(15,23,42,0.22) maps to --shadow-raised concept
-        // Note: Canvas 2D doesn't support CSS variables, so shadow colors are hardcoded
-        // The rgba value is consistent across postcard shadow rendering
-        c.shadowColor = "rgba(15,23,42,0.22)";
+        // Canvas shadow: read from token at runtime for theme compatibility
+        // Note: Canvas 2D doesn't support CSS variables directly, so we read the hex at draw time
+        c.shadowColor = readTokenAsHex("--shadow-raised");
         c.shadowBlur = 26;
         c.shadowOffsetY = 12;
         c.drawImage(img, BAND_X + (BAND_W - dw) / 2, BAND_Y + (BAND_H - dh) / 2, dw, dh);
