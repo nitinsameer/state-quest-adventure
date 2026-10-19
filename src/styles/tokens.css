@@ -197,6 +197,27 @@
   --input: #ddd;
   --ring: #ff7a1a;
   --bg-overlay: white;
+  
+  /* Typography tokens */
+  --type-state-name: 1rem;
+  --type-state-name-weight: 600;
+  --type-screen-title: 1.5rem;
+  --type-screen-title-weight: 800;
+  --type-body: 1rem;
+  --type-body-weight: 400;
+  --type-section-heading: 1.125rem;
+  --type-section-heading-weight: 600;
+  
+  /* Spacing tokens */
+  --space-0-25: 0.0625rem;
+  --space-0-5: 0.125rem;
+  
+  /* Other semantic tokens */
+  --gap-md: 0.75rem;
+  --color-feedback-success: #4caf50;
+  --color-text-inverted: white;
+  --shadow-glow-orange: 0 4px 12px rgba(255, 122, 26, 0.3);
+  --nav-h: 80px;
 }
 
 @layer base {
