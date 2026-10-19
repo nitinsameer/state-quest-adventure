@@ -95,35 +95,35 @@ export function captureAudioDiagnostics(): AudioDiagnostics {
  * Only logs in development builds
  */
 export function logAudioDiagnostics(label?: string): void {
-  if (!import.meta.env.DEV) return;
+  if (import.meta.env.DEV) {
+    const diag = captureAudioDiagnostics();
 
-  const diag = captureAudioDiagnostics();
+    console.log("[AUDIO DEBUG]", "=== AUDIO SYSTEM DIAGNOSTICS ===", label || "");
+    console.log("[AUDIO DEBUG] Timestamp:", new Date(diag.timestamp).toISOString());
+    console.log("[AUDIO DEBUG]", "PLATFORM");
+    console.log("[AUDIO DEBUG]   Platform:", diag.platform);
+    console.log("[AUDIO DEBUG]   Is Native:", diag.isNativePlatform);
+    console.log("[AUDIO DEBUG]   Capacitor Platform:", diag.capacitorPlatform);
+    console.log("[AUDIO DEBUG]   User Agent:", diag.userAgent.substring(0, 80));
 
-  console.log("[AUDIO DEBUG]", "=== AUDIO SYSTEM DIAGNOSTICS ===", label || "");
-  console.log("[AUDIO DEBUG] Timestamp:", new Date(diag.timestamp).toISOString());
-  console.log("[AUDIO DEBUG]", "PLATFORM");
-  console.log("[AUDIO DEBUG]   Platform:", diag.platform);
-  console.log("[AUDIO DEBUG]   Is Native:", diag.isNativePlatform);
-  console.log("[AUDIO DEBUG]   Capacitor Platform:", diag.capacitorPlatform);
-  console.log("[AUDIO DEBUG]   User Agent:", diag.userAgent.substring(0, 80));
+    console.log("[AUDIO DEBUG]", "PERMISSIONS & SETTINGS");
+    console.log(
+      "[AUDIO DEBUG]   Audio Narration Consent:",
+      diag.audioNarrationConsent ? "✓ YES" : "✗ NO",
+    );
+    console.log("[AUDIO DEBUG]   Sound Toggle:", diag.soundToggleOn ? "ON" : "OFF");
 
-  console.log("[AUDIO DEBUG]", "PERMISSIONS & SETTINGS");
-  console.log(
-    "[AUDIO DEBUG]   Audio Narration Consent:",
-    diag.audioNarrationConsent ? "✓ YES" : "✗ NO",
-  );
-  console.log("[AUDIO DEBUG]   Sound Toggle:", diag.soundToggleOn ? "ON" : "OFF");
+    console.log("[AUDIO DEBUG]", "WEB SPEECH API");
+    console.log("[AUDIO DEBUG]   Available:", diag.speechSynthesisAvailable ? "✓ YES" : "✗ NO");
+    console.log("[AUDIO DEBUG]   State:", diag.speechSynthesisState);
+    console.log("[AUDIO DEBUG]   Voices:", diag.voicesAvailable);
 
-  console.log("[AUDIO DEBUG]", "WEB SPEECH API");
-  console.log("[AUDIO DEBUG]   Available:", diag.speechSynthesisAvailable ? "✓ YES" : "✗ NO");
-  console.log("[AUDIO DEBUG]   State:", diag.speechSynthesisState);
-  console.log("[AUDIO DEBUG]   Voices:", diag.voicesAvailable);
+    console.log("[AUDIO DEBUG]", "AUDIO CONTEXT");
+    console.log("[AUDIO DEBUG]   Available:", diag.audioContextAvailable ? "✓ YES" : "✗ NO");
+    console.log("[AUDIO DEBUG]   Type:", diag.audioContextType);
 
-  console.log("[AUDIO DEBUG]", "AUDIO CONTEXT");
-  console.log("[AUDIO DEBUG]   Available:", diag.audioContextAvailable ? "✓ YES" : "✗ NO");
-  console.log("[AUDIO DEBUG]   Type:", diag.audioContextType);
-
-  console.log("[AUDIO DEBUG]", "=== END DIAGNOSTICS ===");
+    console.log("[AUDIO DEBUG]", "=== END DIAGNOSTICS ===");
+  }
 }
 
 /**
