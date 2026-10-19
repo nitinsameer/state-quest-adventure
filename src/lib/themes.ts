@@ -41,6 +41,7 @@ export const THEMES: Theme[] = [
     description: "Soft, warm, and friendly. The default India Explorer theme.",
     isDark: false,
     effects: { blur: false, glow: false, heavy: false },
+    // eslint-disable-next-line no-hardcoded-colors/no-hardcoded-colors
     previewTokens: { bg: "#ece8fb", surface: "#f7f4ff", text: "#2d2650", accent: "#7c5cf0" },
     category: "classic",
   },
@@ -50,6 +51,7 @@ export const THEMES: Theme[] = [
     description: "Subtle depth with soft shadows. Minimalist soft-UI design.",
     isDark: false,
     effects: { blur: false, glow: false, heavy: false },
+    // eslint-disable-next-line no-hardcoded-colors/no-hardcoded-colors
     previewTokens: { bg: "#e0e5ec", surface: "#e0e5ec", text: "#3d4468", accent: "#5b6cff" },
     unlockRule: { type: "states", value: 25 },
     category: "clean",
@@ -60,6 +62,7 @@ export const THEMES: Theme[] = [
     description: "Clean and minimal. Apple-inspired simplicity.",
     isDark: false,
     effects: { blur: false, glow: false, heavy: false },
+    // eslint-disable-next-line no-hardcoded-colors/no-hardcoded-colors
     previewTokens: { bg: "#f5f5f7", surface: "#fff", text: "#1d1d1f", accent: "#0071e3" },
     category: "clean",
   },

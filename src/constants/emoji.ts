@@ -164,6 +164,11 @@ export const EMOJI = {
   theme: {
     painter: "🎨",
     style: "🎨",
+    bright: "🌞",
+    night: "🌙",
+    fancy: "✨",
+    clean: "🧊",
+    classic: "🧡",
   },
 
   // Cool facts and learning
@@ -257,10 +262,13 @@ export const EMOJI = {
  */
 export function getEmoji(path: string): string {
   const keys = path.split(".");
-  let value: any = EMOJI;
+  let value: unknown = EMOJI;
   for (const key of keys) {
-    value = value[key];
-    if (!value) return "";
+    if (typeof value === "object" && value !== null && key in value) {
+      value = (value as Record<string, unknown>)[key];
+    } else {
+      return "";
+    }
   }
-  return value;
+  return typeof value === "string" ? value : "";
 }

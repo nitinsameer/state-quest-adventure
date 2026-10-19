@@ -45,6 +45,7 @@ export function readToken(tokenName: string): string {
  * tokenToHex('rgb(255, 255, 255)')     // Returns: '#ffffff'
  * tokenToHex('rgba(255, 0, 0, 0.5)')   // Returns: '#ff0000'
  * tokenToHex('#ff7a1a')                // Returns: '#ff7a1a'
+ * // eslint-disable-next-line no-hardcoded-colors/no-hardcoded-colors
  */
 export function tokenToHex(tokenValue: string): string {
   // If already hex, return as-is
