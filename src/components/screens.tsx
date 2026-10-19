@@ -36,6 +36,7 @@ import {
 } from "@/lib/parental-consent";
 import { LanguageToggle, type LanguageCode } from "@/components/LanguageToggle";
 import { LanguageSelector } from "@/components/LanguageSelector";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { PostcardModal } from "@/components/PostcardModal";
 import { PostcardPreviewModal } from "@/components/PostcardPreviewModal";
 import { PostcardFrame } from "@/components/PostcardFrame";
@@ -2904,26 +2905,20 @@ export function LearningCardScreen({
           </div>
         </div>
 
-        {/* Language Toggle - Left aligned pill style */}
+        {/* Language Toggle - Compact flag-based selector */}
         {getAvailableLanguages(state.name).length > 1 && (
-          <div className="flex items-center gap-2 bg-surface-raised backdrop-blur-sm rounded-full p-1.5 border border-surface-raised/50">
-            {getAvailableLanguages(state.name).map((lang) => (
-              <button
-                key={lang}
-                onClick={() => {
-                  fxTap();
-                  setDisplayLanguage(lang);
-                }}
-                className={`px-3 py-1.5 rounded-full text-sm font-bold transition-all ${
-                  displayLanguage === lang
-                    ? "ui-button ui-accent-2 shadow-md"
-                    : "bg-surface-card"
-                }`}
-              >
-                {LANGUAGE_NAMES[lang]}
-              </button>
-            ))}
-          </div>
+          <LanguageSwitcher
+            language={displayLanguage === "en" ? "en" : "native"}
+            onChange={(newLang) => {
+              fxTap();
+              const availableLangs = getAvailableLanguages(state.name);
+              const langCode =
+                newLang === "en"
+                  ? "en"
+                  : availableLangs.find((l) => l !== "en") ?? "en";
+              setDisplayLanguage(langCode);
+            }}
+          />
         )}
 
         {/* Listen Button */}

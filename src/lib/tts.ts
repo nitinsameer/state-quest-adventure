@@ -61,39 +61,28 @@ export function isTtsAvailable(): boolean {
  * Play TTS narration using native TextToSpeech plugin
  */
 export function playTts(narrationId: string, text: string, config: Partial<TtsConfig> = {}): void {
-  console.log("\n[TTS] ===== playTts() CALLED =====");
-  console.log("[TTS] narrationId:", narrationId);
-  console.log("[TTS] text length:", text.length);
-  console.log("[TTS] text preview:", text.substring(0, 100) + (text.length > 100 ? "..." : ""));
-  console.log("[TTS] config:", config);
+  debugLog("tts", "playTts called", { narrationId, textLength: text?.length });
 
   // Check audio consent
   const hasConsent = hasFeatureConsent("audio");
-  console.log("[TTS] Audio consent check:", hasConsent);
-
   if (!hasConsent) {
-    console.log("[TTS] ❌ NO AUDIO CONSENT - returning early");
+    debugLog("tts", "Audio consent denied");
     return;
   }
 
   if (!text || text.trim().length === 0) {
-    console.log("[TTS] ❌ TEXT IS EMPTY - returning early");
+    debugLog("tts", "Text is empty, skipping playback");
     return;
   }
 
-  console.log("[TTS] Ensuring audio context...");
   // Ensure audio context is initialized (required for system audio routing)
   ensureAudioContext();
 
   const finalConfig = { ...DEFAULT_TTS_CONFIG, ...config };
-  console.log("[TTS] Final config:", finalConfig);
-
-  // Convert language code: "en-IN" → "en", "hi-IN" → "hi", etc.
   const langCode = finalConfig.language.split("-")[0];
-  console.log("[TTS] Language code:", langCode);
 
-  console.log("[TTS] Calling playTtsNative()...");
-  playTtsNative(narrationId, text, finalConfig, langCode);
+  // Call playTtsNative without awaiting (non-async wrapper)
+  void playTtsNative(narrationId, text, finalConfig, langCode);
 }
 
 /**
@@ -125,6 +114,52 @@ export function playStateNarration(
 }
 
 /**
+ * Play TTS with intelligent fallback to English
+ * Tries native language first, falls back to English on failure
+ * Useful for devices that don't support certain language codes
+ *
+ * @param narrationId - Unique identifier for this narration
+ * @param text - Text to narrate
+ * @param config - TTS configuration (language, speed, pitch, volume)
+ */
+export async function playTtsWithFallback(
+  narrationId: string,
+  text: string,
+  config: Partial<TtsConfig> = {},
+): Promise<void> {
+  const finalConfig = { ...DEFAULT_TTS_CONFIG, ...config };
+  const langCode = finalConfig.language.split("-")[0];
+
+  try {
+    debugLog("tts", "Attempting playback with language", { language: finalConfig.language });
+    await playTtsNative(narrationId, text, finalConfig, langCode);
+  } catch (error) {
+    // If already English, give up
+    if (langCode === "en") {
+      debugError("tts", "English playback failed, no fallback available", error);
+      return;
+    }
+
+    // Try fallback to English
+    debugLog("tts", "First language failed, attempting English fallback", {
+      failedLanguage: langCode,
+    });
+
+    const fallbackConfig: TtsConfig = {
+      ...finalConfig,
+      language: "en-IN",
+    };
+
+    try {
+      await playTtsNative(narrationId, text, fallbackConfig, "en");
+    } catch (fallbackError) {
+      debugError("tts", "Fallback to English also failed", fallbackError);
+      // Silently fail - no toast on second failure, first failure already showed toast
+    }
+  }
+}
+
+/**
  * Play TTS using native Capacitor community plugin
  * Calls Android's system TTS engine directly
  */
@@ -134,36 +169,17 @@ async function playTtsNative(
   config: TtsConfig,
   langCode: string,
 ): Promise<void> {
-  console.log("\n[TTS-NATIVE] ===== playTtsNative() CALLED =====");
-  console.log("[TTS-NATIVE] narrationId:", narrationId);
-  console.log("[TTS-NATIVE] text length:", text.length);
-  console.log("[TTS-NATIVE] language config:", config.language);
-  console.log("[TTS-NATIVE] langCode (ISO 639-1):", langCode);
-  console.log("[TTS-NATIVE] speed:", config.speed);
-  console.log("[TTS-NATIVE] pitch:", config.pitch);
-  console.log("[TTS-NATIVE] volume:", config.volume);
+  debugLog("tts", "Native playback starting", {
+    narrationId,
+    textLength: text.length,
+    language: config.language,
+    langCode,
+  });
 
   try {
     isPlaying = true;
     currentNarrationId = narrationId;
     notifyListeners();
-    console.log("[TTS-NATIVE] State updated - isPlaying=true");
-
-    debugLog("tts", "Starting native playback", {
-      narrationId,
-      textLength: text.length,
-      language: config.language,
-      langCode,
-    });
-
-    console.log("[TTS-NATIVE] Calling TextToSpeech.speak() with params:", {
-      text: text.substring(0, 50) + "...",
-      lang: langCode,
-      rate: config.speed,
-      pitch: config.pitch,
-      volume: config.volume,
-      category: "ambient",
-    });
 
     // Call native TextToSpeech plugin
     // Note: lang parameter uses ISO 639-1 codes (e.g., "en", "hi")
@@ -176,17 +192,14 @@ async function playTtsNative(
       category: "ambient",
     });
 
-    console.log("[TTS-NATIVE] ✅ TextToSpeech.speak() completed successfully");
-    debugLog("tts", "Native playback completed");
+    debugLog("tts", "Native playback completed successfully");
     isPlaying = false;
     currentNarrationId = "";
     notifyListeners();
   } catch (error) {
-    console.log("[TTS-NATIVE] ❌ EXCEPTION in TextToSpeech.speak():", error);
     debugError("tts", "Native playback error", error);
     // FIX #29: Show error via bottom toast instead of modal
     if (error instanceof Error) {
-      console.log("[TTS-NATIVE] Creating error toast:", error.message);
       const toastStore = useToastStore.getState();
       toastStore.show({
         type: "error",
@@ -199,6 +212,7 @@ async function playTtsNative(
     isPlaying = false;
     currentNarrationId = "";
     notifyListeners();
+    throw error; // Re-throw for fallback logic in playTtsWithFallback
   }
 }
 
