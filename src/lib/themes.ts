@@ -266,3 +266,49 @@ export function getVisibleThemes(): Theme[] {
 export function getHeavyThemes(): Theme[] {
   return THEMES.filter((t) => t.effects.heavy);
 }
+
+/**
+ * Check if a theme is unlocked based on player progress.
+ *
+ * A theme is unlocked if:
+ * - It has no unlockRule (starter theme), OR
+ * - The player's progress meets the unlock condition
+ *
+ * @param theme Theme to check
+ * @param progress Player progress object with completed states, streak, and badges
+ * @returns true if theme is unlocked, false if locked
+ */
+export function isThemeUnlocked(
+  theme: Theme,
+  progress: { completed: string[]; streak: number; badges: Record<string, string[]> },
+): boolean {
+  if (!theme.unlockRule) return true; // starter theme
+
+  const { type, value } = theme.unlockRule;
+  const totalBadges = Object.values(progress.badges).flat().length;
+
+  switch (type) {
+    case "states":
+      return progress.completed.length >= value;
+    case "streak":
+      return progress.streak >= value;
+    case "badges":
+      return totalBadges >= value;
+    case "firstBadge":
+      return totalBadges >= 1;
+    default:
+      return false;
+  }
+}
+
+/**
+ * Get all themes that the player has unlocked.
+ *
+ * @param progress Player progress object
+ * @returns Array of unlocked themes
+ */
+export function getUnlockedThemes(
+  progress: { completed: string[]; streak: number; badges: Record<string, string[]> },
+): Theme[] {
+  return THEMES.filter((t) => isThemeUnlocked(t, progress));
+}
