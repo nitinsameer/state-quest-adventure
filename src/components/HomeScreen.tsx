@@ -25,7 +25,6 @@ import indiaFlag from "@/assets/home/india_flag.png";
 import navHomeIcon from "@/assets/home/nav_home_icon.png";
 import navJourneyIcon from "@/assets/home/nav_journey_icon.png";
 import navExplorerIcon from "@/assets/home/nav_explorer_icon.png";
-import navBadgesIcon from "@/assets/home/nav_badges_icon.png";
 import navMeIcon from "@/assets/home/nav_me_icon.png";
 import { EMOJI } from "@/constants/emoji";
 
@@ -303,24 +302,13 @@ export function HomeScreen() {
           </Link>
 
           <Link
-            to="/badges"
-            onClick={() => fxTap()}
-            className="flex flex-col items-center gap-1 py-(--padding-base) px-(--padding-md)"
-          >
-            <img src={navBadgesIcon} alt="badges" className="w-6 h-6" />
-            <span className="text-label" style={{ color: "var(--text-primary)" }}>
-              Badges
-            </span>
-          </Link>
-
-          <Link
             to="/me"
             onClick={() => fxTap()}
             className="flex flex-col items-center gap-1 py-(--padding-base) px-(--padding-md)"
           >
             <img src={navMeIcon} alt="me" className="w-6 h-6" />
             <span className="text-label" style={{ color: "var(--text-primary)" }}>
-              Me
+              Profile
             </span>
           </Link>
         </div>

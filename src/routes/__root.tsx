@@ -478,11 +478,11 @@ function HydratedApp() {
   appLogger.info("root_component", "HydratedApp rendering", { pathname: location.pathname });
 
   // Determine which tab is active based on current pathname
-  const getActiveTab = (): "home" | "map" | "explorer" | "badges" | "profile" => {
+  const getActiveTab = (): "home" | "map" | "explorer" | "profile" => {
     const path = location.pathname;
     if (path.startsWith("/journey")) return "map";
     if (path.startsWith("/explorer")) return "explorer";
-    if (path.startsWith("/badges")) return "badges";
+    if (path.startsWith("/badges")) return "explorer"; // Fallback to explorer (badges disabled for Phase 1)
     if (path.startsWith("/me")) return "profile";
     return "home"; // Default for /home or root
   };

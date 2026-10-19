@@ -219,14 +219,13 @@ function Chip({
 export function BottomNav({
   active,
 }: {
-  active: "home" | "map" | "explorer" | "badges" | "profile";
+  active: "home" | "map" | "explorer" | "profile";
 }) {
   const items = [
     { id: "home", icon: EMOJI.nav.home, label: "Home", to: "/home" },
     { id: "map", icon: EMOJI.nav.map, label: "Journey", to: "/journey" },
     { id: "explorer", icon: EMOJI.nav.explorer, label: "Explore", to: "/explorer" },
-    { id: "badges", icon: EMOJI.nav.badges, label: "Badges", to: "/badges" },
-    { id: "profile", icon: EMOJI.nav.profile, label: "Me", to: "/me" },
+    { id: "profile", icon: EMOJI.nav.profile, label: "Profile", to: "/me" },
   ] as const;
   return (
     <div className="relative w-full" data-testid="bottom-nav" role="navigation">
@@ -4682,7 +4681,7 @@ function RowLink({
   tone: "orange" | "blue" | "green" | "gold";
   title: string;
   sub: string;
-  to: "/explorer" | "/achievements" | "/parent" | "/badges" | "/journey";
+  to: "/explorer" | "/achievements" | "/parent" | "/journey";
 }) {
   // NOTE: bgMap and inkMap contain CSS variable references like var(--accent-1), not hardcoded hex values.
   // These are theme-aware token references that resolve to the current theme's accent colors at runtime.
