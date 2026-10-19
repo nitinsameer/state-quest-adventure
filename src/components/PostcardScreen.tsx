@@ -357,7 +357,7 @@ export function StatePostcardScreen({
           <button
             onClick={handleSaveToPassport}
             disabled={busy || !previewUrl}
-            className="flex-1 h-12 rounded-2xl ui-button ui-accent-1-soft text-ink text-sm font-bold disabled:opacity-60 active:scale-95 transition-transform"
+            className="flex-1 h-12 rounded-2xl ui-button ui-accent-1-soft text-sm font-bold disabled:opacity-60 active:scale-95 transition-transform"
           >
             {busy ? "Saving..." : `${EMOJI.action.save} Save`}
           </button>
@@ -366,7 +366,7 @@ export function StatePostcardScreen({
           <button
             onClick={handleSharePostcard}
             disabled={busy || !previewUrl}
-            className="flex-1 h-12 rounded-2xl ui-button ui-accent-2 text-ink text-sm font-bold disabled:opacity-60 active:scale-95 transition-transform"
+            className="flex-1 h-12 rounded-2xl ui-button ui-accent-2 text-sm font-bold disabled:opacity-60 active:scale-95 transition-transform"
           >
             {EMOJI.action.share} Share
           </button>
@@ -378,7 +378,7 @@ export function StatePostcardScreen({
             fxTap();
             onHome?.();
           }}
-          className="w-full h-14 rounded-2xl ui-button ui-accent-1 text-ink text-display font-extrabold active:scale-95 transition-transform"
+          className="w-full h-14 rounded-2xl ui-button ui-accent-1 text-display font-extrabold active:scale-95 transition-transform"
         >
           {EMOJI.nav.home} Home
         </button>
@@ -388,7 +388,7 @@ export function StatePostcardScreen({
             fxTap();
             onNextState?.();
           }}
-          className="w-full h-12 rounded-xl ui-button ui-accent-1-soft text-ink text-display font-bold active:scale-95 transition-transform"
+          className="w-full h-12 rounded-xl ui-button ui-accent-1-soft text-display font-bold active:scale-95 transition-transform"
         >
           Next State {EMOJI.action.arrow}
         </button>

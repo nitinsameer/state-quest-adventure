@@ -291,7 +291,7 @@ function HeaderBar({
         <button
           onClick={goBack}
           aria-label="Go back"
-          className="h-12 w-12 rounded-full ui-button ui-accent-1-soft flex items-center justify-center text-xl text-ink"
+          className="h-12 w-12 rounded-full ui-button ui-accent-1-soft flex items-center justify-center text-xl"
         >
           ‹
         </button>
@@ -691,7 +691,7 @@ function RecentlyCompletedCelebration({
           <div className="flex gap-3 mt-2">
             <button
               onClick={handleDismiss}
-              className="flex-1 h-11 rounded-xl ui-button ui-accent-1-soft border border-text-on-primary/40 text-ink text-sm font-bold hover:bg-text-on-primary/30 transition-all duration-200"
+              className="flex-1 h-11 rounded-xl ui-button ui-accent-1-soft border border-text-on-primary/40 text-sm font-bold hover:bg-text-on-primary/30 transition-all duration-200"
             >
               Dismiss
             </button>
@@ -945,7 +945,7 @@ function HomeDashboardContent() {
               to="/state/$slug/learn"
               params={{ slug: stateSlug(current.name) }}
               onClick={() => fxTap()}
-              className="h-12 px-4 rounded-2xl ui-button ui-accent-1 text-ink text-display font-bold text-sm flex items-center transition-all duration-300 hover:scale-105 active:scale-95"
+              className="h-12 px-4 rounded-2xl ui-button ui-accent-1 text-display font-bold text-sm flex items-center transition-all duration-300 hover:scale-105 active:scale-95"
             >
               {`Play ${EMOJI.action.play}`}
             </Link>
@@ -1001,7 +1001,7 @@ function HomeDashboardContent() {
                     e.stopPropagation();
                     fxTap();
                   }}
-                  className="mt-1 px-4 py-2 rounded-lg ui-button ui-accent-1 text-ink text-label font-bold transition-all duration-200 hover:scale-105 active:scale-95"
+                  className="mt-1 px-4 py-2 rounded-lg ui-button ui-accent-1 text-label font-bold transition-all duration-200 hover:scale-105 active:scale-95"
                   aria-label={`Start exploring ${s.name}`}
                 >
                   Start exploring
@@ -1091,14 +1091,14 @@ function HomeDashboardContent() {
                     <div className="mt-5 space-y-2">
                       <Link
                         to="/journey"
-                        className="w-full h-12 rounded-2xl ui-button ui-accent-1 text-ink font-extrabold flex items-center justify-center hover:scale-105 transition-all active:scale-95"
+                        className="w-full h-12 rounded-2xl ui-button ui-accent-1 font-extrabold flex items-center justify-center hover:scale-105 transition-all active:scale-95"
                         onClick={() => fxTap()}
                       >
                         View Journey Map
                       </Link>
                       <button
                         onClick={() => setShowLockedPreview(null)}
-                        className="w-full h-11 rounded-2xl ui-button ui-accent-1-soft text-ink font-bold hover:scale-105 transition-all active:scale-95"
+                        className="w-full h-11 rounded-2xl ui-button ui-accent-1-soft font-bold hover:scale-105 transition-all active:scale-95"
                       >
                         Close
                       </button>
@@ -1720,8 +1720,8 @@ export function JourneyMapScreen() {
                   }}
                   className={`px-4 py-3 rounded-full font-extrabold whitespace-nowrap transition active:scale-95 ${
                     isSelected
-                      ? "ui-button ui-accent-1 text-ink"
-                      : "ui-button ui-accent-1-soft text-ink"
+                      ? "ui-button ui-accent-1"
+                      : "ui-button ui-accent-1-soft"
                   }`}
                   style={{ fontSize: "var(--type-body)", fontWeight: "var(--type-body-weight)" }}
                   title={`${regionDone}/${regionStates.length} explored`}
@@ -1966,7 +1966,7 @@ export function StateIntroScreen({
             fxTap();
             onContinue?.();
           }}
-          className="mt-6 w-full h-14 ui-button ui-accent-1 text-ink text-h4 text-display"
+          className="mt-6 w-full h-14 ui-button ui-accent-1 text-h4 text-display"
         >
           Start Exploring! ✈️
         </button>
@@ -2240,8 +2240,8 @@ export function LearningHubScreen({
           disabled={completedCategories < 6 || showDecisionModal}
           className={`w-full h-14 ui-button text-h4 text-display font-extrabold transition-all active:scale-95 ${
             completedCategories === 6 && !showDecisionModal
-              ? "ui-accent-3 text-ink hover:shadow-lg hover:scale-105 animate-pulse"
-              : "ui-accent-1-soft text-ink opacity-40 cursor-not-allowed"
+              ? "ui-accent-3 hover:shadow-lg hover:scale-105 animate-pulse"
+              : "ui-accent-1-soft opacity-40 cursor-not-allowed"
           }`}
         >
           {completedCategories === 6 && !showDecisionModal ? (
@@ -2275,7 +2275,7 @@ export function LearningHubScreen({
                   setShowDecisionModal(false);
                   onQuiz?.();
                 }}
-                className="w-full h-14 ui-button ui-accent-3 text-ink text-display font-extrabold active:scale-95 transition-all"
+                className="w-full h-14 ui-button ui-accent-3 text-display font-extrabold active:scale-95 transition-all"
               >
                 ${EMOJI.action.sparkle} Start Quiz Now
               </button>
@@ -2286,7 +2286,7 @@ export function LearningHubScreen({
                   fxTap();
                   setShowDecisionModal(false);
                 }}
-                className="w-full h-14 ui-button ui-accent-1-soft text-ink text-display font-bold active:scale-95 transition-all"
+                className="w-full h-14 ui-button ui-accent-1-soft text-display font-bold active:scale-95 transition-all"
               >
                 ⏰ Ask Me Later
               </button>
@@ -2703,7 +2703,7 @@ export function LearningCardScreen({
           <p className="text-sm text-text-secondary mb-4">Please try again or go back</p>
           <button
             onClick={() => window.history.back()}
-            className="ui-button ui-accent-2 text-ink px-4 py-2 font-bold"
+            className="ui-button ui-accent-2 px-4 py-2 font-bold"
           >
             Go Back
           </button>
@@ -2916,8 +2916,8 @@ export function LearningCardScreen({
                 }}
                 className={`px-3 py-1.5 rounded-full text-sm font-bold transition-all ${
                   displayLanguage === lang
-                    ? "ui-button ui-accent-2 text-ink shadow-md"
-                    : "bg-surface-card text-ink"
+                    ? "ui-button ui-accent-2 shadow-md"
+                    : "bg-surface-card"
                 }`}
               >
                 {LANGUAGE_NAMES[lang]}
@@ -3067,7 +3067,7 @@ export function LearningCardScreen({
               handleNext();
             }
           }}
-          className="w-full h-14 ui-button ui-accent-1 text-ink text-h4 text-display"
+          className="w-full h-14 ui-button ui-accent-1 text-h4 text-display"
         >
           {isLastInMainCardSection
             ? currentMainCardIndex === 5
@@ -3316,7 +3316,7 @@ function QuizScreenContent({
             onClose?.();
           }}
           aria-label="Back to categories"
-          className="h-12 w-12 rounded-full ui-button ui-accent-1-soft text-ink flex items-center justify-center text-xl flex-shrink-0"
+          className="h-12 w-12 rounded-full ui-button ui-accent-1-soft flex items-center justify-center text-xl flex-shrink-0"
         >
           ←
         </button>
@@ -3394,12 +3394,12 @@ function QuizScreenContent({
               onClick={() => onSelect(label)}
               className={`h-16 rounded-2xl px-5 flex items-center justify-between text-h4 text-display transition-all active:scale-[0.99] hover:scale-[1.02] ${
                 isCorrectPick
-                  ? "ui-button ui-accent-3 text-ink"
+                  ? "ui-button ui-accent-3"
                   : isWrongPick
-                    ? "ui-button ui-accent-1-soft text-ink opacity-60"
+                    ? "ui-button ui-accent-1-soft opacity-60"
                     : isSelected
-                      ? "ui-button ui-accent-2 text-ink"
-                      : "ui-button ui-accent-1-soft text-ink"
+                      ? "ui-button ui-accent-2"
+                      : "ui-button ui-accent-1-soft"
               }`}
             >
               {label}
@@ -3434,10 +3434,10 @@ function QuizScreenContent({
           disabled={!selected}
           className={`w-full h-14 rounded-2xl text-h4 text-display disabled:opacity-50 ${
             result === "correct"
-              ? "ui-button ui-accent-3 text-ink"
+              ? "ui-button ui-accent-3"
               : result === "wrong"
-                ? "ui-button ui-accent-2 text-ink"
-                : "ui-button ui-accent-1 text-ink"
+                ? "ui-button ui-accent-2"
+                : "ui-button ui-accent-1"
           }`}
         >
           {result === "correct"
@@ -3468,7 +3468,7 @@ export function CorrectAnswerScreen({
       {/* Premium Close Button - Top Right */}
       <button
         onClick={onDismiss}
-        className="absolute top-3 right-3 ui-button ui-accent-1-soft text-ink w-8 h-8 rounded-full flex items-center justify-center text-lg transition-all duration-200 z-10"
+        className="absolute top-3 right-3 ui-button ui-accent-1-soft w-8 h-8 rounded-full flex items-center justify-center text-lg transition-all duration-200 z-10"
         aria-label="Close"
       >
         {EMOJI.ui.close}
@@ -3516,7 +3516,7 @@ export function CorrectAnswerScreen({
       </div>
 
       <div className="p-6 relative">
-        <button className="w-full h-14 ui-button ui-accent-1 text-ink text-display text-lg font-extrabold animate-pulse active:scale-95 transition-transform">
+        <button className="w-full h-14 ui-button ui-accent-1 text-display text-lg font-extrabold animate-pulse active:scale-95 transition-transform">
           Next Question →
         </button>
       </div>
@@ -3603,7 +3603,7 @@ export function StateUnlockScreen({
             fxTap();
             onContinue?.();
           }}
-          className="w-full h-14 ui-button ui-accent-1 text-ink text-display text-lg font-extrabold"
+          className="w-full h-14 ui-button ui-accent-1 text-display text-lg font-extrabold"
         >
           Continue Adventure ✈️
         </button>

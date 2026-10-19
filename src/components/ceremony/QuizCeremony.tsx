@@ -153,7 +153,7 @@ export function QuizCeremony() {
         {step === 0 && (
           <button
             onClick={advanceStep}
-            className="w-full h-14 ui-button ui-accent-1 text-ink font-display font-bold text-lg rounded-3xl transition-all active:scale-95"
+            className="w-full h-14 ui-button ui-accent-1 font-display font-bold text-lg rounded-3xl transition-all active:scale-95"
           >
             Next →
           </button>
@@ -162,7 +162,7 @@ export function QuizCeremony() {
           <button
             onClick={advanceStep}
             disabled={!stampedState}
-            className="w-full h-14 ui-button ui-accent-1 text-ink font-display font-bold text-lg rounded-3xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full h-14 ui-button ui-accent-1 font-display font-bold text-lg rounded-3xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Next →
           </button>
@@ -170,7 +170,7 @@ export function QuizCeremony() {
         {step === 2 && (
           <button
             onClick={advanceStep}
-            className="w-full h-14 ui-button ui-accent-1 text-ink font-display font-bold text-lg rounded-3xl transition-all active:scale-95"
+            className="w-full h-14 ui-button ui-accent-1 font-display font-bold text-lg rounded-3xl transition-all active:scale-95"
           >
             Next →
           </button>
@@ -188,7 +188,7 @@ export function QuizCeremony() {
                   navigate({ to: "/state/$slug", params: { slug: nextState.short } });
                 }
               }}
-              className="w-full h-14 ui-button ui-accent-1 text-ink font-display font-bold text-lg rounded-3xl transition-all active:scale-95"
+              className="w-full h-14 ui-button ui-accent-1 font-display font-bold text-lg rounded-3xl transition-all active:scale-95"
             >
               Next State →
             </button>
@@ -202,7 +202,7 @@ export function QuizCeremony() {
                   dismissPendingCelebration();
                   navigate({ to: `/state/${state.short}/quiz` });
                 }}
-                className="w-full h-12 ui-button ui-button-soft text-ink font-bold text-base rounded-3xl transition-all active:scale-95"
+                className="w-full h-12 ui-button ui-button-soft font-bold text-base rounded-3xl transition-all active:scale-95"
               >
                 Play again for {EMOJI.action.stars}
               </button>
@@ -701,7 +701,7 @@ function StepPostcard({ ceremony, state }: StepProps) {
       {/* SHARE BUTTON - Secondary, soft style */}
       <button
         onClick={handleShare}
-        className="w-full h-12 ui-button ui-button-soft text-ink font-bold text-base rounded-3xl transition-all active:scale-95"
+        className="w-full h-12 ui-button ui-button-soft font-bold text-base rounded-3xl transition-all active:scale-95"
       >
         {EMOJI.action.share} Share
       </button>
