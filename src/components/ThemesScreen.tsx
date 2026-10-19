@@ -10,38 +10,12 @@
 
 import { useState, useMemo } from "react";
 import { useThemeStore } from "@/store/themeStore";
-import { getVisibleThemes, isThemeUnlocked, type Theme } from "@/lib/themes";
+import { getVisibleThemes, isThemeUnlocked, formatUnlockCondition, type Theme, type ThemeCategory } from "@/lib/themes";
 import { useProgress } from "@/lib/progress";
 import { fxTap } from "@/lib/fx";
-import { EMOJI } from "@/constants/emoji";
-
-type ThemeCategory = "bright" | "night" | "fancy" | "clean" | "classic";
-
-const CATEGORY_LABELS: Record<ThemeCategory, { emoji: string; label: string }> = {
-  bright: { emoji: EMOJI.theme.bright, label: "Bright & Fun" },
-  night: { emoji: EMOJI.theme.night, label: "Night Mode" },
-  fancy: { emoji: EMOJI.theme.fancy, label: "Fancy" },
-  clean: { emoji: EMOJI.theme.clean, label: "Simple & Clean" },
-  classic: { emoji: EMOJI.theme.classic, label: "Classic" },
-};
+import { EMOJI, CATEGORY_LABELS } from "@/constants/emoji";
 
 const CATEGORY_ORDER: ThemeCategory[] = ["classic", "bright", "clean", "night", "fancy"];
-
-function unlockConditionText(rule: Theme["unlockRule"]): string {
-  if (!rule) return "";
-  switch (rule.type) {
-    case "states":
-      return `Explore ${rule.value} states to unlock!`;
-    case "streak":
-      return `${rule.value}-day streak to unlock!`;
-    case "badges":
-      return `Earn ${rule.value} badges to unlock!`;
-    case "firstBadge":
-      return `Earn your first badge to unlock!`;
-    default:
-      return "";
-  }
-}
 
 export function ThemesScreen() {
   const { currentTheme, setTheme } = useThemeStore();
@@ -219,7 +193,7 @@ export function ThemesScreen() {
                       className="text-xs font-semibold text-center"
                       style={{ color: "var(--text-on-header)" }}
                     >
-                      {unlockConditionText(theme.unlockRule)}
+                      {formatUnlockCondition(theme.unlockRule)}
                     </p>
                   </div>
                 )}

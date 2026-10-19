@@ -12,6 +12,8 @@
  * All components should import and use EMOJI constants from this registry.
  */
 
+import type { ThemeCategory } from "@/lib/themes";
+
 // Navigation emoji
 export const EMOJI = {
   // Bottom Navigation
@@ -164,11 +166,11 @@ export const EMOJI = {
   theme: {
     painter: "🎨",
     style: "🎨",
-    bright: "🌞",
+    bright: "🌈",
     night: "🌙",
     fancy: "✨",
-    clean: "🧊",
-    classic: "🧡",
+    clean: "❄️",
+    classic: "🎬",
   },
 
   // Cool facts and learning
@@ -254,6 +256,18 @@ export const EMOJI = {
     badges: "🏆",
     facts: "📖",
   },
+};
+
+/**
+ * Category labels with fun names for the theme picker.
+ * Each category has an emoji, formal label, and fun/engaging subtitle.
+ */
+export const CATEGORY_LABELS: Record<ThemeCategory, { emoji: string; label: string; fun: string }> = {
+  bright: { emoji: EMOJI.theme.bright, label: "Bright & Fun", fun: "Rainbow Vibes" },
+  night: { emoji: EMOJI.theme.night, label: "Night Mode", fun: "Midnight Dreams" },
+  fancy: { emoji: EMOJI.theme.fancy, label: "Fancy", fun: "Magic Moments" },
+  clean: { emoji: EMOJI.theme.clean, label: "Simple & Clean", fun: "Crystal Clean" },
+  classic: { emoji: EMOJI.theme.classic, label: "Classic", fun: "Storybook Time" },
 };
 
 /**

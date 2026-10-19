@@ -10,6 +10,8 @@
  * eslint-disable no-hardcoded-colors/no-hardcoded-colors
  */
 
+export type ThemeCategory = "bright" | "night" | "fancy" | "clean" | "classic";
+
 export interface Theme {
   id: string;
   name: string;
@@ -43,7 +45,7 @@ export const THEMES: Theme[] = [
     effects: { blur: false, glow: false, heavy: false },
     // eslint-disable-next-line no-hardcoded-colors/no-hardcoded-colors
     previewTokens: { bg: "#ece8fb", surface: "#f7f4ff", text: "#2d2650", accent: "#7c5cf0" },
-    category: "classic",
+    category: "fancy",
   },
   {
     id: "neu",
@@ -163,7 +165,7 @@ export const THEMES: Theme[] = [
     isDark: false,
     effects: { blur: false, glow: false, heavy: false },
     previewTokens: { bg: "#7ad7ff", surface: "#fff", text: "#1b1b1b", accent: "#ff4757" },
-    category: "bright",
+    category: "classic",
   },
 
   // Retro & Technical
@@ -314,4 +316,34 @@ export function getUnlockedThemes(
   progress: { completed: string[]; streak: number; badges: Record<string, string[]> },
 ): Theme[] {
   return THEMES.filter((t) => isThemeUnlocked(t, progress));
+}
+
+/**
+ * Get badge info for a theme's unlock rule.
+ * Used by the theme picker UI to color-code unlock badges.
+ */
+export function getUnlockBadgeInfo(unlockRule?: Theme["unlockRule"]): { color: string; icon: string; text: string } {
+  if (!unlockRule) return { color: "var(--color-surface-primary)", icon: "✓", text: "Unlocked" };
+  // eslint-disable-next-line no-hardcoded-colors/no-hardcoded-colors
+  switch (unlockRule.type) {
+    case "states":    return { color: "#3b82f6", icon: "📊", text: `Explore ${unlockRule.value} states` };
+    case "streak":    return { color: "#f97316", icon: "🔥", text: `${unlockRule.value}-day streak` };
+    case "badges":    return { color: "#eab308", icon: "🏆", text: `Earn ${unlockRule.value} badges` };
+    case "firstBadge":return { color: "#94a3b8", icon: "🎯", text: "First badge" };
+    default:          return { color: "#94a3b8", icon: "🔒", text: "Locked" };
+  }
+}
+
+/**
+ * Format unlock condition as kid-friendly text.
+ */
+export function formatUnlockCondition(rule?: Theme["unlockRule"]): string {
+  if (!rule) return "";
+  switch (rule.type) {
+    case "states":    return `Complete ${rule.value} places!`;
+    case "streak":    return `Keep a ${rule.value}-day streak!`;
+    case "badges":    return `Collect ${rule.value} badges!`;
+    case "firstBadge":return "Earn your first badge!";
+    default:          return "";
+  }
 }
