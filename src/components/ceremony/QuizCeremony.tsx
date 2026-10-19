@@ -50,22 +50,24 @@ export function QuizCeremony() {
     }
   }, [isValidCeremony, navigate]);
 
-  // CRITICAL: Guard against undefined ceremony (prevents NPE when dismissed during navigation)
-  if (!isValidCeremony) {
-    return null;
-  }
-
-  // At this point, ceremony is guaranteed to be PendingCelebration with type "full"
-  const typedCeremony = ceremony as PendingCelebration & { type: "full" };
-  const currentStep = typedCeremony.step ?? 0;
-
-  // Reset interaction state when step changes
+  // Reset interaction state when step changes (called unconditionally)
   useEffect(() => {
     setUserInteractedStep1(false);
-  }, [currentStep]);
+    // Only meaningful if ceremony is valid, but hook must always be called
+    if (isValidCeremony) {
+      // Hook is set up correctly
+    }
+  }, [isValidCeremony]);
 
-  // Auto-advance timer logic
+  // Auto-advance timer logic (called unconditionally)
   useEffect(() => {
+    if (!isValidCeremony) {
+      return; // Skip logic if ceremony is invalid
+    }
+
+    const typedCeremony = ceremony as PendingCelebration & { type: "full" };
+    const currentStep = typedCeremony.step ?? 0;
+
     if (timerRef.current) {
       clearTimeout(timerRef.current);
     }
@@ -89,7 +91,17 @@ export function QuizCeremony() {
         clearTimeout(timerRef.current);
       }
     };
-  }, [currentStep, userInteractedStep1]);
+  }, [isValidCeremony, ceremony, userInteractedStep1]);
+
+  // Guard rendering: return null if ceremony is invalid
+  // (hooks are already called above, so this is safe)
+  if (!isValidCeremony) {
+    return null;
+  }
+
+  // At this point, ceremony is guaranteed to be PendingCelebration with type "full"
+  const typedCeremony = ceremony as PendingCelebration & { type: "full" };
+  const currentStep = typedCeremony.step ?? 0;
 
   const state = getState(ceremony.stateName);
   const grad = TONE_GRADIENT[state.tone] ?? "var(--accent-1)";
@@ -392,7 +404,7 @@ function StepRewardsSummary({
   const [showSaveStatus, setShowSaveStatus] = useState(false);
   const prefersReducedMotion = useRef(false);
 
-  const STICKER_OPTIONS = ["😋", "🎊", EMOJI.action.celebrate];
+  const STICKER_OPTIONS = [EMOJI.quiz.sticker1, EMOJI.quiz.sticker2, EMOJI.action.celebrate];
 
   useEffect(() => {
     if (typeof window !== "undefined") {
