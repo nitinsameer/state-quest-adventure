@@ -19,7 +19,7 @@ export function ThemesScreen() {
   const handleThemeSelect = (themeId: string) => {
     fxTap();
     setIsChanging(true);
-    setTheme(themeId as "clay" | "aero" | "cartoon-comic" | "glassmorphism" | "skeumorphism");
+    setTheme(themeId as string);
     setTimeout(() => setIsChanging(false), 200);
   };
 
