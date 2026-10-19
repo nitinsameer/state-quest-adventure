@@ -74,7 +74,7 @@ export const STATE_PERFORMANCE_BADGE_DEFS: Record<
     dopamineType: "thoroughness",
   },
   "first-try": {
-    icon: EMOJI.action.goal,
+    icon: EMOJI.feedback.goal,
     name: "First Try",
     description: "Perfect score on first quiz attempt",
     category: "performance",

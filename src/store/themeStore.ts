@@ -12,8 +12,8 @@ import { StatusBar, Style } from "@capacitor/status-bar";
 import { getTheme, THEMES } from "@/lib/themes";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 
-// Valid theme IDs (must match entries in src/lib/themes.ts)
-type ThemeId = "clay" | "aero" | "cartoon-comic" | "glassmorphism" | "skeumorphism";
+// Valid theme IDs - derived from THEMES array to stay synchronized
+type ThemeId = typeof THEMES[number]["id"];
 
 // Zod validation schema for persisted theme data
 const ThemePersistenceSchema = z.object({
