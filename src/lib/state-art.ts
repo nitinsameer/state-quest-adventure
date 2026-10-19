@@ -83,7 +83,6 @@ export const TONE_GRADIENT: Record<string, string> = {
 };
 
 /** Flat hex pairs matching the gradient utilities, for canvas rendering. */
-// eslint-disable no-hardcoded-colors/no-hardcoded-colors — Canvas gradient pairs: hex format required for canvas 2D context, mapped to token names
 export const TONE_HEX: Record<string, [string, string]> = {
   orange: ["#FFA766", "#EF6C1A"],
   blue: ["#5FA8F5", "#2E4FE0"],

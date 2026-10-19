@@ -1,5 +1,4 @@
 export function renderErrorPage(): string {
-  // eslint-disable no-hardcoded-colors/no-hardcoded-colors — Static error fallback page without theme capability
   return `<!doctype html>
 <html lang="en">
   <head>

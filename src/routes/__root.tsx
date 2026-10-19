@@ -332,7 +332,6 @@ function HydratedApp() {
         // Get computed style for status bar colors
         const computedStyle = getComputedStyle(root);
         const statusbarStyle = computedStyle.getPropertyValue("--statusbar-style").trim() || "dark";
-        // eslint-disable no-hardcoded-colors/no-hardcoded-colors — Fallback statusbar color only used if --statusbar-bg token unavailable (defined in all theme files)
         const statusbarBg = computedStyle.getPropertyValue("--statusbar-bg").trim() || "#FF8A3D";
 
         // Set status bar appearance
