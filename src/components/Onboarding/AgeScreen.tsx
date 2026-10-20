@@ -14,7 +14,12 @@ const AGE_BANDS: AgeBand[] = [
   { value: "3-5", emoji: EMOJI.ageBand.toddler, label: "Sprout", gradient: "bg-accent-2" },
   { value: "6-7", emoji: EMOJI.ageBand.young, label: "Seedling", gradient: "bg-accent-1" },
   { value: "8-9", emoji: EMOJI.ageBand.mid, label: "Sapling", gradient: "bg-success" },
-  { value: "10-12", emoji: EMOJI.ageBand.preteen, label: "Mighty Tree", gradient: "bg-action-primary" },
+  {
+    value: "10-12",
+    emoji: EMOJI.ageBand.preteen,
+    label: "Mighty Tree",
+    gradient: "bg-action-primary",
+  },
 ];
 
 export interface AgeScreenProps {
@@ -24,12 +29,7 @@ export interface AgeScreenProps {
   onNext: () => void;
 }
 
-export function AgeScreen({
-  selectedAge,
-  onSelectAge,
-  onBack,
-  onNext,
-}: AgeScreenProps) {
+export function AgeScreen({ selectedAge, onSelectAge, onBack, onNext }: AgeScreenProps) {
   const [confettiBurst, setConfettiBurst] = useState(0);
   const [animatingAge, setAnimatingAge] = useState<string | null>(null);
 
@@ -88,13 +88,8 @@ export function AgeScreen({
                     ? `${band.gradient} text-text-on-primary shadow-elevated-2 scale-105`
                     : "bg-surface-card text-text-primary border-2 border-surface-sunken hover:border-surface-raised"
                 }
-                ${animatingAge === band.value ? "scale-110" : ""}
+                ${animatingAge === band.value ? "animate-scale-pop" : ""}
               `}
-              style={
-                animatingAge === band.value
-                  ? ({ animation: "scale-pop 0.3s ease-out" } as React.CSSProperties)
-                  : undefined
-              }
             >
               <div className="text-5xl flex-shrink-0">{band.emoji}</div>
               <div className="flex-1">
@@ -154,14 +149,6 @@ export function AgeScreen({
           Next
         </button>
       </div>
-
-      <style>{`
-        @keyframes scale-pop {
-          0% { transform: scale(1); }
-          50% { transform: scale(1.08); }
-          100% { transform: scale(1); }
-        }
-      `}</style>
     </div>
   );
 }

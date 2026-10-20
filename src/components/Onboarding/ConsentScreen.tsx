@@ -68,14 +68,16 @@ export function ConsentScreen({
           <div className="mb-5 p-4 bg-accent-1-soft rounded-xl border-l-4 border-accent-1">
             <p className="text-sm text-text-secondary font-semibold mb-2">Privacy & Safety</p>
             <p className="text-xs text-text-secondary leading-relaxed">
-              We follow COPPA (Children's Online Privacy Protection Act) and keep kids safe. We don't
-              sell data, and parents can request to delete information anytime.
+              We follow COPPA (Children's Online Privacy Protection Act) and keep kids safe. We
+              don't sell data, and parents can request to delete information anytime.
             </p>
           </div>
 
           {/* COPPA Compliance Notice */}
           <div className="mb-6 p-4 bg-success-soft rounded-xl border-l-4 border-success">
-            <p className="text-sm text-text-secondary font-semibold mb-2">Parent/Guardian Approval</p>
+            <p className="text-sm text-text-secondary font-semibold mb-2">
+              Parent/Guardian Approval
+            </p>
             <p className="text-xs text-text-secondary leading-relaxed">
               By checking this box, you confirm you are a parent or guardian and agree to our Terms
               of Service and Privacy Policy on behalf of this child.
@@ -86,10 +88,7 @@ export function ConsentScreen({
           <button
             type="button"
             onClick={handleToggleConsent}
-            className="w-full flex items-center gap-4 p-4 rounded-xl transition-all duration-200 mb-4"
-            style={{
-              backgroundColor: parentConsented ? "var(--success)" : "var(--surface-raised)",
-            }}
+            className={`w-full flex items-center gap-4 p-4 rounded-xl transition-all duration-200 mb-4 ${parentConsented ? "bg-action-success" : "bg-surface-raised"}`}
           >
             {/* Checkbox */}
             <div
@@ -99,24 +98,14 @@ export function ConsentScreen({
                     ? "border-text-on-primary bg-text-on-primary"
                     : "border-border-color bg-surface-card"
                 }
-                ${checkAnimation ? "scale-110" : ""}
+                ${checkAnimation ? "animate-checkbox-bounce" : ""}
               `}
-              style={
-                checkAnimation
-                  ? ({
-                      animation: "check-pop 0.3s ease-out",
-                    } as React.CSSProperties)
-                  : undefined
-              }
             >
               {parentConsented && (
                 <svg
-                  className="absolute inset-0 w-full h-full p-1 text-success"
+                  className="absolute inset-0 w-full h-full p-1 text-success animate-checkbox-draw"
                   fill="currentColor"
                   viewBox="0 0 20 20"
-                  style={{
-                    animation: "check-draw 0.15s ease-out",
-                  }}
                 >
                   <path
                     fillRule="evenodd"
@@ -143,7 +132,7 @@ export function ConsentScreen({
             <div
               className="absolute inset-0 rounded-2xl pointer-events-none animate-pulse"
               style={{
-                boxShadow: "0 0 24px var(--success-soft)",
+                boxShadow: "0 0 24px rgba(76, 175, 80, 0.3)",
               }}
             />
           )}
@@ -181,25 +170,6 @@ export function ConsentScreen({
           {parentConsented ? "Continue to App" : "I Agree to Continue"}
         </button>
       </div>
-
-      <style>{`
-        @keyframes check-pop {
-          0% { transform: scale(1); }
-          50% { transform: scale(1.1); }
-          100% { transform: scale(1); }
-        }
-
-        @keyframes check-draw {
-          0% {
-            stroke-dasharray: 20;
-            stroke-dashoffset: 20;
-          }
-          100% {
-            stroke-dasharray: 20;
-            stroke-dashoffset: 0;
-          }
-        }
-      `}</style>
     </div>
   );
 }
