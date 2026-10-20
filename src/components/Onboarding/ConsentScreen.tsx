@@ -143,7 +143,7 @@ export function ConsentScreen({
             <div
               className="absolute inset-0 rounded-2xl pointer-events-none animate-pulse"
               style={{
-                boxShadow: "0 0 24px rgba(52, 168, 83, 0.3)",
+                boxShadow: "0 0 24px var(--success-soft)",
               }}
             />
           )}

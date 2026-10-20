@@ -1069,6 +1069,322 @@
   animation: icon-pulse-scale 0.6s ease-in-out;
 }
 
+/* === PHASE 3: ONBOARDING ANIMATIONS & TRANSITIONS === */
+/* High-polish micro-interactions for avatar, age, consent, and screen transitions */
+
+/* AVATAR-BOUNCE: 0% scale(0.9), 50% scale(1.15), 100% scale(1.0) over 200ms, ease-out */
+@keyframes avatar-bounce {
+  0% { transform: scale(0.9); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+.animate-avatar-bounce {
+  animation: avatar-bounce 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* RING-EXPAND: 0% scale(1.2) opacity(0.6), 100% scale(1.0) opacity(0) over 300ms, ease-out */
+@keyframes ring-expand {
+  0% { 
+    transform: scale(1.2);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+.animate-ring-expand {
+  animation: ring-expand 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* AGE-CARD-GLOW: Background fade-in + scale, label color transition, 250ms ease-out */
+@keyframes age-card-glow {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-age-card-glow {
+  animation: age-card-glow 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* CHECKBOX-CHECKMARK: SVG stroke-dasharray draw (150ms) + bounce */
+@keyframes checkbox-draw {
+  from {
+    stroke-dasharray: 16;
+    stroke-dashoffset: 16;
+  }
+  to {
+    stroke-dasharray: 16;
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-checkbox-draw {
+  animation: checkbox-draw 150ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* CHECKBOX-BOUNCE: Pop animation for checkbox container */
+@keyframes checkbox-bounce {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+.animate-checkbox-bounce {
+  animation: checkbox-bounce 300ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* BUTTON-GLOW: Color transition + pulsing glow shadow, 300ms */
+@keyframes button-color-transition {
+  from {
+    color: currentColor;
+  }
+  to {
+    color: currentColor;
+  }
+}
+
+@keyframes button-glow-pulse {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(52, 168, 83, 0.25);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(52, 168, 83, 0.45);
+  }
+}
+
+.animate-button-glow {
+  animation: button-glow-pulse 2s ease-in-out infinite;
+}
+
+.animate-button-color-transition {
+  animation: button-color-transition 300ms ease-out forwards;
+  transition: background-color 300ms ease-out, color 300ms ease-out;
+}
+
+/* SCREEN-ENTER: Fade-in + slide-right 300ms */
+@keyframes screen-enter-right {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-screen-enter-right {
+  animation: screen-enter-right 300ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* SCREEN-EXIT-LEFT: Fade-out + slide-left 300ms */
+@keyframes screen-exit-left {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+}
+
+.animate-screen-exit-left {
+  animation: screen-exit-left 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* SCREEN-ENTER-UP: Fade-in + slide-up (alternative) 300ms */
+@keyframes screen-enter-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-screen-enter-up {
+  animation: screen-enter-up 300ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* SCREEN-EXIT-DOWN: Fade-out + slide-down (alternative) 300ms */
+@keyframes screen-exit-down {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+}
+
+.animate-screen-exit-down {
+  animation: screen-exit-down 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* CONFETTI-PHYSICS: Enhanced confetti with particles falling with rotation and fade */
+/* Small particles: 1s duration */
+@keyframes confetti-fall-small {
+  0% {
+    transform: translateY(-10vh) rotate(var(--confetti-rotate, 0deg));
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) rotate(calc(var(--confetti-rotate, 0deg) + 720deg));
+    opacity: 0;
+  }
+}
+
+.animate-confetti-fall-small {
+  animation: confetti-fall-small 1s cubic-bezier(0.25, 0.6, 0.5, 1) forwards;
+}
+
+/* Medium particles: 1.5s duration */
+@keyframes confetti-fall-medium {
+  0% {
+    transform: translateY(-10vh) rotate(var(--confetti-rotate, 0deg));
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) rotate(calc(var(--confetti-rotate, 0deg) + 540deg));
+    opacity: 0;
+  }
+}
+
+.animate-confetti-fall-medium {
+  animation: confetti-fall-medium 1.5s cubic-bezier(0.25, 0.6, 0.5, 1) forwards;
+}
+
+/* Large particles: 2s duration */
+@keyframes confetti-fall-large {
+  0% {
+    transform: translateY(-10vh) rotate(var(--confetti-rotate, 0deg));
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) rotate(calc(var(--confetti-rotate, 0deg) + 360deg));
+    opacity: 0;
+  }
+}
+
+.animate-confetti-fall-large {
+  animation: confetti-fall-large 2s cubic-bezier(0.25, 0.6, 0.5, 1) forwards;
+}
+
+/* AVATAR-RING-GLOW: Pulsing outer ring effect on selected avatar */
+@keyframes avatar-ring-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(212, 175, 55, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
+  }
+}
+
+.animate-avatar-ring-glow {
+  animation: avatar-ring-glow 1.2s ease-out;
+}
+
+/* AGE-SELECTION-POP: Pop animation for age band selection */
+@keyframes age-selection-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+.animate-age-selection-pop {
+  animation: age-selection-pop 300ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* CONSENT-TOGGLE-GLOW: Glow effect when consent is enabled */
+@keyframes consent-toggle-glow {
+  from {
+    box-shadow: 0 0 0 0 rgba(52, 168, 83, 0.4);
+  }
+  to {
+    box-shadow: 0 0 0 12px rgba(52, 168, 83, 0);
+  }
+}
+
+.animate-consent-toggle-glow {
+  animation: consent-toggle-glow 0.6s ease-out forwards;
+}
+
+/* SLIDE-IN-LEFT: Generic slide-in from left */
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-left {
+  animation: slide-in-left 300ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* SLIDE-IN-RIGHT: Generic slide-in from right */
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 300ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* SCALE-POP: Quick scale pop animation */
+@keyframes scale-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.animate-scale-pop {
+  animation: scale-pop 300ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* LABEL-GLOW: Color glow animation for labels */
+@keyframes label-glow {
+  0% {
+    text-shadow: 0 0 0 transparent;
+  }
+  50% {
+    text-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+  }
+  100% {
+    text-shadow: 0 0 0 transparent;
+  }
+}
+
+.animate-label-glow {
+  animation: label-glow 400ms ease-out forwards;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .mascot-cheer,
   .confetti-fall,
@@ -1091,7 +1407,28 @@
   .animate-fade-out,
   .animate-toast-bounce-up-from-bottom,
   .animate-toast-bounce-down-to-bottom,
-  .animate-icon-pulse-scale {
+  .animate-icon-pulse-scale,
+  .animate-avatar-bounce,
+  .animate-ring-expand,
+  .animate-age-card-glow,
+  .animate-checkbox-draw,
+  .animate-checkbox-bounce,
+  .animate-button-glow,
+  .animate-button-color-transition,
+  .animate-screen-enter-right,
+  .animate-screen-exit-left,
+  .animate-screen-enter-up,
+  .animate-screen-exit-down,
+  .animate-confetti-fall-small,
+  .animate-confetti-fall-medium,
+  .animate-confetti-fall-large,
+  .animate-avatar-ring-glow,
+  .animate-age-selection-pop,
+  .animate-consent-toggle-glow,
+  .animate-slide-in-left,
+  .animate-slide-in-right,
+  .animate-scale-pop,
+  .animate-label-glow {
     animation: none;
   }
 }

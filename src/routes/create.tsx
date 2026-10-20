@@ -1,7 +1,14 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { CreateProfileScreen } from "@/components/screens";
-import { getProgress, useProgress } from "@/lib/progress";
+import { getProgress, useProgress, saveProfile } from "@/lib/progress";
+import { grantFeatureConsent } from "@/lib/parental-consent";
+import { AvatarScreen } from "@/components/Onboarding/AvatarScreen";
+import { AgeScreen } from "@/components/Onboarding/AgeScreen";
+import { ConsentScreen } from "@/components/Onboarding/ConsentScreen";
+import { getAvatarName } from "@/lib/avatar-config";
+import { fxConfetti } from "@/lib/fx";
+
+type OnboardingStep = "avatar" | "age" | "consent";
 
 export const Route = createFileRoute("/create")({
   beforeLoad: async ({ navigate }) => {
@@ -35,6 +42,10 @@ export const Route = createFileRoute("/create")({
 function CreateRoute() {
   const navigate = useNavigate();
   const p = useProgress();
+  const [currentStep, setCurrentStep] = useState<OnboardingStep>("avatar");
+  const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
+  const [selectedAge, setSelectedAge] = useState<string | null>(null);
+  const [parentConsented, setParentConsented] = useState(false);
 
   // Double-check: if user completes onboarding, redirect to home
   useEffect(() => {
@@ -43,5 +54,66 @@ function CreateRoute() {
     }
   }, [p.onboarded, navigate]);
 
-  return <CreateProfileScreen />;
+  const handleAvatarNext = () => {
+    setCurrentStep("age");
+  };
+
+  const handleAgeNext = () => {
+    setCurrentStep("consent");
+  };
+
+  const handleConsentContinue = () => {
+    if (!selectedAvatar || !selectedAge || !parentConsented) return;
+
+    // Play celebration sounds
+    fxConfetti();
+
+    // Save profile
+    const avatarName = getAvatarName(selectedAvatar);
+    saveProfile({
+      name: avatarName,
+      avatar: selectedAvatar,
+      ageBand: selectedAge,
+    });
+
+    // Grant feature consents
+    grantFeatureConsent("analytics");
+    grantFeatureConsent("audio");
+    grantFeatureConsent("file");
+
+    // Navigate to home after celebration
+    setTimeout(() => {
+      navigate({ to: "/home" });
+    }, 500);
+  };
+
+  return (
+    <div className="w-screen h-screen overflow-hidden bg-bg-page">
+      {currentStep === "avatar" && (
+        <AvatarScreen
+          selectedAvatar={selectedAvatar}
+          onSelectAvatar={setSelectedAvatar}
+          onNext={handleAvatarNext}
+        />
+      )}
+
+      {currentStep === "age" && (
+        <AgeScreen
+          selectedAge={selectedAge}
+          onSelectAge={setSelectedAge}
+          onBack={() => setCurrentStep("avatar")}
+          onNext={handleAgeNext}
+        />
+      )}
+
+      {currentStep === "consent" && (
+        <ConsentScreen
+          parentConsented={parentConsented}
+          onConsent={setParentConsented}
+          onBack={() => setCurrentStep("age")}
+          onContinue={handleConsentContinue}
+        />
+      )}
+    </div>
+  );
 }

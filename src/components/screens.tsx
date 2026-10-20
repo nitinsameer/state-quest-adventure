@@ -390,10 +390,6 @@ export function CreateProfileScreen() {
     setCurrentScreen("age");
   };
 
-  const handleAvatarBack = () => {
-    fxTap();
-    navigate({ to: "/welcome" });
-  };
 
   const handleAgeNext = () => {
     fxTap();
@@ -441,7 +437,6 @@ export function CreateProfileScreen() {
       <AvatarScreen
         selectedAvatar={selectedAvatar}
         onSelectAvatar={setSelectedAvatar}
-        onBack={handleAvatarBack}
         onNext={handleAvatarNext}
       />
     );

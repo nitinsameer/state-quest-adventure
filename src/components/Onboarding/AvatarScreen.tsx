@@ -14,7 +14,7 @@ import avatarSkiGoggles from "@/assets/avatars/avatar-ski-goggles.png";
 import avatarFarmerHat from "@/assets/avatars/avatar-farmer-hat.png";
 import avatarSportsCap from "@/assets/avatars/avatar-sports-cap.png";
 import avatarGirlFlower from "@/assets/avatars/avatar-girl-flower.png";
-import { useNavigate } from "@tanstack/react-router";
+
 
 const AVATAR_IMAGE_MAP: Record<AvatarId, string> = {
   "explorer-hat": avatarExplorerHat,
@@ -59,17 +59,14 @@ function getAvatarImage(avatarId: string): string {
 export interface AvatarScreenProps {
   selectedAvatar: string | null;
   onSelectAvatar: (avatarId: string) => void;
-  onBack: () => void;
   onNext: () => void;
 }
 
 export function AvatarScreen({
   selectedAvatar,
   onSelectAvatar,
-  onBack,
   onNext,
 }: AvatarScreenProps) {
-  const navigate = useNavigate();
   const [confettiBurst, setConfettiBurst] = useState(0);
   const [animatingId, setAnimatingId] = useState<string | null>(null);
 
@@ -89,11 +86,6 @@ export function AvatarScreen({
     onSelectAvatar(avatarId);
   };
 
-  const handleBack = () => {
-    fxTap();
-    navigate({ to: "/welcome" });
-  };
-
   const handleNext = () => {
     if (!selectedAvatar) return;
     fxTap();
@@ -101,39 +93,32 @@ export function AvatarScreen({
   };
 
   return (
-    <div className="w-full h-full bg-accent-1-soft flex flex-col select-none touch-none relative overflow-hidden">
+    <div className="w-full h-full bg-accent-1-soft flex flex-col select-none touch-none relative overflow-hidden animate-screen-enter-right">
       <ConfettiBurst trigger={confettiBurst} size="small" />
 
       {/* Header */}
-      <div className="px-5 pt-6 pb-4 bg-accent-1 text-text-on-primary">
-        <h1 className="text-2xl font-black">Pick Your Avatar</h1>
-        <p className="text-sm opacity-90 mt-1">Step 1/3 — Choose your explorer</p>
+      <div className="px-5 pt-5 pb-2 bg-accent-1 text-text-on-primary animate-slide-in-left animate-delay-100">
+        <h1 className="text-2xl font-black">✨ Let's Meet Your Explorer</h1>
+        <p className="text-xs opacity-90 mt-1">Pick the guide who'll discover India with you</p>
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto px-4 py-6">
-        {/* Avatar Grid - 3 columns */}
-        <div className="grid grid-cols-3 gap-3 mb-6">
+      <div className="flex-1 overflow-y-auto px-4 py-3">
+        {/* Avatar Grid - 4 columns */}
+        <div className="grid grid-cols-4 gap-2 mb-4">
           {AVATAR_IDS.map((avatarId) => (
             <button
               key={avatarId}
               type="button"
               onClick={() => handleAvatarSelect(avatarId)}
-              className={`relative aspect-square rounded-2xl overflow-hidden transition-all duration-300 flex items-center justify-center group
+              className={`relative w-12 h-12 rounded-2xl overflow-hidden transition-all duration-300 flex items-center justify-center group
                 ${
                   selectedAvatar === avatarId
-                    ? "ring-4 ring-accent-4 shadow-elevated-2 scale-110"
-                    : "ring-2 ring-border-color shadow-sm hover:ring-border-strong"
+                    ? "ring-4 ring-accent-4 shadow-elevated-1 animate-avatar-ring-glow"
+                    : "ring-2 ring-border-color shadow-sm opacity-75 hover:opacity-100"
                 }
-                ${animatingId === avatarId ? "avatar-bounce" : ""}
+                ${animatingId === avatarId ? "animate-avatar-bounce" : ""}
               `}
-              style={
-                animatingId === avatarId
-                  ? ({
-                      animation: "avatar-bounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)",
-                    } as React.CSSProperties)
-                  : undefined
-              }
             >
               <img
                 src={getAvatarImage(avatarId)}
@@ -150,16 +135,16 @@ export function AvatarScreen({
 
         {/* Preview Card */}
         {selectedAvatar && (
-          <div className="mb-6 rounded-2xl bg-action-primary p-4 text-text-on-primary shadow-elevated-2 animate-fade-in">
-            <div className="flex items-center gap-4">
+          <div className="mb-3 rounded-2xl bg-action-primary p-2 text-text-on-primary shadow-elevated-2 animate-fade-in">
+            <div className="flex items-center gap-2">
               <img
                 src={getAvatarImage(selectedAvatar)}
                 alt={getAvatarName(selectedAvatar)}
-                className="w-24 h-24 rounded-full border-3 border-text-on-primary shadow-elevated-2 flex-shrink-0"
+                className="w-9 h-9 rounded-full border-2 border-text-on-primary shadow-elevated-1 flex-shrink-0"
               />
               <div>
                 <div className="text-xs opacity-90 font-semibold">Your explorer!</div>
-                <div className="text-2xl font-black">{getAvatarName(selectedAvatar)}</div>
+                <div className="text-sm font-black">{getAvatarName(selectedAvatar)}</div>
               </div>
             </div>
           </div>
@@ -167,33 +152,24 @@ export function AvatarScreen({
       </div>
 
       {/* Footer with buttons */}
-      <div className="px-5 py-4 bg-surface-card border-t border-border-color flex gap-3">
-        <button
-          type="button"
-          onClick={handleBack}
-          className="flex-1 py-3 px-4 rounded-xl font-bold text-text-primary bg-surface-raised hover:bg-surface-sunken transition-colors"
-        >
-          Back
-        </button>
+      <div className="px-5 py-3 bg-surface-card border-t border-border-color">
         <button
           type="button"
           onClick={handleNext}
           disabled={!selectedAvatar}
-          className={`flex-1 py-3 px-4 rounded-xl font-bold transition-colors ${
+          className={`w-full h-14 rounded-xl font-bold transition-all duration-300 flex items-center justify-center gap-2 ${
             selectedAvatar
-              ? "bg-action-primary text-text-on-primary hover:shadow-elevated-1"
+              ? "bg-action-primary text-text-on-primary hover:shadow-elevated-2 active:scale-95"
               : "bg-surface-sunken text-text-secondary cursor-not-allowed opacity-50"
           }`}
         >
-          Next
+          <span>Next</span>
+          <span className={selectedAvatar ? "opacity-100" : "opacity-50"}>→</span>
         </button>
       </div>
 
       <style>{`
-        @keyframes avatar-bounce {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.15); }
-        }
+        /* Keep minimal style for component specifics only */
       `}</style>
     </div>
   );
