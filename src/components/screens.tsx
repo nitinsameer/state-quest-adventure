@@ -1277,11 +1277,9 @@ export function JourneyMapScreen() {
     milestones.forEach((m) => {
       if (percentage >= m.threshold && !celebrated.includes(m.threshold)) {
         // New milestone reached!
-        celebration.custom(m.message, m.emoji, {
-          subtitle: `You've explored ${completed}/${totalStates} regions!`,
-          confetti: true,
+        showSuccessToast(`${m.message} 🎉`, {
           duration: 4000,
-          type: "success",
+          icon: m.emoji,
         });
 
         // Mark as celebrated
@@ -2084,11 +2082,9 @@ export function LearningHubScreen({
   useEffect(() => {
     // Celebrate at 3/6 (halfway milestone)
     if (completedCategories === 3 && !celebratedCategories.has(3)) {
-      celebration.custom(`Halfway there! ${EMOJI.action.star}`, EMOJI.action.runningMan, {
-        subtitle: `3/6 categories explored! Keep up the momentum ${EMOJI.action.momentum}`,
-        confetti: true,
+      showSuccessToast(`Halfway there! ⭐ 3/6 categories explored! 🎉`, {
         duration: 2500,
-        type: "success",
+        icon: "🏃",
       });
 
       setCelebratedCategories((prev) => new Set([...prev, 3]));
@@ -2848,12 +2844,9 @@ export function LearningCardScreen({
 
       // FIX: Only main card gives XP (25 XP), not all sub-cards in the category
       // Previously showed: +75 XP for 3 sub-cards, but only 25 was awarded
-      celebration.custom(`${categoryName} mastered!`, EMOJI.action.star, {
-        subtitle: `+${XP_PER_CARD} XP earned ›¢ ${mainCardIdx + 1}/6 categories mastered`,
-        confetti: true,
+      showSuccessToast(`${categoryName} mastered! 🎉`, {
         duration: 2500,
-        type: "success",
-        showCloseButton: true,
+        icon: "🏆",
       });
     }
 
@@ -3841,11 +3834,9 @@ export function BadgesScreen() {
         const notification = getBadgeNotificationMessage(badge);
 
         // Show celebration with confetti
-        celebration.custom(notification.title, notification.emoji, {
-          subtitle: notification.subtitle,
-          confetti: true,
+        showSuccessToast(notification.title, {
           duration: 3000,
-          type: "success",
+          icon: notification.emoji,
         });
 
         // Mark badge as seen so we don't show notification again
