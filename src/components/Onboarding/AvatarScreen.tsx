@@ -61,11 +61,7 @@ export interface AvatarScreenProps {
   onNext: () => void;
 }
 
-export function AvatarScreen({
-  selectedAvatar,
-  onSelectAvatar,
-  onNext,
-}: AvatarScreenProps) {
+export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarScreenProps) {
   const [confettiBurst, setConfettiBurst] = useState(0);
   const [animatingId, setAnimatingId] = useState<string | null>(null);
 
