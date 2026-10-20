@@ -1864,31 +1864,6 @@ export function StateIntroScreen({
         <Cloud className="absolute top-6 left-2 w-20 opacity-80" />
         <Cloud className="absolute top-14 right-2 w-16 opacity-70" />
 
-        {/* Breadcrumb Navigation */}
-        <div className="absolute top-3 left-16 flex items-center gap-1 text-text-on-header text-xs font-bold">
-          <span className="opacity-75">Journey</span>
-          <span className="opacity-50">›</span>
-          {currentRegion && (
-            <>
-              <img
-                src={STATE_ART[currentRegion.name]}
-                alt={currentRegion.name}
-                className="w-3 h-3 object-cover rounded inline-block"
-                loading="lazy"
-                decoding="async"
-              />
-              <span className="opacity-75">{currentRegion.name}</span>
-              <span className="opacity-50">›</span>
-            </>
-          )}
-          <img
-            src={STATE_ART[state.name]}
-            alt={state.name}
-            className="w-3 h-3 object-cover rounded inline-block"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
 
         <button
           onClick={() => {
