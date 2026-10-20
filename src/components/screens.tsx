@@ -54,6 +54,7 @@ import { showSuccessToast } from "@/hooks/useSuccessToast";
 import { AVATAR_CONFIG, type AvatarId } from "@/lib/avatar-config";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouter, Navigate } from "@tanstack/react-router";
+import { AvatarScreen, AgeScreen, ConsentScreen } from "@/components/Onboarding";
 import { fxCorrect, fxWrong, fxConfetti, fxStamp, fxTap, useSoundOn, setSoundOn } from "@/lib/fx";
 import { useAndroidBackButton } from "@/hooks/useAndroidBackButton";
 import { setJourneyBackHandler } from "@/lib/journeyBackHandler";
@@ -362,218 +363,113 @@ export function WelcomeScreen() {
 }
 
 export function CreateProfileScreen() {
-  const avatarImages = [
-    { id: "explorer-hat" as AvatarId, image: avatarExplorerHat },
-    { id: "explorer-pink" as AvatarId, image: avatarExplorerPink },
-    { id: "geek-glasses" as AvatarId, image: avatarGeekGlasses },
-    { id: "girl-peace" as AvatarId, image: avatarGirlPeace },
-    { id: "turban-red" as AvatarId, image: avatarTurbanRed },
-    { id: "girl-earring" as AvatarId, image: avatarGirlEarring },
-    { id: "boy-smile" as AvatarId, image: avatarBoySmi },
-    { id: "girl-tikka" as AvatarId, image: avatarGirlTikka },
-    { id: "ski-goggles" as AvatarId, image: avatarSkiGoggles },
-    { id: "farmer-hat" as AvatarId, image: avatarFarmerHat },
-    { id: "sports-cap" as AvatarId, image: avatarSportsCap },
-    { id: "girl-flower" as AvatarId, image: avatarGirlFlower },
-  ];
-
   const p = useProgress();
   const navigate = useNavigate();
+  const [currentScreen, setCurrentScreen] = useState<"avatar" | "age" | "consent">("avatar");
+  const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
+  const [selectedAge, setSelectedAge] = useState<string | null>(null);
+  const [parentConsented, setParentConsented] = useState(false);
 
-  // CRITICAL FIX #1: Guard against re-entry post-onboarding
-  // If user already has a profile, redirect to home (shouldn't access profile creation again)
+  // Guard against re-entry post-onboarding
   useEffect(() => {
     if (p.onboarded) {
       navigate({ to: "/home" });
     }
   }, [p.onboarded, navigate]);
-  const [avatar, setAvatar] = useState<AvatarId>((p.avatar as AvatarId) || avatarImages[0].id);
-  const [ageBand, setAgeBand] = useState(p.ageBand);
-  const [saved, setSaved] = useState(false);
-  const [selectedAgeIndex, setSelectedAgeIndex] = useState(0);
-  const [burst, setBurst] = useState(0);
-  const [parentConsented, setParentConsented] = useState(false);
 
-  // Age bands with milestone emoji and vibrant gradient
-  const ageBands = [
-    { value: "3-5", emoji: EMOJI.ageBand.toddler, label: "Sprout", gradient: "bg-accent-2" },
-    { value: "6-7", emoji: EMOJI.ageBand.young, label: "Seedling", gradient: "bg-accent-1" },
-    { value: "8-9", emoji: EMOJI.ageBand.mid, label: "Sapling", gradient: "bg-success" },
-    {
-      value: "10-12",
-      emoji: EMOJI.ageBand.preteen,
-      label: "Mighty Tree",
-      gradient: "bg-action-primary",
-    },
-  ];
+  // Initialize audio context on mount
+  useEffect(() => {
+    import("@/lib/fx").then((mod) => {
+      mod.ensureAudioContext();
+    });
+  }, []);
 
-  const handleAgeSelect = (value: string, index: number) => {
+  const handleAvatarNext = () => {
+    if (!selectedAvatar) return;
     fxTap();
-    setAgeBand(value);
-    setSelectedAgeIndex(index);
-    setBurst((n) => n + 1);
-    setSaved(false);
+    setCurrentScreen("age");
   };
 
-  const handleProfileSave = () => {
+  const handleAvatarBack = () => {
+    fxTap();
+    navigate({ to: "/welcome" });
+  };
+
+  const handleAgeNext = () => {
+    fxTap();
+    // If age not selected, use default
+    const ageToUse = selectedAge || "6-7";
+    setSelectedAge(ageToUse);
+    setCurrentScreen("consent");
+  };
+
+  const handleAgeBack = () => {
+    fxTap();
+    setCurrentScreen("avatar");
+    // Clear age when going back but preserve avatar
+    setSelectedAge(null);
+  };
+
+  const handleConsentBack = () => {
+    fxTap();
+    setCurrentScreen("age");
+    setParentConsented(false);
+  };
+
+  const handleConsentContinue = () => {
+    if (!parentConsented) return;
     fxTap();
     fxConfetti();
 
-    const avatarName = getAvatarName(avatar);
-    saveProfile({ name: avatarName, avatar, ageBand });
+    // Save profile
+    const avatarName = getAvatarName(selectedAvatar || "explorer-hat");
+    const ageToSave = selectedAge || "6-7";
+
+    saveProfile({ name: avatarName, avatar: selectedAvatar || "explorer-hat", ageBand: ageToSave });
 
     // Grant feature consents for parental consent
-    grantFeatureConsent('analytics');
-    grantFeatureConsent('audio');
-    grantFeatureConsent('file');
+    grantFeatureConsent("analytics");
+    grantFeatureConsent("audio");
+    grantFeatureConsent("file");
 
-    // Navigate directly to home - no audio dialog here
-    // Audio consent will be requested in Profile settings instead
-    setSaved(true);
+    // Navigate to home after celebration
     setTimeout(() => navigate({ to: "/home" }), 300);
   };
 
-  return (
-    <div
-      className="w-full bg-accent-1-soft flex flex-col select-none touch-none"
-      style={{ touchAction: "pan-y" }}
-    >
-      <div className="px-5 flex-1 overflow-auto">
-        {/* Step 1: Avatar Selection */}
-        <div className="rounded-3xl bg-accent-1 p-7 text-text-on-primary relative overflow-hidden shadow-elevated-2 min-h-[140px] flex flex-col justify-center">
-          <Cloud className="absolute -top-5 right-3 w-20 opacity-25" />
-          <div className="relative z-10">
-            <div className="text-3xl font-black leading-normal">Pick your avatar</div>
-            <div className="text-base opacity-90 mt-3 leading-normal">
-              Choose the explorer who will travel with you
-            </div>
-          </div>
-        </div>
+  if (currentScreen === "avatar") {
+    return (
+      <AvatarScreen
+        selectedAvatar={selectedAvatar}
+        onSelectAvatar={setSelectedAvatar}
+        onBack={handleAvatarBack}
+        onNext={handleAvatarNext}
+      />
+    );
+  }
 
-        <div className="grid grid-cols-4 gap-2 mt-4">
-          {avatarImages.map((a) => (
-            <button
-              key={a.id}
-              type="button"
-              onClick={() => {
-                fxTap();
-                setAvatar(a.id);
-                setSaved(false);
-              }}
-              className={`aspect-square rounded-2xl flex items-center justify-center overflow-hidden transition-all duration-300 transform ${
-                a.id === avatar
-                  ? "ring-3 ring-accent-4 shadow-elevated-2 scale-105"
-                  : "ring-2 ring-border-color shadow-sm hover:ring-border-strong hover:scale-103"
-              }`}
-            >
-              <img src={a.image} alt={getAvatarName(a.id)} className="w-full h-full object-cover" />
-            </button>
-          ))}
-        </div>
+  if (currentScreen === "age") {
+    return (
+      <AgeScreen
+        selectedAge={selectedAge}
+        onSelectAge={setSelectedAge}
+        onBack={handleAgeBack}
+        onNext={handleAgeNext}
+      />
+    );
+  }
 
-        {/* Selected Avatar Preview with Avatar Name */}
-        {avatar &&
-          (() => {
-            const selectedAvatar = avatarImages.find((a) => a.id === avatar);
-            const avatarName = getAvatarName(avatar);
-            return selectedAvatar ? (
-              <div className="mt-4 rounded-2xl bg-action-primary p-4 text-text-on-primary animate-fade-in flex items-center gap-4 shadow-elevated-2">
-                <img
-                  src={selectedAvatar.image}
-                  alt={avatarName}
-                  className="w-20 h-20 rounded-full border-3 border-text-on-primary shadow-elevated-2 flex-shrink-0"
-                />
-                <div>
-                  <div className="text-xs opacity-90 font-semibold">Your explorer!</div>
-                  <div className="text-lg font-black">{avatarName}</div>
-                </div>
-              </div>
-            ) : null;
-          })()}
+  if (currentScreen === "consent") {
+    return (
+      <ConsentScreen
+        parentConsented={parentConsented}
+        onConsent={setParentConsented}
+        onBack={handleConsentBack}
+        onContinue={handleConsentContinue}
+      />
+    );
+  }
 
-        {/* Age Selection with Vibrant Colors & Emojis */}
-        <div className="mt-6 mb-1">
-          <label className="text-base font-black text-text-primary">
-            {EMOJI.action.birthday} How old are you?
-          </label>
-          <div className="mt-3 space-y-2">
-            {ageBands.map((band, idx) => {
-              const isSelected = band.value === ageBand;
-              return (
-                <button
-                  key={band.value}
-                  type="button"
-                  onClick={() => handleAgeSelect(band.value, idx)}
-                  className={`w-full h-14 rounded-xl flex items-center justify-between px-4 font-bold transition-all duration-300 transform ${
-                    isSelected
-                      ? `${band.gradient} text-text-on-primary shadow-elevated-2 scale-100 border-2 border-text-on-primary`
-                      : "bg-surface-card border-2 border-surface-sunken text-text-primary hover:border-surface-sunken hover:shadow-elevated-1"
-                  }`}
-                >
-                  <span className="text-3xl">{band.emoji}</span>
-                  <div className="flex-1 text-center">
-                    <div className="text-sm font-black">{band.value}</div>
-                    <div
-                      className={`text-xs transition-colors ${isSelected ? "text-text-on-primary/90" : "text-text-secondary"}`}
-                    >
-                      {band.label}
-                    </div>
-                  </div>
-                  {isSelected && <div className="text-2xl">{EMOJI.action.star}</div>}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Age Selection Feedback */}
-          {ageBand && <ConfettiBurst key={`age-${burst}`} trigger={burst} size="big" />}
-        </div>
-
-        {/* Parent Consent Checkbox Section */}
-        <div className="mt-6 rounded-2xl bg-surface-card p-4 border-2 border-border-color">
-          <div className="space-y-3">
-            <label className="text-base font-black text-text-primary flex items-start gap-3 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={parentConsented}
-                onChange={(e) => {
-                  setParentConsented(e.target.checked);
-                  setSaved(false);
-                }}
-                className="mt-1 w-5 h-5 rounded cursor-pointer accent-success"
-              />
-              <span className="flex-1">
-                I am a parent/guardian. I agree this app can collect learning data to help my child.
-              </span>
-            </label>
-            <div className="text-caption text-text-secondary pl-8">
-              {EMOJI.utility.info} This helps us provide personalized learning experiences while protecting your child's privacy under COPPA.
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="p-4 pb-safe bg-surface-card border-t border-border-color">
-        <button
-          onClick={handleProfileSave}
-          disabled={!ageBand || !parentConsented}
-          className={`w-full h-12 rounded-xl text-text-on-primary text-sm font-black shadow-elevated-2 transition-all duration-300 transform ${
-            !ageBand || !parentConsented
-              ? "bg-text-secondary/50 cursor-not-allowed opacity-60"
-              : `bg-success ${
-                  saved
-                    ? "scale-95 opacity-80"
-                    : "hover:shadow-elevated-3 hover:scale-102 active:scale-95"
-                }`
-          }`}
-        >
-          {saved ? `${EMOJI.feedback.success} Saved ✓` : "Continue → Let's Explore!"}
-        </button>
-      </div>
-
-      {/* Audio Permission Dialog removed from onboarding - moved to profile settings */}
-    </div>
-  );
+  return null;
 }
 
 /**
