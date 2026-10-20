@@ -285,8 +285,7 @@ function HydratedApp() {
   // This ensures hook count/order is consistent across renders
   const progress = useProgress();
 
-  // Track consent granted state to re-render when gate completes
-  const [consentGranted, setConsentGranted] = useState(hasFeatureConsent("analytics"));
+
 
   // Get celebration store show method at top level (hooks must be called before any conditionals)
   const showCelebration = useCelebrationStore((state) => state.show);
@@ -495,18 +494,7 @@ function HydratedApp() {
   const scrollContainerPadding =
     isPreAuthRoute || isImmersiveRoute ? "pb-safe" : "pb-[calc(var(--nav-h,80px))]";
 
-  // Monitor localStorage for consent changes (from dialog)
-  useEffect(() => {
-    const handleStorageChange = (e: StorageEvent) => {
-      // Consent changes handled by parental-consent system
-      // No action needed here - component will re-render automatically
-    };
 
-    if (typeof window !== "undefined") {
-      window.addEventListener("storage", handleStorageChange);
-      return () => window.removeEventListener("storage", handleStorageChange);
-    }
-  }, []); // Empty deps - storage listeners should persist across route changes
 
   // Start ambient music only on home/authenticated routes after user consents
   // Do NOT start on splash/welcome/create screens
@@ -569,15 +557,8 @@ function HydratedApp() {
           className={`flex-1 overflow-auto pt-safe px-safe ${scrollContainerPadding}`}
           suppressHydrationWarning
         >
-          {/* Parent Consent Gate - conditional on ageBand set AND no consent yet */}
-          {progress.ageBand && !consentGranted ? (
-            <ParentConsentGate onComplete={() => setConsentGranted(true)} />
-          ) : (
-            <>
-              {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-              <Outlet />
-            </>
-          )}
+          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+          <Outlet />
         </main>
       </div>
 
