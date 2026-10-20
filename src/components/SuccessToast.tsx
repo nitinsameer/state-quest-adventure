@@ -102,15 +102,16 @@ export function SuccessToast() {
     <div
       className="fixed left-1/2 z-50 pointer-events-auto"
       style={{
-        bottom: "var(--nav-h, 96px)",
+        bottom: "calc(var(--nav-h, 96px) + 16px)",
         transform: "translateX(-50%)",
+        paddingBottom: "env(safe-area-inset-bottom, 0px)",
       }}
     >
       {/* Particle container - absolutely positioned relative to toast */}
       <div
         className="relative"
         style={{
-          width: "360px",
+          width: "min(360px, calc(100vw - 32px))",
           maxWidth: "calc(100vw - 32px)",
         }}
       >
@@ -134,6 +135,7 @@ export function SuccessToast() {
             backgroundColor: "var(--success-soft, var(--accent-3-soft))",
             borderColor: "var(--success, var(--accent-3))",
             color: "var(--success, var(--accent-3))",
+            minHeight: "56px",
           }}
           role="status"
           aria-live="polite"
