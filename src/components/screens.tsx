@@ -391,6 +391,7 @@ export function CreateProfileScreen() {
   const [saved, setSaved] = useState(false);
   const [selectedAgeIndex, setSelectedAgeIndex] = useState(0);
   const [burst, setBurst] = useState(0);
+  const [parentConsented, setParentConsented] = useState(false);
 
   // Age bands with milestone emoji and vibrant gradient
   const ageBands = [
@@ -419,6 +420,11 @@ export function CreateProfileScreen() {
 
     const avatarName = getAvatarName(avatar);
     saveProfile({ name: avatarName, avatar, ageBand });
+
+    // Grant feature consents for parental consent
+    grantFeatureConsent('analytics');
+    grantFeatureConsent('audio');
+    grantFeatureConsent('file');
 
     // Navigate directly to home - no audio dialog here
     // Audio consent will be requested in Profile settings instead
@@ -521,15 +527,43 @@ export function CreateProfileScreen() {
           {/* Age Selection Feedback */}
           {ageBand && <ConfettiBurst key={`age-${burst}`} trigger={burst} size="big" />}
         </div>
+
+        {/* Parent Consent Checkbox Section */}
+        <div className="mt-6 rounded-2xl bg-surface-card p-4 border-2 border-border-color">
+          <div className="space-y-3">
+            <label className="text-base font-black text-text-primary flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={parentConsented}
+                onChange={(e) => {
+                  setParentConsented(e.target.checked);
+                  setSaved(false);
+                }}
+                className="mt-1 w-5 h-5 rounded cursor-pointer accent-success"
+              />
+              <span className="flex-1">
+                I am a parent/guardian. I agree this app can collect learning data to help my child.
+              </span>
+            </label>
+            <div className="text-caption text-text-secondary pl-8">
+              {EMOJI.utility.info} This helps us provide personalized learning experiences while protecting your child's privacy under COPPA.
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="p-4 pb-safe bg-surface-card border-t border-border-color">
         <button
           onClick={handleProfileSave}
-          className={`w-full h-12 rounded-xl bg-success text-text-on-primary text-sm font-black shadow-elevated-2 transition-all duration-300 transform ${
-            saved
-              ? "scale-95 opacity-80"
-              : "hover:shadow-elevated-3 hover:scale-102 active:scale-95"
+          disabled={!ageBand || !parentConsented}
+          className={`w-full h-12 rounded-xl text-text-on-primary text-sm font-black shadow-elevated-2 transition-all duration-300 transform ${
+            !ageBand || !parentConsented
+              ? "bg-text-secondary/50 cursor-not-allowed opacity-60"
+              : `bg-success ${
+                  saved
+                    ? "scale-95 opacity-80"
+                    : "hover:shadow-elevated-3 hover:scale-102 active:scale-95"
+                }`
           }`}
         >
           {saved ? `${EMOJI.feedback.success} Saved ✓` : "Continue → Let's Explore!"}
