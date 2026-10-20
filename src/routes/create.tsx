@@ -4,11 +4,10 @@ import { getProgress, useProgress, saveProfile } from "@/lib/progress";
 import { grantFeatureConsent } from "@/lib/parental-consent";
 import { AvatarScreen } from "@/components/Onboarding/AvatarScreen";
 import { AgeScreen } from "@/components/Onboarding/AgeScreen";
-import { ConsentScreen } from "@/components/Onboarding/ConsentScreen";
 import { getAvatarName } from "@/lib/avatar-config";
 import { fxConfetti } from "@/lib/fx";
 
-type OnboardingStep = "avatar" | "age" | "consent";
+type OnboardingStep = "avatar" | "age";
 
 export const Route = createFileRoute("/create")({
   beforeLoad: async ({ navigate }) => {
@@ -59,10 +58,6 @@ function CreateRoute() {
   };
 
   const handleAgeNext = () => {
-    setCurrentStep("consent");
-  };
-
-  const handleConsentContinue = () => {
     if (!selectedAvatar || !selectedAge || !parentConsented) return;
 
     // Play celebration sounds
@@ -101,17 +96,10 @@ function CreateRoute() {
         <AgeScreen
           selectedAge={selectedAge}
           onSelectAge={setSelectedAge}
-          onBack={() => setCurrentStep("avatar")}
-          onNext={handleAgeNext}
-        />
-      )}
-
-      {currentStep === "consent" && (
-        <ConsentScreen
           parentConsented={parentConsented}
           onConsent={setParentConsented}
-          onBack={() => setCurrentStep("age")}
-          onContinue={handleConsentContinue}
+          onBack={() => setCurrentStep("avatar")}
+          onNext={handleAgeNext}
         />
       )}
     </div>
