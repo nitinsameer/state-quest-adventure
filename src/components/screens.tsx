@@ -44,6 +44,7 @@ import { PostcardFrame } from "@/components/PostcardFrame";
 import { CardProgressBar } from "@/components/CardProgressBar";
 import { JourneyDestinationCard } from "@/components/JourneyDestinationCard";
 import { IndiaProgressMap } from "@/components/IndiaProgressMap";
+import { StreakDotRow } from '@/components/StreakDotRow';
 
 import { DailyGoalCard } from "@/components/DailyGoalCard";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
@@ -1077,25 +1078,8 @@ function HomeDashboardContent() {
         {/* STAT CARDS ROW: 7-day streak display */}
         <div style={{ padding: "var(--space-1) var(--space-1-5) var(--space-1-5)" }}>
           <div className="flex flex-row gap-2">
-            {/* Streak Card - 7 dots only, no text, no emoji */}
-            <div className="ui-chip ui-accent-2-soft flex items-center justify-center gap-1.5 px-3 py-2 flex-1 animate-stat-slide-in-bottom shadow-soft hover:shadow-md transition-all">
-              {Array.from({ length: 7 }).map((_, idx) => {
-                const isToday = idx === new Date().getDay();
-                const isCompleted = idx < p.streak;
-                const bgClass = isToday
-                  ? 'bg-accent-1 ring-2 ring-offset-1 animate-streak-current-pulse'
-                  : isCompleted
-                  ? 'bg-accent-3'
-                  : 'bg-surface-muted';
-
-                return (
-                  <div
-                    key={idx}
-                    className={`w-3 h-3 rounded-full ${bgClass} transition-all duration-300`}
-                    title={`Day ${idx + 1}`}
-                  />
-                );
-              })}
+            <div className="flex-1 animate-stat-slide-in-bottom">
+              <StreakDotRow streakCount={p.streak} />
             </div>
           </div>
         </div>
