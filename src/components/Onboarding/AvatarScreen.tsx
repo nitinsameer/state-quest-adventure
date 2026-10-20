@@ -97,21 +97,21 @@ export function AvatarScreen({
       <ConfettiBurst trigger={confettiBurst} size="small" />
 
       {/* Header */}
-      <div className="px-5 pt-5 pb-2 bg-accent-1 text-text-on-primary animate-slide-in-left animate-delay-100">
-        <h1 className="text-2xl font-black">✨ Let's Meet Your Explorer</h1>
-        <p className="text-xs opacity-90 mt-1">Pick the guide who'll discover India with you</p>
+      <div className="px-5 pt-5 pb-3 bg-accent-1 text-text-on-primary animate-slide-in-left animate-delay-100 flex-shrink-0">
+        <h1 className="text-2xl font-black">✨ Pick Your Explorer</h1>
+        <p className="text-xs opacity-90 mt-0.5">Choose the guide who'll discover India with you</p>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 overflow-y-auto px-4 py-3">
-        {/* Avatar Grid - 4 columns */}
-        <div className="grid grid-cols-4 gap-2 mb-4">
+      {/* Content - Scrollable if needed */}
+      <div className="flex-1 overflow-y-auto px-4 py-2 min-h-0">
+        {/* Avatar Grid - 4 columns, compact */}
+        <div className="grid grid-cols-4 gap-1.5 mb-2">
           {AVATAR_IDS.map((avatarId) => (
             <button
               key={avatarId}
               type="button"
               onClick={() => handleAvatarSelect(avatarId)}
-              className={`relative w-12 h-12 rounded-2xl overflow-hidden transition-all duration-300 flex items-center justify-center group
+              className={`relative w-14 h-14 rounded-2xl overflow-hidden transition-all duration-300 flex items-center justify-center group
                 ${
                   selectedAvatar === avatarId
                     ? "ring-4 ring-accent-4 shadow-elevated-1 animate-avatar-ring-glow"
@@ -133,31 +133,31 @@ export function AvatarScreen({
           ))}
         </div>
 
-        {/* Preview Card */}
+        {/* Preview Card - Compact */}
         {selectedAvatar && (
-          <div className="mb-3 rounded-2xl bg-action-primary p-2 text-text-on-primary shadow-elevated-2 animate-fade-in">
+          <div className="rounded-xl bg-action-primary p-2 text-text-on-primary shadow-elevated-1 animate-fade-in">
             <div className="flex items-center gap-2">
               <img
                 src={getAvatarImage(selectedAvatar)}
                 alt={getAvatarName(selectedAvatar)}
-                className="w-9 h-9 rounded-full border-2 border-text-on-primary shadow-elevated-1 flex-shrink-0"
+                className="w-8 h-8 rounded-full border-2 border-text-on-primary shadow-elevated-1 flex-shrink-0"
               />
-              <div>
+              <div className="min-w-0">
                 <div className="text-xs opacity-90 font-semibold">Your explorer!</div>
-                <div className="text-sm font-black">{getAvatarName(selectedAvatar)}</div>
+                <div className="text-sm font-black truncate">{getAvatarName(selectedAvatar)}</div>
               </div>
             </div>
           </div>
         )}
       </div>
 
-      {/* Footer with buttons */}
-      <div className="px-5 py-3 bg-surface-card border-t border-border-color">
+      {/* Footer with Next button only */}
+      <div className="px-5 py-2 bg-surface-card border-t border-border-color flex-shrink-0 pb-safe">
         <button
           type="button"
           onClick={handleNext}
           disabled={!selectedAvatar}
-          className={`w-full h-14 rounded-xl font-bold transition-all duration-300 flex items-center justify-center gap-2 ${
+          className={`w-full h-12 rounded-xl font-bold transition-all duration-300 flex items-center justify-center gap-2 ${
             selectedAvatar
               ? "bg-action-primary text-text-on-primary hover:shadow-elevated-2 active:scale-95"
               : "bg-surface-sunken text-text-secondary cursor-not-allowed opacity-50"
