@@ -790,6 +790,43 @@ function HomeDashboardContent() {
             }
           }
 
+          @keyframes streak-current-pulse {
+            0%, 100% {
+              box-shadow: 0 0 0 1px var(--accent-1);
+              transform: scale(1);
+            }
+            50% {
+              box-shadow: 0 0 0 3px var(--accent-1);
+              transform: scale(1.15);
+            }
+          }
+
+          @keyframes explorer-breathing {
+            0%, 100% {
+              opacity: 0.85;
+              transform: scale(1);
+              text-shadow: 0 0 0 transparent;
+            }
+            50% {
+              opacity: 1;
+              transform: scale(1.04);
+              text-shadow: 0 0 8px var(--accent-3);
+            }
+          }
+
+          @keyframes avatar-ring-pulse {
+            0%, 100% {
+              box-shadow: 0 0 0 0px var(--accent-1);
+              opacity: 0.7;
+              transform: scale(1);
+            }
+            50% {
+              box-shadow: 0 0 12px 2px var(--accent-1);
+              opacity: 0.3;
+              transform: scale(1.08);
+            }
+          }
+
           @keyframes header-slide-down {
             0% {
               opacity: 0;
@@ -858,6 +895,28 @@ function HomeDashboardContent() {
             animation: hero-pulse-border 2.5s ease-in-out infinite;
           }
 
+          .animate-streak-current-pulse {
+            animation: streak-current-pulse 2s ease-in-out infinite;
+          }
+
+          .animate-explorer-breathing {
+            animation: explorer-breathing 2s ease-in-out infinite;
+          }
+
+          .avatar-container {
+            position: relative;
+          }
+
+          .avatar-container::before {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: inherit;
+            border: 2px solid var(--accent-1);
+            opacity: 0.6;
+            animation: avatar-ring-pulse 2s ease-in-out infinite;
+          }
+
           .hero-card-ripple::after {
             content: '';
             position: absolute;
@@ -878,7 +937,7 @@ function HomeDashboardContent() {
         <div className="flex items-center gap-4 relative mb-3">
           {/* Avatar - Larger and more prominent */}
           <div
-            className="h-20 w-20 rounded-2xl ui-card ui-accent-1-soft p-1.5 flex items-center justify-center overflow-hidden flex-shrink-0"
+            className="avatar-container h-20 w-20 rounded-2xl ui-card ui-accent-1-soft p-1.5 flex items-center justify-center overflow-hidden flex-shrink-0"
             data-testid="profile-avatar"
           >
             <img
@@ -894,7 +953,9 @@ function HomeDashboardContent() {
               <div className="text-h4 text-display leading-tight">
                 Namaste, {p?.name?.split(" ")[0] || "Explorer"}! {EMOJI.action.wave}
               </div>
-              <div className="text-body-sm opacity-90 mt-1">Explorer</div>
+              <div className="text-h4 font-extrabold text-accent-3-ink mt-1 animate-explorer-breathing">
+                Explorer
+              </div>
             </div>
           </div>
 
@@ -1002,32 +1063,28 @@ function HomeDashboardContent() {
           </Link>
         </div>
 
-        {/* STAT CARDS ROW: Compact 3-card layout (XP, Streak, Level) with animations */}
+        {/* STAT CARDS ROW: 7-day streak display */}
         <div style={{ padding: "var(--space-1) var(--space-1-5) var(--space-1-5)" }}>
           <div className="flex flex-row gap-2">
-            {/* XP Card */}
-            <div className="flex-1 ui-chip ui-accent-1-soft rounded-xl p-3 flex flex-col justify-center items-center animate-stat-slide-in-left shadow-soft hover:shadow-md transition-all">
-              <div className="text-lg">{EMOJI.action.sparkle}</div>
-              <div className="text-h2 font-black text-accent-1 mt-1">{p.xp}</div>
-              <div className="text-label text-text-secondary mt-0.5">XP</div>
-            </div>
+            {/* Streak Card - 7 dots only, no text, no emoji */}
+            <div className="ui-chip ui-accent-2-soft flex items-center justify-center gap-1.5 px-3 py-2 flex-1 animate-stat-slide-in-bottom shadow-soft hover:shadow-md transition-all">
+              {Array.from({ length: 7 }).map((_, idx) => {
+                const isToday = idx === new Date().getDay();
+                const isCompleted = idx < p.streak;
+                const bgClass = isToday
+                  ? 'bg-accent-1 ring-2 ring-offset-1 animate-streak-current-pulse'
+                  : isCompleted
+                  ? 'bg-accent-3'
+                  : 'bg-surface-muted';
 
-            {/* Streak Card - Center position, fire spin if >= 7 */}
-            <div className="flex-1 ui-chip ui-accent-2-soft rounded-xl p-3 flex flex-col justify-center items-center animate-stat-slide-in-bottom shadow-soft hover:shadow-md transition-all">
-              <div
-                className={`text-lg ${p.streak >= 7 ? "animate-fire-spin inline-block" : "inline-block"}`}
-              >
-                {EMOJI.action.fire}
-              </div>
-              <div className="text-h2 font-black text-accent-2 mt-1">{p.streak}</div>
-              <div className="text-label text-text-secondary mt-0.5">Streak</div>
-            </div>
-
-            {/* Level Card */}
-            <div className="flex-1 ui-chip ui-accent-3-soft rounded-xl p-3 flex flex-col justify-center items-center animate-stat-slide-in-right shadow-soft hover:shadow-md transition-all">
-              <div className="text-lg">{EMOJI.action.star}</div>
-              <div className="text-h2 font-black text-accent-3 mt-1">{level}</div>
-              <div className="text-label text-text-secondary mt-0.5">Level</div>
+                return (
+                  <div
+                    key={idx}
+                    className={`w-3 h-3 rounded-full ${bgClass} transition-all duration-300`}
+                    title={`Day ${idx + 1}`}
+                  />
+                );
+              })}
             </div>
           </div>
         </div>
