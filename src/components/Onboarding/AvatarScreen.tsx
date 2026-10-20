@@ -96,15 +96,15 @@ export function AvatarScreen({
       <ConfettiBurst trigger={confettiBurst} size="small" />
 
       {/* Header */}
-      <div className="px-5 pt-6 pb-4 bg-accent-1 text-text-on-primary flex-shrink-0">
+      <div className="px-5 pt-4 pb-3 bg-accent-1 text-text-on-primary flex-shrink-0">
         <h1 className="text-2xl font-black">Pick Your Avatar</h1>
         <p className="text-sm opacity-90 mt-1">Step 1/3 — Choose your explorer</p>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 overflow-y-auto px-4 py-6">
+      {/* Content - No scroll, fits on screen */}
+      <div className="flex-1 px-4 py-3 overflow-hidden flex flex-col">
         {/* Avatar Grid - 3 columns */}
-        <div className="grid grid-cols-3 gap-3 mb-6">
+        <div className="grid grid-cols-3 gap-2 flex-shrink-0">
           {AVATAR_IDS.map((avatarId) => (
             <button
               key={avatarId}
@@ -139,18 +139,18 @@ export function AvatarScreen({
           ))}
         </div>
 
-        {/* Preview Card */}
+        {/* Preview Card - Compact */}
         {selectedAvatar && (
-          <div className="mb-6 rounded-2xl bg-action-primary p-4 text-text-on-primary shadow-elevated-2 animate-fade-in">
-            <div className="flex items-center gap-4">
+          <div className="mt-3 rounded-xl bg-action-primary p-2 text-text-on-primary shadow-elevated-2 animate-fade-in flex-shrink-0">
+            <div className="flex items-center gap-2">
               <img
                 src={getAvatarImage(selectedAvatar)}
                 alt={getAvatarName(selectedAvatar)}
-                className="w-24 h-24 rounded-full border-3 border-text-on-primary shadow-elevated-2 flex-shrink-0"
+                className="w-12 h-12 rounded-full border-2 border-text-on-primary shadow-elevated-2 flex-shrink-0"
               />
-              <div>
+              <div className="min-w-0">
                 <div className="text-xs opacity-90 font-semibold">Your explorer!</div>
-                <div className="text-2xl font-black">{getAvatarName(selectedAvatar)}</div>
+                <div className="text-sm font-black truncate">{getAvatarName(selectedAvatar)}</div>
               </div>
             </div>
           </div>
@@ -158,12 +158,12 @@ export function AvatarScreen({
       </div>
 
       {/* Footer with Next button only */}
-      <div className="px-5 py-4 bg-surface-card border-t border-border-color flex-shrink-0 pb-safe">
+      <div className="px-5 py-2 bg-surface-card border-t border-border-color flex-shrink-0 pb-safe">
         <button
           type="button"
           onClick={handleNext}
           disabled={!selectedAvatar}
-          className={`w-full py-3 px-4 rounded-xl font-bold transition-colors ${
+          className={`w-full py-2.5 px-4 rounded-xl font-bold transition-colors text-sm ${
             selectedAvatar
               ? "bg-action-primary text-text-on-primary hover:shadow-elevated-1"
               : "bg-surface-sunken text-text-secondary cursor-not-allowed opacity-50"
