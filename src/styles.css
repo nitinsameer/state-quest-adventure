@@ -232,6 +232,7 @@
   --shadow-glow-blue: 0 12px 30px -8px oklch(0.62 0.2 250 / 0.45);
   --shadow-glow-green: 0 12px 30px -8px oklch(0.72 0.19 150 / 0.45);
   --shadow-glow-gold: 0 12px 30px -8px oklch(0.82 0.17 85 / 0.5);
+  --accent-4-glow: color-mix(in srgb, var(--accent-4) 70%, transparent);
 
   /* Additional Missing Mappings */
   --color-surface-muted: var(--surface-muted);
@@ -1286,13 +1287,13 @@
 /* AVATAR-RING-GLOW: Pulsing outer ring effect on selected avatar */
 @keyframes avatar-ring-glow {
   0% {
-    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7);
+    box-shadow: 0 0 0 0 var(--accent-4-glow);
   }
   70% {
-    box-shadow: 0 0 0 10px rgba(212, 175, 55, 0);
+    box-shadow: 0 0 0 10px color-mix(in srgb, var(--accent-4) 0%, transparent);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent-4) 0%, transparent);
   }
 }
 
@@ -1374,7 +1375,7 @@
     text-shadow: 0 0 0 transparent;
   }
   50% {
-    text-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+    text-shadow: 0 0 8px var(--accent-4-glow);
   }
   100% {
     text-shadow: 0 0 0 transparent;

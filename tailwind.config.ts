@@ -9,6 +9,16 @@ import type { Config } from "tailwindcss";
 export default {
   theme: {
     extend: {
+      animation: {
+        "delay-50": "none 50ms",
+        "delay-100": "none 100ms",
+        "delay-150": "none 150ms",
+        "delay-200": "none 200ms",
+        "delay-250": "none 250ms",
+        "delay-300": "none 300ms",
+        "delay-400": "none 400ms",
+        "delay-500": "none 500ms",
+      },
       borderWidth: {
         thin: "var(--border-width-thin)",
         DEFAULT: "var(--border-width-default)",
