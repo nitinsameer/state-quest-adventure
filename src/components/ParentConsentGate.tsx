@@ -1,13 +1,13 @@
 /**
  * Simplified Parent Consent Gate Component
  * COPPA Compliance: Collects parent consent for app features
- * 
+ *
  * Simplified Flow:
  * 1. Single-stage intro with checkbox
  * 2. "I am a parent/guardian" acknowledgment
  * 3. "Let's Explore!" button → stores consent → calls onComplete callback
  * 4. Component returns null after consent granted
- * 
+ *
  * Rendered AFTER age selection (ageBand is set)
  * Does not block age selection screen (/create)
  */
@@ -52,7 +52,10 @@ export function ParentConsentGate({ onComplete }: ParentConsentGateProps = {}): 
   }
 
   return (
-    <div className="h-screen w-full flex items-center justify-center bg-gradient-to-br from-accent-1 to-accent-2 px-4 fixed inset-0 z-50">
+    <div
+      className="h-screen w-full flex items-center justify-center px-4 fixed inset-0 z-50"
+      style={{ backgroundColor: "var(--accent-1)" }}
+    >
       <div className="max-w-md w-full space-y-6 text-center">
         {/* Header Icon */}
         <div className="text-6xl mb-4">{EMOJI.nav.map}</div>
@@ -61,7 +64,8 @@ export function ParentConsentGate({ onComplete }: ParentConsentGateProps = {}): 
         <div>
           <h1 className="text-h2 text-text-on-header">Before you explore...</h1>
           <p className="text-body text-text-on-header/90 mt-3 leading-relaxed">
-            We use the data your child creates to help them learn better and stay safe. We never share personal information.
+            We use the data your child creates to help them learn better and stay safe. We never
+            share personal information.
           </p>
         </div>
 
