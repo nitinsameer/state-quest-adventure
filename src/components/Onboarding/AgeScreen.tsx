@@ -93,7 +93,7 @@ export function AgeScreen({
       <div className="relative z-10 flex-1 overflow-hidden px-5 py-3 flex flex-col">
         {/* Selected Avatar Preview */}
         {selectedAvatar && (
-          <div className="flex items-center gap-2 pb-2 border-b border-border-color">
+          <div className="flex items-center gap-2 pb-1 border-b border-border-color">
             <div className="flex-shrink-0 w-12 h-12 rounded-full overflow-hidden shadow-sm">
               <img
                 src={`/src/assets/avatars/${selectedAvatar}.png`}
@@ -112,7 +112,7 @@ export function AgeScreen({
         )}
 
         {/* Age Bands */}
-        <div className="flex-1 overflow-hidden flex flex-col gap-2 py-2">
+        <div className="flex-1 overflow-hidden flex flex-col gap-1 py-0">
           {AGE_BANDS.map((band) => {
             const isSelected = selectedAge === band.value;
             return (
@@ -120,7 +120,7 @@ export function AgeScreen({
                 key={band.value}
                 type="button"
                 onClick={() => handleAgeSelect(band.value)}
-                className={`relative rounded-xl p-3 transition-all duration-300 flex items-center gap-3 text-left flex-shrink-0
+                className={`relative rounded-xl p-2.5 transition-all duration-300 flex items-center gap-3 text-left flex-shrink-0
                   ${
                     isSelected
                       ? `${band.gradient} text-text-on-primary shadow-elevated-2 scale-105`
@@ -155,7 +155,7 @@ export function AgeScreen({
         </div>
 
         {/* Parent Approval Section */}
-        <div className="flex items-start gap-3 py-3 px-3 bg-surface-card rounded-xl flex-shrink-0 border border-surface-sunken">
+        <div className="flex items-start gap-3 py-1.5 px-3 bg-surface-card rounded-xl flex-shrink-0 border border-surface-sunken">
           <div className="flex-shrink-0 w-5 h-5 rounded-full bg-success flex items-center justify-center mt-0.5">
             <svg
               className="w-3 h-3 text-white"
