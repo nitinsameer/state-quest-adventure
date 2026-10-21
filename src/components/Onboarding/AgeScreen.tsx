@@ -176,11 +176,11 @@ export function AgeScreen({
       </div>
 
       {/* Footer with buttons */}
-      <div className="relative z-10 px-5 py-2 bg-surface-card border-t border-border-color flex-shrink-0 gap-3 flex pb-safe">
+      <div className="relative z-10 px-5 py-1 bg-surface-card border-t border-border-color flex-shrink-0 gap-3 flex pb-safe">
         <button
           type="button"
           onClick={handleBack}
-          className="flex-1 py-2.5 px-4 rounded-xl font-bold text-text-primary bg-surface-raised hover:bg-surface-sunken transition-colors text-sm"
+          className="flex-1 py-2 px-4 rounded-xl font-bold text-text-primary bg-surface-raised hover:bg-surface-sunken transition-colors text-sm"
         >
           Back
         </button>
@@ -188,7 +188,7 @@ export function AgeScreen({
           type="button"
           onClick={handleNext}
           disabled={!selectedAge}
-          className={`flex-1 py-2.5 px-4 rounded-xl font-bold transition-colors text-sm ${
+          className={`flex-1 py-2 px-4 rounded-xl font-bold transition-colors text-sm ${
             selectedAge
               ? "bg-action-primary text-text-on-primary hover:shadow-elevated-1"
               : "bg-surface-sunken text-text-secondary cursor-not-allowed opacity-50"

@@ -14,7 +14,7 @@ export function PremiumHeader({
   step,
 }: PremiumHeaderProps) {
   return (
-    <div className="px-5 pt-safe pb-4 bg-accent-1 flex-shrink-0">
+    <div className="px-5 pt-safe pb-2 bg-accent-1 flex-shrink-0">
       <div className="flex items-start justify-between gap-4 mb-1">
         <h1
           className="flex-1 text-4xl font-black leading-tight"

@@ -159,7 +159,7 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
 
         {/* Preview Card - Compact */}
         {selectedAvatar && (
-          <div className="mt-3 rounded-xl bg-action-primary p-2 text-text-on-primary shadow-elevated-2 animate-fade-in flex-shrink-0">
+          <div className="mt-1 rounded-xl bg-action-primary p-1.5 text-text-on-primary shadow-elevated-2 animate-fade-in flex-shrink-0">
             <div className="flex items-center gap-2">
               <img
                 src={getAvatarImage(selectedAvatar)}
@@ -176,12 +176,12 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
       </div>
 
       {/* Footer with Next button only */}
-      <div className="relative z-10 px-5 py-2 bg-surface-card border-t border-border-color flex-shrink-0 pb-safe">
+      <div className="relative z-10 px-5 py-1 bg-surface-card border-t border-border-color flex-shrink-0 pb-safe">
         <button
           type="button"
           onClick={handleNext}
           disabled={!selectedAvatar}
-          className={`w-full py-2.5 px-4 rounded-xl font-bold transition-colors text-sm ${
+          className={`w-full py-2 px-4 rounded-xl font-bold transition-colors text-sm ${
             selectedAvatar
               ? "bg-action-primary text-text-on-primary hover:shadow-elevated-1"
               : "bg-surface-sunken text-text-secondary cursor-not-allowed opacity-50"
