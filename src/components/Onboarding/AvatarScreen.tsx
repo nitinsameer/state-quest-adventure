@@ -114,7 +114,7 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
         <PremiumHeader
           firstPart="Pick Your"
           secondPart="Avatar"
-          subtitle="Choose your adventure buddy"
+          subtitle="Choose your explorer to start your adventure!"
           step={1}
         />
       </div>
@@ -133,8 +133,8 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
                 className={`relative aspect-square rounded-2xl overflow-hidden transition-all duration-300 flex items-center justify-center group
                   ${
                     selectedAvatar === avatarId
-                      ? "ring-4 ring-accent-4 shadow-elevated-2 scale-110"
-                      : "ring-2 ring-border-color shadow-sm hover:ring-border-strong"
+                      ? "ring-6 ring-white shadow-elevated-2 scale-110"
+                      : "ring-3 ring-white shadow-sm hover:shadow-lg"
                   }
                   ${animatingId === avatarId ? "avatar-bounce" : ""}
                 `}
@@ -161,16 +161,16 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
 
           {/* Preview Card - Scrolls with content */}
           {selectedAvatar && (
-            <div className="mt-1 rounded-xl bg-action-primary p-1.5 text-text-on-primary shadow-elevated-2 animate-fade-in">
+            <div className="mt-1 rounded-xl bg-yellow-100 p-3 text-text-primary shadow-elevated-2 animate-fade-in">
               <div className="flex items-center gap-2">
                 <img
                   src={getAvatarImage(selectedAvatar)}
                   alt={getAvatarName(selectedAvatar)}
-                  className="w-12 h-12 rounded-full border-2 border-text-on-primary shadow-elevated-2 flex-shrink-0"
+                  className="w-12 h-12 rounded-full border-2 border-text-primary shadow-elevated-2 flex-shrink-0"
                 />
                 <div className="min-w-0">
-                  <div className="text-xs opacity-90 font-semibold">Your explorer!</div>
-                  <div className="text-sm font-black truncate">{getAvatarName(selectedAvatar)}</div>
+                  <div className="text-xs opacity-80 font-semibold">YOUR EXPLORER</div>
+                  <div className="text-sm font-black truncate text-text-primary">{getAvatarName(selectedAvatar)}</div>
                 </div>
               </div>
             </div>

@@ -82,10 +82,11 @@ export function AgeScreen({
       {/* Premium Header - Fixed */}
       <div className="relative z-10 flex-shrink-0">
         <PremiumHeader
-          firstPart="What's Your"
-          secondPart="Age"
-          subtitle="Tell us your age band"
+          firstPart="How Old"
+          secondPart="Are You?"
+          subtitle="Choose your age band to get a better learning experience!"
           step={2}
+          secondPartColor="#8B5CF6"
         />
       </div>
 
@@ -155,10 +156,10 @@ export function AgeScreen({
           })}
 
           {/* Parent Approval Section */}
-          <div className="flex items-start gap-3 py-3 px-3 bg-surface-card rounded-xl border border-surface-sunken">
-            <div className="flex-shrink-0 w-5 h-5 rounded-full bg-success flex items-center justify-center mt-0.5">
+          <div className="flex items-start gap-3 py-3 px-4 bg-surface-card rounded-xl border border-surface-sunken">
+            <div className="flex-shrink-0 w-6 h-6 rounded-full bg-success flex items-center justify-center mt-0.5">
               <svg
-                className="w-3 h-3 text-white"
+                className="w-4 h-4 text-white"
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
@@ -169,7 +170,7 @@ export function AgeScreen({
                 />
               </svg>
             </div>
-            <p className="text-xs font-semibold text-text-secondary leading-snug">
+            <p className="text-sm font-semibold text-text-primary leading-snug">
               This app respects kids' privacy in line with COPPA.
             </p>
           </div>

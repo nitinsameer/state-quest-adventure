@@ -5,6 +5,7 @@ export interface PremiumHeaderProps {
   secondPart: string;
   subtitle: string;
   step: 1 | 2;
+  secondPartColor?: string;
 }
 
 export function PremiumHeader({
@@ -12,6 +13,7 @@ export function PremiumHeader({
   secondPart,
   subtitle,
   step,
+  secondPartColor = "#FFD700",
 }: PremiumHeaderProps) {
   return (
     <div className="px-5 pt-safe pb-3 bg-transparent flex-shrink-0">
@@ -36,7 +38,7 @@ export function PremiumHeader({
           }}
         >
           <span style={{ color: "#001f3f" }}>{firstPart} </span>
-          <span style={{ color: "#FFD700" }}>{secondPart}</span>
+          <span style={{ color: secondPartColor }}>{secondPart}</span>
         </h1>
         <div className="flex-shrink-0 pt-1">
           <StepBadge step={step} />
