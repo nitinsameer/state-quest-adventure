@@ -3,6 +3,7 @@ import { fxTap, fxConfetti } from "@/lib/fx";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { AVATAR_CONFIG, type AvatarId, getAvatarBackgroundColor } from "@/lib/avatar-config";
 import { PremiumHeader } from "./PremiumHeader";
+import adventureBg from "@/assets/avatar_adventure_bg.png";
 import avatarExplorerHat from "@/assets/avatars/avatar-explorer-hat.png";
 import avatarExplorerPink from "@/assets/avatars/avatar-explorer-pink.png";
 import avatarGeekGlasses from "@/assets/avatars/avatar-geek-glasses.png";
@@ -96,19 +97,30 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
   };
 
   return (
-    <div className="w-full h-full bg-accent-1-soft flex flex-col select-none touch-none relative overflow-hidden">
+    <div className="w-full h-full flex flex-col select-none touch-none relative overflow-hidden bg-bg-page">
+      {/* Background layer */}
+      <div
+        className="absolute inset-0 bg-cover bg-top z-0"
+        style={{ backgroundImage: `url(${adventureBg})`, backgroundPosition: "center top" }}
+      />
+
+      {/* Subtle overlay only in header area for text readability */}
+      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black/20 via-black/10 to-transparent z-5" />
+
       <ConfettiBurst trigger={confettiBurst} size="small" />
 
       {/* Premium Header */}
-      <PremiumHeader
-        firstPart="Pick Your"
-        secondPart="Avatar"
-        subtitle="Choose your adventure buddy"
-        step={1}
-      />
+      <div className="relative z-10">
+        <PremiumHeader
+          firstPart="Pick Your"
+          secondPart="Avatar"
+          subtitle="Choose your adventure buddy"
+          step={1}
+        />
+      </div>
 
       {/* Content - No scroll, fits on screen */}
-      <div className="flex-1 px-4 py-3 overflow-hidden flex flex-col">
+      <div className="relative z-10 flex-1 px-4 py-3 overflow-hidden flex flex-col">
         {/* Avatar Grid - 3 columns */}
         <div className="grid grid-cols-3 gap-2 flex-shrink-0">
           {AVATAR_IDS.map((avatarId) => (
@@ -164,7 +176,7 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
       </div>
 
       {/* Footer with Next button only */}
-      <div className="px-5 py-2 bg-surface-card border-t border-border-color flex-shrink-0 pb-safe">
+      <div className="relative z-10 px-5 py-2 bg-surface-card border-t border-border-color flex-shrink-0 pb-safe">
         <button
           type="button"
           onClick={handleNext}

@@ -4,6 +4,7 @@ import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { EMOJI } from "@/constants/emoji";
 import { getAvatarName } from "@/lib/avatar-config";
 import { PremiumHeader } from "./PremiumHeader";
+import ageBg from "@/assets/age_selection_bg.png";
 
 interface AgeBand {
   value: string;
@@ -66,19 +67,30 @@ export function AgeScreen({
   };
 
   return (
-    <div className="w-full h-full bg-accent-1-soft flex flex-col select-none touch-none relative overflow-hidden">
+    <div className="w-full h-full flex flex-col select-none touch-none relative overflow-hidden bg-bg-page">
+      {/* Background layer */}
+      <div
+        className="absolute inset-0 bg-cover bg-top z-0"
+        style={{ backgroundImage: `url(${ageBg})`, backgroundPosition: "center top" }}
+      />
+
+      {/* Subtle overlay only in header area for text readability */}
+      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black/20 via-black/10 to-transparent z-5" />
+
       <ConfettiBurst trigger={confettiBurst} size="big" />
 
       {/* Premium Header */}
-      <PremiumHeader
-        firstPart="What's Your"
-        secondPart="Age"
-        subtitle="Tell us your age band"
-        step={2}
-      />
+      <div className="relative z-10">
+        <PremiumHeader
+          firstPart="What's Your"
+          secondPart="Age"
+          subtitle="Tell us your age band"
+          step={2}
+        />
+      </div>
 
       {/* Content - No scroll, fits on screen */}
-      <div className="flex-1 overflow-hidden px-5 py-3 flex flex-col">
+      <div className="relative z-10 flex-1 overflow-hidden px-5 py-3 flex flex-col">
         {/* Selected Avatar Preview */}
         {selectedAvatar && (
           <div className="flex items-center gap-2 pb-2 border-b border-border-color">
@@ -164,7 +176,7 @@ export function AgeScreen({
       </div>
 
       {/* Footer with buttons */}
-      <div className="px-5 py-2 bg-surface-card border-t border-border-color flex-shrink-0 gap-3 flex pb-safe">
+      <div className="relative z-10 px-5 py-2 bg-surface-card border-t border-border-color flex-shrink-0 gap-3 flex pb-safe">
         <button
           type="button"
           onClick={handleBack}
