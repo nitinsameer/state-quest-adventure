@@ -14,8 +14,8 @@ export function PremiumHeader({
   step,
 }: PremiumHeaderProps) {
   return (
-    <div className="px-5 pt-safe pb-2 bg-accent-1 flex-shrink-0">
-      <div className="flex items-start justify-between gap-4 mb-1">
+    <div className="px-5 pt-safe pb-3 bg-transparent flex-shrink-0">
+      <div className="flex items-start justify-between gap-4 mb-2">
         <h1
           className="flex-1 text-4xl font-black leading-tight"
           style={{
@@ -38,11 +38,11 @@ export function PremiumHeader({
           <span style={{ color: "#001f3f" }}>{firstPart} </span>
           <span style={{ color: "#FFD700" }}>{secondPart}</span>
         </h1>
-        <div className="flex-shrink-0 pt-2">
+        <div className="flex-shrink-0 pt-1">
           <StepBadge step={step} />
         </div>
       </div>
-      <p className="text-sm font-semibold text-text-on-primary opacity-90">
+      <p className="text-sm font-semibold text-text-primary opacity-95 drop-shadow-md">
         {subtitle}
       </p>
     </div>
