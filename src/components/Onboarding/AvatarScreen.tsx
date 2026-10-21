@@ -109,8 +109,8 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
 
       <ConfettiBurst trigger={confettiBurst} size="small" />
 
-      {/* Premium Header */}
-      <div className="relative z-10">
+      {/* Premium Header - Fixed */}
+      <div className="relative z-10 flex-shrink-0">
         <PremiumHeader
           firstPart="Pick Your"
           secondPart="Avatar"
@@ -119,64 +119,67 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
         />
       </div>
 
-      {/* Content - No scroll, fits on screen */}
-      <div className="relative z-10 flex-1 px-4 py-3 overflow-hidden flex flex-col">
-        {/* Avatar Grid - 3 columns */}
-        <div className="grid grid-cols-3 gap-2 flex-shrink-0">
-          {AVATAR_IDS.map((avatarId) => (
-            <button
-              key={avatarId}
-              type="button"
-              onClick={() => handleAvatarSelect(avatarId)}
-              className={`relative aspect-square rounded-2xl overflow-hidden transition-all duration-300 flex items-center justify-center group
-                ${
-                  selectedAvatar === avatarId
-                    ? "ring-4 ring-accent-4 shadow-elevated-2 scale-110"
-                    : "ring-2 ring-border-color shadow-sm hover:ring-border-strong"
-                }
-                ${animatingId === avatarId ? "avatar-bounce" : ""}
-              `}
-              style={{
-                backgroundColor: getAvatarBackgroundColor(avatarId),
-                animation:
-                  animatingId === avatarId
-                    ? "avatar-bounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)"
-                    : undefined,
-              } as React.CSSProperties}
-            >
-              <img
-                src={getAvatarImage(avatarId)}
-                alt={getAvatarName(avatarId)}
-                className="w-full h-full object-cover"
-              />
-              {/* Glow effect for selected */}
-              {selectedAvatar === avatarId && (
-                <div className="absolute inset-0 bg-accent-4 opacity-10 animate-pulse" />
-              )}
-            </button>
-          ))}
-        </div>
+      {/* Scrollable Content Area */}
+      <div className="relative z-10 flex-1 overflow-y-auto flex flex-col">
+        {/* Inner wrapper for content with padding */}
+        <div className="px-4 py-3 flex flex-col">
+          {/* Avatar Grid - 3 columns */}
+          <div className="grid grid-cols-3 gap-2">
+            {AVATAR_IDS.map((avatarId) => (
+              <button
+                key={avatarId}
+                type="button"
+                onClick={() => handleAvatarSelect(avatarId)}
+                className={`relative aspect-square rounded-2xl overflow-hidden transition-all duration-300 flex items-center justify-center group
+                  ${
+                    selectedAvatar === avatarId
+                      ? "ring-4 ring-accent-4 shadow-elevated-2 scale-110"
+                      : "ring-2 ring-border-color shadow-sm hover:ring-border-strong"
+                  }
+                  ${animatingId === avatarId ? "avatar-bounce" : ""}
+                `}
+                style={{
+                  backgroundColor: getAvatarBackgroundColor(avatarId),
+                  animation:
+                    animatingId === avatarId
+                      ? "avatar-bounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)"
+                      : undefined,
+                } as React.CSSProperties}
+              >
+                <img
+                  src={getAvatarImage(avatarId)}
+                  alt={getAvatarName(avatarId)}
+                  className="w-full h-full object-cover"
+                />
+                {/* Glow effect for selected */}
+                {selectedAvatar === avatarId && (
+                  <div className="absolute inset-0 bg-accent-4 opacity-10 animate-pulse" />
+                )}
+              </button>
+            ))}
+          </div>
 
-        {/* Preview Card - Compact */}
-        {selectedAvatar && (
-          <div className="mt-1 rounded-xl bg-action-primary p-1.5 text-text-on-primary shadow-elevated-2 animate-fade-in flex-shrink-0">
-            <div className="flex items-center gap-2">
-              <img
-                src={getAvatarImage(selectedAvatar)}
-                alt={getAvatarName(selectedAvatar)}
-                className="w-12 h-12 rounded-full border-2 border-text-on-primary shadow-elevated-2 flex-shrink-0"
-              />
-              <div className="min-w-0">
-                <div className="text-xs opacity-90 font-semibold">Your explorer!</div>
-                <div className="text-sm font-black truncate">{getAvatarName(selectedAvatar)}</div>
+          {/* Preview Card - Scrolls with content */}
+          {selectedAvatar && (
+            <div className="mt-1 rounded-xl bg-action-primary p-1.5 text-text-on-primary shadow-elevated-2 animate-fade-in">
+              <div className="flex items-center gap-2">
+                <img
+                  src={getAvatarImage(selectedAvatar)}
+                  alt={getAvatarName(selectedAvatar)}
+                  className="w-12 h-12 rounded-full border-2 border-text-on-primary shadow-elevated-2 flex-shrink-0"
+                />
+                <div className="min-w-0">
+                  <div className="text-xs opacity-90 font-semibold">Your explorer!</div>
+                  <div className="text-sm font-black truncate">{getAvatarName(selectedAvatar)}</div>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
-      {/* Footer with Next button only */}
-      <div className="relative z-10 px-5 py-1 bg-surface-card border-t border-border-color flex-shrink-0 pb-safe">
+      {/* Footer with Next button - Scrolls with content */}
+      <div className="relative z-10 px-5 py-1 bg-surface-card border-t border-border-color pb-safe">
         <button
           type="button"
           onClick={handleNext}
