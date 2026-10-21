@@ -44,7 +44,6 @@ function CreateRoute() {
   const [currentStep, setCurrentStep] = useState<OnboardingStep>("avatar");
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
   const [selectedAge, setSelectedAge] = useState<string | null>(null);
-  const [parentConsented, setParentConsented] = useState(false);
 
   // Double-check: if user completes onboarding, redirect to home
   useEffect(() => {
@@ -58,7 +57,7 @@ function CreateRoute() {
   };
 
   const handleAgeNext = () => {
-    if (!selectedAvatar || !selectedAge || !parentConsented) return;
+    if (!selectedAvatar || !selectedAge) return;
 
     // Play celebration sounds
     fxConfetti();
@@ -71,7 +70,7 @@ function CreateRoute() {
       ageBand: selectedAge,
     });
 
-    // Grant feature consents
+    // Grant feature consents (silent parent consent always true)
     grantFeatureConsent("analytics");
     grantFeatureConsent("audio");
     grantFeatureConsent("file");
@@ -94,10 +93,9 @@ function CreateRoute() {
 
       {currentStep === "age" && (
         <AgeScreen
+          selectedAvatar={selectedAvatar}
           selectedAge={selectedAge}
           onSelectAge={setSelectedAge}
-          parentConsented={parentConsented}
-          onConsent={setParentConsented}
           onBack={() => setCurrentStep("avatar")}
           onNext={handleAgeNext}
         />

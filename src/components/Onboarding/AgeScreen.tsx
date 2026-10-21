@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { fxTap, fxConfetti, fxCorrect } from "@/lib/fx";
+import { fxTap, fxConfetti } from "@/lib/fx";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { EMOJI } from "@/constants/emoji";
+import { getAvatarName } from "@/lib/avatar-config";
 
 interface AgeBand {
   value: string;
@@ -23,25 +24,22 @@ const AGE_BANDS: AgeBand[] = [
 ];
 
 export interface AgeScreenProps {
+  selectedAvatar: string | null;
   selectedAge: string | null;
   onSelectAge: (age: string) => void;
-  parentConsented: boolean;
-  onConsent: (consented: boolean) => void;
   onBack: () => void;
   onNext: () => void;
 }
 
 export function AgeScreen({
+  selectedAvatar,
   selectedAge,
   onSelectAge,
-  parentConsented,
-  onConsent,
   onBack,
   onNext,
 }: AgeScreenProps) {
   const [confettiBurst, setConfettiBurst] = useState(0);
   const [animatingAge, setAnimatingAge] = useState<string | null>(null);
-  const [checkAnimation, setCheckAnimation] = useState(false);
 
   const handleAgeSelect = (age: string) => {
     fxTap();
@@ -55,27 +53,13 @@ export function AgeScreen({
     onSelectAge(age);
   };
 
-  const handleToggleConsent = () => {
-    fxTap();
-
-    if (!parentConsented) {
-      // Transitioning to checked
-      fxCorrect();
-      setCheckAnimation(true);
-      setTimeout(() => setCheckAnimation(false), 300);
-      setConfettiBurst((n) => n + 1);
-    }
-
-    onConsent(!parentConsented);
-  };
-
   const handleBack = () => {
     fxTap();
     onBack();
   };
 
   const handleNext = () => {
-    if (!selectedAge || !parentConsented) return;
+    if (!selectedAge) return;
     fxTap();
     onNext();
   };
@@ -84,130 +68,92 @@ export function AgeScreen({
     <div className="w-full h-full bg-accent-1-soft flex flex-col select-none touch-none relative overflow-hidden">
       <ConfettiBurst trigger={confettiBurst} size="big" />
 
-      {/* Header */}
-      <div className="px-5 pt-6 pb-4 bg-accent-1 text-text-on-primary">
-        <h1 className="text-2xl font-black">How Old Are You?</h1>
-        <p className="text-sm opacity-90 mt-1">Step 2/3 — Choose your age band</p>
+      {/* Header - Clean, no step indicator */}
+      <div className="px-5 pt-3 pb-2 bg-accent-1 text-text-on-primary flex-shrink-0">
+        <h1 className="text-2xl font-black">What's Your Age?</h1>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 overflow-y-auto px-5 py-6 flex flex-col gap-3">
-        {AGE_BANDS.map((band) => {
-          const isSelected = selectedAge === band.value;
-          return (
-            <button
-              key={band.value}
-              type="button"
-              onClick={() => handleAgeSelect(band.value)}
-              className={`relative rounded-2xl p-4 transition-all duration-300 flex items-center gap-4 text-left
-                ${
-                  isSelected
-                    ? `${band.gradient} text-text-on-primary shadow-elevated-2 scale-105`
-                    : "bg-surface-card text-text-primary border-2 border-surface-sunken hover:border-surface-raised"
-                }
-                ${animatingAge === band.value ? "animate-scale-pop" : ""}
-              `}
-            >
-              <div className="text-5xl flex-shrink-0">{band.emoji}</div>
-              <div className="flex-1">
-                <div className="text-sm font-semibold opacity-80">Ages {band.value}</div>
-                <div className="text-lg font-bold">{band.label}</div>
-              </div>
-              {isSelected && (
-                <div className="flex-shrink-0 w-6 h-6 rounded-full bg-text-on-primary flex items-center justify-center">
-                  <svg
-                    className="w-4 h-4 text-action-primary"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
-              )}
-            </button>
-          );
-        })}
-
-        {/* Parent Consent Section */}
-        <div className="mt-6 pt-4 border-t border-border-color">
-          <div className="bg-surface-card rounded-2xl p-4 shadow-elevated-1">
-            <p className="text-xs font-semibold text-text-secondary mb-3">Parent Approval</p>
-
-            {/* Privacy & Safety Info */}
-            <div className="mb-3 p-3 bg-accent-1-soft rounded-xl border-l-4 border-accent-1">
-              <p className="text-xs text-text-secondary leading-relaxed">
-                We follow COPPA and keep kids safe. We don't sell data, and parents can request
-                deletion anytime.
-              </p>
+      {/* Content - Compact layout */}
+      <div className="flex-1 overflow-hidden px-5 py-3 flex flex-col gap-2">
+        {/* Selected Avatar Preview */}
+        {selectedAvatar && (
+          <div className="flex items-center gap-2 pb-2 border-b border-border-color">
+            <div className="flex-shrink-0 w-12 h-12 rounded-full overflow-hidden shadow-sm">
+              <img
+                src={`/src/assets/avatars/${selectedAvatar}.png`}
+                alt={getAvatarName(selectedAvatar)}
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).style.display = "none";
+                }}
+              />
             </div>
+            <div className="min-w-0">
+              <p className="text-xs opacity-80">Your explorer:</p>
+              <p className="text-sm font-bold truncate">{getAvatarName(selectedAvatar)}</p>
+            </div>
+          </div>
+        )}
 
-            {/* Consent Checkbox */}
-            <button
-              type="button"
-              onClick={handleToggleConsent}
-              className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 ${
-                parentConsented ? "bg-action-success" : "bg-surface-raised"
-              }`}
-            >
-              {/* Checkbox */}
-              <div
-                className={`relative w-5 h-5 rounded-lg border-2 flex-shrink-0 transition-all duration-200
+        {/* Age Bands - Scrollable if needed */}
+        <div className="flex-1 overflow-y-auto flex flex-col gap-2">
+          {AGE_BANDS.map((band) => {
+            const isSelected = selectedAge === band.value;
+            return (
+              <button
+                key={band.value}
+                type="button"
+                onClick={() => handleAgeSelect(band.value)}
+                className={`relative rounded-xl p-3 transition-all duration-300 flex items-center gap-3 text-left
                   ${
-                    parentConsented
-                      ? "border-text-on-primary bg-text-on-primary"
-                      : "border-border-color bg-surface-card"
+                    isSelected
+                      ? `${band.gradient} text-text-on-primary shadow-elevated-2 scale-105`
+                      : "bg-surface-card text-text-primary border-2 border-surface-sunken hover:border-surface-raised"
                   }
-                  ${checkAnimation ? "animate-checkbox-bounce" : ""}
+                  ${animatingAge === band.value ? "animate-scale-pop" : ""}
                 `}
               >
-                {parentConsented && (
-                  <svg
-                    className="absolute inset-0 w-full h-full p-0.5 text-success animate-checkbox-draw"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
+                <div className="text-3xl flex-shrink-0">{band.emoji}</div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs font-semibold opacity-80">Ages {band.value}</div>
+                  <div className="text-base font-bold">{band.label}</div>
+                </div>
+                {isSelected && (
+                  <div className="flex-shrink-0 w-5 h-5 rounded-full bg-text-on-primary flex items-center justify-center">
+                    <svg
+                      className="w-3 h-3 text-action-primary"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
                 )}
-              </div>
-
-              <label className="flex-1 text-left cursor-pointer">
-                <p
-                  className={`text-xs font-bold transition-colors ${
-                    parentConsented ? "text-text-on-primary" : "text-text-primary"
-                  }`}
-                >
-                  I am a parent/guardian. I agree to Terms & Privacy.
-                </p>
-              </label>
-            </button>
-          </div>
+              </button>
+            );
+          })}
         </div>
       </div>
 
       {/* Footer with buttons */}
-      <div className="px-5 py-4 bg-surface-card border-t border-border-color flex gap-3">
+      <div className="px-5 py-2 bg-surface-card border-t border-border-color flex-shrink-0 gap-3 flex pb-safe">
         <button
           type="button"
           onClick={handleBack}
-          className="flex-1 py-3 px-4 rounded-xl font-bold text-text-primary bg-surface-raised hover:bg-surface-sunken transition-colors"
+          className="flex-1 py-2.5 px-4 rounded-xl font-bold text-text-primary bg-surface-raised hover:bg-surface-sunken transition-colors text-sm"
         >
           Back
         </button>
         <button
           type="button"
           onClick={handleNext}
-          disabled={!selectedAge || !parentConsented}
-          className={`flex-1 py-3 px-4 rounded-xl font-bold transition-colors ${
-            selectedAge && parentConsented
+          disabled={!selectedAge}
+          className={`flex-1 py-2.5 px-4 rounded-xl font-bold transition-colors text-sm ${
+            selectedAge
               ? "bg-action-primary text-text-on-primary hover:shadow-elevated-1"
               : "bg-surface-sunken text-text-secondary cursor-not-allowed opacity-50"
           }`}

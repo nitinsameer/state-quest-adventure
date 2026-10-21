@@ -92,9 +92,8 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
       <ConfettiBurst trigger={confettiBurst} size="small" />
 
       {/* Header */}
-      <div className="px-5 pt-4 pb-3 bg-accent-1 text-text-on-primary flex-shrink-0">
-        <h1 className="text-2xl font-black">Pick Your Avatar</h1>
-        <p className="text-sm opacity-90 mt-1">Step 1/3 — Choose your explorer</p>
+      <div className="px-5 pt-3 pb-2 bg-accent-1 text-text-on-primary flex-shrink-0">
+        <h1 className="text-2xl font-black">Choose Your Explorer</h1>
       </div>
 
       {/* Content - No scroll, fits on screen */}
