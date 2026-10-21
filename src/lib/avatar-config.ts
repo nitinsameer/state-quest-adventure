@@ -37,6 +37,7 @@ export const AVATAR_CONFIG: Record<
     name: string;
     emoji: string;
     color: string;
+    backgroundColor: string;
     description: string;
   }
 > = {
@@ -44,72 +45,84 @@ export const AVATAR_CONFIG: Record<
     name: "Mia",
     emoji: "🧑‍🔬",
     color: "bg-accent-4",
+    backgroundColor: "#FBBF24",
     description: "Adventure seeker",
   },
   "explorer-pink": {
     name: "Alex",
     emoji: "🧑‍🔬",
     color: "bg-accent-1-soft",
+    backgroundColor: "#F472B6",
     description: "Pink explorer",
   },
   "geek-glasses": {
     name: "Rohan",
     emoji: "🤓",
     color: "bg-accent-2",
+    backgroundColor: "#60A5FA",
     description: "Smart explorer",
   },
   "girl-peace": {
     name: "Priya",
     emoji: "👧",
     color: "bg-accent-5",
+    backgroundColor: "#C084FC",
     description: "Peace keeper",
   },
   "turban-red": {
     name: "Ishaan",
     emoji: "👦",
     color: "bg-success",
+    backgroundColor: "#F87171",
     description: "Brave explorer",
   },
   "girl-earring": {
     name: "Zara",
     emoji: "👧",
     color: "bg-warning",
+    backgroundColor: "#4ADE80",
     description: "Bold explorer",
   },
   "boy-smile": {
     name: "Aditya",
     emoji: "👦",
     color: "bg-accent-5",
+    backgroundColor: "#FB923C",
     description: "Happy adventurer",
   },
   "girl-tikka": {
     name: "Anaya",
     emoji: "👧",
     color: "bg-accent-2",
+    backgroundColor: "#F8D5E5",
     description: "Joyful explorer",
   },
   "ski-goggles": {
     name: "Karan",
     emoji: "🎿",
     color: "bg-accent-2",
+    backgroundColor: "#22D3EE",
     description: "Cool explorer",
   },
   "farmer-hat": {
     name: "Vikram",
     emoji: "👨‍🌾",
     color: "bg-success",
+    backgroundColor: "#BEF264",
     description: "Nature lover",
   },
   "sports-cap": {
     name: "Nikhil",
     emoji: "👦",
     color: "bg-warning",
+    backgroundColor: "#FCD34D",
     description: "Active explorer",
   },
   "girl-flower": {
     name: "Diya",
     emoji: "👧",
     color: "bg-accent-1-soft",
+    backgroundColor: "#E879F9",
     description: "Bright explorer",
   },
 };
@@ -172,4 +185,13 @@ export function getAvatarImage(avatarId: string): string {
 export function getAvatarName(avatarId: string): string {
   if (!avatarId) return "Explorer";
   return AVATAR_CONFIG[avatarId as AvatarId]?.name || "Explorer";
+}
+
+/**
+ * Get avatar background color for a given avatar ID
+ * Returns the hex color code
+ */
+export function getAvatarBackgroundColor(avatarId: string): string {
+  if (!avatarId) return "#FBBF24";
+  return AVATAR_CONFIG[avatarId as AvatarId]?.backgroundColor || "#FBBF24";
 }

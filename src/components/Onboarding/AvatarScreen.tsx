@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { fxTap, fxConfetti } from "@/lib/fx";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
-import { AVATAR_CONFIG, type AvatarId } from "@/lib/avatar-config";
+import { AVATAR_CONFIG, type AvatarId, getAvatarBackgroundColor } from "@/lib/avatar-config";
+import { PremiumHeader } from "./PremiumHeader";
 import avatarExplorerHat from "@/assets/avatars/avatar-explorer-hat.png";
 import avatarExplorerPink from "@/assets/avatars/avatar-explorer-pink.png";
 import avatarGeekGlasses from "@/assets/avatars/avatar-geek-glasses.png";
@@ -65,6 +66,13 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
   const [confettiBurst, setConfettiBurst] = useState(0);
   const [animatingId, setAnimatingId] = useState<string | null>(null);
 
+  // Set default avatar on mount
+  useEffect(() => {
+    if (!selectedAvatar) {
+      onSelectAvatar("explorer-hat");
+    }
+  }, []);
+
   const handleAvatarSelect = (avatarId: AvatarId) => {
     // Play tap sound
     fxTap();
@@ -91,10 +99,13 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
     <div className="w-full h-full bg-accent-1-soft flex flex-col select-none touch-none relative overflow-hidden">
       <ConfettiBurst trigger={confettiBurst} size="small" />
 
-      {/* Header */}
-      <div className="px-5 pt-3 pb-2 bg-accent-1 text-text-on-primary flex-shrink-0">
-        <h1 className="text-2xl font-black">Choose Your Explorer</h1>
-      </div>
+      {/* Premium Header */}
+      <PremiumHeader
+        firstPart="Pick Your"
+        secondPart="Avatar"
+        subtitle="Choose your adventure buddy"
+        step={1}
+      />
 
       {/* Content - No scroll, fits on screen */}
       <div className="flex-1 px-4 py-3 overflow-hidden flex flex-col">
@@ -113,13 +124,13 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
                 }
                 ${animatingId === avatarId ? "avatar-bounce" : ""}
               `}
-              style={
-                animatingId === avatarId
-                  ? ({
-                      animation: "avatar-bounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)",
-                    } as React.CSSProperties)
-                  : undefined
-              }
+              style={{
+                backgroundColor: getAvatarBackgroundColor(avatarId),
+                animation:
+                  animatingId === avatarId
+                    ? "avatar-bounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)"
+                    : undefined,
+              } as React.CSSProperties}
             >
               <img
                 src={getAvatarImage(avatarId)}
@@ -164,7 +175,7 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
               : "bg-surface-sunken text-text-secondary cursor-not-allowed opacity-50"
           }`}
         >
-          Next
+          Continue
         </button>
       </div>
 
