@@ -42,6 +42,7 @@ export function AgeScreen({
 }: AgeScreenProps) {
   const [confettiBurst, setConfettiBurst] = useState(0);
   const [animatingAge, setAnimatingAge] = useState<string | null>(null);
+  const [parentApprovalChecked, setParentApprovalChecked] = useState(true);
 
   const handleAgeSelect = (age: string) => {
     fxTap();
@@ -136,19 +137,14 @@ export function AgeScreen({
 
           {/* Parent Approval Section */}
           <div className="flex items-start gap-3 py-3 px-4 bg-surface-card rounded-xl border border-surface-sunken">
-            <div className="flex-shrink-0 w-6 h-6 rounded-full bg-success flex items-center justify-center mt-0.5">
-              <svg
-                className="w-4 h-4 text-white"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
+            {/* Interactive Checkbox */}
+            <input
+              type="checkbox"
+              checked={parentApprovalChecked}
+              onChange={(e) => setParentApprovalChecked(e.target.checked)}
+              className="flex-shrink-0 w-6 h-6 rounded-lg mt-0.5 cursor-pointer accent-success appearance-none border-2 border-surface-sunken checked:bg-success checked:border-success transition-colors"
+              aria-label="Parent approval consent"
+            />
             <p className="text-sm font-semibold text-text-primary leading-snug">
               This app respects kids' privacy in line with COPPA.
             </p>
@@ -166,9 +162,9 @@ export function AgeScreen({
             <button
               type="button"
               onClick={handleNext}
-              disabled={!selectedAge}
+              disabled={!selectedAge || !parentApprovalChecked}
               className={`flex-1 py-3 px-4 rounded-full font-bold text-base flex items-center justify-center gap-2 transition-all active:scale-95 ${
-                selectedAge
+                selectedAge && parentApprovalChecked
                   ? "bg-action-primary text-white hover:shadow-elevated-2"
                   : "bg-surface-sunken text-text-secondary cursor-not-allowed opacity-50"
               }`}
