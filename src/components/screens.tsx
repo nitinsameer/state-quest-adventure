@@ -45,7 +45,7 @@ import { PostcardFrame } from "@/components/PostcardFrame";
 import { CardProgressBar } from "@/components/CardProgressBar";
 import { JourneyDestinationCard } from "@/components/JourneyDestinationCard";
 import { IndiaProgressMap } from "@/components/IndiaProgressMap";
-import { StreakDotRow } from '@/components/StreakDotRow';
+
 
 import { DailyGoalCard } from "@/components/DailyGoalCard";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
@@ -569,6 +569,40 @@ export function HomeDashboardScreen() {
   return <HomeDashboardContent />;
 }
 
+function getStateEmoji(stateName: string): string {
+  const emojiMap: Record<string, string> = {
+    "Andhra Pradesh": "🏛️",
+    "Arunachal Pradesh": "🏔️",
+    "Assam": "🐘",
+    "Bihar": "🙏",
+    "Chhattisgarh": "⛰️",
+    "Goa": "🏖️",
+    "Gujarat": "🦁",
+    "Haryana": "🌾",
+    "Himachal Pradesh": "⛰️",
+    "Jharkhand": "🏔️",
+    "Karnataka": "☕",
+    "Kerala": "🥥",
+    "Madhya Pradesh": "🏛️",
+    "Maharashtra": "🏢",
+    "Manipur": "🌸",
+    "Meghalaya": "☔",
+    "Mizoram": "🌲",
+    "Nagaland": "🏔️",
+    "Odisha": "🏖️",
+    "Punjab": "🌾",
+    "Rajasthan": "🏜️",
+    "Sikkim": "⛰️",
+    "Tamil Nadu": "🏛️",
+    "Telangana": "🕌",
+    "Tripura": "🌿",
+    "Uttar Pradesh": "🕌",
+    "Uttarakhand": "⛰️",
+    "West Bengal": "🎨",
+  };
+  return emojiMap[stateName] || "🗺️";
+}
+
 function HomeDashboardContent() {
   const p = useProgress();
   const navigate = useNavigate();
@@ -967,11 +1001,25 @@ function HomeDashboardContent() {
           </Link>
         </div>
 
-        {/* STAT CARDS ROW: 7-day streak display */}
-        <div style={{ padding: "var(--space-1) var(--space-1-5) var(--space-1-5)" }}>
-          <div className="flex flex-row gap-2">
-            <div className="flex-1 animate-stat-slide-in-bottom">
-              <StreakDotRow streakCount={p.streak} />
+        {/* STATE DISPLAY CARD - Token-based, no hardcoding */}
+        <div 
+          style={{padding: "var(--padding-md) var(--padding-md) 0"}}
+          className="animate-fade-in"
+        >
+          <div className="bg-accent-1-soft border-2 border-accent-1 rounded-2xl shadow-sm" style={{padding: "var(--padding-md)", display: "flex", flexDirection: "column", gap: "var(--gap-base)"}}>
+            {/* Content Row: Emoji + State Name */}
+            <div className="flex items-center" style={{gap: "var(--gap-base)"}}>
+              <div style={{fontSize: "2.25rem"}} className="flex-shrink-0">
+                {getStateEmoji(current.name)}
+              </div>
+              <div style={{fontSize: "var(--text-h3)", fontWeight: 800}} className="text-accent-1-ink leading-tight">
+                {current.name}
+              </div>
+            </div>
+            
+            {/* Tagline */}
+            <div style={{fontSize: "var(--text-body-sm)", fontWeight: 600}} className="text-text-secondary">
+              Your adventure continues →
             </div>
           </div>
         </div>
