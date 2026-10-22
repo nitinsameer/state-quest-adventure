@@ -141,7 +141,9 @@ function SingleScreenCelebration({
 
     // Phase 1: Confetti (0ms)
     if (elapsed >= 0 && elapsed < 50) {
-      // Already triggered via confettiBurstKey
+      if (hasFeatureConsent("audio")) {
+        fxConfetti();
+      }
     }
 
     // Phase 2: Star 1 (500ms)
@@ -309,7 +311,7 @@ function SingleScreenCelebration({
               {Array.from({ length: 3 }).map((_, i) => {
                 const starProgress = Math.max(
                   0,
-                  Math.min(1, (phase2Progress - i * 0.23) / 0.23),
+                  Math.min(1, (phase2Progress - i * 0.35) / 0.35),
                 );
                 return (
                   <div
