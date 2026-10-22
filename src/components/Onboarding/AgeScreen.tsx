@@ -86,7 +86,7 @@ export function AgeScreen({
           secondPart="Are You?"
           subtitle="Choose your age band to get a better learning experience!"
           step={2}
-          secondPartColor="#8B5CF6"
+          secondPartColor="var(--accent-5)"
         />
       </div>
 

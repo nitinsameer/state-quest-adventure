@@ -13,7 +13,7 @@ export function PremiumHeader({
   secondPart,
   subtitle,
   step,
-  secondPartColor = "#FFD700",
+  secondPartColor = "var(--accent-4)",
 }: PremiumHeaderProps) {
   return (
     <div className="px-5 pt-safe pb-3 bg-transparent flex-shrink-0">
@@ -24,20 +24,20 @@ export function PremiumHeader({
             fontFamily: '"Baloo 2", sans-serif',
             WebkitTextStroke: "2px white",
             textShadow: `
-              -2px -2px 0 #001f3f,
-              2px -2px 0 #001f3f,
-              -2px 2px 0 #001f3f,
-              2px 2px 0 #001f3f,
-              -2px 0 0 #001f3f,
-              2px 0 0 #001f3f,
-              0 -2px 0 #001f3f,
-              0 2px 0 #001f3f,
-              0 0 8px rgba(0, 31, 63, 0.5)
+              -2px -2px 0 var(--text-primary),
+              2px -2px 0 var(--text-primary),
+              -2px 2px 0 var(--text-primary),
+              2px 2px 0 var(--text-primary),
+              -2px 0 0 var(--text-primary),
+              2px 0 0 var(--text-primary),
+              0 -2px 0 var(--text-primary),
+              0 2px 0 var(--text-primary),
+              0 0 8px rgba(0, 0, 0, 0.2)
             `,
-            color: "#001f3f",
+            color: "var(--text-primary)",
           }}
         >
-          <span style={{ color: "#001f3f" }}>{firstPart} </span>
+          <span style={{ color: "var(--text-primary)" }}>{firstPart} </span>
           <span style={{ color: secondPartColor }}>{secondPart}</span>
         </h1>
         <div className="flex-shrink-0 pt-1">
