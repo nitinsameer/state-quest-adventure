@@ -184,19 +184,15 @@ export function clearAllConsents(): void {
 }
 
 /**
- * Ensure audio consent is granted for TTS to work
- * Should be called on app startup
- * COPPA safe: granting optional non-sensitive feature, not required
+ * COPPA Compliance Fix: Audio consent must be explicitly granted by user
+ * This function is now a no-op and should not be called
+ * Audio features gracefully degrade if consent not granted
  *
- * FIX #1.3: No console logging to prevent COPPA violations
- * FIX #30: Unblock TTS by ensuring audio consent is granted
- * Previous 6 fixes attempted to solve wrong problems
- * Root cause: hasFeatureConsent('audio') was returning false, blocking all TTS calls
+ * FIX #1: Remove auto-grant behavior - explicit user consent required
+ * Audio consent is only granted when user explicitly enables it in settings
+ * or during onboarding with parent approval
  */
 export function ensureAudioConsentGranted(): void {
-  if (typeof window === "undefined") return; // SSR safety
-
-  if (!hasFeatureConsent("audio")) {
-    grantFeatureConsent("audio");
-  }
+  // No-op: Audio consent must be explicitly granted by user action, not auto-granted on startup
+  // This complies with COPPA requirements for explicit, affirmative consent
 }

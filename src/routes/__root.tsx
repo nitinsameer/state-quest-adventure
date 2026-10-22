@@ -29,7 +29,7 @@ import {
   getLevelName,
 } from "@/lib/progress";
 import { pauseTts, resumeTts } from "@/lib/tts";
-import { ensureAudioConsentGranted, hasFeatureConsent } from "@/lib/parental-consent";
+import { hasFeatureConsent } from "@/lib/parental-consent";
 import { ParentConsentGate } from "@/components/ParentConsentGate";
 import { initializeAudioCleanup } from "@/lib/fx";
 import { Capacitor } from "@capacitor/core";
@@ -368,13 +368,6 @@ function HydratedApp() {
       return () => window.removeEventListener("resize", updateNavHeight);
     }
   }, [shouldShowBottomNav]);
-
-  // Initialize audio consent on app startup
-  // Note: Don't check isHydrated() - audio consent is independent of progress hydration
-  // Audio consent lives in parental-consent system, progress hydration shouldn't block it
-  useEffect(() => {
-    ensureAudioConsentGranted();
-  }, []);
 
   // Initialize audio cleanup handlers for proper AudioContext lifecycle management
   // CRITICAL FIX #1.4: Cleanup AudioContext on app unload to prevent 10x memory leak

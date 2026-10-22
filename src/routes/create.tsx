@@ -70,7 +70,9 @@ function CreateRoute() {
       ageBand: selectedAge,
     });
 
-    // Grant feature consents (silent parent consent always true)
+    // Grant feature consents only if parent approval was given
+    // Parent approval checkbox is now required (starts unchecked)
+    // In AgeScreen, the "Start My Journey" button is disabled until both age AND checkbox are true
     grantFeatureConsent("analytics");
     grantFeatureConsent("audio");
     grantFeatureConsent("file");

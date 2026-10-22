@@ -42,7 +42,7 @@ export function AgeScreen({
 }: AgeScreenProps) {
   const [confettiBurst, setConfettiBurst] = useState(0);
   const [animatingAge, setAnimatingAge] = useState<string | null>(null);
-  const [parentApprovalChecked, setParentApprovalChecked] = useState(true);
+  const [parentApprovalChecked, setParentApprovalChecked] = useState(false);
 
   const handleAgeSelect = (age: string) => {
     fxTap();
