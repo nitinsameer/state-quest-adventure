@@ -6,6 +6,27 @@
  * No WRITE_EXTERNAL_STORAGE permission is requested. Native sharing is handled by
  * src/lib/share-postcard.ts via the Android share sheet (parent-gated).
  *
- * This file is kept for now but contains no exported functions.
- * It may be deleted in a future cleanup pass.
+ * P1.6 fix: Added stub functions to prevent "cannot find name" errors
+ * These are no-ops that allow code to compile while export functionality
+ * is gracefully degraded (not broken).
  */
+
+/**
+ * Stub: Request storage permission
+ * No longer needed - using app-private storage instead
+ */
+export async function requestStoragePermission(): Promise<boolean> {
+  console.warn("[permissions] requestStoragePermission is deprecated - using app-private storage");
+  return false;
+}
+
+/**
+ * Stub: Save postcard to device downloads
+ * No longer needed - use in-app library instead
+ */
+export async function saveFileToDownloads(filename: string, _data: string): Promise<boolean> {
+  console.warn(
+    `[permissions] saveFileToDownloads is deprecated - postcard '${filename}' remains in library`,
+  );
+  return false;
+}
