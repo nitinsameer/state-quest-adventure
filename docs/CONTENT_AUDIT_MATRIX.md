@@ -435,7 +435,7 @@ Coverage: 36 destinations × 7 JSON categories × available language variants = 
 | Andaman and Nicobar Islands | animal | hi | 🐢 समुद्री कछुआ – समुद्र का यात्री | 39 | 49 | — | Localized wording/source check pending |
 | Andaman and Nicobar Islands | funFact | en | 🏝️ ANDAMAN & NICOBAR - India's Remote Island Paradise! | 27 | 93 | only, most, superlative, precise number | Manual fact/reading review required |
 | Andaman and Nicobar Islands | funFact | hi | 🎉 मजेदार तथ्य – द्वीपों का नीला समुद्र | 27 | 57 | — | Localized wording/source check pending |
-| Andaman and Nicobar Islands | monument | en | 🏛️ CELLULAR JAIL - The Silent Witness of History! | 16 | 67 | absolute | Manual fact/reading review required |
+| Andaman and Nicobar Islands | monument | en | CELLULAR JAIL — SRI VIJAYA PURAM | 19 | 71 | absolute | English copy rewritten; source verification still required |
 | Andaman and Nicobar Islands | monument | hi | 🏛️ सेलुलर जेल – इतिहास की महत्वपूर्ण धरोहर | 33 | 48 | — | Localized wording/source check pending |
 | Chandigarh | capital | en | 🏙️ CHANDIGARH - Planned City of Chandigarh! | 22 | 94 | most, absolute, superlative, precise number | Manual fact/reading review required |
 | Chandigarh | capital | pa | 🏙️ ਚੰਡੀਗੜ੍ਹ – ਯੋਜਨਾਬੱਧ ਸ਼ਹਿਰ | 22 | 44 | — | Localized wording/source check pending |
