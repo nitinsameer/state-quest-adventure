@@ -3,6 +3,7 @@ import {
   questionsForState,
   questionsForStateName,
   randomQuestionsForState,
+  randomQuestionsForAgeBand,
   questionCountForAgeBand,
   QUIZ_BY_STATE,
   type QuizQuestion,
@@ -432,5 +433,57 @@ describe("Quiz Score Calculation - Fix for Task 11.3", () => {
         expect(scorePercentage).toBeCloseTo(expected, 1);
       });
     });
+  });
+});
+
+
+describe("randomQuestionsForAgeBand - age-appropriate question selection", () => {
+  it("uses only foundation questions for ages 3-5", () => {
+    const questions = randomQuestionsForAgeBand("Rajasthan", "3-5");
+    expect(questions).toHaveLength(3);
+    expect(questions.every((question) => question.difficulty === "foundation")).toBe(true);
+  });
+
+  it("limits ages 6-7 to foundation and recall questions", () => {
+    const questions = randomQuestionsForAgeBand("Rajasthan", "6-7");
+    expect(questions).toHaveLength(5);
+    expect(questions.every((question) => ["foundation", "recall"].includes(question.difficulty ?? ""))).toBe(true);
+  });
+
+  it("returns a broader question mix for ages 8-9", () => {
+    const questions = randomQuestionsForAgeBand("Rajasthan", "8-9");
+    expect(questions).toHaveLength(7);
+    expect(new Set(questions.map((question) => question.difficulty)).size).toBeGreaterThan(1);
+  });
+
+  it("can use all three difficulty tiers for ages 10-12", () => {
+    const questions = randomQuestionsForAgeBand("Rajasthan", "10-12");
+    expect(questions).toHaveLength(10);
+    expect(new Set(questions.map((question) => question.difficulty))).toEqual(
+      new Set(["foundation", "recall", "challenge"]),
+    );
+  });
+
+  it("returns expected counts and eligible difficulty for every state and age band", () => {
+    const cases = [
+      { ageBand: "3-5", count: 3, allowed: ["foundation"] },
+      { ageBand: "6-7", count: 5, allowed: ["foundation", "recall"] },
+      { ageBand: "8-9", count: 7, allowed: ["foundation", "recall", "challenge"] },
+      { ageBand: "10-12", count: 10, allowed: ["foundation", "recall", "challenge"] },
+    ];
+    for (const state of INDIA_STATES) {
+      for (const testCase of cases) {
+        const questions = randomQuestionsForAgeBand(state.name, testCase.ageBand);
+        expect(questions).toHaveLength(testCase.count);
+        expect(questions.every((question) => testCase.allowed.includes(question.difficulty ?? ""))).toBe(true);
+        expect(new Set(questions.map((question) => question.id)).size).toBe(questions.length);
+      }
+    }
+  });
+
+  it("uses the 8-9 pool for an unknown age band", () => {
+    const questions = randomQuestionsForAgeBand("Rajasthan", "unknown");
+    expect(questions).toHaveLength(7);
+    expect(questions.every((question) => ["foundation", "recall", "challenge"].includes(question.difficulty ?? ""))).toBe(true);
   });
 });

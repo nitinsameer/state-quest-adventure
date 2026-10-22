@@ -1,7 +1,11 @@
 import { INDIA_STATES, type IndiaState } from "./states";
 
+export type QuizDifficulty = "foundation" | "recall" | "challenge";
+
 export type QuizQuestion = {
   id: string;
+  /** Cognitive demand used to select an age-appropriate quiz pool. */
+  difficulty?: QuizDifficulty;
   /** short kicker shown above the question */
   kicker: string;
   prompt: string;
@@ -55,6 +59,26 @@ function distractors(
   return out;
 }
 
+function difficultyForQuestion(id: string): QuizDifficulty {
+  switch (id) {
+    case "landmark":
+    case "food":
+    case "animal":
+      return "foundation";
+    case "capital":
+    case "language":
+    case "monument":
+    case "state-of-capital":
+      return "recall";
+    case "nickname":
+    case "population":
+    case "fun-fact":
+      return "challenge";
+    default:
+      return "recall";
+  }
+}
+
 function build(
   state: IndiaState,
   id: string,
@@ -75,6 +99,7 @@ function build(
     options,
     correct,
     xp,
+    difficulty: difficultyForQuestion(id),
   };
 }
 
@@ -221,6 +246,34 @@ export function randomQuestionsForState(name: string, count = 3): QuizQuestion[]
     [pool[i], pool[j]] = [pool[j], pool[i]];
   }
   return pool.slice(0, Math.min(count, pool.length));
+}
+
+/**
+ * Select questions by both the learner's age band and requested quiz length.
+ * Age bands are a starting point, not a judgment of ability.
+ */
+export function randomQuestionsForAgeBand(
+  name: string,
+  ageBand: string = "8-9",
+  count: number = questionCountForAgeBand(ageBand),
+): QuizQuestion[] {
+  const allowedDifficulty: Record<string, QuizDifficulty[]> = {
+    "3-5": ["foundation"],
+    "6-7": ["foundation", "recall"],
+    "8-9": ["foundation", "recall", "challenge"],
+    "10-12": ["foundation", "recall", "challenge"],
+  };
+  const normalizedAgeBand = allowedDifficulty[ageBand] ? ageBand : "8-9";
+  const allowed = new Set(allowedDifficulty[normalizedAgeBand]);
+  const pool = questionsForStateName(name).filter((question) =>
+    allowed.has(question.difficulty ?? "recall"),
+  );
+  const shuffled = [...pool];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled.slice(0, Math.min(Math.max(0, count), shuffled.length));
 }
 
 export function questionsForStateName(name: string): QuizQuestion[] {

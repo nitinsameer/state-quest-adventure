@@ -78,7 +78,7 @@ import {
   nextStateAfter,
 } from "@/lib/states";
 import { REGIONS, REGION_KEYS } from "@/lib/passport-helpers";
-import { randomQuestionsForState, questionCountForAgeBand } from "@/lib/quiz";
+import { randomQuestionsForAgeBand, questionCountForAgeBand } from "@/lib/quiz";
 
 import {
   useProgress,
@@ -3187,7 +3187,7 @@ function QuizScreenContent({
 
   const questions = useMemo(() => {
     const qCount = questionCountForAgeBand(progress.ageBand);
-    return randomQuestionsForState(activeName, qCount);
+    return randomQuestionsForAgeBand(activeName, progress.ageBand, qCount);
   }, [activeName, progress.ageBand]);
 
   // Track quiz start on first render
