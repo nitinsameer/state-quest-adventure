@@ -136,18 +136,62 @@ export function AgeScreen({
           })}
 
           {/* Parent Approval Section */}
-          <div className="flex items-start gap-3 py-3 px-4 bg-surface-card rounded-xl border border-surface-sunken">
-            {/* Interactive Checkbox */}
-            <input
-              type="checkbox"
-              checked={parentApprovalChecked}
-              onChange={(e) => setParentApprovalChecked(e.target.checked)}
-              className="flex-shrink-0 w-6 h-6 rounded-lg mt-0.5 cursor-pointer accent-success appearance-none border-2 border-surface-sunken checked:bg-success checked:border-success transition-colors"
-              aria-label="Parent approval consent"
-            />
-            <p className="text-sm font-semibold text-text-primary leading-snug">
-              This app respects kids' privacy in line with COPPA.
+          <div className="flex flex-col gap-3 py-4 px-4 bg-surface-card rounded-xl border border-surface-sunken mt-3">
+            {/* Row 1: Lock Icon + Header */}
+            <div className="flex items-center gap-2">
+              <span className="text-xl">{EMOJI.action.lock}</span>
+              <h3 className="text-base font-bold text-text-primary">Parent Approval</h3>
+            </div>
+
+            {/* Row 2: COPPA Description */}
+            <p className="text-sm text-text-secondary leading-snug">
+              We follow COPPA and keep kids safe. We don't sell data, and parents can request deletion anytime.
             </p>
+
+            {/* Row 3: Custom Checkbox + Agreement */}
+            <div className="flex items-start gap-3">
+              {/* Custom Checkbox Button */}
+              <button
+                type="button"
+                onClick={() => setParentApprovalChecked(!parentApprovalChecked)}
+                className={`flex-shrink-0 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all mt-0.5 cursor-pointer
+                  ${
+                    parentApprovalChecked
+                      ? "border-success bg-success"
+                      : "border-surface-sunken bg-surface-card"
+                  }
+                `}
+                aria-label="I agree to parent approval terms"
+              >
+                {parentApprovalChecked && (
+                  <svg
+                    className="w-4 h-4 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                )}
+              </button>
+
+              {/* Agreement Text with Link */}
+              <label className="flex-1 text-sm font-semibold text-text-primary leading-snug cursor-pointer">
+                I am a parent/guardian. I agree to{" "}
+                <a
+                  href="/privacy"
+                  className="text-text-link underline hover:opacity-80 transition-opacity"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Terms & Privacy
+                </a>
+                .
+              </label>
+            </div>
           </div>
 
           {/* Buttons - In content flow */}
