@@ -62,6 +62,22 @@ describe("India-wide learning content audit guards", () => {
     expect(chandigarh?.correct).toBe("Haryana and Punjab");
   });
 
+  it("uses corrected canonical animal facts for high-risk state/UT records", () => {
+    const byName = Object.fromEntries(INDIA_STATES.map((state) => [state.name, state]));
+    expect(byName["Delhi"]?.animalName).toBe("Nilgai");
+    expect(byName["Chandigarh"]?.animalName).toBe("Indian Grey Mongoose");
+    expect(byName["West Bengal"]?.animalName).toBe("Fishing Cat");
+    expect(byName["Dadra & Nagar Haveli and Daman & Diu"]?.animalName).toBe("Leopard");
+  });
+
+  it("keeps corrected local-language animal and capital cards aligned", () => {
+    const punjabi = getCardContentByAge("Chandigarh", "animal", "pa", "8-9");
+    const hindi = getCardContentByAge("Andaman & Nicobar Islands", "capital", "hi", "8-9");
+    expect(punjabi?.mainText).toContain("ਨੇਵਲਾ");
+    expect(punjabi?.mainText).not.toContain("ਮੋਰ");
+    expect(hindi?.mainText).toContain("श्री विजयपुरम");
+  });
+
   it("uses the current name Sri Vijaya Puram for the Andaman and Nicobar capital", () => {
     const question = questionsForStateName("Andaman & Nicobar Islands").find((q) => q.id.endsWith("-capital"));
     expect(question?.correct).toBe("Sri Vijaya Puram");

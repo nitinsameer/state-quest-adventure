@@ -2,16 +2,16 @@
 
 Branch: `feature/age-adaptive-learning`
 
-**Purpose:** Inventory every active and extra content-card language variant and every generated quiz candidate. This matrix is a review aid, not a claim that each fact has an independent citation.
+**Purpose:** Inventory every content-card language variant and every generated quiz candidate. Risk markers identify claims needing editorial/source review; they are not automatic proof of inaccuracy.
 
 ## Content cards
 
-Coverage: 36 destinations × 7 JSON categories × available language variants = 483 content entries. The six active Learning Hub categories are capital, language, food, places, animal and funFact; monument is included because it is present in the JSON.
+Coverage: 36 destinations × 7 JSON categories × available language variants = 483 content entries. The six active Learning Hub categories are capital, language, food, places, animal and funFact; monument is also included because it exists in the JSON.
 
 | Destination | Category | Language | Title | Main text words | Narration words | Risk markers | Audit status |
 |---|---|---|---|---:|---:|---|---|
 | Rajasthan | capital | en | JAIPUR — THE PINK CITY | 26 | 32 | — | English copy rewritten; source verification still required |
-| Rajasthan | capital | hi | 🏛️ जयपुर - गुलाबी शहर! | 19 | 90 | — | Localized wording/source check pending |
+| Rajasthan | capital | hi | जयपुर — गुलाबी शहर | 19 | 27 | — | Localized copy updated; native/source review required |
 | Rajasthan | language | en | 🗣️ HINDI - Let's Learn! | 13 | 113 | absolute | Manual fact/reading review required |
 | Rajasthan | language | hi | 🗣️ हिंदी - चलो भाषा सीखें! | 19 | 66 | — | Localized wording/source check pending |
 | Rajasthan | food | en | 🍲 DAL BAATI - The YUMMIEST FOOD! | 21 | 147 | only, superlative | Manual fact/reading review required |
@@ -59,7 +59,7 @@ Coverage: 36 destinations × 7 JSON categories × available language variants = 
 | Tamil Nadu | food | en | 🥘 DOSA - The CRISPY, GOLDEN WONDER! | 23 | 133 | superlative, precise number | Manual fact/reading review required |
 | Tamil Nadu | food | ta | 🥘 தோசை - மொறுமொறுப்பான தென்னிந்திய உணவு! | 21 | 53 | — | Localized wording/source check pending |
 | Tamil Nadu | places | en | MEENAKSHI AMMAN TEMPLE | 18 | 18 | — | English copy rewritten; source verification still required |
-| Tamil Nadu | places | ta | 🛕 மதுரை மீனாட்சி அம்மன் கோயில் - சிற்பங்களின் நகரம்! | 18 | 48 | — | Localized wording/source check pending |
+| Tamil Nadu | places | ta | மதுரை மீனாட்சி அம்மன் கோயில் | 11 | 14 | — | Localized copy updated; native/source review required |
 | Tamil Nadu | animal | en | 🐐 NILGIRI TAHR - Mountain Climber! | 20 | 24 | precise number | Manual fact/reading review required |
 | Tamil Nadu | animal | ta | 🐐 நீலகிரி வரையாடு - தமிழ்நாட்டின் மாநில விலங்கு! | 18 | 54 | — | Localized wording/source check pending |
 | Tamil Nadu | funFact | en | 🎉 AMAZING FUN FACTS - Did You Know? | 21 | 31 | oldest, most, precise number | Manual fact/reading review required |
@@ -131,7 +131,7 @@ Coverage: 36 destinations × 7 JSON categories × available language variants = 
 | Delhi | places | en | 🕌 RED FORT - Mughal GRANDEUR! | 18 | 133 | precise number | Manual fact/reading review required |
 | Delhi | places | hi | 🕌 लाल किला - दिल्ली का ऐतिहासिक किला! | 24 | 64 | — | Localized wording/source check pending |
 | Delhi | animal | en | NILGAI — DELHI'S STATE ANIMAL | 26 | 18 | — | English copy rewritten; source verification still required |
-| Delhi | animal | hi | 🐂 नीलगाय - दिल्ली का राज्य पशु! | 25 | 66 | — | Localized wording/source check pending |
+| Delhi | animal | hi | नीलगाय — दिल्ली का राज्य पशु | 30 | 14 | — | Localized copy updated; native/source review required |
 | Delhi | funFact | en | 🎉 AMAZING FUN FACTS - Capital's Secrets! | 19 | 22 | oldest, largest, tallest, superlative, precise number | Manual fact/reading review required |
 | Delhi | funFact | hi | 🎉 मजेदार तथ्य - दिल्ली का इतिहास! | 27 | 68 | — | Localized wording/source check pending |
 | Delhi | monument | en | 🗼 QUTUB MINAR - The Tallest Brick Minaret! | 18 | 100 | tallest, most, absolute, superlative, precise number | Manual fact/reading review required |
@@ -231,7 +231,7 @@ Coverage: 36 destinations × 7 JSON categories × available language variants = 
 | Jharkhand | animal | en | 🐘 ASIAN ELEPHANT - Forest Giant! | 12 | 77 | only, oldest, largest, precise number | Manual fact/reading review required |
 | Jharkhand | animal | hi | 🐘 एशियाई हाथी - जंगल का विशाल जीव! | 25 | 60 | — | Localized wording/source check pending |
 | Jharkhand | funFact | en | JHARKHAND — FORESTS AND MINERAL RESOURCES | 13 | 15 | — | English copy rewritten; source verification still required |
-| Jharkhand | funFact | hi | 🎉 झारखंड के अद्भुत तथ्य! | 12 | 55 | — | Localized wording/source check pending |
+| Jharkhand | funFact | hi | झारखंड — जंगल और खनिज संसाधन | 14 | 17 | — | Localized copy updated; native/source review required |
 | Jharkhand | monument | en | 🛕 BAIDYANATH TEMPLE - One of the Holiest Shrines! | 13 | 63 | absolute, precise number | Manual fact/reading review required |
 | Jharkhand | monument | hi | 🛕 बैद्यनाथ मंदिर - देवघर का प्रसिद्ध तीर्थ! | 23 | 57 | — | Localized wording/source check pending |
 | Odisha | capital | en | BHUBANESWAR — CAPITAL OF ODISHA | 25 | 25 | — | English copy rewritten; source verification still required |
@@ -263,11 +263,11 @@ Coverage: 36 destinations × 7 JSON categories × available language variants = 
 | Chhattisgarh | monument | en | 🛕 BHORAMDEO TEMPLE - The 'Khajuraho of Chhattisgarh'! | 13 | 60 | — | Structure checked; source verification still required |
 | Chhattisgarh | monument | hne | 🛕 भोरमदेव मंदिर - छत्तीसगढ़ के 'खजुराहो'! | 14 | 63 | — | Localized wording/source check pending |
 | Assam | capital | en | DISPUR — CAPITAL OF ASSAM | 20 | 17 | largest | English copy rewritten; source verification still required |
-| Assam | capital | as | 🍵 গুৱাহাটী - উত্তৰ-পূবৰ প্ৰৱেশদ্বাৰ! | 23 | 94 | — | Localized wording/source check pending |
+| Assam | capital | as | দিছপুৰ — অসমৰ ৰাজধানী | 14 | 12 | — | Localized copy updated; native/source review required |
 | Assam | language | en | 🗣️ ASSAMESE - Tea Garden Language! | 11 | 56 | oldest, precise number | Manual fact/reading review required |
 | Assam | language | as | 🗣️ অসমীয়া - চাহ বাগিচাৰ ভাষা! | 17 | 79 | — | Localized wording/source check pending |
 | Assam | food | en | MASOR TENGA — ASSAMESE FISH CURRY | 21 | 19 | — | English copy rewritten; source verification still required |
-| Assam | food | as | 🍜 অসমীয়া ভাত আৰু মাছ - সহজ সোৱাদ! | 15 | 78 | — | Localized wording/source check pending |
+| Assam | food | as | মাছৰ টেঙা — অসমৰ মাছৰ জোল | 18 | 17 | — | Localized copy updated; native/source review required |
 | Assam | places | en | 🏛️ KAZIRANGA - Rhino Paradise! | 10 | 53 | largest, superlative, precise number | Manual fact/reading review required |
 | Assam | places | as | 🏛️ কাজিৰঙা - গঁড়ৰ ৰাজ্য! | 16 | 79 | — | Localized wording/source check pending |
 | Assam | animal | en | 🦏 INDIAN RHINOCEROS - One-Horned Giant! | 11 | 49 | only, largest, superlative, precise number | Manual fact/reading review required |
@@ -350,7 +350,7 @@ Coverage: 36 destinations × 7 JSON categories × available language variants = 
 | Bihar | animal | en | 🐃 GAUR - Bihar's State Animal! | 8 | 11 | superlative, precise number | Manual fact/reading review required |
 | Bihar | animal | hi | 🐂 गौर - बिहार का राजकीय पशु! | 25 | 121 | — | Localized wording/source check pending |
 | Bihar | funFact | en | NALANDA — AN ANCIENT CENTRE OF LEARNING | 19 | 18 | — | English copy rewritten; source verification still required |
-| Bihar | funFact | hi | 🎉 बिहार के मजेदार तथ्य - इतिहास और संस्कृति! | 16 | 136 | — | Localized wording/source check pending |
+| Bihar | funFact | hi | नालंदा — प्राचीन शिक्षा केंद्र | 21 | 17 | — | Localized copy updated; native/source review required |
 | Bihar | monument | en | 📚 NALANDA UNIVERSITY RUINS - The world's Ancient Super-School! | 17 | 67 | first, most, superlative, precise number | Manual fact/reading review required |
 | Bihar | monument | hi | 🏛️ महाबोधि मंदिर - ज्ञान प्राप्ति की भूमि! | 19 | 123 | — | Localized wording/source check pending |
 | Sikkim | capital | en | 🏔️ GANGTOK - Balcony of the Himalayas! | 18 | 82 | largest, first, most, superlative, precise number | Manual fact/reading review required |
@@ -424,7 +424,7 @@ Coverage: 36 destinations × 7 JSON categories × available language variants = 
 | Madhya Pradesh | monument | en | ☸️ SANCHI STUPA - The Ancient Buddhist Dome! | 20 | 75 | oldest, absolute, precise number | Manual fact/reading review required |
 | Madhya Pradesh | monument | hi | सांची स्तूप | 25 | 10 | oldest, absolute, precise number | Localized wording/source check pending |
 | Andaman and Nicobar Islands | capital | en | SRI VIJAYA PURAM — CAPITAL OF THE ISLANDS | 25 | 31 | — | English copy rewritten; source verification still required |
-| Andaman and Nicobar Islands | capital | hi | 🏙️ पोर्ट ब्लेयर – अंडमान और निकोबार द्वीपसमूह का प्रमुख शहर | 29 | 50 | — | Localized wording/source check pending |
+| Andaman and Nicobar Islands | capital | hi | श्री विजयपुरम — द्वीपसमूह की राजधानी | 21 | 21 | — | Localized copy updated; native/source review required |
 | Andaman and Nicobar Islands | language | en | 🗣️ A MELTING POT OF LANGUAGES AND ANCIENT TONGUES! | 28 | 94 | only, most, absolute, superlative | Manual fact/reading review required |
 | Andaman and Nicobar Islands | language | hi | 🗣️ हिंदी और स्थानीय भाषाएँ – द्वीपों की भाषाई विविधता | 28 | 46 | — | Localized wording/source check pending |
 | Andaman and Nicobar Islands | food | en | 🐟 FRESH CATCH OF THE DAY - Island Seafood Feasts! | 21 | 71 | — | Structure checked; source verification still required |
@@ -446,13 +446,13 @@ Coverage: 36 destinations × 7 JSON categories × available language variants = 
 | Chandigarh | places | en | 🎨 ROCK GARDEN - A Masterpiece Made from Waste! | 24 | 99 | most, absolute, precise number | Manual fact/reading review required |
 | Chandigarh | places | pa | 🌊 ਸੁਖਨਾ ਝੀਲ – ਸ਼ਹਿਰ ਦੀ ਸ਼ਾਂਤ ਝੀਲ | 25 | 43 | — | Localized wording/source check pending |
 | Chandigarh | animal | en | INDIAN GREY MONGOOSE — CHANDIGARH'S STATE ANIMAL | 22 | 19 | — | English copy rewritten; source verification still required |
-| Chandigarh | animal | pa | 🦚 ਭਾਰਤੀ ਮੋਰ – ਚੰਡੀਗੜ੍ਹ ਦਾ ਪੰਛੀ | 29 | 41 | — | Localized wording/source check pending |
+| Chandigarh | animal | pa | ਭਾਰਤੀ ਸਲੇਟੀ ਨੇਵਲਾ — ਚੰਡੀਗੜ੍ਹ ਦਾ ਰਾਜ ਪਸ਼ੂ | 21 | 16 | — | Localized copy updated; native/source review required |
 | Chandigarh | funFact | en | 🌳 CHANDIGARH - The City Beautiful! | 22 | 95 | most, absolute, superlative | Manual fact/reading review required |
 | Chandigarh | funFact | pa | 🎨 ਰੌਕ ਗਾਰਡਨ – ਟੁੱਟੀਆਂ ਚੀਜ਼ਾਂ ਤੋਂ ਕਲਾ | 26 | 47 | — | Localized wording/source check pending |
 | Chandigarh | monument | en | ✋ OPEN HAND MONUMENT - The Symbol of the City! | 13 | 72 | most, precise number | Manual fact/reading review required |
 | Chandigarh | monument | pa | 🏛️ ਕੈਪੀਟਲ ਕੰਪਲੈਕਸ – ਆਧੁਨਿਕ ਵਾਸਤੁਕਲਾ | 20 | 46 | — | Localized wording/source check pending |
 | Dadra and Nagar Haveli and Daman and Diu | capital | en | DAMAN — A COASTAL CAPITAL | 36 | 38 | — | English copy rewritten; source verification still required |
-| Dadra and Nagar Haveli and Daman and Diu | capital | gu | ⚓ દમણ – જ્યાં પોર્ટુગીઝ શાસન હતું! | 29 | 45 | — | Localized wording/source check pending |
+| Dadra and Nagar Haveli and Daman and Diu | capital | gu | દમણ — કેન્દ્રશાસિત પ્રદેશની રાજધાની | 29 | 22 | — | Localized copy updated; native/source review required |
 | Dadra and Nagar Haveli and Daman and Diu | language | en | 🗣️ GUJARATI, HINDI & KONKANI - A Coastal Mix! | 22 | 83 | most | Manual fact/reading review required |
 | Dadra and Nagar Haveli and Daman and Diu | language | gu | 🗣️ ગુજરાતી, હિન્દી અને કોંકણી – દરિયાકાંઠાની ભાષાઓનો સંગમ! | 24 | 64 | — | Localized wording/source check pending |
 | Dadra and Nagar Haveli and Daman and Diu | food | en | 🦐 COASTAL SEAFOOD MEETS GUJARATI FLAVORS! | 18 | 78 | superlative | Manual fact/reading review required |
@@ -484,7 +484,7 @@ Coverage: 36 destinations × 7 JSON categories × available language variants = 
 | Puducherry | language | en | 🗣️ TAMIL, FRENCH & ENGLISH - A Colonial Blend! | 24 | 82 | most, absolute, precise number | Manual fact/reading review required |
 | Puducherry | language | ta | 🗣️ தமிழ், பிரெஞ்சு & ஆங்கிலம் - காலனித்துவக் கலவை! | 15 | 65 | — | Localized wording/source check pending |
 | Puducherry | food | en | PUDUCHERRY FISH CURRY | 23 | 26 | — | English copy rewritten; source verification still required |
-| Puducherry | food | ta | 🥐 குரோசானும் தோசையும் சந்திக்கும் இடம் - புதுச்சேரியின் கலவை உணவு! | 17 | 24 | — | Localized wording/source check pending |
+| Puducherry | food | ta | புதுச்சேரி மீன் குழம்பு | 13 | 15 | — | Localized copy updated; native/source review required |
 | Puducherry | places | en | 🌐 AUROVILLE - A City Designed for Peace! | 22 | 86 | absolute, precise number | Manual fact/reading review required |
 | Puducherry | places | ta | 🌐 ஆரோவில் - அமைதிக்காக வடிவமைக்கப்பட்ட நகரம்! | 18 | 64 | — | Localized wording/source check pending |
 | Puducherry | animal | en | 🐢 OLIVE RIDLEY TURTLE - Puducherry's Coastal Visitor! | 22 | 94 | only, absolute, precise number | Manual fact/reading review required |
@@ -496,7 +496,7 @@ Coverage: 36 destinations × 7 JSON categories × available language variants = 
 
 ## Quiz candidate inventory
 
-Coverage: 36 canonical destinations × 10 generated question types = 360 candidates. Runtime regression tests check that generated prompts are non-empty, options are unique, the correct answer is present, and shared-capital questions are unambiguous. This inventory does not independently prove the underlying fact or population estimate.
+Coverage: 36 destinations × 10 generated question types = 360 candidates. Regression tests validate prompt presence, option uniqueness, answer inclusion, and shared-capital handling. This inventory does not independently prove the underlying fact or population estimate.
 
 | Destination | Question ID | Difficulty tier | Prompt | Expected answer from canonical data |
 |---|---|---|---|---|

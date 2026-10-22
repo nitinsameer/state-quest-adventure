@@ -17,7 +17,7 @@
 - Replaced unsupported/incorrect canonical claims that the Thar is India's only desert, Nalanda was definitively the world's oldest university, Assam grows most of India's tea, and Jharkhand supplies most of India's coal.
 - Replaced the misleading food labels `Assam Laksa` and `Baguette Curry`.
 - Rewrote high-risk English card copy for Assam, Gujarat and Uttar Pradesh capital cards to distinguish Dispur from Guwahati, Gandhinagar from Ahmedabad, and Lucknow from Agra.
-- Rewrote or clarified English card copy for 20 high-risk card entries, including Nalanda, Telangana's Koh-i-Noor/Golconda association, Meghalaya rainfall, Tamil Nadu temple history, and the merged DNHDD territory.
+- Rewrote or clarified English card copy for 20 high-risk card entries and updated 11 corresponding Hindi, Assamese, Punjabi, Tamil and Gujarati variants, including Nalanda, Telangana's Koh-i-Noor/Golconda association, Meghalaya rainfall, Tamil Nadu temple history, and the merged DNHDD territory.
 - Updated quiz prompts to avoid implying that one language or dish is exclusive to a state, soften informal nicknames, and clarify that the emoji question tests the app's map symbol.
 - Fixed the shared-capital quiz questions for Haryana, Punjab and Chandigarh; clarified Delhi's capital question.
 - Added age-aware narration delivery: children in the 3–5, 6–7 and 8–9 bands receive the concise card summary as narration; ages 10–12 can receive a longer narration capped at 180 words.
@@ -29,7 +29,7 @@ This report deliberately does **not** claim every sentence in every language has
 
 1. Population figures in `src/lib/states.ts` are approximate but are not consistently tagged with a reference year and source.
 2. Other long-form narrations still contain specific counts, historical stories, superlatives and absolute claims that need individual citations or cautious rewriting.
-3. Regional-language variants have not all been semantically compared with the corrected English versions; some may retain outdated or inaccurate facts.
+3. Only the listed 11 regional-language variants were updated in this pass. Other regional-language variants have not all been semantically compared with the corrected English versions; some may retain outdated or inaccurate facts.
 4. Difficulty tiers are assigned by question type, not validated reading-level or learning-science assessment. Ages 3–5 still receive text-based multiple-choice questions; a genuine pre-reader experience needs picture/audio-first UI.
 5. The `monument` records are extra JSON data outside the six active typed card categories. Confirm whether these are intentionally unused or should be integrated into the model.
 
