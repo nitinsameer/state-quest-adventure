@@ -125,9 +125,6 @@ single_test_diagnostic.txt
 playwright.config.ts
 playwright.config.edge.ts
 
-# Screenshots
-*.png
-home-screen.png
 
 # Build Outputs
 dist/
