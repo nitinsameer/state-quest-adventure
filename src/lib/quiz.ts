@@ -172,19 +172,18 @@ export function questionsForState(state: IndiaState): QuizQuestion[] {
     build(state, "capital", "Capital City", `What is the capital of ${state.name}?`, capital, (s) =>
       extractEnglishValue(s.capital),
     ),
-    build(
-      state,
-      "state-of-capital",
-      "Find the State",
-      `${capital} is the capital of which state?`,
-      state.name,
-      (s) => s.name,
-    ),
+    state.name === "Haryana" || state.name === "Punjab"
+      ? build(state, "state-of-capital", "Shared Capital", "Which city is the shared capital of Haryana and Punjab?", "Chandigarh", (s) => extractEnglishValue(s.capital))
+      : state.name === "Chandigarh"
+        ? build(state, "state-of-capital", "Shared Capital", "Which two states share Chandigarh as their capital?", "Haryana and Punjab", (s) => s.name)
+        : state.name === "Delhi"
+          ? build(state, "state-of-capital", "Capital City", "What is the capital of the National Capital Territory of Delhi?", "New Delhi", (s) => extractEnglishValue(s.capital))
+          : build(state, "state-of-capital", "Find the State or UT", `${capital} is the capital of which state or union territory?`, state.name, (s) => s.name),
     build(
       state,
       "landmark",
-      "Landmark",
-      `Which symbol stands for ${state.name}?`,
+      "Map Symbol",
+      `Which emoji represents ${state.name} in this quiz?`,
       state.emoji,
       (s) => s.emoji,
     ),
@@ -192,18 +191,18 @@ export function questionsForState(state: IndiaState): QuizQuestion[] {
       state,
       "language",
       "Language",
-      `Which language is mainly spoken in ${state.name}?`,
+      `Which language is an official or widely used language in ${state.name}?`,
       language,
       (s) => extractEnglishValue(s.language),
     ),
-    build(state, "food", "Famous Food", `Which tasty dish comes from ${state.name}?`, food, (s) =>
+    build(state, "food", "Famous Food", `Which dish is associated with ${state.name}?`, food, (s) =>
       extractEnglishValue(s.food),
     ),
     build(
       state,
       "animal",
       "State Animal",
-      `Which animal is the state animal of ${state.name}?`,
+      state.name === "Dadra & Nagar Haveli and Daman & Diu" ? `Which wild animal can be found in the forests of ${state.name}?` : `Which animal is listed as the state/UT animal of ${state.name}?`,
       animalName,
       (s) => extractEnglishValue(s.animalName),
     ),
@@ -215,7 +214,7 @@ export function questionsForState(state: IndiaState): QuizQuestion[] {
       monumentName,
       (s) => extractEnglishValue(s.monumentName),
     ),
-    build(state, "nickname", "Nickname", `${state.name} is also known as...?`, nickname, (s) =>
+    build(state, "nickname", "Nickname", `Which nickname is often associated with ${state.name}?`, nickname, (s) =>
       extractEnglishValue(s.nickname),
     ),
     build(
@@ -255,7 +254,7 @@ export function randomQuestionsForState(name: string, count = 3): QuizQuestion[]
 export function randomQuestionsForAgeBand(
   name: string,
   ageBand: string = "8-9",
-  count: number = questionCountForAgeBand(ageBand),
+  count?: number,
 ): QuizQuestion[] {
   const allowedDifficulty: Record<string, QuizDifficulty[]> = {
     "3-5": ["foundation"],
@@ -264,6 +263,7 @@ export function randomQuestionsForAgeBand(
     "10-12": ["foundation", "recall", "challenge"],
   };
   const normalizedAgeBand = allowedDifficulty[ageBand] ? ageBand : "8-9";
+  const questionLimit = count ?? questionCountForAgeBand(normalizedAgeBand);
   const allowed = new Set(allowedDifficulty[normalizedAgeBand]);
   const pool = questionsForStateName(name).filter((question) =>
     allowed.has(question.difficulty ?? "recall"),
@@ -273,7 +273,7 @@ export function randomQuestionsForAgeBand(
     const j = Math.floor(Math.random() * (i + 1));
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
-  return shuffled.slice(0, Math.min(Math.max(0, count), shuffled.length));
+  return shuffled.slice(0, Math.min(Math.max(0, questionLimit), shuffled.length));
 }
 
 export function questionsForStateName(name: string): QuizQuestion[] {
@@ -281,7 +281,7 @@ export function questionsForStateName(name: string): QuizQuestion[] {
   return questionsForState(state);
 }
 
-/** All 28 states' quizzes, keyed by state name. */
+/** All state and union-territory quizzes, keyed by destination name. */
 export const QUIZ_BY_STATE: Record<string, QuizQuestion[]> = Object.fromEntries(
   INDIA_STATES.map((s) => [s.name, questionsForState(s)]),
 );

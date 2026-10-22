@@ -66,8 +66,14 @@ Object.entries(statesData.states).forEach(([stateName, stateData]) => {
   ALL_STATE_CONTENTS[stateName] = stateData as StateEnrichedContent;
 });
 
+function normalizeStateContentKey(name: string): string {
+  return name.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+const STATE_CONTENT_BY_NORMALIZED_NAME = new Map(Object.entries(ALL_STATE_CONTENTS).map(([name, content]) => [normalizeStateContentKey(name), content]));
+
 export function getStateContent(stateName: string): StateEnrichedContent | null {
-  return ALL_STATE_CONTENTS[stateName] ?? null;
+  return ALL_STATE_CONTENTS[stateName] ?? STATE_CONTENT_BY_NORMALIZED_NAME.get(normalizeStateContentKey(stateName)) ?? null;
 }
 
 /**
@@ -189,6 +195,17 @@ function filterFactByAge(content: string | AgeTaggedContent | undefined, ageBand
   return "";
 }
 
+/** Keep narration aligned with the selected age band and avoid oversized scripts. */
+function narrationForAge(content: CardContent, ageBand: string): string {
+  const age = getNumericAge(ageBand);
+  if (age <= 8 || !content.narration) return content.mainText;
+  const words = content.narration.trim().split(/\s+/);
+  if (words.length <= 180) return content.narration;
+  const excerpt = words.slice(0, 180).join(" ");
+  const end = Math.max(excerpt.lastIndexOf("."), excerpt.lastIndexOf("!"), excerpt.lastIndexOf("?"));
+  return end >= Math.floor(excerpt.length * 0.65) ? excerpt.slice(0, end + 1) : excerpt;
+}
+
 /**
  * Get card content filtered by age and language
  * Returns content appropriate for the user's age band
@@ -214,7 +231,7 @@ export function getCardContentByAge(
     emoji: content.emoji,
     mainText: content.mainText,
     keyFacts: filterByAge(content.keyFacts, ageBand),
-    narration: content.narration,
+    narration: narrationForAge(content, ageBand),
     coolFacts: filterByAge(content.coolFacts, ageBand),
     didYouKnow: filterFactByAge(content.didYouKnow, ageBand),
     tryThis: filterFactByAge(content.tryThis, ageBand),

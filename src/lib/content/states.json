@@ -4,94 +4,49 @@
       "stateName": "Rajasthan",
       "capital": {
         "en": {
-          "title": "🏛️ JAIPUR - The PINK CITY!",
+          "title": "JAIPUR — THE PINK CITY",
           "emoji": "🌸",
-          "mainText": "Imagine a whole city painted PINK! That's Jaipur! A king painted it pink in 1876 to welcome visitors.",
+          "mainText": "Jaipur is the capital of Rajasthan. Many buildings in its historic walled city follow a pink-and-terracotta colour tradition linked to welcoming visitors in the 19th century.",
           "keyFacts": [
             {
-              "text": "Built in 1727 by Maharaja Sawai Jai Singh II",
+              "text": "Jaipur was founded in 1727.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "~45 Lakh people live here",
+              "text": "Hawa Mahal is famous for its many small windows.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Why PINK? Because pink = WELCOME! 🎨",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Hawa Mahal has 953 tiny windows! 🪟",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "City Palace is still a real palace - the king's family LIVES there! 👑",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Jantar Mantar = Giant stone telescope 🔭",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Street food: Mirchi Pakora, Ker Sangri, Fafda Jalebi 🍜",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Best time to visit: October-March 🌤️",
+              "text": "Jantar Mantar in Jaipur is an astronomical observatory.",
               "minAge": 3,
               "maxAge": 99
             }
           ],
+          "narration": "Jaipur is the capital of Rajasthan and is often called the Pink City. Many buildings in its historic walled city are associated with pink and terracotta colours. Jaipur was founded in 1727.",
           "coolFacts": [
             {
-              "text": "The pink color was chosen because pink represents HOSPITALITY and WELCOME! 🎨",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Hawa Mahal (Palace of Winds) was built so the queen could watch street festivals without being seen! 👑",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Jaipur is an early planned Indian city, founded in 1727 and laid out in a grid pattern. 🏗️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "The streets are designed in a planned grid pattern - super organized! 📐",
+              "text": "Jaipur was founded in 1727.",
               "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "City Palace blends Mughal and European architecture - it's a FUSION! 🏰",
+              "text": "Hawa Mahal is famous for its many small windows.",
               "minAge": 6,
-              "maxAge": 99
-            },
-            {
-              "text": "Jantar Mantar is an ancient astronomy observation tool made of STONE! 🔭",
-              "minAge": 8,
               "maxAge": 99
             }
           ],
           "didYouKnow": {
-            "text": "Jaipur gets its nickname 'The Pink City' because Many buildings in Jaipur's historic walled city follow a pink-and-terracotta colour tradition that dates back to the 19th century. 🌸",
+            "text": "Jaipur was founded in 1727.",
             "minAge": 6,
             "maxAge": 99
           },
           "tryThis": {
-            "text": "Next time you see something pink - a flower, a balloon, or even pink lemonade - think of Jaipur and imagine walking through the famous Pink City! 💕",
+            "text": "Can you tell someone one new thing you learned?",
             "minAge": 3,
             "maxAge": 99
-          },
-          "narration": "Jaipur is the PINK CITY! Imagine walking down a street where many buildings and landmarks in the old city are associated with Jaipur's pink colour tradition! 🌸\n\nLong, long ago, a clever king wanted visitors to feel super welcome, so he painted the WHOLE city pink - the color of love! 💕\n\nThe Hawa Mahal is the most famous building - it has 953 TINY windows! Why so many? A queen wanted to watch street parties without anyone seeing her. So the king built this magic screen - she could look OUT, but people couldn't see IN! Genius! 💡\n\nIf you visit Jaipur, wear your brightest pink clothes and take the coolest photos! The City Palace is STILL where the king's family lives! And the Jantar Mantar is like the one of the oldest telescope made of stone! 🔭\n\nJaipur street food is AMAZING - try Mirchi Pakora (fried spicy peppers) and Fafda Jalebi (sweet and crispy)! 🍜"
+          }
         },
         "hi": {
           "title": "🏛️ जयपुर - गुलाबी शहर!",
@@ -4844,114 +4799,49 @@
       },
       "places": {
         "en": {
-          "title": "🏛️ MEENAKSHI TEMPLE - The Golden Goddess's Home!",
-          "emoji": "🏛️",
-          "mainText": "One of the oldest temples in India with AMAZING golden towers called gopurams! People have worshipped here for 2,600+ years! 🕉️",
+          "title": "MEENAKSHI AMMAN TEMPLE",
+          "emoji": "🛕",
+          "mainText": "The Meenakshi Amman Temple in Madurai is famous for its colourful gateway towers, called gopurams, and detailed sculptures.",
           "keyFacts": [
             {
-              "text": "Located in Madurai, Tamil Nadu 📍",
+              "text": "The temple is in Madurai, Tamil Nadu.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Built 2,600 years ago! So ancient! 📜",
+              "text": "Its towers are decorated with many sculptures.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Golden gopurams (temple towers) reach 170 FEET high! 🏛️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "The temple has 14 gopurams - super amazing! 🌟",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Thousands of people visit every day! 👥",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Goddess Meenakshi = Goddess with fish-shaped eyes! 👀",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "The temple tank (pond) is HUGE - used for holy baths! 🏊",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "You'll see intricate carvings everywhere - STUNNING art! 🎨",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Festivals here are LOUD and colorful - 🎉",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Over 5 million people visit annually! 🌍",
+              "text": "The present temple complex developed over many centuries.",
               "minAge": 3,
               "maxAge": 99
             }
           ],
+          "narration": "The Meenakshi Amman Temple in Madurai is famous for its colourful gopurams, or gateway towers, covered with sculptures.",
           "coolFacts": [
             {
-              "text": "The gopurams are covered in GOLD and colorful sculptures! ✨",
-              "minAge": 3,
+              "text": "The temple is in Madurai, Tamil Nadu.",
+              "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "Each sculpture tells a story from Hindu mythology! 📖",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "The temple has 30,000+ sculptures - can you imagine counting them? 🤔",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "The 'Hall of 1,000 Pillars' has intricate carvings on EVERY pillar! 🏛️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "The temple's architecture influenced temples across South India! 🏗️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "During festivals, the streets around the temple are packed with millions of people! 🎊",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "The temple has its own kitchen feeding 10,000+ people daily during festivals! 🍲",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Some parts of the temple are 2,000 years old - UNCHANGED! 🕰️",
-              "minAge": 3,
+              "text": "Its towers are decorated with many sculptures.",
+              "minAge": 6,
               "maxAge": 99
             }
           ],
           "didYouKnow": {
-            "text": "The Meenakshi Temple is so famous that even ancient travelers wrote about it 2,000 years ago! Roman merchants visited it! The temple has been the spiritual center of Madurai for over 2,600 YEARS! 🌟",
-            "minAge": 3,
+            "text": "The temple is in Madurai, Tamil Nadu.",
+            "minAge": 6,
             "maxAge": 99
           },
           "tryThis": {
-            "text": "If you visit the Meenakshi Temple, climb up to see the gopurams from different angles - each view is MORE beautiful! Watch the lights at night - MAGICAL! 🌟",
+            "text": "Can you tell someone one new thing you learned?",
             "minAge": 3,
             "maxAge": 99
-          },
-          "narration": "The Meenakshi Temple is GORGEOUS! Imagine a place so ancient that your great-great-great grandparents' ancestors visited it! 2,600 YEARS! 📜\n\nThe golden gopurams (towers) are so tall - 170 FEET! That's like stacking 50 kids on top of each other! 👦👦👦\n\nEvery inch of the temple has BEAUTIFUL carvings and sculptures! The artists spent lifetimes creating them! 🎨\n\nThere's a HUGE tank (temple pond) where people take holy baths - it's like an ancient swimming pool! 🏊\n\nInside, you'll see the 'Hall of 1,000 Pillars' - EVERY pillar has detailed carvings telling stories! 📖\n\nDuring festivals, over a MILLION people gather here! The colors, the sounds, the smells - it's INCREDIBLE! 🎉\n\nThe coolest part? People have been worshipping here for 2,600 YEARS - and it's still BEAUTIFUL and ACTIVE today! 🕉️"
+          }
         },
         "ta": {
           "title": "🛕 மதுரை மீனாட்சி அம்மன் கோயில் - சிற்பங்களின் நகரம்!",
@@ -5606,104 +5496,49 @@
       "stateName": "Gujarat",
       "capital": {
         "en": {
-          "title": "🔨 AHMEDABAD - The MANCHESTER of India!",
-          "emoji": "🔨",
-          "mainText": "Industrial city! 1 CRORE people! Famous for TEXTILES and DIAMONDS! Modern but respects ancient culture! Where GANDHI lived! 🧵",
+          "title": "GANDHINAGAR — CAPITAL OF GUJARAT",
+          "emoji": "🏛️",
+          "mainText": "Gandhinagar is the capital of Gujarat. Ahmedabad is the state's largest city and an important centre for business and textiles.",
           "keyFacts": [
             {
-              "text": "Population: 1 CRORE (10 million)! 🏙️",
+              "text": "Gandhinagar was planned as Gujarat's capital after the state was formed in 1960.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Called MANCHESTER OF INDIA - textile hub! 🔨",
+              "text": "The city is named after Mahatma Gandhi.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Textiles: Cotton fabrics, dyes, handmade cloth! 🧵",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Diamonds: Cut and polished here! 💎",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Sabarmati Ashram: Where GANDHI lived! 🙏",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Jama Masjid: One of the largest mosques in INDIA! 🕌",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Old City: Winding streets, bazaars, HISTORY! 🏘️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Modern: New malls, tech companies! 🏢",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Textile museums! 🎨",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Street food: Dhokla, Fafda, Jalebi! 🍲",
+              "text": "Ahmedabad and Gandhinagar are separate cities.",
               "minAge": 3,
               "maxAge": 99
             }
           ],
+          "narration": "Gandhinagar is the capital of Gujarat. Ahmedabad is a separate, larger city known for business and its textile history.",
           "coolFacts": [
             {
-              "text": "Ahmedabad is called MANCHESTER OF INDIA because of all the textile mills! Like England's Manchester! 🔨",
-              "minAge": 3,
+              "text": "Gandhinagar was planned as Gujarat's capital after the state was formed in 1960.",
+              "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "Gandhi chose Sabarmati Ashram in Ahmedabad as his HOME! That's where he planned INDEPENDENCE! 🙏",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "The Jama Masjid is SO HUGE that it can hold 10,000 PEOPLE at once! 🕌",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Diamonds from Ahmedabad are sold WORLDWIDE! Beautiful gems cut here! 💎",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Old Ahmedabad has NARROW WINDING STREETS! Like walking through a maze! 🌀",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Modern Ahmedabad has TECH COMPANIES and STARTUPS! It's GROWING FAST! 🚀",
-              "minAge": 3,
+              "text": "The city is named after Mahatma Gandhi.",
+              "minAge": 6,
               "maxAge": 99
             }
           ],
           "didYouKnow": {
-            "text": "Sabarmati Ashram in Ahmedabad is where GANDHI lived and worked! It's a SACRED place for Indian independence! 🙏",
-            "minAge": 3,
+            "text": "Gandhinagar was planned as Gujarat's capital after the state was formed in 1960.",
+            "minAge": 6,
             "maxAge": 99
           },
           "tryThis": {
-            "text": "Visit Sabarmati Ashram to see where Gandhi lived! Or explore the Old City bazaars! Eat dhokla and jalebi from street vendors! 🍲",
+            "text": "Can you tell someone one new thing you learned?",
             "minAge": 3,
             "maxAge": 99
-          },
-          "narration": "Ahmedabad is where INDUSTRY meets SPIRITUALITY! 🔨\n\n1 CRORE people live in this bustling city! It's called the MANCHESTER OF INDIA because of all the TEXTILE MILLS! 🧵\n\nThe Sabarmati Ashram is WHERE GANDHI LIVED! This is where he PLANNED INDIA'S INDEPENDENCE! 🙏 It's a SACRED place!\n\nThe Jama Masjid is MASSIVE! Can hold 10,000 people at once! SO BEAUTIFUL! 🕌\n\nOld Ahmedabad is a MAZE of NARROW WINDING STREETS! Bazaars full of COLORS, SOUNDS, SMELLS! 🌀\n\nModern Ahmedabad has TECH COMPANIES, STARTUPS, and PROGRESS! It's EVOLVING FAST! 🚀\n\nWhen you visit:\n- See Gandhi's Ashram 🙏\n- Explore Old City bazaars 🏘️\n- Visit Jama Masjid 🕌\n- Eat dhokla and jalebi 🍲\n- Feel the HISTORY and ENERGY! ⚡"
+          }
         },
         "gu": {
           "title": "રાજધાની",
@@ -8194,114 +8029,49 @@
       },
       "funFact": {
         "en": {
-          "title": "🎉 AMAZING FUN FACTS - Telangana Treasures!",
-          "emoji": "🎉",
-          "mainText": "Telangana is newest Indian state (formed 2014) but has ANCIENT history! Biryani, Charminar, and pearls - it's SPECIAL! 🌟",
+          "title": "THE KOH-I-NOOR AND GOLCONDA",
+          "emoji": "💎",
+          "mainText": "The historic Golconda region in present-day Telangana was famous for its diamond trade. The Koh-i-Noor is historically linked to the Golconda diamond region.",
           "keyFacts": [
             {
-              "text": "Telangana became a separate state in 2014! 🎉",
-              "minAge": 8,
-              "maxAge": 99
-            },
-            {
-              "text": "Famous worldwide for Hyderabadi biryani! 🍲",
-              "minAge": 6,
-              "maxAge": 99
-            },
-            {
-              "text": "Pearl capital of India - produces TONS of pearls! 💎",
+              "text": "Golconda became an important centre for the diamond trade.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Charminar is symbol of Hyderabad! 🕌",
+              "text": "The Koh-i-Noor passed through many rulers and empires over time.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Home to IT industry - tech hub! 💻",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Hyderabad is called 'Cyber City'! 🏙️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Ancient kingdom ruled by Nizams (kings)! 👑",
-              "minAge": 8,
-              "maxAge": 99
-            },
-            {
-              "text": "Home to Ramoji Film City - Bollywood set! 🎬",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Produces 90% of India's diamonds! 💎",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Miracles Bazaar - one of India's oldest markets! 🛍️",
+              "text": "Historical gems can have complex histories, so avoid claiming an exact discovery site without a source.",
               "minAge": 3,
               "maxAge": 99
             }
           ],
+          "narration": "The historic Golconda region in present-day Telangana was famous for its diamond trade. The Koh-i-Noor is linked to the region, although its exact discovery story is not certain.",
           "coolFacts": [
             {
-              "text": "Hyderabad doubled in population in 20 years! 📈",
+              "text": "Golconda became an important centre for the diamond trade.",
               "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "Miracles Bazaar has been operating for 400+ years! 🏪",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Telangana has 1,500+ ancient temples! 🕉️",
-              "minAge": 8,
-              "maxAge": 99
-            },
-            {
-              "text": "Pearl processing happens here - world famous! 💎",
+              "text": "The Koh-i-Noor passed through many rulers and empires over time.",
               "minAge": 6,
-              "maxAge": 99
-            },
-            {
-              "text": "Tech companies like Microsoft, Google have offices here! 💼",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Ramoji Film City is HUGE - bigger than many cities! 🎥",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Tanks (ponds) dot the landscape - ancient water system! 💧",
-              "minAge": 8,
-              "maxAge": 99
-            },
-            {
-              "text": "Biryani Festival happens annually - HUGE celebration! 🎉",
-              "minAge": 3,
               "maxAge": 99
             }
           ],
           "didYouKnow": {
-            "text": "Hyderabad became India's 'Silicon Valley' - tons of tech companies! It went from a historical city to a MODERN TECH HUB in 20 years! 💻🌟",
-            "minAge": 3,
+            "text": "Golconda became an important centre for the diamond trade.",
+            "minAge": 6,
             "maxAge": 99
           },
           "tryThis": {
-            "text": "Watch Ramoji Film City - it's like visiting a movie studio! Or visit Pearl Street to see traditional pearl trading! 🎥💎",
+            "text": "Can you tell someone one new thing you learned?",
             "minAge": 3,
             "maxAge": 99
-          },
-          "narration": "Telangana is a MIX of old and new! 🌟\n\nIt's the NEWEST Indian state - only became separate in 2014! 🎉\n\nBUT - it has THOUSANDS of years of history!\n\nHyderabad is now called 'Cyber City' - TONS of tech companies! 💻\n\nMicrosoft, Google, Amazon - all have offices here!\n\nBiryani - WORLD FAMOUS! Charminar - 400 years old! 🕌\n\nPearl capital - produces 90% of India's diamonds AND pearls! 💎\n\nRamoji Film City - where Indian movies are made! It's MASSIVE! 🎬\n\nMiraWalking through 400-year-old bazaars where people still trade pearls!\n\nAncient temples everywhere - 1,500+ temples in Telangana!\n\nHyderabad went from historical kingdom to TECH HUB in just 20 years!\n\nTelangana shows how India blends HISTORY with MODERN INNOVATION! 🌟"
+          }
         },
         "te": {
           "title": "🕺 బతుకమ్మ - పూల పండుగ!",
@@ -9166,104 +8936,49 @@
       "stateName": "Uttar Pradesh",
       "capital": {
         "en": {
-          "title": "🏛️ LUCKNOW - City of NAWABS!",
+          "title": "LUCKNOW — CAPITAL OF UTTAR PRADESH",
           "emoji": "🏛️",
-          "mainText": "Home of Taj Mahal (in Agra)! 2.3 CRORE people! Ancient capital! Mughal palaces! Delicious kebabs! 🍖",
+          "mainText": "Lucknow is the capital of Uttar Pradesh. Agra is another city in the state and is home to the Taj Mahal.",
           "keyFacts": [
             {
-              "text": "Population: more than 200 million people (230 million)! 🌍",
+              "text": "Lucknow is known for its historic architecture and cuisine.",
+              "minAge": 3,
+              "maxAge": 99
+            },
+            {
+              "text": "The Taj Mahal is in Agra, not Lucknow.",
+              "minAge": 3,
+              "maxAge": 99
+            },
+            {
+              "text": "Uttar Pradesh has many historic cities and cultural traditions.",
+              "minAge": 3,
+              "maxAge": 99
+            }
+          ],
+          "narration": "Lucknow is the capital of Uttar Pradesh. It is known for its history, architecture, crafts and food. The Taj Mahal is in Agra, another city in the same state.",
+          "coolFacts": [
+            {
+              "text": "Lucknow is known for its historic architecture and cuisine.",
               "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "Contains Taj Mahal in Agra - one of 7 wonders! 🏰",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Capital: Lucknow - City of Nawabs! 👑",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Chikhalwari: Beautiful handicrafts! 🎨",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Food: Kebabs, biryanis, AMAZING cuisine! 🍖",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Varanasi: Holy city on Ganga river! 🙏",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Uttar Pradesh is INDIA'S MOST POPULOUS state - 1 in 6 Indians lives here! 🌍",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Ancient kingdoms: Ayodhya, Mathura - holy cities! 🙏",
-              "minAge": 8,
-              "maxAge": 99
-            },
-            {
-              "text": "Crafts: Chikhalwari embroidery! 🧵",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Lucknow Biryani: DIFFERENT from Hyderabadi! 🍲",
-              "minAge": 3,
-              "maxAge": 99
-            }
-          ],
-          "coolFacts": [
-            {
-              "text": "Taj Mahal is one of the 7 WONDERS OF THE WORLD! It's in Agra, Uttar Pradesh! ✨",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Uttar Pradesh is SO POPULOUS that if it were a country, it would be the 3rd most populated in the WORLD! 🌍",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Lucknow was the capital of the Mughal empire - HOME to emperors and nawabs! 👑",
-              "minAge": 8,
-              "maxAge": 99
-            },
-            {
-              "text": "Varanasi is the HOLIEST city in India - people come from all over the world! 🙏",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "The Lucknow Biryani is DIFFERENT from Hyderabadi - it uses more meat and less spices! 🍲",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Uttar Pradesh has some of the OLDEST cities in the world - Ayodhya, Mathura! 👑",
-              "minAge": 3,
+              "text": "The Taj Mahal is in Agra, not Lucknow.",
+              "minAge": 6,
               "maxAge": 99
             }
           ],
           "didYouKnow": {
-            "text": "Uttar Pradesh is the MOST POPULOUS state in India - more than 200 million people people live here! That's more than the population of many countries! 🌍",
+            "text": "Lucknow is known for its historic architecture and cuisine.",
             "minAge": 6,
             "maxAge": 99
           },
           "tryThis": {
-            "text": "Visit Taj Mahal in Agra - one of the famous buildings in the world! Or explore Varanasi - the holiest city! 🏰",
-            "minAge": 6,
+            "text": "Can you tell someone one new thing you learned?",
+            "minAge": 3,
             "maxAge": 99
-          },
-          "narration": "Lucknow is the capital of Uttar Pradesh and is known for its Nawabi-era architecture, literature, crafts and cuisine. Agra, home of the Taj Mahal, is a different city in the same state. 🏛️"
+          }
         },
         "hi": {
           "title": "🏛️ लखनऊ - नवाबी तहज़ीब का शहर!",
@@ -11442,114 +11157,49 @@
       },
       "animal": {
         "en": {
-          "title": "🦌 NILGAI - Delhi's State Animal!",
-          "emoji": "🦚",
-          "mainText": "The nilgai is the state animal of the National Capital Territory of Delhi.",
+          "title": "NILGAI — DELHI'S STATE ANIMAL",
+          "emoji": "🐂",
+          "mainText": "The nilgai, also called the blue bull, is the state animal of Delhi. It is a large antelope found in parts of Delhi and nearby scrubland.",
           "keyFacts": [
             {
-              "text": "Spotted coat - white spots on brown! 🎨",
+              "text": "Nilgai are antelopes, not cows.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Live in Delhi Ridge Forest! 🌳",
+              "text": "Nilgai can live near scrubland and open areas.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Males have BEAUTIFUL branched antlers! 🦌",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Weigh 150-250 kg! 💪",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Live 15-20 years! 📅",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Herbivores - eat grass and leaves! 🌿",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Herd animals - live in groups! 👥",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Males called 'stags', females 'hinds'! 🦌",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Fawns are born spotted! 👶",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Can run 40 mph - super fast! 🏃",
+              "text": "Delhi's state bird is the house sparrow, not the state animal.",
               "minAge": 3,
               "maxAge": 99
             }
           ],
+          "narration": "The nilgai, also called the blue bull, is Delhi's state animal. The house sparrow is Delhi's state bird.",
           "coolFacts": [
             {
-              "text": "Spots fade as they age! 🎨",
-              "minAge": 3,
+              "text": "Nilgai are antelopes, not cows.",
+              "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "Males grow new antlers every year! 🔄",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Can jump 6 meters high! 🏃",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Most vocal deer in India! 📢",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Males fight during mating season - incredible! ⚔️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Females protect fawns fiercely! 👩‍👧",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Thrive in Delhi's protected forests! 🌲",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Tourism brings awareness about conservation! 🌍",
-              "minAge": 3,
+              "text": "Nilgai can live near scrubland and open areas.",
+              "minAge": 6,
               "maxAge": 99
             }
           ],
           "didYouKnow": {
-            "text": "The nilgai is the largest Asian antelope and is the state animal of the National Capital Territory of Delhi.",
-            "minAge": 3,
+            "text": "Nilgai are antelopes, not cows.",
+            "minAge": 6,
             "maxAge": 99
           },
           "tryThis": {
-            "text": "Visit Delhi Ridge early morning to see herds of spotted deer! Look for fawns in spring! Observe their behavior! 🦌",
+            "text": "Can you tell someone one new thing you learned?",
             "minAge": 3,
             "maxAge": 99
-          },
-          "narration": "The nilgai is the largest Asian antelope and is the state animal of the National Capital Territory of Delhi."
+          }
         },
         "hi": {
           "title": "🐂 नीलगाय - दिल्ली का राज्य पशु!",
@@ -12850,114 +12500,49 @@
       },
       "animal": {
         "en": {
-          "title": "🐱 FISHING CAT - Bengal's Wild Cat!",
-          "emoji": "🐯",
-          "mainText": "The fishing cat is the state animal of West Bengal and is adapted to wetlands and marshy habitats.",
+          "title": "FISHING CAT — WEST BENGAL'S STATE ANIMAL",
+          "emoji": "🐈",
+          "mainText": "The fishing cat is the state animal of West Bengal. This wild cat is adapted to wetland habitats and can catch fish.",
           "keyFacts": [
             {
-              "text": "Bengal tigers weigh 200-260 kg! 💪",
+              "text": "Fishing cats are different from domestic cats.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "its wild population is monitored by conservation programmes! 😢",
+              "text": "Wetlands provide important habitats for fishing cats.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Sundarbans Reserve - tiger habitat! 🌳",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Can jump 30 feet - INCREDIBLE! 🏃",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Run at 40 mph - SUPER fast! 🚗",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Nocturnal hunters - hunt at night! 🌙",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Each stripe unique - like fingerprint! 🔍",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Can eat 100+ lbs meat in one meal! 🍖",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Cubs learn hunting 2-3 years! 👶",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Swimming experts - love water! 🏊",
+              "text": "Protecting wetlands helps many plants and animals.",
               "minAge": 3,
               "maxAge": 99
             }
           ],
+          "narration": "The fishing cat is the state animal of West Bengal. It is a wild cat adapted to wetland habitats and can catch fish.",
           "coolFacts": [
             {
-              "text": "Sundarbans - world's largest tiger reserve! 🌍",
-              "minAge": 3,
+              "text": "Fishing cats are different from domestic cats.",
+              "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "Largest concentration of tigers in India! 🐯",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Tigers can take down large animals! 💪",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Bengal tigers have territorial roars! 📢",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Man-eating tigers - rare but dangerous! ⚠️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Conservation efforts INCREASING population! 📈",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Project Tiger - successful program! 🌳",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Tigers are SHY - avoid humans! 👁️",
-              "minAge": 3,
+              "text": "Wetlands provide important habitats for fishing cats.",
+              "minAge": 6,
               "maxAge": 99
             }
           ],
           "didYouKnow": {
-            "text": "The fishing cat is West Bengal's state animal. It is a strong swimmer and is closely associated with wetlands.",
-            "minAge": 3,
+            "text": "Fishing cats are different from domestic cats.",
+            "minAge": 6,
             "maxAge": 99
           },
           "tryThis": {
-            "text": "Visit Sundarbans tiger reserve! See Bengal tigers in natural habitat! Support tiger conservation! 🐯",
+            "text": "Can you tell someone one new thing you learned?",
             "minAge": 3,
             "maxAge": 99
-          },
-          "narration": "The fishing cat is West Bengal's state animal. This wild cat is strongly associated with wetlands and is an excellent swimmer. 🐱"
+          }
         },
         "bn": {
           "title": "🐱 মেছোবাঘ - বাংলার বন্য বিড়াল!",
@@ -21580,114 +21165,49 @@
       },
       "funFact": {
         "en": {
-          "title": "🎉 AMAZING FUN FACTS - Jharkhand Riches!",
-          "emoji": "🎉",
-          "mainText": "Jharkhand - MINERAL RICH! Coal, steel, diamonds! Tribal culture intact! 💎",
+          "title": "JHARKHAND — FORESTS AND MINERAL RESOURCES",
+          "emoji": "🌳",
+          "mainText": "Jharkhand has forests, waterfalls and important mineral resources, including coal and iron ore.",
           "keyFacts": [
             {
-              "text": "Mineral treasure - coal! ⛏️",
+              "text": "Mining is an important part of the state's economy.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Steel production - major! 🏭",
+              "text": "Jharkhand also has forests and many Adivasi communities.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Diamonds - 90% of India! 💎",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Tribal culture - rich heritage! 🏹",
-              "minAge": 8,
-              "maxAge": 99
-            },
-            {
-              "text": "Forests - biodiversity! 🌲",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Waterfalls - Niagara of East! 💧",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Sacred pilgrimages! 🕉️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Birding paradise! 🦅",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Adventure tourism - growing! 🧗",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Tribal festivals! 🎉",
+              "text": "Natural resources and conservation both matter to the region.",
               "minAge": 3,
               "maxAge": 99
             }
           ],
+          "narration": "Jharkhand is known for forests, waterfalls and mineral resources such as coal and iron ore.",
           "coolFacts": [
             {
-              "text": "Coal - energy source! ⛏️",
-              "minAge": 3,
+              "text": "Mining is an important part of the state's economy.",
+              "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "Steel mills - industrial might! 🏭",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Diamond capital! 💎",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Tribal wisdom - forest knowledge! 🌲",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Waterfalls - 40+ in state! 💧",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Jamshedpur - steel city! 🏢",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Ranchi - lake city! 💧",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Birding hotspot - 400+ species! 🦅",
-              "minAge": 3,
+              "text": "Jharkhand also has forests and many Adivasi communities.",
+              "minAge": 6,
               "maxAge": 99
             }
           ],
           "didYouKnow": {
-            "text": "Jharkhand is MINERAL TREASURE! 90% of India's diamonds come from here! Coal, steel, minerals - ECONOMIC POWERHOUSE! Tribal culture INTACT for thousands of years! 🌟",
+            "text": "Mining is an important part of the state's economy.",
             "minAge": 6,
             "maxAge": 99
           },
           "tryThis": {
-            "text": "Visit mining regions! See waterfalls! Experience tribal culture! Go birding! Trek forests! 🌲",
-            "minAge": 6,
+            "text": "Can you tell someone one new thing you learned?",
+            "minAge": 3,
             "maxAge": 99
-          },
-          "narration": "Jharkhand is TREASURE CHEST! 💎\n\nMineral wealth - ENORMOUS! ⛏️\n\nCoal production! ⛏️\n\nSteel mills! 🏭\n\n90% of India's DIAMONDS! 💎\n\nCoal - energy source!\n\nMining - major industry!\n\nTribal culture - RICH! 🏹\n\n32 tribal groups!\n\nAncient forests! 🌲\n\nBiodiversity - amazing! 🦅\n\nWaterfalls - 40+! 💧\n\nDassam Falls - spectacular! 💧\n\nJamshedpur - steel city! 🏢\n\nRanchi - lake city! 💧\n\nPilgrimage sites! 🕉️\n\nBirding paradise - 400+ species! 🦅\n\nAdventure tourism! 🧗\n\nWildlife reserves! 🐯\n\nJharkhand = NATURE + CULTURE + MINERALS! 🌟"
+          }
         },
         "hi": {
           "title": "🎉 झारखंड के अद्भुत तथ्य!",
@@ -21898,104 +21418,49 @@
       "stateName": "Odisha",
       "capital": {
         "en": {
-          "title": "🏛️ BHUBANESWAR - Temple City!",
+          "title": "BHUBANESWAR — CAPITAL OF ODISHA",
           "emoji": "🏛️",
-          "mainText": "Ancient temples! tens of millions of people people! Jagannath Temple (MOST SACRED)! Beaches! Tribal art! 🙏",
+          "mainText": "Bhubaneswar is the capital of Odisha and is known for its many historic temples. The state also has beaches, wildlife habitats and rich artistic traditions.",
           "keyFacts": [
             {
-              "text": "Population: ~9 LAKH (about 900,000) people in Bhubaneswar city!",
-              "minAge": 6,
-              "maxAge": 99
-            },
-            {
-              "text": "Capital: Bhubaneswar 🏙️",
+              "text": "Bhubaneswar is often called the Temple City.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Jagannath Temple: MOST SACRED! 🙏",
+              "text": "Puri is home to the famous Jagannath Temple.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Puri Beach: Holy beach! 🏖️",
+              "text": "Odisha has a long tradition of classical dance and crafts.",
               "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Konark Sun Temple: UNESCO World Heritage! ⛩️",
-              "minAge": 8,
-              "maxAge": 99
-            },
-            {
-              "text": "Tribal art: Warli, Madhubani paintings! 🎨",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Odissi Dance: Ancient classical dance! 💃",
-              "minAge": 8,
-              "maxAge": 99
-            },
-            {
-              "text": "Handicrafts: Intricate carvings! 🛍️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Chilika Lake: Largest brackish lake! 🌊",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Sambalpuri sarees: FAMOUS handwoven! 🧵",
-              "minAge": 6,
               "maxAge": 99
             }
           ],
+          "narration": "Bhubaneswar is the capital of Odisha and is known for its historic temples. Puri, another city in Odisha, is home to the famous Jagannath Temple.",
           "coolFacts": [
             {
-              "text": "Jagannath Temple is SO SACRED that millions pilgrimage there yearly! It's one of the FOUR HOLIEST temples in India! 🙏",
+              "text": "Bhubaneswar is often called the Temple City.",
               "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "Konark Sun Temple is shaped like a GIANT CHARIOT! Built 800 years ago! It's a UNESCO World Heritage site! ⛩️",
-              "minAge": 8,
-              "maxAge": 99
-            },
-            {
-              "text": "Odissi dance is one of the OLDEST classical dances in India - a language with a long recorded literary history! 💃",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Chilika Lake is the LARGEST brackish lake in Asia - home to rare migratory birds! 🌊",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Odisha has INCREDIBLE tribal art - Warli paintings, Madhubani art! 🎨",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Sambalpuri sarees are WORLD-FAMOUS - handwoven with intricate patterns! 🧵",
+              "text": "Puri is home to the famous Jagannath Temple.",
               "minAge": 6,
               "maxAge": 99
             }
           ],
           "didYouKnow": {
-            "text": "The Jagannath Temple is so wealthy that it serves FREE FOOD (langar) to over 100,000 people EVERY DAY! Just like Punjab's Golden Temple! 🙏",
-            "minAge": 3,
+            "text": "Bhubaneswar is often called the Temple City.",
+            "minAge": 6,
             "maxAge": 99
           },
           "tryThis": {
-            "text": "Visit Jagannath Temple in Puri! See Konark Sun Temple! Watch Odissi dance! Buy Sambalpuri sarees! 🎨",
+            "text": "Can you tell someone one new thing you learned?",
             "minAge": 3,
             "maxAge": 99
-          },
-          "narration": "Odisha is the TEMPLE LAND! 🏛️\n\ntens of millions of people people live here!\n\nOdisha is FAMOUS for:\n- JAGANNATH TEMPLE: One of the FOUR HOLIEST temples in India! Located in Puri! Millions come yearly! 🙏\n- KONARK SUN TEMPLE: A GIANT CHARIOT made of stone! Built 800 years ago! UNESCO World Heritage site! ⛩️\n- ODISSI DANCE: Ancient classical dance - a language with a long recorded literary history! SO GRACEFUL! 💃\n- TRIBAL ART: Warli paintings, Madhubani art! Colorful and beautiful! 🎨\n- CHILIKA LAKE: Asia's largest brackish lake! Home to rare birds! 🌊\n- SAMBALPURI SAREES: FAMOUS handwoven sarees with intricate patterns! 🧵\n\nWhen you visit:\n- Pray at Jagannath Temple 🙏\n- See Konark Sun Temple ⛩️\n- Watch Odissi dance 💃\n- Explore tribal art 🎨"
+          }
         },
         "or": {
           "title": "🏛️ ଭୁବନେଶ୍ୱର - ମନ୍ଦିରର ସହର!",
@@ -24714,99 +24179,49 @@
       "stateName": "Assam",
       "capital": {
         "en": {
-          "title": "🍵 GUWAHATI - Gateway to the Northeast!",
-          "emoji": "🌿",
-          "mainText": "Assam's biggest city sits on the mighty Brahmaputra River! Home to world-famous Assam tea, one-horned rhinos, and the gateway to all of Northeast India! 🐘",
+          "title": "DISPUR — CAPITAL OF ASSAM",
+          "emoji": "🍃",
+          "mainText": "Dispur is the capital of Assam. Guwahati is the state's largest city and an important centre beside the Brahmaputra River.",
           "keyFacts": [
             {
-              "text": "Capital: Dispur (part of Guwahati city)! 🏙️",
+              "text": "Dispur is part of the wider Guwahati urban area.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Guwahati population: ~10+ LAKH (over 1 million) people! 🌍",
-              "minAge": 6,
-              "maxAge": 99
-            },
-            {
-              "text": "Assam tea: world-famous, strong and malty - different from Darjeeling tea (that's West Bengal's)! ☕",
-              "minAge": 6,
-              "maxAge": 99
-            },
-            {
-              "text": "Assam grows about half of ALL of India's tea! 🍵",
+              "text": "Guwahati is a major gateway to Northeast India.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Rhinos: One-horned rhinos live in nearby Kaziranga! 🦏",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Brahmaputra River: One of the world's mightiest rivers flows right through the city! 🌊",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Silk: Assamese silk (Muga silk) is famous worldwide! 🧵",
-              "minAge": 6,
-              "maxAge": 99
-            },
-            {
-              "text": "Festivals: Bihu (harvest festival) is Assam's biggest celebration! 🎊",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Kamakhya Temple: Ancient hilltop temple overlooking the city! 🛕",
-              "minAge": 8,
-              "maxAge": 99
-            },
-            {
-              "text": "Gateway city: Almost everyone travelling to the Northeast passes through here! 🚪",
+              "text": "The Brahmaputra is one of the major rivers of the region.",
               "minAge": 3,
               "maxAge": 99
             }
           ],
+          "narration": "Dispur is the capital of Assam. Guwahati is Assam's largest city and sits beside the Brahmaputra River.",
           "coolFacts": [
             {
-              "text": "Assam tea comes from a completely different tea plant than Darjeeling tea! 🍃",
-              "minAge": 3,
+              "text": "Dispur is part of the wider Guwahati urban area.",
+              "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "Guwahati sits right on the banks of the massive Brahmaputra River! 🌊",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Assam produces roughly half of all the tea grown in India! ☕",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Kamakhya Temple sits on a hill with a stunning view of the whole city! 🛕",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "The Brahmaputra is one of the few rivers in the world that is officially male in local tradition (most rivers in India are called goddesses)! 🌊",
-              "minAge": 3,
+              "text": "Guwahati is a major gateway to Northeast India.",
+              "minAge": 6,
               "maxAge": 99
             }
           ],
           "didYouKnow": {
-            "text": "People often mix up Assam tea and Darjeeling tea - but Darjeeling tea actually comes from West Bengal, in the Himalayan foothills! Assam tea is grown in the hot, humid Brahmaputra valley and has a completely different, bolder taste. ☕",
-            "minAge": 3,
+            "text": "Dispur is part of the wider Guwahati urban area.",
+            "minAge": 6,
             "maxAge": 99
           },
           "tryThis": {
-            "text": "Next time you see a box of tea, check the label - does it say Assam or Darjeeling? Now you know where each one really comes from! 🔍",
+            "text": "Can you tell someone one new thing you learned?",
             "minAge": 3,
             "maxAge": 99
-          },
-          "narration": "Guwahati is the gateway to India's whole Northeast! It sits right on the banks of the giant Brahmaputra River. 🌊\n\nAssam is famous for its tea - Assam tea is strong, malty, and grown in the hot valley of the Brahmaputra. A LOT of people mix it up with Darjeeling tea, but that's actually from West Bengal, in cool mountain hills far away! Different plant, different taste! ☕\n\nNot far from the city, at Kaziranga National Park, you can find the greatest concentration of one-horned rhinos anywhere on Earth! 🦏"
+          }
         },
         "as": {
           "title": "🍵 গুৱাহাটী - উত্তৰ-পূবৰ প্ৰৱেশদ্বাৰ!",
@@ -25128,114 +24543,49 @@
       },
       "food": {
         "en": {
-          "title": "🍜 ASSAMESE RICE & FISH - Simple Perfection!",
-          "emoji": "🍜",
-          "mainText": "Rice and fish curry - ASSAM'S STAPLE! Fresh, healthy, DELICIOUS! 🐟",
+          "title": "MASOR TENGA — ASSAMESE FISH CURRY",
+          "emoji": "🍲",
+          "mainText": "Masor tenga is a tangy fish curry from Assam. It is often made with souring ingredients such as tomatoes or lemon.",
           "keyFacts": [
             {
-              "text": "Rice - daily staple!",
+              "text": "Masor tenga is associated with Assamese cuisine.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Fish - Brahmaputra river!",
+              "text": "Tenga refers to a sour or tangy flavour.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Mustard oil - traditional!",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Simple spices - turmeric, chili!",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Cooked with very little oil, making it a light, healthy meal! 🥗",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "River fish varieties!",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Quick, easy meal!",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Recipes passed down through generations of Assamese families! 👵",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Street food popular!",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Rice and fish stay staple foods across every season! 🍚",
+              "text": "Recipes vary from home to home.",
               "minAge": 3,
               "maxAge": 99
             }
           ],
+          "narration": "Masor tenga is a tangy fish curry associated with Assam. Cooks may use tomatoes, lemon or other souring ingredients.",
           "coolFacts": [
             {
-              "text": "Fish curry - signature dish!",
-              "minAge": 3,
+              "text": "Masor tenga is associated with Assamese cuisine.",
+              "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "Mustard oil - health benefits!",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "River fish - fresh daily!",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Brahmaputra provides abundance!",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Simple cooking methods!",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Turmeric - medicinal!",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Traditional recipes - generations!",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Flavor-rich cuisine!",
-              "minAge": 3,
+              "text": "Tenga refers to a sour or tangy flavour.",
+              "minAge": 6,
               "maxAge": 99
             }
           ],
           "didYouKnow": {
-            "text": "Assamese rice and fish is SIMPLE PERFECTION! Mustard oil and fresh river fish! UNESCO recognizes Assamese food heritage! 🌟",
-            "minAge": 8,
-            "maxAge": 99
-          },
-          "tryThis": {
-            "text": "Visit Assam! Try river fish curry! Eat with rice! Experience Brahmaputra culture! 🐟",
+            "text": "Masor tenga is associated with Assamese cuisine.",
             "minAge": 6,
             "maxAge": 99
           },
-          "narration": "Assamese rice-fish is PERFECT! 🍜\n\nSimple, healthy!\n\nRice - daily staple! 🍚\n\nFish - FRESH from Brahmaputra! 🐟\n\nMustard oil - traditional! 💛\n\nTurmeric, chili - spices!\n\nCurry is SMOOTH, RICH!\n\nServed with steaming rice!\n\nSoaks rice in curry - HEAVEN! 😋\n\nHealthy, nutritious!\n\nFamily recipes - generations!\n\nStreet food - authentic! 🛣️\n\nBrahmaputra river - fish daily!\n\nAssam's TREASURE! 🌟"
+          "tryThis": {
+            "text": "Can you tell someone one new thing you learned?",
+            "minAge": 3,
+            "maxAge": 99
+          }
         },
         "as": {
           "title": "🍜 অসমীয়া ভাত আৰু মাছ - সহজ সোৱাদ!",
@@ -26111,99 +25461,49 @@
     "Meghalaya": {
       "stateName": "Meghalaya",
       "capital": {
-        "title": "☁️ SHILLONG - Scotland of the East!",
+        "title": "SHILLONG — CAPITAL OF MEGHALAYA",
         "emoji": "☁️",
-        "mainText": "A cool, misty hill town so green and rolling that the British nicknamed it 'Scotland of the East'! It's the capital of the wettest state in India!",
+        "mainText": "Shillong is the capital of Meghalaya, a state known for hills, forests and some of the wettest places on Earth.",
         "keyFacts": [
           {
-            "text": "Capital of Meghalaya - name means 'Abode of Clouds'! ☁️",
+            "text": "Shillong is in the Khasi Hills.",
             "minAge": 3,
             "maxAge": 99
           },
           {
-            "text": "Population: around 1.5 LAKH people in Shillong city! 🏙️",
-            "minAge": 6,
-            "maxAge": 99
-          },
-          {
-            "text": "Nicknamed 'Scotland of the East' by the British! 🏴",
+            "text": "Meghalaya includes places that receive very heavy rainfall.",
             "minAge": 3,
             "maxAge": 99
           },
           {
-            "text": "Ward's Lake: pretty man-made lake right in the city! 🌊",
-            "minAge": 3,
-            "maxAge": 99
-          },
-          {
-            "text": "Shillong Peak: highest point, great city views! 🏔️",
-            "minAge": 3,
-            "maxAge": 99
-          },
-          {
-            "text": "Cool climate all year - rarely gets very hot! 🌤️",
-            "minAge": 3,
-            "maxAge": 99
-          },
-          {
-            "text": "Home to a big music and rock band scene! 🎸",
-            "minAge": 3,
-            "maxAge": 99
-          },
-          {
-            "text": "Khasi Hills surround the city! ⛰️",
-            "minAge": 3,
-            "maxAge": 99
-          },
-          {
-            "text": "Elephant Falls: waterfall just outside town! 💧",
-            "minAge": 3,
-            "maxAge": 99
-          },
-          {
-            "text": "Best time to visit: October-May! 🌦️",
+            "text": "The nickname 'Scotland of the East' is often associated with Shillong.",
             "minAge": 3,
             "maxAge": 99
           }
         ],
+        "narration": "Shillong is the capital of Meghalaya. The state has hills, forests and places that receive very heavy rainfall.",
         "coolFacts": [
           {
-            "text": "Shillong is sometimes called the 'Rock Capital of India' because of its huge live-music culture! 🎸",
+            "text": "Shillong is in the Khasi Hills.",
             "minAge": 6,
             "maxAge": 99
           },
           {
-            "text": "Meghalaya's name literally means 'Home of the Clouds' in Sanskrit! ☁️",
-            "minAge": 3,
-            "maxAge": 99
-          },
-          {
-            "text": "The state has one of the highest literacy rates in the Northeast! 📚",
-            "minAge": 3,
-            "maxAge": 99
-          },
-          {
-            "text": "Shillong's weather stays cool and pleasant almost year-round! 🌤️",
-            "minAge": 3,
-            "maxAge": 99
-          },
-          {
-            "text": "It was once the capital of the whole undivided Assam region! 🏛️",
-            "minAge": 3,
+            "text": "Meghalaya includes places that receive very heavy rainfall.",
+            "minAge": 6,
             "maxAge": 99
           }
         ],
         "didYouKnow": {
-          "text": "Meghalaya is one of only a few places in India where society is matrilineal - property and family names pass down through the mother's side, not the father's! 👩‍👧",
-          "minAge": 3,
+          "text": "Shillong is in the Khasi Hills.",
+          "minAge": 6,
           "maxAge": 99
         },
         "tryThis": {
-          "text": "Ask your family whose last name you have - now imagine if it worked the opposite way, like it does for the Khasi people! 💭",
+          "text": "Can you tell someone one new thing you learned?",
           "minAge": 3,
           "maxAge": 99
-        },
-        "narration": "Shillong sits high in the hills of Meghalaya, wrapped in mist and cool breezes almost all year round! ☁️\n\nThe British loved it so much they called it the 'Scotland of the East' because the green rolling hills reminded them of home.\n\nToday, Shillong is famous across India for something surprising - rock music! Bands from this small hill town have won national competitions, earning it the nickname 'Rock Capital of India'! 🎸\n\nJust outside the city, waterfalls tumble down green hillsides, and the whole region gets some of the heaviest rain on the planet."
+        }
       },
       "language": {
         "title": "🗣️ KHASI - Meghalaya's Musical Tongue!",
@@ -32683,99 +31983,49 @@
       },
       "funFact": {
         "en": {
-          "title": "📿 BIHAR - Cradle of Ancient Wisdom!",
-          "emoji": "📿",
-          "mainText": "Home to the one of the oldest known university, the place an important place in the history of Buddhism, and the birthplace of great empires - Bihar shaped the story of ancient India!",
+          "title": "NALANDA — AN ANCIENT CENTRE OF LEARNING",
+          "emoji": "📚",
+          "mainText": "Nalanda in Bihar was a famous ancient centre of learning. Scholars from different regions studied there many centuries ago.",
           "keyFacts": [
             {
-              "text": "Nalanda: home to one of the one of the oldest universities, founded around the 5th century! 🎓",
+              "text": "Nalanda was known for teaching and scholarship.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Nalanda once drew students from as far as China and Korea! 🌏",
+              "text": "The archaeological remains show that it was a large learning complex.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Bodh Gaya: birthplace of Buddhism, where the Buddha found enlightenment! 🕉️",
+              "text": "Nalanda is an important part of India's educational history.",
               "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Was the seat of the mighty Maurya and Gupta Empires! 👑",
-              "minAge": 8,
-              "maxAge": 99
-            },
-            {
-              "text": "Emperor Ashoka ruled a vast empire from ancient Patna (Pataliputra)! 🏛️",
-              "minAge": 8,
-              "maxAge": 99
-            },
-            {
-              "text": "Home to the Chhath Puja festival, honoring the Sun God! 🌅",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "The Ganges River flows across the state, vital for farming! 🌊",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Madhubani painting, a folk art style, comes from Bihar! 🎨",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "One of India's most historically significant states! 📜",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Name 'Bihar' comes from 'Vihara', meaning Buddhist monastery! 🛕",
-              "minAge": 8,
               "maxAge": 99
             }
           ],
+          "narration": "Nalanda in Bihar was a famous ancient centre of learning. Scholars travelled from different regions to study there.",
           "coolFacts": [
             {
-              "text": "Nalanda University had an enormous library and reportedly educated thousands of students at once, over 1,500 years ago! 🎓",
-              "minAge": 8,
+              "text": "Nalanda was known for teaching and scholarship.",
+              "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "The very word 'Bihar' comes from 'Vihara', a Sanskrit word for a Buddhist monastery! 🛕",
-              "minAge": 8,
-              "maxAge": 99
-            },
-            {
-              "text": "Madhubani paintings, with their bold lines and bright colors, are a folk art tradition unique to Bihar! 🎨",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Chhath Puja, a festival honoring the Sun God, is one of Bihar's biggest and most colorful celebrations! 🌅",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Ancient Patna (Pataliputra) was once considered one of the greatest cities in the world! 🏛️",
-              "minAge": 8,
+              "text": "The archaeological remains show that it was a large learning complex.",
+              "minAge": 6,
               "maxAge": 99
             }
           ],
           "didYouKnow": {
-            "text": "Bihar's name comes from the Sanskrit word 'Vihara', meaning a Buddhist monastery - a nod to the region's deep history as a center of Buddhist learning and worship. 🛕",
-            "minAge": 8,
+            "text": "Nalanda was known for teaching and scholarship.",
+            "minAge": 6,
             "maxAge": 99
           },
           "tryThis": {
-            "text": "Look up a Madhubani painting online and notice its bold outlines and bright, patterned colors! 🎨",
+            "text": "Can you tell someone one new thing you learned?",
             "minAge": 3,
             "maxAge": 99
-          },
-          "narration": "Bihar contains some of India's most important ancient Buddhist and archaeological sites, including Nalanda and Bodh Gaya. Nalanda was a major ancient centre of learning. 📚"
+          }
         },
         "hi": {
           "title": "🎉 बिहार के मजेदार तथ्य - इतिहास और संस्कृति!",
@@ -36085,99 +35335,49 @@
     "Arunachal Pradesh": {
       "stateName": "Arunachal Pradesh",
       "capital": {
-        "title": "🌅 ITANAGAR - Where India Greets the Sun First!",
+        "title": "ITANAGAR — CAPITAL OF ARUNACHAL PRADESH",
         "emoji": "🌅",
-        "mainText": "Arunachal Pradesh is nicknamed the 'Land of the Rising Sun' because it's the first Indian state to see sunrise each morning!",
+        "mainText": "Itanagar is the capital of Arunachal Pradesh. The state lies in India's northeast, and its eastern location means some parts see sunrise earlier than much of the country.",
         "keyFacts": [
           {
-            "text": "Capital of Arunachal Pradesh, in the far Northeast! 🌅",
+            "text": "Arunachal Pradesh shares international borders with Bhutan, China and Myanmar.",
             "minAge": 3,
             "maxAge": 99
           },
           {
-            "text": "Population: around 60,000 people! 🏙️",
+            "text": "The state has mountains, forests and many Indigenous communities.",
+            "minAge": 3,
+            "maxAge": 99
+          },
+          {
+            "text": "'Land of the Rising Sun' is a common nickname for the state.",
+            "minAge": 3,
+            "maxAge": 99
+          }
+        ],
+        "narration": "Itanagar is the capital of Arunachal Pradesh. The state lies in India's northeast and has mountains, forests and many Indigenous communities. Because of its eastern location, some parts see sunrise earlier than much of the country.",
+        "coolFacts": [
+          {
+            "text": "Arunachal Pradesh shares international borders with Bhutan, China and Myanmar.",
             "minAge": 6,
             "maxAge": 99
           },
           {
-            "text": "Named after the ancient Ita Fort ('fort of bricks')! 🧱",
-            "minAge": 8,
-            "maxAge": 99
-          },
-          {
-            "text": "Arunachal means 'Land of the Dawn-Lit Mountains'! 🌄",
-            "minAge": 3,
-            "maxAge": 99
-          },
-          {
-            "text": "First Indian state to see sunrise every day! ☀️",
-            "minAge": 3,
-            "maxAge": 99
-          },
-          {
-            "text": "Surrounded by dense forests and steep hills! 🌲",
-            "minAge": 3,
-            "maxAge": 99
-          },
-          {
-            "text": "Home to over 26 major tribes and 100+ sub-tribes! 🏘️",
-            "minAge": 3,
-            "maxAge": 99
-          },
-          {
-            "text": "Ganga Lake (Gyakar Sinyi) nearby, a scenic forest lake! 🌊",
-            "minAge": 3,
-            "maxAge": 99
-          },
-          {
-            "text": "Buddhist, animist, and Hindu traditions coexist here! 🙏",
-            "minAge": 8,
-            "maxAge": 99
-          },
-          {
-            "text": "Best time to visit: October-April! 🌤️",
-            "minAge": 3,
-            "maxAge": 99
-          }
-        ],
-        "coolFacts": [
-          {
-            "text": "Arunachal Pradesh is nicknamed the 'Land of the Rising Sun' because it sees the sunrise before anywhere else in India! ☀️",
-            "minAge": 3,
-            "maxAge": 99
-          },
-          {
-            "text": "The old brick fort that gives Itanagar its name still stands today! 🧱",
-            "minAge": 3,
-            "maxAge": 99
-          },
-          {
-            "text": "Arunachal Pradesh is India's most linguistically diverse state, home to over 100 tribal sub-groups! 🌈",
-            "minAge": 3,
-            "maxAge": 99
-          },
-          {
-            "text": "The state shares borders with Bhutan, Tibet (China), and Myanmar! 🗺️",
-            "minAge": 3,
-            "maxAge": 99
-          },
-          {
-            "text": "Much of the state remains covered in thick, untouched forest! 🌲",
-            "minAge": 3,
+            "text": "The state has mountains, forests and many Indigenous communities.",
+            "minAge": 6,
             "maxAge": 99
           }
         ],
         "didYouKnow": {
-          "text": "Because Arunachal Pradesh sits at India's far eastern edge, the sun rises here before it rises anywhere else in the entire country - sometimes by nearly two hours compared to western India! ☀️",
-          "minAge": 3,
+          "text": "Arunachal Pradesh shares international borders with Bhutan, China and Myanmar.",
+          "minAge": 6,
           "maxAge": 99
         },
         "tryThis": {
-          "text": "Look up what time sunrise happens in your city versus in Arunachal Pradesh - notice the big time difference across one country! 🕐",
+          "text": "Can you tell someone one new thing you learned?",
           "minAge": 3,
           "maxAge": 99
-        },
-        "narration": "Every single morning, Arunachal Pradesh gets to see the sun first, before anywhere else in India - which is exactly why it's called the 'Land of the Rising Sun'. 🌅\n\nIts capital, Itanagar, takes its name from an old brick fort, and the whole state is home to an incredible mix of over 100 different tribal communities, each with their own customs, clothing, and beliefs. 🏘️\n\nSurrounded by thick forests and steep mountains, bordering Bhutan, Tibet, and Myanmar, Arunachal Pradesh remains one of India's most remote and least explored corners. 🌲"
+        }
       },
       "language": {
         "title": "🗣️ 100+ TRIBAL LANGUAGES - India's Most Diverse State!",
@@ -39201,99 +38401,49 @@
       "stateName": "Andaman and Nicobar Islands",
       "capital": {
         "en": {
-          "title": "⚓ PORT BLAIR - Gateway to the Islands!",
+          "title": "SRI VIJAYA PURAM — CAPITAL OF THE ISLANDS",
           "emoji": "⚓",
-          "mainText": "A port town with a haunting history - Port Blair once held one of the most feared colonial prisons in India, now a powerful monument to freedom fighters!",
+          "mainText": "Sri Vijaya Puram, formerly called Port Blair, is the capital of the Andaman and Nicobar Islands. The city is home to the historic Cellular Jail.",
           "keyFacts": [
             {
-              "text": "Capital of the Andaman and Nicobar Islands! 🏝️",
+              "text": "The city's official name changed from Port Blair to Sri Vijaya Puram in 2024.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Population: around 1 LAKH people! 🏙️",
-              "minAge": 6,
-              "maxAge": 99
-            },
-            {
-              "text": "Cellular Jail: former colonial prison, now a national memorial! 🔒",
+              "text": "Cellular Jail is an important site in India's freedom struggle.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Freedom fighters were once imprisoned here during British rule! 🇮🇳",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Surrounded by turquoise sea on all sides! 🌊",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Gateway to nearby islands like Havelock and Neil Island! 🚢",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Home to unique indigenous tribal communities! 🏘️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Anthropological Museum showcases island tribal culture! 🖼️",
-              "minAge": 6,
-              "maxAge": 99
-            },
-            {
-              "text": "Light and sound show held at Cellular Jail each evening! 🎇",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Best time to visit: October-May! 🌤️",
+              "text": "The Union Territory is an archipelago in the Bay of Bengal.",
               "minAge": 3,
               "maxAge": 99
             }
           ],
+          "narration": "Sri Vijaya Puram, formerly called Port Blair, is the capital of the Andaman and Nicobar Islands. The city is home to Cellular Jail, a historic site connected with India's freedom struggle.",
           "coolFacts": [
             {
-              "text": "Cellular Jail was specifically designed with solitary cells to isolate political prisoners from each other completely! 🔒",
-              "minAge": 8,
-              "maxAge": 99
-            },
-            {
-              "text": "Many of India's most famous freedom fighters were imprisoned at Cellular Jail! 🇮🇳",
+              "text": "The city's official name changed from Port Blair to Sri Vijaya Puram in 2024.",
               "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "Port Blair is closer to Thailand and Myanmar than to mainland India! 🗺️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "A moving light and sound show is performed at Cellular Jail every evening! 🎇",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "The islands are home to some of the most isolated tribal communities on Earth! 🏘️",
-              "minAge": 3,
+              "text": "Cellular Jail is an important site in India's freedom struggle.",
+              "minAge": 6,
               "maxAge": 99
             }
           ],
           "didYouKnow": {
-            "text": "Port Blair is actually geographically closer to Thailand, Myanmar, and Indonesia than it is to mainland India - even though it's an Indian territory! 🗺️",
-            "minAge": 3,
+            "text": "The city's official name changed from Port Blair to Sri Vijaya Puram in 2024.",
+            "minAge": 6,
             "maxAge": 99
           },
           "tryThis": {
-            "text": "Look up a map showing how close the Andaman Islands are to Southeast Asia compared to mainland India - it's a big surprise! 🗺️",
+            "text": "Can you tell someone one new thing you learned?",
             "minAge": 3,
             "maxAge": 99
-          },
-          "narration": "Port Blair carries a powerful and difficult history. During British rule, the colonial government built Cellular Jail here, a prison with tiny solitary cells designed to isolate freedom fighters completely from one another. 🔒\n\nToday, that same building stands as a national memorial, honoring the brave people who were imprisoned for fighting for India's independence. Every evening, a moving light and sound show retells their story. 🎇\n\nSurrounded by turquoise waters, Port Blair is also the gateway to some of India's famous islands - and interestingly, it's actually closer to Thailand and Myanmar than to mainland India! 🌊"
+          }
         },
         "hi": {
           "title": "🏙️ पोर्ट ब्लेयर – अंडमान और निकोबार द्वीपसमूह का प्रमुख शहर",
@@ -41217,99 +40367,49 @@
       },
       "animal": {
         "en": {
-          "title": "🦚 INDIAN PEAFOWL - A Familiar Bird of Chandigarh!",
-          "emoji": "🦚",
-          "mainText": "Peacocks are commonly seen in Chandigarh's green spaces. The Indian peafowl is India's national bird.",
+          "title": "INDIAN GREY MONGOOSE — CHANDIGARH'S STATE ANIMAL",
+          "emoji": "🐾",
+          "mainText": "The Indian grey mongoose is the state animal of Chandigarh. It is a small mammal that hunts rodents and other small animals.",
           "keyFacts": [
             {
-              "text": "The Indian peafowl (peacock) is commonly spotted in Chandigarh's parks! 🦚",
+              "text": "Mongooses are mammals, not birds.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "It's India's National Bird! 🇮🇳",
+              "text": "The Indian grey hornbill is Chandigarh's state bird.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Males (peacocks) have iridescent blue-green feathers! 💙",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Female peahens are duller brown, for camouflage while nesting! 🟤",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "A peacock's tail feathers can be over 1.5 meters long! 📏",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Chandigarh's many parks and green spaces attract wild birds! 🌳",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Sukhna Lake wetlands are a popular birdwatching spot! 🦆",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Peacocks perform elaborate dances to attract mates! 💃",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Sacred and celebrated in many Indian cultural traditions! 🙏",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Thrive in Chandigarh thanks to the city's abundant greenery! 🌿",
+              "text": "Mongooses can help control some rodent populations.",
               "minAge": 3,
               "maxAge": 99
             }
           ],
+          "narration": "The Indian grey mongoose is Chandigarh's state animal. The Indian grey hornbill, by contrast, is the city's state bird.",
           "coolFacts": [
             {
-              "text": "A peacock's spectacular tail feathers can grow over 1.5 meters long - longer than most kids are tall! 📏",
-              "minAge": 3,
+              "text": "Mongooses are mammals, not birds.",
+              "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "Chandigarh's carefully planned green spaces make it a surprisingly good place to spot peacocks in the wild! 🌳",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Peacocks perform an elaborate fanned-tail dance to attract peahens during mating season! 💃",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "The shimmering colors in a peacock's feathers come from the structure of the feathers, not pigment - a bit like a rainbow! 🌈",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Sukhna Lake's wetlands attract not just peacocks but many migratory birds too! 🦆",
-              "minAge": 3,
+              "text": "The Indian grey hornbill is Chandigarh's state bird.",
+              "minAge": 6,
               "maxAge": 99
             }
           ],
           "didYouKnow": {
-            "text": "Peacocks are commonly seen in Chandigarh's green spaces. The Indian peafowl is India's national bird.",
-            "minAge": 3,
+            "text": "Mongooses are mammals, not birds.",
+            "minAge": 6,
             "maxAge": 99
           },
           "tryThis": {
-            "text": "Look closely at a soap bubble in the sunlight and notice the rainbow colors - that's a similar trick to how peacock feathers get their shimmer! 🫧",
+            "text": "Can you tell someone one new thing you learned?",
             "minAge": 3,
             "maxAge": 99
-          },
-          "narration": "Peacocks are commonly seen in Chandigarh's green spaces. The Indian peafowl is India's national bird."
+          }
         },
         "pa": {
           "title": "🦚 ਭਾਰਤੀ ਮੋਰ – ਚੰਡੀਗੜ੍ਹ ਦਾ ਪੰਛੀ",
@@ -41697,99 +40797,49 @@
       "stateName": "Dadra and Nagar Haveli and Daman and Diu",
       "capital": {
         "en": {
-          "title": "⚓ DAMAN - Where Portugal Once Ruled!",
+          "title": "DAMAN — A COASTAL CAPITAL",
           "emoji": "⚓",
-          "mainText": "This tiny coastal territory was ruled by Portugal for over 450 years before joining India - and its forts, churches, and streets still show that history today!",
+          "mainText": "Daman is the capital of the Union Territory of Dadra and Nagar Haveli and Daman and Diu. Daman and Diu have a long Portuguese colonial history, while Dadra and Nagar Haveli has its own distinct history.",
           "keyFacts": [
             {
-              "text": "Formed in 2020 by merging two former Union Territories! 🔗",
+              "text": "The Union Territory was formed by merging two territories in 2020.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Daman serves as the main administrative capital! 🏛️",
+              "text": "Daman lies on the Arabian Sea coast.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Ruled by Portugal from 1531 until 1961! 🇵🇹",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Daman Fort: an old Portuguese fort overlooking the sea! 🏰",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Silvassa is another major town in the territory (Nagar Haveli)! 🏙️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Population: around 6 LAKH people across the territory! 🏙️",
-              "minAge": 6,
-              "maxAge": 99
-            },
-            {
-              "text": "Church of Bom Jesus in Daman shows Portuguese colonial architecture! ⛪",
-              "minAge": 6,
-              "maxAge": 99
-            },
-            {
-              "text": "Coastal location on the Arabian Sea! 🌊",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Known for its beaches and relaxed pace of life! 🏖️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Best time to visit: October-March! 🌤️",
+              "text": "The different districts have distinct landscapes and histories.",
               "minAge": 3,
               "maxAge": 99
             }
           ],
+          "narration": "Daman is the capital of the Union Territory of Dadra and Nagar Haveli and Daman and Diu. Daman and Diu have a long Portuguese colonial history, while Dadra and Nagar Haveli has a different local history and landscape.",
           "coolFacts": [
             {
-              "text": "Portugal ruled this territory for over 450 years - far longer than the British ruled most of India! 🇵🇹",
-              "minAge": 3,
+              "text": "The Union Territory was formed by merging two territories in 2020.",
+              "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "It was formed in 2020 by merging two separate former Union Territories into one! 🔗",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Old Portuguese forts and churches still stand along the coast today! 🏰",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "The territory has two very different parts - Daman and Diu on the coast, and Dadra and Nagar Haveli inland! 🗺️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Portuguese-style architecture still gives parts of Daman a distinct European feel! ⛪",
+              "text": "Daman lies on the Arabian Sea coast.",
               "minAge": 6,
               "maxAge": 99
             }
           ],
           "didYouKnow": {
-            "text": "Portugal ruled Daman and Diu for over 450 years - from 1531 all the way until 1961 - which is even longer than the roughly 200 years the British controlled most of mainland India! 🇵🇹",
-            "minAge": 3,
+            "text": "The Union Territory was formed by merging two territories in 2020.",
+            "minAge": 6,
             "maxAge": 99
           },
           "tryThis": {
-            "text": "Look up a photo of an old Portuguese fort in Daman and compare it to a Mughal fort elsewhere in India - notice the architectural differences! 🏰",
+            "text": "Can you tell someone one new thing you learned?",
             "minAge": 3,
             "maxAge": 99
-          },
-          "narration": "Long before India's independence, tiny Daman was ruled not by the British, but by Portugal - for over 450 years! 🇵🇹\n\nOld forts, churches, and colorful colonial buildings still line its streets, giving this small coastal town a very different feel from the rest of India.\n\nIn 2020, Daman and Diu joined together with Dadra and Nagar Haveli to form one combined territory, blending its Portuguese coastal history with the tribal traditions of its inland forests. ⚓"
+          }
         },
         "gu": {
           "title": "⚓ દમણ – જ્યાં પોર્ટુગીઝ શાસન હતું!",
@@ -42465,99 +41515,49 @@
       },
       "animal": {
         "en": {
-          "title": "🐆 LEOPARD - The Hidden Hunter of the Forests!",
+          "title": "LEOPARD — WILDLIFE OF THE TERRITORY",
           "emoji": "🐆",
-          "mainText": "In the quiet forests of Nagar Haveli, leopards move silently through the trees - powerful, adaptable, and rarely seen by the humans who share their home!",
+          "mainText": "Leopards live in forested areas of Dadra and Nagar Haveli. This card describes local wildlife rather than an official animal symbol for the merged Union Territory.",
           "keyFacts": [
             {
-              "text": "Leopards live in the forested areas of Nagar Haveli! 🌳",
+              "text": "A leopard is a wild cat, not a state symbol for this territory.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Weight: around 30-70 kg! ⚖️",
+              "text": "Dadra and Nagar Haveli includes forested areas and wildlife habitats.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Excellent climbers, often resting in trees during the day! 🌲",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Yellow-gold coat with distinctive dark rosette spots! 🐆",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Extremely adaptable, able to live near human settlements too! 🏘️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Mostly active at night (nocturnal)! 🌙",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Solitary hunters, relying on stealth and surprise! 🤫",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Can run at bursts of over 55 km/h! 🏃",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Listed as Vulnerable due to habitat loss! 😢",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "One of the most widespread big cats in the world! 🌍",
+              "text": "Daman and Diu are coastal parts of the same Union Territory.",
               "minAge": 3,
               "maxAge": 99
             }
           ],
+          "narration": "Leopards live in forested areas of Dadra and Nagar Haveli. This card describes local wildlife, not an official state animal.",
           "coolFacts": [
             {
-              "text": "Leopards are famous for dragging prey up into trees, keeping it safe from other predators! 🌲",
+              "text": "A leopard is a wild cat, not a state symbol for this territory.",
               "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "They're one of the most adaptable big cats on Earth, able to survive in forests, hills, and even near villages! 🏘️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "A leopard's spotted coat provides near-effective camouflage in dappled forest light! 🐆",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "They're mostly silent, solitary hunters that rely on stealth rather than speed over long distances! 🤫",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Despite their power, leopards are shy and go to great lengths to avoid humans! 👻",
-              "minAge": 3,
+              "text": "Dadra and Nagar Haveli includes forested areas and wildlife habitats.",
+              "minAge": 6,
               "maxAge": 99
             }
           ],
           "didYouKnow": {
-            "text": "Leopards are strong enough to drag prey that weighs more than themselves up into the branches of a tree, keeping their meal safely away from other hungry predators on the ground! 🌲",
-            "minAge": 3,
+            "text": "A leopard is a wild cat, not a state symbol for this territory.",
+            "minAge": 6,
             "maxAge": 99
           },
           "tryThis": {
-            "text": "Look up a photo of a leopard's spotted coat next to a forest floor covered in dappled sunlight - notice how well it blends in! 🐆",
+            "text": "Can you tell someone one new thing you learned?",
             "minAge": 3,
             "maxAge": 99
-          },
-          "narration": "In the quiet forests of Nagar Haveli, leopards move like silent shadows, their spotted coats blending perfectly into the dappled sunlight of the trees. 🐆\n\nThese powerful, solitary hunters are famous for one particular trick - dragging their prey up into tree branches, keeping it safe from other hungry animals below. 🌲\n\nDespite their strength, leopards are shy and rarely seen, preferring to avoid people entirely as they quietly share these forests with local communities. 👻"
+          }
         },
         "gu": {
           "title": "🐆 ચિત્તો – જંગલોનો છુપાયેલો શિકારી!",
@@ -44577,99 +43577,49 @@
       },
       "food": {
         "en": {
-          "title": "🥐 CROISSANTS MEET DOSA - Puducherry's Fusion Food!",
-          "emoji": "🥐",
-          "mainText": "Where else in India can you eat a crispy South Indian dosa for breakfast and a freshly baked French croissant for dessert - all in the same town?",
+          "title": "PUDUCHERRY FISH CURRY",
+          "emoji": "🍲",
+          "mainText": "Puducherry has food traditions shaped by Tamil cooking and a long French colonial connection. Fish curry is one dish enjoyed in the region.",
           "keyFacts": [
             {
-              "text": "Blends classic South Indian food with French-influenced dishes! 🥐",
+              "text": "Food traditions vary among Puducherry's districts and communities.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Dosa, idli, and sambar are everyday Tamil staples here! 🥞",
+              "text": "Tamil cooking is an important influence on local cuisine.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "French bakeries serve fresh croissants and baguettes! 🥖",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Fresh seafood is popular thanks to the coastal location! 🐟",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "French-style cafes line the streets of the White Town! ☕",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Filter coffee is a beloved South Indian tradition here too! ☕",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Some restaurants serve genuine French cuisine! 🍽️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Local Tamil thali meals remain widely popular! 🍛",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "A rare and delicious mix of two very different food cultures! 🌍",
-              "minAge": 6,
-              "maxAge": 99
-            },
-            {
-              "text": "Bakeries reflect the lasting legacy of French colonial rule! 🥐",
+              "text": "French influences can be seen in some local foods and bakeries.",
               "minAge": 3,
               "maxAge": 99
             }
           ],
+          "narration": "Puducherry's food traditions reflect Tamil cooking and its French colonial history. Fish curry is enjoyed in the region, and local dishes vary by community and district.",
           "coolFacts": [
             {
-              "text": "Puducherry is known for having both South Indian food and French-influenced café foods. 🥐 🥐",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Its French-style bakeries have been baking bread and pastries for generations! 🥖",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Cafes in the old French Quarter often have a distinctly European feel, right in the middle of Tamil Nadu! ☕",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Fresh seafood dishes reflect Puducherry's long coastal and colonial history! 🐟",
+              "text": "Food traditions vary among Puducherry's districts and communities.",
               "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "This food fusion makes Puducherry one of India's most unique culinary destinations! 🌍",
-              "minAge": 3,
+              "text": "Tamil cooking is an important influence on local cuisine.",
+              "minAge": 6,
               "maxAge": 99
             }
           ],
           "didYouKnow": {
-            "text": "Puducherry has genuine French bakeries that have been making fresh croissants and baguettes for generations - making it one of the very few places in India where you can grab authentic French pastries for breakfast! 🥐",
-            "minAge": 3,
+            "text": "Food traditions vary among Puducherry's districts and communities.",
+            "minAge": 6,
             "maxAge": 99
           },
           "tryThis": {
-            "text": "Ask an adult if you can try a croissant alongside a dosa sometime - that unusual pairing is a perfectly normal breakfast choice in Puducherry! 🥐",
+            "text": "Can you tell someone one new thing you learned?",
             "minAge": 3,
             "maxAge": 99
-          },
-          "narration": "Puducherry's food reflects both Tamil culinary traditions and the territory's French colonial history. You can find South Indian dishes alongside French-influenced breads, pastries and café foods. 🥐"
+          }
         },
         "ta": {
           "title": "🥐 குரோசானும் தோசையும் சந்திக்கும் இடம் - புதுச்சேரியின் கலவை உணவு!",
