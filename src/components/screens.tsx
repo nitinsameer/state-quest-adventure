@@ -4331,11 +4331,9 @@ function ProfileScreenContent() {
             </span>
           </button>
         </div>
-        {/* Daily Goals Section */}
+        {/* Streak Section */}
         <div className="animate-fade-in" style={{ animationDelay: "250ms" }}>
           {(() => {
-            const dailyGoalText =
-              p.completed.length === 0 ? "Complete your first state" : "Explore a new state today";
             const nextMilestone = Math.ceil((p.streak + 1) / 5) * 5;
             const daysUntilNext = nextMilestone - p.streak;
 
@@ -4347,28 +4345,28 @@ function ProfileScreenContent() {
                     className="h-12 w-12 rounded-2xl flex items-center justify-center text-2xl"
                     style={{ backgroundColor: "var(--accent-3)", color: "var(--accent-3-ink)" }}
                   >
-                    {EMOJI.milestone.twentyFive}
+                    {EMOJI.action.fire}
                   </div>
                   <div className="flex-1">
                     <div className="text-display font-extrabold text-[15px] leading-tight">
-                      Daily Goals
+                      Streak
                     </div>
                     <div className="text-[11px] font-bold text-text-secondary">
-                      {EMOJI.feedback.trophy} {p.streak} day streak
+                      Keep exploring to build your streak
                     </div>
                   </div>
                 </div>
 
-                {/* Daily Challenge */}
-                <div className="ml-15 text-[13px] font-extrabold text-ink">
-                  {EMOJI.action.lock} {dailyGoalText}
+                {/* Streak Count */}
+                <div className="ml-15 text-[24px] font-extrabold text-accent-3">
+                  {p.streak} days
                 </div>
 
-                {/* Next Reward */}
-                <div className="ml-15 text-[11px] font-bold text-warning">
+                {/* Next Milestone */}
+                <div className="ml-15 text-[13px] font-extrabold text-accent-3">
                   {daysUntilNext === 0
-                    ? `${EMOJI.theme.painter} Claim your milestone reward!`
-                    : `{EMOJI.theme.painter} ${daysUntilNext} day${daysUntilNext !== 1 ? "s" : ""} until ${nextMilestone}-day bonus!`}
+                    ? `${EMOJI.action.fire} Claim your ${nextMilestone}-day milestone!`
+                    : `${EMOJI.action.fire} ${daysUntilNext} day${daysUntilNext !== 1 ? "s" : ""} until ${nextMilestone}-day bonus!`}
                 </div>
               </div>
             );

@@ -99,11 +99,8 @@ export function HomeScreen() {
               )}
             </div>
 
-            {/* Right: Streak + Coins */}
+            {/* Right: Coins */}
             <div className="flex items-center gap-(--gap-base)">
-              <div className="bg-surface-card/80 rounded-full w-12 h-12 flex items-center justify-center shadow-md text-lg">
-                {EMOJI.action.fire}
-              </div>
               <div className="bg-surface-card/80 rounded-full w-12 h-12 flex items-center justify-center shadow-md text-lg">
                 {EMOJI.quiz.question}
               </div>
