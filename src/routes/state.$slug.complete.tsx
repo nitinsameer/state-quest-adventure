@@ -1,5 +1,5 @@
 import { createFileRoute, notFound, useNavigate, redirect } from "@tanstack/react-router";
-import { QuizCeremony } from "@/components/ceremony/QuizCeremony";
+import { QuizCelebrationScreen } from "@/components/ceremony/QuizCelebrationScreen";
 import { ThemeUnlockCelebration } from "@/components/ThemeUnlockCelebration";
 import { getStateBySlug } from "@/lib/states";
 import { statesWithProgress, setLastPlayedState, getProgress } from "@/lib/progress";
@@ -96,7 +96,7 @@ function Complete() {
   }
 
   if (pendingCelebration.type === "full" || pendingCelebration.type === "stars-improved") {
-    return <QuizCeremony />;
+    return <QuizCelebrationScreen />;
   }
 
   if (pendingCelebration.type === "theme-unlock") {
