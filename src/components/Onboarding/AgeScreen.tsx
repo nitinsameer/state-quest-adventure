@@ -79,7 +79,7 @@ export function AgeScreen({
 
       <ConfettiBurst trigger={confettiBurst} size="big" />
 
-      {/* Premium Header - Fixed */}
+      {/* Header - Fixed at top */}
       <div className="relative z-10 flex-shrink-0">
         <PremiumHeader
           firstPart="How Old"
@@ -90,30 +90,9 @@ export function AgeScreen({
         />
       </div>
 
-      {/* Scrollable Content Area */}
-      <div className="relative z-10 flex-1 overflow-y-auto flex flex-col">
-        {/* Inner wrapper for content with padding */}
-        <div className="px-5 py-3 flex flex-col gap-2">
-          {/* Selected Avatar Preview */}
-          {selectedAvatar && (
-            <div className="flex items-center gap-2 pb-2 border-b border-border-color">
-              <div className="flex-shrink-0 w-12 h-12 rounded-full overflow-hidden shadow-sm">
-                <img
-                  src={`/src/assets/avatars/${selectedAvatar}.png`}
-                  alt={getAvatarName(selectedAvatar)}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).style.display = "none";
-                  }}
-                />
-              </div>
-              <div className="min-w-0">
-                <p className="text-xs opacity-80">Your explorer:</p>
-                <p className="text-sm font-bold truncate">{getAvatarName(selectedAvatar)}</p>
-              </div>
-            </div>
-          )}
-
+      {/* Scrollable Content - includes buttons in flow */}
+      <div className="relative z-10 flex-1 overflow-y-auto">
+        <div className="px-5 py-3 pb-safe flex flex-col gap-2">
           {/* Age Bands */}
           {AGE_BANDS.map((band) => {
             const isSelected = selectedAge === band.value;
@@ -174,30 +153,31 @@ export function AgeScreen({
               This app respects kids' privacy in line with COPPA.
             </p>
           </div>
-        </div>
-      </div>
 
-      {/* Footer with buttons - Scrolls with content */}
-      <div className="relative z-10 px-5 py-1 bg-surface-card border-t border-border-color gap-3 flex pb-safe">
-        <button
-          type="button"
-          onClick={handleBack}
-          className="flex-1 py-2 px-4 rounded-xl font-bold text-text-primary bg-surface-raised hover:bg-surface-sunken transition-colors text-sm"
-        >
-          Back
-        </button>
-        <button
-          type="button"
-          onClick={handleNext}
-          disabled={!selectedAge}
-          className={`flex-1 py-2 px-4 rounded-xl font-bold transition-colors text-sm ${
-            selectedAge
-              ? "bg-action-primary text-text-on-primary hover:shadow-elevated-1"
-              : "bg-surface-sunken text-text-secondary cursor-not-allowed opacity-50"
-          }`}
-        >
-          Start My Journey
-        </button>
+          {/* Buttons - In content flow */}
+          <div className="flex gap-3 pt-2">
+            <button
+              type="button"
+              onClick={handleBack}
+              className="flex-1 py-3 px-4 rounded-full font-bold text-text-primary bg-white border-2 border-action-primary transition-all active:scale-95"
+            >
+              Back
+            </button>
+            <button
+              type="button"
+              onClick={handleNext}
+              disabled={!selectedAge}
+              className={`flex-1 py-3 px-4 rounded-full font-bold text-base flex items-center justify-center gap-2 transition-all active:scale-95 ${
+                selectedAge
+                  ? "bg-action-primary text-white hover:shadow-elevated-2"
+                  : "bg-surface-sunken text-text-secondary cursor-not-allowed opacity-50"
+              }`}
+            >
+              Start My Journey
+              <span>→</span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

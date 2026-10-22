@@ -109,7 +109,7 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
 
       <ConfettiBurst trigger={confettiBurst} size="small" />
 
-      {/* Premium Header - Fixed */}
+      {/* Header - Fixed at top */}
       <div className="relative z-10 flex-shrink-0">
         <PremiumHeader
           firstPart="Pick Your"
@@ -119,12 +119,11 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
         />
       </div>
 
-      {/* Scrollable Content Area */}
-      <div className="relative z-10 flex-1 overflow-y-auto flex flex-col">
-        {/* Inner wrapper for content with padding */}
-        <div className="px-4 py-3 flex flex-col">
+      {/* Scrollable Content - includes button in flow */}
+      <div className="relative z-10 flex-1 overflow-y-auto">
+        <div className="px-4 py-3 pb-safe flex flex-col">
           {/* Avatar Grid - 3 columns */}
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 gap-2 mb-3">
             {AVATAR_IDS.map((avatarId) => (
               <button
                 key={avatarId}
@@ -159,39 +158,35 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
             ))}
           </div>
 
-          {/* Preview Card - Scrolls with content */}
+          {/* Explorer Summary Card */}
           {selectedAvatar && (
-            <div className="mt-1 rounded-xl bg-yellow-100 p-3 text-text-primary shadow-elevated-2 animate-fade-in">
-              <div className="flex items-center gap-2">
+            <div className="rounded-2xl bg-yellow-100 p-3 mb-3 shadow-elevated-2 animate-fade-in">
+              <div className="flex items-center gap-3">
                 <img
                   src={getAvatarImage(selectedAvatar)}
                   alt={getAvatarName(selectedAvatar)}
-                  className="w-12 h-12 rounded-full border-2 border-text-primary shadow-elevated-2 flex-shrink-0"
+                  className="w-14 h-14 rounded-full border-2 border-yellow-300 shadow-md flex-shrink-0"
                 />
-                <div className="min-w-0">
-                  <div className="text-xs opacity-80 font-semibold">YOUR EXPLORER</div>
-                  <div className="text-sm font-black truncate text-text-primary">{getAvatarName(selectedAvatar)}</div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs font-bold text-yellow-700 tracking-wider">YOUR EXPLORER</div>
+                  <div className="text-lg font-black text-text-primary truncate">{getAvatarName(selectedAvatar)}</div>
                 </div>
               </div>
             </div>
           )}
-        </div>
-      </div>
 
-      {/* Footer with Next button - Scrolls with content */}
-      <div className="relative z-10 px-5 py-1 bg-surface-card border-t border-border-color pb-safe">
-        <button
-          type="button"
-          onClick={handleNext}
-          disabled={!selectedAvatar}
-          className={`w-full py-2 px-4 rounded-xl font-bold transition-colors text-sm ${
-            selectedAvatar
-              ? "bg-action-primary text-text-on-primary hover:shadow-elevated-1"
-              : "bg-surface-sunken text-text-secondary cursor-not-allowed opacity-50"
-          }`}
-        >
-          Continue
-        </button>
+          {/* Continue Button - In content flow */}
+          {selectedAvatar && (
+            <button
+              type="button"
+              onClick={handleNext}
+              className="w-full py-3 px-4 rounded-full bg-action-primary text-white font-bold text-base flex items-center justify-center gap-2 shadow-elevated-2 hover:shadow-elevated-3 active:scale-95 transition-all"
+            >
+              Continue
+              <span>→</span>
+            </button>
+          )}
+        </div>
       </div>
 
       <style>{`
