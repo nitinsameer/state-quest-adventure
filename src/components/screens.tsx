@@ -27,6 +27,7 @@ import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { PassportSeedling } from "@/components/PassportSeedling";
 import { AudioSettingRow } from "@/components/AudioSettingToggle";
 import { ResetPINDialog } from "@/components/ResetPINDialog";
+import { DebugThemeSelector } from "@/components/DebugThemeSelector";
 import { StatePerformanceBadgesView } from "@/components/state-performance-badges-view";
 import {
   grantFeatureConsent,
@@ -4266,6 +4267,9 @@ function ProfileScreenContent() {
         <div className="animate-fade-in" style={{ animationDelay: "185ms" }}>
           <ThemePickerNavButton />
         </div>
+
+        {/* Debug Theme Selector - Development Only */}
+        <DebugThemeSelector />
 
         {/* ⚙️ Settings Section Header */}
         <div className="animate-fade-in pt-2" style={{ animationDelay: "195ms" }}>
