@@ -160,15 +160,15 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
 
           {/* Explorer Summary Card */}
           {selectedAvatar && (
-            <div className="rounded-2xl bg-yellow-100 p-3 mb-3 shadow-elevated-2 animate-fade-in">
+            <div className="rounded-2xl bg-accent-1-soft p-3 mb-3 shadow-elevated-2 animate-fade-in">
               <div className="flex items-center gap-3">
                 <img
                   src={getAvatarImage(selectedAvatar)}
                   alt={getAvatarName(selectedAvatar)}
-                  className="w-14 h-14 rounded-full border-2 border-yellow-300 shadow-md flex-shrink-0"
+                  className="w-14 h-14 rounded-full border-2 border-accent-1 shadow-md flex-shrink-0"
                 />
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs font-bold text-yellow-700 tracking-wider">YOUR EXPLORER</div>
+                  <div className="text-xs font-bold text-accent-1-ink tracking-wider">YOUR EXPLORER</div>
                   <div className="text-lg font-black text-text-primary truncate">{getAvatarName(selectedAvatar)}</div>
                 </div>
               </div>
