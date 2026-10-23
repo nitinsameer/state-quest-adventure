@@ -963,7 +963,7 @@ function HomeDashboardContent() {
         {/* HERO CARD: Next State - Entire card is tappable */}
         <div
           className="flex-1 min-h-0 flex flex-col"
-          style={{ padding: "var(--space-1-5) var(--space-1-5) 0" }}
+          style={{ padding: "var(--space-1-5) var(--space-1-5) var(--space-1-5)" }}
         >
           <Link
             to="/state/$slug/learn"
