@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
-    <!-- Cleartext (HTTP) is ALWAYS disabled, even for debug builds -->
+    <!-- Default policy: HTTPS only, no cleartext anywhere -->
     <domain-config cleartextTrafficPermitted="false">
         <domain includeSubdomains="true">firebaseapp.com</domain>
         <domain includeSubdomains="true">firebaseio.com</domain>
@@ -8,13 +8,9 @@
         <domain includeSubdomains="true">firebase.google.com</domain>
         <domain includeSubdomains="true">*.firebaseio.com</domain>
         <domain includeSubdomains="true">*.firebaseapp.com</domain>
-    </domain-config>
-    
-    <!-- Default policy: HTTPS only, no cleartext anywhere -->
-    <default-config cleartextTrafficPermitted="false">
         <trust-anchors>
             <certificates src="system" />
             <certificates src="user" />
         </trust-anchors>
-    </default-config>
+    </domain-config>
 </network-security-config>
