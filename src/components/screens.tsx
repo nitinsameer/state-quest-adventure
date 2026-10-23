@@ -1,6 +1,7 @@
 import mascot from "@/assets/mascot.webp";
 import airplane from "@/assets/airplane.png";
 import welcomeScreenImage from "@/assets/welcome.webp";
+import stateHeaderBg from "@/assets/state-header-background.png";
 import avatarExplorerHat from "@/assets/avatars/avatar-explorer-hat.png";
 import avatarExplorerPink from "@/assets/avatars/avatar-explorer-pink.png";
 import avatarGeekGlasses from "@/assets/avatars/avatar-geek-glasses.png";
@@ -2129,78 +2130,96 @@ export function LearningHubScreen({
 
   return (
     <div className="h-full w-full bg-surface-card flex flex-col">
-      <div className={`px-5 pt-3 pb-4 ${grad} rounded-b-[32px] relative`}>
-        {/* Breadcrumb Navigation Context */}
-        <div className="mb-2 flex items-center gap-1 text-text-on-header text-xs font-bold px-12">
-          <span className="opacity-75">Journey</span>
-          <span className="opacity-50">›</span>
-          {currentRegion && (
-            <>
-              <img
-                src={STATE_ART[currentRegion.name]}
-                alt={currentRegion.name}
-                className="w-3 h-3 object-cover rounded inline-block"
-                loading="lazy"
-                decoding="async"
-              />
-              <span className="opacity-75">{currentRegion.name}</span>
-              <span className="opacity-50">›</span>
-            </>
-          )}
-          <img
-            src={STATE_ART[state.name]}
-            alt={state.name}
-            className="w-3 h-3 object-cover rounded inline-block"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => {
-              if (onBack) {
-                fxTap();
-                onBack();
-              } else {
-                goBack();
-              }
-            }}
-            className="h-12 w-12 rounded-full bg-text-on-header/20 flex items-center justify-center text-text-on-header text-xl"
-          >
-            ‹
-          </button>
-          <div className="flex-1 text-text-on-header">
-            <div className="text-xs font-bold text-text-on-header/90">Learning Hub</div>
-            <div className="text-display text-xl font-extrabold">{state.name}</div>
-            {progress.streak > 0 && (
-              <div className="text-xs font-bold text-text-on-header/80 mt-0.5">
-                {EMOJI.feedback.trophy} Day {progress.streak} streak
-              </div>
+      <div className={`h-40 ${grad} rounded-b-[32px] relative overflow-hidden`}>
+        {/* Background image - absolute positioned */}
+        <img
+          src={stateHeaderBg}
+          alt="Header background"
+          className="absolute inset-0 w-full h-full object-cover"
+          loading="lazy"
+          decoding="async"
+        />
+        
+        {/* Content overlay with z-10 for relative positioning */}
+        <div className="relative z-10 px-5 pt-3 pb-4 h-full flex flex-col">
+          {/* Breadcrumb Navigation Context */}
+          <div className="mb-2 flex items-center gap-1 text-text-on-header text-xs font-bold px-12">
+            <span className="opacity-75">Journey</span>
+            <span className="opacity-50">›</span>
+            {currentRegion && (
+              <>
+                <img
+                  src={STATE_ART[currentRegion.name]}
+                  alt={currentRegion.name}
+                  className="w-3 h-3 object-cover rounded inline-block"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span className="opacity-75">{currentRegion.name}</span>
+                <span className="opacity-50">›</span>
+              </>
             )}
-          </div>
-          <div className="flex items-center gap-1 text-text-on-header text-display font-extrabold">
-            <span>{EMOJI.action.star}</span> {completedCategories * XP_PER_CARD}
-          </div>
-        </div>
-
-        {/* Journey Progress Bar */}
-        <div className="mt-3 flex items-center gap-3">
-          <div className="flex-1 h-2.5 bg-text-on-header/30 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-text-on-header rounded-full transition-all duration-300"
-              style={{ width: `${(completedCategories / 6) * 100}%` }}
+            <img
+              src={STATE_ART[state.name]}
+              alt={state.name}
+              className="w-3 h-3 object-cover rounded inline-block"
+              loading="lazy"
+              decoding="async"
             />
           </div>
-          <div className="text-sm font-extrabold text-text-on-header whitespace-nowrap">
-            {completedCategories} / 6
+
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => {
+                if (onBack) {
+                  fxTap();
+                  onBack();
+                } else {
+                  goBack();
+                }
+              }}
+              className="h-12 w-12 rounded-full bg-text-on-header/20 flex items-center justify-center text-text-on-header text-xl"
+            >
+              ‹
+            </button>
+            <div className="flex-1 text-text-on-header">
+              <div className="text-xs font-bold text-text-on-header/90">Learning Hub</div>
+              <div className="text-display text-xl font-extrabold">{state.name}</div>
+              {progress.streak > 0 && (
+                <div className="text-xs font-bold text-text-on-header/80 mt-0.5">
+                  {EMOJI.feedback.trophy} Day {progress.streak} streak
+                </div>
+              )}
+            </div>
+            <div className="flex items-center gap-1 text-text-on-header text-display font-extrabold">
+              <span>{EMOJI.action.star}</span> {completedCategories * XP_PER_CARD}
+            </div>
+          </div>
+
+          {/* Journey Progress Bar - "Your state adventure" */}
+          <div className="mt-3 flex items-center gap-3">
+            <div className="text-xs font-bold text-text-on-header">Your state adventure</div>
+          </div>
+          <div className="mt-1 flex items-center gap-3">
+            <div className="flex-1 h-2.5 bg-text-on-header/30 rounded-full overflow-hidden">
+              <div
+                className="h-full rounded-full transition-all duration-300"
+                style={{ 
+                  width: `${(completedCategories / 6) * 100}%`,
+                  backgroundColor: "var(--text-on-header)"
+                }}
+              />
+            </div>
+            <div className="text-sm font-extrabold text-text-on-header whitespace-nowrap">
+              {completedCategories} / 6
+            </div>
           </div>
         </div>
       </div>
 
       <div className="p-4 grid grid-cols-2 gap-3 flex-1 overflow-auto">
-        {cards.map((c) => (
-          <HubCard key={c.title} {...c} stateName={state.name} />
+        {cards.map((c, idx) => (
+          <HubCard key={c.title} index={idx} {...c} stateName={state.name} />
         ))}
       </div>
       <div className="p-4">
@@ -2294,6 +2313,7 @@ function HubCard({
   stateName,
   categoryCardsTotal,
   categoryCardsRead,
+  index,
   onOpen,
 }: {
   icon: string;
@@ -2310,18 +2330,18 @@ function HubCard({
   categoryCardsRead?: number;
   onOpen?: () => void;
 }) {
-  const bg = {
-    orange: "bg-saffron-soft",
-    blue: "bg-explorer-soft",
-    green: "bg-success-soft",
-    gold: "bg-gold-soft",
-  }[tone];
-  const borderColorMap = {
-    orange: "var(--saffron)",
-    blue: "var(--explorer)",
-    green: "var(--success)",
-    gold: "var(--gold)",
-  };
+  // Pastel color system mapped by index
+  const pastelColorMap = [
+    "#FFD9B3", // 0: Capital - soft peach
+    "#BFDBFE", // 1: Language - soft sky
+    "#BBFBEE", // 2: Food - soft mint
+    "#FED7AA", // 3: Places - soft amber
+    "#FFD9B3", // 4: Monument - soft peach
+    "#BFDBFE", // 5: Craft - soft sky
+  ];
+
+  const pastelBg = index !== undefined ? pastelColorMap[index] : "#BFDBFE";
+
   return (
     <button
       type="button"
@@ -2330,29 +2350,39 @@ function HubCard({
         fxTap();
         onOpen?.();
       }}
-      className={`relative text-left ui-card ${locked ? "ui-accent-1-soft opacity-70 pointer-events-none cursor-not-allowed" : done ? "ui-accent-3" : "ui-accent-1-soft"} p-4 border-2 transition active:scale-[0.98]`}
-      style={active ? { borderColor: borderColorMap[tone] } : undefined}
+      className={`relative text-left transition active:scale-[0.98] p-4 border-4 rounded-2xl`}
+      style={{
+        backgroundColor: pastelBg,
+        borderColor: locked ? "rgba(0,0,0,0.1)" : "rgba(0,0,0,0.2)",
+        opacity: locked ? 0.7 : 1,
+        pointerEvents: locked || !canClick ? "none" : "auto",
+        cursor: locked || !canClick ? "not-allowed" : "pointer",
+      }}
     >
+      {/* Numbered badge in top-left */}
+      {index !== undefined && (
+        <div className="absolute top-2 left-2 h-7 w-7 rounded-full bg-white/80 flex items-center justify-center text-xs font-black text-gray-700 shadow-sm">
+          {String(index + 1).padStart(2, "0")}
+        </div>
+      )}
+
       <div className="text-h1">{icon}</div>
-      <div className="text-h5 text-display mt-1 leading-tight">{title}</div>
-      <div className="text-xs font-bold text-text-secondary">{sub}</div>
+      <div className="text-h5 text-display mt-1 leading-tight font-bold">{title}</div>
+      <div className="text-xs font-bold text-gray-600">{sub}</div>
       {/* Category-scoped progress counter */}
       {categoryCardsTotal !== undefined && categoryCardsRead !== undefined && (
-        <div className={`mt-2 text-xs font-bold ${done ? "text-success" : "text-text-secondary"}`}>
+        <div className={`mt-2 text-xs font-bold ${done ? "text-green-600" : "text-gray-600"}`}>
           {categoryCardsRead}/{categoryCardsTotal}
           {done && " ✓"}
         </div>
       )}
       {done && (
-        <div className="absolute top-2 right-2 h-8 w-8 rounded-full bg-success text-text-on-primary flex items-center justify-center text-h5 font-black shadow-lg animate-bounce">
+        <div className="absolute top-2 right-2 h-8 w-8 rounded-full bg-green-500 text-white flex items-center justify-center text-h5 font-black shadow-lg animate-bounce">
           ✓
         </div>
       )}
       {locked && (
-        <div
-          className="absolute top-2 right-2 h-7 w-7 rounded-full text-text-primary flex items-center justify-center text-xs"
-          style={{ backgroundColor: "var(--scrim)" }}
-        >
+        <div className="absolute top-2 right-2 h-7 w-7 rounded-full text-white flex items-center justify-center text-xs bg-gray-400 shadow-sm">
           {EMOJI.milestone.hundred}
         </div>
       )}
