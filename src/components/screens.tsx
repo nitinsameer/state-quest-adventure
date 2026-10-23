@@ -3360,7 +3360,9 @@ function QuizScreenContent({
           {questions.map((q, i) => {
             let bgColor = "bg-surface-raised"; // Not answered yet
             if (i < index) {
-              bgColor = "bg-fb-success-bg"; // Correct answer
+              // Check if this question was answered correctly or wrongly
+              const answeredQuestion = answeredQuestions[i];
+              bgColor = answeredQuestion?.correct ? "bg-fb-success-bg" : "bg-fb-error-bg";
             } else if (i === index) {
               bgColor = "bg-accent-2"; // Current question
             }
@@ -3480,7 +3482,7 @@ function QuizScreenContent({
               : "Next Question →"
             : result === "wrong"
               ? isLastQuestion
-                ? "Finish Quiz {EMOJI.feedback.success}"
+                ? `Finish Quiz ${EMOJI.feedback.success}`
                 : "Next Question →"
               : "Check Answer"}
         </button>
