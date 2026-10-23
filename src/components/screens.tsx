@@ -2117,10 +2117,10 @@ export function LearningHubScreen({
   });
 
   return (
-    <div className="h-full w-full bg-bg-page flex flex-col">
-      {/* HEADER SECTION - Simplified, compact header with background image and floating controls */}
-      <div className="h-32 relative overflow-hidden flex flex-col justify-center">
-        {/* Background image - absolute positioned, full width/height */}
+    <div className="w-full bg-bg-page flex flex-col">
+      {/* HEADER SECTION - Simplified, clean header with background image and centered state name */}
+      <div className="relative h-32 overflow-hidden">
+        {/* Background image - covers full header */}
         <img
           src={stateHeaderBg}
           alt="Header background"
@@ -2129,9 +2129,9 @@ export function LearningHubScreen({
           decoding="async"
         />
         
-        {/* Content overlay with z-10 for relative positioning */}
-        <div className="relative z-10 px-5 h-full flex flex-col items-center justify-center">
-          {/* Floating back button - left side */}
+        {/* Header content overlay - back button, title, star counter */}
+        <div className="relative z-10 h-full flex items-center justify-between px-4">
+          {/* Back button - left side */}
           <button
             onClick={() => {
               if (onBack) {
@@ -2141,96 +2141,98 @@ export function LearningHubScreen({
                 goBack();
               }
             }}
-            className="absolute left-5 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-text-on-header/30 backdrop-blur-sm flex items-center justify-center text-text-on-header text-lg flex-shrink-0 transition-all active:scale-95 hover:bg-text-on-header/40"
+            className="h-9 w-9 rounded-full bg-text-on-header/40 backdrop-blur-sm flex items-center justify-center text-text-on-header text-lg flex-shrink-0 transition-all active:scale-95"
             aria-label="Go back"
           >
             ‹
           </button>
 
-          {/* Center: State name prominently */}
-          <div className="text-center">
-            <h1 className="text-display text-2xl font-extrabold text-text-on-header leading-tight">
-              {state.name}
-            </h1>
-          </div>
+          {/* Center: State name - flex-grow to push star to right */}
+          <h1 className="flex-1 text-center text-h2 font-extrabold text-text-on-header leading-tight px-4">
+            {state.name}
+          </h1>
 
-          {/* Floating star counter - right side */}
-          <div className="absolute right-5 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-text-on-header/30 backdrop-blur-sm flex items-center justify-center text-text-on-header flex-shrink-0">
-            <span className="text-lg font-extrabold">{completedCategories * XP_PER_CARD}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* PROGRESS CARD - White rounded card with overlap and lavender progress bar */}
-      <div className="px-5 -mt-6 relative z-20">
-        <div className="bg-surface-card rounded-2xl shadow-elevated-1 p-5">
-          <div className="flex items-center justify-between mb-3">
-            <div className="text-label font-bold text-text-primary">Your state adventure</div>
-            <div className="text-body font-extrabold text-text-primary">{completedCategories} / 6</div>
-          </div>
-          <div className="w-full h-2.5 bg-accent-5-soft rounded-full overflow-hidden">
-            <div
-              className="h-full rounded-full transition-all duration-300"
-              style={{ 
-                width: `${(completedCategories / 6) * 100}%`,
-                backgroundColor: "var(--accent-5)"
-              }}
-            />
+          {/* Star counter - right side */}
+          <div className="h-9 w-9 rounded-full bg-text-on-header/40 backdrop-blur-sm flex items-center justify-center text-text-on-header flex-shrink-0">
+            <span className="text-sm font-extrabold">⭐</span>
+            <span className="text-xs font-extrabold ml-0.5">{completedCategories * XP_PER_CARD}</span>
           </div>
         </div>
       </div>
 
-      {/* SECTION HEADING & SUBTITLE */}
-      <div className="px-5 mt-5">
-        <h2 className="text-h4 text-text-primary font-extrabold">Explore the state</h2>
-        <p className="text-caption text-text-secondary mt-1.5">Complete all 6 challenges to unlock your quiz.</p>
-      </div>
-
-      {/* CHALLENGE CARDS GRID - Fixed height, 2 columns, all 6 visible without scroll */}
-      <div className="px-4 mt-4 flex-1 grid grid-cols-2 gap-2.5 overflow-hidden">
-        {cards.map((c, idx) => (
-          <HubCard key={c.title} index={idx} {...c} stateName={state.name} />
-        ))}
-      </div>
-
-      {/* QUIZ PANEL - Full-width lavender card with lock and sparkles */}
-      <div className="px-4 pb-4 mt-3">
-        <button
-          onClick={() => {
-            if (completedCategories === 6 && !showDecisionModal) {
-              fxTap();
-              onQuiz?.();
-            }
-          }}
-          disabled={completedCategories < 6}
-          className={`w-full rounded-2xl p-4 transition-all active:scale-95 flex items-center gap-3 ${
-            completedCategories === 6
-              ? "bg-accent-5-soft hover:shadow-md"
-              : "bg-accent-5-soft/50"
-          }`}
-        >
-          {/* Lock icon in circular background */}
-          <div className={`h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0 text-lg ${
-            completedCategories === 6 ? "bg-accent-5/20" : "bg-accent-5/10"
-          }`}>
-            {completedCategories === 6 ? "✅" : "🔒"}
-          </div>
-
-          {/* Heading and subtitle */}
-          <div className="flex-1 text-left min-w-0">
-            <div className="font-bold text-body text-text-primary">
-              {completedCategories === 6 ? "Take the Quiz!" : "State Quiz Locked"}
+      {/* Scrollable content area - allows all cards and quiz panel to be visible */}
+      <div className="flex-1 overflow-y-auto">
+        {/* PROGRESS CARD - White rounded card with overlap */}
+        <div className="px-5 -mt-6 relative z-20 mb-6">
+          <div className="bg-surface-card rounded-2xl shadow-elevated-1 p-4">
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-label font-bold text-text-primary">Your state adventure</div>
+              <div className="text-body font-extrabold text-text-primary">{completedCategories} / 6</div>
             </div>
-            <div className="text-caption text-text-secondary mt-0.5 line-clamp-1">
-              {completedCategories === 6 
-                ? "Test your knowledge now"
-                : "Complete all 6 challenges"}
+            <div className="w-full h-2.5 bg-accent-5-soft rounded-full overflow-hidden">
+              <div
+                className="h-full rounded-full transition-all duration-300"
+                style={{ 
+                  width: `${(completedCategories / 6) * 100}%`,
+                  backgroundColor: "var(--accent-5)"
+                }}
+              />
             </div>
           </div>
+        </div>
 
-          {/* Decorative sparkles */}
-          <div className="text-lg flex-shrink-0">✨</div>
-        </button>
+        {/* SECTION HEADING & SUBTITLE */}
+        <div className="px-5 mb-4">
+          <h2 className="text-h2 text-text-primary font-extrabold mb-1">Explore the state</h2>
+          <p className="text-body text-text-secondary">Complete all 6 challenges to unlock your quiz.</p>
+        </div>
+
+        {/* CHALLENGE CARDS GRID - 2 columns, natural flow, no fixed heights */}
+        <div className="px-4 mb-6 grid grid-cols-2 gap-3">
+          {cards.map((c, idx) => (
+            <HubCard key={c.title} index={idx} {...c} stateName={state.name} />
+          ))}
+        </div>
+
+        {/* QUIZ PANEL - Full-width card with lock and sparkles */}
+        <div className="px-4 pb-6">
+          <button
+            onClick={() => {
+              if (completedCategories === 6 && !showDecisionModal) {
+                fxTap();
+                onQuiz?.();
+              }
+            }}
+            disabled={completedCategories < 6}
+            className={`w-full rounded-2xl p-4 transition-all active:scale-95 flex items-center gap-3 ${
+              completedCategories === 6
+                ? "bg-accent-5-soft hover:shadow-md"
+                : "bg-accent-5-soft/50"
+            }`}
+          >
+            {/* Lock icon in circular background */}
+            <div className={`h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0 text-lg ${
+              completedCategories === 6 ? "bg-accent-5/20" : "bg-accent-5/10"
+            }`}>
+              {completedCategories === 6 ? "🔓" : "🔒"}
+            </div>
+
+            {/* Heading and subtitle */}
+            <div className="flex-1 text-left">
+              <div className="text-label font-extrabold text-text-primary">
+                {completedCategories === 6 ? "State Quiz" : "State Quiz Locked"}
+              </div>
+              <div className="text-caption text-text-secondary">
+                {completedCategories === 6 
+                  ? "Complete all 6 challenges"
+                  : "Complete all 6 challenges"}
+              </div>
+            </div>
+
+            {/* Decorative sparkles */}
+            <div className="text-lg flex-shrink-0">✨</div>
+          </button>
+        </div>
       </div>
 
       {/* "All 6 cards done!" Decision Modal */}
@@ -2325,12 +2327,12 @@ function HubCard({
 
   // Border styling based on index - use theme tokens
   let borderColor = "var(--border-subtle)"; // Default subtle gray
-  let borderWidth = "1.5px";
+  let borderWidth = "2px";
   let arrowBg = "bg-text-secondary/50";
   let arrowText = "text-text-primary";
 
   if (index === 0) {
-    // Capital card - ORANGE
+    // Capital card - ORANGE/PINK
     borderColor = "var(--accent-2)";
     borderWidth = "3px";
     arrowBg = "bg-accent-2";
@@ -2345,60 +2347,66 @@ function HubCard({
         fxTap();
         onOpen?.();
       }}
-      className="relative text-left transition active:scale-[0.98] p-3 rounded-xl flex flex-col"
+      className="relative text-left transition active:scale-95 p-3 rounded-2xl flex flex-col h-full"
       style={{
         backgroundColor: pastelBg,
         borderColor: borderColor,
         borderWidth: borderWidth,
         borderStyle: "solid",
-        opacity: locked ? 0.5 : 1,
+        opacity: locked ? 0.6 : 1,
         pointerEvents: locked || !canClick ? "none" : "auto",
         cursor: locked || !canClick ? "not-allowed" : "pointer",
       }}
     >
-      {/* Numbered badge in top-left */}
-      {index !== undefined && (
-        <div className="absolute top-2 left-2 h-6 w-6 rounded-full bg-surface-card flex items-center justify-center text-xs font-black text-text-primary shadow-soft">
-          {String(index + 1).padStart(2, "0")}
-        </div>
-      )}
+      {/* Top row: Number badge (left) + Icon (right) */}
+      <div className="flex items-start justify-between mb-2">
+        {/* Numbered badge in top-left */}
+        {index !== undefined && (
+          <div className="h-6 w-6 rounded-full bg-surface-card flex items-center justify-center text-xs font-black text-text-primary shadow-soft flex-shrink-0">
+            {String(index + 1).padStart(2, "0")}
+          </div>
+        )}
+        
+        {/* Checkmark badge for completed - replaces number */}
+        {done && (
+          <div className="h-6 w-6 rounded-full bg-action-success text-text-on-primary flex items-center justify-center text-xs font-black shadow-soft flex-shrink-0">
+            ✓
+          </div>
+        )}
 
-      {/* Icon - top right */}
-      <div className="text-3xl mb-2 text-right">{icon}</div>
+        {/* Icon - top right */}
+        <div className="text-3xl ml-auto flex-shrink-0">{icon}</div>
+      </div>
 
-      {/* Title */}
-      <div className="text-label text-text-primary font-bold leading-tight mb-1">{title}</div>
+      {/* Title - grows to fill space */}
+      <div className="text-h5 text-text-primary font-extrabold leading-tight mb-1 flex-grow">{title}</div>
 
       {/* Subtitle */}
-      <div className="text-caption text-text-secondary font-medium mb-2 line-clamp-1">{sub}</div>
+      <div className="text-body text-text-secondary font-medium mb-2 line-clamp-2">{sub}</div>
 
-      {/* Progress counter at bottom left */}
-      {categoryCardsTotal !== undefined && categoryCardsRead !== undefined && (
-        <div className={`text-caption font-bold ${done ? "text-action-success" : "text-text-secondary"}`}>
-          {categoryCardsRead}/{categoryCardsTotal}
-        </div>
-      )}
-
-      {/* Completed checkmark badge - top right */}
-      {done && (
-        <div className="absolute top-2 right-2 h-6 w-6 rounded-full bg-action-success text-text-on-primary flex items-center justify-center text-sm font-black shadow-soft">
-          ✓
-        </div>
-      )}
-
-      {/* Locked icon - top right */}
-      {locked && (
-        <div className="absolute top-2 right-2 h-6 w-6 rounded-full text-text-on-primary flex items-center justify-center text-xs bg-text-secondary/70 shadow-soft">
-          🔒
-        </div>
-      )}
-
-      {/* Arrow button - bottom right */}
-      {!done && !locked && (
-        <div className={`absolute bottom-2 right-2 h-6 w-6 rounded-full flex items-center justify-center text-xs font-bold ${arrowBg} ${arrowText}`}>
-          →
-        </div>
-      )}
+      {/* Bottom row: Question count (left) + Arrow button (right) */}
+      <div className="flex items-center justify-between mt-auto">
+        {/* Question count */}
+        {categoryCardsTotal !== undefined && categoryCardsRead !== undefined && (
+          <div className={`text-body font-bold ${done ? "text-action-success" : "text-text-secondary"}`}>
+            {categoryCardsRead}/{categoryCardsTotal}
+          </div>
+        )}
+        
+        {/* Arrow button - bottom right */}
+        {!done && !locked && (
+          <div className={`h-6 w-6 rounded-full flex items-center justify-center text-xs font-bold ml-auto flex-shrink-0 ${arrowBg} ${arrowText}`}>
+            →
+          </div>
+        )}
+        
+        {/* Locked icon - bottom right */}
+        {locked && (
+          <div className="h-6 w-6 rounded-full bg-text-secondary/70 text-text-on-primary flex items-center justify-center text-xs flex-shrink-0 ml-auto">
+            🔒
+          </div>
+        )}
+      </div>
     </button>
   );
 }
