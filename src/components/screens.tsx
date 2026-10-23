@@ -2012,18 +2012,6 @@ export function LearningHubScreen({
       status,
   );
   const read = cardsRead(progress, state.name);
-  const grad = TONE_GRADIENT[state.tone] ?? "var(--accent-1)";
-
-  // Determine current region for breadcrumb navigation
-  const currentRegion = useMemo(() => {
-    for (const regionKey of REGION_KEYS) {
-      const region = REGIONS[regionKey];
-      if (region.states.some((s) => s.name === state.name)) {
-        return region;
-      }
-    }
-    return null;
-  }, [state.name]);
 
   // Track which categories have been celebrated to avoid duplicate celebrations
   const [celebratedCategories, setCelebratedCategories] = useState<Set<number>>(new Set());
@@ -2130,8 +2118,9 @@ export function LearningHubScreen({
 
   return (
     <div className="h-full w-full bg-surface-card flex flex-col">
-      <div className={`h-40 ${grad} rounded-b-[32px] relative overflow-hidden`}>
-        {/* Background image - absolute positioned */}
+      {/* HEADER SECTION - Simplified with landscape background */}
+      <div className="h-40 relative overflow-hidden">
+        {/* Background image - absolute positioned, full width/height */}
         <img
           src={stateHeaderBg}
           alt="Header background"
@@ -2142,33 +2131,7 @@ export function LearningHubScreen({
         
         {/* Content overlay with z-10 for relative positioning */}
         <div className="relative z-10 px-5 pt-3 pb-4 h-full flex flex-col">
-          {/* Breadcrumb Navigation Context */}
-          <div className="mb-2 flex items-center gap-1 text-text-on-header text-xs font-bold px-12">
-            <span className="opacity-75">Journey</span>
-            <span className="opacity-50">›</span>
-            {currentRegion && (
-              <>
-                <img
-                  src={STATE_ART[currentRegion.name]}
-                  alt={currentRegion.name}
-                  className="w-3 h-3 object-cover rounded inline-block"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <span className="opacity-75">{currentRegion.name}</span>
-                <span className="opacity-50">›</span>
-              </>
-            )}
-            <img
-              src={STATE_ART[state.name]}
-              alt={state.name}
-              className="w-3 h-3 object-cover rounded inline-block"
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
-
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-1">
             <button
               onClick={() => {
                 if (onBack) {
@@ -2178,77 +2141,94 @@ export function LearningHubScreen({
                   goBack();
                 }
               }}
-              className="h-12 w-12 rounded-full bg-text-on-header/20 flex items-center justify-center text-text-on-header text-xl"
+              className="h-12 w-12 rounded-full bg-text-on-header/20 flex items-center justify-center text-text-on-header text-xl flex-shrink-0"
             >
               ‹
             </button>
             <div className="flex-1 text-text-on-header">
               <div className="text-xs font-bold text-text-on-header/90">Learning Hub</div>
               <div className="text-display text-xl font-extrabold">{state.name}</div>
-              {progress.streak > 0 && (
-                <div className="text-xs font-bold text-text-on-header/80 mt-0.5">
-                  {EMOJI.feedback.trophy} Day {progress.streak} streak
-                </div>
-              )}
             </div>
-            <div className="flex items-center gap-1 text-text-on-header text-display font-extrabold">
+            <div className="flex items-center gap-1 text-text-on-header text-display font-extrabold flex-shrink-0">
               <span>{EMOJI.action.star}</span> {completedCategories * XP_PER_CARD}
-            </div>
-          </div>
-
-          {/* Journey Progress Bar - "Your state adventure" */}
-          <div className="mt-3 flex items-center gap-3">
-            <div className="text-xs font-bold text-text-on-header">Your state adventure</div>
-          </div>
-          <div className="mt-1 flex items-center gap-3">
-            <div className="flex-1 h-2.5 bg-text-on-header/30 rounded-full overflow-hidden">
-              <div
-                className="h-full rounded-full transition-all duration-300"
-                style={{ 
-                  width: `${(completedCategories / 6) * 100}%`,
-                  backgroundColor: "var(--text-on-header)"
-                }}
-              />
-            </div>
-            <div className="text-sm font-extrabold text-text-on-header whitespace-nowrap">
-              {completedCategories} / 6
             </div>
           </div>
         </div>
       </div>
 
-      <div className="p-4 grid grid-cols-2 gap-3 flex-1 overflow-auto">
+      {/* PROGRESS CARD - White rounded card with overlap */}
+      <div className="px-5 -mt-6 relative z-20">
+        <div className="bg-white rounded-2xl shadow-lg p-5">
+          <div className="flex items-center justify-between mb-3">
+            <div className="text-xs font-bold text-display">Your state adventure</div>
+            <div className="text-sm font-extrabold text-display">{completedCategories} / 6</div>
+          </div>
+          <div className="w-full h-2.5 bg-accent-1/20 rounded-full overflow-hidden">
+            <div
+              className="h-full rounded-full transition-all duration-300"
+              style={{ 
+                width: `${(completedCategories / 6) * 100}%`,
+                backgroundColor: "var(--accent-5)"
+              }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* SECTION HEADING & SUBTITLE */}
+      <div className="px-5 mt-6">
+        <h2 className="text-h3 text-display font-extrabold">Explore the state</h2>
+        <p className="text-sm text-subtitle mt-2">Complete all 6 challenges to unlock your quiz.</p>
+      </div>
+
+      {/* CHALLENGE CARDS GRID */}
+      <div className="px-4 pt-4 grid grid-cols-2 gap-3 flex-1 overflow-auto">
         {cards.map((c, idx) => (
           <HubCard key={c.title} index={idx} {...c} stateName={state.name} />
         ))}
       </div>
-      <div className="p-4">
-        {/* Quiz Button with Completion Guard */}
+
+      {/* QUIZ PANEL - Illustrated card */}
+      <div className="px-4 pb-4">
         <button
           onClick={() => {
-            fxTap();
-            // If modal was dismissed with "Later", this will trigger onQuiz when user is ready
             if (completedCategories === 6 && !showDecisionModal) {
-              onQuiz?.();
-            } else if (completedCategories === 6 && showDecisionModal) {
-              // If modal is showing, the button should be disabled until user makes a choice
-              return;
-            } else {
+              fxTap();
               onQuiz?.();
             }
           }}
-          disabled={completedCategories < 6 || showDecisionModal}
-          className={`w-full h-14 ui-button text-h4 text-display font-extrabold transition-all active:scale-95 ${
-            completedCategories === 6 && !showDecisionModal
-              ? "ui-accent-3 hover:shadow-lg hover:scale-105 animate-pulse"
-              : "ui-accent-1-soft opacity-40 cursor-not-allowed"
+          disabled={completedCategories < 6}
+          className={`w-full rounded-3xl p-6 transition-all active:scale-95 flex items-center gap-4 ${
+            completedCategories === 6
+              ? "bg-green-100 hover:shadow-lg hover:scale-105"
+              : "bg-accent-5/10"
           }`}
         >
-          {completedCategories === 6 && !showDecisionModal ? (
-            <>Take the Quiz! {EMOJI.milestone.twentyFive}</>
-          ) : (
-            `Quiz Locked (${completedCategories}/6 done)`
-          )}
+          {/* Lock icon in circular background */}
+          <div className={`h-12 w-12 rounded-full flex items-center justify-center flex-shrink-0 text-lg ${
+            completedCategories === 6 ? "bg-green-200" : "bg-accent-5/20"
+          }`}>
+            {completedCategories === 6 ? "✅" : "🔒"}
+          </div>
+
+          {/* Heading and subtitle */}
+          <div className="flex-1 text-left">
+            <div className={`font-extrabold text-h4 ${
+              completedCategories === 6 ? "text-green-700" : "text-display"
+            }`}>
+              {completedCategories === 6 ? "Take the Quiz!" : "State Quiz Locked"}
+            </div>
+            <div className={`text-sm font-bold mt-0.5 ${
+              completedCategories === 6 ? "text-green-600" : "text-subtitle"
+            }`}>
+              {completedCategories === 6 
+                ? "You've unlocked it! Test your knowledge now."
+                : "Complete all 6 challenges to unlock it."}
+            </div>
+          </div>
+
+          {/* Decorative sparkles */}
+          <div className="text-xl flex-shrink-0">✨</div>
         </button>
       </div>
 
@@ -2332,15 +2312,29 @@ function HubCard({
 }) {
   // Pastel color system mapped by index
   const pastelColorMap = [
-    "#FFD9B3", // 0: Capital - soft peach
-    "#BFDBFE", // 1: Language - soft sky
-    "#BBFBEE", // 2: Food - soft mint
-    "#FED7AA", // 3: Places - soft amber
-    "#FFD9B3", // 4: Monument - soft peach
-    "#BFDBFE", // 5: Craft - soft sky
+    "#FFE8D0", // 0: Capital - light peachy
+    "#D4E6F7", // 1: Language - light sky
+    "#D0F4EE", // 2: Food - light mint
+    "#FFE0B2", // 3: Places - light amber
+    "#FFE8D0", // 4: Monument - light peachy
+    "#D4E6F7", // 5: Craft - light sky
   ];
 
-  const pastelBg = index !== undefined ? pastelColorMap[index] : "#BFDBFE";
+  const pastelBg = index !== undefined ? pastelColorMap[index] : "#D4E6F7";
+
+  // Border styling based on index
+  let borderColor = "#E0E0E0"; // Default subtle gray
+  let borderWidth = "2px";
+  let arrowBg = "bg-gray-300";
+  let arrowText = "text-gray-700";
+
+  if (index === 0) {
+    // Capital card - ORANGE
+    borderColor = "#FF9D4D";
+    borderWidth = "3px";
+    arrowBg = "bg-orange-500";
+    arrowText = "text-white";
+  }
 
   return (
     <button
@@ -2350,40 +2344,58 @@ function HubCard({
         fxTap();
         onOpen?.();
       }}
-      className={`relative text-left transition active:scale-[0.98] p-4 border-4 rounded-2xl`}
+      className="relative text-left transition active:scale-[0.98] p-4 rounded-2xl flex flex-col"
       style={{
         backgroundColor: pastelBg,
-        borderColor: locked ? "rgba(0,0,0,0.1)" : "rgba(0,0,0,0.2)",
-        opacity: locked ? 0.7 : 1,
+        borderColor: borderColor,
+        borderWidth: borderWidth,
+        borderStyle: "solid",
+        opacity: locked ? 0.6 : 1,
         pointerEvents: locked || !canClick ? "none" : "auto",
         cursor: locked || !canClick ? "not-allowed" : "pointer",
       }}
     >
       {/* Numbered badge in top-left */}
       {index !== undefined && (
-        <div className="absolute top-2 left-2 h-7 w-7 rounded-full bg-white/80 flex items-center justify-center text-xs font-black text-gray-700 shadow-sm">
+        <div className="absolute top-3 left-3 h-7 w-7 rounded-full bg-white flex items-center justify-center text-xs font-black text-gray-700 shadow-sm">
           {String(index + 1).padStart(2, "0")}
         </div>
       )}
 
-      <div className="text-h1">{icon}</div>
-      <div className="text-h5 text-display mt-1 leading-tight font-bold">{title}</div>
-      <div className="text-xs font-bold text-gray-600">{sub}</div>
-      {/* Category-scoped progress counter */}
+      {/* Icon - top right */}
+      <div className="text-4xl mb-2 text-right">{icon}</div>
+
+      {/* Title */}
+      <div className="text-h5 text-display font-bold leading-tight mb-1">{title}</div>
+
+      {/* Subtitle */}
+      <div className="text-xs text-gray-600 font-semibold mb-3">{sub}</div>
+
+      {/* Progress counter at bottom left */}
       {categoryCardsTotal !== undefined && categoryCardsRead !== undefined && (
-        <div className={`mt-2 text-xs font-bold ${done ? "text-green-600" : "text-gray-600"}`}>
+        <div className={`text-xs font-bold ${done ? "text-green-600" : "text-gray-600"}`}>
           {categoryCardsRead}/{categoryCardsTotal}
-          {done && " ✓"}
         </div>
       )}
+
+      {/* Completed checkmark badge - top right */}
       {done && (
-        <div className="absolute top-2 right-2 h-8 w-8 rounded-full bg-green-500 text-white flex items-center justify-center text-h5 font-black shadow-lg animate-bounce">
+        <div className="absolute top-3 right-3 h-8 w-8 rounded-full bg-green-500 text-white flex items-center justify-center text-lg font-black shadow-lg">
           ✓
         </div>
       )}
+
+      {/* Locked icon - top right */}
       {locked && (
-        <div className="absolute top-2 right-2 h-7 w-7 rounded-full text-white flex items-center justify-center text-xs bg-gray-400 shadow-sm">
+        <div className="absolute top-3 right-3 h-7 w-7 rounded-full text-white flex items-center justify-center text-xs bg-gray-400 shadow-sm">
           {EMOJI.milestone.hundred}
+        </div>
+      )}
+
+      {/* Arrow button - bottom right */}
+      {!done && !locked && (
+        <div className={`absolute bottom-3 right-3 h-8 w-8 rounded-full flex items-center justify-center text-sm font-bold ${arrowBg} ${arrowText}`}>
+          →
         </div>
       )}
     </button>
