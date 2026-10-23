@@ -2182,7 +2182,7 @@ export function LearningHubScreen({
       </div>
 
       {/* CHALLENGE CARDS GRID */}
-      <div className="px-4 pt-4 grid grid-cols-2 gap-3 flex-1 overflow-auto">
+      <div className="px-4 pt-4 grid grid-cols-2 gap-3 flex-1 overflow-auto pb-[env(safe-area-inset-bottom)]">
         {cards.map((c, idx) => (
           <HubCard key={c.title} index={idx} {...c} stateName={state.name} />
         ))}
