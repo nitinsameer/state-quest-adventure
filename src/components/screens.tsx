@@ -1001,29 +1001,6 @@ function HomeDashboardContent() {
           </Link>
         </div>
 
-        {/* STATE DISPLAY CARD - Token-based, no hardcoding */}
-        <div 
-          style={{padding: "var(--padding-md) var(--padding-md) 0"}}
-          className="animate-fade-in"
-        >
-          <div className="bg-accent-1-soft border-2 border-accent-1 rounded-2xl shadow-sm" style={{padding: "var(--padding-md)", display: "flex", flexDirection: "column", gap: "var(--gap-base)"}}>
-            {/* Content Row: Emoji + State Name */}
-            <div className="flex items-center" style={{gap: "var(--gap-base)"}}>
-              <div style={{fontSize: "2.25rem"}} className="flex-shrink-0">
-                {getStateEmoji(current.name)}
-              </div>
-              <div style={{fontSize: "var(--text-h3)", fontWeight: 800}} className="text-accent-1-ink leading-tight">
-                {current.name}
-              </div>
-            </div>
-            
-            {/* Tagline */}
-            <div style={{fontSize: "var(--text-body-sm)", fontWeight: 600}} className="text-text-secondary">
-              Your adventure continues →
-            </div>
-          </div>
-        </div>
-
         {/* First Session Tutorial removed from onboarding flow */}
       </div>
       {/* End scrollable content area */}
