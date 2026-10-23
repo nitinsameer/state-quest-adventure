@@ -38,6 +38,7 @@ export function QuizCelebrationScreen() {
   const progress = useProgress();
   const navigate = useNavigate();
   const navigationInProgressRef = useRef(false);
+  const [shouldNavigate, setShouldNavigate] = useState(false);
 
   // Get the first pending celebration (current ceremony)
   const ceremony = progress.pendingCelebrations?.[0];
@@ -45,21 +46,21 @@ export function QuizCelebrationScreen() {
   // Type guard: only proceed if ceremony is valid "full" type
   const isValidCeremony = ceremony && ceremony.type === "full";
 
-  // ALL HOOKS MUST BE CALLED UNCONDITIONALLY
-  // CRITICAL FIX: Separate navigation effect from data-dependent effects
-  // This prevents infinite re-render when ceremony data changes during store updates
+  // Check if we need to navigate away
   useEffect(() => {
     if (isValidCeremony === false && !navigationInProgressRef.current) {
-      // Schedule navigation asynchronously to prevent interrupting render
-      const timeoutId = setTimeout(() => {
-        navigate({ to: "/" });
-      }, 0);
-      return () => clearTimeout(timeoutId);
+      setShouldNavigate(true);
     }
-  }, [isValidCeremony, navigate]);
+  }, [isValidCeremony]);
+
+  // Perform navigation in a separate effect to avoid interrupting render
+  useEffect(() => {
+    if (shouldNavigate) {
+      navigate({ to: "/" });
+    }
+  }, [shouldNavigate, navigate]);
 
   // Guard rendering: return null if ceremony is invalid
-  // (hooks are already called above, so this is safe)
   if (!isValidCeremony) {
     return null;
   }
