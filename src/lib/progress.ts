@@ -145,7 +145,7 @@ const ALL_BADGE_IDS: BadgeId[] = STATE_BADGES.map((b) => b.id);
 
 // Use centralized storage key from constants
 const STORAGE_KEY = STORAGE_KEYS.progress;
-const APP_VERSION = "3.0"; // Increment when you need to clear old cache
+const APP_VERSION = "3.1"; // Increment when you need to clear old cache
 export const XP_PER_LEVEL = 400;
 export const CARDS_PER_STATE = 6;
 export const XP_PER_CARD = 25;
@@ -332,9 +332,11 @@ function migrateProgressVersion(oldData: any): Progress {
       typeof oldData.statePerformance === "object" && oldData.statePerformance !== null
         ? oldData.statePerformance
         : defaultData.statePerformance,
-    pendingCelebrations: Array.isArray(oldData.pendingCelebrations)
-      ? oldData.pendingCelebrations
-      : defaultData.pendingCelebrations,
+    // CRITICAL FIX: Clear pending celebrations during migration to prevent
+    // corrupted data from old versions (with mixed badge types) from crashing the app.
+    // When users update the app, any old pending celebrations are discarded.
+    // This is safe because celebrations are ephemeral UI state, not persistent data.
+    pendingCelebrations: defaultData.pendingCelebrations,
     stars:
       typeof oldData.stars === "object" && oldData.stars !== null
         ? oldData.stars
