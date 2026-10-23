@@ -2119,7 +2119,7 @@ export function LearningHubScreen({
   return (
     <div className="w-full bg-bg-page flex flex-col">
       {/* HEADER SECTION - Simplified, clean header with background image and centered state name */}
-      <div className="relative h-32 overflow-hidden">
+      <div className="relative h-32">
         {/* Background image - covers full header */}
         <img
           src={stateHeaderBg}
