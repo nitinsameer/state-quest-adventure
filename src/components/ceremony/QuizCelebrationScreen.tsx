@@ -207,30 +207,11 @@ function SingleScreenCelebration({
   const filledStars = Math.min(stars, Math.floor(phase2Progress * (stars + 1)));
 
   const handleSkip = () => {
-    fxTap();
-    if (prefersReducedMotion) return;
-    setElapsedMs(5000); // Jump to end
+    // Skip removed
   };
 
   const handleStickerPick = (sticker: string) => {
-    if (selectedSticker === sticker) return;
-
-    fxTap();
-    setSelectedSticker(sticker);
-
-    // Persist to localStorage immediately
-    const ceremony_copy = { ...ceremony, sticker };
-    const progress_copy = { ...progress };
-    progress_copy.pendingCelebrations = (progress_copy.pendingCelebrations || []).map((c, i) =>
-      i === 0 ? ceremony_copy : c,
-    );
-
-    try {
-      const STORAGE_KEY = STORAGE_KEYS.progress;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(progress_copy));
-    } catch {
-      // Storage error - fail silently
-    }
+    // Sticker picker removed
   };
 
   const handleNavigate = (to: string, params?: { slug: string }) => {
@@ -259,16 +240,6 @@ function SingleScreenCelebration({
 
   return (
     <div className="h-full w-full bg-surface-card flex flex-col overflow-hidden">
-      {/* SKIP BUTTON - Always visible */}
-      <div className={`absolute top-4 right-4 z-50 ${grad} rounded-full p-2`}>
-        <button
-          onClick={handleSkip}
-          className="text-on-header text-xs font-bold opacity-75 hover:opacity-100 transition-opacity active:scale-95"
-          aria-label="Skip to results"
-        >
-          Skip »
-        </button>
-      </div>
 
       {/* CONTENT AREA */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-6 overflow-y-auto relative">
@@ -346,38 +317,27 @@ function SingleScreenCelebration({
             </p>
           )}
 
-          {/* PHASE 3: XP chips float up */}
+          {/* PHASE 3: XP floats up in a badge with animation */}
           {showPhase3 && (
             <div
-              className="space-y-3 transition-all"
+              className="transition-all"
               style={{
                 opacity: phase3Progress,
-                transform: `translateY(${(1 - phase3Progress) * 20}px)`,
+                transform: `translateY(${(1 - phase3Progress) * 40}px)`,
               }}
             >
-              <div className="ui-chip ui-accent-4 px-4 py-3 text-center">
-                <div className="text-sm font-bold text-ink">+{ceremony.quizXp} XP quiz</div>
-              </div>
-              <div className="ui-chip ui-accent-4 px-4 py-3 text-center">
-                <div className="text-sm font-bold text-ink">+{ceremony.bonusXp} XP state bonus</div>
-              </div>
-
-              {ceremony.leveledUp && (
-                <div className="ui-card ui-accent-3 px-4 py-3 rounded-2xl border-2 border-success/30">
-                  <div className="text-center">
-                    <div className="text-sm font-bold text-ink">
-                      {EMOJI.action.celebrate} New level!
-                    </div>
-                    <div className="text-xs font-semibold text-ink/80 mt-1">
-                      {ceremony.levelName}
-                    </div>
+              <div className="flex items-center justify-center">
+                {/* Flying XP badge */}
+                <div className="px-6 py-3 rounded-full bg-accent-3 shadow-lg animate-float">
+                  <div className="text-h4 font-extrabold text-text-on-primary">
+                    +{ceremony.quizXp + ceremony.bonusXp} XP
                   </div>
                 </div>
-              )}
+              </div>
             </div>
           )}
 
-          {/* PHASE 4: Postcard + Stickers */}
+          {/* PHASE 4: Postcard - simplified, no stickers or extra labels */}
           {showPhase4 && (
             <div
               className="transition-all"
@@ -386,101 +346,65 @@ function SingleScreenCelebration({
                 transform: `translateY(${(1 - phase4Progress) * 30}px)`,
               }}
             >
+              {/* Postcard without sticker picker or extra labels */}
               <PostcardFrame
                 stateName={state.name}
                 stars={ceremony.stars}
                 date={ceremony.stampDate}
                 badge={(ceremony.earnedBadgeIds?.[0] as BadgeId) || "explorer"}
               />
-
-              {/* Stickers appear inline */}
-              {phase4Progress > 0.5 && (
-                <div
-                  className="space-y-3 mt-6 transition-all"
-                  style={{
-                    opacity: Math.max(0, (phase4Progress - 0.5) * 2),
-                  }}
-                >
-                  <p className="text-center font-display font-bold text-ink text-lg">Pick a sticker</p>
-                  <div className="flex justify-center gap-4">
-                    {STICKER_OPTIONS.map((sticker) => (
-                      <button
-                        key={sticker}
-                        onClick={() => handleStickerPick(sticker)}
-                        className={`text-5xl transition-all active:scale-90 ${
-                          selectedSticker === sticker
-                            ? "scale-125 drop-shadow-lg"
-                            : "scale-100 opacity-70 hover:opacity-100"
-                        }`}
-                        style={{ minHeight: "48px", minWidth: "48px" }}
-                        aria-label={`Select ${sticker} sticker`}
-                      >
-                        {sticker}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Streak and level-up badges */}
-              {ceremony.streak > 0 && ceremony.streak % 7 === 0 && (
-                <div className="ui-card ui-accent-2 px-4 py-3 rounded-2xl mt-4">
-                  <div className="text-center">
-                    <div className="text-lg mb-1">{EMOJI.action.fire}</div>
-                    <div className="text-sm font-bold text-ink">{ceremony.streak}-Day Streak!</div>
-                  </div>
-                </div>
-              )}
             </div>
           )}
         </div>
       </div>
 
-      {/* PHASE 5: Buttons slide in staggered */}
+      {/* PHASE 5: Buttons in grid layout - 2 columns top row, full width bottom */}
       <div
-        className="px-6 pb-6 pt-4 bg-surface-card space-y-3 transition-all"
+        className="px-4 pb-6 pt-4 bg-surface-card grid grid-cols-2 gap-3 transition-all"
         style={{
           opacity: showPhase5 ? 1 : 0,
           transform: showPhase5 ? "translateY(0)" : "translateY(20px)",
           pointerEvents: showPhase5 ? "auto" : "none",
         }}
       >
-        {/* Next State button */}
+        {/* Home button - left */}
         <button
-          onClick={handleNextState}
-          className="w-full h-14 ui-button ui-accent-1 font-display font-bold text-lg rounded-3xl transition-all active:scale-95 animate-slide-up"
+          onClick={handleHome}
+          className="h-12 ui-button ui-accent-1-soft font-bold text-body rounded-2xl transition-all active:scale-95 animate-slide-up"
           style={{
             animationDelay: "0ms",
           }}
-          aria-label="Next State Navigation"
+          aria-label="Return to Home"
         >
-          Next State →
+          {EMOJI.nav.home} Home
         </button>
 
-        {/* Play Again button (if stars < 3) */}
-        {parseInt(ceremony.stars) < 3 && (
+        {/* Play Again button - right (if stars < 3) */}
+        {parseInt(ceremony.stars) < 3 ? (
           <button
             onClick={handlePlayAgain}
-            className="w-full h-12 ui-button ui-button-soft font-bold text-base rounded-3xl transition-all active:scale-95 animate-slide-up"
+            className="h-12 ui-button ui-accent-3 font-bold text-body rounded-2xl transition-all active:scale-95 animate-slide-up"
             style={{
               animationDelay: "100ms",
             }}
             aria-label="Replay Quiz"
           >
-            Play again for {EMOJI.action.star}
+            {EMOJI.action.star} Play Again
           </button>
+        ) : (
+          <div></div> /* Empty slot if only 3 stars */
         )}
 
-        {/* Home button */}
+        {/* Next State button - full width, bottom row */}
         <button
-          onClick={handleHome}
-          className="w-full h-12 text-ink font-bold text-base rounded-3xl transition-all active:scale-95 hover:bg-ink/5 animate-slide-up"
+          onClick={handleNextState}
+          className="col-span-2 h-12 ui-button ui-accent-1 font-bold text-body rounded-2xl transition-all active:scale-95 animate-slide-up"
           style={{
             animationDelay: parseInt(ceremony.stars) < 3 ? "200ms" : "100ms",
           }}
-          aria-label="Return to Home"
+          aria-label="Next State Navigation"
         >
-          Home
+          Next State →
         </button>
       </div>
 
@@ -496,7 +420,7 @@ function SingleScreenCelebration({
         {showPhase4 && " postcard earned"}
       </div>
 
-      {/* Hidden styles for slide-up animation */}
+      {/* Hidden styles for animations */}
       <style>{`
         @keyframes slide-up {
           from {
@@ -510,6 +434,18 @@ function SingleScreenCelebration({
         }
         .animate-slide-up {
           animation: slide-up 0.3s ease-out forwards;
+        }
+        
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+        .animate-float {
+          animation: float 2s ease-in-out infinite;
         }
       `}</style>
     </div>
