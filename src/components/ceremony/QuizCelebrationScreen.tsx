@@ -46,13 +46,20 @@ export function QuizCelebrationScreen() {
   const isValidCeremony = ceremony && ceremony.type === "full";
 
   // ALL HOOKS MUST BE CALLED UNCONDITIONALLY
+  // CRITICAL FIX: Separate navigation effect from data-dependent effects
+  // This prevents infinite re-render when ceremony data changes during store updates
   useEffect(() => {
     if (isValidCeremony === false && !navigationInProgressRef.current) {
-      navigate({ to: "/" });
+      // Schedule navigation asynchronously to prevent interrupting render
+      const timeoutId = setTimeout(() => {
+        navigate({ to: "/" });
+      }, 0);
+      return () => clearTimeout(timeoutId);
     }
   }, [isValidCeremony, navigate]);
 
   // Guard rendering: return null if ceremony is invalid
+  // (hooks are already called above, so this is safe)
   if (!isValidCeremony) {
     return null;
   }
@@ -117,11 +124,13 @@ function SingleScreenCelebration({
 
       if (prefersReducedMotion) {
         // Instant reveal: jump to end
-        setElapsedMs(5000);
+        setElapsedMs((prev) => (prev !== 5000 ? 5000 : prev));
         return;
       }
 
-      setElapsedMs(elapsed);
+      // CRITICAL FIX: Only update state if elapsed actually changed
+      // This prevents unnecessary re-renders from RAF loop triggering infinite render cycles
+      setElapsedMs((prev) => (Math.round(elapsed) !== Math.round(prev) ? elapsed : prev));
 
       // Continue animation loop until all phases complete
       if (elapsed < 5000) {
