@@ -16,7 +16,10 @@ import { createLibraryPostcard } from "@/lib/postcard-library";
  * Migrate old PostcardData to new LibraryPostcard format
  *
  * Old format: { generatedAt, state, badge, stampDate }
- * New format: LibraryPostcard with consent tracking, history, etc.
+ * New format: LibraryPostcard with consent tracking, history, export metadata, etc.
+ *
+ * P1.2 FIX: Ensure ALL required LibraryPostcard fields are present including
+ * exportCount, consentState, consentHistory, displayOrder, tags
  */
 function migratePostcardData(stateName: string, oldData: PostcardData): LibraryPostcard {
   return {
@@ -25,7 +28,10 @@ function migratePostcardData(stateName: string, oldData: PostcardData): LibraryP
     state: oldData.state,
     badge: oldData.badge,
     stampDate: oldData.stampDate,
-    exportCount: 0,
+    exportCount: 0, // P1.2: Required field for postcard export tracking
+    isExportedToDevice: false,
+    exportedAt: undefined,
+    exportedFilename: undefined,
     // Proposal C: Initialize with "pending" consent to be COPPA-safe
     consentState: "pending",
     consentChangedAt: oldData.generatedAt,
@@ -38,6 +44,7 @@ function migratePostcardData(stateName: string, oldData: PostcardData): LibraryP
     ],
     displayOrder: 0,
     tags: [],
+    imageData: undefined, // Optional base64 image data
   };
 }
 

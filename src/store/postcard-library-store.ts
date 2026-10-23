@@ -89,14 +89,27 @@ const createPostcardLibraryStore = (): PostcardLibraryStore => {
   if (typeof localStorage !== "undefined") {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      // CRITICAL FIX #1.5: Validate postcard library with Zod schema
-      const validated = validatePostcardLibrary(stored);
-      if (validated.length > 0) {
-        initialPostcards = validated;
-        initialMetadata = getLibraryMetadata(initialPostcards);
+      // P1.3 FIX: Validate postcard library with Zod schema and log errors
+      try {
+        const validated = validatePostcardLibrary(stored);
+        if (validated.length > 0) {
+          initialPostcards = validated;
+          initialMetadata = getLibraryMetadata(initialPostcards);
+        }
+      } catch (validationError) {
+        // P1.3: Log validation error instead of silently failing
+        console.warn(
+          "[PostcardLibraryStore] Schema validation failed, starting with empty library:",
+          validationError instanceof Error ? validationError.message : String(validationError),
+        );
+        // Do NOT clear localStorage - just skip loading and start fresh
+        // Next save will overwrite with new schema
+        initialPostcards = [];
+        initialMetadata = getLibraryMetadata([]);
       }
     } catch (err) {
-      // Validation failed - start fresh
+      // Storage access failed - start fresh
+      console.error("[PostcardLibraryStore] Failed to read from localStorage:", err);
       initialPostcards = [];
       initialMetadata = getLibraryMetadata([]);
     }
@@ -258,23 +271,36 @@ const createPostcardLibraryStore = (): PostcardLibraryStore => {
         usePostcardLibrary.setState({ isLoading: true, error: null });
         const stored = localStorage.getItem(STORAGE_KEY);
 
-        // CRITICAL FIX #1.5: Validate postcard library with Zod schema
-        const validated = validatePostcardLibrary(stored);
-        if (validated.length > 0) {
-          const metadata = getLibraryMetadata(validated);
+        // P1.3 FIX: Validate postcard library with Zod schema and handle errors gracefully
+        try {
+          const validated = validatePostcardLibrary(stored);
+          if (validated.length > 0) {
+            const metadata = getLibraryMetadata(validated);
+            usePostcardLibrary.setState({
+              postcards: validated,
+              metadata,
+              isLoading: false,
+            });
+          } else {
+            usePostcardLibrary.setState({ isLoading: false });
+          }
+        } catch (validationError) {
+          // P1.3: Handle validation failure gracefully with detailed error message
+          const errorMsg =
+            validationError instanceof Error ? validationError.message : "Unknown validation error";
+          console.warn("[PostcardLibraryStore] Failed to validate stored postcards:", errorMsg);
           usePostcardLibrary.setState({
-            postcards: validated,
-            metadata,
+            error: "Failed to load postcard library (schema mismatch)",
             isLoading: false,
+            postcards: [], // Start fresh with empty library
           });
-        } else {
-          usePostcardLibrary.setState({ isLoading: false });
         }
       } catch (err) {
         usePostcardLibrary.setState({
-          error: "Failed to load postcard library",
+          error: "Failed to read postcard library from storage",
           isLoading: false,
         });
+        console.error("[PostcardLibraryStore] Storage access error:", err);
       }
     },
 

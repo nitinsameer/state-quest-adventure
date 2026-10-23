@@ -26,49 +26,55 @@ export function useAndroidBackButton(onJourneyBack?: () => void) {
     let unlistener: (() => void) | null = null;
 
     const setupListener = async () => {
-      const listenerHandle = await App.addListener("backButton", async () => {
-        const currentPath = router.state.location.pathname;
+      try {
+        const listenerHandle = await App.addListener("backButton", async () => {
+          const currentPath = router.state.location.pathname;
 
-        // Exit app on home/welcome/root screens
-        if (currentPath === "/" || currentPath === "/home" || currentPath === "/welcome") {
-          await App.exitApp();
-          return;
-        }
-
-        // Journey-specific: handle internal state navigation before route history
-        if (currentPath === "/journey" && onJourneyBack) {
-          onJourneyBack();
-          return; // Exit here - let onJourneyBack decide what to do
-        }
-
-        // FIX #2: Smart route-aware back navigation
-        // Prevents confusing history-based back in branching state routes
-
-        // If on a completion/celebration screen: go home
-        if (currentPath.includes("/state/") && currentPath.endsWith("/complete")) {
-          router.navigate({ to: "/home" });
-          return;
-        }
-
-        // If in any state sub-route (quiz, learn, cards, postcard, etc.): go to state intro
-        if (currentPath.includes("/state/")) {
-          const segments = currentPath.split("/");
-          const slug = segments[2]; // e.g. '/state/delhi/quiz' → 'delhi'
-          if (slug) {
-            router.navigate({ to: "/state/$slug", params: { slug } });
+          // Exit app on home/welcome/root screens
+          if (currentPath === "/" || currentPath === "/home" || currentPath === "/welcome") {
+            await App.exitApp();
             return;
           }
-        }
 
-        // Fallback: browser history or home
-        if (router.history.length > 1) {
-          router.history.back();
-        } else {
-          router.navigate({ to: "/home" });
-        }
-      });
+          // Journey-specific: handle internal state navigation before route history
+          if (currentPath === "/journey" && onJourneyBack) {
+            onJourneyBack();
+            return; // Exit here - let onJourneyBack decide what to do
+          }
 
-      unlistener = () => listenerHandle.remove();
+          // FIX #2: Smart route-aware back navigation
+          // Prevents confusing history-based back in branching state routes
+
+          // If on a completion/celebration screen: go home
+          if (currentPath.includes("/state/") && currentPath.endsWith("/complete")) {
+            router.navigate({ to: "/home" });
+            return;
+          }
+
+          // If in any state sub-route (quiz, learn, cards, postcard, etc.): go to state intro
+          if (currentPath.includes("/state/")) {
+            const segments = currentPath.split("/");
+            const slug = segments[2]; // e.g. '/state/delhi/quiz' → 'delhi'
+            if (slug) {
+              router.navigate({ to: "/state/$slug", params: { slug } });
+              return;
+            }
+          }
+
+          // Fallback: browser history or home
+          if (router.history.length > 1) {
+            router.history.back();
+          } else {
+            router.navigate({ to: "/home" });
+          }
+        });
+
+        // P1.1 FIX: Properly capture listener handle for cleanup
+        unlistener = () => listenerHandle.remove();
+      } catch (error) {
+        // Log error but don't crash app
+        console.error("Failed to setup Android back button listener:", error);
+      }
     };
 
     setupListener();

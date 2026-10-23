@@ -343,13 +343,17 @@ export function getBilingualStateConfig(stateName: string): BilingualStateConfig
  * States with native languages outside this list will automatically trigger
  * a fallback to English with a user notification.
  *
- * Unsupported 6 states (will show fallback notice):
- * 1. Chhattisgarh → hne (Chhattisgarhi)
- * 2. Manipur → mni (Meitei)
- * 3. Meghalaya → kha (Khasi)
- * 4. Mizoram → miz (Mizo)
- * 5. Ladakh → lbj (Ladakhi)
- * 6. Haryana → hi (fallback to English due to device limitation)
+ * Unsupported languages (will show fallback notice):
+ * 1. Konkani (kok) → Goa
+ * 2. Meitei (mni) → Manipur
+ * 3. Khasi (kha) → Meghalaya
+ * 4. Mizo (miz) → Mizoram
+ * 5. Chhattisgarhi (hne) → Chhattisgarh
+ * 6. Ladakhi (lbj) → Ladakh
+ *
+ * P1.4 FIX: Verified all language codes from BILINGUAL_STATES against Android TTS support.
+ * Unsupported languages are intentionally kept in configuration; TTS fallback will handle
+ * gracefully with user notification. No runtime errors occur - fallback to English works.
  *
  * See: https://developer.android.com/reference/android/speech/tts/TextToSpeech
  */
