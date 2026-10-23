@@ -2130,7 +2130,7 @@ export function LearningHubScreen({
         />
         
         {/* Header content overlay - back button, title, star counter */}
-        <div className="relative z-10 h-full flex items-center justify-between px-4">
+        <div className="relative z-10 h-full flex items-center justify-between px-5">
           {/* Back button - left side */}
           <button
             onClick={() => {
@@ -2141,10 +2141,10 @@ export function LearningHubScreen({
                 goBack();
               }
             }}
-            className="h-9 w-9 rounded-full bg-text-on-header/40 backdrop-blur-sm flex items-center justify-center text-text-on-header text-lg flex-shrink-0 transition-all active:scale-95"
+            className="h-10 w-10 rounded-full bg-text-on-header/40 backdrop-blur-sm flex items-center justify-center text-text-on-header flex-shrink-0 transition-all active:scale-95"
             aria-label="Go back"
           >
-            ‹
+            <span className="text-label">‹</span>
           </button>
 
           {/* Center: State name - flex-grow to push star to right */}
@@ -2153,9 +2153,9 @@ export function LearningHubScreen({
           </h1>
 
           {/* Star counter - right side */}
-          <div className="h-9 w-9 rounded-full bg-text-on-header/40 backdrop-blur-sm flex items-center justify-center text-text-on-header flex-shrink-0">
-            <span className="text-sm font-extrabold">⭐</span>
-            <span className="text-xs font-extrabold ml-0.5">{completedCategories * XP_PER_CARD}</span>
+          <div className="h-10 w-10 rounded-full bg-text-on-header/40 backdrop-blur-sm flex items-center justify-center text-text-on-header flex-shrink-0">
+            <span className="text-label">⭐</span>
+            <span className="text-caption font-extrabold">{completedCategories * XP_PER_CARD}</span>
           </div>
         </div>
       </div>
@@ -2164,8 +2164,8 @@ export function LearningHubScreen({
       <div className="flex-1 overflow-y-auto">
         {/* PROGRESS CARD - White rounded card with overlap */}
         <div className="px-5 -mt-6 relative z-20 mb-6">
-          <div className="bg-surface-card rounded-2xl shadow-elevated-1 p-4">
-            <div className="flex items-center justify-between mb-2">
+          <div className="bg-surface-card rounded-2xl shadow-elevated-1 p-5">
+            <div className="flex items-center justify-between mb-3">
               <div className="text-label font-bold text-text-primary">Your state adventure</div>
               <div className="text-body font-extrabold text-text-primary">{completedCategories} / 6</div>
             </div>
@@ -2183,7 +2183,7 @@ export function LearningHubScreen({
 
         {/* SECTION HEADING & SUBTITLE */}
         <div className="px-5 mb-4">
-          <h2 className="text-h2 text-text-primary font-extrabold mb-1">Explore the state</h2>
+          <h2 className="text-h2 text-text-primary font-extrabold mb-2">Explore the state</h2>
           <p className="text-body text-text-secondary">Complete all 6 challenges to unlock your quiz.</p>
         </div>
 
@@ -2211,7 +2211,7 @@ export function LearningHubScreen({
             }`}
           >
             {/* Lock icon in circular background */}
-            <div className={`h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0 text-lg ${
+            <div className={`h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0 text-h4 ${
               completedCategories === 6 ? "bg-accent-5/20" : "bg-accent-5/10"
             }`}>
               {completedCategories === 6 ? "🔓" : "🔒"}
@@ -2230,7 +2230,7 @@ export function LearningHubScreen({
             </div>
 
             {/* Decorative sparkles */}
-            <div className="text-lg flex-shrink-0">✨</div>
+            <div className="text-h4 flex-shrink-0">✨</div>
           </button>
         </div>
       </div>
@@ -2243,17 +2243,17 @@ export function LearningHubScreen({
         >
           <div className="bg-action-primary rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden animate-in zoom-in-95 flex flex-col">
             {/* Header */}
-            <div className="p-6 text-center">
+            <div className="p-5 text-center">
               <div className="text-5xl mb-4">{EMOJI.action.celebrate}</div>
-              <div className="text-ink text-xs font-black uppercase tracking-[0.3em] mb-2">
+              <div className="text-caption text-ink font-black uppercase tracking-widest mb-2">
                 All Done!
               </div>
               <h2 className="text-h2 text-ink font-extrabold">All 6 Cards Explored!</h2>
-              <p className="text-ink font-bold mt-3 text-sm">Ready to test your knowledge?</p>
+              <p className="text-body text-ink font-bold mt-3">Ready to test your knowledge?</p>
             </div>
 
             {/* Buttons */}
-            <div className="p-6 space-y-3 flex flex-col">
+            <div className="p-5 space-y-3 flex flex-col">
               {/* Start Quiz button */}
               <button
                 onClick={() => {
@@ -2261,7 +2261,7 @@ export function LearningHubScreen({
                   setShowDecisionModal(false);
                   onQuiz?.();
                 }}
-                className="w-full h-14 ui-button ui-accent-3 text-display font-extrabold active:scale-95 transition-all"
+                className="w-full h-12 ui-button ui-accent-3 text-body font-extrabold active:scale-95 transition-all"
               >
                 ${EMOJI.action.sparkle} Start Quiz Now
               </button>
@@ -2272,7 +2272,7 @@ export function LearningHubScreen({
                   fxTap();
                   setShowDecisionModal(false);
                 }}
-                className="w-full h-14 ui-button ui-accent-1-soft text-display font-bold active:scale-95 transition-all"
+                className="w-full h-12 ui-button ui-accent-1-soft text-body font-bold active:scale-95 transition-all"
               >
                 ⏰ Ask Me Later
               </button>
@@ -2362,20 +2362,20 @@ function HubCard({
       <div className="flex items-start justify-between mb-2">
         {/* Numbered badge in top-left */}
         {index !== undefined && (
-          <div className="h-6 w-6 rounded-full bg-surface-card flex items-center justify-center text-xs font-black text-text-primary shadow-soft flex-shrink-0">
+          <div className="h-6 w-6 rounded-full bg-surface-card flex items-center justify-center text-caption font-black text-text-primary shadow-soft flex-shrink-0">
             {String(index + 1).padStart(2, "0")}
           </div>
         )}
         
         {/* Checkmark badge for completed - replaces number */}
         {done && (
-          <div className="h-6 w-6 rounded-full bg-action-success text-text-on-primary flex items-center justify-center text-xs font-black shadow-soft flex-shrink-0">
+          <div className="h-6 w-6 rounded-full bg-action-success text-text-on-primary flex items-center justify-center text-caption font-black shadow-soft flex-shrink-0">
             ✓
           </div>
         )}
 
         {/* Icon - top right */}
-        <div className="text-3xl ml-auto flex-shrink-0">{icon}</div>
+        <div className="text-h3 ml-auto flex-shrink-0">{icon}</div>
       </div>
 
       {/* Title - grows to fill space */}
@@ -2395,14 +2395,14 @@ function HubCard({
         
         {/* Arrow button - bottom right */}
         {!done && !locked && (
-          <div className={`h-6 w-6 rounded-full flex items-center justify-center text-xs font-bold ml-auto flex-shrink-0 ${arrowBg} ${arrowText}`}>
+          <div className={`h-6 w-6 rounded-full flex items-center justify-center text-caption font-bold ml-auto flex-shrink-0 ${arrowBg} ${arrowText}`}>
             →
           </div>
         )}
         
         {/* Locked icon - bottom right */}
         {locked && (
-          <div className="h-6 w-6 rounded-full bg-text-secondary/70 text-text-on-primary flex items-center justify-center text-xs flex-shrink-0 ml-auto">
+          <div className="h-6 w-6 rounded-full bg-text-secondary/70 text-text-on-primary flex items-center justify-center text-caption flex-shrink-0 ml-auto">
             🔒
           </div>
         )}
