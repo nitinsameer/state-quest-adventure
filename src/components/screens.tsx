@@ -2117,9 +2117,9 @@ export function LearningHubScreen({
   });
 
   return (
-    <div className="h-full w-full bg-surface-card flex flex-col">
-      {/* HEADER SECTION - Simplified with landscape background */}
-      <div className="h-40 relative overflow-hidden">
+    <div className="h-full w-full bg-bg-page flex flex-col">
+      {/* HEADER SECTION - Simplified, compact header with background image and floating controls */}
+      <div className="h-32 relative overflow-hidden flex flex-col justify-center">
         {/* Background image - absolute positioned, full width/height */}
         <img
           src={stateHeaderBg}
@@ -2130,40 +2130,45 @@ export function LearningHubScreen({
         />
         
         {/* Content overlay with z-10 for relative positioning */}
-        <div className="relative z-10 px-5 pt-3 pb-4 h-full flex flex-col">
-          <div className="flex items-center gap-3 flex-1">
-            <button
-              onClick={() => {
-                if (onBack) {
-                  fxTap();
-                  onBack();
-                } else {
-                  goBack();
-                }
-              }}
-              className="h-12 w-12 rounded-full bg-text-on-header/20 flex items-center justify-center text-text-on-header text-xl flex-shrink-0"
-            >
-              ‹
-            </button>
-            <div className="flex-1 text-text-on-header">
-              <div className="text-xs font-bold text-text-on-header/90">Learning Hub</div>
-              <div className="text-display text-xl font-extrabold">{state.name}</div>
-            </div>
-            <div className="flex items-center gap-1 text-text-on-header text-display font-extrabold flex-shrink-0">
-              <span>{EMOJI.action.star}</span> {completedCategories * XP_PER_CARD}
-            </div>
+        <div className="relative z-10 px-5 h-full flex flex-col items-center justify-center">
+          {/* Floating back button - left side */}
+          <button
+            onClick={() => {
+              if (onBack) {
+                fxTap();
+                onBack();
+              } else {
+                goBack();
+              }
+            }}
+            className="absolute left-5 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-text-on-header/30 backdrop-blur-sm flex items-center justify-center text-text-on-header text-lg flex-shrink-0 transition-all active:scale-95 hover:bg-text-on-header/40"
+            aria-label="Go back"
+          >
+            ‹
+          </button>
+
+          {/* Center: State name prominently */}
+          <div className="text-center">
+            <h1 className="text-display text-2xl font-extrabold text-text-on-header leading-tight">
+              {state.name}
+            </h1>
+          </div>
+
+          {/* Floating star counter - right side */}
+          <div className="absolute right-5 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-text-on-header/30 backdrop-blur-sm flex items-center justify-center text-text-on-header flex-shrink-0">
+            <span className="text-lg font-extrabold">{completedCategories * XP_PER_CARD}</span>
           </div>
         </div>
       </div>
 
-      {/* PROGRESS CARD - White rounded card with overlap */}
+      {/* PROGRESS CARD - White rounded card with overlap and lavender progress bar */}
       <div className="px-5 -mt-6 relative z-20">
-        <div className="bg-white rounded-2xl shadow-lg p-5">
+        <div className="bg-surface-card rounded-2xl shadow-elevated-1 p-5">
           <div className="flex items-center justify-between mb-3">
-            <div className="text-xs font-bold text-display">Your state adventure</div>
-            <div className="text-sm font-extrabold text-display">{completedCategories} / 6</div>
+            <div className="text-label font-bold text-text-primary">Your state adventure</div>
+            <div className="text-body font-extrabold text-text-primary">{completedCategories} / 6</div>
           </div>
-          <div className="w-full h-2.5 bg-accent-1/20 rounded-full overflow-hidden">
+          <div className="w-full h-2.5 bg-accent-5-soft rounded-full overflow-hidden">
             <div
               className="h-full rounded-full transition-all duration-300"
               style={{ 
@@ -2176,20 +2181,20 @@ export function LearningHubScreen({
       </div>
 
       {/* SECTION HEADING & SUBTITLE */}
-      <div className="px-5 mt-6">
-        <h2 className="text-h3 text-display font-extrabold">Explore the state</h2>
-        <p className="text-sm text-subtitle mt-2">Complete all 6 challenges to unlock your quiz.</p>
+      <div className="px-5 mt-5">
+        <h2 className="text-h4 text-text-primary font-extrabold">Explore the state</h2>
+        <p className="text-caption text-text-secondary mt-1.5">Complete all 6 challenges to unlock your quiz.</p>
       </div>
 
-      {/* CHALLENGE CARDS GRID */}
-      <div className="px-4 pt-4 grid grid-cols-2 gap-3 flex-1 overflow-auto pb-[env(safe-area-inset-bottom)]">
+      {/* CHALLENGE CARDS GRID - Fixed height, 2 columns, all 6 visible without scroll */}
+      <div className="px-4 mt-4 flex-1 grid grid-cols-2 gap-2.5 overflow-hidden">
         {cards.map((c, idx) => (
           <HubCard key={c.title} index={idx} {...c} stateName={state.name} />
         ))}
       </div>
 
-      {/* QUIZ PANEL - Illustrated card */}
-      <div className="px-4 pb-4">
+      {/* QUIZ PANEL - Full-width lavender card with lock and sparkles */}
+      <div className="px-4 pb-4 mt-3">
         <button
           onClick={() => {
             if (completedCategories === 6 && !showDecisionModal) {
@@ -2198,37 +2203,33 @@ export function LearningHubScreen({
             }
           }}
           disabled={completedCategories < 6}
-          className={`w-full rounded-3xl p-6 transition-all active:scale-95 flex items-center gap-4 ${
+          className={`w-full rounded-2xl p-4 transition-all active:scale-95 flex items-center gap-3 ${
             completedCategories === 6
-              ? "bg-green-100 hover:shadow-lg hover:scale-105"
-              : "bg-accent-5/10"
+              ? "bg-accent-5-soft hover:shadow-md"
+              : "bg-accent-5-soft/50"
           }`}
         >
           {/* Lock icon in circular background */}
-          <div className={`h-12 w-12 rounded-full flex items-center justify-center flex-shrink-0 text-lg ${
-            completedCategories === 6 ? "bg-green-200" : "bg-accent-5/20"
+          <div className={`h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0 text-lg ${
+            completedCategories === 6 ? "bg-accent-5/20" : "bg-accent-5/10"
           }`}>
             {completedCategories === 6 ? "✅" : "🔒"}
           </div>
 
           {/* Heading and subtitle */}
-          <div className="flex-1 text-left">
-            <div className={`font-extrabold text-h4 ${
-              completedCategories === 6 ? "text-green-700" : "text-display"
-            }`}>
+          <div className="flex-1 text-left min-w-0">
+            <div className="font-bold text-body text-text-primary">
               {completedCategories === 6 ? "Take the Quiz!" : "State Quiz Locked"}
             </div>
-            <div className={`text-sm font-bold mt-0.5 ${
-              completedCategories === 6 ? "text-green-600" : "text-subtitle"
-            }`}>
+            <div className="text-caption text-text-secondary mt-0.5 line-clamp-1">
               {completedCategories === 6 
-                ? "You've unlocked it! Test your knowledge now."
-                : "Complete all 6 challenges to unlock it."}
+                ? "Test your knowledge now"
+                : "Complete all 6 challenges"}
             </div>
           </div>
 
           {/* Decorative sparkles */}
-          <div className="text-xl flex-shrink-0">✨</div>
+          <div className="text-lg flex-shrink-0">✨</div>
         </button>
       </div>
 
@@ -2310,30 +2311,30 @@ function HubCard({
   categoryCardsRead?: number;
   onOpen?: () => void;
 }) {
-  // Pastel color system mapped by index
+  // Pastel color system mapped by index - using semantic tokens
   const pastelColorMap = [
-    "#FFE8D0", // 0: Capital - light peachy
-    "#D4E6F7", // 1: Language - light sky
-    "#D0F4EE", // 2: Food - light mint
-    "#FFE0B2", // 3: Places - light amber
-    "#FFE8D0", // 4: Monument - light peachy
-    "#D4E6F7", // 5: Craft - light sky
+    "var(--accent-2-soft)", // 0: Capital - soft accent 2
+    "var(--accent-4-soft)", // 1: Language - soft accent 4
+    "var(--accent-6-soft)", // 2: Food - soft accent 6
+    "var(--accent-1-soft)", // 3: Places - soft accent 1
+    "var(--accent-2-soft)", // 4: Monument - soft accent 2
+    "var(--accent-4-soft)", // 5: Craft - soft accent 4
   ];
 
-  const pastelBg = index !== undefined ? pastelColorMap[index] : "#D4E6F7";
+  const pastelBg = index !== undefined ? pastelColorMap[index] : "var(--accent-4-soft)";
 
-  // Border styling based on index
-  let borderColor = "#E0E0E0"; // Default subtle gray
-  let borderWidth = "2px";
-  let arrowBg = "bg-gray-300";
-  let arrowText = "text-gray-700";
+  // Border styling based on index - use theme tokens
+  let borderColor = "var(--border-subtle)"; // Default subtle gray
+  let borderWidth = "1.5px";
+  let arrowBg = "bg-text-secondary/50";
+  let arrowText = "text-text-primary";
 
   if (index === 0) {
     // Capital card - ORANGE
-    borderColor = "#FF9D4D";
+    borderColor = "var(--accent-2)";
     borderWidth = "3px";
-    arrowBg = "bg-orange-500";
-    arrowText = "text-white";
+    arrowBg = "bg-accent-2";
+    arrowText = "text-text-on-primary";
   }
 
   return (
@@ -2344,57 +2345,57 @@ function HubCard({
         fxTap();
         onOpen?.();
       }}
-      className="relative text-left transition active:scale-[0.98] p-4 rounded-2xl flex flex-col"
+      className="relative text-left transition active:scale-[0.98] p-3 rounded-xl flex flex-col"
       style={{
         backgroundColor: pastelBg,
         borderColor: borderColor,
         borderWidth: borderWidth,
         borderStyle: "solid",
-        opacity: locked ? 0.6 : 1,
+        opacity: locked ? 0.5 : 1,
         pointerEvents: locked || !canClick ? "none" : "auto",
         cursor: locked || !canClick ? "not-allowed" : "pointer",
       }}
     >
       {/* Numbered badge in top-left */}
       {index !== undefined && (
-        <div className="absolute top-3 left-3 h-7 w-7 rounded-full bg-white flex items-center justify-center text-xs font-black text-gray-700 shadow-sm">
+        <div className="absolute top-2 left-2 h-6 w-6 rounded-full bg-surface-card flex items-center justify-center text-xs font-black text-text-primary shadow-soft">
           {String(index + 1).padStart(2, "0")}
         </div>
       )}
 
       {/* Icon - top right */}
-      <div className="text-4xl mb-2 text-right">{icon}</div>
+      <div className="text-3xl mb-2 text-right">{icon}</div>
 
       {/* Title */}
-      <div className="text-h5 text-display font-bold leading-tight mb-1">{title}</div>
+      <div className="text-label text-text-primary font-bold leading-tight mb-1">{title}</div>
 
       {/* Subtitle */}
-      <div className="text-xs text-gray-600 font-semibold mb-3">{sub}</div>
+      <div className="text-caption text-text-secondary font-medium mb-2 line-clamp-1">{sub}</div>
 
       {/* Progress counter at bottom left */}
       {categoryCardsTotal !== undefined && categoryCardsRead !== undefined && (
-        <div className={`text-xs font-bold ${done ? "text-green-600" : "text-gray-600"}`}>
+        <div className={`text-caption font-bold ${done ? "text-action-success" : "text-text-secondary"}`}>
           {categoryCardsRead}/{categoryCardsTotal}
         </div>
       )}
 
       {/* Completed checkmark badge - top right */}
       {done && (
-        <div className="absolute top-3 right-3 h-8 w-8 rounded-full bg-green-500 text-white flex items-center justify-center text-lg font-black shadow-lg">
+        <div className="absolute top-2 right-2 h-6 w-6 rounded-full bg-action-success text-text-on-primary flex items-center justify-center text-sm font-black shadow-soft">
           ✓
         </div>
       )}
 
       {/* Locked icon - top right */}
       {locked && (
-        <div className="absolute top-3 right-3 h-7 w-7 rounded-full text-white flex items-center justify-center text-xs bg-gray-400 shadow-sm">
-          {EMOJI.milestone.hundred}
+        <div className="absolute top-2 right-2 h-6 w-6 rounded-full text-text-on-primary flex items-center justify-center text-xs bg-text-secondary/70 shadow-soft">
+          🔒
         </div>
       )}
 
       {/* Arrow button - bottom right */}
       {!done && !locked && (
-        <div className={`absolute bottom-3 right-3 h-8 w-8 rounded-full flex items-center justify-center text-sm font-bold ${arrowBg} ${arrowText}`}>
+        <div className={`absolute bottom-2 right-2 h-6 w-6 rounded-full flex items-center justify-center text-xs font-bold ${arrowBg} ${arrowText}`}>
           →
         </div>
       )}
