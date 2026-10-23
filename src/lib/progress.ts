@@ -23,7 +23,7 @@ export type PendingCelebration =
       quizXp: number;
       bonusXp: number;
       stampDate: string;
-      earnedBadgeIds: (BadgeId | string)[]; // Can be state badges OR achievement badges like "region-master-north"
+      earnedBadgeIds: BadgeId[]; // Only state badges for postcard display
       regionKey: string;
       regionDone: number;
       regionTotal: number;

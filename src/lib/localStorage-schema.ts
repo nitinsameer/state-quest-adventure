@@ -104,13 +104,7 @@ const PendingCelebrationSchema = z.object({
   quizXp: z.number().int().nonnegative(), // Sum of +20 per first-time correct
   bonusXp: z.number().int().nonnegative(), // Always 100
   stampDate: z.string(), // Formatted like "12 · MAR"
-  // Allow state badges OR achievement badges (e.g. "region-master-north")
-  earnedBadgeIds: z.array(
-    z.union([
-      z.enum(["monument", "animal", "explorer"]),
-      z.string().regex(/^region-master-/), // Dynamic: region-master-{regionKey}
-    ]),
-  ),
+  earnedBadgeIds: z.array(z.enum(["monument", "animal", "explorer"])), // Only state badges
   regionKey: z.string().min(1), // e.g., "north", "south"
   regionDone: z.number().int().nonnegative().max(8), // How many states in region are done
   regionTotal: z.number().int().positive().max(8), // Total states in this region
