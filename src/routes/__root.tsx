@@ -294,9 +294,11 @@ function HydratedApp() {
   const preAuthRoutes = ["/", "/welcome", "/create"];
 
   // Immersive routes that should NOT show BottomNav (full-screen experiences)
-  // Uses regex to match /state/<slug>/quiz, /state/<slug>/learn, etc. AND /journey (entire journey map is immersive)
+  // Only hide nav for /state/* routes (learning, quizzes, etc.)
+  // Journey tab (/journey) shows nav normally; specific states accessed FROM journey stay as /journey route
+  // but are rendered as immersive screens via internal view state in JourneyMapScreen
   const immersiveRoutePattern =
-    /^\/state\/[^/]+\/(quiz|learn|card|cards|complete|postcard|unlock)(\/|$)|^\/journey$/;
+    /^\/state\/[^/]+\/(quiz|learn|card|cards|complete|postcard|unlock)(\/|$)/;
 
   // Check if current route is immersive (quiz, learning, celebration, or journey map)
   const isImmersiveRoute = immersiveRoutePattern.test(location.pathname);
