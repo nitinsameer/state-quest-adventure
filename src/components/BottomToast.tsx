@@ -82,14 +82,9 @@ export function BottomToastProvider() {
     return (
       <div
         className="fixed inset-0 pointer-events-none z-[998]"
-        style={{ pointerEvents: "auto" }}
+        style={{ pointerEvents: "none" }}
       >
-        <SuccessToast
-          message={current.message}
-          icon={current.icon}
-          duration={current.duration ?? 2500}
-          onDismiss={() => dismiss()}
-        />
+        <SuccessToast />
       </div>
     );
   }

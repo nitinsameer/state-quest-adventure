@@ -102,14 +102,13 @@ export function SuccessToast() {
     <div
       className="fixed inset-x-0 z-50 pointer-events-none"
       style={{
-        bottom: 0,
+        bottom: "calc(var(--nav-h, 80px) + 20px)",
         display: "flex",
-        alignItems: "flex-end",
+        alignItems: "center",
         justifyContent: "center",
-        paddingBottom: "calc(var(--nav-h, 96px) + 16px)",
-        paddingLeft: "16px",
-        paddingRight: "16px",
-        pointerEvents: "auto",
+        paddingLeft: "12px",
+        paddingRight: "12px",
+        pointerEvents: "none", // Non-blocking - allows clicks through
       }}
     >
       {/* Particle container - absolutely positioned relative to toast */}
