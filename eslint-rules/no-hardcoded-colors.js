@@ -63,7 +63,11 @@ export default {
                 "stroke",
               ].some((c) => keyName === c);
 
-              if (isColorProperty && prop.value.type === "Literal" && typeof prop.value.value === "string") {
+              if (
+                isColorProperty &&
+                prop.value.type === "Literal" &&
+                typeof prop.value.value === "string"
+              ) {
                 const colorMatch = hasColorPattern(prop.value.value);
                 if (colorMatch) {
                   context.report({

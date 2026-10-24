@@ -18,7 +18,10 @@ function PrivacyPolicyScreen() {
   return (
     <div className="h-full w-full bg-surface-card flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="px-5 pt-3 pb-6 rounded-b-[32px]" style={{backgroundColor: "var(--accent-5)", color: "var(--accent-5-ink)"}}>
+      <div
+        className="px-5 pt-3 pb-6 rounded-b-[32px]"
+        style={{ backgroundColor: "var(--accent-5)", color: "var(--accent-5-ink)" }}
+      >
         <div className="flex items-center justify-between">
           <button
             onClick={() => window.history.back()}

@@ -49,7 +49,8 @@ export default {
   meta: {
     type: "problem",
     docs: {
-      description: "Prevent hardcoded emoji literals in JSX. Use EMOJI constants from src/constants/emoji.ts instead.",
+      description:
+        "Prevent hardcoded emoji literals in JSX. Use EMOJI constants from src/constants/emoji.ts instead.",
       category: "Best Practices",
       recommended: true,
     },
@@ -75,8 +76,9 @@ export default {
 
         // Only check in JSX attribute values and object properties (not text content or other strings)
         const isRelevantContext =
-          (parent.type === "JSXAttribute") ||
-          (parent.type === "Property" && (parent.key.name === "icon" || parent.key.name === "emoji"));
+          parent.type === "JSXAttribute" ||
+          (parent.type === "Property" &&
+            (parent.key.name === "icon" || parent.key.name === "emoji"));
 
         if (!isRelevantContext) {
           return;

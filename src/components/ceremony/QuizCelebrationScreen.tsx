@@ -104,9 +104,7 @@ function SingleScreenCelebration({
   // Check prefers-reduced-motion on mount
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const prefersReduced = window
-        .matchMedia("(prefers-reduced-motion: reduce)")
-        .matches;
+      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       setPrefersReducedMotion(prefersReduced);
     }
   }, []);
@@ -250,7 +248,6 @@ function SingleScreenCelebration({
 
   return (
     <div className="h-full w-full bg-surface-card flex flex-col overflow-hidden">
-
       {/* CONTENT AREA */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-6 overflow-y-auto relative">
         {/* PHASE 1: Confetti + Mascot bounce */}
@@ -290,10 +287,7 @@ function SingleScreenCelebration({
               }}
             >
               {Array.from({ length: 3 }).map((_, i) => {
-                const starProgress = Math.max(
-                  0,
-                  Math.min(1, (phase2Progress - i * 0.35) / 0.35),
-                );
+                const starProgress = Math.max(0, Math.min(1, (phase2Progress - i * 0.35) / 0.35));
                 return (
                   <div
                     key={i}

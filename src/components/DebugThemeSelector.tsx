@@ -1,6 +1,6 @@
 /**
  * Debug Theme Selector Component
- * 
+ *
  * Only visible in development mode (process.env.NODE_ENV === 'development').
  * Allows quick preview of all available themes by clicking buttons.
  * Displays theme names with color previews and highlights the current theme.
@@ -11,16 +11,16 @@ import { THEMES } from "@/lib/themes";
 import { fxTap } from "@/lib/fx";
 
 export function DebugThemeSelector() {
+  const { currentTheme, setTheme } = useThemeStore();
+
   // Only show in development mode
   if (process.env.NODE_ENV !== "development") {
     return null;
   }
 
-  const { currentTheme, setTheme } = useThemeStore();
-
   const handleThemeSelect = (themeId: string) => {
     fxTap();
-    setTheme(themeId as any);
+    setTheme(themeId as Record<string, unknown>);
   };
 
   return (
@@ -67,9 +67,7 @@ export function DebugThemeSelector() {
                 <div className="text-[11px] font-extrabold text-text-primary truncate">
                   {theme.name}
                 </div>
-                <div className="text-[9px] font-bold text-text-secondary truncate">
-                  {theme.id}
-                </div>
+                <div className="text-[9px] font-bold text-text-secondary truncate">{theme.id}</div>
               </div>
 
               {/* Current Indicator */}
@@ -84,8 +82,12 @@ export function DebugThemeSelector() {
 
         {/* Debug Info */}
         <div className="text-[9px] font-mono text-text-secondary bg-surface-sunken p-2 rounded">
-          <div>Current: <span className="font-extrabold">{currentTheme}</span></div>
-          <div>Total themes: <span className="font-extrabold">{THEMES.length}</span></div>
+          <div>
+            Current: <span className="font-extrabold">{currentTheme}</span>
+          </div>
+          <div>
+            Total themes: <span className="font-extrabold">{THEMES.length}</span>
+          </div>
         </div>
       </div>
     </div>

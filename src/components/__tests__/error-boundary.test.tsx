@@ -1,9 +1,9 @@
 /**
  * Error Boundary Component Tests
- * 
+ *
  * Regression tests for Batch 1 fix: FND-020 (EMOJI import)
  * and general error handling coverage for P0 blocking fixes.
- * 
+ *
  * Verifies that error boundaries catch errors gracefully without
  * crashes and display user-friendly error messages.
  */
@@ -42,11 +42,7 @@ function MockErrorBoundary({ children }: { children: React.ReactNode }) {
     );
   }
 
-  return (
-    <ErrorBoundary onError={handleError}>
-      {children}
-    </ErrorBoundary>
-  );
+  return <ErrorBoundary onError={handleError}>{children}</ErrorBoundary>;
 }
 
 /**
@@ -71,7 +67,8 @@ class ErrorBoundary extends React.Component<
 
   render() {
     if (this.state.hasError) {
-      const errorMessage = this.state.error instanceof Error ? this.state.error.message : String(this.state.error);
+      const errorMessage =
+        this.state.error instanceof Error ? this.state.error.message : String(this.state.error);
       return (
         <div data-testid="error-boundary">
           <h1>Something went wrong</h1>
@@ -121,7 +118,8 @@ describe("Error Boundary (Regression: FND-020)", () => {
 
     it("should handle unknown error type correctly", () => {
       const unknownError: unknown = "String error";
-      const errorMessage = unknownError instanceof Error ? unknownError.message : String(unknownError);
+      const errorMessage =
+        unknownError instanceof Error ? unknownError.message : String(unknownError);
 
       expect(errorMessage).toBe("String error");
       expect(typeof errorMessage).toBe("string");
@@ -137,7 +135,8 @@ describe("Error Boundary (Regression: FND-020)", () => {
 
     it("should handle undefined error gracefully", () => {
       const undefinedError: unknown = undefined;
-      const errorMessage = undefinedError instanceof Error ? undefinedError.message : String(undefinedError);
+      const errorMessage =
+        undefinedError instanceof Error ? undefinedError.message : String(undefinedError);
 
       expect(errorMessage).toBe("undefined");
       expect(typeof errorMessage).toBe("string");
@@ -157,7 +156,7 @@ describe("Error Boundary (Regression: FND-020)", () => {
       render(
         <ErrorBoundary>
           <ThrowingComponent shouldThrow={false} />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       expect(screen.getByTestId("success")).toBeTruthy();
@@ -167,7 +166,7 @@ describe("Error Boundary (Regression: FND-020)", () => {
       render(
         <ErrorBoundary>
           <ThrowingComponent shouldThrow={true} />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       expect(screen.getByTestId("error-boundary")).toBeTruthy();
@@ -179,7 +178,7 @@ describe("Error Boundary (Regression: FND-020)", () => {
       render(
         <ErrorBoundary>
           <ThrowingComponent shouldThrow={true} />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       const details = screen.getByText("Error details").closest("details");
@@ -192,7 +191,7 @@ describe("Error Boundary (Regression: FND-020)", () => {
       render(
         <ErrorBoundary onError={onError}>
           <ThrowingComponent shouldThrow={true} />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       expect(onError).toHaveBeenCalled();
@@ -234,7 +233,7 @@ describe("Error Boundary (Regression: FND-020)", () => {
       render(
         <ErrorBoundary>
           <ThrowingComponent shouldThrow={true} />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // User should see:

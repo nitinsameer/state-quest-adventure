@@ -1,10 +1,10 @@
-import { readFileSync, readdirSync, statSync } from 'fs';
-import { join, extname } from 'path';
+import { readFileSync, readdirSync, statSync } from "fs";
+import { join, extname } from "path";
 
 const rootDir = process.argv[2] || process.cwd();
 
-const ALLOWED_EXTENSIONS = ['.tsx', '.ts', '.jsx', '.js', '.mjs', '.css', '.json', '.md'];
-const SKIP_DIRS = new Set(['node_modules', '.git', 'dist', 'build', 'android', 'ios', '.agents']);
+const ALLOWED_EXTENSIONS = [".tsx", ".ts", ".jsx", ".js", ".mjs", ".css", ".json", ".md"];
+const SKIP_DIRS = new Set(["node_modules", ".git", "dist", "build", "android", "ios", ".agents"]);
 
 // Mojibake detection regex: Latin-1 high bytes followed by continuation bytes
 const MOJIBAKE_REGEX = /[\xc0-\xff][\x80-\xbf]+/g;
@@ -14,7 +14,8 @@ const MOJIBAKE_REGEX = /[\xc0-\xff][\x80-\xbf]+/g;
 // Pattern: Common emoji ranges followed by quotation + Latin-1 high bytes OR Latin-1 control chars
 // We focus on: quotation marks (U+201C, U+201D, U+2018, U+2019) followed by high bytes (U+00A0-U+00FF)
 // OR: emoji followed by Latin-1 control characters (U+0080-U+009F)
-const EMOJI_MOJIBAKE_REGEX = /(🏆|🎨|🦁|🎯|🏅|🌍|✨|🎉)[\u201C\u201D\u2018\u2019\u008F\u0090\u008D][\u00A0-\u00FF\u203A\uFE0F]?/ug;
+const EMOJI_MOJIBAKE_REGEX =
+  /(🏆|🎨|🦁|🎯|🏅|🌍|✨|🎉)[\u201C\u201D\u2018\u2019\u008F\u0090\u008D][\u00A0-\u00FF\u203A\uFE0F]?/gu;
 
 function shouldProcess(filePath) {
   const ext = extname(filePath);
@@ -44,25 +45,25 @@ walk(rootDir, (file) => {
   if (!shouldProcess(file)) return;
 
   try {
-    const content = readFileSync(file, 'utf8');
-    
+    const content = readFileSync(file, "utf8");
+
     // Check for general mojibake (Latin-1 high bytes + continuation bytes)
     if (MOJIBAKE_REGEX.test(content)) {
       console.log(`MOJIBAKE DETECTED: ${file}`);
       hasIssues = true;
     }
-    
+
     // Check for emoji mojibake (emoji followed by Latin-1 high bytes)
     // This catches cases like "🏆"¥" where UTF-8 was double-encoded
     const emojiMatches = content.matchAll(EMOJI_MOJIBAKE_REGEX);
-    const lines = content.split('\n');
-    
+    const lines = content.split("\n");
+
     for (const match of emojiMatches) {
       // Find approximate line number
       const position = match.index;
       let lineNum = 1;
       let charCount = 0;
-      
+
       for (let i = 0; i < lines.length; i++) {
         charCount += lines[i].length + 1; // +1 for newline
         if (charCount > position) {
@@ -70,7 +71,7 @@ walk(rootDir, (file) => {
           break;
         }
       }
-      
+
       console.log(`EMOJI MOJIBAKE DETECTED: ${file}:${lineNum}`);
       console.log(`  Found: ${match[0]} (emoji followed by high byte)`);
       hasIssues = true;
@@ -81,7 +82,7 @@ walk(rootDir, (file) => {
 });
 
 if (!hasIssues) {
-  console.log('Encoding check passed.');
+  console.log("Encoding check passed.");
   process.exit(0);
 } else {
   process.exit(1);

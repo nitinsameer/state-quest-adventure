@@ -40,9 +40,9 @@ export function KidsButton({
 
   // Size mapping
   const sizeClasses = {
-    sm: "h-10 px-(--padding-sm) text-xs",      // 40px min height
-    md: "h-12 px-(--padding-base) text-sm",    // 48px min height (touch target)
-    lg: "h-14 px-(--padding-md) text-base",    // 56px min height
+    sm: "h-10 px-(--padding-sm) text-xs", // 40px min height
+    md: "h-12 px-(--padding-base) text-sm", // 48px min height (touch target)
+    lg: "h-14 px-(--padding-md) text-base", // 56px min height
   };
 
   // Variant mapping
@@ -50,7 +50,8 @@ export function KidsButton({
     primary: "ui-button ui-accent-1 text-on-primary hover:opacity-90",
     secondary: "ui-button-soft ui-accent-2 text-accent-2-ink border-2 border-border",
     success: "ui-button ui-accent-3 text-on-primary hover:opacity-90",
-    locked: "ui-button-soft opacity-60 cursor-not-allowed text-text-disabled border-2 border-dashed",
+    locked:
+      "ui-button-soft opacity-60 cursor-not-allowed text-text-disabled border-2 border-dashed",
     ghost: "bg-transparent text-accent-1 font-bold hover:bg-accent-1-soft active:scale-95",
   };
 
@@ -66,7 +67,7 @@ export function KidsButton({
         "active:scale-95 disabled:cursor-not-allowed",
         sizeClasses[size],
         variantClasses[variant],
-        className
+        className,
       )}
     >
       {children}

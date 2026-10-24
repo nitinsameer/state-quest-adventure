@@ -391,7 +391,6 @@ export function StatePostcardScreen({
           Next State {EMOJI.action.arrow}
         </button>
       </div>
-
     </div>
   );
 }

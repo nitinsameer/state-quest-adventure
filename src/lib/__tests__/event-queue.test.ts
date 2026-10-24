@@ -1,8 +1,8 @@
 /**
  * Event Queue Tests
- * 
+ *
  * Regression tests for Batch 4 fix: FND-007 (event queue data loss when localStorage full)
- * 
+ *
  * Verifies that analytics events are properly queued, persisted, and handled when
  * storage is full or corrupted.
  */

@@ -1,10 +1,10 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
 /**
  * DEBUG: Find actual selectors in the app
  */
-test('Debug: Print app structure', async ({ page }) => {
-  await page.goto('/', { waitUntil: 'networkidle' });
+test("Debug: Print app structure", async ({ page }) => {
+  await page.goto("/", { waitUntil: "networkidle" });
   await page.waitForTimeout(3000); // Wait for app to fully load
 
   // Wait for content to appear
@@ -20,7 +20,7 @@ test('Debug: Print app structure', async ({ page }) => {
   }
 
   // Get heading text
-  const headings = await page.locator('h1, h2, h3, h4, h5, h6').all();
+  const headings = await page.locator("h1, h2, h3, h4, h5, h6").all();
   console.log(`\n[DEBUG] Found ${headings.length} headings:`);
   for (let i = 0; i < Math.min(headings.length, 10); i++) {
     const text = await headings[i].textContent();
@@ -28,11 +28,11 @@ test('Debug: Print app structure', async ({ page }) => {
   }
 
   // Get main content
-  const bodyText = await page.locator('body').textContent();
-  const preview = bodyText?.substring(0, 500) || '';
+  const bodyText = await page.locator("body").textContent();
+  const preview = bodyText?.substring(0, 500) || "";
   console.log(`\n[DEBUG] Body text preview:\n${preview.substring(0, 200)}`);
 
   // Take screenshot
-  await page.screenshot({ path: './test-screenshots/debug-structure.png' });
-  console.log('\n[DEBUG] Screenshot saved: debug-structure.png');
+  await page.screenshot({ path: "./test-screenshots/debug-structure.png" });
+  console.log("\n[DEBUG] Screenshot saved: debug-structure.png");
 });

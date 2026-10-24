@@ -99,10 +99,7 @@ export async function playTone(config: ToneConfig): Promise<void> {
  * @param tones Array of tone configurations
  * @param gap Gap between tones in seconds (default 0.05)
  */
-export async function playSequence(
-  tones: ToneConfig[],
-  gap: number = 0.05,
-): Promise<void> {
+export async function playSequence(tones: ToneConfig[], gap: number = 0.05): Promise<void> {
   if (tones.length === 0) return;
 
   // Ensure AudioContext is running
@@ -119,11 +116,7 @@ export async function playSequence(
 
     for (const tone of tones) {
       // Calculate total duration including envelope
-      const {
-        attack = 0.01,
-        decay = 0.1,
-        release = 0.1,
-      } = tone;
+      const { attack = 0.01, decay = 0.1, release = 0.1 } = tone;
       const totalDuration = tone.duration + attack + decay + release;
 
       // Play tone with delay

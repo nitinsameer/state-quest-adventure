@@ -1,27 +1,27 @@
-import { BasePage } from './BasePage';
+import { BasePage } from "./BasePage";
 
 /**
  * Home Dashboard Page Object
  */
 export class HomePage extends BasePage {
   // Selectors
-  private readonly homeHeader = 'text=Namaste';
+  private readonly homeHeader = "text=Namaste";
   private readonly xpDisplay = '[class*="text-2xl"][class*="font-extrabold"]'; // XP number
-  private readonly levelDisplay = 'text=/Level \\d+/';
-  private readonly streakCounter = 'text=/\\d+/'; // Flame icon + number
-  private readonly statesCount = 'text=/\\d+/'; // From stat cards
-  private readonly badgesCount = 'text=/\\d+/';
-  private readonly stampsCount = 'text=/\\d+/';
+  private readonly levelDisplay = "text=/Level \\d+/";
+  private readonly streakCounter = "text=/\\d+/"; // Flame icon + number
+  private readonly statesCount = "text=/\\d+/"; // From stat cards
+  private readonly badgesCount = "text=/\\d+/";
+  private readonly stampsCount = "text=/\\d+/";
   private readonly continueJourneyCard = '[class*="Continue your journey"]';
   private readonly playButton = 'button:has-text("Play")';
-  private readonly indiaExploredPercent = 'text=/\\d+%/';
+  private readonly indiaExploredPercent = "text=/\\d+%/";
   private readonly progressBar = '[class*="gradient-saffron"]';
 
   /**
    * Navigate to home
    */
   async goto() {
-    await super.goto('/home');
+    await super.goto("/home");
     await this.waitForHomeToLoad();
   }
 
@@ -43,7 +43,7 @@ export class HomePage extends BasePage {
    * Get XP value
    */
   async getXPValue(): Promise<number> {
-    const xpText = await this.page.locator('text=/\\d+.*XP/').textContent();
+    const xpText = await this.page.locator("text=/\\d+.*XP/").textContent();
     const match = xpText?.match(/(\d+)/);
     return match ? parseInt(match[1]) : 0;
   }
@@ -62,8 +62,8 @@ export class HomePage extends BasePage {
    */
   async getStreak(): Promise<number> {
     // Streak is in the flame badge at top right
-    const streakLocator = this.page.locator('.flex.items-center.gap-1.5.bg-white\\/70');
-    const streakText = await streakLocator.locator('text=/\\d+/').first().textContent();
+    const streakLocator = this.page.locator(".flex.items-center.gap-1.5.bg-white\\/70");
+    const streakText = await streakLocator.locator("text=/\\d+/").first().textContent();
     return streakText ? parseInt(streakText) : 0;
   }
 
@@ -71,7 +71,7 @@ export class HomePage extends BasePage {
    * Get India explored percentage
    */
   async getIndiaExploredPercent(): Promise<number> {
-    const percentText = await this.page.locator('text=/\\d+%/').last().textContent();
+    const percentText = await this.page.locator("text=/\\d+%/").last().textContent();
     const match = percentText?.match(/(\d+)/);
     return match ? parseInt(match[1]) : 0;
   }
@@ -80,9 +80,9 @@ export class HomePage extends BasePage {
    * Get states count from stat cards
    */
   async getStatesCount(): Promise<number> {
-    const stateCard = this.page.locator('text=States').first();
+    const stateCard = this.page.locator("text=States").first();
     const parent = stateCard.locator('xpath=ancestor::div[contains(@class, "rounded")]');
-    const countText = await parent.locator('text=/\\d+/').first().textContent();
+    const countText = await parent.locator("text=/\\d+/").first().textContent();
     return countText ? parseInt(countText) : 0;
   }
 
@@ -90,9 +90,9 @@ export class HomePage extends BasePage {
    * Get badges count from stat cards
    */
   async getBadgesCount(): Promise<number> {
-    const badgeCard = this.page.locator('text=Badges').first();
+    const badgeCard = this.page.locator("text=Badges").first();
     const parent = badgeCard.locator('xpath=ancestor::div[contains(@class, "rounded")]');
-    const countText = await parent.locator('text=/\\d+/').first().textContent();
+    const countText = await parent.locator("text=/\\d+/").first().textContent();
     return countText ? parseInt(countText) : 0;
   }
 
@@ -100,9 +100,9 @@ export class HomePage extends BasePage {
    * Get stamps count from stat cards
    */
   async getStampsCount(): Promise<number> {
-    const stampCard = this.page.locator('text=Stamps').first();
+    const stampCard = this.page.locator("text=Stamps").first();
     const parent = stampCard.locator('xpath=ancestor::div[contains(@class, "rounded")]');
-    const countText = await parent.locator('text=/\\d+/').first().textContent();
+    const countText = await parent.locator("text=/\\d+/").first().textContent();
     return countText ? parseInt(countText) : 0;
   }
 
@@ -111,8 +111,8 @@ export class HomePage extends BasePage {
    */
   async getCurrentStateName(): Promise<string> {
     const continueCard = this.page.locator('[class*="rounded-3xl"][class*="bg-white"]').nth(0);
-    const stateName = await continueCard.locator('text=/[A-Z]/').first().textContent();
-    return stateName || '';
+    const stateName = await continueCard.locator("text=/[A-Z]/").first().textContent();
+    return stateName || "";
   }
 
   /**
@@ -120,7 +120,7 @@ export class HomePage extends BasePage {
    */
   async clickPlayButton() {
     await this.page.locator('button:has-text("Play")').click();
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState("networkidle");
   }
 
   /**
@@ -138,7 +138,7 @@ export class HomePage extends BasePage {
    */
   async getProgressBarPercent(): Promise<number> {
     const progressBar = this.page.locator('[class*="bg-white"][class*="transition-all"]').first();
-    const style = await progressBar.getAttribute('style');
+    const style = await progressBar.getAttribute("style");
     const match = style?.match(/width:\s*(\d+)/);
     return match ? parseInt(match[1]) : 0;
   }
@@ -160,6 +160,6 @@ export class HomePage extends BasePage {
    */
   async waitForHomeRefresh(timeout = 5000) {
     await this.page.waitForTimeout(500); // Give React time to update
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState("networkidle");
   }
 }

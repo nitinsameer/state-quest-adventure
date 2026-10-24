@@ -6,27 +6,27 @@
 export const TEST_USERS = {
   newUser: {
     avatar: 0, // First avatar
-    ageBand: '8-9',
+    ageBand: "8-9",
     acceptAudio: false,
   },
   youngUser: {
     avatar: 1,
-    ageBand: '3-5',
+    ageBand: "3-5",
     acceptAudio: false,
   },
   olderUser: {
     avatar: 2,
-    ageBand: '10-12',
+    ageBand: "10-12",
     acceptAudio: false,
   },
 };
 
 export const TEST_STATES = [
-  'Andhra Pradesh',
-  'Arunachal Pradesh',
-  'Assam',
-  'Bihar',
-  'Chhattisgarh',
+  "Andhra Pradesh",
+  "Arunachal Pradesh",
+  "Assam",
+  "Bihar",
+  "Chhattisgarh",
 ];
 
 export const EXPECTED_XP_VALUES = {
@@ -52,19 +52,26 @@ export const EXPECTED_BADGES_PER_STATE = {
 };
 
 export const EXPECTED_CARDS = [
-  { icon: '🏛️', title: 'Capital' },
-  { icon: '🗣️', title: 'Language' },
-  { icon: '🍽️', title: 'Famous Food' },
-  { icon: '🏰', title: 'Places' },
-  { icon: '🐘', title: 'State Animal' },
-  { icon: '💡', title: 'Fun Fact' },
+  { icon: "🏛️", title: "Capital" },
+  { icon: "🗣️", title: "Language" },
+  { icon: "🍽️", title: "Famous Food" },
+  { icon: "🏰", title: "Places" },
+  { icon: "🐘", title: "State Animal" },
+  { icon: "💡", title: "Fun Fact" },
 ];
 
 export const EXPECTED_ACHIEVEMENTS = {
-  tier1: ['explorers-awakening', 'reader', 'quiz-starter', 'stamp-collector', 'fired-up'],
-  tier2: ['five-explorer', 'knowledge-keeper', 'quiz-master', 'artist', 'week-warrior', 'regional-champ'],
-  tier3: ['ten-champion', 'master-reader', 'quiz-legend', 'unstoppable', 'postcard-master'],
-  tier4: ['india-conqueror', 'level-master', 'badge-collector', 'world-guardian'],
+  tier1: ["explorers-awakening", "reader", "quiz-starter", "stamp-collector", "fired-up"],
+  tier2: [
+    "five-explorer",
+    "knowledge-keeper",
+    "quiz-master",
+    "artist",
+    "week-warrior",
+    "regional-champ",
+  ],
+  tier3: ["ten-champion", "master-reader", "quiz-legend", "unstoppable", "postcard-master"],
+  tier4: ["india-conqueror", "level-master", "badge-collector", "world-guardian"],
 };
 
 export const EXPECTED_LEVELS = {
@@ -81,11 +88,11 @@ export const EXPECTED_STATES_TOTAL = 36;
 
 // LocalStorage keys
 export const STORAGE_KEYS = {
-  progress: 'india-explorer:progress:v2',
-  sound: 'india-explorer:sound:v1',
-  celebrated: 'india-explorer:celebrated:v1',
-  tutorialSeen: 'india-explorer:tutorial-seen:v1',
-  appVersion: 'india-explorer:app-version',
+  progress: "india-explorer:progress:v2",
+  sound: "india-explorer:sound:v1",
+  celebrated: "india-explorer:celebrated:v1",
+  tutorialSeen: "india-explorer:tutorial-seen:v1",
+  appVersion: "india-explorer:app-version",
 };
 
 // Expected timestamps format
@@ -105,13 +112,13 @@ export const TIMEOUTS = {
 
 // Test URLs
 export const TEST_URLS = {
-  base: 'http://localhost:5173',
-  home: '/home',
-  welcome: '/welcome',
-  create: '/create',
-  journey: '/journey',
-  explorer: '/explorer',
-  badges: '/badges',
-  achievements: '/achievements',
-  profile: '/me',
+  base: "http://localhost:5173",
+  home: "/home",
+  welcome: "/welcome",
+  create: "/create",
+  journey: "/journey",
+  explorer: "/explorer",
+  badges: "/badges",
+  achievements: "/achievements",
+  profile: "/me",
 };

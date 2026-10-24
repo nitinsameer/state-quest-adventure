@@ -177,7 +177,7 @@ export function getPerformanceBadgeIds(): StatePerformanceBadgeId[] {
     "streak-builder",
     "master-learner",
   ] as const;
-  
+
   return [...BADGE_IDS] as StatePerformanceBadgeId[];
 }
 
@@ -245,11 +245,14 @@ export function getPerformanceBadgeProgress(
   { earned: boolean; progress: number; max: number; message: string }
 > {
   const metrics = performance?.[stateName];
-  
+
   // Initialize result with all badge IDs explicitly (no unsafe casts)
   const allBadgeIds = getPerformanceBadgeIds();
   const result: Partial<
-    Record<StatePerformanceBadgeId, { earned: boolean; progress: number; max: number; message: string }>
+    Record<
+      StatePerformanceBadgeId,
+      { earned: boolean; progress: number; max: number; message: string }
+    >
   > = {};
 
   // Initialize all badges with default "not started" values

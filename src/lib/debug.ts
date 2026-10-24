@@ -1,9 +1,9 @@
 /**
  * Debug Logging Utility
- * 
+ *
  * Provides a centralized way to log debug information that respects the
  * import.meta.env.DEV flag, ensuring no console output in production builds.
- * 
+ *
  * Usage:
  *   debugLog("MyComponent", "Action happened", { data: "value" });
  *   debugError("MyComponent", "Error occurred", error);

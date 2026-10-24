@@ -1,6 +1,6 @@
 /**
  * Firebase Analytics Events Wrapper - DISABLED FOR KIDS APP
- * 
+ *
  * Analytics is DISABLED by default for this kids app to protect children's privacy.
  * All event tracking functions are no-ops.
  * Firebase is initialized with analytics collection permanently disabled.

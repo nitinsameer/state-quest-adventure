@@ -47,7 +47,7 @@ export function playSuccessChime(): void {
 
     // Three-note ascending chime frequencies (Hz)
     const notes = [
-      { freq: 523.25, startTime: 0 },    // C5
+      { freq: 523.25, startTime: 0 }, // C5
       { freq: 659.25, startTime: 0.22 }, // E5
       { freq: 783.99, startTime: 0.44 }, // G5
     ];

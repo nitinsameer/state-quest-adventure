@@ -1245,7 +1245,11 @@ export function finishQuiz(
         ...p.postcards,
         [stateName]: generatePostcardData(stateName, earnedQuizBadges),
       },
-      badges: { ...p.badges, [stateName]: earnedQuizBadges, "_achievements": newAchievementBadges as BadgeId[] },
+      badges: {
+        ...p.badges,
+        [stateName]: earnedQuizBadges,
+        _achievements: newAchievementBadges as BadgeId[],
+      },
       lastPlayedState: stateName,
       // From recordStatePerformance
       statePerformance: {

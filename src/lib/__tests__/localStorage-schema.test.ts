@@ -1,11 +1,11 @@
 /**
  * localStorage Schema Validation Tests
- * 
+ *
  * Regression tests for Batch 4 fixes:
  * - FND-006: Corrupt progress data handling
  * - FND-009: Unvalidated JSON.parse in badge tracker
  * - FND-010: Parent zone settings validation
- * 
+ *
  * Verifies that all localStorage data is properly validated and corrupt data
  * is handled gracefully without crashes or silent data loss.
  */
@@ -249,7 +249,7 @@ describe("localStorage Schema Validation (Regression: FND-006, FND-009, FND-010)
       localStorage.setItem("india-explorer:parental-consent:v1", "███corrupted███");
 
       const result = validateConsentStorage(
-        localStorage.getItem("india-explorer:parental-consent:v1")
+        localStorage.getItem("india-explorer:parental-consent:v1"),
       );
 
       // Should not throw and should return safe default

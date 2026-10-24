@@ -1,9 +1,9 @@
 /**
  * EMOJI Constants Tests
- * 
+ *
  * Regression tests for Batch 3 fix: FND-023, FND-024 (hardcoded emoji violations)
  * and FND-020 (EMOJI import in PassportSeedling)
- * 
+ *
  * Verifies that all emoji constants are properly defined and can be imported
  * without TypeScript errors.
  */
@@ -81,7 +81,9 @@ describe("EMOJI Constants (Regression: FND-020, FND-023, FND-024)", () => {
       // Check if any emoji could represent a stamp
       const hasStampLike = Object.values(EMOJI).some((group) => {
         if (typeof group === "object" && group !== null) {
-          return Object.values(group).some((e) => e === "🎫" || e.includes("stamp") || e.includes("medal"));
+          return Object.values(group).some(
+            (e) => e === "🎫" || e.includes("stamp") || e.includes("medal"),
+          );
         }
         return false;
       });
@@ -190,7 +192,9 @@ describe("EMOJI Constants (Regression: FND-020, FND-023, FND-024)", () => {
       expect(emojiKeys.length).toBeGreaterThan(0);
 
       // At least one category should exist
-      const hasCategories = emojiKeys.some((key) => typeof EMOJI[key as keyof typeof EMOJI] === "object");
+      const hasCategories = emojiKeys.some(
+        (key) => typeof EMOJI[key as keyof typeof EMOJI] === "object",
+      );
       expect(hasCategories).toBe(true);
     });
 

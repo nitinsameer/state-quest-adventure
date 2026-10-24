@@ -13,7 +13,7 @@ import { getTheme, THEMES } from "@/lib/themes";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 
 // Valid theme IDs - derived from THEMES array to stay synchronized
-type ThemeId = typeof THEMES[number]["id"];
+type ThemeId = (typeof THEMES)[number]["id"];
 
 // Zod validation schema for persisted theme data
 const ThemePersistenceSchema = z.object({
@@ -48,7 +48,8 @@ function applyTheme(themeId: ThemeId) {
     try {
       const computedStyle = getComputedStyle(root);
       const statusbarStyle = computedStyle.getPropertyValue("--statusbar-style").trim() || "dark";
-      const statusbarBg = computedStyle.getPropertyValue("--statusbar-bg").trim() || "var(--accent-1)";
+      const statusbarBg =
+        computedStyle.getPropertyValue("--statusbar-bg").trim() || "var(--accent-1)";
 
       const styleValue = statusbarStyle === "dark" ? Style.Dark : Style.Light;
       StatusBar.setStyle({ style: styleValue }).catch(() => {});
@@ -63,7 +64,8 @@ function applyTheme(themeId: ThemeId) {
   if (metaThemeColor) {
     try {
       const computedStyle = getComputedStyle(root);
-      const statusbarBg = computedStyle.getPropertyValue("--statusbar-bg").trim() || "var(--accent-1)";
+      const statusbarBg =
+        computedStyle.getPropertyValue("--statusbar-bg").trim() || "var(--accent-1)";
       metaThemeColor.setAttribute("content", statusbarBg);
     } catch (error) {
       console.warn("Failed to update meta theme-color:", error);

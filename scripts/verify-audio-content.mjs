@@ -7,63 +7,63 @@
  * For monolingual states: checks only English content
  */
 
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Configuration: bilingual states with their language codes
 const BILINGUAL_STATES = {
-  'Andhra Pradesh': 'te',
-  'Gujarat': 'gu',
-  'Karnataka': 'kn',
-  'Maharashtra': 'mr',
-  'Tamil Nadu': 'ta',
-  'West Bengal': 'bn',
-  'Rajasthan': 'hi',
-  'Madhya Pradesh': 'hi',
-  'Uttar Pradesh': 'hi',
-  'Bihar': 'hi',
-  'Jharkhand': 'hi',
-  'Uttarakhand': 'hi',
-  'Haryana': 'hi',
-  'Delhi': 'hi',
-  'Andaman and Nicobar Islands': 'hi',
-  'Odisha': 'or',
-  'Kerala': 'ml',
-  'Telangana': 'te',
-  'Goa': 'kok',
-  'Punjab': 'pa',
-  'Himachal Pradesh': 'hi',
-  'Assam': 'as',
-  'Manipur': 'mni',
-  'Meghalaya': 'kha',
-  'Mizoram': 'miz',
-  'Chhattisgarh': 'hne',
-  'Jammu and Kashmir': 'ur',
-  'Ladakh': 'lbj',
-  'Sikkim': 'ne',
-  'Tripura': 'bn',
-  'Puducherry': 'ta',
-  'Chandigarh': 'pa',
-  'Lakshadweep': 'ml',
-  'Dadra and Nagar Haveli and Daman and Diu': 'gu',
+  "Andhra Pradesh": "te",
+  Gujarat: "gu",
+  Karnataka: "kn",
+  Maharashtra: "mr",
+  "Tamil Nadu": "ta",
+  "West Bengal": "bn",
+  Rajasthan: "hi",
+  "Madhya Pradesh": "hi",
+  "Uttar Pradesh": "hi",
+  Bihar: "hi",
+  Jharkhand: "hi",
+  Uttarakhand: "hi",
+  Haryana: "hi",
+  Delhi: "hi",
+  "Andaman and Nicobar Islands": "hi",
+  Odisha: "or",
+  Kerala: "ml",
+  Telangana: "te",
+  Goa: "kok",
+  Punjab: "pa",
+  "Himachal Pradesh": "hi",
+  Assam: "as",
+  Manipur: "mni",
+  Meghalaya: "kha",
+  Mizoram: "miz",
+  Chhattisgarh: "hne",
+  "Jammu and Kashmir": "ur",
+  Ladakh: "lbj",
+  Sikkim: "ne",
+  Tripura: "bn",
+  Puducherry: "ta",
+  Chandigarh: "pa",
+  Lakshadweep: "ml",
+  "Dadra and Nagar Haveli and Daman and Diu": "gu",
 };
 
 // Card types to verify
-const CARD_TYPES = ['capital', 'language', 'food', 'places', 'animal', 'funFact'];
+const CARD_TYPES = ["capital", "language", "food", "places", "animal", "funFact"];
 
 // Required fields in each card's content
-const REQUIRED_FIELDS = ['title', 'emoji', 'mainText', 'narration'];
+const REQUIRED_FIELDS = ["title", "emoji", "mainText", "narration"];
 
 /**
  * Load states.json
  */
 function loadStatesData() {
-  const statesPath = path.join(__dirname, '../src/lib/content/states.json');
-  const content = fs.readFileSync(statesPath, 'utf-8');
+  const statesPath = path.join(__dirname, "../src/lib/content/states.json");
+  const content = fs.readFileSync(statesPath, "utf-8");
   return JSON.parse(content);
 }
 
@@ -71,7 +71,10 @@ function loadStatesData() {
  * Check if card content has required fields
  */
 function hasRequiredFields(cardContent) {
-  return REQUIRED_FIELDS.every(field => field in cardContent && cardContent[field] !== undefined && cardContent[field] !== null);
+  return REQUIRED_FIELDS.every(
+    (field) =>
+      field in cardContent && cardContent[field] !== undefined && cardContent[field] !== null,
+  );
 }
 
 /**
@@ -92,10 +95,10 @@ function verifyState(stateName, stateData) {
 
     if (isBilingual) {
       // For bilingual states, expect {en: {...}, langCode: {...}} structure
-      if (!('en' in cardData)) {
+      if (!("en" in cardData)) {
         issues.push(`${cardType}: missing 'en' language variant`);
       } else if (!hasRequiredFields(cardData.en)) {
-        const missing = REQUIRED_FIELDS.filter(f => !(f in cardData.en)).join(', ');
+        const missing = REQUIRED_FIELDS.filter((f) => !(f in cardData.en)).join(", ");
         issues.push(`${cardType} (en): missing fields: ${missing}`);
       }
 
@@ -104,15 +107,21 @@ function verifyState(stateName, stateData) {
       } else if (!(nativeLanguageCode in cardData)) {
         issues.push(`${cardType}: missing '${nativeLanguageCode}' language variant`);
       } else if (!hasRequiredFields(cardData[nativeLanguageCode])) {
-        const missing = REQUIRED_FIELDS.filter(f => !(f in cardData[nativeLanguageCode])).join(', ');
+        const missing = REQUIRED_FIELDS.filter((f) => !(f in cardData[nativeLanguageCode])).join(
+          ", ",
+        );
         issues.push(`${cardType} (${nativeLanguageCode}): missing fields: ${missing}`);
       }
     } else {
       // For monolingual states, expect plain CardContent (not language variant structure)
-      if (typeof cardData === 'object' && cardData !== null && ('en' in cardData || nativeLanguageCode in cardData)) {
+      if (
+        typeof cardData === "object" &&
+        cardData !== null &&
+        ("en" in cardData || nativeLanguageCode in cardData)
+      ) {
         issues.push(`${cardType}: unexpected language variant structure for monolingual state`);
       } else if (!hasRequiredFields(cardData)) {
-        const missing = REQUIRED_FIELDS.filter(f => !(f in cardData)).join(', ');
+        const missing = REQUIRED_FIELDS.filter((f) => !(f in cardData)).join(", ");
         issues.push(`${cardType}: missing fields: ${missing}`);
       }
     }
@@ -125,7 +134,7 @@ function verifyState(stateName, stateData) {
  * Main verification
  */
 function main() {
-  console.log('\n🔍 Audio Content Verification\n');
+  console.log("\n🔍 Audio Content Verification\n");
 
   try {
     const statesData = loadStatesData();
@@ -138,17 +147,17 @@ function main() {
       const issues = verifyState(stateName, stateData);
 
       if (issues.length === 0) {
-        results.push({ stateName, status: '✅ OK', issues: [] });
+        results.push({ stateName, status: "✅ OK", issues: [] });
         okCount++;
       } else {
-        results.push({ stateName, status: '❌ Issues', issues });
+        results.push({ stateName, status: "❌ Issues", issues });
         failCount++;
       }
     }
 
     // Print table
-    console.log('State Name                         | Status    | Issues');
-    console.log('--'.padEnd(70, '-'));
+    console.log("State Name                         | Status    | Issues");
+    console.log("--".padEnd(70, "-"));
 
     for (const result of results) {
       const stateCol = result.stateName.padEnd(33);
@@ -158,7 +167,7 @@ function main() {
       } else {
         console.log(`${stateCol} | ${statusCol} | ${result.issues[0]}`);
         for (let i = 1; i < result.issues.length; i++) {
-          console.log(`${''.padEnd(33)} | ${''.padEnd(11)} | ${result.issues[i]}`);
+          console.log(`${"".padEnd(33)} | ${"".padEnd(11)} | ${result.issues[i]}`);
         }
       }
     }
@@ -167,14 +176,14 @@ function main() {
     console.log(`\n📊 Summary: ${okCount} states OK, ${failCount} states with gaps`);
 
     if (failCount > 0) {
-      console.log('\n⚠️  Some states have missing content. Check above for details.\n');
+      console.log("\n⚠️  Some states have missing content. Check above for details.\n");
       process.exit(1);
     } else {
-      console.log('\n✨ All states have complete audio content!\n');
+      console.log("\n✨ All states have complete audio content!\n");
       process.exit(0);
     }
   } catch (error) {
-    console.error('❌ Error during verification:', error.message);
+    console.error("❌ Error during verification:", error.message);
     console.error(error);
     process.exit(1);
   }

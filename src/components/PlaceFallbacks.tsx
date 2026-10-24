@@ -11,7 +11,7 @@ function Shell({ emoji, title, body }: { emoji: string; title: string; body: str
       <Link
         to="/journey"
         className="mt-(--space-2) h-12 px-(--padding-lg) rounded-2xl text-display font-extrabold flex items-center"
-        style={{backgroundColor: "var(--accent-1)", color: "var(--accent-1-ink)"}}
+        style={{ backgroundColor: "var(--accent-1)", color: "var(--accent-1-ink)" }}
       >
         Back to the map
       </Link>

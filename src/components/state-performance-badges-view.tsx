@@ -33,8 +33,13 @@ export function StatePerformanceBadgesView() {
   return (
     <div className="h-full w-full bg-bg-page flex flex-col">
       {/* Header - Kid-friendly celebration style */}
-      <div className="px-5 pt-3 pb-4 rounded-b-[32px] relative overflow-hidden" style={{backgroundColor: "var(--accent-4)", color: "var(--accent-4-ink)"}}>
-        <div className="absolute top-2 right-4 text-5xl opacity-40 pointer-events-none">{EMOJI.milestone.hundred}</div>
+      <div
+        className="px-5 pt-3 pb-4 rounded-b-[32px] relative overflow-hidden"
+        style={{ backgroundColor: "var(--accent-4)", color: "var(--accent-4-ink)" }}
+      >
+        <div className="absolute top-2 right-4 text-5xl opacity-40 pointer-events-none">
+          {EMOJI.milestone.hundred}
+        </div>
 
         <div className="flex items-center gap-3 relative z-10">
           <div className="h-14 w-14 rounded-2xl ui-card ui-accent-1-soft p-1 flex items-center justify-center overflow-hidden flex-shrink-0">
@@ -45,9 +50,7 @@ export function StatePerformanceBadgesView() {
             />
           </div>
           <div className="flex-1" style={{ color: "var(--text-on-header)" }}>
-            <div className="text-display text-lg font-bold leading-tight">
-              {progress.name}
-            </div>
+            <div className="text-display text-lg font-bold leading-tight">{progress.name}</div>
             <div
               className="text-xs font-bold"
               style={{ color: "var(--text-on-header)", opacity: 0.8 }}

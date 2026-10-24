@@ -81,13 +81,6 @@ export function UnlockCelebration() {
   const progress = useProgress();
   const celebration = useCelebration();
 
-  // GATE: Suppress unlock celebrations during quiz celebration
-  // If there's a pending "full" celebration (quiz), don't show unlock popups
-  const isInQuizCelebration = progress.pendingCelebrations?.some((c) => c.type === "full");
-  if (isInQuizCelebration) {
-    console.log("[UnlockCelebration] Quiz celebration in progress - suppressing unlock popups");
-    return null;
-  }
   const [pieces, setPieces] = useState<Piece[] | null>(null);
   const burstRef = useRef(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -96,9 +89,18 @@ export function UnlockCelebration() {
   /** every key ever celebrated — persisted so reloads never replay a burst */
   const celebrated = useRef<Set<string>>(new Set());
   const hydrated = useRef(false);
+
   if (typeof window !== "undefined" && !hydrated.current) {
     hydrated.current = true;
     celebrated.current = loadCelebrated();
+  }
+
+  // GATE: Suppress unlock celebrations during quiz celebration
+  // If there's a pending "full" celebration (quiz), don't show unlock popups
+  const isInQuizCelebration = progress.pendingCelebrations?.some((c) => c.type === "full");
+  if (isInQuizCelebration) {
+    console.log("[UnlockCelebration] Quiz celebration in progress - suppressing unlock popups");
+    return null;
   }
 
   useEffect(

@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { Page, expect } from "@playwright/test";
 
 /**
  * Base Page Object Model
@@ -12,14 +12,14 @@ export class BasePage {
    */
   async goto(path: string) {
     await this.page.goto(path);
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState("networkidle");
   }
 
   /**
    * Wait for element to be visible
    */
   async waitForElement(selector: string, timeout = 5000) {
-    await this.page.waitForSelector(selector, { timeout, state: 'visible' });
+    await this.page.waitForSelector(selector, { timeout, state: "visible" });
   }
 
   /**
@@ -27,7 +27,7 @@ export class BasePage {
    */
   async getText(selector: string): Promise<string> {
     const element = await this.page.$(selector);
-    return element ? await element.textContent() : '';
+    return element ? await element.textContent() : "";
   }
 
   /**
@@ -78,10 +78,7 @@ export class BasePage {
    * Set localStorage value
    */
   async setLocalStorageItem(key: string, value: string) {
-    await this.page.evaluate(
-      ({ k, v }) => localStorage.setItem(k, v),
-      { k: key, v: value }
-    );
+    await this.page.evaluate(({ k, v }) => localStorage.setItem(k, v), { k: key, v: value });
   }
 
   /**
@@ -122,17 +119,13 @@ export class BasePage {
   /**
    * Wait for condition
    */
-  async waitFor(
-    callback: () => Promise<boolean>,
-    timeout = 5000,
-    interval = 100
-  ) {
+  async waitFor(callback: () => Promise<boolean>, timeout = 5000, interval = 100) {
     const startTime = Date.now();
     while (Date.now() - startTime < timeout) {
       if (await callback()) return;
       await this.page.waitForTimeout(interval);
     }
-    throw new Error('Timeout waiting for condition');
+    throw new Error("Timeout waiting for condition");
   }
 
   /**
@@ -160,6 +153,6 @@ export class BasePage {
    * Wait for element to be hidden
    */
   async waitForElementHidden(selector: string, timeout = 5000) {
-    await this.page.waitForSelector(selector, { timeout, state: 'hidden' });
+    await this.page.waitForSelector(selector, { timeout, state: "hidden" });
   }
 }

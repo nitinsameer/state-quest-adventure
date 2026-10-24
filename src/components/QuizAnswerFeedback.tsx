@@ -71,7 +71,9 @@ export function QuizAnswerFeedback({
           // ✅ CORRECT ANSWER - MAXIMUM DOPAMINE HIT
           <>
             {/* Large animated checkmark */}
-            <div className="animate-pop-in text-9xl mb-8 drop-shadow-2xl">{EMOJI.action.checkButton}</div>
+            <div className="animate-pop-in text-9xl mb-8 drop-shadow-2xl">
+              {EMOJI.action.checkButton}
+            </div>
 
             {/* Success message with slide-up animation */}
             <div className="animate-slide-up text-center px-6">

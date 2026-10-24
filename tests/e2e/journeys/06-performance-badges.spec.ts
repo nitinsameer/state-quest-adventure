@@ -1,12 +1,12 @@
-import { test, expect } from '@playwright/test';
-import { OnboardingPage } from '../pages/OnboardingPage';
-import { HomePage } from '../pages/HomePage';
-import { LearningHubPage } from '../pages/LearningHubPage';
-import { QuizPage } from '../pages/QuizPage';
-import { BadgesPage } from '../pages/BadgesPage';
-import { TEST_USERS, EXPECTED_XP_VALUES } from '../fixtures/test-data';
+import { test, expect } from "@playwright/test";
+import { OnboardingPage } from "../pages/OnboardingPage";
+import { HomePage } from "../pages/HomePage";
+import { LearningHubPage } from "../pages/LearningHubPage";
+import { QuizPage } from "../pages/QuizPage";
+import { BadgesPage } from "../pages/BadgesPage";
+import { TEST_USERS, EXPECTED_XP_VALUES } from "../fixtures/test-data";
 
-test.describe('Performance Badges & Per-State Achievements', () => {
+test.describe("Performance Badges & Per-State Achievements", () => {
   let onboarding: OnboardingPage;
   let home: HomePage;
   let learningHub: LearningHubPage;
@@ -25,9 +25,9 @@ test.describe('Performance Badges & Per-State Achievements', () => {
     await onboarding.completeOnboarding(TEST_USERS.newUser);
   });
 
-  test('should earn Bookworm badge (all 6 cards read)', async ({ page }) => {
+  test("should earn Bookworm badge (all 6 cards read)", async ({ page }) => {
     // Complete learning hub (read all cards)
-    await learningHub.goto('Andhra Pradesh');
+    await learningHub.goto("Andhra Pradesh");
     for (let i = 0; i < 6; i++) {
       const progress = await learningHub.getProgress();
       if (progress.read >= 6) break;
@@ -39,16 +39,16 @@ test.describe('Performance Badges & Per-State Achievements', () => {
 
     // Check statePerformance in localStorage
     const progressData = await onboarding.getProgressData();
-    const statePerf = progressData.statePerformance['Andhra Pradesh'];
+    const statePerf = progressData.statePerformance["Andhra Pradesh"];
 
     // After reading all cards, Bookworm badge should be earned
     expect(statePerf.cardsRead.length).toBe(6);
-    expect(statePerf.earnedBadges).toContain('bookworm');
+    expect(statePerf.earnedBadges).toContain("bookworm");
   });
 
-  test('should earn Perfect Quiz badge (3 perfect scores)', async ({ page }) => {
+  test("should earn Perfect Quiz badge (3 perfect scores)", async ({ page }) => {
     // Read all cards
-    await learningHub.goto('Andhra Pradesh');
+    await learningHub.goto("Andhra Pradesh");
     for (let i = 0; i < 6; i++) {
       const progress = await learningHub.getProgress();
       if (progress.read >= 6) break;
@@ -61,7 +61,7 @@ test.describe('Performance Badges & Per-State Achievements', () => {
     // Complete quiz 3 times (simulated - just check earned badge would track it)
     await learningHub.clickQuizButton();
     const totalQuestions = await quiz.getTotalQuestions();
-    
+
     for (let q = 0; q < totalQuestions; q++) {
       const currentQ = await quiz.getCurrentQuestion();
       if (currentQ > totalQuestions) break;
@@ -78,15 +78,15 @@ test.describe('Performance Badges & Per-State Achievements', () => {
 
     // Verify perfect quiz tracking exists
     const progressData = await onboarding.getProgressData();
-    const statePerf = progressData.statePerformance['Andhra Pradesh'];
-    
+    const statePerf = progressData.statePerformance["Andhra Pradesh"];
+
     expect(statePerf.perfectQuizzes).toBeDefined();
     expect(statePerf.perfectQuizzes >= 0).toBe(true);
   });
 
-  test('should earn Speed Demon badge (2 quizzes <60 seconds)', async ({ page }) => {
+  test("should earn Speed Demon badge (2 quizzes <60 seconds)", async ({ page }) => {
     // Read all cards
-    await learningHub.goto('Andhra Pradesh');
+    await learningHub.goto("Andhra Pradesh");
     for (let i = 0; i < 6; i++) {
       const progress = await learningHub.getProgress();
       if (progress.read >= 6) break;
@@ -119,16 +119,16 @@ test.describe('Performance Badges & Per-State Achievements', () => {
 
     // Verify quiz time was tracked
     const progressData = await onboarding.getProgressData();
-    const statePerf = progressData.statePerformance['Andhra Pradesh'];
+    const statePerf = progressData.statePerformance["Andhra Pradesh"];
 
     expect(statePerf.quizTimes).toBeDefined();
     expect(statePerf.quizTimes.length).toBeGreaterThan(0);
     expect(statePerf.quizTimes[0]).toBeLessThan(300); // Should be less than 5 minutes
   });
 
-  test('should earn First Try badge (no replays)', async ({ page }) => {
+  test("should earn First Try badge (no replays)", async ({ page }) => {
     // Read all cards (no replays)
-    await learningHub.goto('Andhra Pradesh');
+    await learningHub.goto("Andhra Pradesh");
     for (let i = 0; i < 6; i++) {
       const progress = await learningHub.getProgress();
       if (progress.read >= 6) break;
@@ -155,16 +155,16 @@ test.describe('Performance Badges & Per-State Achievements', () => {
 
     // Verify no replays recorded
     const progressData = await onboarding.getProgressData();
-    const statePerf = progressData.statePerformance['Andhra Pradesh'];
+    const statePerf = progressData.statePerformance["Andhra Pradesh"];
 
     expect(statePerf.totalReplays).toBe(0);
     expect(statePerf.hasReplay).toBe(false);
-    expect(statePerf.earnedBadges).toContain('first-try');
+    expect(statePerf.earnedBadges).toContain("first-try");
   });
 
-  test('should track all 6 performance badges', async ({ page }) => {
+  test("should track all 6 performance badges", async ({ page }) => {
     // Complete full state journey
-    await learningHub.goto('Andhra Pradesh');
+    await learningHub.goto("Andhra Pradesh");
 
     // Read all cards
     for (let i = 0; i < 6; i++) {
@@ -193,7 +193,7 @@ test.describe('Performance Badges & Per-State Achievements', () => {
 
     // Verify statePerformance has all tracking fields
     const progressData = await onboarding.getProgressData();
-    const statePerf = progressData.statePerformance['Andhra Pradesh'];
+    const statePerf = progressData.statePerformance["Andhra Pradesh"];
 
     expect(statePerf.quizCompletions).toBeDefined();
     expect(statePerf.quizTimes).toBeDefined();
@@ -205,9 +205,9 @@ test.describe('Performance Badges & Per-State Achievements', () => {
     expect(statePerf.badgeEarnedDates).toBeDefined();
   });
 
-  test('should display earned badges on badges screen', async ({ page }) => {
+  test("should display earned badges on badges screen", async ({ page }) => {
     // Complete a state to earn badges
-    await learningHub.goto('Andhra Pradesh');
+    await learningHub.goto("Andhra Pradesh");
 
     // Read all cards
     for (let i = 0; i < 6; i++) {
@@ -246,9 +246,9 @@ test.describe('Performance Badges & Per-State Achievements', () => {
     expect(totalEarned).toBeGreaterThanOrEqual(3);
   });
 
-  test('should verify badge timestamps', async ({ page }) => {
+  test("should verify badge timestamps", async ({ page }) => {
     // Complete state
-    await learningHub.goto('Andhra Pradesh');
+    await learningHub.goto("Andhra Pradesh");
 
     for (let i = 0; i < 6; i++) {
       const progress = await learningHub.getProgress();
@@ -275,7 +275,7 @@ test.describe('Performance Badges & Per-State Achievements', () => {
 
     // Verify badge earned dates are ISO timestamps
     const progressData = await onboarding.getProgressData();
-    const statePerf = progressData.statePerformance['Andhra Pradesh'];
+    const statePerf = progressData.statePerformance["Andhra Pradesh"];
 
     const iso8601Regex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/;
 

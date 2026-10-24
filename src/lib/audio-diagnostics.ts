@@ -173,7 +173,8 @@ export function testWebSpeechAPI(
       };
 
       utterance.onerror = (event) => {
-        if (import.meta.env.DEV) console.log("[AUDIO DEBUG] ✗ speechSynthesis.onerror:", event.error);
+        if (import.meta.env.DEV)
+          console.log("[AUDIO DEBUG] ✗ speechSynthesis.onerror:", event.error);
         resolve({ success: false, message: `Speech error: ${event.error}` });
       };
 
@@ -192,7 +193,8 @@ export function testWebSpeechAPI(
       // Set timeout in case onend never fires
       setTimeout(() => {
         if (window.speechSynthesis.speaking) {
-          if (import.meta.env.DEV) console.log("[AUDIO DEBUG] ⚠ Timeout: speechSynthesis still speaking after 10s");
+          if (import.meta.env.DEV)
+            console.log("[AUDIO DEBUG] ⚠ Timeout: speechSynthesis still speaking after 10s");
           resolve({ success: false, message: "Speech timeout - still speaking after 10s" });
         }
       }, 10000);

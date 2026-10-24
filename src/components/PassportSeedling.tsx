@@ -176,9 +176,7 @@ export function PassportSeedling() {
                 key={key}
                 onClick={() => handleRegionChange(key)}
                 className={`px-4 py-3 rounded-full font-extrabold whitespace-nowrap transition active:scale-95 ${
-                  isSelected
-                    ? "ui-button ui-accent-1"
-                    : "ui-button ui-accent-1-soft"
+                  isSelected ? "ui-button ui-accent-1" : "ui-button ui-accent-1-soft"
                 }`}
                 style={{ fontSize: "var(--type-body)", fontWeight: "var(--type-body-weight)" }}
                 title={`${completed}/${regionStates.length} explored`}

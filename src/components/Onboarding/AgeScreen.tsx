@@ -145,7 +145,8 @@ export function AgeScreen({
 
             {/* Row 2: COPPA Description */}
             <p className="text-sm text-text-secondary leading-snug">
-              We follow COPPA and keep kids safe. We don't sell data, and parents can request deletion anytime.
+              We follow COPPA and keep kids safe. We don't sell data, and parents can request
+              deletion anytime.
             </p>
 
             {/* Row 3: Custom Checkbox + Agreement */}
@@ -164,11 +165,7 @@ export function AgeScreen({
                 aria-label="I agree to parent approval terms"
               >
                 {parentApprovalChecked && (
-                  <svg
-                    className="w-4 h-4 text-white"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
+                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       fillRule="evenodd"
                       d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"

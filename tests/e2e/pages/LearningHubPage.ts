@@ -1,4 +1,4 @@
-import { BasePage } from './BasePage';
+import { BasePage } from "./BasePage";
 
 /**
  * Learning Hub Page Object
@@ -8,20 +8,20 @@ export class LearningHubPage extends BasePage {
   // Selectors
   private readonly hubHeader = '[class*="Learning Hub"]';
   private readonly progressBar = '[class*="bg-white/25"]';
-  private readonly progressText = 'text=/\\d+ \\/ 6/';
+  private readonly progressText = "text=/\\d+ \\/ 6/";
   private readonly cards = '[class*="rounded-2xl"][class*="p-3"]';
-  private readonly quizButton = 'button:has-text(/Take Quiz|Quiz/)'
+  private readonly quizButton = "button:has-text(/Take Quiz|Quiz/)";
   private readonly cardModal = '[class*="modal"]';
   private readonly cardContent = '[class*="text-white"]';
-  private readonly closeButton = 'button:has-text(/Back|Close|←/)';
+  private readonly closeButton = "button:has-text(/Back|Close|←/)";
   private readonly celebrationModal = '[class*="celebration"]';
-  private readonly masteryMessage = 'text=/MASTERED/';
+  private readonly masteryMessage = "text=/MASTERED/";
 
   /**
    * Navigate to learning hub for a state
    */
   async goto(stateName: string) {
-    const slug = stateName.toLowerCase().replace(/\s+/g, '-');
+    const slug = stateName.toLowerCase().replace(/\s+/g, "-");
     await super.goto(`/state/${slug}/learn`);
     await this.waitForHubToLoad();
   }
@@ -84,7 +84,7 @@ export class LearningHubPage extends BasePage {
   async getCardTitle(): Promise<string> {
     // Card title is usually in a heading
     const title = await this.page.locator('[class*="text-lg"]').first().textContent();
-    return title || '';
+    return title || "";
   }
 
   /**
@@ -92,7 +92,7 @@ export class LearningHubPage extends BasePage {
    */
   async closeCardModal() {
     // Click outside or press escape
-    await this.page.press('Escape');
+    await this.page.press("Escape");
     await this.page.waitForTimeout(300); // Animation
   }
 
@@ -146,7 +146,7 @@ export class LearningHubPage extends BasePage {
    */
   async clickQuizButton() {
     await this.click(this.quizButton);
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState("networkidle");
   }
 
   /**
@@ -154,7 +154,7 @@ export class LearningHubPage extends BasePage {
    */
   async waitForCompletionCelebration(timeout = 10000) {
     try {
-      await this.page.waitForSelector('text=/MASTERED/', { timeout });
+      await this.page.waitForSelector("text=/MASTERED/", { timeout });
       return true;
     } catch {
       return false;
@@ -166,7 +166,7 @@ export class LearningHubPage extends BasePage {
    */
   async closeCelebration() {
     // Usually auto-closes or click outside
-    await this.page.press('Escape');
+    await this.page.press("Escape");
     await this.page.waitForTimeout(500);
   }
 
@@ -196,7 +196,10 @@ export class LearningHubPage extends BasePage {
     const titles: string[] = [];
 
     for (const card of cardElements) {
-      const title = await card.locator('text=/Capital|Language|Food|Places|Animal|Fact/').first().textContent();
+      const title = await card
+        .locator("text=/Capital|Language|Food|Places|Animal|Fact/")
+        .first()
+        .textContent();
       if (title) titles.push(title);
     }
 
@@ -207,11 +210,11 @@ export class LearningHubPage extends BasePage {
    * Verify all 6 card categories are visible
    */
   async verifyAllCategoriesVisible(): Promise<boolean> {
-    const categories = ['Capital', 'Language', 'Food', 'Places', 'Animal', 'Fact'];
+    const categories = ["Capital", "Language", "Food", "Places", "Animal", "Fact"];
     const titles = await this.getAllCardTitles();
 
     for (const cat of categories) {
-      if (!titles.some(t => t.includes(cat))) {
+      if (!titles.some((t) => t.includes(cat))) {
         return false;
       }
     }
@@ -244,13 +247,13 @@ export class LearningHubPage extends BasePage {
     // Verify quiz is now enabled
     const quizEnabled = await this.isQuizButtonEnabled();
     if (!quizEnabled) {
-      throw new Error('Quiz button should be enabled after reading all cards');
+      throw new Error("Quiz button should be enabled after reading all cards");
     }
 
     // Wait for mastery celebration
     const celebrated = await this.waitForCompletionCelebration();
     if (!celebrated) {
-      console.warn('Did not see mastery celebration');
+      console.warn("Did not see mastery celebration");
     }
   }
 }

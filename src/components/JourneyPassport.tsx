@@ -26,8 +26,10 @@ function buildRegionStats(completedStates: Set<string>): Record<RegionKey, Regio
 
   REGION_KEYS.forEach((regionKey: RegionKey) => {
     const region = REGIONS[regionKey];
-    const regionStateNames = region.states.map((s: any) => s.name);
-    const regionCompleted = regionStateNames.filter((name: string) => completedStates.has(name)).length;
+    const regionStateNames = region.states.map((s: Record<string, unknown>) => s.name);
+    const regionCompleted = regionStateNames.filter((name: string) =>
+      completedStates.has(name),
+    ).length;
     const regionTotal = regionStateNames.length;
 
     stats[regionKey] = {
@@ -47,8 +49,10 @@ export function JourneyPassport() {
   const allStates = useMemo(
     () =>
       Object.values(REGIONS)
-        .flatMap((r: any) => r.states)
-        .sort((a: any, b: any) => a.name.localeCompare(b.name)),
+        .flatMap((r: Record<string, unknown>) => r.states as Record<string, unknown>[])
+        .sort((a: Record<string, unknown>, b: Record<string, unknown>) =>
+          (a.name as string).localeCompare(b.name as string),
+        ),
     [],
   );
 

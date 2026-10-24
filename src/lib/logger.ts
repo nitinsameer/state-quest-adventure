@@ -159,7 +159,7 @@ class Logger {
     const prefix = `[${time}] [${entry.level.toUpperCase()}] [${entry.category}]`;
 
     // NOTE: Console styling uses hex colors for developer tools. These are not user-facing UI colors and are not part of the theme system.
-    // eslint-disable-next-line no-hardcoded-colors/no-hardcoded-colors
+
     const style = {
       debug: "color: #888; font-weight: normal;",
       info: "color: #0066cc; font-weight: bold;",
@@ -170,7 +170,6 @@ class Logger {
     console.log(`%c${prefix} ${entry.message}`, style, entry.data || "");
 
     if (entry.stack) {
-      // eslint-disable-next-line no-hardcoded-colors/no-hardcoded-colors
       console.log(`%cStack: ${entry.stack}`, "color: #999; font-size: 0.85em;");
     }
   }

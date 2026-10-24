@@ -5,11 +5,7 @@
  */
 
 import { useCallback, useEffect, useState } from "react";
-import {
-  getAudioContext,
-  resumeAudioContext,
-  isAudioContextReady,
-} from "@/lib/audio/audioContext";
+import { getAudioContext, resumeAudioContext, isAudioContextReady } from "@/lib/audio/audioContext";
 import { AUDIO_STORAGE_KEY, DEFAULT_VOLUME } from "@/constants/audioConfig";
 
 interface UseAudioReturn {
@@ -71,20 +67,17 @@ export function useAudio(): UseAudioReturn {
   /**
    * Play a sound with error handling
    */
-  const play = useCallback(
-    async (soundFunction: () => Promise<void>): Promise<void> => {
-      try {
-        // Ensure AudioContext is running before playing
-        await resumeAudioContext();
+  const play = useCallback(async (soundFunction: () => Promise<void>): Promise<void> => {
+    try {
+      // Ensure AudioContext is running before playing
+      await resumeAudioContext();
 
-        // Play the sound
-        await soundFunction();
-      } catch (error) {
-        console.error("[useAudio] Error playing sound:", error);
-      }
-    },
-    [],
-  );
+      // Play the sound
+      await soundFunction();
+    } catch (error) {
+      console.error("[useAudio] Error playing sound:", error);
+    }
+  }, []);
 
   /**
    * Stop all audio playback

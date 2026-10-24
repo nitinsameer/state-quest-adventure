@@ -49,7 +49,7 @@ function Quiz() {
   const { slug } = Route.useParams();
   const { name } = Route.useLoaderData();
   const navigate = useNavigate();
-  
+
   // FIX #4: Hardware back button in quiz - back cancels quiz and goes to learn hub
   // Quiz progress is NOT saved when back is pressed
   useAndroidBackButton(() => {

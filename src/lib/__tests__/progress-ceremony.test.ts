@@ -441,7 +441,7 @@ describe("Task 12.2: Save Ceremony Data - Extended Pending Celebration", () => {
 
       // Filter for "full" type celebrations (theme-unlock celebrations may also be present)
       const fullCelebrations = (validated?.pendingCelebrations || []).filter(
-        (c: any): c is any => c.type === "full"
+        (c: any): c is any => c.type === "full",
       );
 
       expect(fullCelebrations.length).toBe(3);

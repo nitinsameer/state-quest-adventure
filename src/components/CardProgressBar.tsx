@@ -25,7 +25,7 @@ export function CardProgressBar({
           style={{ width: `${percentage}%` }}
         />
       </div>
-      <div className="text-label text-center" style={{color: "var(--text-muted)"}}>
+      <div className="text-label text-center" style={{ color: "var(--text-muted)" }}>
         {visitedCount}/{totalCards} cards
       </div>
     </div>

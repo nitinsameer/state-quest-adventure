@@ -1,11 +1,11 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const rootDir = path.join(__dirname, '..');
-const srcDir = path.join(rootDir, 'dist', 'client');
-const destDir = path.join(rootDir, 'android', 'app', 'src', 'main', 'assets', 'public');
+const rootDir = path.join(__dirname, "..");
+const srcDir = path.join(rootDir, "dist", "client");
+const destDir = path.join(rootDir, "android", "app", "src", "main", "assets", "public");
 
 try {
   // Ensure destination directory exists
@@ -26,7 +26,7 @@ try {
 
     const files = fs.readdirSync(src);
 
-    files.forEach(file => {
+    files.forEach((file) => {
       const srcPath = path.join(src, file);
       const destPath = path.join(dest, file);
 
@@ -42,6 +42,6 @@ try {
   console.log(`✅ Assets copied to Android: ${destDir}`);
   console.log(`   Source: ${srcDir}`);
 } catch (error) {
-  console.error('❌ Failed to copy assets:', error.message);
+  console.error("❌ Failed to copy assets:", error.message);
   process.exit(1);
 }

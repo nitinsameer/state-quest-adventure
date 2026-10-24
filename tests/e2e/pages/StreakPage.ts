@@ -1,4 +1,4 @@
-import { BasePage } from './BasePage';
+import { BasePage } from "./BasePage";
 
 /**
  * Streak & Engagement Tracking Page Object
@@ -8,14 +8,14 @@ export class StreakPage extends BasePage {
   // Selectors
   private readonly streakCounter = '[class*="flame"]';
   private readonly streakBadge = '[class*="streak"]';
-  private readonly streakMilestone = 'text=/\\d+ day|Week Warrior|Fortnight|Legend/';
+  private readonly streakMilestone = "text=/\\d+ day|Week Warrior|Fortnight|Legend/";
   private readonly celebrationModal = '[class*="celebration"]';
 
   /**
    * Navigate to home to check streak
    */
   async gotoHome() {
-    await super.goto('/home');
+    await super.goto("/home");
   }
 
   /**
@@ -24,9 +24,10 @@ export class StreakPage extends BasePage {
   async getStreakFromHome(): Promise<number> {
     try {
       // Streak is in a badge with flame emoji
-      const streakText = await this.page.locator('[class*="flex"][class*="items-center"]')
-        .filter({ has: this.page.locator('text=🔥') })
-        .locator('text=/\\d+/')
+      const streakText = await this.page
+        .locator('[class*="flex"][class*="items-center"]')
+        .filter({ has: this.page.locator("text=🔥") })
+        .locator("text=/\\d+/")
         .first()
         .textContent();
 
@@ -42,8 +43,8 @@ export class StreakPage extends BasePage {
    */
   async touchStreak(): Promise<void> {
     // Navigating to a state and back triggers touchStreak()
-    await this.page.goto('http://localhost:8080/journey');
-    await this.page.waitForLoadState('networkidle');
+    await this.page.goto("http://localhost:8080/journey");
+    await this.page.waitForLoadState("networkidle");
     await this.page.goBack();
   }
 
@@ -63,7 +64,7 @@ export class StreakPage extends BasePage {
    * Check localStorage for streak data
    */
   async getStreakFromLocalStorage(): Promise<number> {
-    const progress = await this.getLocalStorageJSON('india-explorer:progress:v2');
+    const progress = await this.getLocalStorageJSON("india-explorer:progress:v2");
     return progress?.streak || 0;
   }
 
@@ -71,8 +72,8 @@ export class StreakPage extends BasePage {
    * Get lastActive date from localStorage
    */
   async getLastActiveDateFromStorage(): Promise<string> {
-    const progress = await this.getLocalStorageJSON('india-explorer:progress:v2');
-    return progress?.lastActive || '';
+    const progress = await this.getLocalStorageJSON("india-explorer:progress:v2");
+    return progress?.lastActive || "";
   }
 
   /**
@@ -80,8 +81,8 @@ export class StreakPage extends BasePage {
    * (Simulated by checking logic)
    */
   async verifyStreakLogic(): Promise<boolean> {
-    const progress = await this.getLocalStorageJSON('india-explorer:progress:v2');
-    const lastActive = progress?.lastActive || '';
+    const progress = await this.getLocalStorageJSON("india-explorer:progress:v2");
+    const lastActive = progress?.lastActive || "";
     const currentStreak = progress?.streak || 0;
 
     // Verify lastActive is in correct format (YYYY-MM-DD)
@@ -93,18 +94,15 @@ export class StreakPage extends BasePage {
    * Simulate streak reset (skip a day)
    */
   async simulateStreakReset(): Promise<void> {
-    const progress = await this.getLocalStorageJSON('india-explorer:progress:v2');
+    const progress = await this.getLocalStorageJSON("india-explorer:progress:v2");
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 2); // 2 days ago
-    const yesterdayStr = yesterday.toISOString().split('T')[0];
+    const yesterdayStr = yesterday.toISOString().split("T")[0];
 
     progress.lastActive = yesterdayStr;
     progress.streak = 1; // Will reset on next visit
 
-    await this.setLocalStorageItem(
-      'india-explorer:progress:v2',
-      JSON.stringify(progress)
-    );
+    await this.setLocalStorageItem("india-explorer:progress:v2", JSON.stringify(progress));
   }
 
   /**
@@ -114,9 +112,9 @@ export class StreakPage extends BasePage {
     const streak = await this.getStreakFromHome();
 
     const milestones = [
-      { days: 7, message: 'Week Warrior' },
-      { days: 14, message: 'Fortnight Master' },
-      { days: 30, message: 'Legend' },
+      { days: 7, message: "Week Warrior" },
+      { days: 14, message: "Fortnight Master" },
+      { days: 30, message: "Legend" },
     ];
 
     for (const m of milestones) {
@@ -125,15 +123,16 @@ export class StreakPage extends BasePage {
       }
     }
 
-    return { days: 0, message: '' };
+    return { days: 0, message: "" };
   }
 
   /**
    * Verify streak display on home
    */
   async isStreakDisplayVisible(): Promise<boolean> {
-    return await this.page.locator('[class*="flex"][class*="items-center"]')
-      .filter({ has: this.page.locator('text=🔥') })
+    return await this.page
+      .locator('[class*="flex"][class*="items-center"]')
+      .filter({ has: this.page.locator("text=🔥") })
       .isVisible()
       .catch(() => false);
   }
@@ -142,11 +141,12 @@ export class StreakPage extends BasePage {
    * Get streak badge styling
    */
   async getStreakBadgeStyle(): Promise<string> {
-    const badge = this.page.locator('[class*="flex"][class*="items-center"]')
-      .filter({ has: this.page.locator('text=🔥') })
+    const badge = this.page
+      .locator('[class*="flex"][class*="items-center"]')
+      .filter({ has: this.page.locator("text=🔥") })
       .first();
 
-    const className = await badge.getAttribute('class') || '';
+    const className = (await badge.getAttribute("class")) || "";
     return className;
   }
 
@@ -154,19 +154,20 @@ export class StreakPage extends BasePage {
    * Check if streak has animation (bouncing)
    */
   async streakHasAnimation(): Promise<boolean> {
-    const badge = this.page.locator('[class*="flex"][class*="items-center"]')
-      .filter({ has: this.page.locator('text=🔥') })
+    const badge = this.page
+      .locator('[class*="flex"][class*="items-center"]')
+      .filter({ has: this.page.locator("text=🔥") })
       .first();
 
-    const className = await badge.getAttribute('class') || '';
-    return className.includes('animate');
+    const className = (await badge.getAttribute("class")) || "";
+    return className.includes("animate");
   }
 
   /**
    * Verify daily visit tracker
    */
   async verifyDailyVisitTracking(): Promise<boolean> {
-    const progress = await this.getLocalStorageJSON('india-explorer:progress:v2');
+    const progress = await this.getLocalStorageJSON("india-explorer:progress:v2");
     const stamps = progress?.stamps || {};
     const stampCount = Object.keys(stamps).length;
 
@@ -178,13 +179,13 @@ export class StreakPage extends BasePage {
    * Get days since app started
    */
   async getDaysSinceStart(): Promise<number> {
-    const progress = await this.getLocalStorageJSON('india-explorer:progress:v2');
+    const progress = await this.getLocalStorageJSON("india-explorer:progress:v2");
     const stamps = progress?.stamps || {};
     const dates = new Set<string>();
 
     for (const date of Object.values(stamps) as string[]) {
       // Extract date from stamp date label
-      dates.add(date.split(' ')[0]);
+      dates.add(date.split(" ")[0]);
     }
 
     return dates.size;
@@ -195,12 +196,12 @@ export class StreakPage extends BasePage {
    */
   async verifyStreakPersistence(): Promise<boolean> {
     const streak1 = await this.getStreakFromLocalStorage();
-    
+
     // Reload page
     await this.page.reload();
-    
+
     const streak2 = await this.getStreakFromLocalStorage();
-    
+
     return streak1 === streak2;
   }
 
@@ -208,15 +209,18 @@ export class StreakPage extends BasePage {
    * Get full engagement stats
    */
   async getEngagementStats(): Promise<any> {
-    const progress = await this.getLocalStorageJSON('india-explorer:progress:v2');
+    const progress = await this.getLocalStorageJSON("india-explorer:progress:v2");
 
     return {
       streak: progress?.streak || 0,
-      lastActive: progress?.lastActive || '',
+      lastActive: progress?.lastActive || "",
       xp: progress?.xp || 0,
       statesCompleted: progress?.completed?.length || 0,
       stampsCollected: Object.keys(progress?.stamps || {}).length,
-      cardsRead: Object.values(progress?.cards || {}).reduce((total: number, cards: any[]) => total + cards.length, 0),
+      cardsRead: Object.values(progress?.cards || {}).reduce(
+        (total: number, cards: any[]) => total + cards.length,
+        0,
+      ),
       answeredQuestions: progress?.answered?.length || 0,
     };
   }

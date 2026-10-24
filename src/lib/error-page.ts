@@ -1,5 +1,4 @@
 export function renderErrorPage(): string {
-  // eslint-disable-next-line no-hardcoded-colors/no-hardcoded-colors
   // NOTE: Error fallback page is a static HTML string rendered when JS fails to load. It cannot use theme tokens or CSS variables since it has no runtime context.
   // The hex colors (#fafafa, #111, #4b5563, #d1d5db) are hardcoded in HTML and cannot be theme-switched.
   return `<!doctype html>

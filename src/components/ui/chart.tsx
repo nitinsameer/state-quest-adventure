@@ -47,7 +47,7 @@ const ChartContainer = React.forwardRef<
       <div
         data-chart={chartId}
         ref={ref}
-        // eslint-disable-next-line no-hardcoded-colors/no-hardcoded-colors
+
         // NOTE: Recharts library renders SVG elements that require specific hex stroke values for styling framework interop
         // The hex values (#ccc, #fff) are part of CSS selectors targeting Recharts' internal SVG structure and cannot be replaced with CSS variables.
         className={cn(

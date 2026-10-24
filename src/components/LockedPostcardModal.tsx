@@ -25,7 +25,7 @@ export function LockedPostcardModal({ destination, onClose }: LockedPostcardModa
   return (
     <div
       className="fixed inset-0 flex items-end z-50 animate-in fade-in"
-      style={{backgroundColor: 'var(--scrim)'}}
+      style={{ backgroundColor: "var(--scrim)" }}
       onClick={onClose}
     >
       <div

@@ -113,19 +113,11 @@ export function StateCompletionCelebration({
 
           {/* Header: State name and emoji */}
           <div className="text-center mb-6">
-            <div className="text-7xl mb-4 transition-transform duration-300">
-              {stateEmoji}
-            </div>
-            <h1
-              className="text-h1 font-black mb-2"
-              style={{ color: "var(--action-primary-fg)" }}
-            >
+            <div className="text-7xl mb-4 transition-transform duration-300">{stateEmoji}</div>
+            <h1 className="text-h1 font-black mb-2" style={{ color: "var(--action-primary-fg)" }}>
               {stateName}
             </h1>
-            <p
-              className="text-body font-bold"
-              style={{ color: "var(--action-primary-fg)" }}
-            >
+            <p className="text-body font-bold" style={{ color: "var(--action-primary-fg)" }}>
               {EMOJI.action.sparkle} Completely Explored! {EMOJI.action.sparkle}
             </p>
           </div>
@@ -141,10 +133,7 @@ export function StateCompletionCelebration({
                 borderColor: "color-mix(in srgb, var(--action-primary-fg) 50%, transparent)",
               }}
             >
-              <p
-                className="text-h4 font-black mb-1"
-                style={{ color: "var(--action-primary-fg)" }}
-              >
+              <p className="text-h4 font-black mb-1" style={{ color: "var(--action-primary-fg)" }}>
                 {cardsCompleted}
               </p>
               <p
@@ -164,10 +153,7 @@ export function StateCompletionCelebration({
                 borderColor: "color-mix(in srgb, var(--action-primary-fg) 50%, transparent)",
               }}
             >
-              <p
-                className="text-h4 font-black mb-1"
-                style={{ color: "var(--action-primary-fg)" }}
-              >
+              <p className="text-h4 font-black mb-1" style={{ color: "var(--action-primary-fg)" }}>
                 +{totalXpGained}
               </p>
               <p
@@ -204,7 +190,8 @@ export function StateCompletionCelebration({
                       style={{
                         backgroundColor: "var(--action-primary-fg)",
                         opacity: 0.2,
-                        borderColor: "color-mix(in srgb, var(--action-primary-fg) 50%, transparent)",
+                        borderColor:
+                          "color-mix(in srgb, var(--action-primary-fg) 50%, transparent)",
                       }}
                       title={badge.name}
                     >

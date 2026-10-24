@@ -9,7 +9,7 @@ import { EMOJI } from "@/constants/emoji";
 export function DebugScreen() {
   const [isVisible, setIsVisible] = useState(false);
   const [tapCount, setTapCount] = useState(0);
-  const [logs, setLogs] = useState<any[]>([]);
+  const [logs, setLogs] = useState<Record<string, unknown>[]>([]);
   const [autoScroll, setAutoScroll] = useState(true);
   const [filter, setFilter] = useState<"all" | "error" | "warn" | "info" | "debug">("all");
 
@@ -107,7 +107,8 @@ export function DebugScreen() {
               filter === "all"
                 ? "bg-accent-2 text-text-on-primary"
                 : "bg-surface-raised hover:bg-surface-elevated"
-            }`} style={filter !== "all" ? {color: "var(--text-secondary)"} : undefined}
+            }`}
+            style={filter !== "all" ? { color: "var(--text-secondary)" } : undefined}
           >
             All
           </button>
@@ -117,7 +118,8 @@ export function DebugScreen() {
               filter === "error"
                 ? "bg-error text-text-on-primary"
                 : "bg-surface-raised hover:bg-surface-elevated"
-            }`} style={filter !== "error" ? {color: "var(--text-secondary)"} : undefined}
+            }`}
+            style={filter !== "error" ? { color: "var(--text-secondary)" } : undefined}
           >
             Errors
           </button>
@@ -127,7 +129,8 @@ export function DebugScreen() {
               filter === "warn"
                 ? "bg-warning text-text-on-primary"
                 : "bg-surface-sunken hover:bg-surface-raised"
-            }`} style={filter !== "warn" ? {color: "var(--text-secondary)"} : undefined}
+            }`}
+            style={filter !== "warn" ? { color: "var(--text-secondary)" } : undefined}
           >
             Warns
           </button>
@@ -137,7 +140,8 @@ export function DebugScreen() {
               filter === "info"
                 ? "bg-success text-text-on-primary"
                 : "bg-surface-raised hover:bg-surface-elevated"
-            }`} style={filter !== "info" ? {color: "var(--text-secondary)"} : undefined}
+            }`}
+            style={filter !== "info" ? { color: "var(--text-secondary)" } : undefined}
           >
             Info
           </button>
@@ -221,7 +225,10 @@ export function DebugScreen() {
       </div>
 
       {/* Footer */}
-      <div className="bg-surface-sunken border-t border-surface-muted p-(--padding-xs) text-xs" style={{color: "var(--text-muted)"}}>
+      <div
+        className="bg-surface-sunken border-t border-surface-muted p-(--padding-xs) text-xs"
+        style={{ color: "var(--text-muted)" }}
+      >
         <p>{EMOJI.learning.funFact} Ctrl+D or tap corner 5x to toggle | Export logs for analysis</p>
       </div>
     </div>

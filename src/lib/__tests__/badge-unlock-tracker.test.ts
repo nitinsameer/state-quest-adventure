@@ -1,6 +1,6 @@
 /**
  * Badge Unlock Tracker Tests
- * 
+ *
  * Regression tests for Batch 4 fix: FND-009 (unvalidated JSON.parse)
  * Verifies that corrupted localStorage data is handled gracefully
  */
@@ -56,7 +56,7 @@ describe("Badge Unlock Tracker (Regression: FND-009)", () => {
     it("should return seen badge IDs from valid storage", () => {
       localStorage.setItem(
         "india-explorer:seen-badges:v1",
-        JSON.stringify(["badge-1", "badge-2", "badge-3"])
+        JSON.stringify(["badge-1", "badge-2", "badge-3"]),
       );
 
       const seen = getSeenBadgeIds();

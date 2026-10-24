@@ -13,20 +13,20 @@ function ToastNotification({ config }: { config: ToastConfig }) {
   const [isExiting, setIsExiting] = useState(false);
   const dismiss = useToastStore((state) => state.dismiss);
 
+  const handleDismiss = React.useCallback(() => {
+    setIsExiting(true);
+    setTimeout(() => {
+      dismiss();
+    }, 200);
+  }, [dismiss]);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       handleDismiss();
     }, config.duration ?? 3500);
 
     return () => clearTimeout(timer);
-  }, [config.duration]);
-
-  const handleDismiss = () => {
-    setIsExiting(true);
-    setTimeout(() => {
-      dismiss();
-    }, 200);
-  };
+  }, [config.duration, handleDismiss]);
 
   const colors = {
     error: "bg-fb-error",
@@ -80,10 +80,7 @@ export function BottomToastProvider() {
   // Render success toast for success type
   if (current.type === "success") {
     return (
-      <div
-        className="fixed inset-0 pointer-events-none z-[998]"
-        style={{ pointerEvents: "none" }}
-      >
+      <div className="fixed inset-0 pointer-events-none z-[998]" style={{ pointerEvents: "none" }}>
         <SuccessToast />
       </div>
     );

@@ -72,7 +72,7 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
     if (!selectedAvatar) {
       onSelectAvatar("explorer-hat");
     }
-  }, []);
+  }, [selectedAvatar, onSelectAvatar]);
 
   const handleAvatarSelect = (avatarId: AvatarId) => {
     // Play tap sound
@@ -137,13 +137,15 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
                   }
                   ${animatingId === avatarId ? "avatar-bounce" : ""}
                 `}
-                style={{
-                  backgroundColor: getAvatarBackgroundColor(avatarId),
-                  animation:
-                    animatingId === avatarId
-                      ? "avatar-bounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)"
-                      : undefined,
-                } as React.CSSProperties}
+                style={
+                  {
+                    backgroundColor: getAvatarBackgroundColor(avatarId),
+                    animation:
+                      animatingId === avatarId
+                        ? "avatar-bounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)"
+                        : undefined,
+                  } as React.CSSProperties
+                }
               >
                 <img
                   src={getAvatarImage(avatarId)}
@@ -168,8 +170,12 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
                   className="w-14 h-14 rounded-full border-2 border-accent-1 shadow-md flex-shrink-0"
                 />
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs font-bold text-accent-1-ink tracking-wider">YOUR EXPLORER</div>
-                  <div className="text-lg font-black text-text-primary truncate">{getAvatarName(selectedAvatar)}</div>
+                  <div className="text-xs font-bold text-accent-1-ink tracking-wider">
+                    YOUR EXPLORER
+                  </div>
+                  <div className="text-lg font-black text-text-primary truncate">
+                    {getAvatarName(selectedAvatar)}
+                  </div>
                 </div>
               </div>
             </div>

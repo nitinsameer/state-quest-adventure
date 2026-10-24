@@ -1,4 +1,4 @@
-import { BasePage } from './BasePage';
+import { BasePage } from "./BasePage";
 
 /**
  * Badges & Achievements Page Object
@@ -6,11 +6,11 @@ import { BasePage } from './BasePage';
  */
 export class BadgesPage extends BasePage {
   // Selectors
-  private readonly badgesHeader = 'text=/Badges|Badge/';
+  private readonly badgesHeader = "text=/Badges|Badge/";
   private readonly stateCards = '[class*="rounded"]';
   private readonly badgeGrid = '[class*="grid"]';
   private readonly badges = '[class*="badge"]';
-  private readonly achievementsTab = 'text=/Achievements/';
+  private readonly achievementsTab = "text=/Achievements/";
   private readonly achievementGrid = '[class*="grid"]';
   private readonly achievementCards = '[class*="rounded-2xl"]';
 
@@ -18,7 +18,7 @@ export class BadgesPage extends BasePage {
    * Navigate to badges screen
    */
   async goto() {
-    await super.goto('/badges');
+    await super.goto("/badges");
     await this.waitForBadgesScreen();
   }
 
@@ -26,7 +26,7 @@ export class BadgesPage extends BasePage {
    * Navigate to achievements screen
    */
   async gotoAchievements() {
-    await super.goto('/achievements');
+    await super.goto("/achievements");
     await this.waitForAchievementsScreen();
   }
 
@@ -73,10 +73,10 @@ export class BadgesPage extends BasePage {
     const stateSection = this.page.locator(`text=${stateName}`).first();
     const parent = stateSection.locator('xpath=ancestor::div[contains(@class, "rounded")]');
     const badgeElements = await parent.locator('[class*="badge"]').all();
-    
+
     const badges: string[] = [];
     for (const badge of badgeElements) {
-      const title = await badge.getAttribute('title') || await badge.textContent() || '';
+      const title = (await badge.getAttribute("title")) || (await badge.textContent()) || "";
       if (title) badges.push(title);
     }
     return badges;
@@ -87,7 +87,10 @@ export class BadgesPage extends BasePage {
    */
   async isStateCompleted(stateName: string): Promise<boolean> {
     const stateSection = this.page.locator(`text=${stateName}`).first();
-    const explorerBadge = stateSection.locator('text=/Explorer|✓/').isVisible().catch(() => false);
+    const explorerBadge = stateSection
+      .locator("text=/Explorer|✓/")
+      .isVisible()
+      .catch(() => false);
     return !!explorerBadge;
   }
 
@@ -101,7 +104,7 @@ export class BadgesPage extends BasePage {
     for (const card of cards) {
       const title = await card.locator('[class*="text"]').first().textContent();
       const description = await card.locator('[class*="text-sm"]').textContent();
-      const isUnlocked = await card.evaluate(el => !el.className.includes('opacity'));
+      const isUnlocked = await card.evaluate((el) => !el.className.includes("opacity"));
 
       achievements.push({
         title,
@@ -135,7 +138,7 @@ export class BadgesPage extends BasePage {
   async getPerformanceBadgeProgress(badgeName: string): Promise<number> {
     const badge = this.page.locator(`text=${badgeName}`);
     const progressBar = badge.locator('xpath=ancestor::div//[class*="progress"]');
-    const width = await progressBar.evaluate(el => {
+    const width = await progressBar.evaluate((el) => {
       const style = window.getComputedStyle(el);
       return style.width;
     });
@@ -158,7 +161,9 @@ export class BadgesPage extends BasePage {
   async getAchievementsByTier(tier: string): Promise<string[]> {
     const tierCards: string[] = [];
     // Find tier section and get all achievement cards within it
-    const tierSection = this.page.locator(`text=${tier}`).locator('xpath=ancestor::div[contains(@class, "section")]');
+    const tierSection = this.page
+      .locator(`text=${tier}`)
+      .locator('xpath=ancestor::div[contains(@class, "section")]');
     const cards = await tierSection.locator('[class*="rounded"]').all();
 
     for (const card of cards) {
@@ -174,7 +179,7 @@ export class BadgesPage extends BasePage {
    */
   async isBadgeEarned(badgeName: string): Promise<boolean> {
     const badge = this.page.locator(`text=${badgeName}`);
-    const hasGradient = await badge.evaluate(el => el.className.includes('gradient'));
+    const hasGradient = await badge.evaluate((el) => el.className.includes("gradient"));
     return hasGradient;
   }
 
@@ -183,7 +188,7 @@ export class BadgesPage extends BasePage {
    */
   async getBadgeDescription(badgeName: string): Promise<string> {
     const badge = this.page.locator(`text=${badgeName}`).first();
-    const tooltip = await badge.getAttribute('title') || '';
+    const tooltip = (await badge.getAttribute("title")) || "";
     return tooltip;
   }
 

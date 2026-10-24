@@ -77,10 +77,13 @@ export function DailyGoalCard() {
   };
 
   return (
-    <div className="flex-shrink-0" style={{ marginTop: 'var(--space-2)', marginBottom: 'var(--space-2)' }}>
+    <div
+      className="flex-shrink-0"
+      style={{ marginTop: "var(--space-2)", marginBottom: "var(--space-2)" }}
+    >
       <div
         className={`rounded-2xl ${goalColor} shadow-lg relative overflow-hidden`}
-        style={{ padding: 'var(--padding-md)' }}
+        style={{ padding: "var(--padding-md)" }}
       >
         {/* Decorative background element */}
         <div
@@ -88,7 +91,10 @@ export function DailyGoalCard() {
           style={{ backgroundColor: "var(--accent-1-soft)" }}
         />
 
-        <div className="relative z-10 flex items-center justify-between" style={{ gap: 'var(--gap-base)' }}>
+        <div
+          className="relative z-10 flex items-center justify-between"
+          style={{ gap: "var(--gap-base)" }}
+        >
           {/* Left: Goal info (compact) */}
           <div className="flex-1 min-w-0">
             <div className="text-caption" style={{ color: "var(--accent-1-ink)" }}>
@@ -99,7 +105,7 @@ export function DailyGoalCard() {
             </div>
             <div
               className="text-caption"
-              style={{ color: "var(--accent-1-ink)", marginTop: 'var(--space-0-5)', opacity: 0.9 }}
+              style={{ color: "var(--accent-1-ink)", marginTop: "var(--space-0-5)", opacity: 0.9 }}
             >
               {getEncouragementMessage()}
             </div>
@@ -132,8 +138,8 @@ export function DailyGoalCard() {
               <div
                 className="h-12 rounded-full border text-label font-bold flex items-center justify-center"
                 style={{
-                  paddingLeft: 'var(--padding-base)',
-                  paddingRight: 'var(--padding-base)',
+                  paddingLeft: "var(--padding-base)",
+                  paddingRight: "var(--padding-base)",
                   backgroundColor: "var(--accent-1-soft)",
                   borderColor: "var(--accent-1-ink)",
                   color: "var(--accent-1-ink)",

@@ -239,12 +239,13 @@ export function PostcardModal({
         {/* Postcard Card */}
         <div
           className="relative w-[328px] h-[420px] rounded-[20px] overflow-hidden animate-postcard-enter"
-          style={{
-            backgroundColor: "white",
-            boxShadow:
-              "0 8px 32px rgba(0, 0, 0, 0.18), 0 0 0 0 transparent",
-            "--glow-color": `${fromHex}59`,
-          } as React.CSSProperties}
+          style={
+            {
+              backgroundColor: "white",
+              boxShadow: "0 8px 32px rgba(0, 0, 0, 0.18), 0 0 0 0 transparent",
+              "--glow-color": `${fromHex}59`,
+            } as React.CSSProperties
+          }
         >
           {/* Hero Image Section (top 60% = 252px) */}
           <div
@@ -282,29 +283,20 @@ export function PostcardModal({
             </div>
 
             {/* Badge Emoji */}
-            <div
-              className="text-[56px] animate-badge-float"
-              style={{ lineHeight: 1 }}
-            >
+            <div className="text-[56px] animate-badge-float" style={{ lineHeight: 1 }}>
               {badgeEmoji}
             </div>
 
             {/* State Name */}
-            <div className="text-[20px] font-bold text-text-primary text-center">
-              {state.name}
-            </div>
+            <div className="text-[20px] font-bold text-text-primary text-center">{state.name}</div>
 
             {/* Capital City */}
             {state.capital && (
-              <div className="text-[13px] text-text-secondary">
-                ⊕ {state.capital}
-              </div>
+              <div className="text-[13px] text-text-secondary">⊕ {state.capital}</div>
             )}
 
             {/* Date */}
-            <div className="text-[12px] text-text-secondary">
-              {postcard.stampDate}
-            </div>
+            <div className="text-[12px] text-text-secondary">{postcard.stampDate}</div>
           </div>
         </div>
 
@@ -357,9 +349,7 @@ export function PostcardModal({
         </button>
 
         {/* Dismiss Hint */}
-        <p className="text-xs text-center text-text-secondary">
-          Tap anywhere to close
-        </p>
+        <p className="text-xs text-center text-text-secondary">Tap anywhere to close</p>
       </div>
     </div>
   );

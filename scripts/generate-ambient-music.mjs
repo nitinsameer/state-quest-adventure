@@ -22,16 +22,12 @@ function generateWAV() {
     typeof OfflineAudioContext !== "undefined"
       ? OfflineAudioContext
       : typeof webkitOfflineAudioContext !== "undefined"
-      ? webkitOfflineAudioContext
-      : null;
+        ? webkitOfflineAudioContext
+        : null;
 
   if (!OfflineAudioContext) {
-    console.error(
-      "OfflineAudioContext not available - skipping ambient music generation"
-    );
-    console.log(
-      "Note: You can manually add ambient-music.mp3 to public/ folder"
-    );
+    console.error("OfflineAudioContext not available - skipping ambient music generation");
+    console.log("Note: You can manually add ambient-music.mp3 to public/ folder");
     return null;
   }
 
@@ -109,7 +105,7 @@ function audioBufferToWAV(audioBuffer) {
   const raw = offlineCtx.createBuffer(
     audioBuffer.numberOfChannels,
     audioBuffer.length,
-    audioBuffer.sampleRate
+    audioBuffer.sampleRate,
   );
 
   const rawData = raw.getChannelData(0);
@@ -135,9 +131,7 @@ function encodeWAV(audioBuffer) {
     channelData.push(audioBuffer.getChannelData(i));
   }
 
-  const interleaved = new Float32Array(
-    audioBuffer.length * numberOfChannels
-  );
+  const interleaved = new Float32Array(audioBuffer.length * numberOfChannels);
   for (let i = 0; i < audioBuffer.length; i++) {
     for (let channel = 0; channel < numberOfChannels; channel++) {
       interleaved[i * numberOfChannels + channel] = channelData[channel][i];
@@ -171,11 +165,7 @@ function encodeWAV(audioBuffer) {
   let offset = 44;
   for (let i = 0; i < interleaved.length; i++) {
     const s = Math.max(-1, Math.min(1, interleaved[i]));
-    view.setInt16(
-      offset,
-      s < 0 ? s * 0x8000 : s * 0x7fff,
-      true
-    );
+    view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7fff, true);
     offset += 2;
   }
 

@@ -82,7 +82,7 @@ export const TONE_GRADIENT: Record<string, string> = {
   gold: "var(--accent-4)",
 };
 
-/** 
+/**
  * Flat hex pairs matching the gradient utilities, for canvas rendering.
  * NOTE: Canvas drawing requires actual hex color values, not CSS variables, since canvas uses raw pixel manipulation.
  * These hex values correspond to the theme accent colors but are provided as static hex strings for performance.

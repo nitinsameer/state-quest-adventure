@@ -87,8 +87,6 @@ class RootErrorBoundary extends React.Component<
       },
       error,
     );
-
-
   }
 
   render() {
@@ -127,7 +125,9 @@ class RootErrorBoundary extends React.Component<
             </div>
 
             {/* Reassuring message */}
-            <p className="mt-6 text-caption text-muted-foreground">Your progress is saved! {EMOJI.action.save}</p>
+            <p className="mt-6 text-caption text-muted-foreground">
+              Your progress is saved! {EMOJI.action.save}
+            </p>
           </div>
         </div>
       );
@@ -283,8 +283,6 @@ function HydratedApp() {
   // This ensures hook count/order is consistent across renders
   const progress = useProgress();
 
-
-
   // Get celebration store show method at top level (hooks must be called before any conditionals)
   const showCelebration = useCelebrationStore((state) => state.show);
 
@@ -327,7 +325,8 @@ function HydratedApp() {
         // Get computed style for status bar colors
         const computedStyle = getComputedStyle(root);
         const statusbarStyle = computedStyle.getPropertyValue("--statusbar-style").trim() || "dark";
-        const statusbarBg = computedStyle.getPropertyValue("--statusbar-bg").trim() || "var(--accent-1)";
+        const statusbarBg =
+          computedStyle.getPropertyValue("--statusbar-bg").trim() || "var(--accent-1)";
 
         // Set status bar appearance
         if (Capacitor.isNativePlatform()) {
@@ -460,8 +459,6 @@ function HydratedApp() {
   const scrollContainerPadding =
     isPreAuthRoute || isImmersiveRoute ? "pb-safe" : "pb-[calc(var(--nav-h,80px))]";
 
-
-
   // Start ambient music only on home/authenticated routes after user consents
   // Do NOT start on splash/welcome/create screens
   // Also set up app lifecycle listeners for pause/resume
@@ -592,7 +589,9 @@ function RootComponent() {
       <div className="h-screen w-full flex items-center justify-center bg-bg-header">
         <div className="text-center">
           <div className="text-6xl mb-4 animate-bounce">{EMOJI.nav.map}</div>
-          <div className="font-bold text-lg" style={{color: "var(--text-on-primary)"}}>Loading your adventure...</div>
+          <div className="font-bold text-lg" style={{ color: "var(--text-on-primary)" }}>
+            Loading your adventure...
+          </div>
         </div>
       </div>
     );

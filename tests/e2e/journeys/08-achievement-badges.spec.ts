@@ -1,12 +1,12 @@
-import { test, expect } from '@playwright/test';
-import { OnboardingPage } from '../pages/OnboardingPage';
-import { HomePage } from '../pages/HomePage';
-import { LearningHubPage } from '../pages/LearningHubPage';
-import { QuizPage } from '../pages/QuizPage';
-import { BadgesPage } from '../pages/BadgesPage';
-import { TEST_USERS, EXPECTED_ACHIEVEMENTS } from '../fixtures/test-data';
+import { test, expect } from "@playwright/test";
+import { OnboardingPage } from "../pages/OnboardingPage";
+import { HomePage } from "../pages/HomePage";
+import { LearningHubPage } from "../pages/LearningHubPage";
+import { QuizPage } from "../pages/QuizPage";
+import { BadgesPage } from "../pages/BadgesPage";
+import { TEST_USERS, EXPECTED_ACHIEVEMENTS } from "../fixtures/test-data";
 
-test.describe('Achievement Badges & Tier Progression', () => {
+test.describe("Achievement Badges & Tier Progression", () => {
   let onboarding: OnboardingPage;
   let home: HomePage;
   let learningHub: LearningHubPage;
@@ -25,9 +25,9 @@ test.describe('Achievement Badges & Tier Progression', () => {
     await onboarding.completeOnboarding(TEST_USERS.newUser);
   });
 
-  test('should unlock Explorers Awakening achievement (first state)', async ({ page }) => {
+  test("should unlock Explorers Awakening achievement (first state)", async ({ page }) => {
     // Complete first state
-    await learningHub.goto('Andhra Pradesh');
+    await learningHub.goto("Andhra Pradesh");
 
     // Read all cards
     for (let i = 0; i < 6; i++) {
@@ -59,10 +59,10 @@ test.describe('Achievement Badges & Tier Progression', () => {
     const completed = progressData.completed;
 
     expect(completed.length).toBe(1);
-    expect(completed[0]).toBe('Andhra Pradesh');
+    expect(completed[0]).toBe("Andhra Pradesh");
   });
 
-  test('should track achievement progress for Seedling tier', async ({ page }) => {
+  test("should track achievement progress for Seedling tier", async ({ page }) => {
     // Achievements should be accessible from home
     const xp = await home.getXPValue();
     const statesCount = await home.getStatesCount();
@@ -72,7 +72,7 @@ test.describe('Achievement Badges & Tier Progression', () => {
     expect(statesCount >= 0).toBe(true);
   });
 
-  test('should verify achievements screen exists', async ({ page }) => {
+  test("should verify achievements screen exists", async ({ page }) => {
     await badges.gotoAchievements();
 
     // Page should load with achievements grid
@@ -80,20 +80,22 @@ test.describe('Achievement Badges & Tier Progression', () => {
     expect(achievements.length > 0).toBe(true);
   });
 
-  test('should display achievement tiers', async ({ page }) => {
+  test("should display achievement tiers", async ({ page }) => {
     await badges.gotoAchievements();
 
     // Verify at least Seedling tier (tier 1) is visible
-    const hasSeedling = await badges.verifyAchievementTier('Seedling');
+    const hasSeedling = await badges.verifyAchievementTier("Seedling");
     expect(hasSeedling).toBe(true);
   });
 
-  test('should track Reader achievement (50 cards read)', async ({ page }) => {
+  test("should track Reader achievement (50 cards read)", async ({ page }) => {
     const progressData = await onboarding.getProgressData();
 
     // Count total cards read
-    const cardsRead = Object.values(progressData.cards || {})
-      .reduce((total: number, cards: any[]) => total + cards.length, 0);
+    const cardsRead = Object.values(progressData.cards || {}).reduce(
+      (total: number, cards: any[]) => total + cards.length,
+      0,
+    );
 
     expect(cardsRead >= 0).toBe(true);
 
@@ -101,7 +103,7 @@ test.describe('Achievement Badges & Tier Progression', () => {
     // This test documents the tracking logic
   });
 
-  test('should track Quiz Starter achievement (10 questions answered)', async ({ page }) => {
+  test("should track Quiz Starter achievement (10 questions answered)", async ({ page }) => {
     const progressData = await onboarding.getProgressData();
 
     // Count answered questions
@@ -110,7 +112,7 @@ test.describe('Achievement Badges & Tier Progression', () => {
     expect(answeredCount >= 0).toBe(true);
   });
 
-  test('should track Stamp Collector achievement (10 stamps)', async ({ page }) => {
+  test("should track Stamp Collector achievement (10 stamps)", async ({ page }) => {
     const progressData = await onboarding.getProgressData();
 
     // Count stamps
@@ -119,7 +121,7 @@ test.describe('Achievement Badges & Tier Progression', () => {
     expect(stampCount >= 0).toBe(true);
   });
 
-  test('should verify level-based achievement', async ({ page }) => {
+  test("should verify level-based achievement", async ({ page }) => {
     await home.goto();
 
     const level = await home.getLevel();
@@ -130,7 +132,7 @@ test.describe('Achievement Badges & Tier Progression', () => {
     expect(xp >= 0).toBe(true);
   });
 
-  test('should unlock Five Explorer achievement at 5 states', async ({ page }) => {
+  test("should unlock Five Explorer achievement at 5 states", async ({ page }) => {
     const progressData = await onboarding.getProgressData();
     const statesCompleted = progressData.completed.length;
 
@@ -140,7 +142,7 @@ test.describe('Achievement Badges & Tier Progression', () => {
     }
   });
 
-  test('should unlock Ten Champion achievement at 10 states', async ({ page }) => {
+  test("should unlock Ten Champion achievement at 10 states", async ({ page }) => {
     const progressData = await onboarding.getProgressData();
     const statesCompleted = progressData.completed.length;
 
@@ -148,7 +150,7 @@ test.describe('Achievement Badges & Tier Progression', () => {
     expect(statesCompleted >= 0).toBe(true);
   });
 
-  test('should unlock India Conqueror at all 36 states', async ({ page }) => {
+  test("should unlock India Conqueror at all 36 states", async ({ page }) => {
     const progressData = await onboarding.getProgressData();
     const statesCompleted = progressData.completed.length;
 
@@ -160,9 +162,9 @@ test.describe('Achievement Badges & Tier Progression', () => {
     }
   });
 
-  test('should track achievement badges with timestamps', async ({ page }) => {
+  test("should track achievement badges with timestamps", async ({ page }) => {
     // Complete first state
-    await learningHub.goto('Andhra Pradesh');
+    await learningHub.goto("Andhra Pradesh");
 
     for (let i = 0; i < 6; i++) {
       const progress = await learningHub.getProgress();
@@ -192,7 +194,7 @@ test.describe('Achievement Badges & Tier Progression', () => {
     expect(progressData.completed.length > 0).toBe(true);
   });
 
-  test('should unlock Fired Up achievement (1 day streak)', async ({ page }) => {
+  test("should unlock Fired Up achievement (1 day streak)", async ({ page }) => {
     const progress = await onboarding.getProgressData();
     const streak = progress.streak;
 
@@ -203,7 +205,7 @@ test.describe('Achievement Badges & Tier Progression', () => {
     // Test documents the logic
   });
 
-  test('should display all achievement tiers', async ({ page }) => {
+  test("should display all achievement tiers", async ({ page }) => {
     await badges.gotoAchievements();
 
     // Should have at least Seedling tier achievements
@@ -211,7 +213,7 @@ test.describe('Achievement Badges & Tier Progression', () => {
     expect(achievements.length > 0).toBe(true);
   });
 
-  test('should verify achievement icons and descriptions', async ({ page }) => {
+  test("should verify achievement icons and descriptions", async ({ page }) => {
     await badges.gotoAchievements();
 
     const achievements = await badges.getAchievementsData();
@@ -224,7 +226,7 @@ test.describe('Achievement Badges & Tier Progression', () => {
     }
   });
 
-  test('should track XP-based achievements', async ({ page }) => {
+  test("should track XP-based achievements", async ({ page }) => {
     await home.goto();
 
     const xp = await home.getXPValue();
@@ -238,21 +240,23 @@ test.describe('Achievement Badges & Tier Progression', () => {
     }
   });
 
-  test('should unlock Knowledge Keeper achievement (100 cards read)', async ({ page }) => {
+  test("should unlock Knowledge Keeper achievement (100 cards read)", async ({ page }) => {
     const progressData = await onboarding.getProgressData();
 
-    const totalCards = Object.values(progressData.cards || {})
-      .reduce((total: number, cards: any[]) => total + cards.length, 0);
+    const totalCards = Object.values(progressData.cards || {}).reduce(
+      (total: number, cards: any[]) => total + cards.length,
+      0,
+    );
 
     // Knowledge Keeper at 100 cards
     // Test documents tracking logic
     expect(totalCards >= 0).toBe(true);
   });
 
-  test('should unlock Badge Collector achievement (15 badges)', async ({ page }) => {
+  test("should unlock Badge Collector achievement (15 badges)", async ({ page }) => {
     // Count all badges earned
     const progressData = await onboarding.getProgressData();
-    
+
     let totalBadges = 0;
     for (const stateNameBadges of Object.values(progressData.badges || {})) {
       totalBadges += (stateNameBadges as string[]).length;

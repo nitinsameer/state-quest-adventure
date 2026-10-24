@@ -1,10 +1,10 @@
 /**
  * Firebase initialization and configuration
- * 
+ *
  * PRIVACY FIRST: Analytics is DISABLED by default for this kids app.
  * We do not collect personal data, device identifiers, or usage analytics
  * without explicit, informed consent that meets child-safety requirements.
- * 
+ *
  * Currently, Firebase is initialized minimally with analytics disabled.
  * Firestore is available for essential app data only if needed.
  */
@@ -63,7 +63,10 @@ function initializeFirebase() {
     // This complies with COPPA and child privacy best practices
     if (analytics) {
       setAnalyticsCollectionEnabled(analytics, false);
-      debugLog("firebase", "Firebase initialized - Analytics collection DISABLED (kids app privacy)");
+      debugLog(
+        "firebase",
+        "Firebase initialized - Analytics collection DISABLED (kids app privacy)",
+      );
     }
   } catch (error) {
     debugError("firebase", "Firebase initialization failed", error);

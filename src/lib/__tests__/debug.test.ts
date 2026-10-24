@@ -1,6 +1,6 @@
 /**
  * Debug Utility Tests
- * 
+ *
  * Regression tests for Batch 2 fix: FND-001 to FND-005 (excessive console logging)
  * Verifies that debugLog, debugWarn, and debugError only output in DEV mode
  */
@@ -35,10 +35,7 @@ describe("Debug Utility (Regression: FND-001-005)", () => {
 
     it("should format label correctly", () => {
       debugLog("CardNarrationPlayer", "Playback started");
-      expect(consoleLogSpy).toHaveBeenCalledWith(
-        "[CardNarrationPlayer] Playback started",
-        ""
-      );
+      expect(consoleLogSpy).toHaveBeenCalledWith("[CardNarrationPlayer] Playback started", "");
     });
 
     it("should handle no data parameter", () => {
@@ -51,10 +48,9 @@ describe("Debug Utility (Regression: FND-001-005)", () => {
     it("should warn in DEV mode", () => {
       debugWarn("TestComponent", "Warning message", { issue: "something" });
       expect(consoleWarnSpy).toHaveBeenCalled();
-      expect(consoleWarnSpy).toHaveBeenCalledWith(
-        "[TestComponent] Warning message",
-        { issue: "something" }
-      );
+      expect(consoleWarnSpy).toHaveBeenCalledWith("[TestComponent] Warning message", {
+        issue: "something",
+      });
     });
 
     it("should format warning label correctly", () => {
@@ -87,9 +83,9 @@ describe("Debug Utility (Regression: FND-001-005)", () => {
     it("should respect import.meta.env.DEV flag", () => {
       // When DEV is false (production), functions should not call console
       const originalDEV = import.meta.env.DEV;
-      
+
       debugLog("TestLabel", "This should appear or not based on DEV");
-      
+
       // In test environment, DEV is true, so console.log should be called
       // In production build, DEV is false and console.log should not be called
       if (import.meta.env.DEV) {

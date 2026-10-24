@@ -55,12 +55,18 @@ export function PassportSprout() {
       )}
 
       {/* Header */}
-      <div className="px-5 pt-4 pb-3 bg-bg-header rounded-b-3xl shadow-lg" style={{color: "var(--text-on-header)"}}>
+      <div
+        className="px-5 pt-4 pb-3 bg-bg-header rounded-b-3xl shadow-lg"
+        style={{ color: "var(--text-on-header)" }}
+      >
         <div className="text-2xl font-extrabold">{`My Stamps ${EMOJI.action.stamp}`}</div>
       </div>
 
       {/* Profile Card */}
-      <div className="mx-5 mt-4 p-4 rounded-3xl bg-accent-1 shadow-lg" style={{color: "var(--text-on-primary)"}}>
+      <div
+        className="mx-5 mt-4 p-4 rounded-3xl bg-accent-1 shadow-lg"
+        style={{ color: "var(--text-on-primary)" }}
+      >
         <div className="flex items-center gap-3 mb-3">
           <div className="text-5xl">{progress.avatar}</div>
           <div>
@@ -136,7 +142,8 @@ export function PassportSprout() {
               fxTap();
               setCurrentPage(currentPage - 1);
             }}
-            className="flex-1 h-12 rounded-2xl bg-surface-card border-2 border-border-color font-extrabold text-lg" style={{color: "var(--text-secondary)"}}
+            className="flex-1 h-12 rounded-2xl bg-surface-card border-2 border-border-color font-extrabold text-lg"
+            style={{ color: "var(--text-secondary)" }}
           >
             ← Previous
           </button>
@@ -147,7 +154,8 @@ export function PassportSprout() {
               fxTap();
               setCurrentPage(currentPage + 1);
             }}
-            className="flex-1 h-12 rounded-2xl bg-accent-2 font-extrabold text-lg shadow-lg" style={{color: "var(--text-on-primary)"}}
+            className="flex-1 h-12 rounded-2xl bg-accent-2 font-extrabold text-lg shadow-lg"
+            style={{ color: "var(--text-on-primary)" }}
           >
             Next States →
           </button>
@@ -155,7 +163,8 @@ export function PassportSprout() {
         {!hasNextPage && currentPage === 0 && (
           <button
             onClick={() => navigate({ to: "/home" })}
-            className="flex-1 h-12 rounded-2xl bg-accent-3 font-extrabold text-lg shadow-lg" style={{color: "var(--text-on-primary)"}}
+            className="flex-1 h-12 rounded-2xl bg-accent-3 font-extrabold text-lg shadow-lg"
+            style={{ color: "var(--text-on-primary)" }}
           >
             Back Home {EMOJI.nav.home}
           </button>

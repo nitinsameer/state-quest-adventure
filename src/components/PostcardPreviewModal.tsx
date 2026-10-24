@@ -23,7 +23,7 @@ import { EMOJI } from "@/constants/emoji";
 const BADGE_EMOJI: Record<BadgeId, string> = {
   monument: EMOJI.achievement.monument,
   animal: EMOJI.achievement.animal,
-  explorer: "???è",
+  explorer: "???ÔøΩ",
 };
 
 function loadImage(src: string): Promise<HTMLImageElement> {
@@ -133,7 +133,10 @@ async function generatePostcardPreview(stateName?: string): Promise<Blob | null>
   }
 
   // badge chip
-  const earned = badgesFor({ stamps: {}, postcards: {}, achievements: {} } as any, state.name);
+  const earned = badgesFor(
+    { stamps: {}, postcards: {}, achievements: {} } as Record<string, unknown>,
+    state.name,
+  );
   const badge = STATE_BADGES.find((b) => b.id === earned[0]) ?? STATE_BADGES[0];
 
   c.fillStyle = readTokenAsHex("--accent-6-soft");
@@ -213,7 +216,7 @@ export function PostcardPreviewModal({
     return () => {
       if (previewUrl) URL.revokeObjectURL(previewUrl);
     };
-  }, [isOpen, stateName]);
+  }, [isOpen, stateName, previewUrl]);
 
   const handleSaveToPassport = async () => {
     if (isSaving) return;
@@ -239,15 +242,15 @@ export function PostcardPreviewModal({
         const library = usePostcardLibrary.getState();
         const now = new Date().toISOString();
 
-        // Generate a stamp date like "12 ∑ MAR"
+        // Generate a stamp date like "12 ÔøΩ MAR"
         const date = new Date();
         const day = date.getDate();
         const month = date.toLocaleString("en-US", { month: "short" }).toUpperCase();
-        const stampDate = `${day} ∑ ${month}`;
+        const stampDate = `${day} ÔøΩ ${month}`;
 
         // Determine badge earned
         const earned = badgesFor(
-          { stamps: {}, postcards: {}, achievements: {} } as any,
+          { stamps: {}, postcards: {}, achievements: {} } as Record<string, unknown>,
           stateName || "",
         );
         const badgeId = (earned[0] ?? "explorer") as BadgeId;

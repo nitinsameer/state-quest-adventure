@@ -1,4 +1,4 @@
-import { BasePage } from './BasePage';
+import { BasePage } from "./BasePage";
 
 /**
  * Quiz Page Object
@@ -6,19 +6,19 @@ import { BasePage } from './BasePage';
  */
 export class QuizPage extends BasePage {
   // Selectors
-  private readonly quizHeader = 'text=/Question \\d+ of \\d+/';
+  private readonly quizHeader = "text=/Question \\d+ of \\d+/";
   private readonly questionPrompt = '[class*="text-lg"]';
   private readonly answerOptions = 'button[class*="rounded"]';
-  private readonly progressCounter = 'text=/Question \\d+ of \\d+/';
-  private readonly scoreDisplay = 'text=/\\d+\\/\\d+/';
-  private readonly completeButton = 'button:has-text(/Continue|Next|Done/)';
+  private readonly progressCounter = "text=/Question \\d+ of \\d+/";
+  private readonly scoreDisplay = "text=/\\d+\\/\\d+/";
+  private readonly completeButton = "button:has-text(/Continue|Next|Done/)";
   private readonly celebrationModal = '[class*="modal"]';
 
   /**
    * Navigate to quiz for a state
    */
   async goto(stateName: string) {
-    const slug = stateName.toLowerCase().replace(/\s+/g, '-');
+    const slug = stateName.toLowerCase().replace(/\s+/g, "-");
     await super.goto(`/state/${slug}/quiz`);
     await this.waitForQuizToLoad();
   }
@@ -60,7 +60,7 @@ export class QuizPage extends BasePage {
    */
   async getAnswerOptions(): Promise<string[]> {
     const options = await this.getAllText(this.answerOptions);
-    return options.filter(o => o.trim().length > 0);
+    return options.filter((o) => o.trim().length > 0);
   }
 
   /**
@@ -95,7 +95,7 @@ export class QuizPage extends BasePage {
    */
   async isAnswerInOptions(answer: string): Promise<boolean> {
     const options = await this.getAnswerOptions();
-    return options.some(o => o.includes(answer));
+    return options.some((o) => o.includes(answer));
   }
 
   /**
@@ -111,7 +111,7 @@ export class QuizPage extends BasePage {
    */
   async completeQuizRandom() {
     const totalQuestions = await this.getTotalQuestions();
-    let correctCount = 0;
+    const correctCount = 0;
 
     for (let i = 0; i < totalQuestions; i++) {
       const options = await this.getAnswerOptions();
@@ -146,7 +146,7 @@ export class QuizPage extends BasePage {
    */
   async waitForCompletionScreen(timeout = 15000) {
     try {
-      await this.page.waitForSelector('text=/\\d+\\/\\d+/|Score|Complete/', { timeout });
+      await this.page.waitForSelector("text=/\\d+\\/\\d+/|Score|Complete/", { timeout });
       return true;
     } catch {
       return false;
@@ -178,7 +178,7 @@ export class QuizPage extends BasePage {
    */
   async clickContinue() {
     await this.waitAndClick(this.completeButton, 5000);
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState("networkidle");
   }
 
   /**
@@ -200,7 +200,7 @@ export class QuizPage extends BasePage {
 
     const totalQuestions = await this.getTotalQuestions();
     if (totalQuestions === 0) {
-      throw new Error('No questions found in quiz');
+      throw new Error("No questions found in quiz");
     }
 
     // Answer all questions randomly
@@ -209,7 +209,7 @@ export class QuizPage extends BasePage {
     // Wait for completion
     const completed = await this.waitForCompletionScreen();
     if (!completed) {
-      throw new Error('Quiz did not complete');
+      throw new Error("Quiz did not complete");
     }
 
     // Get score

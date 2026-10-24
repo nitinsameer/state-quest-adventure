@@ -6,12 +6,7 @@
  */
 
 import { useState } from "react";
-import {
-  playTts,
-  stopTts,
-  isTtsAvailable,
-  useTtsState,
-} from "@/lib/tts";
+import { playTts, stopTts, isTtsAvailable, useTtsState } from "@/lib/tts";
 import { hasAudioEnabled } from "@/lib/parental-consent";
 import { KidsButton } from "./KidsButton";
 import { EMOJI } from "@/constants/emoji";
@@ -59,7 +54,10 @@ export function CardNarrationPlayer({
     <div className="w-full">
       {/* Audio Disabled Notice */}
       {audioDisabled && audioEnabled === false && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 p-(--padding-base)" style={{backgroundColor: 'var(--scrim)'}}>
+        <div
+          className="fixed inset-0 flex items-center justify-center z-50 p-(--padding-base)"
+          style={{ backgroundColor: "var(--scrim)" }}
+        >
           <div className="bg-surface-card rounded-3xl p-(--padding-lg) max-w-sm shadow-2xl animate-in fade-in scale-in">
             <div className="text-center">
               <div className="text-5xl mb-(--space-2)">{EMOJI.audio.muted}</div>
@@ -72,11 +70,7 @@ export function CardNarrationPlayer({
               <p className="text-body-sm mb-(--space-2)" style={{ color: "var(--text-primary)" }}>
                 Turn on audio in Profile settings to hear this story read aloud.
               </p>
-              <KidsButton
-                variant="primary"
-                size="md"
-                onClick={() => setAudioDisabled(false)}
-              >
+              <KidsButton variant="primary" size="md" onClick={() => setAudioDisabled(false)}>
                 Got It
               </KidsButton>
             </div>
@@ -119,7 +113,9 @@ export function CardNarrationPlayer({
             </div>
             {audioEnabled ? (
               <div className="text-caption text-action-primary-bg mt-(--space-0-25)">
-                {isCurrentPlaying ? `${EMOJI.audio.music} Playing... tap to stop` : `Tap play to hear! ${EMOJI.action.listen}`}
+                {isCurrentPlaying
+                  ? `${EMOJI.audio.music} Playing... tap to stop`
+                  : `Tap play to hear! ${EMOJI.action.listen}`}
               </div>
             ) : (
               <div className="text-caption text-action-primary-bg font-semibold mt-(--space-0-25)">

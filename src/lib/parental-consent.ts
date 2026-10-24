@@ -1,10 +1,10 @@
 /**
  * Simplified Audio Preference System
- * 
+ *
  * Audio and basic features work WITHOUT requiring parental consent gates.
  * Users can simply toggle audio on/off in settings.
  * No blocking prompts or consent requirements.
- * 
+ *
  * Analytics remains DISABLED for this kids app.
  */
 
@@ -57,7 +57,7 @@ export function subscribeAudioChanges(listener: (enabled: boolean) => void): () 
   const handleChange = () => {
     listener(hasAudioEnabled());
   };
-  
+
   window.addEventListener("storage", handleChange);
   return () => window.removeEventListener("storage", handleChange);
 }

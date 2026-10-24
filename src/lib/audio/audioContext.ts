@@ -23,8 +23,7 @@ export function getAudioContext(): AudioContext | null {
 
   try {
     // Try standard AudioContext, fall back to webkit prefix
-    const AudioContextClass =
-      window.AudioContext || (window as any).webkitAudioContext;
+    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
 
     if (!AudioContextClass) {
       console.warn("[AudioContext] Web Audio API not available");

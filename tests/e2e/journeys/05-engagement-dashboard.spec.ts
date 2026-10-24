@@ -1,9 +1,9 @@
-import { test, expect } from '@playwright/test';
-import { OnboardingPage } from '../pages/OnboardingPage';
-import { HomePage } from '../pages/HomePage';
-import { TEST_USERS } from '../fixtures/test-data';
+import { test, expect } from "@playwright/test";
+import { OnboardingPage } from "../pages/OnboardingPage";
+import { HomePage } from "../pages/HomePage";
+import { TEST_USERS } from "../fixtures/test-data";
 
-test.describe('Engagement Tracking & Home Dashboard', () => {
+test.describe("Engagement Tracking & Home Dashboard", () => {
   let onboarding: OnboardingPage;
   let home: HomePage;
 
@@ -16,7 +16,7 @@ test.describe('Engagement Tracking & Home Dashboard', () => {
     await onboarding.completeOnboarding(TEST_USERS.newUser);
   });
 
-  test('should display home dashboard with all stats', async ({ page }) => {
+  test("should display home dashboard with all stats", async ({ page }) => {
     await home.goto();
 
     // Verify all major components visible
@@ -40,7 +40,7 @@ test.describe('Engagement Tracking & Home Dashboard', () => {
     expect(stampsCount).toBe(0);
   });
 
-  test('should show progress bar accurately', async ({ page }) => {
+  test("should show progress bar accurately", async ({ page }) => {
     await home.goto();
 
     // Fresh user should be at 0% progress to next level
@@ -52,7 +52,7 @@ test.describe('Engagement Tracking & Home Dashboard', () => {
     expect(level).toBe(1);
   });
 
-  test('should display India explored percentage', async ({ page }) => {
+  test("should display India explored percentage", async ({ page }) => {
     await home.goto();
 
     const indiaPercent = await home.getIndiaExploredPercent();
@@ -64,7 +64,7 @@ test.describe('Engagement Tracking & Home Dashboard', () => {
     expect(indiaPercent).toBe(expectedPercent);
   });
 
-  test('should track streak indicator', async ({ page }) => {
+  test("should track streak indicator", async ({ page }) => {
     await home.goto();
 
     // Fresh user has 0 streak
@@ -73,7 +73,7 @@ test.describe('Engagement Tracking & Home Dashboard', () => {
 
     // Trigger touchStreak by navigating to a state and back
     await page.click('button:has-text("Play")');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState("networkidle");
     await page.goBack();
 
     // Streak should be 1 now
@@ -82,7 +82,7 @@ test.describe('Engagement Tracking & Home Dashboard', () => {
     expect(streak).toBeGreaterThanOrEqual(0);
   });
 
-  test('should update XP display in real-time', async ({ page }) => {
+  test("should update XP display in real-time", async ({ page }) => {
     await home.goto();
 
     const initialXP = await home.getXPValue();
@@ -92,12 +92,9 @@ test.describe('Engagement Tracking & Home Dashboard', () => {
     // (In full test, this would happen through actual gameplay)
     const progress = await onboarding.getProgressData();
     progress.xp = 100;
-    progress.cards['Test State'] = [0, 1, 2];
+    progress.cards["Test State"] = [0, 1, 2];
 
-    await onboarding.setLocalStorageItem(
-      'india-explorer:progress:v2',
-      JSON.stringify(progress)
-    );
+    await onboarding.setLocalStorageItem("india-explorer:progress:v2", JSON.stringify(progress));
 
     // Reload home
     await home.goto();
@@ -107,7 +104,7 @@ test.describe('Engagement Tracking & Home Dashboard', () => {
     expect(updatedXP).toBe(100);
   });
 
-  test('should display current state from continue journey', async ({ page }) => {
+  test("should display current state from continue journey", async ({ page }) => {
     await home.goto();
 
     // Should show first state (Andhra Pradesh or similar)
@@ -115,7 +112,7 @@ test.describe('Engagement Tracking & Home Dashboard', () => {
     expect(currentState.length).toBeGreaterThan(0);
   });
 
-  test('should show level progression correctly', async ({ page }) => {
+  test("should show level progression correctly", async ({ page }) => {
     await home.goto();
 
     let level = await home.getLevel();
@@ -125,10 +122,7 @@ test.describe('Engagement Tracking & Home Dashboard', () => {
     const progress = await onboarding.getProgressData();
     progress.xp = 400; // Exactly 1 level
 
-    await onboarding.setLocalStorageItem(
-      'india-explorer:progress:v2',
-      JSON.stringify(progress)
-    );
+    await onboarding.setLocalStorageItem("india-explorer:progress:v2", JSON.stringify(progress));
 
     await home.goto();
 
@@ -136,7 +130,7 @@ test.describe('Engagement Tracking & Home Dashboard', () => {
     expect(level).toBe(2); // Should be level 2
   });
 
-  test('should maintain dashboard consistency across navigation', async ({ page }) => {
+  test("should maintain dashboard consistency across navigation", async ({ page }) => {
     await home.goto();
 
     const initialXP = await home.getXPValue();
@@ -145,7 +139,7 @@ test.describe('Engagement Tracking & Home Dashboard', () => {
 
     // Navigate to a state and back
     await page.click('button:has-text("Play")');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState("networkidle");
     await page.goBack();
 
     // Check values unchanged
@@ -159,7 +153,7 @@ test.describe('Engagement Tracking & Home Dashboard', () => {
     expect(afterStates).toBe(initialStates);
   });
 
-  test('should verify stat card accuracy', async ({ page }) => {
+  test("should verify stat card accuracy", async ({ page }) => {
     await home.goto();
 
     // Get all stat values
@@ -177,7 +171,7 @@ test.describe('Engagement Tracking & Home Dashboard', () => {
     expect(indiaPercent).toBe(0);
   });
 
-  test('should display play button for current state', async ({ page }) => {
+  test("should display play button for current state", async ({ page }) => {
     await home.goto();
 
     // Play button should be visible

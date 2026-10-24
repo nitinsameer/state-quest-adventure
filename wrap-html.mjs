@@ -1,20 +1,20 @@
-import fs from 'fs';
-import path from 'path';
+import fs from "fs";
+import path from "path";
 
-const indexPath = 'dist/client/index.html';
+const indexPath = "dist/client/index.html";
 
 // Try to read the prerendered shell if it exists
-let shell = '';
-const shellPath = 'dist/client/_shell.html';
+let shell = "";
+const shellPath = "dist/client/_shell.html";
 if (fs.existsSync(shellPath)) {
-  shell = fs.readFileSync(shellPath, 'utf8');
-  
+  shell = fs.readFileSync(shellPath, "utf8");
+
   // CRITICAL: Remove async attribute from embedded router manifest script
   // TanStack Start embeds async:!0 in the manifest which breaks hydration
   // Pattern: async:!0 should be removed from the router manifest script
-  shell = shell.replace(/async:!0,/g, '');
-  shell = shell.replace(/async:true,/g, '');
-  
+  shell = shell.replace(/async:!0,/g, "");
+  shell = shell.replace(/async:true,/g, "");
+
   console.log(`✓ Using prerendered shell: ${shellPath}`);
 } else {
   // Fallback: generate shell from scratch if _shell.html doesn't exist
@@ -23,12 +23,16 @@ if (fs.existsSync(shellPath)) {
 }
 
 // Find the CSS file
-const cssFiles = fs.readdirSync('dist/client/assets').filter(f => f.startsWith('styles-') && f.endsWith('.css'));
-const cssFile = cssFiles[0] || 'styles.css';
+const cssFiles = fs
+  .readdirSync("dist/client/assets")
+  .filter((f) => f.startsWith("styles-") && f.endsWith(".css"));
+const cssFile = cssFiles[0] || "styles.css";
 
 // Find the main JS file
-const jsFiles = fs.readdirSync('dist/client/assets').filter(f => f.startsWith('index-') && f.endsWith('.js'));
-const jsFile = jsFiles[0] || 'index.js';
+const jsFiles = fs
+  .readdirSync("dist/client/assets")
+  .filter((f) => f.startsWith("index-") && f.endsWith(".js"));
+const jsFile = jsFiles[0] || "index.js";
 
 // Wrap in complete HTML document
 const html = `<!DOCTYPE html>
@@ -81,7 +85,7 @@ ${shell}
 </body>
 </html>`;
 
-fs.writeFileSync(indexPath, html, 'utf8');
+fs.writeFileSync(indexPath, html, "utf8");
 console.log(`✓ Generated index.html: ${indexPath}`);
 console.log(`  CSS: ${cssFile}`);
 console.log(`  JS:  ${jsFile}`);

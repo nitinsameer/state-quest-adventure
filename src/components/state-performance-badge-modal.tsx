@@ -45,7 +45,7 @@ export function StatePerformanceBadgeModal({
   return (
     <div
       className="fixed inset-0 z-50 flex items-end"
-      style={{backgroundColor: 'var(--scrim)'}}
+      style={{ backgroundColor: "var(--scrim)" }}
       onClick={() => {
         fxTap();
         onClose();
@@ -164,7 +164,9 @@ function BadgeDetailCard({ badgeId, progress }: BadgeDetailCardProps) {
           <div className="mt-3 pt-3 border-t border-border-subtle">
             {progress.earned ? (
               <div className="flex flex-col gap-1">
-                <div className="text-lg font-extrabold text-text-primary">{EMOJI.feedback.success} You Did It!</div>
+                <div className="text-lg font-extrabold text-text-primary">
+                  {EMOJI.feedback.success} You Did It!
+                </div>
               </div>
             ) : (
               <div className="flex flex-col gap-2">

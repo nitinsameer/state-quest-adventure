@@ -69,7 +69,22 @@ export function SuccessToast() {
   if (!isVisible) return null;
 
   // Emoji particles for celebration
-  const emojiList = ["🎉", "⭐", "✨", "🎊", "🎈", "🌟", "💫", "🏆", "🎯", "🥳", "🌈", "💥", "🎆", "🎇"];
+  const emojiList = [
+    "🎉",
+    "⭐",
+    "✨",
+    "🎊",
+    "🎈",
+    "🌟",
+    "💫",
+    "🏆",
+    "🎯",
+    "🥳",
+    "🌈",
+    "💥",
+    "🎆",
+    "🎇",
+  ];
 
   // Deterministic positioning based on index (no Math.random for hydration safety)
   const particles = emojiList.map((emoji, index) => {
@@ -87,9 +102,7 @@ export function SuccessToast() {
           left: "50%",
           top: "50%",
           transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
-          animation: shouldReduceMotion
-            ? "none"
-            : `toast-emoji-particle 1.2s ease-out forwards`,
+          animation: shouldReduceMotion ? "none" : `toast-emoji-particle 1.2s ease-out forwards`,
           animationDelay: `${delay}s`,
         }}
       >
@@ -158,9 +171,7 @@ export function SuccessToast() {
 
           {/* Message text */}
           <div className="flex-1 min-w-0">
-            <p className="font-bold text-base leading-tight drop-shadow">
-              {current?.message}
-            </p>
+            <p className="font-bold text-base leading-tight drop-shadow">{current?.message}</p>
           </div>
         </div>
       </div>

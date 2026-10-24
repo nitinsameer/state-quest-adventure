@@ -30,15 +30,8 @@ import { AudioSettingRow } from "@/components/AudioSettingToggle";
 
 import { DebugThemeSelector } from "@/components/DebugThemeSelector";
 import { StatePerformanceBadgesView } from "@/components/state-performance-badges-view";
-import {
-  hasAudioEnabled,
-  enableAudio,
-  disableAudio,
-} from "@/lib/parental-consent";
-import {
-  getPostcardSettings,
-  setPostcardSetting,
-} from "@/lib/postcard-settings";
+import { hasAudioEnabled, enableAudio, disableAudio } from "@/lib/parental-consent";
+import { getPostcardSettings, setPostcardSetting } from "@/lib/postcard-settings";
 import { LanguageToggle, type LanguageCode } from "@/components/LanguageToggle";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
@@ -49,7 +42,6 @@ import { PostcardFrame } from "@/components/PostcardFrame";
 import { CardProgressBar } from "@/components/CardProgressBar";
 import { JourneyDestinationCard } from "@/components/JourneyDestinationCard";
 import { IndiaProgressMap } from "@/components/IndiaProgressMap";
-
 
 import { DailyGoalCard } from "@/components/DailyGoalCard";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
@@ -395,7 +387,6 @@ export function CreateProfileScreen() {
     setCurrentScreen("age");
   };
 
-
   const handleAgeNext = () => {
     fxTap();
     // If age not selected, use default
@@ -554,7 +545,10 @@ function RecentlyCompletedCelebration({
         navigate({ to: "/journey" });
       },
     });
-  }, [pendingCelebration?.type === "full" ? pendingCelebration.stateName : undefined, showCelebrationPopup]);
+  }, [
+    pendingCelebration?.type === "full" ? pendingCelebration.stateName : undefined,
+    showCelebrationPopup,
+  ]);
 
   return null;
 }
@@ -575,31 +569,31 @@ function getStateEmoji(stateName: string): string {
   const emojiMap: Record<string, string> = {
     "Andhra Pradesh": "🏛️",
     "Arunachal Pradesh": "🏔️",
-    "Assam": "🐘",
-    "Bihar": "🙏",
-    "Chhattisgarh": "⛰️",
-    "Goa": "🏖️",
-    "Gujarat": "🦁",
-    "Haryana": "🌾",
+    Assam: "🐘",
+    Bihar: "🙏",
+    Chhattisgarh: "⛰️",
+    Goa: "🏖️",
+    Gujarat: "🦁",
+    Haryana: "🌾",
     "Himachal Pradesh": "⛰️",
-    "Jharkhand": "🏔️",
-    "Karnataka": "☕",
-    "Kerala": "🥥",
+    Jharkhand: "🏔️",
+    Karnataka: "☕",
+    Kerala: "🥥",
     "Madhya Pradesh": "🏛️",
-    "Maharashtra": "🏢",
-    "Manipur": "🌸",
-    "Meghalaya": "☔",
-    "Mizoram": "🌲",
-    "Nagaland": "🏔️",
-    "Odisha": "🏖️",
-    "Punjab": "🌾",
-    "Rajasthan": "🏜️",
-    "Sikkim": "⛰️",
+    Maharashtra: "🏢",
+    Manipur: "🌸",
+    Meghalaya: "☔",
+    Mizoram: "🌲",
+    Nagaland: "🏔️",
+    Odisha: "🏖️",
+    Punjab: "🌾",
+    Rajasthan: "🏜️",
+    Sikkim: "⛰️",
     "Tamil Nadu": "🏛️",
-    "Telangana": "🕌",
-    "Tripura": "🌿",
+    Telangana: "🕌",
+    Tripura: "🌿",
     "Uttar Pradesh": "🕌",
-    "Uttarakhand": "⛰️",
+    Uttarakhand: "⛰️",
     "West Bengal": "🎨",
   };
   return emojiMap[stateName] || "🗺️";
@@ -1892,7 +1886,6 @@ export function StateIntroScreen({
         <Cloud className="absolute top-6 left-2 w-20 opacity-80" />
         <Cloud className="absolute top-14 right-2 w-16 opacity-70" />
 
-
         <button
           onClick={() => {
             if (onBack) {
@@ -2129,7 +2122,7 @@ export function LearningHubScreen({
           loading="lazy"
           decoding="async"
         />
-        
+
         {/* Header content overlay - back button, title, star counter */}
         <div className="relative z-10 h-full flex items-center justify-between px-5">
           {/* Back button - left side */}
@@ -2168,14 +2161,16 @@ export function LearningHubScreen({
           <div className="bg-surface-card rounded-2xl shadow-elevated-1 p-5">
             <div className="flex items-center justify-between mb-3">
               <div className="text-label font-bold text-text-primary">Your state adventure</div>
-              <div className="text-body font-extrabold text-text-primary">{completedCategories} / 6</div>
+              <div className="text-body font-extrabold text-text-primary">
+                {completedCategories} / 6
+              </div>
             </div>
             <div className="w-full h-2.5 bg-accent-5-soft rounded-full overflow-hidden">
               <div
                 className="h-full rounded-full transition-all duration-300"
-                style={{ 
+                style={{
                   width: `${(completedCategories / 6) * 100}%`,
-                  backgroundColor: "var(--accent-5)"
+                  backgroundColor: "var(--accent-5)",
                 }}
               />
             </div>
@@ -2185,7 +2180,9 @@ export function LearningHubScreen({
         {/* SECTION HEADING & SUBTITLE */}
         <div className="px-5 mb-4">
           <h2 className="text-h2 text-text-primary font-extrabold mb-2">Explore the state</h2>
-          <p className="text-body text-text-secondary">Complete all 6 challenges to unlock your quiz.</p>
+          <p className="text-body text-text-secondary">
+            Complete all 6 challenges to unlock your quiz.
+          </p>
         </div>
 
         {/* CHALLENGE CARDS GRID - 2 columns, natural flow, no fixed heights */}
@@ -2206,15 +2203,15 @@ export function LearningHubScreen({
             }}
             disabled={completedCategories < 6}
             className={`w-full rounded-2xl p-4 transition-all active:scale-95 flex items-center gap-3 ${
-              completedCategories === 6
-                ? "bg-accent-5-soft hover:shadow-md"
-                : "bg-accent-5-soft/50"
+              completedCategories === 6 ? "bg-accent-5-soft hover:shadow-md" : "bg-accent-5-soft/50"
             }`}
           >
             {/* Lock icon in circular background */}
-            <div className={`h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0 text-h4 ${
-              completedCategories === 6 ? "bg-accent-5/20" : "bg-accent-5/10"
-            }`}>
+            <div
+              className={`h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0 text-h4 ${
+                completedCategories === 6 ? "bg-accent-5/20" : "bg-accent-5/10"
+              }`}
+            >
               {completedCategories === 6 ? "🔓" : "🔒"}
             </div>
 
@@ -2224,7 +2221,7 @@ export function LearningHubScreen({
                 {completedCategories === 6 ? "State Quiz" : "State Quiz Locked"}
               </div>
               <div className="text-caption text-text-secondary">
-                {completedCategories === 6 
+                {completedCategories === 6
                   ? "Complete all 6 challenges"
                   : "Complete all 6 challenges"}
               </div>
@@ -2367,7 +2364,7 @@ function HubCard({
             {String(index + 1).padStart(2, "0")}
           </div>
         )}
-        
+
         {/* Checkmark badge for completed - replaces number */}
         {done && (
           <div className="h-6 w-6 rounded-full bg-action-success text-text-on-primary flex items-center justify-center text-caption font-black shadow-soft flex-shrink-0">
@@ -2380,7 +2377,9 @@ function HubCard({
       </div>
 
       {/* Title - grows to fill space */}
-      <div className="text-h5 text-text-primary font-extrabold leading-tight mb-1 flex-grow">{title}</div>
+      <div className="text-h5 text-text-primary font-extrabold leading-tight mb-1 flex-grow">
+        {title}
+      </div>
 
       {/* Subtitle */}
       <div className="text-body text-text-secondary font-medium mb-2 line-clamp-2">{sub}</div>
@@ -2389,18 +2388,22 @@ function HubCard({
       <div className="flex items-center justify-between mt-auto">
         {/* Question count */}
         {categoryCardsTotal !== undefined && categoryCardsRead !== undefined && (
-          <div className={`text-body font-bold ${done ? "text-action-success" : "text-text-secondary"}`}>
+          <div
+            className={`text-body font-bold ${done ? "text-action-success" : "text-text-secondary"}`}
+          >
             {categoryCardsRead}/{categoryCardsTotal}
           </div>
         )}
-        
+
         {/* Arrow button - bottom right */}
         {!done && !locked && (
-          <div className={`h-6 w-6 rounded-full flex items-center justify-center text-caption font-bold ml-auto flex-shrink-0 ${arrowBg} ${arrowText}`}>
+          <div
+            className={`h-6 w-6 rounded-full flex items-center justify-center text-caption font-bold ml-auto flex-shrink-0 ${arrowBg} ${arrowText}`}
+          >
             →
           </div>
         )}
-        
+
         {/* Locked icon - bottom right */}
         {locked && (
           <div className="h-6 w-6 rounded-full bg-text-secondary/70 text-text-on-primary flex items-center justify-center text-caption flex-shrink-0 ml-auto">
@@ -3005,9 +3008,7 @@ export function LearningCardScreen({
                 ? "bg-accent-1-soft text-accent-1 hover:shadow-md border border-accent-1"
                 : "bg-muted text-muted-light border border-muted cursor-not-allowed"
           }`}
-          title={
-            hasAudioEnabled() ? "Play card content" : "Enable audio in settings to listen"
-          }
+          title={hasAudioEnabled() ? "Play card content" : "Enable audio in settings to listen"}
         >
           {playingCardIndex === currentCardIndex ? EMOJI.ui.pause : EMOJI.action.play} Listen
         </button>
@@ -4433,8 +4434,6 @@ function ProfileScreenContent() {
           </Link>
         </div>
       </div>
-
-
     </div>
   );
 }
@@ -4701,4 +4700,3 @@ export function EmptyStateScreen() {
     </div>
   );
 }
-

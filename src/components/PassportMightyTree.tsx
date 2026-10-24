@@ -172,7 +172,9 @@ export function PassportMightyTree() {
 
         {/* States Grid */}
         <div className="space-y-2 pb-2">
-          <div className="px-1 text-sm font-bold text-text-secondary">{EMOJI.utility.worldMap} All 36 States</div>
+          <div className="px-1 text-sm font-bold text-text-secondary">
+            {EMOJI.utility.worldMap} All 36 States
+          </div>
           <div className="grid grid-cols-4 gap-2">
             {INDIA_STATES.map((state) => {
               const isUnlocked = progress.completed.includes(state.name);

@@ -1,41 +1,41 @@
-import type { CapacitorConfig } from '@capacitor/cli';
+import type { CapacitorConfig } from "@capacitor/cli";
 
 // Default background matches Skeumorphism theme default
-const DEFAULT_BACKGROUND = '#F5F5F5';
+const DEFAULT_BACKGROUND = "#F5F5F5";
 
 const config: CapacitorConfig = {
-  appId: 'com.nishaantech.exploreindia',
-  appName: 'India Explorer',
-  webDir: 'dist/client',
+  appId: "com.nishaantech.exploreindia",
+  appName: "India Explorer",
+  webDir: "dist/client",
   server: {
-    allowNavigation: []
+    allowNavigation: [],
   },
   android: {
-    preferredStatusBarStyle: 'dark',
+    preferredStatusBarStyle: "dark",
     backgroundColor: DEFAULT_BACKGROUND,
     allowMixedContent: false,
-    webContentsDebuggingEnabled: false
+    webContentsDebuggingEnabled: false,
   },
   plugins: {
     SplashScreen: {
       launchShowDuration: 0,
       launchAutoHide: true,
-      androidScaleType: 'center',
-      androidSpinnerStyle: 'large',
-      showSpinner: false
+      androidScaleType: "center",
+      androidSpinnerStyle: "large",
+      showSpinner: false,
     },
     StatusBar: {
-      style: 'DARK'
+      style: "DARK",
     },
     TextToSpeech: {
       rate: 1.0,
       pitch: 1.0,
       volume: 1.0,
-      category: 'Ambient',
+      category: "Ambient",
       categoryOptions: [],
-      language: 'en-US'
-    }
-  }
+      language: "en-US",
+    },
+  },
 };
 
 export default config;

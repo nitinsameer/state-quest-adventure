@@ -9,10 +9,10 @@ export default defineConfig({
     // See: https://tanstack.com/start/latest/docs/framework/react/guide/spa-mode
     spa: {
       enabled: true,
-      maskPath: '/',
+      maskPath: "/",
       prerender: {
         enabled: true,
-        outputPath: '/_shell.html',
+        outputPath: "/_shell.html",
         crawlLinks: false,
         retryCount: 0,
       },
@@ -20,7 +20,7 @@ export default defineConfig({
   },
   vite: {
     // Use relative paths for Capacitor WebView (doesn't support absolute /assets)
-    base: './',
+    base: "./",
     resolve: {
       // Use native Vite tsconfigPaths resolution (replaces vite-tsconfig-paths plugin)
       tsconfigPaths: true,
@@ -40,4 +40,3 @@ export default defineConfig({
     },
   },
 });
-

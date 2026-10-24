@@ -1,32 +1,33 @@
-import { BasePage } from './BasePage';
+import { BasePage } from "./BasePage";
 
 /**
  * Onboarding & Profile Creation Page Object
  */
 export class OnboardingPage extends BasePage {
   // Splash Screen
-  private readonly splashScreen = 'text=/India.*Explorer/';
+  private readonly splashScreen = "text=/India.*Explorer/";
   private readonly loadingDots = '[class*="animate-pulse"]';
 
   // Welcome Screen
   private readonly welcomeScreen = '[class*="welcome"]';
-  private readonly startButton = 'button:has-text(/Start|Begin/)';
+  private readonly startButton = "button:has-text(/Start|Begin/)";
 
   // Create Profile Screen
-  private readonly createProfileHeader = 'text=/Pick your avatar/';
-  private readonly avatarButtons = 'button[class*="rounded-2xl"][class*="border"], div.grid.grid-cols-4 button';
+  private readonly createProfileHeader = "text=/Pick your avatar/";
+  private readonly avatarButtons =
+    'button[class*="rounded-2xl"][class*="border"], div.grid.grid-cols-4 button';
   private readonly ageBandOptions = '[class*="gradient"], button[class*="rounded-xl"]';
   private readonly selectedAvatarConfirm = '[class*="gradient"][class*="orange"]';
-  private readonly saveButton = 'button:has-text(/Save|Continue|Let.*s Explore/i)';
+  private readonly saveButton = "button:has-text(/Save|Continue|Let.*s Explore/i)";
   private readonly audioPermissionDialog = '[class*="modal"]';
-  private readonly acceptAudioButton = 'button:has-text(/Yes|Accept|Allow/)';
-  private readonly rejectAudioButton = 'button:has-text(/No|Deny|Skip/)';
+  private readonly acceptAudioButton = "button:has-text(/Yes|Accept|Allow/)";
+  private readonly rejectAudioButton = "button:has-text(/No|Deny|Skip/)";
 
   /**
    * Navigate to splash screen
    */
   async goto() {
-    await super.goto('/');
+    await super.goto("/");
     // Splash auto-redirects to welcome, so wait for welcome
     await this.waitForWelcomeScreen();
   }
@@ -43,7 +44,7 @@ export class OnboardingPage extends BasePage {
    */
   async waitForWelcomeScreen() {
     // Welcome is usually a background image, so we look for the "Start" button or click area
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState("networkidle");
     await this.page.waitForTimeout(1000); // Give redirect time
   }
 
@@ -52,12 +53,12 @@ export class OnboardingPage extends BasePage {
    */
   async clickStart() {
     // Welcome screen is a full-screen clickable area
-    console.log('[Onboarding] Clicking to start (welcome screen)...');
-    await this.page.click('body');
-    await this.page.waitForLoadState('networkidle');
-    console.log('[Onboarding] Network idle, waiting for create profile screen...');
+    console.log("[Onboarding] Clicking to start (welcome screen)...");
+    await this.page.click("body");
+    await this.page.waitForLoadState("networkidle");
+    console.log("[Onboarding] Network idle, waiting for create profile screen...");
     await this.waitForCreateProfileScreen();
-    console.log('[Onboarding] Create profile screen ready');
+    console.log("[Onboarding] Create profile screen ready");
   }
 
   /**
@@ -70,10 +71,12 @@ export class OnboardingPage extends BasePage {
       await this.waitForElement(this.createProfileHeader, 20000);
     } catch (error) {
       // If "Pick your avatar" text not found, try other indicators
-      console.warn('Primary selector failed, trying alternative selectors...');
+      console.warn("Primary selector failed, trying alternative selectors...");
       await Promise.race([
-        this.page.waitForSelector('button[class*="rounded-2xl"][class*="border"]', { timeout: 15000 }),
-        this.page.waitForSelector('div.grid.grid-cols-4 button', { timeout: 15000 }),
+        this.page.waitForSelector('button[class*="rounded-2xl"][class*="border"]', {
+          timeout: 15000,
+        }),
+        this.page.waitForSelector("div.grid.grid-cols-4 button", { timeout: 15000 }),
         this.page.waitForSelector('button[class*="rounded-xl"]', { timeout: 15000 }),
       ]);
     }
@@ -107,12 +110,12 @@ export class OnboardingPage extends BasePage {
   /**
    * Select age band
    */
-  async selectAgeBand(ageBand: '3-5' | '6-7' | '8-9' | '10-12') {
+  async selectAgeBand(ageBand: "3-5" | "6-7" | "8-9" | "10-12") {
     const ageText = {
-      '3-5': 'Sprout',
-      '6-7': 'Seedling',
-      '8-9': 'Sapling',
-      '10-12': 'Mighty Tree',
+      "3-5": "Sprout",
+      "6-7": "Seedling",
+      "8-9": "Sapling",
+      "10-12": "Mighty Tree",
     }[ageBand];
 
     await this.page.locator(`text=${ageText}`).click();
@@ -155,10 +158,10 @@ export class OnboardingPage extends BasePage {
    */
   async completeOnboarding(options?: {
     avatar?: number;
-    ageBand?: '3-5' | '6-7' | '8-9' | '10-12';
+    ageBand?: "3-5" | "6-7" | "8-9" | "10-12";
     acceptAudio?: boolean;
   }) {
-    const { avatar = 0, ageBand = '8-9', acceptAudio = false } = options || {};
+    const { avatar = 0, ageBand = "8-9", acceptAudio = false } = options || {};
 
     // Click start
     await this.clickStart();
@@ -176,14 +179,14 @@ export class OnboardingPage extends BasePage {
     await this.handleAudioPermission(acceptAudio);
 
     // Wait for redirect to home
-    await this.waitForURL('/home', 10000);
+    await this.waitForURL("/home", 10000);
   }
 
   /**
    * Get localStorage progress after onboarding
    */
   async getProgressData(): Promise<any> {
-    return await this.getLocalStorageJSON('india-explorer:progress:v2');
+    return await this.getLocalStorageJSON("india-explorer:progress:v2");
   }
 
   /**

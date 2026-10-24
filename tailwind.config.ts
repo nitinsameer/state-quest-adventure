@@ -85,9 +85,9 @@ export default {
         "border-subtle": "var(--border-color)",
 
         // Reference System Variables (for compatibility)
-        "surface": "var(--card)",
-        "ink": "var(--ink)",
-        "mute": "var(--mute)",
+        surface: "var(--card)",
+        ink: "var(--ink)",
+        mute: "var(--mute)",
       },
       textColor: {
         // Text semantic mappings

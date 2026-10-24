@@ -90,7 +90,7 @@ function Complete() {
 
   // Dispatch based on celebration type
   const pendingCelebration = progress.pendingCelebrations?.[0];
-  
+
   if (!pendingCelebration) {
     return null;
   }

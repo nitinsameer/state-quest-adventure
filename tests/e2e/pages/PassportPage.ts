@@ -1,4 +1,4 @@
-import { BasePage } from './BasePage';
+import { BasePage } from "./BasePage";
 
 /**
  * Passport / Explorer Page Object
@@ -6,9 +6,9 @@ import { BasePage } from './BasePage';
  */
 export class PassportPage extends BasePage {
   // Selectors
-  private readonly passportHeader = 'text=/My Passport|India Explorer Passport/';
-  private readonly progressText = 'text=/\\d+\\/36/';
-  private readonly progressPercent = 'text=/\\d+%/';
+  private readonly passportHeader = "text=/My Passport|India Explorer Passport/";
+  private readonly progressText = "text=/\\d+\\/36/";
+  private readonly progressPercent = "text=/\\d+%/";
   private readonly stampGrid = '[class*="grid"]';
   private readonly stamps = '[class*="rounded-xl"][class*="border"]';
   private readonly collectedStamp = '[class*="border-saffron"]';
@@ -18,7 +18,7 @@ export class PassportPage extends BasePage {
    * Navigate to passport
    */
   async goto() {
-    await super.goto('/explorer');
+    await super.goto("/explorer");
     await this.waitForPassportToLoad();
   }
 
@@ -138,6 +138,6 @@ export class PassportPage extends BasePage {
    * Get postcard library access (if available)
    */
   async getPostcardLibraryElement(): Promise<boolean> {
-    return await this.elementExists('text=/Postcard|Library/');
+    return await this.elementExists("text=/Postcard|Library/");
   }
 }
