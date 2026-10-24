@@ -1,6 +1,6 @@
 /**
  * Regression Tests: Storage Resilience
- * 
+ *
  * Verifies that the app handles storage issues gracefully:
  * - Malformed JSON doesn't crash the app
  * - Unavailable storage is handled gracefully
@@ -70,7 +70,7 @@ describe("Storage Resilience", () => {
     const result = () => {
       const raw = localStorage.getItem("india-explorer:progress:v2");
       const data = JSON.parse(raw || "{}");
-      
+
       // Check if it has minimum required fields
       return data.name && data.ageBand !== undefined && data.xp !== undefined;
     };
@@ -93,8 +93,9 @@ describe("Storage Resilience", () => {
     let quotaExceeded = false;
     try {
       localStorage.setItem("india-explorer:progress:v2", JSON.stringify(largeData));
-    } catch (err: any) {
-      if (err.name === "QuotaExceededError") {
+    } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if ((err as any).name === "QuotaExceededError") {
         quotaExceeded = true;
       }
     }
@@ -232,9 +233,7 @@ describe("Storage Resilience", () => {
     localStorage.setItem("india-explorer:progress:v2", JSON.stringify(progress));
 
     // When retrieving
-    const stored = JSON.parse(
-      localStorage.getItem("india-explorer:progress:v2") || "{}"
-    );
+    const stored = JSON.parse(localStorage.getItem("india-explorer:progress:v2") || "{}");
 
     // Then large values should be preserved
     expect(stored.xp).toBe(999999999);

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { appLogger } from "@/lib/logger";
+import { appLogger, type LogEntry } from "@/lib/logger";
 import { EMOJI } from "@/constants/emoji";
 
 /**
@@ -9,7 +9,7 @@ import { EMOJI } from "@/constants/emoji";
 export function DebugScreen() {
   const [isVisible, setIsVisible] = useState(false);
   const [tapCount, setTapCount] = useState(0);
-  const [logs, setLogs] = useState<Record<string, unknown>[]>([]);
+  const [logs, setLogs] = useState<LogEntry[]>([]);
   const [autoScroll, setAutoScroll] = useState(true);
   const [filter, setFilter] = useState<"all" | "error" | "warn" | "info" | "debug">("all");
 

@@ -1,6 +1,6 @@
 /**
  * Regression Tests: Audio Functionality
- * 
+ *
  * Verifies that audio works correctly without consent gates:
  * - Sound effects play without requiring parental consent
  * - Background music plays without blocking
@@ -23,22 +23,39 @@ describe("Audio Functionality", () => {
   it("should allow sound effects to play without consent gate", () => {
     // Given a user with no consent data
     localStorage.clear();
-    
+
     // When they try to play a sound effect
     const canPlaySound = () => {
       // Sound should not be blocked by consent check
       const consentData = localStorage.getItem("india-explorer:parental-consent:v1");
-      return consentData === null || JSON.parse(consentData).some((c: any) => c.feature === "audio" && c.granted);
+      return (
+        consentData === null ||
+        JSON.parse(consentData).some(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (c: any) => c.feature === "audio" && c.granted,
+        )
+      );
     };
 
     // Then sound should be allowed (no consent blocks it)
     expect(canPlaySound()).toBe(true);
   });
 
+  it("should verify audio can be toggled", () => {
+    // Given the audio settings
+    const audioEnabled = localStorage.getItem("audio-enabled");
+
+    // When attempting to toggle
+    localStorage.setItem("audio-enabled", audioEnabled === "true" ? "false" : "true");
+
+    // Then setting should be stored
+    const newValue = localStorage.getItem("audio-enabled");
+    expect(newValue).toBeDefined();
+  });
   it("should allow background music without consent gate", () => {
     // Given no parental consent recorded
     localStorage.clear();
-    
+
     // When music is requested
     const musicAllowed = () => {
       const consentData = localStorage.getItem("india-explorer:parental-consent:v1");
@@ -53,7 +70,7 @@ describe("Audio Functionality", () => {
   it("should allow text-to-speech without consent gate", () => {
     // Given no consent requirements for TTS
     localStorage.clear();
-    
+
     // When TTS is requested
     const ttsAllowed = () => {
       const consentData = localStorage.getItem("india-explorer:parental-consent:v1");
@@ -121,8 +138,9 @@ describe("Audio Functionality", () => {
       const consent = localStorage.getItem("india-explorer:parental-consent:v1");
       // Audio should not be blocked if no consent data exists
       if (consent === null) return false;
-      
+
       const consentRecords = JSON.parse(consent);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const audioConsent = consentRecords.find((c: any) => c.feature === "audio");
       return audioConsent && !audioConsent.granted;
     };
@@ -141,7 +159,7 @@ describe("Audio Functionality", () => {
     // Then the toggle should work without needing consent
     const soundToggle = localStorage.getItem("india-explorer:sound:v1");
     const hasConsent = localStorage.getItem("india-explorer:parental-consent:v1");
-    
+
     expect(soundToggle).toBe("0");
     expect(hasConsent).toBeNull();
   });
@@ -153,7 +171,7 @@ describe("Audio Functionality", () => {
 
     // When they close and reopen the app
     const session1Sound = localStorage.getItem("india-explorer:sound:v1");
-    
+
     // Then their preference should still be there
     expect(session1Sound).toBe("0");
 

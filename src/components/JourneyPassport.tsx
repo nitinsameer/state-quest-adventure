@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useProgress } from "@/lib/progress";
 import { REGIONS, REGION_KEYS, type RegionKey } from "@/lib/passport-helpers";
+import { INDIA_STATES, type IndiaState } from "@/lib/states";
 import { EMOJI } from "@/constants/emoji";
 import { STATE_ART } from "@/lib/state-art";
 
@@ -26,10 +27,8 @@ function buildRegionStats(completedStates: Set<string>): Record<RegionKey, Regio
 
   REGION_KEYS.forEach((regionKey: RegionKey) => {
     const region = REGIONS[regionKey];
-    const regionStateNames = region.states.map((s: Record<string, unknown>) => s.name);
-    const regionCompleted = regionStateNames.filter((name: string) =>
-      completedStates.has(name),
-    ).length;
+    const regionStateNames = region.states.map((s: IndiaState) => s.name);
+    const regionCompleted = regionStateNames.filter((name) => completedStates.has(name)).length;
     const regionTotal = regionStateNames.length;
 
     stats[regionKey] = {
@@ -49,10 +48,8 @@ export function JourneyPassport() {
   const allStates = useMemo(
     () =>
       Object.values(REGIONS)
-        .flatMap((r: Record<string, unknown>) => r.states as Record<string, unknown>[])
-        .sort((a: Record<string, unknown>, b: Record<string, unknown>) =>
-          (a.name as string).localeCompare(b.name as string),
-        ),
+        .flatMap((r: Record<string, unknown>) => r.states as IndiaState[])
+        .sort((a: IndiaState, b: IndiaState) => a.name.localeCompare(b.name)),
     [],
   );
 
@@ -131,7 +128,7 @@ export function JourneyPassport() {
       <div className="space-y-3">
         <div className="text-sm font-bold text-ink">States & Union Territories</div>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          {allStates.map((state) => {
+          {allStates.map((state: IndiaState) => {
             const isCompleted = completedStates.has(state.name);
             const badge = passportBadges[state.name];
 

@@ -180,18 +180,21 @@ export function PostcardModal({
         const base64 = (reader.result as string).split(",")[1];
         const library = usePostcardLibrary.getState();
 
-        // Add to postcard library with image data
-        library.addPostcard(
-          postcard.state,
-          postcard.badge,
-          postcard.stampDate,
-          new Date().toISOString(),
-          base64,
-        );
+        // Add to postcard library with image data (only statue/animal/explorer badges, not region-master)
+        const stateBadge = postcard.badge;
+        if (stateBadge === "monument" || stateBadge === "animal" || stateBadge === "explorer") {
+          library.addPostcard(
+            postcard.state,
+            stateBadge,
+            postcard.stampDate,
+            new Date().toISOString(),
+            base64,
+          );
 
-        toast.success(`${EMOJI.postcard.saved} Saved to your Passport!`, {
-          subtitle: "View anytime from Explorer",
-        });
+          toast.success(`${EMOJI.postcard.saved} Saved to your Passport!`, {
+            subtitle: "View anytime from Explorer",
+          });
+        }
         setIsSaving(false);
         onClose();
       };

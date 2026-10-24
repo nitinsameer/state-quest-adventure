@@ -1,6 +1,6 @@
 /**
  * Regression Tests: Routes and Navigation
- * 
+ *
  * Verifies that routes work correctly:
  * - Removed parent route does not expose broken screen
  * - All core routes are accessible

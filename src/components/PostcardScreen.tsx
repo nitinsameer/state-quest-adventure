@@ -14,7 +14,7 @@ import { sharePostcard } from "@/lib/share-postcard";
 import { readTokenAsHex, subscribeThemeChange } from "@/lib/theme-tokens";
 import { EMOJI } from "@/constants/emoji";
 
-const BADGE_EMOJI: Record<BadgeId, string> = {
+const BADGE_EMOJI: Record<"monument" | "animal" | "explorer", string> = {
   monument: EMOJI.achievement.monument,
   animal: EMOJI.achievement.animal,
   explorer: EMOJI.achievement.explorer,
@@ -172,7 +172,8 @@ export function StatePostcardScreen({
     c.fill();
     c.fillStyle = readTokenAsHex("--text-primary");
     c.font = "bold 40px system-ui, sans-serif";
-    c.fillText(`${BADGE_EMOJI[badge.id]}  ${badge.name} Badge Earned`, W / 2, 900);
+    const badgeEmoji = BADGE_EMOJI[badge.id as "monument" | "animal" | "explorer"];
+    c.fillText(`${badgeEmoji}  ${badge.name} Badge Earned`, W / 2, 900);
 
     // fun fact
     c.fillStyle = readTokenAsHex("--text-secondary");
@@ -242,7 +243,13 @@ export function StatePostcardScreen({
 
         // Determine badge earned
         const earned = badgesFor(progress, state.name);
-        const badgeId = (earned[earned.length - 1] ?? "explorer") as BadgeId;
+        let badgeId: "monument" | "animal" | "explorer" = "explorer";
+        if (earned.length > 0) {
+          const lastBadge = earned[earned.length - 1];
+          if (lastBadge === "monument" || lastBadge === "animal" || lastBadge === "explorer") {
+            badgeId = lastBadge;
+          }
+        }
 
         // Add to postcard library with image data
         library.addPostcard(state.name, badgeId, stampDate, now, base64);

@@ -12,7 +12,7 @@
 import { useEffect, useRef, useState } from "react";
 import { getState } from "@/lib/states";
 import { STATE_ART, TONE_GRADIENT, TONE_HEX, preloadStateArt } from "@/lib/state-art";
-import { useProgress, badgesFor, STATE_BADGES, type BadgeId } from "@/lib/progress";
+import { useProgress, badgesFor, STATE_BADGES, type BadgeId, type Progress } from "@/lib/progress";
 import { fxTap } from "@/lib/fx";
 import { useToast } from "@/hooks/useToast";
 import { usePostcardLibrary } from "@/store/postcard-library-store";
@@ -20,10 +20,10 @@ import { StandardModal } from "@/components/StandardModal";
 import { readTokenAsHex } from "@/lib/theme-tokens";
 import { EMOJI } from "@/constants/emoji";
 
-const BADGE_EMOJI: Record<BadgeId, string> = {
+const BADGE_EMOJI: Record<"monument" | "animal" | "explorer", string> = {
   monument: EMOJI.achievement.monument,
   animal: EMOJI.achievement.animal,
-  explorer: "???�",
+  explorer: EMOJI.achievement.explorer,
 };
 
 function loadImage(src: string): Promise<HTMLImageElement> {
@@ -133,10 +133,22 @@ async function generatePostcardPreview(stateName?: string): Promise<Blob | null>
   }
 
   // badge chip
-  const earned = badgesFor(
-    { stamps: {}, postcards: {}, achievements: {} } as Record<string, unknown>,
-    state.name,
-  );
+  const emptyProgress: Progress = {
+    name: "",
+    avatar: "",
+    ageBand: "",
+    onboarded: false,
+    xp: 0,
+    streak: 0,
+    lastActive: new Date().toISOString().split("T")[0],
+    completed: [],
+    stamps: {},
+    postcards: {},
+    answered: [],
+    badges: {},
+    cards: {},
+  };
+  const earned = badgesFor(emptyProgress, state.name);
   const badge = STATE_BADGES.find((b) => b.id === earned[0]) ?? STATE_BADGES[0];
 
   c.fillStyle = readTokenAsHex("--accent-6-soft");
@@ -144,7 +156,8 @@ async function generatePostcardPreview(stateName?: string): Promise<Blob | null>
   c.fill();
   c.fillStyle = readTokenAsHex("--text-primary");
   c.font = "bold 40px system-ui, sans-serif";
-  c.fillText(`${BADGE_EMOJI[badge.id]}  ${badge.name} Badge Earned`, W / 2, 900);
+  const badgeEmoji = BADGE_EMOJI[badge.id as "monument" | "animal" | "explorer"];
+  c.fillText(`${badgeEmoji}  ${badge.name} Badge Earned`, W / 2, 900);
 
   // fun fact
   c.fillStyle = readTokenAsHex("--text-secondary");
@@ -249,11 +262,29 @@ export function PostcardPreviewModal({
         const stampDate = `${day} � ${month}`;
 
         // Determine badge earned
-        const earned = badgesFor(
-          { stamps: {}, postcards: {}, achievements: {} } as Record<string, unknown>,
-          stateName || "",
-        );
-        const badgeId = (earned[0] ?? "explorer") as BadgeId;
+        const emptyProgress2: Progress = {
+          name: "",
+          avatar: "",
+          ageBand: "",
+          onboarded: false,
+          xp: 0,
+          streak: 0,
+          lastActive: new Date().toISOString().split("T")[0],
+          completed: [],
+          stamps: {},
+          postcards: {},
+          answered: [],
+          badges: {},
+          cards: {},
+        };
+        const earned = badgesFor(emptyProgress2, stateName || "");
+        let badgeId: "monument" | "animal" | "explorer" = "explorer";
+        if (
+          earned.length > 0 &&
+          (earned[0] === "monument" || earned[0] === "animal" || earned[0] === "explorer")
+        ) {
+          badgeId = earned[0];
+        }
 
         // Add to postcard library with image data
         library.addPostcard(stateName || "", badgeId, stampDate, now, base64);

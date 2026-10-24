@@ -1,6 +1,6 @@
 /**
  * Regression Tests: Analytics and Privacy
- * 
+ *
  * Verifies that privacy and data protection are maintained:
  * - Analytics remain disabled without valid consent
  * - No personal data is collected for children
@@ -29,7 +29,10 @@ describe("Analytics and Privacy", () => {
       if (!consentData) return false; // No consent = disabled
 
       const records = JSON.parse(consentData);
-      const analyticsConsent = records.find((c: any) => c.feature === "analytics");
+      const analyticsConsent = records.find(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (c: any) => c.feature === "analytics",
+      );
       return analyticsConsent?.granted === true;
     };
 
@@ -51,10 +54,11 @@ describe("Analytics and Privacy", () => {
     localStorage.setItem("india-explorer:parental-consent:v1", JSON.stringify(consentData));
 
     // When checking analytics permission
-    const result = JSON.parse(
-      localStorage.getItem("india-explorer:parental-consent:v1") || "[]"
+    const result = JSON.parse(localStorage.getItem("india-explorer:parental-consent:v1") || "[]");
+    const analyticsConsent = result.find(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (c: any) => c.feature === "analytics",
     );
-    const analyticsConsent = result.find((c: any) => c.feature === "analytics");
 
     // Then denial should be respected
     expect(analyticsConsent?.granted).toBe(false);
@@ -104,11 +108,7 @@ describe("Analytics and Privacy", () => {
     localStorage.clear();
 
     // When checking for recorded audio data
-    const voiceRecordings = [
-      "recorded-voice:v1",
-      "audio-cache:v1",
-      "speech-input:v1",
-    ];
+    const voiceRecordings = ["recorded-voice:v1", "audio-cache:v1", "speech-input:v1"];
 
     let foundRecordings = false;
     for (const key of voiceRecordings) {
@@ -140,13 +140,7 @@ describe("Analytics and Privacy", () => {
     localStorage.clear();
 
     // When checking for device tracking keys
-    const trackingKeys = [
-      "device-id",
-      "firebase-app-id",
-      "gaid",
-      "idfa",
-      "uuid",
-    ];
+    const trackingKeys = ["device-id", "firebase-app-id", "gaid", "idfa", "uuid"];
 
     let trackingDataFound = false;
     for (const key of trackingKeys) {
@@ -232,9 +226,7 @@ describe("Analytics and Privacy", () => {
     localStorage.setItem("india-explorer:progress:v2", JSON.stringify(progress));
 
     // When storing progress (for game only, not external)
-    const stored = JSON.parse(
-      localStorage.getItem("india-explorer:progress:v2") || "{}"
-    );
+    const stored = JSON.parse(localStorage.getItem("india-explorer:progress:v2") || "{}");
 
     // Then child name should be present (needed for game state)
     // but no external analytics should be enabled

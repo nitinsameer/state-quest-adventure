@@ -5,7 +5,7 @@ import { fxConfetti } from "@/lib/fx";
 import { EMOJI } from "@/constants/emoji";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 
-const BADGE_ICON: Record<BadgeId, string> = {
+const BADGE_ICON: Record<"monument" | "animal" | "explorer", string> = {
   monument: EMOJI.achievement.monument,
   animal: EMOJI.achievement.animal,
   explorer: EMOJI.achievement.explorer,
@@ -197,9 +197,12 @@ export function UnlockCelebration() {
       }
       for (const [state, ids] of byState) {
         const names = ids
+          .filter((id) => id === "monument" || id === "animal" || id === "explorer")
           .map((id) => `${BADGE_ICON[id]} ${STATE_BADGES.find((b) => b.id === id)?.name ?? id}`)
           .join(" · ");
-        lines.push(`${EMOJI.achievement.badge} ${state}: ${names}`);
+        if (names) {
+          lines.push(`${EMOJI.achievement.badge} ${state}: ${names}`);
+        }
       }
     }
 

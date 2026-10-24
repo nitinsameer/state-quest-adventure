@@ -11,7 +11,17 @@ import {
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { THEMES, isThemeUnlocked } from "./themes";
 
-export type BadgeId = "monument" | "animal" | "explorer" | "region-master-north" | "region-master-south" | "region-master-east" | "region-master-central" | "region-master-west" | "region-master-northeast" | "region-master-unionTerritories";
+export type BadgeId =
+  | "monument"
+  | "animal"
+  | "explorer"
+  | "region-master-north"
+  | "region-master-south"
+  | "region-master-east"
+  | "region-master-central"
+  | "region-master-west"
+  | "region-master-northeast"
+  | "region-master-unionTerritories";
 
 export type PendingCelebration =
   | {
@@ -152,8 +162,19 @@ export const XP_PER_CARD = 25;
 
 /** Generate postcard data for a completed state */
 function generatePostcardData(stateName: string, badgeIds: BadgeId[]): PostcardData {
-  // Get the highest badge earned (explorer > animal > monument)
-  const badgePriority: Record<BadgeId, number> = { explorer: 3, animal: 2, monument: 1 };
+  // Get the highest badge earned (explorer > animal > monument > region-master badges)
+  const badgePriority: Record<BadgeId, number> = {
+    explorer: 3,
+    animal: 2,
+    monument: 1,
+    "region-master-north": 0,
+    "region-master-south": 0,
+    "region-master-east": 0,
+    "region-master-central": 0,
+    "region-master-west": 0,
+    "region-master-northeast": 0,
+    "region-master-unionTerritories": 0,
+  };
   const badge = badgeIds.reduce(
     (best, current) => (badgePriority[current] > badgePriority[best] ? current : best),
     badgeIds[0] || "monument",
@@ -1176,7 +1197,13 @@ export function finishQuiz(
     // Sync postcard to library (async, doesn't block)
     import("@/lib/postcard-integration")
       .then(({ syncNewPostcardToLibrary }) => {
-        const badge = earnedQuizBadges[earnedQuizBadges.length - 1] || "explorer";
+        let badge: "monument" | "animal" | "explorer" = "explorer";
+        if (earnedQuizBadges.length > 0) {
+          const lastBadge = earnedQuizBadges[earnedQuizBadges.length - 1];
+          if (lastBadge === "monument" || lastBadge === "animal" || lastBadge === "explorer") {
+            badge = lastBadge;
+          }
+        }
         syncNewPostcardToLibrary(stateName, badge, stampDateStr, generatedAtStr);
       })
       .catch((err) => {
@@ -1252,11 +1279,10 @@ export function finishQuiz(
 
     // 6. Check if region is now complete and award region-master badge
     const regionMasterBadgeId = `region-master-${regionKey}`;
-    
+
     // Award region master badge if region just completed
-    const regionMasterBadge = regionDone === regionTotal
-      ? [regionMasterBadgeId as unknown as BadgeId]
-      : [];
+    const regionMasterBadge =
+      regionDone === regionTotal ? [regionMasterBadgeId as unknown as BadgeId] : [];
 
     // Build list of badges to display in ceremony
     // For postcard display: use state badges (BadgeId type: monument, animal, explorer)
@@ -1398,7 +1424,13 @@ export function completeState(name: string, xpReward = 100) {
     // Import is deferred to avoid circular dependency
     import("@/lib/postcard-integration")
       .then(({ syncNewPostcardToLibrary }) => {
-        const badge = earnedBadges[earnedBadges.length - 1] || "explorer";
+        let badge: "monument" | "animal" | "explorer" = "explorer";
+        if (earnedBadges.length > 0) {
+          const lastBadge = earnedBadges[earnedBadges.length - 1];
+          if (lastBadge === "monument" || lastBadge === "animal" || lastBadge === "explorer") {
+            badge = lastBadge;
+          }
+        }
         syncNewPostcardToLibrary(name, badge, stampDateStr, generatedAtStr);
       })
       .catch((err) => {

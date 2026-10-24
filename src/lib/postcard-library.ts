@@ -261,7 +261,9 @@ export function getPostcardStats(postcards: LibraryPostcard[]) {
 
   // Count by badge
   postcards.forEach((p) => {
-    stats.byBadge[p.badge]++;
+    if (p.badge === "monument" || p.badge === "animal" || p.badge === "explorer") {
+      stats.byBadge[p.badge]++;
+    }
     stats.byConsent[p.consentState]++;
   });
 

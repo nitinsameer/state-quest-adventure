@@ -1,6 +1,6 @@
 /**
  * Regression Tests: Core App Functionality
- * 
+ *
  * Verifies that key app features continue to work:
  * - State exploration
  * - Quiz completion
@@ -10,6 +10,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { useProgress, type Progress } from "@/lib/progress";
 
 describe("Core App Functionality", () => {
   beforeEach(() => {
@@ -22,13 +23,14 @@ describe("Core App Functionality", () => {
 
   it("should track state completion", () => {
     // Given a user completes a state
-    const progress = {
+    const progress: Progress = {
       name: "Explorer",
       avatar: "explorer-hat",
       ageBand: "8-9",
       onboarded: true,
       xp: 0,
       streak: 0,
+      lastActive: new Date().toISOString().split("T")[0],
       completed: [],
       stamps: {},
       postcards: {},
@@ -39,16 +41,15 @@ describe("Core App Functionality", () => {
 
     // When they complete Karnataka
     progress.completed.push("Karnataka");
-    progress.stamps["Karnataka"] = "15 · JAN";
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (progress.stamps as any)["Karnataka"] = "15 · JAN";
     progress.xp += 120; // Quiz XP + bonus
     progress.streak = 1;
 
     localStorage.setItem("india-explorer:progress:v2", JSON.stringify(progress));
 
     // Then state completion should be saved
-    const stored = JSON.parse(
-      localStorage.getItem("india-explorer:progress:v2") || "{}"
-    );
+    const stored = JSON.parse(localStorage.getItem("india-explorer:progress:v2") || "{}");
     expect(stored.completed).toContain("Karnataka");
     expect(stored.stamps["Karnataka"]).toBe("15 · JAN");
     expect(stored.xp).toBe(120);
@@ -56,7 +57,16 @@ describe("Core App Functionality", () => {
 
   it("should track quiz attempts and scores", () => {
     // Given a user starts a quiz
-    const quizProgress = {
+    const quizProgress: Record<
+      string,
+      {
+        index: number;
+        correctCount: number;
+        answers: Array<{ id: string; correct: boolean }>;
+        startedAt: number;
+        updatedAt: number;
+      }
+    > = {
       Karnataka: {
         index: 0,
         correctCount: 0,
@@ -78,22 +88,21 @@ describe("Core App Functionality", () => {
     localStorage.setItem("india-explorer:quiz-progress:v1", JSON.stringify(quizProgress));
 
     // Then quiz progress should be tracked
-    const stored = JSON.parse(
-      localStorage.getItem("india-explorer:quiz-progress:v1") || "{}"
-    );
+    const stored = JSON.parse(localStorage.getItem("india-explorer:quiz-progress:v1") || "{}");
     expect(stored.Karnataka.correctCount).toBe(2);
     expect(stored.Karnataka.answers.length).toBe(3);
   });
 
   it("should track achievement badges", () => {
     // Given a user earns badges
-    const progress = {
+    const progress: Progress = {
       name: "Explorer",
       avatar: "explorer-hat",
       ageBand: "8-9",
       onboarded: true,
       xp: 1000,
       streak: 10,
+      lastActive: new Date().toISOString().split("T")[0],
       completed: ["Karnataka", "Maharashtra"],
       stamps: {
         Karnataka: "15 · JAN",
@@ -111,9 +120,7 @@ describe("Core App Functionality", () => {
     localStorage.setItem("india-explorer:progress:v2", JSON.stringify(progress));
 
     // When checking badges
-    const stored = JSON.parse(
-      localStorage.getItem("india-explorer:progress:v2") || "{}"
-    );
+    const stored = JSON.parse(localStorage.getItem("india-explorer:progress:v2") || "{}");
 
     // Then badges should be tracked per state
     expect(stored.badges.Karnataka).toContain("monument");
@@ -141,9 +148,7 @@ describe("Core App Functionality", () => {
     localStorage.setItem("india-explorer:progress:v2", JSON.stringify(session1Progress));
 
     // When they close and reopen the app
-    const session2Progress = JSON.parse(
-      localStorage.getItem("india-explorer:progress:v2") || "{}"
-    );
+    const session2Progress = JSON.parse(localStorage.getItem("india-explorer:progress:v2") || "{}");
 
     // Then their progress should be restored
     expect(session2Progress.xp).toBe(5000);
@@ -176,9 +181,7 @@ describe("Core App Functionality", () => {
     localStorage.setItem("india-explorer:progress:v2", JSON.stringify(progress));
 
     // Then card views should be tracked
-    const stored = JSON.parse(
-      localStorage.getItem("india-explorer:progress:v2") || "{}"
-    );
+    const stored = JSON.parse(localStorage.getItem("india-explorer:progress:v2") || "{}");
     expect(stored.cards.Karnataka).toEqual([0, 1, 2, 3, 4, 5]);
   });
 
@@ -214,11 +217,9 @@ describe("Core App Functionality", () => {
 
     // When storing profile data (in a real app, this might use different storage keys)
     localStorage.setItem("india-explorer:progress:v2", JSON.stringify(profile1));
-    
+
     // Then profile data should be independently managed
-    const stored = JSON.parse(
-      localStorage.getItem("india-explorer:progress:v2") || "{}"
-    );
+    const stored = JSON.parse(localStorage.getItem("india-explorer:progress:v2") || "{}");
     expect(stored.name).toBe("Arjun");
     expect(stored.xp).toBe(2000);
   });
@@ -246,9 +247,7 @@ describe("Core App Functionality", () => {
     localStorage.setItem("india-explorer:progress:v2", JSON.stringify(progress));
 
     // Then all answered questions should be tracked
-    const stored = JSON.parse(
-      localStorage.getItem("india-explorer:progress:v2") || "{}"
-    );
+    const stored = JSON.parse(localStorage.getItem("india-explorer:progress:v2") || "{}");
     expect(stored.answered).toContain("q1");
     expect(stored.answered).toContain("q5");
     expect(stored.answered.length).toBe(5);
@@ -257,10 +256,10 @@ describe("Core App Functionality", () => {
   it("should not require parent dashboard for core navigation", () => {
     // Given the app works without a parent dashboard
     // (Verify no required references to removed parent dashboard)
-    
+
     // When user navigates
     const allowedRoutes = ["home", "journey", "badges", "achievements", "themes", "me"];
-    
+
     // Then all core routes should be accessible
     expect(allowedRoutes).toContain("home");
     expect(allowedRoutes).toContain("journey");

@@ -1,6 +1,6 @@
 /**
  * Regression Tests: Existing User App Update
- * 
+ *
  * Verifies that existing users updating to the new version:
  * - Preserve their app data and progress
  * - Are not forced through PIN setup
@@ -57,7 +57,7 @@ describe("Existing User App Update", () => {
 
     // When the user updates to the new app version
     const retrievedProgress = JSON.parse(
-      localStorage.getItem("india-explorer:progress:v2") || "{}"
+      localStorage.getItem("india-explorer:progress:v2") || "{}",
     );
 
     // Then all their data should be intact
@@ -94,9 +94,7 @@ describe("Existing User App Update", () => {
     expect(localStorage.getItem("india-explorer:pin-attempts")).toBeNull();
 
     // And their progress flag should still indicate they've been onboarded
-    const progress = JSON.parse(
-      localStorage.getItem("india-explorer:progress:v2") || "{}"
-    );
+    const progress = JSON.parse(localStorage.getItem("india-explorer:progress:v2") || "{}");
     expect(progress.onboarded).toBe(true);
   });
 
@@ -124,9 +122,7 @@ describe("Existing User App Update", () => {
     expect(localStorage.getItem("india-explorer:parental-consent:v1")).toBeNull();
 
     // And they should be able to play immediately
-    const progress = JSON.parse(
-      localStorage.getItem("india-explorer:progress:v2") || "{}"
-    );
+    const progress = JSON.parse(localStorage.getItem("india-explorer:progress:v2") || "{}");
     expect(progress.completed.length).toBeGreaterThan(0);
   });
 
@@ -148,9 +144,7 @@ describe("Existing User App Update", () => {
     localStorage.setItem("india-explorer:quiz-progress:v1", JSON.stringify(quizProgress));
 
     // When they update
-    const retrieved = JSON.parse(
-      localStorage.getItem("india-explorer:quiz-progress:v1") || "{}"
-    );
+    const retrieved = JSON.parse(localStorage.getItem("india-explorer:quiz-progress:v1") || "{}");
 
     // Then quiz progress should be preserved
     expect(retrieved.Karnataka).toBeDefined();
@@ -179,9 +173,7 @@ describe("Existing User App Update", () => {
     localStorage.setItem("postcard-library-v1", JSON.stringify(postcardLibrary));
 
     // When they update
-    const retrieved = JSON.parse(
-      localStorage.getItem("postcard-library-v1") || "[]"
-    );
+    const retrieved = JSON.parse(localStorage.getItem("postcard-library-v1") || "[]");
 
     // Then postcard library should be intact
     expect(retrieved.length).toBe(1);
@@ -192,7 +184,7 @@ describe("Existing User App Update", () => {
   it("should not require new consent after update", () => {
     // Given an existing user with no consent data (sound worked without it)
     localStorage.clear();
-    
+
     const existingProgress = {
       name: "Explorer",
       avatar: "explorer-hat",
@@ -212,10 +204,8 @@ describe("Existing User App Update", () => {
     // When they update and continue playing
     // Then they should still not need to grant consent to use sound
     expect(localStorage.getItem("india-explorer:parental-consent:v1")).toBeNull();
-    
-    const progress = JSON.parse(
-      localStorage.getItem("india-explorer:progress:v2") || "{}"
-    );
+
+    const progress = JSON.parse(localStorage.getItem("india-explorer:progress:v2") || "{}");
     expect(progress.onboarded).toBe(true);
   });
 });

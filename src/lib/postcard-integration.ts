@@ -89,11 +89,17 @@ export async function initializePostcardLibrary(progress: Progress) {
   if (currentPostcards.length === 0 && progress.postcards) {
     const migrated = migratePostcardsToLibrary(progress);
     if (migrated.length > 0) {
-      // Add all migrated postcards
+      // Add all migrated postcards (only statue/animal/explorer badges, not region-master)
       migrated.forEach((postcard) => {
-        usePostcardLibrary
-          .getState()
-          .addPostcard(postcard.state, postcard.badge, postcard.stampDate, postcard.generatedAt);
+        if (
+          postcard.badge === "monument" ||
+          postcard.badge === "animal" ||
+          postcard.badge === "explorer"
+        ) {
+          usePostcardLibrary
+            .getState()
+            .addPostcard(postcard.state, postcard.badge, postcard.stampDate, postcard.generatedAt);
+        }
       });
     }
   }

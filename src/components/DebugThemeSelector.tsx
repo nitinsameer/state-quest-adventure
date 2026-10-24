@@ -20,7 +20,7 @@ export function DebugThemeSelector() {
 
   const handleThemeSelect = (themeId: string) => {
     fxTap();
-    setTheme(themeId as Record<string, unknown>);
+    setTheme(themeId);
   };
 
   return (
