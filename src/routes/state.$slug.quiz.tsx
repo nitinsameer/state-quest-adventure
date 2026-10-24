@@ -2,7 +2,7 @@ import { createFileRoute, notFound, redirect, useNavigate } from "@tanstack/reac
 import { QuizScreen } from "@/components/screens";
 import { getStateBySlug } from "@/lib/states";
 import { NotFoundPlace, PlaceError } from "@/components/PlaceFallbacks";
-import { getProgress, cardsDone, CARDS_PER_STATE, finishQuiz } from "@/lib/progress";
+import { getProgress, cardsDone, CARDS_PER_STATE } from "@/lib/progress";
 import { useAndroidBackButton } from "@/hooks/useAndroidBackButton";
 
 export const Route = createFileRoute("/state/$slug/quiz")({
@@ -62,9 +62,8 @@ function Quiz() {
       stateName={name}
       onClose={() => navigate({ to: "/state/$slug/learn", params: { slug } })}
       onDone={(quizMetrics) => {
-        if (quizMetrics) {
-          finishQuiz(name, quizMetrics);
-        }
+        // finishQuiz is already called in QuizScreenContent.tsx
+        // Don't call it again here to avoid double state updates and race conditions
         navigate({ to: "/state/$slug/complete", params: { slug } });
       }}
     />
