@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Capacitor } from "@capacitor/core";
 import { App } from "@capacitor/app";
 import { useRouter } from "@tanstack/react-router";
+import { debugError } from "@/lib/debug";
 
 /**
  * Hook to handle Android hardware back button.
@@ -72,8 +73,9 @@ export function useAndroidBackButton(onJourneyBack?: () => void) {
         // P1.1 FIX: Properly capture listener handle for cleanup
         unlistener = () => listenerHandle.remove();
       } catch (error) {
-        // Log error but don't crash app
-        console.error("Failed to setup Android back button listener:", error);
+        // Silent failure - back button not critical to app functionality
+        // Use debugError for development-only logging
+        debugError("android-back-button", "Failed to setup listener", error as Error);
       }
     };
 

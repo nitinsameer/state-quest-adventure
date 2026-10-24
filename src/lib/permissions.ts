@@ -19,14 +19,3 @@ export async function requestStoragePermission(): Promise<boolean> {
   console.warn("[permissions] requestStoragePermission is deprecated - using app-private storage");
   return false;
 }
-
-/**
- * Stub: Save postcard to device downloads
- * No longer needed - use in-app library instead
- */
-export async function saveFileToDownloads(filename: string, _data: string): Promise<boolean> {
-  console.warn(
-    `[permissions] saveFileToDownloads is deprecated - postcard '${filename}' remains in library`,
-  );
-  return false;
-}
