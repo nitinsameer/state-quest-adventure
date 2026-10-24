@@ -1,34 +1,31 @@
 /**
  * AudioSettingToggle - Profile Audio Settings Control
  *
- * Allows users to enable/disable AUDIO NARRATION in profile settings
- * Uses parental-consent system (not sound effects toggle)
- * Changes take effect immediately (no app restart needed)
- * Affects:
- * - TTS narration: Controlled by hasFeatureConsent('audio')
- * - Celebration sounds: Respects audio consent
+ * Allows users to enable/disable audio.
+ * No parental consent gates - audio works seamlessly.
+ * Changes take effect immediately.
  */
 
 import { useState, useEffect } from "react";
 import { fxTap } from "@/lib/fx";
 import { stopTts } from "@/lib/tts";
 import {
-  hasFeatureConsent,
-  grantFeatureConsent,
-  revokeFeatureConsent,
-  subscribeConsentChanges,
+  hasAudioEnabled,
+  enableAudio,
+  disableAudio,
+  subscribeAudioChanges,
 } from "@/lib/parental-consent";
 
 export function AudioSettingToggle() {
   const [audioEnabled, setAudioEnabled] = useState(() => {
-    return hasFeatureConsent("audio");
+    return hasAudioEnabled();
   });
   const [isToggling, setIsToggling] = useState(false);
 
-  // Subscribe to consent changes
+  // Subscribe to audio preference changes
   useEffect(() => {
-    const unsubscribe = subscribeConsentChanges("audio", () => {
-      setAudioEnabled(hasFeatureConsent("audio"));
+    const unsubscribe = subscribeAudioChanges((enabled) => {
+      setAudioEnabled(enabled);
     });
     return unsubscribe;
   }, []);
@@ -36,17 +33,17 @@ export function AudioSettingToggle() {
   const handleToggle = () => {
     if (isToggling) return;
     setIsToggling(true);
-    fxTap(); // Play feedback before changing
+    fxTap();
 
     const newState = !audioEnabled;
 
     if (newState) {
-      grantFeatureConsent("audio");
+      enableAudio();
       setAudioEnabled(true);
     } else {
-      revokeFeatureConsent("audio");
+      disableAudio();
       setAudioEnabled(false);
-      stopTts(); // Stop any active TTS immediately
+      stopTts();
     }
 
     setIsToggling(false);
@@ -88,16 +85,15 @@ export function AudioSettingToggle() {
 
 /**
  * AudioSettingToggleCompact - Minimal version for inline settings
- * Shows just the toggle without extra description
  */
 export function AudioSettingToggleCompact() {
   const [audioEnabled, setAudioEnabled] = useState(() => {
-    return hasFeatureConsent("audio");
+    return hasAudioEnabled();
   });
 
   useEffect(() => {
-    const unsubscribe = subscribeConsentChanges("audio", () => {
-      setAudioEnabled(hasFeatureConsent("audio"));
+    const unsubscribe = subscribeAudioChanges((enabled) => {
+      setAudioEnabled(enabled);
     });
     return unsubscribe;
   }, []);
@@ -107,10 +103,10 @@ export function AudioSettingToggleCompact() {
     const newState = !audioEnabled;
 
     if (newState) {
-      grantFeatureConsent("audio");
+      enableAudio();
       setAudioEnabled(true);
     } else {
-      revokeFeatureConsent("audio");
+      disableAudio();
       setAudioEnabled(false);
       stopTts();
     }
@@ -135,16 +131,15 @@ export function AudioSettingToggleCompact() {
 
 /**
  * AudioSettingRow - For use in settings lists
- * Shows icon, label, and toggle in a list row format
  */
 export function AudioSettingRow() {
   const [audioEnabled, setAudioEnabled] = useState(() => {
-    return hasFeatureConsent("audio");
+    return hasAudioEnabled();
   });
 
   useEffect(() => {
-    const unsubscribe = subscribeConsentChanges("audio", () => {
-      setAudioEnabled(hasFeatureConsent("audio"));
+    const unsubscribe = subscribeAudioChanges((enabled) => {
+      setAudioEnabled(enabled);
     });
     return unsubscribe;
   }, []);
@@ -154,10 +149,10 @@ export function AudioSettingRow() {
     const newState = !audioEnabled;
 
     if (newState) {
-      grantFeatureConsent("audio");
+      enableAudio();
       setAudioEnabled(true);
     } else {
-      revokeFeatureConsent("audio");
+      disableAudio();
       setAudioEnabled(false);
       stopTts();
     }

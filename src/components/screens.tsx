@@ -31,10 +31,9 @@ import { AudioSettingRow } from "@/components/AudioSettingToggle";
 import { DebugThemeSelector } from "@/components/DebugThemeSelector";
 import { StatePerformanceBadgesView } from "@/components/state-performance-badges-view";
 import {
-  grantFeatureConsent,
-  revokeFeatureConsent,
-  hasFeatureConsent,
-  subscribeConsentChanges,
+  hasAudioEnabled,
+  enableAudio,
+  disableAudio,
 } from "@/lib/parental-consent";
 import {
   getPostcardSettings,
@@ -429,10 +428,7 @@ export function CreateProfileScreen() {
 
     saveProfile({ name: avatarName, avatar: selectedAvatar || "explorer-hat", ageBand: ageToSave });
 
-    // Grant feature consents for parental consent
-    grantFeatureConsent("analytics");
-    grantFeatureConsent("audio");
-    grantFeatureConsent("file");
+    // No consent gates needed - audio and features work by default
 
     // Navigate to home after celebration
     setTimeout(() => navigate({ to: "/home" }), 300);
@@ -4088,34 +4084,16 @@ function ProfileScreenContent() {
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
   const [isSelectingAvatar, setIsSelectingAvatar] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState<AvatarId>(p.avatar as AvatarId);
-  const [hasFileConsent, setHasFileConsent] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return hasFeatureConsent("file");
-  });
-  const [hasAudioConsent, setHasAudioConsent] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return hasFeatureConsent("audio");
+  const [audioEnabled, setAudioEnabled] = useState(() => {
+    if (typeof window === "undefined") return true;
+    return hasAudioEnabled();
   });
   const [includeNameOnPostcards, setIncludeNameOnPostcards] = useState(() => {
     if (typeof window === "undefined") return false;
     return getPostcardSettings().includeNameOnSharedPostcards ?? false;
   });
 
-  // Subscribe to file consent changes
-  useEffect(() => {
-    const unsubscribe = subscribeConsentChanges("file", () => {
-      setHasFileConsent(hasFeatureConsent("file"));
-    });
-    return unsubscribe;
-  }, []);
-
-  // Subscribe to audio consent changes
-  useEffect(() => {
-    const unsubscribe = subscribeConsentChanges("audio", () => {
-      setHasAudioConsent(hasFeatureConsent("audio"));
-    });
-    return unsubscribe;
-  }, []);
+  // Audio preference is now simple - no consent tracking needed
 
   // Avatar images list for ProfileScreen
   const avatarImages = [
@@ -4368,58 +4346,7 @@ function ProfileScreenContent() {
         </div>
 
         {/* File Permission Card - Simple Toggle */}
-        <div className="animate-fade-in" style={{ animationDelay: "210ms" }}>
-          <button
-            type="button"
-            role="switch"
-            aria-checked={hasFileConsent}
-            aria-label="Save pictures permission"
-            onClick={() => {
-              if (hasFileConsent) {
-                // Revoke consent
-                revokeFeatureConsent("file");
-                fxTap();
-              } else {
-                // Grant consent directly (no dialog)
-                grantFeatureConsent("file");
-                fxTap();
-              }
-            }}
-            className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
-          >
-            <div className="h-12 w-12 rounded-2xl bg-accent-5 flex items-center justify-center text-2xl">
-              {EMOJI.feedback.trophy}
-            </div>
-            <div className="flex-1 text-left">
-              <div className="text-display font-extrabold text-[15px] leading-tight">
-                Save Pictures
-              </div>
-              <div className="text-[11px] font-bold">
-                {hasFileConsent ? (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-success/10 text-success border border-success">
-                    Active ✓
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-sunken text-text-secondary border border-surface-sunken">
-                    Tap to enable
-                  </span>
-                )}
-              </div>
-            </div>
-            <span
-              className="h-7 w-12 rounded-full flex items-center px-1 transition"
-              style={
-                hasFileConsent
-                  ? { backgroundColor: "var(--accent-3)" }
-                  : { backgroundColor: "var(--color-muted-bg)" }
-              }
-            >
-              <span
-                className={`h-5 w-5 rounded-full bg-text-on-header shadow transition-transform ${hasFileConsent ? "translate-x-5" : "translate-x-0"}`}
-              />
-            </span>
-          </button>
-        </div>
+        {/* Save Pictures toggle removed - file features work by default */}
 
         {/* Postcard Name Sharing Toggle */}
         <div className="animate-fade-in" style={{ animationDelay: "220ms" }}>
@@ -4536,16 +4463,8 @@ function ProfileScreenContent() {
 function SoundToggleRow() {
   const soundOn = useSoundOn();
   const [audioEnabled, setAudioEnabled] = useState(() => {
-    return hasFeatureConsent("audio");
+    return hasAudioEnabled();
   });
-
-  // Subscribe to consent changes
-  useEffect(() => {
-    const unsubscribe = subscribeConsentChanges("audio", () => {
-      setAudioEnabled(hasFeatureConsent("audio"));
-    });
-    return unsubscribe;
-  }, []);
 
   const toggleSound = () => {
     setSoundOn(!soundOn);
@@ -4558,11 +4477,11 @@ function SoundToggleRow() {
   const toggleAudio = () => {
     const newState = !audioEnabled;
     if (newState) {
-      grantFeatureConsent("audio");
+      enableAudio();
       setAudioEnabled(true);
       setTimeout(() => fxTap(), 100);
     } else {
-      revokeFeatureConsent("audio");
+      disableAudio();
       setAudioEnabled(false);
     }
   };

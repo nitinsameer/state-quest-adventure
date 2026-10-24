@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { getProgress, useProgress, saveProfile } from "@/lib/progress";
-import { grantFeatureConsent } from "@/lib/parental-consent";
 import { AvatarScreen } from "@/components/Onboarding/AvatarScreen";
 import { AgeScreen } from "@/components/Onboarding/AgeScreen";
 import { getAvatarName } from "@/lib/avatar-config";
@@ -70,12 +69,8 @@ function CreateRoute() {
       ageBand: selectedAge,
     });
 
-    // Grant feature consents only if parent approval was given
-    // Parent approval checkbox is now required (starts unchecked)
-    // In AgeScreen, the "Start My Journey" button is disabled until both age AND checkbox are true
-    grantFeatureConsent("analytics");
-    grantFeatureConsent("audio");
-    grantFeatureConsent("file");
+    // No consent gates - audio and features work by default
+    // Users can manage audio preferences in settings
 
     // Navigate to home after celebration
     setTimeout(() => {

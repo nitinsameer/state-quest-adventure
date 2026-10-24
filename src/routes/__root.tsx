@@ -28,8 +28,7 @@ import {
   getLevelName,
 } from "@/lib/progress";
 import { pauseTts, resumeTts } from "@/lib/tts";
-import { hasFeatureConsent } from "@/lib/parental-consent";
-import { ParentConsentGate } from "@/components/ParentConsentGate";
+import { ParentConsentGate } from "@/components/ParentConsentGate"; // No-op component, removed consent gates
 import { initializeAudioCleanup } from "@/lib/fx";
 import { Capacitor } from "@capacitor/core";
 import { useCelebrationStore } from "@/store/celebrationStore";
@@ -384,39 +383,12 @@ function HydratedApp() {
       return;
     }
 
-    // CRITICAL FIX: Check parent consent before firing ANY Firebase events
-    // This prevents COPPA violations
-    if (!hasFeatureConsent("analytics")) {
-      appLogger.debug(
-        "app_lifecycle",
-        "Skipping Firebase events - parent consent not yet granted"
-      );
-      return;
-    }
+    // User is onboarded - log session/analytics (delay to not block initial render)
+    // Analytics is disabled by default for this kids app
 
-    // User is onboarded AND parent consented - log session/analytics (delay to not block initial render)
-    const isReturningUser = true; // If onboarded, they're returning
-
-    // Defer Firebase events until after initial render completes
+    // Defer to avoid blocking render
     setTimeout(() => {
-      firebaseEvents.sessionStart({
-        ageBand: progress.ageBand,
-        isReturningUser,
-      });
-
-      // Track daily visit and streak
-      firebaseEvents.dailyVisit({
-        ageBand: progress.ageBand,
-        streak: progress.streak,
-        daysActive: Object.keys(progress.stamps ?? {}).length,
-        totalXp: progress.xp,
-      });
-
-      // Track streak milestones
-      const milestonesToCheck = [3, 7, 14, 30];
-      if (milestonesToCheck.includes(progress.streak)) {
-        firebaseEvents.streakMilestone(progress.streak);
-      }
+      // No-op - analytics disabled
     }, 500); // Defer by 500ms to avoid blocking initial render
   }, [progress.onboarded, progress]);
 

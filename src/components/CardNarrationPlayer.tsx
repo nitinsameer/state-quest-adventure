@@ -2,22 +2,17 @@
  * Card Narration Player Component
  * Displays a play button and plays TTS narration
  * Kid-friendly UI with simple controls
+ * Audio works without permission checks
  */
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   playTts,
   stopTts,
-  isTtsPlaying,
-  getCurrentNarrationId,
-  useTtsState,
   isTtsAvailable,
+  useTtsState,
 } from "@/lib/tts";
-import {
-  hasFeatureConsent,
-  subscribeConsentChanges,
-  grantFeatureConsent,
-} from "@/lib/parental-consent";
+import { hasAudioEnabled } from "@/lib/parental-consent";
 import { KidsButton } from "./KidsButton";
 import { EMOJI } from "@/constants/emoji";
 
@@ -34,33 +29,15 @@ export function CardNarrationPlayer({
   title,
   emoji = EMOJI.audio.speaker,
 }: CardNarrationPlayerProps) {
-  const [audioNarrationEnabled, setAudioNarrationEnabled] = useState(() => {
-    const hasConsent = hasFeatureConsent("audio");
-    return hasConsent;
-  });
-  const [showPermissionPrompt, setShowPermissionPrompt] = useState(false);
+  const [audioDisabled, setAudioDisabled] = useState(false);
   const ttsState = useTtsState();
   const isCurrentPlaying = ttsState.narrationId === narrationId && ttsState.isPlaying;
   const [hasSupport] = useState(isTtsAvailable());
-
-  // Subscribe to consent changes and re-render when consent status changes
-  useEffect(() => {
-    const currentConsent = hasFeatureConsent("audio");
-    setAudioNarrationEnabled(currentConsent);
-
-    const unsubscribe = subscribeConsentChanges("audio", () => {
-      const consentAfterChange = hasFeatureConsent("audio");
-      setAudioNarrationEnabled(consentAfterChange);
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, []);
+  const audioEnabled = hasAudioEnabled();
 
   const handlePlayClick = () => {
-    if (!audioNarrationEnabled) {
-      setShowPermissionPrompt(true);
+    if (!audioEnabled) {
+      setAudioDisabled(true);
       return;
     }
 
@@ -74,51 +51,34 @@ export function CardNarrationPlayer({
     }
   };
 
-  const handleEnableAudio = () => {
-    grantFeatureConsent("audio");
-    setAudioNarrationEnabled(true);
-    setShowPermissionPrompt(false);
-
-    // Auto-play the narration immediately after enabling
-    playTts(narrationId, text, {
-      speed: 0.85,
-      pitch: 1.05,
-    });
-  };
-
   if (!hasSupport) {
     return null;
   }
 
   return (
     <div className="w-full">
-      {/* Permission Prompt Modal */}
-      {showPermissionPrompt && (
+      {/* Audio Disabled Notice */}
+      {audioDisabled && audioEnabled === false && (
         <div className="fixed inset-0 flex items-center justify-center z-50 p-(--padding-base)" style={{backgroundColor: 'var(--scrim)'}}>
           <div className="bg-surface-card rounded-3xl p-(--padding-lg) max-w-sm shadow-2xl animate-in fade-in scale-in">
             <div className="text-center">
-              <div className="text-5xl mb-(--space-2)">{EMOJI.audio.headphones}</div>
+              <div className="text-5xl mb-(--space-2)">{EMOJI.audio.muted}</div>
               <h3
                 className="text-h4 font-bold mb-(--space-0-5)"
                 style={{ color: "var(--text-primary)" }}
               >
-                Enable Audio?
+                Audio is Off
               </h3>
               <p className="text-body-sm mb-(--space-2)" style={{ color: "var(--text-primary)" }}>
-                Would you like to enable audio to hear this story read aloud?
+                Turn on audio in Profile settings to hear this story read aloud.
               </p>
-              <div className="flex gap-(--gap-base)">
-                <KidsButton
-                  variant="secondary"
-                  size="md"
-                  onClick={() => setShowPermissionPrompt(false)}
-                >
-                  Not Now
-                </KidsButton>
-                <KidsButton variant="primary" size="md" onClick={handleEnableAudio}>
-                  Enable Audio
-                </KidsButton>
-              </div>
+              <KidsButton
+                variant="primary"
+                size="md"
+                onClick={() => setAudioDisabled(false)}
+              >
+                Got It
+              </KidsButton>
             </div>
           </div>
         </div>
@@ -133,7 +93,7 @@ export function CardNarrationPlayer({
             className={`h-12 w-12 rounded-full flex items-center justify-center text-2xl transition-transform active:scale-95 flex-shrink-0 ${
               isCurrentPlaying
                 ? "bg-fb-warning-bg shadow-lg animate-pulse"
-                : audioNarrationEnabled
+                : audioEnabled
                   ? "bg-action-primary-bg shadow-md hover:shadow-lg"
                   : "bg-action-primary-bg/50 shadow-md hover:shadow-lg"
             }`}
@@ -141,9 +101,9 @@ export function CardNarrationPlayer({
             title={
               isCurrentPlaying
                 ? "Stop narration"
-                : audioNarrationEnabled
+                : audioEnabled
                   ? "Play narration"
-                  : "Enable audio to play narration"
+                  : "Audio is disabled"
             }
           >
             {isCurrentPlaying ? EMOJI.ui.pause : EMOJI.action.play}
@@ -157,19 +117,19 @@ export function CardNarrationPlayer({
             <div className="text-body-sm font-bold text-action-primary-bg mt-(--space-0-25)">
               {title}
             </div>
-            {audioNarrationEnabled ? (
+            {audioEnabled ? (
               <div className="text-caption text-action-primary-bg mt-(--space-0-25)">
                 {isCurrentPlaying ? `${EMOJI.audio.music} Playing... tap to stop` : `Tap play to hear! ${EMOJI.action.listen}`}
               </div>
             ) : (
               <div className="text-caption text-action-primary-bg font-semibold mt-(--space-0-25)">
-                {EMOJI.audio.speaker} Tap to enable audio
+                {EMOJI.audio.speaker} Audio is off
               </div>
             )}
           </div>
 
           {/* Mute Indicator */}
-          {!audioNarrationEnabled && (
+          {!audioEnabled && (
             <div className="text-2xl animate-bounce flex-shrink-0">{EMOJI.audio.muted}</div>
           )}
         </div>

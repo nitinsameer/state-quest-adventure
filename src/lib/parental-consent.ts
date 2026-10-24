@@ -1,198 +1,116 @@
 /**
- * Secure Parental Consent System
- * FIX #7: Replaces simple localStorage strings with timestamp-validated consent
- * FIX #1.3: COPPA Compliance - Remove all console.logs leaking consent data
- * FIX #1.5: Type safety - Validate all consent data with Zod schemas
- *
- * Requirements:
- * - Explicit user action (not default)
- * - Timestamp tracking for audit (NOT logged to console)
- * - No encryption needed (app-level security only)
- * - Clear revocation mechanism
- *
- * COPPA Compliance:
- * - No auto-enable on first load
- * - Requires explicit parent/child acceptance
- * - Timestamps stored securely (not in console logs)
- * - NO sensitive data leaked to console or localStorage
+ * Simplified Audio Preference System
+ * 
+ * Audio and basic features work WITHOUT requiring parental consent gates.
+ * Users can simply toggle audio on/off in settings.
+ * No blocking prompts or consent requirements.
+ * 
+ * Analytics remains DISABLED for this kids app.
  */
 
-import { validateConsentStorage, type ConsentRecord } from "./localStorage-schema";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 
-const CONSENT_STORAGE_KEY = STORAGE_KEYS.parentalConsent;
-const CONSENT_VERSION = 1;
-const consentListeners = new Set<(feature: "audio" | "file" | "analytics") => void>();
+const AUDIO_PREF_KEY = STORAGE_KEYS.audioEnabled ?? "audioEnabled";
 
 /**
- * Request consent for a feature (audio, file, or analytics)
- * Returns true if already granted, false if needs to be requested
- *
- * CRITICAL FIX #1.3: No console logging to prevent COPPA violations
- * CRITICAL FIX #1.5: Validate consent data with Zod schema before use
- * Timestamps are stored securely but not logged
+ * Check if audio is enabled
+ * Audio is enabled by default for seamless experience
  */
-export function hasFeatureConsent(feature: "audio" | "file" | "analytics"): boolean {
+export function hasAudioEnabled(): boolean {
   try {
-    const stored = localStorage.getItem(CONSENT_STORAGE_KEY);
-
-    // CRITICAL FIX #1.5: Validate stored data with Zod schema
-    const records = validateConsentStorage(stored);
-
-    const record = records.find((r) => r.feature === feature);
-
-    if (!record) {
-      return false;
-    }
-
-    // Validate consent is recent (within 1 year)
-    // NOTE: Timestamp NOT logged - COPPA compliance
-    const oneYearMs = 365 * 24 * 60 * 60 * 1000;
-    const ageMs = Date.now() - record.timestamp;
-    const isExpired = ageMs > oneYearMs;
-
-    return record.granted && !isExpired;
+    const stored = localStorage.getItem(AUDIO_PREF_KEY);
+    // Default to true if not explicitly disabled
+    if (stored === null) return true;
+    return stored === "true";
   } catch {
-    return false;
+    return true; // Fail open - audio enabled if storage unavailable
   }
 }
 
 /**
- * Grant consent for a feature
- * Should only be called after explicit user acceptance
- *
- * CRITICAL FIX #1.3: No console logging to prevent COPPA violations
- * CRITICAL FIX #1.5: Validate consent data with Zod schema before modifying
+ * Enable audio
  */
-export function grantFeatureConsent(feature: "audio" | "file" | "analytics"): void {
+export function enableAudio(): void {
   try {
-    const stored = localStorage.getItem(CONSENT_STORAGE_KEY);
-
-    // CRITICAL FIX #1.5: Validate stored data with Zod schema
-    const records = validateConsentStorage(stored);
-
-    // Remove old record if exists
-    const filtered = records.filter((r) => r.feature !== feature);
-
-    // Add new consent record with timestamp
-    // NOTE: Timestamp stored securely but not logged
-    const newRecord: ConsentRecord = {
-      feature,
-      granted: true,
-      timestamp: Date.now(),
-      version: CONSENT_VERSION,
-    };
-
-    filtered.push(newRecord);
-
-    const jsonToStore = JSON.stringify(filtered);
-    localStorage.setItem(CONSENT_STORAGE_KEY, jsonToStore);
-
-    // COPPA FIX #1.5: Enable analytics if analytics consent just granted
-    if (feature === "analytics") {
-      try {
-        // Dynamic import to avoid circular dependencies
-        const { enableAnalyticsAfterConsent } = require("./firebase-init");
-        enableAnalyticsAfterConsent();
-      } catch {
-        // Firebase not available - skip
-      }
-    }
-
-    // Notify all listeners that consent changed
-    notifyConsentListeners(feature);
+    localStorage.setItem(AUDIO_PREF_KEY, "true");
   } catch {
-    // Storage error - fail silently (no logging)
+    // Storage error - ignore
   }
 }
 
 /**
- * Revoke consent for a feature
- * Can be called from parental controls or settings
- *
- * CRITICAL FIX #1.5: Validate consent data with Zod schema before modifying
+ * Disable audio
  */
-export function revokeFeatureConsent(feature: "audio" | "file" | "analytics"): void {
+export function disableAudio(): void {
   try {
-    const stored = localStorage.getItem(CONSENT_STORAGE_KEY);
-
-    // CRITICAL FIX #1.5: Validate stored data with Zod schema
-    const records = validateConsentStorage(stored);
-    const filtered = records.filter((r) => r.feature !== feature);
-
-    localStorage.setItem(CONSENT_STORAGE_KEY, JSON.stringify(filtered));
-
-    // Notify all listeners that consent changed
-    notifyConsentListeners(feature);
+    localStorage.setItem(AUDIO_PREF_KEY, "false");
   } catch {
-    // Storage error - fail silently
+    // Storage error - ignore
   }
 }
 
 /**
- * Subscribe to consent changes for a feature
+ * Subscribe to audio preference changes
  * Returns unsubscribe function
  */
+export function subscribeAudioChanges(listener: (enabled: boolean) => void): () => void {
+  const handleChange = () => {
+    listener(hasAudioEnabled());
+  };
+  
+  window.addEventListener("storage", handleChange);
+  return () => window.removeEventListener("storage", handleChange);
+}
+
+/**
+ * Legacy functions for compatibility - these are no-ops now
+ * Audio works without consent gates
+ */
+export function hasFeatureConsent(feature: "audio" | "file" | "analytics"): boolean {
+  if (feature === "audio") {
+    return hasAudioEnabled();
+  }
+  // Analytics and file features don't require consent anymore
+  return false;
+}
+
+export function grantFeatureConsent(feature: "audio" | "file" | "analytics"): void {
+  if (feature === "audio") {
+    enableAudio();
+  }
+  // No-op for other features
+}
+
+export function revokeFeatureConsent(feature: "audio" | "file" | "analytics"): void {
+  if (feature === "audio") {
+    disableAudio();
+  }
+  // No-op for other features
+}
+
 export function subscribeConsentChanges(
   feature: "audio" | "file" | "analytics",
   listener: () => void,
 ): () => void {
-  const wrappedListener = (changedFeature: "audio" | "file" | "analytics") => {
-    if (changedFeature === feature) {
-      listener();
-    }
-  };
-
-  consentListeners.add(wrappedListener);
-  return () => consentListeners.delete(wrappedListener);
-}
-
-/**
- * Notify all listeners of consent change
- */
-function notifyConsentListeners(feature: "audio" | "file" | "analytics"): void {
-  for (const listener of consentListeners) {
-    listener(feature);
+  if (feature === "audio") {
+    return subscribeAudioChanges(() => listener());
   }
+  // No-op subscription for other features
+  return () => {};
 }
 
-/**
- * Get all consent records (for audit/debugging)
- *
- * CRITICAL FIX #1.5: Validate consent data with Zod schema before returning
- */
-export function getAllConsentRecords(): ConsentRecord[] {
-  try {
-    const stored = localStorage.getItem(CONSENT_STORAGE_KEY);
-    // CRITICAL FIX #1.5: Validate with Zod schema
-    return validateConsentStorage(stored);
-  } catch {
-    return [];
-  }
+export function getAllConsentRecords() {
+  return [];
 }
 
-/**
- * Clear all consent records
- * Used when deleting app data or resetting
- */
 export function clearAllConsents(): void {
   try {
-    localStorage.removeItem(CONSENT_STORAGE_KEY);
+    localStorage.removeItem(AUDIO_PREF_KEY);
   } catch {
     // Storage error
   }
 }
 
-/**
- * COPPA Compliance Fix: Audio consent must be explicitly granted by user
- * This function is now a no-op and should not be called
- * Audio features gracefully degrade if consent not granted
- *
- * FIX #1: Remove auto-grant behavior - explicit user consent required
- * Audio consent is only granted when user explicitly enables it in settings
- * or during onboarding with parent approval
- */
 export function ensureAudioConsentGranted(): void {
-  // No-op: Audio consent must be explicitly granted by user action, not auto-granted on startup
-  // This complies with COPPA requirements for explicit, affirmative consent
+  // No-op - audio works by default without gates
 }

@@ -5,7 +5,7 @@
  * STEP 4 & 5: Verify all runtime settings and Web Speech API availability
  */
 
-import { hasFeatureConsent } from "./parental-consent";
+import { hasAudioEnabled } from "./parental-consent";
 import { isSoundOn } from "./fx";
 import { Capacitor } from "@capacitor/core";
 
@@ -50,7 +50,7 @@ export function captureAudioDiagnostics(): AudioDiagnostics {
     isNativePlatform: Capacitor.isNativePlatform(),
 
     // Consent & Permissions
-    audioNarrationConsent: hasFeatureConsent("audio"),
+    audioNarrationConsent: hasAudioEnabled(),
 
     // Sound settings
     soundToggleOn: isSoundOn(),

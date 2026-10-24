@@ -11,7 +11,7 @@
 import { TextToSpeech } from "@capacitor-community/text-to-speech";
 import { useCelebrationStore } from "@/store/celebrationStore";
 import { useToastStore } from "@/store/toastStore";
-import { hasFeatureConsent } from "./parental-consent";
+import { hasAudioEnabled } from "./parental-consent";
 import { ensureAudioContext } from "./fx";
 import { getStateLanguageCode } from "./state-content";
 import { debugLog, debugError } from "./debug";
@@ -63,10 +63,10 @@ export function isTtsAvailable(): boolean {
 export function playTts(narrationId: string, text: string, config: Partial<TtsConfig> = {}): void {
   debugLog("tts", "playTts called", { narrationId, textLength: text?.length });
 
-  // Check audio consent
-  const hasConsent = hasFeatureConsent("audio");
-  if (!hasConsent) {
-    debugLog("tts", "Audio consent denied");
+  // Check audio preference
+  const audioEnabled = hasAudioEnabled();
+  if (!audioEnabled) {
+    debugLog("tts", "Audio is disabled");
     return;
   }
 

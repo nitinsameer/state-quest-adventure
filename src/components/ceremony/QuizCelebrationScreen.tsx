@@ -10,7 +10,7 @@ import { getState, type IndiaState, nextStateAfter } from "@/lib/states";
 import { STATE_ART, TONE_GRADIENT } from "@/lib/state-art";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { fxTap, fxCorrect, fxStamp, fxConfetti } from "@/lib/fx";
-import { hasFeatureConsent } from "@/lib/parental-consent";
+import { hasAudioEnabled } from "@/lib/parental-consent";
 import { PostcardFrame } from "@/components/PostcardFrame";
 import { EMOJI } from "@/constants/emoji";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
@@ -151,42 +151,42 @@ function SingleScreenCelebration({
 
     // Phase 1: Confetti (0ms)
     if (elapsed >= 0 && elapsed < 50) {
-      if (hasFeatureConsent("audio")) {
+      if (hasAudioEnabled()) {
         fxConfetti();
       }
     }
 
     // Phase 2: Star 1 (500ms)
     if (elapsed >= 500 && elapsed < 550) {
-      if (hasFeatureConsent("audio")) {
+      if (hasAudioEnabled()) {
         fxCorrect();
       }
     }
 
     // Star 2 (1200ms)
     if (elapsed >= 1200 && elapsed < 1250) {
-      if (hasFeatureConsent("audio")) {
+      if (hasAudioEnabled()) {
         fxCorrect();
       }
     }
 
     // Star 3 (1900ms)
     if (elapsed >= 1900 && elapsed < 1950) {
-      if (hasFeatureConsent("audio")) {
+      if (hasAudioEnabled()) {
         fxCorrect();
       }
     }
 
     // Victory fanfare if 3 stars (2500ms)
     if (elapsed >= 2500 && elapsed < 2550 && parseInt(ceremony.stars) === 3) {
-      if (hasFeatureConsent("audio")) {
+      if (hasAudioEnabled()) {
         fxConfetti();
       }
     }
 
     // Postcard seal sound (3500ms)
     if (elapsed >= 3500 && elapsed < 3550) {
-      if (hasFeatureConsent("audio")) {
+      if (hasAudioEnabled()) {
         fxStamp();
       }
     }

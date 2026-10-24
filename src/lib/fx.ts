@@ -290,14 +290,11 @@ function ac(): AudioContext | null {
 
 /**
  * Determine if sound output should be played through speakers
- * Checks BOTH conditions:
- * 1. Sound toggle enabled in profile (isSoundOn)
- * 2. Audio consent granted during profile creation (hasFeatureConsent)
- * @returns true only if BOTH are true
+ * Checks the sound toggle preference
+ * @returns true if sound toggle is enabled
  */
 function shouldPlaySound(): boolean {
-  // Sound effects only need the sound toggle, not audio narration consent
-  // Audio narration (TTS) has its own separate consent check
+  // Sound effects are controlled by the sound toggle only
   return isSoundOn();
 }
 
