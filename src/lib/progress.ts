@@ -11,7 +11,7 @@ import {
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { THEMES, isThemeUnlocked } from "./themes";
 
-export type BadgeId = "monument" | "animal" | "explorer";
+export type BadgeId = "monument" | "animal" | "explorer" | "region-master-north" | "region-master-south" | "region-master-east" | "region-master-central" | "region-master-west" | "region-master-northeast" | "region-master-unionTerritories";
 
 export type PendingCelebration =
   | {
@@ -1250,13 +1250,18 @@ export function finishQuiz(
       [...p.completed, stateName].includes(s),
     ).length;
 
-    // 6. Build list of badges to display in ceremony
-    // For postcard display: only use state badges (BadgeId type: monument, animal, explorer)
-    // earnedQuizBadges only contains state badges (monument, animal, explorer)
-    const ceremonyBadgeIds: BadgeId[] = [...earnedQuizBadges];
+    // 6. Check if region is now complete and award region-master badge
+    const regionMasterBadgeId = `region-master-${regionKey}`;
+    
+    // Award region master badge if region just completed
+    const regionMasterBadge = regionDone === regionTotal
+      ? [regionMasterBadgeId as unknown as BadgeId]
+      : [];
 
-    // Note: Achievement badges (region-master, etc.) are tracked separately in p.badges._achievements
-    // They are not included here because PostcardFrame expects only valid BadgeId types
+    // Build list of badges to display in ceremony
+    // For postcard display: use state badges (BadgeId type: monument, animal, explorer)
+    // Plus any region-master badges earned on this completion
+    const ceremonyBadgeIds: BadgeId[] = [...earnedQuizBadges, ...regionMasterBadge];
 
     // 7. Check if leveled up (reuse existing level logic)
     const oldLevel = levelInfo(p.xp).level;
@@ -1283,16 +1288,6 @@ export function finishQuiz(
     ).map((t) => ({ type: "theme-unlock" as const, themeId: t.id, themeName: t.name }));
 
     // 9. Return atomic update with all state changes
-    const regionMasterBadgeId = `region-master-${regionKey}`;
-    const hasRegionMasterBadge =
-      p.badges?.["_achievements"]?.some((id: any) => id === regionMasterBadgeId) ?? false;
-
-    // Award region master badge if region just completed
-    const newAchievementBadges = hasRegionMasterBadge
-      ? (p.badges?.["_achievements"] ?? [])
-      : regionDone === regionTotal
-        ? [...(p.badges?.["_achievements"] ?? []), regionMasterBadgeId]
-        : (p.badges?.["_achievements"] ?? []);
 
     const updated: Progress = {
       ...p,
@@ -1307,7 +1302,6 @@ export function finishQuiz(
       badges: {
         ...p.badges,
         [stateName]: earnedQuizBadges,
-        _achievements: newAchievementBadges as BadgeId[],
       },
       lastPlayedState: stateName,
       // From recordStatePerformance
@@ -1339,7 +1333,7 @@ export function finishQuiz(
           quizXp,
           bonusXp: xpReward,
           stampDate: stampDateStr,
-          earnedBadgeIds: ceremonyBadgeIds, // Only state badges (BadgeId type)
+          earnedBadgeIds: ceremonyBadgeIds, // State badges + region-master badges
           regionKey: regionKey as string,
           regionDone,
           regionTotal,

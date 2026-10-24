@@ -157,6 +157,7 @@ export const THEMES: Theme[] = [
       text: "#fff",
       accent: "#fff",
     },
+    unlockRule: { type: "states", value: 36 },
     category: "fancy",
   },
   {
