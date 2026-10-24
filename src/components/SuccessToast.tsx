@@ -115,7 +115,7 @@ export function SuccessToast() {
     <div
       className="fixed inset-x-0 z-50 pointer-events-none"
       style={{
-        bottom: "calc(var(--nav-h, 80px) + 20px)",
+        bottom: "calc(var(--nav-h, 80px) + 24px)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

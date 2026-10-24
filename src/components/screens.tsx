@@ -2061,7 +2061,7 @@ export function LearningHubScreen({
       // Mark as celebrated so we don't show this again
       setCelebratedCategories((prev) => new Set([...prev, 6]));
     }
-  }, [completedCategories, celebratedCategories, celebration, state.name]);
+  }, [completedCategories]);
 
   // Track completion per category - all cards must be read
   const cards = [
@@ -2090,9 +2090,9 @@ export function LearningHubScreen({
   });
 
   return (
-    <div className="w-full bg-bg-page flex flex-col">
+    <div className="w-full h-full bg-bg-page flex flex-col">
       {/* HEADER SECTION - Simplified, clean header with background image and centered state name */}
-      <div className="relative h-32">
+      <div className="relative h-32 flex-shrink-0">
         {/* Background image - covers full header */}
         <img
           src={stateHeaderBg}
@@ -2133,8 +2133,8 @@ export function LearningHubScreen({
         </div>
       </div>
 
-      {/* Scrollable content area - allows all cards and quiz panel to be visible */}
-      <div className="flex-1 overflow-y-auto">
+      {/* Scrollable content area - flex-1 ensures it fills remaining space, min-h-0 for flex scroll fix */}
+      <div className="flex-1 overflow-y-auto min-h-0 pb-[calc(var(--nav-h,80px)+24px)]">
         {/* PROGRESS CARD - White rounded card with overlap */}
         <div className="px-5 -mt-6 relative z-20 mb-6">
           <div className="bg-surface-card rounded-2xl shadow-elevated-1 p-5">
