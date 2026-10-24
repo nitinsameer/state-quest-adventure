@@ -106,12 +106,7 @@ class Logger {
 
         // Track crash event - only send error message, no stack
         try {
-          firebaseEvents.crash({
-            errorType: "uncaught_error",
-            errorMessage: event.message,
-            // FIX #5: Don't send stack traces to Firebase (contains sensitive data)
-            ageBand: "unknown", // Don't read profile from localStorage - causes PII exposure
-          });
+          firebaseEvents.crash();
         } catch (e) {
           // Silently fail if Firebase events not available
         }
@@ -125,11 +120,7 @@ class Logger {
 
         // Track crash event - sanitized
         try {
-          firebaseEvents.crash({
-            errorType: "unhandled_rejection",
-            errorMessage: event.reason?.message || String(event.reason),
-            ageBand: "unknown", // Don't read from localStorage
-          });
+          firebaseEvents.crash();
         } catch (e) {
           // Silently fail if Firebase events not available
         }

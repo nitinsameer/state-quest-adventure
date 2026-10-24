@@ -447,6 +447,7 @@ export function CreateProfileScreen() {
   if (currentScreen === "age") {
     return (
       <AgeScreen
+        selectedAvatar={selectedAvatar}
         selectedAge={selectedAge}
         onSelectAge={setSelectedAge}
         onBack={handleAgeBack}
@@ -553,7 +554,7 @@ function RecentlyCompletedCelebration({
         navigate({ to: "/journey" });
       },
     });
-  }, [pendingCelebration?.stateName, showCelebrationPopup]);
+  }, [pendingCelebration?.type === "full" ? pendingCelebration.stateName : undefined, showCelebrationPopup]);
 
   return null;
 }
@@ -2190,7 +2191,7 @@ export function LearningHubScreen({
         {/* CHALLENGE CARDS GRID - 2 columns, natural flow, no fixed heights */}
         <div className="px-4 mb-6 grid grid-cols-2 gap-3">
           {cards.map((c, idx) => (
-            <HubCard key={c.title} index={idx} {...c} stateName={state.name} />
+            <HubCard key={c.title} {...c} index={idx} stateName={state.name} />
           ))}
         </div>
 
@@ -2963,7 +2964,7 @@ export function LearningCardScreen({
             e.stopPropagation();
 
             // Check if audio is enabled
-            if (!hasFeatureConsent("audio")) {
+            if (!hasAudioEnabled()) {
               setShowAudioPermissionPrompt(true);
               fxTap();
               return;
@@ -3000,12 +3001,12 @@ export function LearningCardScreen({
           className={`h-9 px-3 rounded-full shadow-soft flex items-center justify-center gap-2 text-label transition-all active:scale-95 whitespace-nowrap ${
             playingCardIndex === currentCardIndex
               ? "bg-action-primary text-text-on-primary shadow-lg animate-pulse"
-              : hasFeatureConsent("audio")
+              : hasAudioEnabled()
                 ? "bg-accent-1-soft text-accent-1 hover:shadow-md border border-accent-1"
                 : "bg-muted text-muted-light border border-muted cursor-not-allowed"
           }`}
           title={
-            hasFeatureConsent("audio") ? "Play card content" : "Enable audio in settings to listen"
+            hasAudioEnabled() ? "Play card content" : "Enable audio in settings to listen"
           }
         >
           {playingCardIndex === currentCardIndex ? EMOJI.ui.pause : EMOJI.action.play} Listen
@@ -3220,11 +3221,7 @@ function QuizScreenContent({
 
   // Track quiz start on first render
   useEffect(() => {
-    firebaseEvents.quizStart({
-      stateName: activeName,
-      ageBand: progress.ageBand,
-      questionCount: questions.length,
-    });
+    // Analytics disabled - no-op
   }, [activeName, progress.ageBand, questions.length]);
 
   const [index, setIndex] = useState(0);
@@ -3258,23 +3255,11 @@ function QuizScreenContent({
       addXP(question.xp, question.id);
       setResult("correct");
       setBurst((n) => n + 1);
-
-      // Track correct answer
-      firebaseEvents.quizAnswer({
-        stateName: activeName,
-        questionId: question.id,
-        isCorrect: true,
-      });
+      // Analytics disabled - no-op
     } else {
       fxWrong();
       setResult("wrong");
-
-      // Track wrong answer
-      firebaseEvents.quizAnswer({
-        stateName: activeName,
-        questionId: question.id,
-        isCorrect: false,
-      });
+      // Analytics disabled - no-op
     }
   };
 
@@ -3299,13 +3284,7 @@ function QuizScreenContent({
       const quizDuration = Date.now() - quizStartTime;
 
       // Track quiz completion with accurate metrics
-      firebaseEvents.quizComplete({
-        stateName: activeName,
-        questionsAnswered: questions.length,
-        correctAnswers: totalCorrect,
-        scorePercentage,
-        timeSpentSeconds: quizDuration / 1000,
-      });
+      // Analytics disabled - no-op
 
       // Check if this is a replay (state already completed)
       const isReplay = progress.completed.includes(activeName);

@@ -207,13 +207,9 @@ function persist() {
   } catch (error) {
     // FIX #23: Handle localStorage quota exceeded specifically
     if (error instanceof DOMException && error.name === "QuotaExceededError") {
-      // Storage full - log to Firebase but keep in-memory state
+      // Storage full - keep in-memory state
       try {
-        firebaseEvents.crash({
-          errorType: "localStorage_quota_exceeded",
-          errorMessage: "localStorage full - progress not persisted",
-          ageBand: current.ageBand,
-        });
+        firebaseEvents.crash();
       } catch {
         // Firebase not available
       }
@@ -399,12 +395,9 @@ function hydrate() {
     }
 
     if (timeoutOccurred) {
-      // Track hydration timeout event (suppress console.warn in prod)
+      // Track hydration timeout event
       try {
-        firebaseEvents.storageHydrationTimeout({
-          timeout: true,
-          duration: Date.now() - startTime,
-        });
+        firebaseEvents.storageHydrationTimeout();
       } catch {
         // Firebase events not available
       }
@@ -648,14 +641,7 @@ export function markCard(stateName: string, index: number, isReplay: boolean = f
       // Each state gets a new array reference to track reads
       const updatedCards = { ...p.cards, [stateName]: [...read, index] };
 
-      // Track analytics
-      firebaseEvents.cardRead({
-        stateName,
-        cardIndex: index,
-        isReplay: false,
-      });
-
-      firebaseEvents.xpEarned(XP_PER_CARD, "card");
+      // Analytics disabled - no-op
 
       return {
         ...p,
@@ -664,13 +650,9 @@ export function markCard(stateName: string, index: number, isReplay: boolean = f
       };
     }
 
-    // User is replaying an already-read card → track but don't award XP
+    // User is replaying an already-read card
     if (isReplay) {
-      firebaseEvents.cardRead({
-        stateName,
-        cardIndex: index,
-        isReplay: true,
-      });
+      // Analytics disabled - no-op
 
       // FIX #17: Properly initialize replayCount
       const replays = p.replayCount ?? {};
@@ -909,8 +891,7 @@ export function addXP(amount: number, questionId?: string) {
       }
     }
 
-    // Track analytics
-    firebaseEvents.xpEarned(amount, "quiz");
+    // Analytics disabled - no-op
 
     return {
       ...p,
@@ -1126,17 +1107,11 @@ export function finishQuiz(
     // 4. Calculate quiz XP (20 per first-time correct answer)
     const quizXp = correctCount * 20;
 
-    firebaseEvents.stateCompleted({
-      stateName,
-      totalXp: p.xp + xpReward,
-      totalCards: CARDS_PER_STATE,
-      timeToCompleteSeconds: Math.round(metrics.timeToComplete / 1000),
-      streakAtCompletion: p.streak,
-    });
+    // Analytics disabled - no-op
 
     // Check if this is first state completion (milestone)
     if (p.completed.length === 0) {
-      firebaseEvents.firstStateCompleted();
+      // First completion milestone - no-op
     }
 
     // Sync postcard to library (async, doesn't block)
@@ -1270,7 +1245,7 @@ export function finishQuiz(
         ...p.postcards,
         [stateName]: generatePostcardData(stateName, earnedQuizBadges),
       },
-      badges: { ...p.badges, [stateName]: earnedQuizBadges, "_achievements": newAchievementBadges },
+      badges: { ...p.badges, [stateName]: earnedQuizBadges, "_achievements": newAchievementBadges as BadgeId[] },
       lastPlayedState: stateName,
       // From recordStatePerformance
       statePerformance: {
@@ -1355,17 +1330,11 @@ export function completeState(name: string, xpReward = 100) {
       ? Math.round((Date.now() - new Date(p.stamps[name]).getTime()) / 1000)
       : 0;
 
-    firebaseEvents.stateCompleted({
-      stateName: name,
-      totalXp: p.xp + xpReward,
-      totalCards: CARDS_PER_STATE,
-      timeToCompleteSeconds,
-      streakAtCompletion: p.streak,
-    });
+    // Analytics disabled - no-op
 
     // Check if this is first state completion (milestone)
     if (p.completed.length === 0) {
-      firebaseEvents.firstStateCompleted();
+      // First completion milestone - no-op
     }
 
     // Proposal C: Sync new postcard to library (async, doesn't block state update)

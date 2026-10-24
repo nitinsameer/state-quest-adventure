@@ -10,7 +10,7 @@
 
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 
-const AUDIO_PREF_KEY = STORAGE_KEYS.audioEnabled ?? "audioEnabled";
+const AUDIO_PREF_KEY = STORAGE_KEYS.sound;
 
 /**
  * Check if audio is enabled

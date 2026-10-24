@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useProgress } from "@/lib/progress";
-import { REGIONS, REGION_KEYS, type RegionKey } from "@/lib/states";
+import { REGIONS, REGION_KEYS, type RegionKey } from "@/lib/passport-helpers";
 import { EMOJI } from "@/constants/emoji";
 import { STATE_ART } from "@/lib/state-art";
 
@@ -24,10 +24,10 @@ type RegionStat = {
 function buildRegionStats(completedStates: Set<string>): Record<RegionKey, RegionStat> {
   const stats = {} as Record<RegionKey, RegionStat>;
 
-  REGION_KEYS.forEach((regionKey) => {
+  REGION_KEYS.forEach((regionKey: RegionKey) => {
     const region = REGIONS[regionKey];
-    const regionStateNames = region.states.map((s) => s.name);
-    const regionCompleted = regionStateNames.filter((name) => completedStates.has(name)).length;
+    const regionStateNames = region.states.map((s: any) => s.name);
+    const regionCompleted = regionStateNames.filter((name: string) => completedStates.has(name)).length;
     const regionTotal = regionStateNames.length;
 
     stats[regionKey] = {
@@ -47,8 +47,8 @@ export function JourneyPassport() {
   const allStates = useMemo(
     () =>
       Object.values(REGIONS)
-        .flatMap((r) => r.states)
-        .sort((a, b) => a.name.localeCompare(b.name)),
+        .flatMap((r: any) => r.states)
+        .sort((a: any, b: any) => a.name.localeCompare(b.name)),
     [],
   );
 
@@ -95,7 +95,7 @@ export function JourneyPassport() {
       <div className="space-y-3">
         <div className="text-sm font-bold text-ink">Regions</div>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-          {REGION_KEYS.map((regionKey) => {
+          {REGION_KEYS.map((regionKey: RegionKey) => {
             const region = REGIONS[regionKey];
             const stats = regionStats[regionKey];
 
@@ -170,7 +170,7 @@ export function JourneyPassport() {
                   <div className="flex items-center gap-2 pt-1 border-t border-ink/10">
                     <div className="text-sm">{EMOJI.feedback.trophy}</div>
                     <div className="text-xs font-bold text-ink/70">
-                      {badge.stars || "0"} {EMOJI.action.star}
+                      {progress.stars?.[state.name] || "0"} {EMOJI.action.star}
                     </div>
                     {badge.stampDate && (
                       <div className="text-xs font-semibold text-ink/50 ml-auto">

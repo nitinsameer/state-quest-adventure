@@ -8,10 +8,12 @@
  * crashes and display user-friendly error messages.
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { BrowserRouter } from "react-router-dom";
+import "@testing-library/jest-dom";
 import React from "react";
+
+// No router wrapper needed for this test
 
 /**
  * Mock error boundary component that mirrors the behavior of __root.tsx
@@ -158,7 +160,7 @@ describe("Error Boundary (Regression: FND-020)", () => {
         </ErrorBoundary>
       );
 
-      expect(screen.getByTestId("success")).toBeInTheDocument();
+      expect(screen.getByTestId("success")).toBeTruthy();
     });
 
     it("should catch and display Error instances", () => {
@@ -168,9 +170,9 @@ describe("Error Boundary (Regression: FND-020)", () => {
         </ErrorBoundary>
       );
 
-      expect(screen.getByTestId("error-boundary")).toBeInTheDocument();
-      expect(screen.getByText("Something went wrong")).toBeInTheDocument();
-      expect(screen.getByText("Test error from component")).toBeInTheDocument();
+      expect(screen.getByTestId("error-boundary")).toBeTruthy();
+      expect(screen.getByText("Something went wrong")).toBeTruthy();
+      expect(screen.getByText("Test error from component")).toBeTruthy();
     });
 
     it("should display error details in collapsed element", () => {
@@ -181,7 +183,7 @@ describe("Error Boundary (Regression: FND-020)", () => {
       );
 
       const details = screen.getByText("Error details").closest("details");
-      expect(details).toBeInTheDocument();
+      expect(details).toBeTruthy();
     });
 
     it("should call onError callback when error is caught", () => {
@@ -236,10 +238,10 @@ describe("Error Boundary (Regression: FND-020)", () => {
       );
 
       // User should see:
-      expect(screen.getByText("Something went wrong")).toBeInTheDocument();
+      expect(screen.getByText("Something went wrong")).toBeTruthy();
 
       // And be able to expand details if needed:
-      expect(screen.getByText("Error details")).toBeInTheDocument();
+      expect(screen.getByText("Error details")).toBeTruthy();
     });
   });
 });

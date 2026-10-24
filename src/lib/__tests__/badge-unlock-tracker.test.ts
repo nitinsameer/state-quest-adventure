@@ -140,7 +140,7 @@ describe("Badge Unlock Tracker (Regression: FND-009)", () => {
     it("should return empty array when no badges unlocked", () => {
       const badges: AchievementBadge[] = [
         {
-          id: "badge-1",
+          id: "explorers-awakening",
           tier: "seedling",
           icon: "🌱",
           name: "Starter",
@@ -160,7 +160,7 @@ describe("Badge Unlock Tracker (Regression: FND-009)", () => {
     it("should return newly unlocked badges not yet seen", () => {
       const badges: AchievementBadge[] = [
         {
-          id: "badge-1",
+          id: "reader",
           tier: "seedling",
           icon: "🌱",
           name: "Starter",
@@ -175,15 +175,15 @@ describe("Badge Unlock Tracker (Regression: FND-009)", () => {
 
       const newly = getNewlyUnlockedBadges(badges);
       expect(newly.length).toBe(1);
-      expect(newly[0].id).toBe("badge-1");
+      expect(newly[0].id).toBe("reader");
     });
 
     it("should not return badges already seen", () => {
-      markBadgeAsSeen("badge-1");
+      markBadgeAsSeen("quiz-starter");
 
       const badges: AchievementBadge[] = [
         {
-          id: "badge-1",
+          id: "quiz-starter",
           tier: "seedling",
           icon: "🌱",
           name: "Starter",
@@ -201,11 +201,11 @@ describe("Badge Unlock Tracker (Regression: FND-009)", () => {
     });
 
     it("should handle mix of seen and unseen badges", () => {
-      markBadgeAsSeen("seen-badge");
+      markBadgeAsSeen("stamp-collector");
 
       const badges: AchievementBadge[] = [
         {
-          id: "seen-badge",
+          id: "stamp-collector",
           tier: "seedling",
           icon: "🌱",
           name: "Seen",
@@ -217,7 +217,7 @@ describe("Badge Unlock Tracker (Regression: FND-009)", () => {
           progress: 1,
         },
         {
-          id: "new-badge",
+          id: "fired-up",
           tier: "growing",
           icon: "🌿",
           name: "New",
@@ -232,14 +232,14 @@ describe("Badge Unlock Tracker (Regression: FND-009)", () => {
 
       const newly = getNewlyUnlockedBadges(badges);
       expect(newly.length).toBe(1);
-      expect(newly[0].id).toBe("new-badge");
+      expect(newly[0].id).toBe("fired-up");
     });
   });
 
   describe("getBadgeNotificationMessage", () => {
     it("should return notification message for seedling badge", () => {
       const badge: AchievementBadge = {
-        id: "starter",
+        id: "explorers-awakening",
         tier: "seedling",
         icon: "🌱",
         name: "First Steps",
@@ -258,17 +258,17 @@ describe("Badge Unlock Tracker (Regression: FND-009)", () => {
     });
 
     it("should return different emoji for each tier", () => {
-      const tiers: Array<[string, string]> = [
-        ["seedling", "🌱"],
-        ["growing", "🌿"],
-        ["mighty", "🌳"],
-        ["elite", "🌲"],
+      const badgeIds: Array<[string, string, "seedling" | "growing" | "mighty" | "elite"]> = [
+        ["explorers-awakening", "🌱", "seedling"],
+        ["five-explorer", "🌿", "growing"],
+        ["ten-champion", "🌳", "mighty"],
+        ["india-conqueror", "🌲", "elite"],
       ];
 
-      for (const [tier, emoji] of tiers) {
+      for (const [id, emoji, tier] of badgeIds) {
         const badge: AchievementBadge = {
-          id: `badge-${tier}`,
-          tier: tier as any,
+          id: id as any,
+          tier,
           icon: emoji,
           name: `${tier} Badge`,
           description: "Test",
@@ -286,7 +286,7 @@ describe("Badge Unlock Tracker (Regression: FND-009)", () => {
 
     it("should use fallback emoji if badge icon missing", () => {
       const badge: AchievementBadge = {
-        id: "no-icon",
+        id: "master-reader",
         tier: "seedling",
         icon: "",
         name: "No Icon Badge",
