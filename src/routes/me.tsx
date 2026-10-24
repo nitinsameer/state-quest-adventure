@@ -7,7 +7,7 @@ export const Route = createFileRoute("/me")({
       { title: "My Explorer Profile — India Explorer" },
       {
         name: "description",
-        content: "Your explorer profile: level, XP, streak, collections and parent controls.",
+        content: "Your explorer profile: level, XP, streak, achievements, and settings.",
       },
       { property: "og:title", content: "My Explorer Profile" },
       {

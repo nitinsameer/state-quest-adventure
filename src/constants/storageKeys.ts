@@ -22,8 +22,8 @@ export const STORAGE_KEYS = {
   // === Tutorial & Onboarding ===
   tutorialShown: "india-explorer:first-session-tutorial-shown:v1",
 
-  // === Parent Zone & Controls ===
-  parentZoneSettings: "india-explorer:parent-zone-settings:v1",
+  // === Postcard Preferences ===
+  postcardSettings: "india-explorer:postcard-settings:v1",
 
   // === Content & Collections ===
   postcards: "india-explorer:postcard-library:v1",

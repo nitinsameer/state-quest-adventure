@@ -36,6 +36,10 @@ import {
   hasFeatureConsent,
   subscribeConsentChanges,
 } from "@/lib/parental-consent";
+import {
+  getPostcardSettings,
+  setPostcardSetting,
+} from "@/lib/postcard-settings";
 import { LanguageToggle, type LanguageCode } from "@/components/LanguageToggle";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
@@ -4092,6 +4096,10 @@ function ProfileScreenContent() {
     if (typeof window === "undefined") return false;
     return hasFeatureConsent("audio");
   });
+  const [includeNameOnPostcards, setIncludeNameOnPostcards] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return getPostcardSettings().includeNameOnSharedPostcards ?? false;
+  });
 
   // Subscribe to file consent changes
   useEffect(() => {
@@ -4412,6 +4420,47 @@ function ProfileScreenContent() {
             </span>
           </button>
         </div>
+
+        {/* Postcard Name Sharing Toggle */}
+        <div className="animate-fade-in" style={{ animationDelay: "220ms" }}>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={includeNameOnPostcards}
+            aria-label="Include name on shared postcards"
+            onClick={() => {
+              const newValue = !includeNameOnPostcards;
+              setIncludeNameOnPostcards(newValue);
+              setPostcardSetting("includeNameOnSharedPostcards", newValue);
+              fxTap();
+            }}
+            className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
+          >
+            <div className="h-12 w-12 rounded-2xl bg-accent-4 flex items-center justify-center text-2xl">
+              {EMOJI.action.save}
+            </div>
+            <div className="flex-1 text-left">
+              <div className="text-display font-extrabold text-[15px] leading-tight">
+                Include name on postcards
+              </div>
+              <div className="text-[11px] font-bold text-text-secondary">
+                Add your name when sharing with others
+              </div>
+            </div>
+            <span
+              className="h-7 w-12 rounded-full flex items-center px-1 transition"
+              style={
+                includeNameOnPostcards
+                  ? { backgroundColor: "var(--accent-3)" }
+                  : { backgroundColor: "var(--color-muted-bg)" }
+              }
+            >
+              <span
+                className={`h-5 w-5 rounded-full bg-text-on-header shadow transition-transform ${includeNameOnPostcards ? "translate-x-5" : "translate-x-0"}`}
+              />
+            </span>
+          </button>
+        </div>
         {/* Streak Section */}
         <div className="animate-fade-in" style={{ animationDelay: "250ms" }}>
           {(() => {
@@ -4603,55 +4652,6 @@ function ProfileStat({ value, label }: { value: string; label: string }) {
       <div className="text-display text-xl font-extrabold">{value}</div>
       <div className="text-xs font-bold text-text-secondary">{label}</div>
     </div>
-  );
-}
-
-
-function RowLink({
-  icon,
-  tone,
-  title,
-  sub,
-  to,
-}: {
-  icon: string;
-  tone: "orange" | "blue" | "green" | "gold";
-  title: string;
-  sub: string;
-  to: "/explorer" | "/achievements" | "/parent" | "/journey";
-}) {
-  // NOTE: bgMap and inkMap contain CSS variable references like var(--accent-1), not hardcoded hex values.
-  // These are theme-aware token references that resolve to the current theme's accent colors at runtime.
-  const bgMap = {
-    orange: "var(--accent-1)",
-    blue: "var(--accent-5)",
-    green: "var(--accent-3)",
-    gold: "var(--accent-4)",
-  };
-  const inkMap = {
-    orange: "var(--accent-1-ink)",
-    blue: "var(--accent-5-ink)",
-    green: "var(--accent-3-ink)",
-    gold: "var(--accent-4-ink)",
-  };
-  return (
-    <Link
-      to={to}
-      onClick={() => fxTap()}
-      className="ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
-    >
-      <div
-        className="h-12 w-12 rounded-2xl flex items-center justify-center text-2xl"
-        style={{ backgroundColor: bgMap[tone], color: inkMap[tone] }}
-      >
-        {icon}
-      </div>
-      <div className="flex-1">
-        <div className="text-display font-extrabold text-[15px] leading-tight">{title}</div>
-        <div className="text-[11px] font-bold text-text-secondary">{sub}</div>
-      </div>
-      <div className="text-text-secondary text-xl">›</div>
-    </Link>
   );
 }
 
