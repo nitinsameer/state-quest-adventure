@@ -2343,6 +2343,7 @@ function HubCard({
         opacity: locked ? 0.6 : 1,
         pointerEvents: locked || !canClick ? "none" : "auto",
         cursor: locked || !canClick ? "not-allowed" : "pointer",
+        contain: "layout style paint", // FIX: Prevent reflow cascade when children change
       }}
     >
       {/* Top row: Number badge (left) + Large Icon (right) */}
@@ -2357,9 +2358,14 @@ function HubCard({
           </div>
         )}
 
-        {/* Checkmark overlay for completed - appears on top of card */}
+        {/* Checkmark overlay for completed - appears on top of card, fixed size */}
         {done && (
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div
+            className="absolute inset-0 flex items-center justify-center pointer-events-none"
+            style={{
+              zIndex: 10,
+            }}
+          >
             <div className="h-16 w-16 rounded-full bg-action-success text-white flex items-center justify-center text-h3 font-black shadow-lg hub-checkmark-animate">
               ✓
             </div>
@@ -2391,7 +2397,10 @@ function HubCard({
         {!locked && (
           <div
             className="h-10 w-10 rounded-full flex items-center justify-center text-h5 font-bold text-white ml-auto flex-shrink-0 hub-arrow-pulse"
-            style={{ backgroundColor: arrowColor }}
+            style={{
+              backgroundColor: arrowColor,
+              pointerEvents: done ? "auto" : "auto", // Always clickable
+            }}
           >
             →
           </div>
