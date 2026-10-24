@@ -88,7 +88,13 @@ function SingleScreenCelebration({
   navigationInProgressRef,
   navigate,
 }: SingleScreenCelebrationProps) {
+  // SAFETY: Validate state exists before accessing properties
   const state = getState(ceremony.stateName);
+  if (!state) {
+    console.error(`[QuizCelebrationScreen] Invalid state: ${ceremony.stateName}`);
+    return null;
+  }
+
   const grad = TONE_GRADIENT[state.tone] ?? "var(--accent-1)";
   const art = STATE_ART[state.name];
 
@@ -223,10 +229,21 @@ function SingleScreenCelebration({
   };
 
   const handleNavigate = (to: string, params?: { slug: string }) => {
+    // CRITICAL: Prevent double navigation on rapid clicks
+    if (navigationInProgressRef.current) {
+      console.warn("[QuizCelebrationScreen] Navigation already in progress, ignoring click");
+      return;
+    }
+
     navigationInProgressRef.current = true;
     fxTap();
     dismissPendingCelebration();
-    navigate({ to: to as any, params: params as any });
+    
+    // Use setTimeout to ensure dismissPendingCelebration state update completes
+    // before navigation happens, preventing stale state reads
+    setTimeout(() => {
+      navigate({ to: to as any, params: params as any });
+    }, 0);
   };
 
   const handleNextState = () => {
@@ -239,7 +256,9 @@ function SingleScreenCelebration({
   };
 
   const handlePlayAgain = () => {
-    handleNavigate(`/state/${state.short}/quiz`);
+    // SAFETY: Validate state exists before navigation
+    if (!state) return;
+    handleNavigate("/state/$slug/quiz", { slug: state.short });
   };
 
   const handleHome = () => {

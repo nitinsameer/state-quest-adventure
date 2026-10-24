@@ -6,6 +6,7 @@ import { statesWithProgress, setLastPlayedState, getProgress } from "@/lib/progr
 import { useProgress } from "@/lib/progress";
 import { useAndroidBackButton } from "@/hooks/useAndroidBackButton";
 import { PlaceError, NotFoundPlace } from "@/components/PlaceFallbacks";
+import { useEffect, useRef } from "react";
 
 export const Route = createFileRoute("/state/$slug/complete")({
   loader: ({ params }) => {
@@ -50,15 +51,17 @@ function Complete() {
   const { name } = Route.useLoaderData();
   const navigate = useNavigate();
   const progress = useProgress();
+  const navigationInProgressRef = useRef(false);
 
   // Guard: If no pending celebration, redirect to learn
   // BUT: Don't redirect immediately if there ARE pending celebrations
   // This prevents race condition when buttons dismiss celebration while navigating
-  if (!progress.pendingCelebrations?.length && progress.onboarded) {
-    // Only redirect if we're sure there's no ceremony in progress
-    // (if celebration was just dismissed, wait for next render)
-    return null;
-  }
+  useEffect(() => {
+    if (!progress.pendingCelebrations?.length && progress.onboarded && !navigationInProgressRef.current) {
+      navigationInProgressRef.current = true;
+      navigate({ to: "/state/$slug/learn", params: { slug } });
+    }
+  }, [progress.pendingCelebrations?.length, progress.onboarded, navigate, slug]);
 
   // Android back button: FIX #3 - Back from celebration goes to /home, not back into quiz
   // This prevents users from going back through quiz navigation history

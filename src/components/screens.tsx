@@ -3260,8 +3260,11 @@ function QuizScreenContent({
   const isLastQuestion = index === questions.length - 1;
   const onReset = () => {
     fxTap();
-    // Prevent double navigation on last question
-    if (navigationStarted) return;
+    // CRITICAL: Prevent double navigation and double finishQuiz calls on last question
+    if (navigationStarted) {
+      console.warn("[Quiz] Navigation already started, ignoring duplicate onReset");
+      return;
+    }
 
     // Record this answer
     const isCorrect = selected === correct;
@@ -3269,6 +3272,7 @@ function QuizScreenContent({
 
     // Always move to next question (or finish if last)
     if (isLastQuestion) {
+      // CRITICAL: Set flag BEFORE any async operations to prevent race conditions
       setNavigationStarted(true);
 
       // Calculate accurate score from stored answers
