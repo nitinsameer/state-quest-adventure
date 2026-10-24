@@ -2203,13 +2203,17 @@ export function LearningHubScreen({
             }}
             disabled={completedCategories < 6}
             className={`w-full rounded-2xl p-4 transition-all active:scale-95 flex items-center gap-3 ${
-              completedCategories === 6 ? "bg-accent-5-soft hover:shadow-md" : "bg-accent-5-soft/50"
+              completedCategories === 6 
+                ? "bg-accent-5-soft hover:shadow-md shadow-md" 
+                : "bg-accent-5-soft/50 opacity-60 cursor-not-allowed"
             }`}
           >
             {/* Lock icon in circular background */}
             <div
-              className={`h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0 text-h4 ${
-                completedCategories === 6 ? "bg-accent-5/20" : "bg-accent-5/10"
+              className={`h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0 text-h4 flex-shrink-0 transition-all ${
+                completedCategories === 6 
+                  ? "bg-accent-5 animate-pulse" 
+                  : "bg-accent-5/10"
               }`}
             >
               {completedCategories === 6 ? "🔓" : "🔒"}
@@ -2217,18 +2221,22 @@ export function LearningHubScreen({
 
             {/* Heading and subtitle */}
             <div className="flex-1 text-left">
-              <div className="text-label font-extrabold text-text-primary">
+              <div className={`text-label font-extrabold ${
+                completedCategories === 6 ? "text-text-primary" : "text-text-secondary"
+              }`}>
                 {completedCategories === 6 ? "State Quiz" : "State Quiz Locked"}
               </div>
               <div className="text-caption text-text-secondary">
                 {completedCategories === 6
-                  ? "Complete all 6 challenges"
+                  ? "Tap to start your quiz!"
                   : "Complete all 6 challenges"}
               </div>
             </div>
 
-            {/* Decorative sparkles */}
-            <div className="text-h4 flex-shrink-0">✨</div>
+            {/* Decorative sparkles - animated when enabled */}
+            <div className={`text-h4 flex-shrink-0 ${completedCategories === 6 ? "animate-bounce" : "opacity-30"}`}>
+              ✨
+            </div>
           </button>
         </div>
       </div>
