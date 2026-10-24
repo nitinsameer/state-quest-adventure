@@ -51,7 +51,7 @@ import { showSuccessToast } from "@/hooks/useSuccessToast";
 import { AVATAR_CONFIG, type AvatarId } from "@/lib/avatar-config";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouter, Navigate } from "@tanstack/react-router";
-import { AvatarScreen, AgeScreen, ConsentScreen } from "@/components/Onboarding";
+import { AvatarScreen, AgeScreen } from "@/components/Onboarding";
 import { fxCorrect, fxWrong, fxConfetti, fxStamp, fxTap, useSoundOn, setSoundOn } from "@/lib/fx";
 import { useAndroidBackButton } from "@/hooks/useAndroidBackButton";
 import { setJourneyBackHandler } from "@/lib/journeyBackHandler";
@@ -362,10 +362,9 @@ export function WelcomeScreen() {
 export function CreateProfileScreen() {
   const p = useProgress();
   const navigate = useNavigate();
-  const [currentScreen, setCurrentScreen] = useState<"avatar" | "age" | "consent">("avatar");
+  const [currentScreen, setCurrentScreen] = useState<"avatar" | "age">("avatar");
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
   const [selectedAge, setSelectedAge] = useState<string | null>(null);
-  const [parentConsented, setParentConsented] = useState(false);
 
   // Guard against re-entry post-onboarding
   useEffect(() => {
@@ -389,10 +388,18 @@ export function CreateProfileScreen() {
 
   const handleAgeNext = () => {
     fxTap();
+    fxConfetti();
+    
     // If age not selected, use default
     const ageToUse = selectedAge || "6-7";
     setSelectedAge(ageToUse);
-    setCurrentScreen("consent");
+
+    // Save profile immediately (no consent gate needed)
+    const avatarName = getAvatarName(selectedAvatar || "explorer-hat");
+    saveProfile({ name: avatarName, avatar: selectedAvatar || "explorer-hat", ageBand: ageToUse });
+
+    // Navigate to home after celebration
+    setTimeout(() => navigate({ to: "/home" }), 300);
   };
 
   const handleAgeBack = () => {
@@ -400,29 +407,6 @@ export function CreateProfileScreen() {
     setCurrentScreen("avatar");
     // Clear age when going back but preserve avatar
     setSelectedAge(null);
-  };
-
-  const handleConsentBack = () => {
-    fxTap();
-    setCurrentScreen("age");
-    setParentConsented(false);
-  };
-
-  const handleConsentContinue = () => {
-    if (!parentConsented) return;
-    fxTap();
-    fxConfetti();
-
-    // Save profile
-    const avatarName = getAvatarName(selectedAvatar || "explorer-hat");
-    const ageToSave = selectedAge || "6-7";
-
-    saveProfile({ name: avatarName, avatar: selectedAvatar || "explorer-hat", ageBand: ageToSave });
-
-    // No consent gates needed - audio and features work by default
-
-    // Navigate to home after celebration
-    setTimeout(() => navigate({ to: "/home" }), 300);
   };
 
   if (currentScreen === "avatar") {
@@ -443,17 +427,6 @@ export function CreateProfileScreen() {
         onSelectAge={setSelectedAge}
         onBack={handleAgeBack}
         onNext={handleAgeNext}
-      />
-    );
-  }
-
-  if (currentScreen === "consent") {
-    return (
-      <ConsentScreen
-        parentConsented={parentConsented}
-        onConsent={setParentConsented}
-        onBack={handleConsentBack}
-        onContinue={handleConsentContinue}
       />
     );
   }
@@ -3319,13 +3292,12 @@ function QuizScreenContent({
       };
 
       // ATOMIC: Call finishQuiz to complete state, award XP/stars, and queue celebration
-      // This happens before navigation to ensure state is consistent
+      // This happens BEFORE navigation to ensure state is consistent
       finishQuiz(activeName, quizMetrics);
 
-      // Use setTimeout to ensure state is settled before navigation
-      setTimeout(() => {
-        onDone?.(quizMetrics);
-      }, 50);
+      // Navigate to completion screen after finishQuiz state update
+      // (Zustand setState is synchronous, so celebration should be queued by now)
+      onDone?.(quizMetrics);
       return;
     }
 
