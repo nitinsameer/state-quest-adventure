@@ -2304,31 +2304,29 @@ function HubCard({
   categoryCardsRead?: number;
   onOpen?: () => void;
 }) {
-  // Pastel color system mapped by index - using semantic tokens
+  // Pastel background colors mapped by index - using semantic tokens
   const pastelColorMap = [
-    "var(--accent-2-soft)", // 0: Capital - soft accent 2
-    "var(--accent-4-soft)", // 1: Language - soft accent 4
-    "var(--accent-6-soft)", // 2: Food - soft accent 6
-    "var(--accent-1-soft)", // 3: Places - soft accent 1
-    "var(--accent-2-soft)", // 4: Monument - soft accent 2
-    "var(--accent-4-soft)", // 5: Craft - soft accent 4
+    "var(--accent-2-soft)", // 0: Capital - soft accent 2 (orange)
+    "var(--accent-4-soft)", // 1: Language - soft accent 4 (purple)
+    "var(--accent-6-soft)", // 2: Food - soft accent 6 (orange)
+    "var(--accent-1-soft)", // 3: Places - soft accent 1 (red/pink)
+    "var(--accent-2-soft)", // 4: Monument - soft accent 2 (green)
+    "var(--accent-4-soft)", // 5: Craft - soft accent 4 (blue)
+  ];
+
+  // Badge colors - solid accent colors for numbered badges
+  const badgeColorMap = [
+    "var(--accent-2)", // 0: Orange
+    "var(--accent-4)", // 1: Purple
+    "var(--accent-6)", // 2: Orange/Red
+    "var(--accent-1)", // 3: Red/Pink
+    "var(--accent-5)", // 4: Green
+    "var(--accent-3)", // 5: Blue
   ];
 
   const pastelBg = index !== undefined ? pastelColorMap[index] : "var(--accent-4-soft)";
-
-  // Border styling based on index - use theme tokens
-  let borderColor = "var(--border-subtle)"; // Default subtle gray
-  let borderWidth = "2px";
-  let arrowBg = "bg-text-secondary/50";
-  let arrowText = "text-text-primary";
-
-  if (index === 0) {
-    // Capital card - ORANGE/PINK
-    borderColor = "var(--accent-2)";
-    borderWidth = "3px";
-    arrowBg = "bg-accent-2";
-    arrowText = "text-text-on-primary";
-  }
+  const badgeColor = index !== undefined ? badgeColorMap[index] : "var(--accent-4)";
+  const arrowColor = badgeColor; // Arrow matches badge color
 
   return (
     <button
@@ -2338,60 +2336,60 @@ function HubCard({
         fxTap();
         onOpen?.();
       }}
-      className="relative text-left transition active:scale-95 p-3 rounded-2xl flex flex-col h-full"
+      className="relative text-left transition active:scale-95 p-4 rounded-3xl flex flex-col h-full border-2"
       style={{
         backgroundColor: pastelBg,
-        borderColor: borderColor,
-        borderWidth: borderWidth,
-        borderStyle: "solid",
+        borderColor: "var(--border-subtle)",
         opacity: locked ? 0.6 : 1,
         pointerEvents: locked || !canClick ? "none" : "auto",
         cursor: locked || !canClick ? "not-allowed" : "pointer",
       }}
     >
-      {/* Top row: Number badge (left) + Icon (right) */}
-      <div className="flex items-start justify-between mb-2">
-        {/* Numbered badge in top-left */}
-        {index !== undefined && (
-          <div className="h-6 w-6 rounded-full bg-surface-card flex items-center justify-center text-caption font-black text-text-primary shadow-soft flex-shrink-0">
+      {/* Top row: Number badge (left) + Large Icon (right) */}
+      <div className="flex items-start justify-between mb-3 gap-2">
+        {/* Numbered badge in top-left - large colored circle */}
+        {index !== undefined && !done && (
+          <div
+            className="h-10 w-10 rounded-full flex items-center justify-center text-body font-black text-white shadow-md flex-shrink-0"
+            style={{ backgroundColor: badgeColor }}
+          >
             {String(index + 1).padStart(2, "0")}
           </div>
         )}
 
         {/* Checkmark badge for completed - replaces number */}
         {done && (
-          <div className="h-6 w-6 rounded-full bg-action-success text-text-on-primary flex items-center justify-center text-caption font-black shadow-soft flex-shrink-0 hub-checkmark-animate">
+          <div className="h-10 w-10 rounded-full bg-action-success text-white flex items-center justify-center text-body font-black shadow-md flex-shrink-0 hub-checkmark-animate">
             ✓
           </div>
         )}
 
-        {/* Icon - top right */}
-        <div className="text-h3 ml-auto flex-shrink-0">{icon}</div>
+        {/* Large Icon - top right */}
+        <div className="text-5xl ml-auto flex-shrink-0 flex items-center justify-center">{icon}</div>
       </div>
 
-      {/* Title - grows to fill space */}
-      <div className="text-h5 text-text-primary font-extrabold leading-tight mb-1 flex-grow">
+      {/* Title */}
+      <div className="text-h5 text-text-primary font-extrabold leading-tight mb-1">
         {title}
       </div>
 
       {/* Subtitle */}
-      <div className="text-body text-text-secondary font-medium mb-2 line-clamp-2">{sub}</div>
+      <div className="text-body text-text-secondary font-medium mb-3 line-clamp-2">{sub}</div>
 
       {/* Bottom row: Question count (left) + Arrow button (right) */}
-      <div className="flex items-center justify-between mt-auto">
-        {/* Question count */}
+      <div className="flex items-center justify-between mt-auto pt-2">
+        {/* Question count text */}
         {categoryCardsTotal !== undefined && categoryCardsRead !== undefined && (
-          <div
-            className={`text-body font-bold ${done ? "text-action-success" : "text-text-secondary"}`}
-          >
-            {categoryCardsRead}/{categoryCardsTotal}
+          <div className="text-body text-text-secondary font-medium">
+            {categoryCardsRead}/{categoryCardsTotal} questions
           </div>
         )}
 
-        {/* Arrow button - bottom right */}
+        {/* Arrow button - bottom right, colored */}
         {!done && !locked && (
           <div
-            className={`h-8 w-8 rounded-full flex items-center justify-center text-caption font-bold ml-auto flex-shrink-0 ${arrowBg} ${arrowText} hub-arrow-pulse`}
+            className="h-10 w-10 rounded-full flex items-center justify-center text-h5 font-bold text-white ml-auto flex-shrink-0 hub-arrow-pulse"
+            style={{ backgroundColor: arrowColor }}
           >
             →
           </div>
@@ -2399,7 +2397,7 @@ function HubCard({
 
         {/* Locked icon - bottom right */}
         {locked && (
-          <div className="h-6 w-6 rounded-full bg-text-secondary/70 text-text-on-primary flex items-center justify-center text-caption flex-shrink-0 ml-auto">
+          <div className="h-10 w-10 rounded-full bg-text-secondary/70 text-white flex items-center justify-center text-body font-bold flex-shrink-0 ml-auto">
             🔒
           </div>
         )}
