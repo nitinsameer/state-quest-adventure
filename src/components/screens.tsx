@@ -1350,6 +1350,14 @@ export function JourneyMapScreen() {
 
   useEffect(() => {
     appLogger.info("journey_map_screen", "view state changed", view);
+    
+    // Signal to root layout whether to hide bottom nav
+    // Show nav only when view is null (main journey map view)
+    if (view === null) {
+      sessionStorage.removeItem("journey-immersive-view");
+    } else {
+      sessionStorage.setItem("journey-immersive-view", "true");
+    }
   }, [view]);
 
   // Preload all state images for smooth rendering
@@ -2012,8 +2020,6 @@ export function LearningHubScreen({
 
   // State for showing the "All 6 cards done" decision modal
   const [showDecisionModal, setShowDecisionModal] = useState(false);
-
-  // Category progress tracking - calculate card counts using cardVisits
   const allCards = useMemo(() => {
     return learningCardsFor(state.name, "en", progress.ageBand);
   }, [state.name, progress.ageBand]);
@@ -2167,7 +2173,7 @@ export function LearningHubScreen({
             </div>
             <div className="w-full h-2.5 bg-accent-5-soft rounded-full overflow-hidden">
               <div
-                className="h-full rounded-full transition-all duration-300"
+                className={`h-full rounded-full transition-all duration-300 ${completedCategories === 6 ? "hub-progress-complete" : ""}`}
                 style={{
                   width: `${(completedCategories / 6) * 100}%`,
                   backgroundColor: "var(--accent-5)",
@@ -2188,7 +2194,13 @@ export function LearningHubScreen({
         {/* CHALLENGE CARDS GRID - 2 columns, natural flow, no fixed heights */}
         <div className="px-4 mb-6 grid grid-cols-2 gap-3">
           {cards.map((c, idx) => (
-            <HubCard key={c.title} {...c} index={idx} stateName={state.name} />
+            <div 
+              key={c.title}
+              className="hub-card-entrance"
+              style={{ animationDelay: `${idx * 50}ms` }}
+            >
+              <HubCard {...c} index={idx} stateName={state.name} />
+            </div>
           ))}
         </div>
 
@@ -2202,7 +2214,7 @@ export function LearningHubScreen({
               }
             }}
             disabled={completedCategories < 6}
-            className={`w-full rounded-2xl p-4 transition-all active:scale-95 flex items-center gap-3 ${
+            className={`w-full rounded-2xl p-5 transition-all active:scale-95 flex items-center gap-3 ${
               completedCategories === 6 
                 ? "bg-accent-5-soft hover:shadow-md shadow-md" 
                 : "bg-accent-5-soft/50 opacity-60 cursor-not-allowed"
@@ -2375,7 +2387,7 @@ function HubCard({
 
         {/* Checkmark badge for completed - replaces number */}
         {done && (
-          <div className="h-6 w-6 rounded-full bg-action-success text-text-on-primary flex items-center justify-center text-caption font-black shadow-soft flex-shrink-0">
+          <div className="h-6 w-6 rounded-full bg-action-success text-text-on-primary flex items-center justify-center text-caption font-black shadow-soft flex-shrink-0 hub-checkmark-animate">
             ✓
           </div>
         )}
@@ -2406,7 +2418,7 @@ function HubCard({
         {/* Arrow button - bottom right */}
         {!done && !locked && (
           <div
-            className={`h-6 w-6 rounded-full flex items-center justify-center text-caption font-bold ml-auto flex-shrink-0 ${arrowBg} ${arrowText}`}
+            className={`h-8 w-8 rounded-full flex items-center justify-center text-caption font-bold ml-auto flex-shrink-0 ${arrowBg} ${arrowText} hub-arrow-pulse`}
           >
             →
           </div>

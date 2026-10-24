@@ -286,19 +286,55 @@ function HydratedApp() {
   // Get celebration store show method at top level (hooks must be called before any conditionals)
   const showCelebration = useCelebrationStore((state) => state.show);
 
+  // State to trigger re-render when journey immersive view changes
+  const [journeyImmersiveMode, setJourneyImmersiveMode] = useState(false);
+
   // Pre-auth routes that should NOT show BottomNav
   const preAuthRoutes = ["/", "/welcome", "/create"];
 
   // Immersive routes that should NOT show BottomNav (full-screen experiences)
-  // Only hide nav for /state/* routes (learning, quizzes, etc.)
-  // Journey tab (/journey) shows nav normally; specific states accessed FROM journey stay as /journey route
-  // but are rendered as immersive screens via internal view state in JourneyMapScreen
+  // Hide nav for:
+  // 1. /state/* routes (learning hubs, quizzes, cards, etc.)
+  // 2. /journey when viewing state details (intro, hub, card, quiz screens)
+  // Note: When viewing immersive content within /journey, we use sessionStorage to signal nav hiding
   const immersiveRoutePattern =
     /^\/state\/[^/]+\/(quiz|learn|card|cards|complete|postcard|unlock)(\/|$)/;
 
-  // Check if current route is immersive (quiz, learning, celebration, or journey map)
+  // Check if current route is immersive
   const isImmersiveRoute = immersiveRoutePattern.test(location.pathname);
-  const shouldShowBottomNav = !preAuthRoutes.includes(location.pathname) && !isImmersiveRoute;
+  
+  // Check if user is viewing immersive content within Journey screen
+  const isJourneyImmersive = 
+    location.pathname === "/journey" && journeyImmersiveMode;
+  
+  const shouldShowBottomNav = 
+    !preAuthRoutes.includes(location.pathname) && 
+    !isImmersiveRoute && 
+    !isJourneyImmersive;
+
+  // Listen for sessionStorage changes from JourneyMapScreen
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const isImmersive = sessionStorage.getItem("journey-immersive-view") === "true";
+      setJourneyImmersiveMode(isImmersive);
+    };
+
+    // Check initial state
+    handleStorageChange();
+
+    // Listen for sessionStorage changes
+    window.addEventListener("storage", handleStorageChange);
+    
+    // Also listen on same tab (storage event doesn't fire for same tab)
+    // We'll use a custom event instead
+    const handleCustomEvent = () => handleStorageChange();
+    window.addEventListener("journey-immersive-change", handleCustomEvent);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("journey-immersive-change", handleCustomEvent);
+    };
+  }, []);
 
   // Initialize and verify Sound toggle state on app load
   useEffect(() => {

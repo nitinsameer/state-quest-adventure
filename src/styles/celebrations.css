@@ -312,3 +312,108 @@
 .toast-emoji-particle {
   animation: toast-emoji-particle 1.2s ease-out forwards;
 }
+
+
+/* === Learning Hub Card Animations (Token-based) === */
+
+@keyframes hub-checkmark-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(-180deg);
+  }
+  60% {
+    transform: scale(1.2) rotate(0deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes hub-progress-complete {
+  0%, 100% {
+    box-shadow: 
+      0 0 0 0 var(--accent-5),
+      inset 0 0 0 0 rgba(74, 144, 226, 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 0 0 8px rgba(74, 144, 226, 0),
+      inset 0 0 0 3px var(--accent-5);
+  }
+}
+
+@keyframes hub-card-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-1-5));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hub-counter-highlight {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes hub-arrow-pulse {
+  0%, 100% {
+    transform: translateX(0) scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateX(var(--space-0-5)) scale(1.1);
+    opacity: 1;
+  }
+}
+
+/* Checkmark animation class */
+.hub-checkmark-animate {
+  animation: hub-checkmark-pop var(--duration-slow) cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Progress complete pulse */
+.hub-progress-complete {
+  animation: hub-progress-complete var(--duration-slow) var(--easing-ease-out);
+}
+
+/* Card entrance animation */
+.hub-card-entrance {
+  animation: hub-card-fade-in var(--duration-normal) var(--easing-ease-out) forwards;
+}
+
+/* Counter highlight on update */
+.hub-counter-highlight {
+  animation: hub-counter-highlight var(--duration-normal) var(--easing-ease-out);
+}
+
+/* Arrow affordance pulse */
+.hub-arrow-pulse {
+  animation: hub-arrow-pulse 2s var(--easing-ease-in-out) infinite;
+}
+
+/* Respect motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .hub-checkmark-animate,
+  .hub-progress-complete,
+  .hub-card-entrance,
+  .hub-counter-highlight,
+  .hub-arrow-pulse {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
