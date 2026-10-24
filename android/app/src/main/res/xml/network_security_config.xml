@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
-    <!-- Default policy: HTTPS only, no cleartext anywhere -->
+    <!-- Default policy: HTTPS only, no cleartext traffic for any domain -->
     <domain-config cleartextTrafficPermitted="false">
-        <domain includeSubdomains="true">firebaseapp.com</domain>
-        <domain includeSubdomains="true">firebaseio.com</domain>
-        <domain includeSubdomains="true">googleapis.com</domain>
-        <domain includeSubdomains="true">firebase.google.com</domain>
-        <domain includeSubdomains="true">*.firebaseio.com</domain>
-        <domain includeSubdomains="true">*.firebaseapp.com</domain>
+        <domain includeSubdomains="true">*</domain>
         <trust-anchors>
             <certificates src="system" />
+            <!-- Allow user-installed CA certs for testing/corporate networks -->
             <certificates src="user" />
         </trust-anchors>
     </domain-config>
