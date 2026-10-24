@@ -145,7 +145,7 @@ const ALL_BADGE_IDS: BadgeId[] = STATE_BADGES.map((b) => b.id);
 
 // Use centralized storage key from constants
 const STORAGE_KEY = STORAGE_KEYS.progress;
-const APP_VERSION = "3.1"; // Increment when you need to clear old cache
+const APP_VERSION = "3.2"; // Increment when you need to clear old cache
 export const XP_PER_LEVEL = 400;
 export const CARDS_PER_STATE = 6;
 export const XP_PER_CARD = 25;
@@ -353,7 +353,9 @@ function hydrate() {
     // Check app version in localStorage to migrate old data if needed
     const storedVersion = localStorage.getItem(STORAGE_KEYS.appVersion);
     if (storedVersion !== APP_VERSION) {
-      // Version mismatch - migrate old data instead of clearing
+      // Version mismatch - migrate old data and clean up obsolete keys
+      cleanupObsoleteStorageKeys();
+
       const oldProgressRaw = localStorage.getItem(STORAGE_KEY);
 
       if (oldProgressRaw) {
@@ -447,6 +449,63 @@ function migrateProgress(validated: any): Progress {
     pendingCelebrations: validated.pendingCelebrations ?? [],
     stars: validated.stars ?? {},
   };
+}
+
+/**
+ * Clean up obsolete storage keys from previous versions.
+ * This function is idempotent - safe to call multiple times.
+ * Called during app version migration.
+ *
+ * Removes:
+ * - PIN-related keys (legacy parental control feature)
+ * - Consent-related keys (no longer needed)
+ * - Other legacy feature keys
+ *
+ * Preserves:
+ * - User progress data
+ * - Quiz history
+ * - Completed states
+ * - All active feature data
+ */
+function cleanupObsoleteStorageKeys() {
+  if (typeof window === "undefined") return;
+
+  // List of obsolete keys to remove
+  const obsoleteKeys = [
+    // PIN/parental control keys (removed feature)
+    "india-explorer:pin-hash",
+    "india-explorer:pin-salt",
+    "india-explorer:pin-attempts",
+    "india-explorer:pin-locked-until",
+    "india-explorer:pin-consent-given",
+    "india-explorer:parent-gate-verified",
+    "india-explorer:pin-recovery-code",
+    "india-explorer:pin-setup-complete",
+
+    // Consent-related keys (no longer required)
+    "india-explorer:parental-consent",
+    "india-explorer:parental-consent:v1",
+    "india-explorer:audio-consent",
+    "india-explorer:consent-timestamp",
+
+    // Other legacy keys
+    "india-explorer:tutorial-completed",
+    "india-explorer:force-update",
+  ];
+
+  // Attempt to remove each obsolete key
+  for (const key of obsoleteKeys) {
+    try {
+      if (localStorage.getItem(key) !== null) {
+        localStorage.removeItem(key);
+        console.log(`[cleanup] Removed obsolete key: ${key}`);
+      }
+    } catch (error) {
+      // Storage unavailable or quota exceeded - silently continue
+      // This is safe because we're in a migration context and have fallbacks
+      console.warn(`[cleanup] Failed to remove key ${key}:`, error);
+    }
+  }
 }
 
 function set(update: (p: Progress) => Progress) {
