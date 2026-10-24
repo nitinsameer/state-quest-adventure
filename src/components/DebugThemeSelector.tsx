@@ -4,14 +4,22 @@
  * Only visible in development mode (process.env.NODE_ENV === 'development').
  * Allows quick preview of all available themes by clicking buttons.
  * Displays theme names with color previews and highlights the current theme.
+ * Includes a button to unlock all themes for testing.
  */
 
+import { useState } from "react";
 import { useThemeStore } from "@/store/themeStore";
 import { THEMES } from "@/lib/themes";
 import { fxTap } from "@/lib/fx";
 
 export function DebugThemeSelector() {
   const { currentTheme, setTheme } = useThemeStore();
+  const [allThemesUnlocked, setAllThemesUnlocked] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("debug-unlock-all-themes") === "true";
+    }
+    return false;
+  });
 
   // Only show in development mode
   if (process.env.NODE_ENV !== "development") {
@@ -23,6 +31,15 @@ export function DebugThemeSelector() {
     setTheme(themeId);
   };
 
+  const handleToggleUnlockAll = () => {
+    fxTap();
+    const newValue = !allThemesUnlocked;
+    localStorage.setItem("debug-unlock-all-themes", String(newValue));
+    setAllThemesUnlocked(newValue);
+    // Force page reload to apply the change
+    window.location.reload();
+  };
+
   return (
     <div className="animate-fade-in" style={{ animationDelay: "280ms" }}>
       <div className="ui-card ui-accent-1-soft p-4 space-y-3">
@@ -30,6 +47,18 @@ export function DebugThemeSelector() {
         <div className="text-xs font-extrabold text-text-secondary uppercase tracking-wider px-1">
           🐛 Debug: Theme Preview
         </div>
+
+        {/* Unlock All Themes Button */}
+        <button
+          onClick={handleToggleUnlockAll}
+          className={`w-full h-10 rounded-lg text-xs font-extrabold transition active:scale-95 ${
+            allThemesUnlocked
+              ? "bg-accent-3 text-text-on-header hover:shadow-md"
+              : "bg-surface-raised text-text-primary hover:bg-surface-sunken"
+          }`}
+        >
+          {allThemesUnlocked ? "🔓 All Themes Unlocked" : "🔒 Unlock All Themes for Testing"}
+        </button>
 
         {/* Theme Grid */}
         <div className="grid grid-cols-2 gap-2 max-h-80 overflow-y-auto">
@@ -87,6 +116,11 @@ export function DebugThemeSelector() {
           </div>
           <div>
             Total themes: <span className="font-extrabold">{THEMES.length}</span>
+          </div>
+          <div>
+            {allThemesUnlocked && (
+              <div className="text-accent-3 font-extrabold">✓ All themes unlocked</div>
+            )}
           </div>
         </div>
       </div>
