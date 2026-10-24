@@ -2346,9 +2346,9 @@ function HubCard({
       }}
     >
       {/* Top row: Number badge (left) + Large Icon (right) */}
-      <div className="flex items-start justify-between mb-3 gap-2">
+      <div className="flex items-start justify-between mb-3 gap-2 relative">
         {/* Numbered badge in top-left - large colored circle */}
-        {index !== undefined && !done && (
+        {index !== undefined && (
           <div
             className="h-10 w-10 rounded-full flex items-center justify-center text-body font-black text-white shadow-md flex-shrink-0"
             style={{ backgroundColor: badgeColor }}
@@ -2357,10 +2357,12 @@ function HubCard({
           </div>
         )}
 
-        {/* Checkmark badge for completed - replaces number */}
+        {/* Checkmark overlay for completed - appears on top of card */}
         {done && (
-          <div className="h-10 w-10 rounded-full bg-action-success text-white flex items-center justify-center text-body font-black shadow-md flex-shrink-0 hub-checkmark-animate">
-            ✓
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="h-16 w-16 rounded-full bg-action-success text-white flex items-center justify-center text-h3 font-black shadow-lg hub-checkmark-animate">
+              ✓
+            </div>
           </div>
         )}
 
@@ -2380,13 +2382,13 @@ function HubCard({
       <div className="flex items-center justify-between mt-auto pt-2">
         {/* Question count text */}
         {categoryCardsTotal !== undefined && categoryCardsRead !== undefined && (
-          <div className="text-body text-text-secondary font-medium">
+          <div className={`text-body font-medium ${done ? "text-action-success" : "text-text-secondary"}`}>
             {categoryCardsRead}/{categoryCardsTotal} questions
           </div>
         )}
 
-        {/* Arrow button - bottom right, colored */}
-        {!done && !locked && (
+        {/* Arrow button - bottom right, colored - always visible */}
+        {!locked && (
           <div
             className="h-10 w-10 rounded-full flex items-center justify-center text-h5 font-bold text-white ml-auto flex-shrink-0 hub-arrow-pulse"
             style={{ backgroundColor: arrowColor }}
