@@ -27,7 +27,7 @@ import { getJourneyMotivationalMessage } from "@/lib/journey-messaging";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { PassportSeedling } from "@/components/PassportSeedling";
 import { AudioSettingRow } from "@/components/AudioSettingToggle";
-import { ResetPINDialog } from "@/components/ResetPINDialog";
+
 import { DebugThemeSelector } from "@/components/DebugThemeSelector";
 import { StatePerformanceBadgesView } from "@/components/state-performance-badges-view";
 import {
@@ -4084,7 +4084,6 @@ function ProfileScreenContent() {
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
   const [isSelectingAvatar, setIsSelectingAvatar] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState<AvatarId>(p.avatar as AvatarId);
-  const [showResetPINDialog, setShowResetPINDialog] = useState(false);
   const [hasFileConsent, setHasFileConsent] = useState(() => {
     if (typeof window === "undefined") return false;
     return hasFeatureConsent("file");
@@ -4480,17 +4479,7 @@ function ProfileScreenContent() {
         </div>
       </div>
 
-      {/* Reset PIN Dialog - requires parental PIN to reset progress */}
-      <ResetPINDialog
-        open={showResetPINDialog}
-        onConfirm={() => {
-          setShowResetPINDialog(false);
-          resetProgress();
-        }}
-        onCancel={() => {
-          setShowResetPINDialog(false);
-        }}
-      />
+
     </div>
   );
 }
@@ -4617,114 +4606,6 @@ function ProfileStat({ value, label }: { value: string; label: string }) {
   );
 }
 
-function ParentZonePlaceholder() {
-  const [showSettings, setShowSettings] = useState(false);
-  const [newPIN, setNewPIN] = useState("");
-  const [pinSaveStatus, setPinSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
-
-  const handleSavePIN = async () => {
-    if (newPIN.length !== 4) {
-      alert("PIN must be 4 digits");
-      return;
-    }
-
-    setPinSaveStatus("saving");
-    try {
-      const { setPin } = await import("@/lib/parent-gate");
-      const success = await setPin(newPIN);
-      if (success) {
-        setPinSaveStatus("saved");
-        setTimeout(() => {
-          setShowSettings(false);
-          setNewPIN("");
-          setPinSaveStatus("idle");
-        }, 1500);
-      } else {
-        alert("Failed to save PIN");
-        setPinSaveStatus("idle");
-      }
-    } catch (e) {
-      alert("Failed to save PIN");
-      setPinSaveStatus("idle");
-    }
-  };
-
-  return (
-    <div className="rounded-2xl bg-info-soft border-2 border-info p-3 transition">
-      <button
-        onClick={() => {
-          fxTap();
-          setShowSettings(!showSettings);
-        }}
-        className="w-full flex items-center gap-3 hover:opacity-80 transition"
-      >
-        <div className="h-12 w-12 rounded-2xl bg-accent-1 flex items-center justify-center text-2xl flex-shrink-0">
-          {EMOJI.feedback.encouragement}›{EMOJI.feedback.encouragement}›
-          {EMOJI.feedback.encouragement}
-        </div>
-        <div className="flex-1 text-left">
-          <div className="text-display font-extrabold text-[15px] leading-tight text-info">
-            Parent Zone
-          </div>
-          <div className="text-[11px] font-bold text-accent-1">
-            Tap to configure PIN & parental settings
-          </div>
-        </div>
-        <div className="text-info text-lg">
-          {showSettings ? EMOJI.ui.chevronDown : EMOJI.action.chevron}
-        </div>
-      </button>
-
-      {/* PIN Settings Panel */}
-      {showSettings && (
-        <div className="mt-3 pt-3 border-t-2 border-info space-y-3 animate-fade-in">
-          <div>
-            <label className="text-xs font-bold text-info block mb-1">
-              Parental PIN (4 digits)
-            </label>
-            <input
-              type="password"
-              maxLength={4}
-              value={newPIN}
-              onChange={(e) => setNewPIN(e.target.value.replace(/\D/g, ""))}
-              placeholder="Enter 4-digit PIN"
-              className="w-full h-10 rounded-lg border-2 border-info px-3 font-extrabold text-center text-lg tracking-widest text-info"
-            />
-            <div className="text-xs text-accent-1 mt-1">
-              {EMOJI.milestone.twentyFive} Used to reset progress. Default: 1234
-            </div>
-          </div>
-          <button
-            onClick={handleSavePIN}
-            disabled={newPIN.length !== 4 || pinSaveStatus === "saving"}
-            className={`w-full h-10 rounded-lg font-bold text-sm transition text-text-on-primary ${
-              pinSaveStatus === "saved"
-                ? "bg-success-soft0"
-                : "bg-accent-1 disabled:opacity-50 hover:bg-accent-1/90"
-            }`}
-          >
-            {pinSaveStatus === "saved"
-              ? "✓ PIN Saved"
-              : pinSaveStatus === "saving"
-                ? "Saving..."
-                : "Save PIN"}
-          </button>
-          <button
-            onClick={() => {
-              fxTap();
-              setShowSettings(false);
-              setNewPIN("");
-              setPinSaveStatus("idle");
-            }}
-            className="w-full h-10 rounded-lg font-bold text-sm bg-surface-card text-info hover:bg-info-soft border border-info"
-          >
-            Close
-          </button>
-        </div>
-      )}
-    </div>
-  );
-}
 
 function RowLink({
   icon,
@@ -4922,3 +4803,4 @@ export function EmptyStateScreen() {
     </div>
   );
 }
+

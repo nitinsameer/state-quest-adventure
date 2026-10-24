@@ -10,7 +10,7 @@ import { useCelebration } from "@/hooks/useCelebration";
 import { useToast } from "@/hooks/useToast";
 import { usePostcardLibrary } from "@/store/postcard-library-store";
 import { sharePostcard } from "@/lib/share-postcard";
-import { ResetPINDialog } from "@/components/ResetPINDialog";
+
 import { readTokenAsHex, subscribeThemeChange } from "@/lib/theme-tokens";
 import { EMOJI } from "@/constants/emoji";
 
@@ -65,7 +65,6 @@ export function StatePostcardScreen({
   const [burst, setBurst] = useState(0);
   const [busy, setBusy] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [showParentGate, setShowParentGate] = useState(false);
   const [pendingBlob, setPendingBlob] = useState<Blob | null>(null);
   const cheer = useRef<HTMLImageElement | null>(null);
 
@@ -272,7 +271,7 @@ export function StatePostcardScreen({
       const blob = await generatePostcardPreview();
       if (blob) {
         setPendingBlob(blob);
-        setShowParentGate(true);
+        proceedWithShare();
       }
     } catch (err) {
       console.error("[StatePostcardScreen] Share prep failed", err);
@@ -393,18 +392,6 @@ export function StatePostcardScreen({
         </button>
       </div>
 
-      {/* Parent Gate for Share */}
-      <ResetPINDialog
-        open={showParentGate}
-        onConfirm={() => {
-          setShowParentGate(false);
-          proceedWithShare();
-        }}
-        onCancel={() => {
-          setShowParentGate(false);
-          setPendingBlob(null);
-        }}
-      />
     </div>
   );
 }

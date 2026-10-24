@@ -12,7 +12,6 @@ import { INDIA_STATES } from "@/lib/states";
 import { STATE_ART } from "@/lib/state-art";
 import { useGoBack, BottomNav } from "@/components/screens";
 import { fxTap } from "@/lib/fx";
-import { setPin } from "@/lib/parent-gate";
 import { getParentZoneSettings, setParentZoneSetting } from "@/lib/parent-zone-settings";
 import { EMOJI } from "@/constants/emoji";
 import { useState } from "react";
@@ -25,9 +24,6 @@ export function ParentZoneScreen() {
   const goBack = useGoBack("/me");
   const { level, pct } = levelInfo(p.xp);
   const [confirm, setConfirm] = useState(false);
-  const [showPINSettings, setShowPINSettings] = useState(false);
-  const [newPIN, setNewPIN] = useState("");
-  const [pinSaveStatus, setPinSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
   const [activeTab, setActiveTab] = useState<"overview" | "analytics" | "controls" | "export">(
     "overview",
   );
@@ -60,32 +56,6 @@ export function ParentZoneScreen() {
   // Calculate daily average
   const daysActive = p.streak || 1;
   const dailyAverage = Math.round(p.xp / daysActive / 100);
-
-  const handleSavePIN = async () => {
-    if (newPIN.length !== 4) {
-      alert("PIN must be 4 digits");
-      return;
-    }
-
-    setPinSaveStatus("saving");
-    try {
-      const success = await setPin(newPIN);
-      if (success) {
-        setPinSaveStatus("saved");
-        setTimeout(() => {
-          setShowPINSettings(false);
-          setNewPIN("");
-          setPinSaveStatus("idle");
-        }, 1500);
-      } else {
-        alert("Failed to save PIN");
-        setPinSaveStatus("idle");
-      }
-    } catch (e) {
-      alert("Failed to save PIN");
-      setPinSaveStatus("idle");
-    }
-  };
 
   const handleExportData = () => {
     // Create CSV export of progress
@@ -310,49 +280,6 @@ export function ParentZoneScreen() {
           <div className="space-y-(--space-2)">
             <div className="text-display font-extrabold text-sm text-muted-foreground uppercase">
               Parental Controls
-            </div>
-
-            <div className="rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-border-subtle">
-              <div className="flex items-center justify-between mb-(--space-0-25)">
-                <div>
-                  <div className="text-sm font-bold" style={{color: "var(--text-primary)"}}>Parental PIN</div>
-                  <div className="text-xs" style={{color: "var(--text-muted)"}}>Protect sensitive settings</div>
-                </div>
-                <button
-                  onClick={() => setShowPINSettings(!showPINSettings)}
-                  className="px-3 py-1 rounded-lg bg-action-primary-bg text-xs font-bold" style={{color: "var(--text-on-primary)"}}
-                >
-                  {showPINSettings ? "Hide" : "Edit"}
-                </button>
-              </div>
-
-              {showPINSettings && (
-                <div className="mt-(--space-0-25) space-y-(--space-0-5) border-t pt-(--space-0-25)">
-                  <input
-                    type="password"
-                    maxLength={4}
-                    value={newPIN}
-                    onChange={(e) => setNewPIN(e.target.value.replace(/\D/g, ""))}
-                    placeholder="Enter 4-digit PIN"
-                    className="w-full h-10 rounded-lg border-2 border-[var(--border-color)] px-3 font-extrabold text-center text-lg tracking-widest"
-                  />
-                  <button
-                    onClick={handleSavePIN}
-                    disabled={newPIN.length !== 4 || pinSaveStatus === "saving"}
-                    className={`w-full h-10 rounded-lg font-bold text-sm transition ${
-                      pinSaveStatus === "saved"
-                        ? "bg-fb-success-bg disabled:opacity-50"
-                        : "bg-action-primary-bg disabled:opacity-50"
-                    }`} style={{color: "var(--text-on-primary)"}}
-                  >
-                    {pinSaveStatus === "saved"
-                      ? "✓ Saved"
-                      : pinSaveStatus === "saving"
-                        ? "Saving..."
-                        : "Save PIN"}
-                  </button>
-                </div>
-              )}
             </div>
 
             <div className="rounded-3xl bg-surface-card p-(--padding-md) shadow-[var(--shadow-card)] border border-border-subtle">
