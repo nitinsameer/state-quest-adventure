@@ -35,6 +35,15 @@ const config: CapacitorConfig = {
       categoryOptions: [],
       language: "en-US",
     },
+    /**
+     * Screen Orientation Lock
+     * Locks the app to portrait orientation only
+     * Prevents auto-rotation on app install/launch
+     */
+    ScreenOrientation: {
+      // This plugin config is optional - orientation is locked via AndroidManifest.xml
+      // But included here for completeness and future use
+    },
   },
 };
 
