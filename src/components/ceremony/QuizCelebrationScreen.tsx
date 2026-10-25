@@ -39,69 +39,21 @@ export function QuizCelebrationScreen() {
   const navigate = useNavigate();
   const navigationInProgressRef = useRef(false);
 
-  // Get the first pending celebration (current ceremony)
+  // CRITICAL: Get ceremony early but do NOT conditionally render yet
   const ceremony = progress.pendingCelebrations?.[0];
-
-  // Type guard: only proceed if ceremony is valid "full" type
   const isValidCeremony = ceremony && ceremony.type === "full";
 
-  // Check if we need to navigate away
-  useEffect(() => {
-    if (isValidCeremony === false && !navigationInProgressRef.current) {
-      navigationInProgressRef.current = true;
-      navigate({ to: "/" });
-    }
-  }, [isValidCeremony, navigate]);
-
-  // Only render celebration if ceremony is valid
-  // All hooks above are called unconditionally, so this early return is safe
-  if (!isValidCeremony || !ceremony || ceremony.type !== "full") {
-    return null;
-  }
-
-  // At this point, ceremony is guaranteed to be PendingCelebration with type "full"
-  const typedCeremony = ceremony as PendingCelebration & { type: "full" };
-
-  return (
-    <SingleScreenCelebration
-      ceremony={typedCeremony}
-      navigationInProgressRef={navigationInProgressRef}
-      navigate={navigate}
-    />
-  );
-}
-
-interface SingleScreenCelebrationProps {
-  ceremony: PendingCelebration & { type: "full" };
-  navigationInProgressRef: React.MutableRefObject<boolean>;
-  navigate: ReturnType<typeof useNavigate>;
-}
-
-function SingleScreenCelebration({
-  ceremony,
-  navigationInProgressRef,
-  navigate,
-}: SingleScreenCelebrationProps) {
-  // Animation state - CALL HOOKS FIRST (before any conditional returns)
+  // CRITICAL: ALL hooks must be called unconditionally, even if we'll return early
+  // Animation state hooks (always called)
   const startTimeRef = useRef<number | null>(null);
   const [elapsedMs, setElapsedMs] = useState(0);
-  const [selectedSticker, setSelectedSticker] = useState<string | undefined>(ceremony.sticker);
+  const [selectedSticker, setSelectedSticker] = useState<string | undefined>(
+    ceremony?.sticker
+  );
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [confettiBurstKey, setConfettiBurstKey] = useState(0);
 
-  // SAFETY: Validate state exists AFTER all hooks are called
-  const state = getState(ceremony.stateName);
-  if (!state) {
-    console.error(`[QuizCelebrationScreen] Invalid state: ${ceremony.stateName}`);
-    return null; // Now safe - all hooks above are always called
-  }
-
-  const grad = TONE_GRADIENT[state.tone] ?? "var(--accent-1)";
-  const art = STATE_ART[state.name];
-
-  const STICKER_OPTIONS = [EMOJI.quiz.sticker1, EMOJI.quiz.sticker2, EMOJI.action.celebrate];
-
-  // Check prefers-reduced-motion on mount
+  // Check prefers-reduced-motion on mount (always called)
   useEffect(() => {
     if (typeof window !== "undefined") {
       const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -109,9 +61,8 @@ function SingleScreenCelebration({
     }
   }, []);
 
-  // RAF loop: track elapsed time for animation phases
+  // RAF loop (always called)
   useEffect(() => {
-    // Initialize on first render
     if (startTimeRef.current === null) {
       startTimeRef.current = performance.now();
       setConfettiBurstKey(1);
@@ -122,16 +73,12 @@ function SingleScreenCelebration({
       const elapsed = now - start;
 
       if (prefersReducedMotion) {
-        // Instant reveal: jump to end
         setElapsedMs((prev) => (prev !== 5000 ? 5000 : prev));
         return;
       }
 
-      // CRITICAL FIX: Only update state if elapsed actually changed
-      // This prevents unnecessary re-renders from RAF loop triggering infinite render cycles
       setElapsedMs((prev) => (Math.round(elapsed) !== Math.round(prev) ? elapsed : prev));
 
-      // Continue animation loop until all phases complete
       if (elapsed < 5000) {
         requestAnimationFrame(frame);
       }
@@ -141,68 +88,85 @@ function SingleScreenCelebration({
     return () => cancelAnimationFrame(id);
   }, [prefersReducedMotion]);
 
-  // Audio/haptics triggers on phase transitions
+  // Audio/haptics triggers (always called)
   useEffect(() => {
-    if (prefersReducedMotion) return;
+    if (prefersReducedMotion || !isValidCeremony) return;
 
     const elapsed = elapsedMs;
 
-    // Phase 1: Confetti (0ms)
     if (elapsed >= 0 && elapsed < 50) {
       if (hasAudioEnabled()) {
         fxConfetti();
       }
     }
 
-    // Phase 2: Star 1 (500ms)
     if (elapsed >= 500 && elapsed < 550) {
       if (hasAudioEnabled()) {
         fxCorrect();
       }
     }
 
-    // Star 2 (1200ms)
     if (elapsed >= 1200 && elapsed < 1250) {
       if (hasAudioEnabled()) {
         fxCorrect();
       }
     }
 
-    // Star 3 (1900ms)
     if (elapsed >= 1900 && elapsed < 1950) {
       if (hasAudioEnabled()) {
         fxCorrect();
       }
     }
 
-    // Victory fanfare if 3 stars (2500ms)
-    if (elapsed >= 2500 && elapsed < 2550 && parseInt(ceremony.stars) === 3) {
+    if (elapsed >= 2500 && elapsed < 2550 && isValidCeremony && parseInt(ceremony.stars) === 3) {
       if (hasAudioEnabled()) {
         fxConfetti();
       }
     }
 
-    // Postcard seal sound (3500ms)
     if (elapsed >= 3500 && elapsed < 3550) {
       if (hasAudioEnabled()) {
         fxStamp();
       }
     }
-  }, [elapsedMs, ceremony.stars, prefersReducedMotion]);
+  }, [elapsedMs, ceremony?.stars, prefersReducedMotion, isValidCeremony]);
 
-  // Calculate animation progress for each phase
+  // Navigation redirect effect (always called)
+  useEffect(() => {
+    if (isValidCeremony === false && !navigationInProgressRef.current) {
+      navigationInProgressRef.current = true;
+      navigate({ to: "/" });
+    }
+  }, [isValidCeremony, navigate]);
+
+  // NOW we can safely return early (all hooks above were called unconditionally)
+  if (!isValidCeremony || !ceremony || ceremony.type !== "full") {
+    return null;
+  }
+
+  const typedCeremony = ceremony as PendingCelebration & { type: "full" };
+  const state = getState(typedCeremony.stateName);
+
+  if (!state) {
+    console.error(`[QuizCelebrationScreen] Invalid state: ${typedCeremony.stateName}`);
+    return null;
+  }
+
+  const grad = TONE_GRADIENT[state.tone] ?? "var(--accent-1)";
+  const art = STATE_ART[state.name];
+  const STICKER_OPTIONS = [EMOJI.quiz.sticker1, EMOJI.quiz.sticker2, EMOJI.action.celebrate];
+
   const getPhaseProgress = (phaseStartMs: number, phaseDurationMs: number) => {
     if (prefersReducedMotion) return 1;
     const progress = (elapsedMs - phaseStartMs) / phaseDurationMs;
     return Math.max(0, Math.min(1, progress));
   };
 
-  // Phase timing
-  const phase1Progress = getPhaseProgress(0, 300); // 0-0.3s
-  const phase2Progress = getPhaseProgress(500, 2000); // 0.5-2.5s
-  const phase3Progress = getPhaseProgress(2500, 1000); // 2.5-3.5s
-  const phase4Progress = getPhaseProgress(3500, 1000); // 3.5-4.5s
-  const phase5Progress = getPhaseProgress(4500, 300); // 4.5s+
+  const phase1Progress = getPhaseProgress(0, 300);
+  const phase2Progress = getPhaseProgress(500, 2000);
+  const phase3Progress = getPhaseProgress(2500, 1000);
+  const phase4Progress = getPhaseProgress(3500, 1000);
+  const phase5Progress = getPhaseProgress(4500, 300);
 
   const showPhase1 = phase1Progress > 0;
   const showPhase2 = phase2Progress > 0;
@@ -210,8 +174,7 @@ function SingleScreenCelebration({
   const showPhase4 = phase4Progress > 0;
   const showPhase5 = phase5Progress > 0;
 
-  // Star fill logic: 3 stars fill sequentially
-  const stars = parseInt(ceremony.stars);
+  const stars = parseInt(typedCeremony.stars);
   const filledStars = Math.min(stars, Math.floor(phase2Progress * (stars + 1)));
 
   const handleSkip = () => {
@@ -223,7 +186,6 @@ function SingleScreenCelebration({
   };
 
   const handleNavigate = (to: string, params?: { slug: string }) => {
-    // CRITICAL: Prevent double navigation on rapid clicks
     if (navigationInProgressRef.current) {
       console.warn("[QuizCelebrationScreen] Navigation already in progress, ignoring click");
       return;
@@ -232,16 +194,14 @@ function SingleScreenCelebration({
     navigationInProgressRef.current = true;
     fxTap();
     dismissPendingCelebration();
-    
-    // Use setTimeout to ensure dismissPendingCelebration state update completes
-    // before navigation happens, preventing stale state reads
+
     setTimeout(() => {
       navigate({ to: to as any, params: params as any });
     }, 0);
   };
 
   const handleNextState = () => {
-    const nextState = nextStateAfter(ceremony.stateName);
+    const nextState = nextStateAfter(typedCeremony.stateName);
     if (nextState) {
       handleNavigate("/state/$slug", { slug: nextState.short });
     } else {
@@ -250,7 +210,6 @@ function SingleScreenCelebration({
   };
 
   const handlePlayAgain = () => {
-    // SAFETY: Validate state exists before navigation
     if (!state) return;
     handleNavigate("/state/$slug/quiz", { slug: state.short });
   };
@@ -286,7 +245,7 @@ function SingleScreenCelebration({
               }}
             >
               <h1 className="font-display text-3xl font-bold text-ink text-center leading-tight">
-                {ceremony.correctCount} of {ceremony.totalQuestions} right!
+                {typedCeremony.correctCount} of {typedCeremony.totalQuestions} right!
               </h1>
             </div>
           )}
@@ -347,7 +306,7 @@ function SingleScreenCelebration({
                 {/* Flying XP badge */}
                 <div className="px-6 py-3 rounded-full bg-accent-3 shadow-lg animate-float">
                   <div className="text-h4 font-extrabold text-text-on-primary">
-                    +{ceremony.quizXp + ceremony.bonusXp} XP
+                    +{typedCeremony.quizXp + typedCeremony.bonusXp} XP
                   </div>
                 </div>
               </div>
@@ -366,9 +325,9 @@ function SingleScreenCelebration({
               {/* Postcard without sticker picker or extra labels */}
               <PostcardFrame
                 stateName={state.name}
-                stars={ceremony.stars}
-                date={ceremony.stampDate}
-                badge={(ceremony.earnedBadgeIds?.[0] as BadgeId) || "explorer"}
+                stars={typedCeremony.stars}
+                date={typedCeremony.stampDate}
+                badge={(typedCeremony.earnedBadgeIds?.[0] as BadgeId) || "explorer"}
               />
             </div>
           )}
@@ -397,7 +356,7 @@ function SingleScreenCelebration({
         </button>
 
         {/* Play Again button - right (if stars < 3) */}
-        {parseInt(ceremony.stars) < 3 ? (
+        {parseInt(typedCeremony.stars) < 3 ? (
           <button
             onClick={handlePlayAgain}
             className="h-12 ui-button ui-accent-3 font-bold text-body rounded-2xl transition-all active:scale-95 animate-slide-up"
@@ -417,7 +376,7 @@ function SingleScreenCelebration({
           onClick={handleNextState}
           className="col-span-2 h-12 ui-button ui-accent-1 font-bold text-body rounded-2xl transition-all active:scale-95 animate-slide-up"
           style={{
-            animationDelay: parseInt(ceremony.stars) < 3 ? "200ms" : "100ms",
+            animationDelay: parseInt(typedCeremony.stars) < 3 ? "200ms" : "100ms",
           }}
           aria-label="Next State Navigation"
         >
@@ -433,7 +392,7 @@ function SingleScreenCelebration({
         aria-label="Celebration progress"
       >
         {filledStars > 0 && `Earned ${filledStars} star${filledStars > 1 ? "s" : ""}`}
-        {showPhase3 && ` plus ${ceremony.quizXp + ceremony.bonusXp} XP`}
+        {showPhase3 && ` plus ${typedCeremony.quizXp + typedCeremony.bonusXp} XP`}
         {showPhase4 && " postcard earned"}
       </div>
 
