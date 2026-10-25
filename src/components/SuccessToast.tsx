@@ -113,73 +113,58 @@ export function SuccessToast() {
 
   return (
     <div
-      className="fixed z-50 pointer-events-none"
+      className="relative pointer-events-none"
       style={{
-        bottom: "calc(max(var(--nav-h, 80px) + 24px, env(safe-area-inset-bottom, 0px) + 24px))",
-        left: "50%",
-        right: "50%",
-        transform: "translateX(-50%)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        width: "100%",
+        maxWidth: "360px",
+        minWidth: "0",
         paddingLeft: "12px",
         paddingRight: "12px",
-        pointerEvents: "none",
-        width: "100%",
-        maxWidth: "100%",
         boxSizing: "border-box",
+        pointerEvents: "none",
       }}
     >
-      {/* Particle container - absolutely positioned relative to toast */}
+      {/* Particles layer */}
       <div
-        className="relative"
+        className="absolute inset-0 pointer-events-none"
         style={{
-          width: "100%",
-          maxWidth: "360px",
-          minWidth: "0",
+          inset: "-40px",
+          overflow: "visible",
         }}
       >
-        {/* Particles layer */}
+        {particles}
+      </div>
+
+      {/* Toast card */}
+      <div
+        className={`relative bg-surface-card rounded-3xl p-4 flex items-center gap-3 shadow-lg border-2 flex-nowrap w-full ${
+          isExiting ? "toast-bounce-down" : "toast-bounce-up"
+        }`}
+        style={{
+          backgroundColor: "var(--success-soft, var(--accent-3-soft))",
+          borderColor: "var(--success, var(--accent-3))",
+          color: "var(--success, var(--accent-3))",
+          minHeight: "56px",
+          pointerEvents: "auto",
+        }}
+        role="status"
+        aria-live="polite"
+        aria-label={current?.message}
+      >
+        {/* Checkmark icon with pulse */}
         <div
-          className="absolute inset-0 pointer-events-none"
+          className="flex-shrink-0 text-3xl font-bold toast-icon-pulse"
           style={{
-            inset: "-40px",
-            overflow: "visible",
+            animation: shouldReduceMotion ? "none" : "toast-icon-pulse 400ms ease-out forwards",
+            animationDelay: "100ms",
           }}
         >
-          {particles}
+          {current?.icon ?? "✓"}
         </div>
 
-        {/* Toast card */}
-        <div
-          className={`relative bg-surface-card rounded-3xl p-4 flex items-center gap-3 shadow-lg border-2 flex-nowrap w-full ${
-            isExiting ? "toast-bounce-down" : "toast-bounce-up"
-          }`}
-          style={{
-            backgroundColor: "var(--success-soft, var(--accent-3-soft))",
-            borderColor: "var(--success, var(--accent-3))",
-            color: "var(--success, var(--accent-3))",
-            minHeight: "56px",
-          }}
-          role="status"
-          aria-live="polite"
-          aria-label={current?.message}
-        >
-          {/* Checkmark icon with pulse */}
-          <div
-            className="flex-shrink-0 text-3xl font-bold toast-icon-pulse"
-            style={{
-              animation: shouldReduceMotion ? "none" : "toast-icon-pulse 400ms ease-out forwards",
-              animationDelay: "100ms",
-            }}
-          >
-            {current?.icon ?? "✓"}
-          </div>
-
-          {/* Message text */}
-          <div className="flex-1 min-w-0">
-            <p className="font-bold text-base leading-tight drop-shadow">{current?.message}</p>
-          </div>
+        {/* Message text */}
+        <div className="flex-1 min-w-0">
+          <p className="font-bold text-base leading-tight drop-shadow">{current?.message}</p>
         </div>
       </div>
     </div>
