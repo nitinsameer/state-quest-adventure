@@ -115,9 +115,8 @@ export function SuccessToast() {
     <div
       className="relative pointer-events-none"
       style={{
-        width: "100%",
         maxWidth: "360px",
-        minWidth: "0",
+        width: "auto",
         boxSizing: "border-box",
         pointerEvents: "none",
       }}
@@ -135,7 +134,7 @@ export function SuccessToast() {
 
       {/* Toast card */}
       <div
-        className={`relative bg-surface-card rounded-3xl p-4 flex items-center gap-3 shadow-lg border-2 flex-nowrap w-full ${
+        className={`relative bg-surface-card rounded-3xl p-4 flex items-center gap-3 shadow-lg border-2 flex-nowrap ${
           isExiting ? "toast-bounce-down" : "toast-bounce-up"
         }`}
         style={{
@@ -144,6 +143,7 @@ export function SuccessToast() {
           color: "var(--success, var(--accent-3))",
           minHeight: "56px",
           pointerEvents: "auto",
+          width: "fit-content",
         }}
         role="status"
         aria-live="polite"
