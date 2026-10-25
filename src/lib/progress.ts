@@ -467,7 +467,8 @@ function migrateProgress(validated: any): Progress {
     cardVisits: validated.cardVisits ?? {},
     lastPlayedState: validated.lastPlayedState,
     statePerformance: validated.statePerformance ?? {},
-    pendingCelebrations: validated.pendingCelebrations ?? [],
+    // CRITICAL: Filter out stale, already-acknowledged celebrations to prevent replay after app restart
+    pendingCelebrations: filterStaleAcknowledgedCelebrations(validated.pendingCelebrations ?? []),
     stars: validated.stars ?? {},
   };
 }
@@ -2294,11 +2295,81 @@ export function updateCeremonyStep(step: number) {
 }
 
 /**
- * Remove the first pending celebration from the queue (called when dismissed)
+ * Track which celebrations have been shown and acknowledged by the user.
+ * Persisted in localStorage to survive app restart.
+ * Key format: "{stateName}_{timestamp}"
+ */
+const ACKNOWLEDGED_CELEBRATIONS_KEY = "acknowledged-celebrations-v1";
+
+/**
+ * Get set of acknowledged celebration IDs
+ */
+function getAcknowledgedCelebrations(): Set<string> {
+  try {
+    if (typeof window === "undefined") return new Set();
+    const stored = localStorage.getItem(ACKNOWLEDGED_CELEBRATIONS_KEY);
+    if (!stored) return new Set();
+    return new Set(JSON.parse(stored));
+  } catch (e) {
+    console.error("[Progress] Failed to load acknowledged celebrations", e);
+    return new Set();
+  }
+}
+
+/**
+ * Mark a celebration as acknowledged (shown to user and dismissed)
+ * This prevents replay after app restart
+ */
+function recordCelebrationAcknowledged(celebrationId: string) {
+  try {
+    if (typeof window === "undefined") return;
+    const acknowledged = getAcknowledgedCelebrations();
+    acknowledged.add(celebrationId);
+    // Keep max 100 entries to prevent unbounded growth
+    if (acknowledged.size > 100) {
+      const entries = Array.from(acknowledged);
+      localStorage.setItem(ACKNOWLEDGED_CELEBRATIONS_KEY, JSON.stringify(entries.slice(-100)));
+    } else {
+      localStorage.setItem(ACKNOWLEDGED_CELEBRATIONS_KEY, JSON.stringify(Array.from(acknowledged)));
+    }
+  } catch (e) {
+    console.error("[Progress] Failed to record acknowledged celebration", e);
+  }
+}
+
+/**
+ * Generate a unique ID for a celebration to track acknowledgment
+ */
+function getCelebrationId(celebration: PendingCelebration): string {
+  if (celebration.type === "full") {
+    return `full_${celebration.stateName}_${celebration.stampDate}`;
+  } else if (celebration.type === "stars-improved") {
+    return `stars_${celebration.stateName}_${celebration.stampDate}`;
+  } else if (celebration.type === "theme-unlock") {
+    return `theme_${celebration.themeId}_${celebration.themeName}`;
+  }
+  return "unknown";
+}
+
+/**
+ * Filter out already-acknowledged celebrations on hydration
+ */
+function filterStaleAcknowledgedCelebrations(celebrations: PendingCelebration[]): PendingCelebration[] {
+  const acknowledged = getAcknowledgedCelebrations();
+  return celebrations.filter((c) => !acknowledged.has(getCelebrationId(c)));
+}
+
+/**
+ * Remove the first pending celebration from the queue (called when dismissed).
+ * Also records it as acknowledged to prevent replay after app restart.
  */
 export function dismissPendingCelebration() {
   set((p) => {
     if (!p.pendingCelebrations?.length) return p;
+
+    const celebration = p.pendingCelebrations[0];
+    // Record this celebration as acknowledged before removing it
+    recordCelebrationAcknowledged(getCelebrationId(celebration));
 
     return {
       ...p,
