@@ -77,21 +77,20 @@ export function BottomToastProvider() {
 
   if (!current) return null;
 
-  // Render success toast for success type - centered horizontally, positioned at bottom
+  // Render success toast for success type - centered both horizontally and vertically
   if (current.type === "success") {
     return (
       <div
         className="fixed z-[998] pointer-events-none"
         style={{
-          left: 0,
-          right: 0,
-          bottom: "calc(max(var(--nav-h, 80px) + 24px, env(safe-area-inset-bottom, 0px) + 24px))",
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -50%)",
           display: "flex",
-          alignItems: "flex-end",
+          alignItems: "center",
           justifyContent: "center",
           pointerEvents: "none",
-          paddingLeft: "12px",
-          paddingRight: "12px",
+          maxWidth: "calc(100vw - 32px)",
           boxSizing: "border-box",
         }}
       >
