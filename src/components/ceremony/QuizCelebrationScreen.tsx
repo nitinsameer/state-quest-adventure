@@ -38,7 +38,6 @@ export function QuizCelebrationScreen() {
   const progress = useProgress();
   const navigate = useNavigate();
   const navigationInProgressRef = useRef(false);
-  const [shouldNavigate, setShouldNavigate] = useState(false);
 
   // Get the first pending celebration (current ceremony)
   const ceremony = progress.pendingCelebrations?.[0];
@@ -49,19 +48,14 @@ export function QuizCelebrationScreen() {
   // Check if we need to navigate away
   useEffect(() => {
     if (isValidCeremony === false && !navigationInProgressRef.current) {
-      setShouldNavigate(true);
-    }
-  }, [isValidCeremony]);
-
-  // Perform navigation in a separate effect to avoid interrupting render
-  useEffect(() => {
-    if (shouldNavigate) {
+      navigationInProgressRef.current = true;
       navigate({ to: "/" });
     }
-  }, [shouldNavigate, navigate]);
+  }, [isValidCeremony, navigate]);
 
-  // Guard rendering: return null if ceremony is invalid
-  if (!isValidCeremony) {
+  // Only render celebration if ceremony is valid
+  // All hooks above are called unconditionally, so this early return is safe
+  if (!isValidCeremony || !ceremony || ceremony.type !== "full") {
     return null;
   }
 
@@ -88,22 +82,22 @@ function SingleScreenCelebration({
   navigationInProgressRef,
   navigate,
 }: SingleScreenCelebrationProps) {
-  // SAFETY: Validate state exists before accessing properties
-  const state = getState(ceremony.stateName);
-  if (!state) {
-    console.error(`[QuizCelebrationScreen] Invalid state: ${ceremony.stateName}`);
-    return null;
-  }
-
-  const grad = TONE_GRADIENT[state.tone] ?? "var(--accent-1)";
-  const art = STATE_ART[state.name];
-
-  // Animation state
+  // Animation state - CALL HOOKS FIRST (before any conditional returns)
   const startTimeRef = useRef<number | null>(null);
   const [elapsedMs, setElapsedMs] = useState(0);
   const [selectedSticker, setSelectedSticker] = useState<string | undefined>(ceremony.sticker);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [confettiBurstKey, setConfettiBurstKey] = useState(0);
+
+  // SAFETY: Validate state exists AFTER all hooks are called
+  const state = getState(ceremony.stateName);
+  if (!state) {
+    console.error(`[QuizCelebrationScreen] Invalid state: ${ceremony.stateName}`);
+    return null; // Now safe - all hooks above are always called
+  }
+
+  const grad = TONE_GRADIENT[state.tone] ?? "var(--accent-1)";
+  const art = STATE_ART[state.name];
 
   const STICKER_OPTIONS = [EMOJI.quiz.sticker1, EMOJI.quiz.sticker2, EMOJI.action.celebrate];
 
