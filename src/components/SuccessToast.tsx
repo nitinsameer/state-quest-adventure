@@ -113,15 +113,21 @@ export function SuccessToast() {
 
   return (
     <div
-      className="fixed inset-x-0 z-50 pointer-events-none"
+      className="fixed z-50 pointer-events-none"
       style={{
-        bottom: "calc(var(--nav-h, 80px) + 24px)",
+        bottom: "calc(max(var(--nav-h, 80px) + 24px, env(safe-area-inset-bottom, 0px) + 24px))",
+        left: "50%",
+        right: "50%",
+        transform: "translateX(-50%)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         paddingLeft: "12px",
         paddingRight: "12px",
-        pointerEvents: "none", // Non-blocking - allows clicks through
+        pointerEvents: "none",
+        width: "100%",
+        maxWidth: "100%",
+        boxSizing: "border-box",
       }}
     >
       {/* Particle container - absolutely positioned relative to toast */}
@@ -130,6 +136,7 @@ export function SuccessToast() {
         style={{
           width: "100%",
           maxWidth: "360px",
+          minWidth: "0",
         }}
       >
         {/* Particles layer */}
