@@ -2091,8 +2091,8 @@ export function LearningHubScreen({
 
   return (
     <div className="w-full h-full bg-bg-page flex flex-col">
-      {/* HEADER SECTION - Simplified, clean header with background image and centered state name */}
-      <div className="relative h-32 flex-shrink-0">
+      {/* HEADER SECTION - Fixed positioned, clean header with background image and centered state name */}
+      <div className="relative h-32 flex-shrink-0 z-40">
         {/* Background image - covers full header */}
         <img
           src={stateHeaderBg}
@@ -2133,10 +2133,10 @@ export function LearningHubScreen({
         </div>
       </div>
 
-      {/* Scrollable content area - flex-1 ensures it fills remaining space, min-h-0 for flex scroll fix */}
+      {/* Scrollable content area - flex-1 ensures it fills remaining space, min-h-0 for flex scroll fix, mt-0 to prevent gap below header */}
       <div className="flex-1 overflow-y-auto min-h-0 pb-[calc(var(--nav-h,80px)+24px)]">
-        {/* PROGRESS CARD - White rounded card with overlap */}
-        <div className="px-5 -mt-6 relative z-20 mb-6">
+        {/* PROGRESS CARD - White rounded card with overlap, negative margin preserved for visual layering */}
+        <div className="px-5 -mt-6 relative z-30 mb-6">
           <div className="bg-surface-card rounded-2xl shadow-elevated-1 p-5">
             <div className="flex items-center justify-between mb-3">
               <div className="text-label font-bold text-text-primary">Your state adventure</div>
@@ -2177,52 +2177,97 @@ export function LearningHubScreen({
           ))}
         </div>
 
-        {/* QUIZ PANEL - Full-width card with lock and sparkles */}
+        {/* QUIZ PANEL - Full-width card with lock, progress bar, and clear state transitions */}
         <div className="px-4 pb-6">
-          <button
-            onClick={() => {
-              if (completedCategories === 6 && !showDecisionModal) {
-                fxTap();
-                onQuiz?.();
-              }
+          <div
+            className="w-full rounded-2xl p-5 flex flex-col gap-3 transition-all"
+            style={{
+              backgroundColor: completedCategories === 6 ? "var(--accent-5-soft)" : "var(--accent-5-soft)/50",
+              borderLeft: "3px solid var(--accent-5)",
             }}
-            disabled={completedCategories < 6}
-            className={`w-full rounded-2xl p-5 transition-all active:scale-95 flex items-center gap-3 ${
-              completedCategories === 6 
-                ? "bg-accent-5-soft hover:shadow-md shadow-md" 
-                : "bg-accent-5-soft/50 opacity-60 cursor-not-allowed"
-            }`}
           >
-            {/* Lock icon in circular background */}
-            <div
-              className={`h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0 text-h4 flex-shrink-0 transition-all ${
-                completedCategories === 6 
-                  ? "bg-accent-5 animate-pulse" 
-                  : "bg-accent-5/10"
-              }`}
-            >
-              {completedCategories === 6 ? "🔓" : "🔒"}
+            {/* Top section: Lock icon + Title + Sparkle */}
+            <div className="flex items-center gap-3">
+              {/* Lock icon in circular background */}
+              <div
+                className="h-12 w-12 rounded-full flex items-center justify-center flex-shrink-0 text-h4 transition-all shadow-md"
+                style={{
+                  backgroundColor:
+                    completedCategories === 6 ? "var(--accent-5)" : "var(--accent-5)/20",
+                }}
+              >
+                {completedCategories === 6 ? "🔓" : "🔒"}
+              </div>
+
+              {/* Heading and subtitle */}
+              <div className="flex-1 text-left">
+                <div
+                  className={`text-label font-extrabold ${
+                    completedCategories === 6
+                      ? "text-text-primary"
+                      : "text-text-secondary"
+                  }`}
+                >
+                  {completedCategories === 6
+                    ? "State Quiz Unlocked!"
+                    : "Your State Quiz Awaits!"}
+                </div>
+                <div className="text-caption text-text-secondary">
+                  {completedCategories === 6
+                    ? "Ready to test your knowledge?"
+                    : `Finish all 6 challenges`}
+                </div>
+              </div>
+
+              {/* Decorative sparkles - animated when enabled */}
+              <div
+                className={`text-h4 flex-shrink-0 ${
+                  completedCategories === 6 ? "animate-bounce" : "opacity-30"
+                }`}
+              >
+                ✨
+              </div>
             </div>
 
-            {/* Heading and subtitle */}
-            <div className="flex-1 text-left">
-              <div className={`text-label font-extrabold ${
-                completedCategories === 6 ? "text-text-primary" : "text-text-secondary"
-              }`}>
-                {completedCategories === 6 ? "State Quiz" : "State Quiz Locked"}
+            {/* Progress indicator section - shows when not fully completed */}
+            {completedCategories < 6 && (
+              <div className="flex items-center gap-2">
+                <div className="flex-1">
+                  {/* Progress bar */}
+                  <div className="w-full h-2 rounded-full overflow-hidden bg-accent-5/20">
+                    <div
+                      className="h-full rounded-full transition-all duration-300"
+                      style={{
+                        width: `${(completedCategories / 6) * 100}%`,
+                        backgroundColor: "var(--accent-5)",
+                      }}
+                    />
+                  </div>
+                  <div className="text-caption text-text-secondary mt-1">
+                    {completedCategories} of 6 challenges complete
+                  </div>
+                </div>
               </div>
-              <div className="text-caption text-text-secondary">
-                {completedCategories === 6
-                  ? "Tap to start your quiz!"
-                  : "Complete all 6 challenges"}
-              </div>
-            </div>
+            )}
 
-            {/* Decorative sparkles - animated when enabled */}
-            <div className={`text-h4 flex-shrink-0 ${completedCategories === 6 ? "animate-bounce" : "opacity-30"}`}>
-              ✨
-            </div>
-          </button>
+            {/* CTA Button - only enabled when quiz is unlocked */}
+            {completedCategories === 6 && (
+              <button
+                onClick={() => {
+                  fxTap();
+                  onQuiz?.();
+                }}
+                className="w-full h-12 rounded-xl font-bold text-body transition-all active:scale-95 flex items-center justify-center gap-2"
+                style={{
+                  backgroundColor: "var(--accent-5)",
+                  color: "var(--text-on-accent)",
+                }}
+              >
+                <span>🚀</span>
+                <span>Start State Quiz</span>
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -2346,7 +2391,7 @@ function HubCard({
         contain: "layout style paint", // FIX: Prevent reflow cascade when children change
       }}
     >
-      {/* Top row: Number badge (left) + Large Icon (right) */}
+      {/* Top row: Number badge (left) + Completion badge (top-right) + Large Icon (right side below) */}
       <div className="flex items-start justify-between mb-3 gap-2 relative">
         {/* Numbered badge in top-left - large colored circle */}
         {index !== undefined && (
@@ -2358,22 +2403,18 @@ function HubCard({
           </div>
         )}
 
-        {/* Checkmark overlay for completed - appears on top of card, fixed size */}
+        {/* Completion badge - top-right corner, green, compact */}
         {done && (
           <div
-            className="absolute inset-0 flex items-center justify-center pointer-events-none"
-            style={{
-              zIndex: 10,
-            }}
+            className="absolute top-2 right-2 h-8 w-8 rounded-full bg-action-success text-white flex items-center justify-center text-caption font-black shadow-md hub-checkmark-animate z-20"
+            style={{}}
           >
-            <div className="h-16 w-16 rounded-full bg-action-success text-white flex items-center justify-center text-h3 font-black shadow-lg hub-checkmark-animate">
-              ✓
-            </div>
+            ✓
           </div>
         )}
 
-        {/* Large Icon - top right */}
-        <div className="text-5xl ml-auto flex-shrink-0 flex items-center justify-center">{icon}</div>
+        {/* Large Icon - top right, offset to not interfere with completion badge */}
+        <div className="text-5xl ml-auto flex-shrink-0 flex items-center justify-center pt-2">{icon}</div>
       </div>
 
       {/* Title */}
@@ -2384,12 +2425,12 @@ function HubCard({
       {/* Subtitle */}
       <div className="text-body text-text-secondary font-medium mb-3 line-clamp-2">{sub}</div>
 
-      {/* Bottom row: Question count (left) + Arrow button (right) */}
+      {/* Bottom row: Card count (left) + Arrow button (right) */}
       <div className="flex items-center justify-between mt-auto pt-2">
-        {/* Question count text */}
+        {/* Card count text - changed from "questions" to "cards" */}
         {categoryCardsTotal !== undefined && categoryCardsRead !== undefined && (
           <div className={`text-body font-medium ${done ? "text-action-success" : "text-text-secondary"}`}>
-            {categoryCardsRead}/{categoryCardsTotal} questions
+            {categoryCardsRead}/{categoryCardsTotal} cards
           </div>
         )}
 
