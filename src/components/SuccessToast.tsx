@@ -118,8 +118,6 @@ export function SuccessToast() {
         width: "100%",
         maxWidth: "360px",
         minWidth: "0",
-        paddingLeft: "12px",
-        paddingRight: "12px",
         boxSizing: "border-box",
         pointerEvents: "none",
       }}

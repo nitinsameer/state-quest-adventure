@@ -77,17 +77,22 @@ export function BottomToastProvider() {
 
   if (!current) return null;
 
-  // Render success toast for success type - centered on viewport
+  // Render success toast for success type - centered horizontally, positioned at bottom
   if (current.type === "success") {
     return (
       <div
         className="fixed z-[998] pointer-events-none"
         style={{
-          inset: 0,
+          left: 0,
+          right: 0,
+          bottom: "calc(max(var(--nav-h, 80px) + 24px, env(safe-area-inset-bottom, 0px) + 24px))",
           display: "flex",
-          alignItems: "center",
+          alignItems: "flex-end",
           justifyContent: "center",
           pointerEvents: "none",
+          paddingLeft: "12px",
+          paddingRight: "12px",
+          boxSizing: "border-box",
         }}
       >
         <SuccessToast />
