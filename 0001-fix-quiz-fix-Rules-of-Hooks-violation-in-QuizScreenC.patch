@@ -1,0 +1,87 @@
+From 81d334fcdc16e42199436c7a05a8cb819699b147 Mon Sep 17 00:00:00 2001
+From: Claude <claude@anthropic.com>
+Date: Mon, 26 Oct 2026 11:39:29 +0000
+Subject: [PATCH] fix(quiz): fix Rules-of-Hooks violation in QuizScreenContent
+ (React #300/#310)
+
+commit b067e44 moved the 'states not loaded yet' early return from the
+QuizScreen wrapper into QuizScreenContent itself, placing it before 9
+more hook calls (useMemo, useEffect, and 7x useState). Whenever states
+was empty on a render, the component returned after only 3 hooks; once
+states populated on a later render, it called 12 total hooks. That
+mismatched hook count between renders is exactly what triggers minified
+React error #300/#310 ('Rendered fewer hooks than expected').
+
+Moves the loading check back to QuizScreen (the wrapper), which decides
+whether to mount QuizScreenContent at all - conditionally mounting a
+different component is safe, an early return partway through one
+component's hooks is not.
+
+Also fixes a divergence this introduced: the learn-hub quiz entry point
+(state.$slug.quiz.tsx) already navigates straight to /state/$slug/learn
+on completion, but the journey-map's embedded quiz entry point
+(JourneyMapScreen in screens.tsx) still routed to the now-unused
+quiz-done screen. Both entry points now behave the same way.
+---
+ src/components/screens.tsx | 30 ++++++++++++++++++++----------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
+
+diff --git a/src/components/screens.tsx b/src/components/screens.tsx
+index b357710..805b212 100644
+--- a/src/components/screens.tsx
++++ b/src/components/screens.tsx
+@@ -1501,10 +1501,11 @@ export function JourneyMapScreen() {
+         }}
+         onDone={() => {
+           appLogger.info("journey_map_screen", "QuizScreen onDone clicked");
+-          // Navigate to the completion screen (same robust screen used by the
+-          // learn-hub quiz entry point; see state.$slug.quiz.tsx)
++          // Same completion behavior as the learn-hub quiz entry point
++          // (see state.$slug.quiz.tsx) - navigate to the learn hub rather
++          // than quiz-done, so both entry points stay in sync.
+           const slug = stateSlug(view.name);
+-          navigate({ to: "/state/$slug/quiz-done", params: { slug } });
++          navigate({ to: "/state/$slug/learn", params: { slug } });
+         }}
+       />
+     );
+@@ -3224,8 +3225,22 @@ export function QuizScreen({
+   }) => void;
+   onClose?: () => void;
+ } = {}) {
+-  // Always render the content component to avoid hook count mismatches
+-  // QuizScreenContent will handle loading state internally
++  // Decide whether to mount QuizScreenContent at all based on whether
++  // progress has loaded. This must stay in this wrapper component, not
++  // inside QuizScreenContent: an early return placed before some of
++  // QuizScreenContent's hooks (useMemo/useEffect/useState) would make it
++  // call a different number of hooks between renders depending on
++  // whether `states` is populated yet, which is a Rules-of-Hooks
++  // violation and crashes with React error #300/#310. Conditionally
++  // mounting a different component is safe; an early return partway
++  // through one component's hooks is not.
++  const progress = useProgress();
++  const states = statesWithProgress(progress);
++
++  if (!states || states.length === 0) {
++    return <LoadingScreen />;
++  }
++
+   return <QuizScreenContent stateName={stateName} onDone={onDone} onClose={onClose} />;
+ }
+ 
+@@ -3247,11 +3262,6 @@ function QuizScreenContent({
+   const states = statesWithProgress(progress);
+   const level = levelInfo(progress.xp);
+ 
+-  // Handle loading state inside component (not in parent) to avoid hook count mismatch
+-  if (!states || states.length === 0) {
+-    return <LoadingScreen />;
+-  }
+-
+   const activeName =
+     stateName ??
+     states.find((s) => s.status === "current")?.name ??
+-- 
+2.43.0
+

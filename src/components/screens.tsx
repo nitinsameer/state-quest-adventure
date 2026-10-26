@@ -49,7 +49,7 @@ import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { useToastStore } from "@/store/toastStore";
 import { showSuccessToast } from "@/hooks/useSuccessToast";
 import { AVATAR_CONFIG, type AvatarId } from "@/lib/avatar-config";
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, useRef, type ReactNode } from "react";
 import { Link, useNavigate, useRouter, Navigate } from "@tanstack/react-router";
 import { AvatarScreen, AgeScreen } from "@/components/Onboarding";
 import { fxCorrect, fxWrong, fxConfetti, fxStamp, fxTap, useSoundOn, setSoundOn } from "@/lib/fx";
@@ -1991,9 +1991,7 @@ export function LearningHubScreen({
   const read = cardsRead(progress, state.name);
 
   // Track which categories have been celebrated to avoid duplicate celebrations
-  const [celebratedCategories, setCelebratedCategories] = useState<Set<number>>(new Set());
-
-  // State for showing the "All 6 cards done" decision modal
+  // Now using celebrationTrackerRef instead - see below in useEffect
   const [showDecisionModal, setShowDecisionModal] = useState(false);
   const allCards = useMemo(() => {
     return learningCardsFor(state.name, "en", progress.ageBand);
@@ -2044,24 +2042,25 @@ export function LearningHubScreen({
   }, [cardCounts]);
 
   // Detect intermediate and full category completions and celebrate
+  // CRITICAL FIX: Use ref to track celebrations without calling hooks in effect
+  // This prevents React hook count mismatches (#300, #310)
+  const celebrationTrackerRef = useRef<Set<number>>(new Set());
+  
   useEffect(() => {
     // Celebrate at 3/6 (halfway milestone)
-    if (completedCategories === 3 && !celebratedCategories.has(3)) {
+    if (completedCategories === 3 && !celebrationTrackerRef.current.has(3)) {
+      celebrationTrackerRef.current.add(3);
       showSuccessToast(`Halfway there! ⭐ 3/6 categories explored! 🎉`, {
         duration: 2500,
         icon: "🏃",
       });
-
-      setCelebratedCategories((prev) => new Set([...prev, 3]));
     }
 
     // At 6/6 (full completion, before quiz): show decision modal instead of auto-celebrating
-    if (completedCategories === 6 && !celebratedCategories.has(6)) {
+    if (completedCategories === 6 && !celebrationTrackerRef.current.has(6)) {
+      celebrationTrackerRef.current.add(6);
       // Show the "All 6 cards done! Start quiz / Later" decision modal
       setShowDecisionModal(true);
-
-      // Mark as celebrated so we don't show this again
-      setCelebratedCategories((prev) => new Set([...prev, 6]));
     }
   }, [completedCategories]);
 
