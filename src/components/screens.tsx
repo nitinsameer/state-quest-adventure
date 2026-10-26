@@ -3349,6 +3349,25 @@ function QuizScreenContent({
       // This happens BEFORE navigation to ensure state is consistent
       finishQuiz(activeName, quizMetrics);
 
+      // Hand off this attempt's exact numbers to the completion screen, since
+      // after finishQuiz they can't be reliably reconstructed from stored
+      // progress alone (e.g. a replay that doesn't improve stars doesn't
+      // record a fresh score).
+      try {
+        sessionStorage.setItem(
+          "india-explorer:last-quiz-result",
+          JSON.stringify({
+            stateName: activeName,
+            correctCount: totalCorrect,
+            totalQuestions: questions.length,
+            quizXp: totalCorrect * 20,
+            bonusXp: isReplay ? 0 : 100,
+          }),
+        );
+      } catch {
+        // sessionStorage unavailable - completion screen will fall back to stored progress
+      }
+
       // Navigate to completion screen after finishQuiz state update
       // (Zustand setState is synchronous, so celebration should be queued by now)
       onDone?.(quizMetrics);

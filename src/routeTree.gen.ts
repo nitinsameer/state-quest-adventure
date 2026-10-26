@@ -28,6 +28,7 @@ import { Route as StateSlugCompleteRouteImport } from './routes/state.$slug.comp
 import { Route as StateSlugLearnRouteImport } from './routes/state.$slug.learn'
 import { Route as StateSlugPostcardRouteImport } from './routes/state.$slug.postcard'
 import { Route as StateSlugQuizRouteImport } from './routes/state.$slug.quiz'
+import { Route as StateSlugQuizDoneRouteImport } from './routes/state.$slug.quiz-done'
 import { Route as StateSlugUnlockRouteImport } from './routes/state.$slug.unlock'
 import { Route as StateSlugCardIndexRouteImport } from './routes/state.$slug.card.$index'
 
@@ -126,6 +127,11 @@ const StateSlugQuizRoute = StateSlugQuizRouteImport.update({
   path: '/state/$slug/quiz',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StateSlugQuizDoneRoute = StateSlugQuizDoneRouteImport.update({
+  id: '/state/$slug/quiz-done',
+  path: '/state/$slug/quiz-done',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StateSlugUnlockRoute = StateSlugUnlockRouteImport.update({
   id: '/state/$slug/unlock',
   path: '/state/$slug/unlock',
@@ -156,6 +162,7 @@ export interface FileRoutesByFullPath {
   '/state/$slug/learn': typeof StateSlugLearnRoute
   '/state/$slug/postcard': typeof StateSlugPostcardRoute
   '/state/$slug/quiz': typeof StateSlugQuizRoute
+  '/state/$slug/quiz-done': typeof StateSlugQuizDoneRoute
   '/state/$slug/unlock': typeof StateSlugUnlockRoute
   '/state/$slug/': typeof StateSlugIndexRoute
   '/state/$slug/card/$index': typeof StateSlugCardIndexRoute
@@ -179,6 +186,7 @@ export interface FileRoutesByTo {
   '/state/$slug/learn': typeof StateSlugLearnRoute
   '/state/$slug/postcard': typeof StateSlugPostcardRoute
   '/state/$slug/quiz': typeof StateSlugQuizRoute
+  '/state/$slug/quiz-done': typeof StateSlugQuizDoneRoute
   '/state/$slug/unlock': typeof StateSlugUnlockRoute
   '/state/$slug': typeof StateSlugIndexRoute
   '/state/$slug/card/$index': typeof StateSlugCardIndexRoute
@@ -203,6 +211,7 @@ export interface FileRoutesById {
   '/state/$slug/learn': typeof StateSlugLearnRoute
   '/state/$slug/postcard': typeof StateSlugPostcardRoute
   '/state/$slug/quiz': typeof StateSlugQuizRoute
+  '/state/$slug/quiz-done': typeof StateSlugQuizDoneRoute
   '/state/$slug/unlock': typeof StateSlugUnlockRoute
   '/state/$slug/': typeof StateSlugIndexRoute
   '/state/$slug/card/$index': typeof StateSlugCardIndexRoute
@@ -228,6 +237,7 @@ export interface FileRouteTypes {
     | '/state/$slug/learn'
     | '/state/$slug/postcard'
     | '/state/$slug/quiz'
+    | '/state/$slug/quiz-done'
     | '/state/$slug/unlock'
     | '/state/$slug/'
     | '/state/$slug/card/$index'
@@ -251,6 +261,7 @@ export interface FileRouteTypes {
     | '/state/$slug/learn'
     | '/state/$slug/postcard'
     | '/state/$slug/quiz'
+    | '/state/$slug/quiz-done'
     | '/state/$slug/unlock'
     | '/state/$slug'
     | '/state/$slug/card/$index'
@@ -274,6 +285,7 @@ export interface FileRouteTypes {
     | '/state/$slug/learn'
     | '/state/$slug/postcard'
     | '/state/$slug/quiz'
+    | '/state/$slug/quiz-done'
     | '/state/$slug/unlock'
     | '/state/$slug/'
     | '/state/$slug/card/$index'
@@ -298,6 +310,7 @@ export interface RootRouteChildren {
   StateSlugLearnRoute: typeof StateSlugLearnRoute
   StateSlugPostcardRoute: typeof StateSlugPostcardRoute
   StateSlugQuizRoute: typeof StateSlugQuizRoute
+  StateSlugQuizDoneRoute: typeof StateSlugQuizDoneRoute
   StateSlugUnlockRoute: typeof StateSlugUnlockRoute
   StateSlugIndexRoute: typeof StateSlugIndexRoute
   StateSlugCardIndexRoute: typeof StateSlugCardIndexRoute
@@ -438,6 +451,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StateSlugQuizRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/state/$slug/quiz-done': {
+      id: '/state/$slug/quiz-done'
+      path: '/state/$slug/quiz-done'
+      fullPath: '/state/$slug/quiz-done'
+      preLoaderRoute: typeof StateSlugQuizDoneRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/state/$slug/unlock': {
       id: '/state/$slug/unlock'
       path: '/state/$slug/unlock'
@@ -474,6 +494,7 @@ const rootRouteChildren: RootRouteChildren = {
   StateSlugLearnRoute: StateSlugLearnRoute,
   StateSlugPostcardRoute: StateSlugPostcardRoute,
   StateSlugQuizRoute: StateSlugQuizRoute,
+  StateSlugQuizDoneRoute: StateSlugQuizDoneRoute,
   StateSlugUnlockRoute: StateSlugUnlockRoute,
   StateSlugIndexRoute: StateSlugIndexRoute,
   StateSlugCardIndexRoute: StateSlugCardIndexRoute,

@@ -64,7 +64,7 @@ function Quiz() {
       onDone={(quizMetrics) => {
         // finishQuiz is already called in QuizScreenContent.tsx
         // Don't call it again here to avoid double state updates and race conditions
-        navigate({ to: "/state/$slug/complete", params: { slug } });
+        navigate({ to: "/state/$slug/quiz-done", params: { slug } });
       }}
     />
   );
