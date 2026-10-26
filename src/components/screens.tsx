@@ -1501,9 +1501,10 @@ export function JourneyMapScreen() {
         }}
         onDone={() => {
           appLogger.info("journey_map_screen", "QuizScreen onDone clicked");
-          // Navigate to completion screen which will show postcard → unlock → explorer
-          const slug = view.name.toLowerCase().replace(/\s+/g, "-");
-          navigate({ to: "/state/$slug/complete", params: { slug } });
+          // Navigate to the completion screen (same robust screen used by the
+          // learn-hub quiz entry point; see state.$slug.quiz.tsx)
+          const slug = stateSlug(view.name);
+          navigate({ to: "/state/$slug/quiz-done", params: { slug } });
         }}
       />
     );
