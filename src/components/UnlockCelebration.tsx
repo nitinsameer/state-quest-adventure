@@ -96,12 +96,15 @@ export function UnlockCelebration() {
   }
 
   // GATE: Suppress unlock celebrations during quiz celebration
-  // If there's a pending "full" celebration (quiz), don't show unlock popups
+  // If there's a pending "full" celebration (quiz), don't show unlock popups.
+  // IMPORTANT: this must stay a plain boolean used *inside* the effects and
+  // the final render below - never an early `return` placed between hook
+  // calls. This component is mounted globally (see __root.tsx), so an early
+  // return here before the two useEffect calls below means it renders with
+  // fewer hooks the instant a quiz celebration is queued (React error #300),
+  // and with more hooks the instant that celebration is dismissed (error
+  // #310). Hooks must run the same number of times on every render.
   const isInQuizCelebration = progress.pendingCelebrations?.some((c) => c.type === "full");
-  if (isInQuizCelebration) {
-    console.log("[UnlockCelebration] Quiz celebration in progress - suppressing unlock popups");
-    return null;
-  }
 
   useEffect(
     () => () => {
@@ -111,6 +114,11 @@ export function UnlockCelebration() {
   );
 
   useEffect(() => {
+    if (isInQuizCelebration) {
+      console.log("[UnlockCelebration] Quiz celebration in progress - suppressing unlock popups");
+      return;
+    }
+
     // GATE: Only show achievement popups AFTER user completes onboarding
     // During onboarding, suppress celebrations to avoid UI noise
     if (!progress.onboarded) {
@@ -244,8 +252,9 @@ export function UnlockCelebration() {
       timerRef.current = null;
       setPieces(null);
     }, 3200);
-  }, [progress]);
+  }, [progress, isInQuizCelebration]);
 
+  if (isInQuizCelebration) return null;
   if (!pieces) return null;
 
   return (
