@@ -2041,6 +2041,43 @@ export function LearningHubScreen({
     return result;
   }, [cardCounts]);
 
+  // CRITICAL FIX #5: Handle deferred quiz completion from quiz screen
+  // This effect processes quiz results AFTER LearningHubScreen mounts
+  // to prevent React hook count mismatches during state updates
+  useEffect(() => {
+    const completionData = sessionStorage.getItem("quiz-completion-data");
+    if (completionData) {
+      try {
+        const { stateName, metrics, timestamp } = JSON.parse(completionData);
+        
+        // Only process if this is recent (within 1 second) and for this state
+        const age = Date.now() - (timestamp || 0);
+        if (age < 1000 && stateName === state.name) {
+          // Now safe to call finishQuiz - component is fully mounted
+          // All hooks have been initialized in consistent order
+          finishQuiz(stateName, metrics);
+          
+          appLogger.info(
+            "learning_hub_screen",
+            "Processed deferred quiz completion",
+            { stateName, age }
+          );
+        }
+        
+        // Clean up - remove the flag
+        sessionStorage.removeItem("quiz-completion-data");
+      } catch (e) {
+        appLogger.error(
+          "learning_hub_screen",
+          "Error processing quiz completion",
+          {},
+          e as Error
+        );
+        sessionStorage.removeItem("quiz-completion-data");
+      }
+    }
+  }, [state.name]);
+
   // Detect intermediate and full category completions and celebrate
   // CRITICAL FIX: Use ref to track celebrations without calling hooks in effect
   // This prevents React hook count mismatches (#300, #310)
@@ -3351,10 +3388,28 @@ function QuizScreenContent({
         correctCount: totalCorrect,
       };
 
-      // Call finishQuiz to complete state, award XP/stars
-      finishQuiz(activeName, quizMetrics);
+      // CRITICAL FIX #5: Defer finishQuiz() call until AFTER navigation to prevent React hook mismatch
+      // Problem: Calling finishQuiz() here while QuizScreenContent is mounted causes state updates
+      //          that trigger re-renders with different hook counts → Error #300
+      // Solution: Store completion data, navigate first, then let LearningHubScreen call finishQuiz()
+      //           after it mounts. This ensures all hooks are called in consistent order.
+      
+      // Store quiz completion data for LearningHubScreen to process
+      try {
+        sessionStorage.setItem(
+          "quiz-completion-data",
+          JSON.stringify({
+            stateName: activeName,
+            metrics: quizMetrics,
+            timestamp: Date.now(),
+          }),
+        );
+      } catch {
+        // Fallback: call finishQuiz immediately if storage fails
+        finishQuiz(activeName, quizMetrics);
+      }
 
-      // Store in sessionStorage for celebration screen
+      // Also store for celebration screen (legacy)
       try {
         sessionStorage.setItem(
           "india-explorer:last-quiz-result",
@@ -3370,7 +3425,7 @@ function QuizScreenContent({
         // Ignore storage errors
       }
 
-      // Navigate immediately via callback
+      // Navigate immediately via callback (WITHOUT calling finishQuiz)
       onDone?.(quizMetrics);
       return;
     }
