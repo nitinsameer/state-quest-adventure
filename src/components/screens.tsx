@@ -3346,6 +3346,14 @@ function QuizScreenContent({
       setResult("correct");
       setBurst((n) => n + 1);
       // Analytics disabled - no-op
+      
+      // DOPAMINE FIX #1: Auto-advance after 1.2 seconds on correct answer
+      // This maintains momentum and keeps engagement high
+      const timer = setTimeout(() => {
+        onReset();
+      }, 1200);
+      
+      return () => clearTimeout(timer);
     } else {
       fxWrong();
       setResult("wrong");
@@ -3569,9 +3577,9 @@ function QuizScreenContent({
         <button
           onClick={result ? onReset : onCheck}
           disabled={!selected}
-          className={`w-full h-14 rounded-2xl text-h4 text-display disabled:opacity-50 ${
+          className={`w-full h-14 rounded-2xl text-h4 text-display disabled:opacity-50 transition-all ${
             result === "correct"
-              ? "ui-button ui-accent-3"
+              ? "ui-button ui-accent-3 animate-pulse"
               : result === "wrong"
                 ? "ui-button ui-accent-2"
                 : "ui-button ui-accent-1"
@@ -3580,13 +3588,20 @@ function QuizScreenContent({
           {result === "correct"
             ? isLastQuestion
               ? `Finish Quiz ${EMOJI.feedback.success}`
-              : "Next Question →"
+              : `Next Question → ${EMOJI.action.sparkle}`
             : result === "wrong"
               ? isLastQuestion
                 ? `Finish Quiz ${EMOJI.feedback.success}`
                 : "Next Question →"
               : "Check Answer"}
         </button>
+        
+        {/* DOPAMINE FIX #2: Show auto-advance message for correct answers */}
+        {result === "correct" && !isLastQuestion && (
+          <div className="text-center text-caption text-text-secondary mt-2 animate-fade-in">
+            ✨ Moving to next question... (or tap to skip)
+          </div>
+        )}
       </div>
     </div>
   );

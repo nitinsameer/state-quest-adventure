@@ -1,0 +1,88 @@
+From 289837c6a048151fe24ab3a96baf179621637baf Mon Sep 17 00:00:00 2001
+From: Claude <claude@anthropic.com>
+Date: Mon, 26 Oct 2026 19:32:33 +0000
+Subject: [PATCH] fix(ui): fix Rules-of-Hooks violation in global
+ UnlockCelebration (React #300/#310)
+
+Root cause of both crashes reported from the device (#300 on tapping
+'Finish Quiz', then #310 after the post-quiz toast is dismissed on
+Home): UnlockCelebration is mounted globally in __root.tsx, so it is
+present on every screen. It had an early 'if (isInQuizCelebration)
+return null;' placed between its first batch of hooks (useState + 5x
+useRef) and two useEffect calls below it.
+
+- The instant finishQuiz() queues a pendingCelebration of type 'full',
+  isInQuizCelebration flips to true on this globally-mounted
+  component's next render, and it now returns after fewer hooks than
+  the render before it -> error #300. This fires right when the user
+  taps 'Finish Quiz', which matches exactly what was reported.
+- Later, once the Home-screen toast dismisses that pendingCelebration,
+  isInQuizCelebration flips back to false, and the component calls
+  more hooks than it did on its previous (gated) render -> error #310.
+  This matches the second crash reported after killing and reopening
+  the app.
+
+This is unrelated to any of the quiz-flow routing fixes in recent
+commits; it's a standalone, pre-existing bug that would fire any time
+a quiz celebration is queued or dismissed, regardless of which quiz
+entry point or completion screen is used.
+
+Fix: keep isInQuizCelebration as a plain boolean used only inside the
+two useEffect bodies and the final JSX return (both safe places for
+conditionals), so every render calls the exact same hooks in the same
+order.
+---
+ src/components/UnlockCelebration.tsx | 21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
+
+diff --git a/src/components/UnlockCelebration.tsx b/src/components/UnlockCelebration.tsx
+index 86953b4..bbd0354 100644
+--- a/src/components/UnlockCelebration.tsx
++++ b/src/components/UnlockCelebration.tsx
+@@ -96,12 +96,15 @@ export function UnlockCelebration() {
+   }
+ 
+   // GATE: Suppress unlock celebrations during quiz celebration
+-  // If there's a pending "full" celebration (quiz), don't show unlock popups
++  // If there's a pending "full" celebration (quiz), don't show unlock popups.
++  // IMPORTANT: this must stay a plain boolean used *inside* the effects and
++  // the final render below - never an early `return` placed between hook
++  // calls. This component is mounted globally (see __root.tsx), so an early
++  // return here before the two useEffect calls below means it renders with
++  // fewer hooks the instant a quiz celebration is queued (React error #300),
++  // and with more hooks the instant that celebration is dismissed (error
++  // #310). Hooks must run the same number of times on every render.
+   const isInQuizCelebration = progress.pendingCelebrations?.some((c) => c.type === "full");
+-  if (isInQuizCelebration) {
+-    console.log("[UnlockCelebration] Quiz celebration in progress - suppressing unlock popups");
+-    return null;
+-  }
+ 
+   useEffect(
+     () => () => {
+@@ -111,6 +114,11 @@ export function UnlockCelebration() {
+   );
+ 
+   useEffect(() => {
++    if (isInQuizCelebration) {
++      console.log("[UnlockCelebration] Quiz celebration in progress - suppressing unlock popups");
++      return;
++    }
++
+     // GATE: Only show achievement popups AFTER user completes onboarding
+     // During onboarding, suppress celebrations to avoid UI noise
+     if (!progress.onboarded) {
+@@ -244,8 +252,9 @@ export function UnlockCelebration() {
+       timerRef.current = null;
+       setPieces(null);
+     }, 3200);
+-  }, [progress]);
++  }, [progress, isInQuizCelebration]);
+ 
++  if (isInQuizCelebration) return null;
+   if (!pieces) return null;
+ 
+   return (
+-- 
+2.43.0
+
