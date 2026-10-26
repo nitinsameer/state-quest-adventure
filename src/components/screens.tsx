@@ -3224,14 +3224,8 @@ export function QuizScreen({
   }) => void;
   onClose?: () => void;
 } = {}) {
-  const progress = useProgress();
-  const states = statesWithProgress(progress);
-
-  // Safety check: ensure states data is loaded
-  if (!states || states.length === 0) {
-    return <LoadingScreen />;
-  }
-
+  // Always render the content component to avoid hook count mismatches
+  // QuizScreenContent will handle loading state internally
   return <QuizScreenContent stateName={stateName} onDone={onDone} onClose={onClose} />;
 }
 
@@ -3252,6 +3246,11 @@ function QuizScreenContent({
   const progress = useProgress();
   const states = statesWithProgress(progress);
   const level = levelInfo(progress.xp);
+
+  // Handle loading state inside component (not in parent) to avoid hook count mismatch
+  if (!states || states.length === 0) {
+    return <LoadingScreen />;
+  }
 
   const activeName =
     stateName ??
