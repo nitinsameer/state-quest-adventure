@@ -63,8 +63,8 @@ function Quiz() {
       onClose={() => navigate({ to: "/state/$slug/learn", params: { slug } })}
       onDone={(quizMetrics) => {
         // finishQuiz is already called in QuizScreenContent.tsx
-        // Don't call it again here to avoid double state updates and race conditions
-        navigate({ to: "/state/$slug/quiz-done", params: { slug } });
+        // Simply navigate back to learn hub - celebration is in progress store
+        navigate({ to: "/state/$slug/learn", params: { slug } });
       }}
     />
   );

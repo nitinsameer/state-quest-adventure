@@ -3331,28 +3331,21 @@ function QuizScreenContent({
 
       const quizDuration = Date.now() - quizStartTime;
 
-      // Track quiz completion with accurate metrics
-      // Analytics disabled - no-op
-
       // Check if this is a replay (state already completed)
       const isReplay = progress.completed.includes(activeName);
 
-      // Pass quiz metrics to completion screen for badge tracking
+      // Pass quiz metrics to completion callback
       const quizMetrics = {
         timeToComplete: quizDuration,
-        quizAttempts: isReplay ? 2 : 1, // Track real attempt number
+        quizAttempts: isReplay ? 2 : 1,
         quizScore: scorePercentage,
-        correctCount: totalCorrect, // NEW: pass correct answer count for star calculation
+        correctCount: totalCorrect,
       };
 
-      // ATOMIC: Call finishQuiz to complete state, award XP/stars, and queue celebration
-      // This happens BEFORE navigation to ensure state is consistent
+      // Call finishQuiz to complete state, award XP/stars
       finishQuiz(activeName, quizMetrics);
 
-      // Hand off this attempt's exact numbers to the completion screen, since
-      // after finishQuiz they can't be reliably reconstructed from stored
-      // progress alone (e.g. a replay that doesn't improve stars doesn't
-      // record a fresh score).
+      // Store in sessionStorage for celebration screen
       try {
         sessionStorage.setItem(
           "india-explorer:last-quiz-result",
@@ -3365,11 +3358,10 @@ function QuizScreenContent({
           }),
         );
       } catch {
-        // sessionStorage unavailable - completion screen will fall back to stored progress
+        // Ignore storage errors
       }
 
-      // Navigate to completion screen after finishQuiz state update
-      // (Zustand setState is synchronous, so celebration should be queued by now)
+      // Navigate immediately via callback
       onDone?.(quizMetrics);
       return;
     }
