@@ -1501,10 +1501,11 @@ export function JourneyMapScreen() {
         }}
         onDone={() => {
           appLogger.info("journey_map_screen", "QuizScreen onDone clicked");
-          // Navigate to the completion screen (same robust screen used by the
-          // learn-hub quiz entry point; see state.$slug.quiz.tsx)
+          // Same completion behavior as the learn-hub quiz entry point
+          // (see state.$slug.quiz.tsx) - navigate to the learn hub rather
+          // than quiz-done, so both entry points stay in sync.
           const slug = stateSlug(view.name);
-          navigate({ to: "/state/$slug/quiz-done", params: { slug } });
+          navigate({ to: "/state/$slug/learn", params: { slug } });
         }}
       />
     );
@@ -3224,8 +3225,22 @@ export function QuizScreen({
   }) => void;
   onClose?: () => void;
 } = {}) {
-  // Always render the content component to avoid hook count mismatches
-  // QuizScreenContent will handle loading state internally
+  // Decide whether to mount QuizScreenContent at all based on whether
+  // progress has loaded. This must stay in this wrapper component, not
+  // inside QuizScreenContent: an early return placed before some of
+  // QuizScreenContent's hooks (useMemo/useEffect/useState) would make it
+  // call a different number of hooks between renders depending on
+  // whether `states` is populated yet, which is a Rules-of-Hooks
+  // violation and crashes with React error #300/#310. Conditionally
+  // mounting a different component is safe; an early return partway
+  // through one component's hooks is not.
+  const progress = useProgress();
+  const states = statesWithProgress(progress);
+
+  if (!states || states.length === 0) {
+    return <LoadingScreen />;
+  }
+
   return <QuizScreenContent stateName={stateName} onDone={onDone} onClose={onClose} />;
 }
 
@@ -3246,11 +3261,6 @@ function QuizScreenContent({
   const progress = useProgress();
   const states = statesWithProgress(progress);
   const level = levelInfo(progress.xp);
-
-  // Handle loading state inside component (not in parent) to avoid hook count mismatch
-  if (!states || states.length === 0) {
-    return <LoadingScreen />;
-  }
 
   const activeName =
     stateName ??
