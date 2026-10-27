@@ -2156,7 +2156,7 @@ export function LearningHubScreen({
           />
 
           {/* Header content overlay - back button, title, star counter */}
-          <div className="relative z-10 w-full flex flex-col items-center justify-end px-4 pb-2 min-h-16">
+          <div className="relative z-10 w-full flex flex-col items-center justify-end px-4 pb-6 min-h-16">
             {/* Top: Learning Hub label + Star counter row */}
             <div className="w-full flex items-start justify-between mb-2">
               {/* Back button - left side */}
@@ -2178,7 +2178,9 @@ export function LearningHubScreen({
               {/* Star counter - right side */}
               <div className="h-9 w-9 rounded-full bg-text-on-header/40 backdrop-blur-sm flex items-center justify-center text-text-on-header flex-shrink-0">
                 <span className="text-caption">⭐</span>
-                <span className="text-[11px] font-extrabold">{completedCategories * XP_PER_CARD}</span>
+                <span className="text-[11px] font-extrabold">
+                  {completedCategories * XP_PER_CARD}
+                </span>
               </div>
             </div>
 
@@ -2226,12 +2228,14 @@ export function LearningHubScreen({
           </p>
         </div>
 
-        {/* CHALLENGE CARDS GRID - responsive 2-column layout */}
+        {/* CHALLENGE CARDS GRID - responsive 2-column layout. min-w-0 on
+            each cell stops long card content (e.g. the Fun Fact sentence)
+            from forcing a column wider than its fair share of the grid. */}
         <div className="px-4 pb-4 grid grid-cols-2 gap-3 auto-rows-max">
           {cards.map((c, idx) => (
             <div
               key={c.title}
-              className="hub-card-entrance"
+              className="hub-card-entrance min-w-0"
               style={{ animationDelay: `${idx * 50}ms` }}
             >
               <HubCard {...c} index={idx} stateName={state.name} />
@@ -2418,7 +2422,7 @@ function HubCard({
         fxTap();
         onOpen?.();
       }}
-      className="relative text-left transition active:scale-95 p-3 rounded-2xl flex flex-col h-full border-2 min-w-0 aspect-square"
+      className="relative text-left transition active:scale-95 p-3 rounded-2xl flex flex-col h-full border-2 min-w-0"
       style={{
         backgroundColor: pastelBg,
         borderColor: locked ? "var(--border-subtle)" : badgeColor,
@@ -2448,12 +2452,14 @@ function HubCard({
         <div className="text-2xl flex-shrink-0">{icon}</div>
       </div>
 
-      {/* Title + subtitle */}
-      <div className="min-h-0 mb-auto">
-        <div className="text-caption font-extrabold text-text-primary leading-snug">
+      {/* Title + subtitle - min-w-0 and break-words/line-clamp stop long
+          content (e.g. the Fun Fact sentence) from forcing the card wider
+          than its grid column instead of wrapping */}
+      <div className="min-h-0 min-w-0 mb-auto">
+        <div className="text-caption font-extrabold text-text-primary leading-snug truncate">
           {title}
         </div>
-        <div className="text-[11px] leading-snug text-text-secondary font-medium">
+        <div className="text-[11px] leading-snug text-text-secondary font-medium break-words line-clamp-2">
           {sub}
         </div>
       </div>
