@@ -2156,32 +2156,40 @@ export function LearningHubScreen({
           />
 
           {/* Header content overlay - back button, title, star counter */}
-          <div className="relative z-10 w-full h-16 flex items-center justify-between px-4">
-            {/* Back button - left side */}
-            <button
-              onClick={() => {
-                if (onBack) {
-                  fxTap();
-                  onBack();
-                } else {
-                  goBack();
-                }
-              }}
-              className="h-9 w-9 rounded-full bg-text-on-header/40 backdrop-blur-sm flex items-center justify-center text-text-on-header flex-shrink-0 transition-all active:scale-95"
-              aria-label="Go back"
-            >
-              <span className="text-label">‹</span>
-            </button>
+          <div className="relative z-10 w-full flex flex-col items-center justify-end px-4 pb-2 min-h-16">
+            {/* Top: Learning Hub label + Star counter row */}
+            <div className="w-full flex items-start justify-between mb-2">
+              {/* Back button - left side */}
+              <button
+                onClick={() => {
+                  if (onBack) {
+                    fxTap();
+                    onBack();
+                  } else {
+                    goBack();
+                  }
+                }}
+                className="h-9 w-9 rounded-full bg-text-on-header/40 backdrop-blur-sm flex items-center justify-center text-text-on-header flex-shrink-0 transition-all active:scale-95"
+                aria-label="Go back"
+              >
+                <span className="text-label">‹</span>
+              </button>
 
-            {/* Center: State name - flex-grow to push star to right */}
-            <h1 className="flex-1 text-center text-h2 font-extrabold text-text-on-header leading-tight px-3 truncate">
-              {state.name}
-            </h1>
+              {/* Star counter - right side */}
+              <div className="h-9 w-9 rounded-full bg-text-on-header/40 backdrop-blur-sm flex items-center justify-center text-text-on-header flex-shrink-0">
+                <span className="text-caption">⭐</span>
+                <span className="text-[11px] font-extrabold">{completedCategories * XP_PER_CARD}</span>
+              </div>
+            </div>
 
-            {/* Star counter - right side */}
-            <div className="h-9 w-9 rounded-full bg-text-on-header/40 backdrop-blur-sm flex items-center justify-center text-text-on-header flex-shrink-0">
-              <span className="text-caption">⭐</span>
-              <span className="text-[11px] font-extrabold">{completedCategories * XP_PER_CARD}</span>
+            {/* Bottom: Learning Hub label + State name */}
+            <div className="flex flex-col items-center w-full">
+              <div className="text-caption font-semibold text-text-on-header/80 mb-0.5">
+                Learning Hub
+              </div>
+              <h1 className="text-h2 font-extrabold text-text-on-header leading-tight truncate max-w-full">
+                {state.name}
+              </h1>
             </div>
           </div>
         </div>
