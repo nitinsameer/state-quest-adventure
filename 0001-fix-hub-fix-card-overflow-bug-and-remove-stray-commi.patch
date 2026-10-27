@@ -1,0 +1,913 @@
+From 10587b8b8f97c0a36f6e1c7c44b5d2634a98865c Mon Sep 17 00:00:00 2001
+From: Claude <claude@anthropic.com>
+Date: Tue, 27 Oct 2026 10:45:34 +0000
+Subject: [PATCH] fix(hub): fix card overflow bug and remove stray committed
+ patch files
+
+The Fun Fact card (and any card with a long subtitle sentence, unlike
+the short word/phrase subtitles on the other 5 cards) was overflowing
+past the right edge of the screen instead of wrapping within its grid
+column - visible as the card's border and text extending off-screen in
+the reported screenshot.
+
+HubCard's title/subtitle container had no min-w-0, and the subtitle
+text itself had no wrapping constraint, so a long sentence could force
+the card wider than its 2-column grid cell. Added min-w-0 to both the
+grid cell wrapper and the title/subtitle container, truncate on the
+title, and break-words + line-clamp-2 on the subtitle, so long content
+always wraps and clips within the card instead of pushing it wider.
+
+Also removes three .patch files that got committed into the repo root
+as tracked files by a previous commit (should never have been checked
+in - they're generated patches, not source), and adds *.patch to
+.gitignore to stop it happening again.
+---
+ .gitignore                                    |   1 +
+ ...-unlock-bypass-layout-clipping-and-c.patch | 623 ------------------
+ ...es-of-Hooks-violation-in-QuizScreenC.patch |  87 ---
+ ...-of-Hooks-violation-in-global-Unlock.patch |  88 ---
+ src/components/screens.tsx                    |  20 +-
+ 5 files changed, 14 insertions(+), 805 deletions(-)
+ delete mode 100644 0001-fix-hub-fix-quiz-unlock-bypass-layout-clipping-and-c.patch
+ delete mode 100644 0001-fix-quiz-fix-Rules-of-Hooks-violation-in-QuizScreenC.patch
+ delete mode 100644 0001-fix-ui-fix-Rules-of-Hooks-violation-in-global-Unlock.patch
+
+diff --git a/.gitignore b/.gitignore
+index bbd91d2..6868e2f 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -172,3 +172,4 @@ serve-static.mjs
+ 
+ # Build Output Logs
+ build-output.txt
++*.patch
+diff --git a/0001-fix-hub-fix-quiz-unlock-bypass-layout-clipping-and-c.patch b/0001-fix-hub-fix-quiz-unlock-bypass-layout-clipping-and-c.patch
+deleted file mode 100644
+index 4be99b6..0000000
+--- a/0001-fix-hub-fix-quiz-unlock-bypass-layout-clipping-and-c.patch
++++ /dev/null
+@@ -1,623 +0,0 @@
+-From e89439bdea394160dbc0c0b4f78e20ec5f99e99e Mon Sep 17 00:00:00 2001
+-From: Claude <claude@anthropic.com>
+-Date: Tue, 27 Oct 2026 03:41:42 +0000
+-Subject: [PATCH] fix(hub): fix quiz-unlock bypass, layout clipping, and card
+- collision
+-
+-Six issues on the Learn Hub screen:
+-
+-1. Quiz unlocking prematurely ('directly doing 6th card' opened the
+-   quiz): three separate bypasses of the 'all 6 categories complete'
+-   requirement, all fixed to use the same strict, per-sub-card signal
+-   (completedCategoriesCount / cardVisits) that the UI already displays:
+-   - handleMainCardDone() only checked currentMainCardIndex === 5 before
+-     routing straight to the quiz, regardless of whether categories 1-5
+-     were actually done. The 'Take the Quiz!' button label had the same
+-     bug. Both now check completedCategoriesCount(...) === 6.
+-   - The /state/$slug/quiz route's loader guard used the older
+-     cardsDone()/p.cards signal, which only required each category's
+-     *main* card to have been opened once (not every sub-card in it) -
+-     a weaker bar than what the hub UI enforces. Switched to
+-     completedCategoriesCount for consistency.
+-   - The Journey Map's internal 'quiz' view (view-state based, not a
+-     real route) had no guard at all. Added an effect that bounces back
+-     to the hub if reached before all 6 categories are complete.
+-
+-2. 'Your state adventure' progress card getting cropped: it lived
+-   inside an overflow-y-auto scroll container with a negative top
+-   margin pulling it up to overlap the header. The scroll container
+-   clipped that overlap at its own top edge. Moved it to be a
+-   non-scrolling sibling of the header instead.
+-
+-3. Completion checkmark overlapping the category icon: both were
+-   fighting for the same top-right corner of each HubCard (checkmark
+-   absolutely positioned there, icon pushed there via ml-auto in the
+-   same row). Checkmark now renders on its own layer at the card level;
+-   icon moved into the top row next to the numbered badge.
+-
+-4. All 6 cards + quiz card now fit on one screen without scrolling:
+-   removed the scroll container, shrank the header, and compacted the
+-   progress strip, card grid (now a fixed grid-rows-3 filling a flex-1
+-   area), and quiz panel.
+-
+-Toast alignment (reported as left-aligned) was investigated but not
+-changed - the current code already centers it explicitly
+-(BottomToast.tsx), so a screenshot is needed to find whatever this
+-actually is before changing anything.
+----
+- src/components/screens.tsx      | 348 +++++++++++++++-----------------
+- src/routes/state.$slug.quiz.tsx |  15 +-
+- 2 files changed, 178 insertions(+), 185 deletions(-)
+-
+-diff --git a/src/components/screens.tsx b/src/components/screens.tsx
+-index e2ca0b3..2cb613a 100644
+---- a/src/components/screens.tsx
+-+++ b/src/components/screens.tsx
+-@@ -94,6 +94,7 @@ import {
+-   touchStreak,
+-   cardsDone,
+-   cardsRead,
+-+  completedCategoriesCount,
+-   CARDS_PER_STATE,
+-   XP_PER_CARD,
+-   isCardReplaying,
+-@@ -389,7 +390,7 @@ export function CreateProfileScreen() {
+-   const handleAgeNext = () => {
+-     fxTap();
+-     fxConfetti();
+--    
+-+
+-     // If age not selected, use default
+-     const ageToUse = selectedAge || "6-7";
+-     setSelectedAge(ageToUse);
+-@@ -1286,6 +1287,24 @@ export function JourneyMapScreen() {
+-     });
+-   }, [p.completed.length, celebration]);
+- 
+-+  // GUARD: the "quiz" view has no route loader behind it (it's internal
+-+  // view state, not a URL), so it can't rely on state.$slug.quiz.tsx's
+-+  // guard. Bounce back to the hub if somehow reached before all 6
+-+  // categories are actually complete.
+-+  useEffect(() => {
+-+    if (view?.screen !== "quiz") return;
+-+    const alreadyCompleted = p.completed.includes(view.name);
+-+    if (alreadyCompleted) return;
+-+    const allCards = learningCardsFor(view.name, "en", p.ageBand);
+-+    if (completedCategoriesCount(p, view.name, allCards) < 6) {
+-+      appLogger.info(
+-+        "journey_map_screen",
+-+        "Blocked quiz view - not all categories complete, returning to hub",
+-+      );
+-+      setView({ screen: "hub", name: view.name });
+-+    }
+-+  }, [view, p]);
+-+
+-   // Register the back handler for this screen with the global journey back handler
+-   useEffect(() => {
+-     const handleBack = () => {
+-@@ -1323,7 +1342,7 @@ export function JourneyMapScreen() {
+- 
+-   useEffect(() => {
+-     appLogger.info("journey_map_screen", "view state changed", view);
+--    
+-+
+-     // Signal to root layout whether to hide bottom nav
+-     // Show nav only when view is null (main journey map view)
+-     if (view === null) {
+-@@ -2049,30 +2068,24 @@ export function LearningHubScreen({
+-     if (completionData) {
+-       try {
+-         const { stateName, metrics, timestamp } = JSON.parse(completionData);
+--        
+-+
+-         // Only process if this is recent (within 1 second) and for this state
+-         const age = Date.now() - (timestamp || 0);
+-         if (age < 1000 && stateName === state.name) {
+-           // Now safe to call finishQuiz - component is fully mounted
+-           // All hooks have been initialized in consistent order
+-           finishQuiz(stateName, metrics);
+--          
+--          appLogger.info(
+--            "learning_hub_screen",
+--            "Processed deferred quiz completion",
+--            { stateName, age }
+--          );
+-+
+-+          appLogger.info("learning_hub_screen", "Processed deferred quiz completion", {
+-+            stateName,
+-+            age,
+-+          });
+-         }
+--        
+-+
+-         // Clean up - remove the flag
+-         sessionStorage.removeItem("quiz-completion-data");
+-       } catch (e) {
+--        appLogger.error(
+--          "learning_hub_screen",
+--          "Error processing quiz completion",
+--          {},
+--          e as Error
+--        );
+-+        appLogger.error("learning_hub_screen", "Error processing quiz completion", {}, e as Error);
+-         sessionStorage.removeItem("quiz-completion-data");
+-       }
+-     }
+-@@ -2082,7 +2095,7 @@ export function LearningHubScreen({
+-   // CRITICAL FIX: Use ref to track celebrations without calling hooks in effect
+-   // This prevents React hook count mismatches (#300, #310)
+-   const celebrationTrackerRef = useRef<Set<number>>(new Set());
+--  
+-+
+-   useEffect(() => {
+-     // Celebrate at 3/6 (halfway milestone)
+-     if (completedCategories === 3 && !celebrationTrackerRef.current.has(3)) {
+-@@ -2128,9 +2141,9 @@ export function LearningHubScreen({
+-   });
+- 
+-   return (
+--    <div className="w-full h-full bg-bg-page flex flex-col">
+--      {/* HEADER SECTION - Fixed positioned, clean header with background image and centered state name */}
+--      <div className="relative h-32 flex-shrink-0 z-40">
+-+    <div className="w-full h-full bg-bg-page flex flex-col overflow-hidden">
+-+      {/* HEADER SECTION - compact, fixed height, no scroll */}
+-+      <div className="relative h-20 flex-shrink-0 z-40">
+-         {/* Background image - covers full header */}
+-         <img
+-           src={stateHeaderBg}
+-@@ -2141,7 +2154,7 @@ export function LearningHubScreen({
+-         />
+- 
+-         {/* Header content overlay - back button, title, star counter */}
+--        <div className="relative z-10 h-full flex items-center justify-between px-5">
+-+        <div className="relative z-10 h-full flex items-center justify-between px-4">
+-           {/* Back button - left side */}
+-           <button
+-             onClick={() => {
+-@@ -2152,160 +2165,129 @@ export function LearningHubScreen({
+-                 goBack();
+-               }
+-             }}
+--            className="h-10 w-10 rounded-full bg-text-on-header/40 backdrop-blur-sm flex items-center justify-center text-text-on-header flex-shrink-0 transition-all active:scale-95"
+-+            className="h-9 w-9 rounded-full bg-text-on-header/40 backdrop-blur-sm flex items-center justify-center text-text-on-header flex-shrink-0 transition-all active:scale-95"
+-             aria-label="Go back"
+-           >
+-             <span className="text-label">‹</span>
+-           </button>
+- 
+-           {/* Center: State name - flex-grow to push star to right */}
+--          <h1 className="flex-1 text-center text-h2 font-extrabold text-text-on-header leading-tight px-4">
+-+          <h1 className="flex-1 text-center text-h4 font-extrabold text-text-on-header leading-tight px-3 truncate">
+-             {state.name}
+-           </h1>
+- 
+-           {/* Star counter - right side */}
+--          <div className="h-10 w-10 rounded-full bg-text-on-header/40 backdrop-blur-sm flex items-center justify-center text-text-on-header flex-shrink-0">
+--            <span className="text-label">⭐</span>
+--            <span className="text-caption font-extrabold">{completedCategories * XP_PER_CARD}</span>
+-+          <div className="h-9 w-9 rounded-full bg-text-on-header/40 backdrop-blur-sm flex items-center justify-center text-text-on-header flex-shrink-0">
+-+            <span className="text-caption">⭐</span>
+-+            <span className="text-[11px] font-extrabold">{completedCategories * XP_PER_CARD}</span>
+-           </div>
+-         </div>
+-       </div>
+- 
+--      {/* Scrollable content area - flex-1 ensures it fills remaining space, min-h-0 for flex scroll fix, mt-0 to prevent gap below header */}
+--      <div className="flex-1 overflow-y-auto min-h-0 pb-[calc(var(--nav-h,80px)+24px)]">
+--        {/* PROGRESS CARD - White rounded card with overlap, negative margin preserved for visual layering */}
+--        <div className="px-5 -mt-6 relative z-30 mb-6">
+--          <div className="bg-surface-card rounded-2xl shadow-elevated-1 p-5">
+--            <div className="flex items-center justify-between mb-3">
+--              <div className="text-label font-bold text-text-primary">Your state adventure</div>
+--              <div className="text-body font-extrabold text-text-primary">
+--                {completedCategories} / 6
+--              </div>
+--            </div>
+--            <div className="w-full h-2.5 bg-accent-5-soft rounded-full overflow-hidden">
+--              <div
+--                className={`h-full rounded-full transition-all duration-300 ${completedCategories === 6 ? "hub-progress-complete" : ""}`}
+--                style={{
+--                  width: `${(completedCategories / 6) * 100}%`,
+--                  backgroundColor: "var(--accent-5)",
+--                }}
+--              />
+-+      {/* PROGRESS STRIP - a non-scrolling sibling of the header (not a child
+-+          of a scroll container), so its rounded top can safely peek over
+-+          the header without ever being clipped */}
+-+      <div className="px-4 -mt-3 relative z-30 flex-shrink-0">
+-+        <div className="bg-surface-card rounded-2xl shadow-elevated-1 px-4 py-2.5">
+-+          <div className="flex items-center justify-between mb-1.5">
+-+            <div className="text-caption font-bold text-text-primary">Your state adventure</div>
+-+            <div className="text-caption font-extrabold text-text-primary">
+-+              {completedCategories} / 6
+-             </div>
+-           </div>
+-+          <div className="w-full h-2 bg-accent-5-soft rounded-full overflow-hidden">
+-+            <div
+-+              className={`h-full rounded-full transition-all duration-300 ${completedCategories === 6 ? "hub-progress-complete" : ""}`}
+-+              style={{
+-+                width: `${(completedCategories / 6) * 100}%`,
+-+                backgroundColor: "var(--accent-5)",
+-+              }}
+-+            />
+-+          </div>
+-         </div>
+-+      </div>
+- 
+--        {/* SECTION HEADING & SUBTITLE */}
+--        <div className="px-5 mb-4">
+--          <h2 className="text-h2 text-text-primary font-extrabold mb-2">Explore the state</h2>
+--          <p className="text-body text-text-secondary">
+--            Complete all 6 challenges to unlock your quiz.
+--          </p>
+--        </div>
+--
+--        {/* CHALLENGE CARDS GRID - 2 columns, natural flow, no fixed heights */}
+--        <div className="px-4 mb-6 grid grid-cols-2 gap-3">
+--          {cards.map((c, idx) => (
+--            <div 
+--              key={c.title}
+--              className="hub-card-entrance"
+--              style={{ animationDelay: `${idx * 50}ms` }}
+--            >
+--              <HubCard {...c} index={idx} stateName={state.name} />
+--            </div>
+--          ))}
+--        </div>
+--
+--        {/* QUIZ PANEL - Full-width card with lock, progress bar, and clear state transitions */}
+--        <div className="px-4 pb-6">
+-+      {/* CHALLENGE CARDS GRID - fills remaining space, 2 cols x 3 rows,
+-+          sized to fit without scrolling so all 6 cards + the quiz card
+-+          below are visible on one screen */}
+-+      <div className="flex-1 min-h-0 px-3 pt-3 pb-1.5 grid grid-cols-2 grid-rows-3 gap-2">
+-+        {cards.map((c, idx) => (
+-           <div
+--            className="w-full rounded-2xl p-5 flex flex-col gap-3 transition-all"
+--            style={{
+--              backgroundColor: completedCategories === 6 ? "var(--accent-5-soft)" : "var(--accent-5-soft)/50",
+--              borderLeft: "3px solid var(--accent-5)",
+--            }}
+-+            key={c.title}
+-+            className="hub-card-entrance min-h-0"
+-+            style={{ animationDelay: `${idx * 50}ms` }}
+-           >
+--            {/* Top section: Lock icon + Title + Sparkle */}
+--            <div className="flex items-center gap-3">
+--              {/* Lock icon in circular background */}
+--              <div
+--                className="h-12 w-12 rounded-full flex items-center justify-center flex-shrink-0 text-h4 transition-all shadow-md"
+--                style={{
+--                  backgroundColor:
+--                    completedCategories === 6 ? "var(--accent-5)" : "var(--accent-5)/20",
+--                }}
+--              >
+--                {completedCategories === 6 ? "🔓" : "🔒"}
+--              </div>
+-+            <HubCard {...c} index={idx} stateName={state.name} />
+-+          </div>
+-+        ))}
+-+      </div>
+- 
+--              {/* Heading and subtitle */}
+--              <div className="flex-1 text-left">
+--                <div
+--                  className={`text-label font-extrabold ${
+--                    completedCategories === 6
+--                      ? "text-text-primary"
+--                      : "text-text-secondary"
+--                  }`}
+--                >
+--                  {completedCategories === 6
+--                    ? "State Quiz Unlocked!"
+--                    : "Your State Quiz Awaits!"}
+--                </div>
+--                <div className="text-caption text-text-secondary">
+--                  {completedCategories === 6
+--                    ? "Ready to test your knowledge?"
+--                    : `Finish all 6 challenges`}
+--                </div>
+--              </div>
+-+      {/* QUIZ PANEL - compact, fixed height, always visible at the bottom */}
+-+      <div className="px-3 pb-[calc(var(--nav-h,70px)+8px)] pt-1 flex-shrink-0">
+-+        <div
+-+          className="w-full rounded-2xl px-4 py-3 flex flex-col gap-2 transition-all"
+-+          style={{
+-+            backgroundColor:
+-+              completedCategories === 6 ? "var(--accent-5-soft)" : "var(--accent-5-soft)/50",
+-+            borderLeft: "3px solid var(--accent-5)",
+-+          }}
+-+        >
+-+          {/* Top section: Lock icon + Title + Sparkle */}
+-+          <div className="flex items-center gap-2.5">
+-+            {/* Lock icon in circular background */}
+-+            <div
+-+              className="h-9 w-9 rounded-full flex items-center justify-center flex-shrink-0 text-body transition-all shadow-md"
+-+              style={{
+-+                backgroundColor:
+-+                  completedCategories === 6 ? "var(--accent-5)" : "var(--accent-5)/20",
+-+              }}
+-+            >
+-+              {completedCategories === 6 ? "🔓" : "🔒"}
+-+            </div>
+- 
+--              {/* Decorative sparkles - animated when enabled */}
+-+            {/* Heading and subtitle */}
+-+            <div className="flex-1 text-left min-w-0">
+-               <div
+--                className={`text-h4 flex-shrink-0 ${
+--                  completedCategories === 6 ? "animate-bounce" : "opacity-30"
+-+                className={`text-caption font-extrabold truncate ${
+-+                  completedCategories === 6 ? "text-text-primary" : "text-text-secondary"
+-                 }`}
+-               >
+--                ✨
+-+                {completedCategories === 6 ? "State Quiz Unlocked!" : "Your State Quiz Awaits!"}
+-               </div>
+--            </div>
+--
+--            {/* Progress indicator section - shows when not fully completed */}
+--            {completedCategories < 6 && (
+--              <div className="flex items-center gap-2">
+--                <div className="flex-1">
+--                  {/* Progress bar */}
+--                  <div className="w-full h-2 rounded-full overflow-hidden bg-accent-5/20">
+--                    <div
+--                      className="h-full rounded-full transition-all duration-300"
+--                      style={{
+--                        width: `${(completedCategories / 6) * 100}%`,
+--                        backgroundColor: "var(--accent-5)",
+--                      }}
+--                    />
+--                  </div>
+--                  <div className="text-caption text-text-secondary mt-1">
+--                    {completedCategories} of 6 challenges complete
+--                  </div>
+-+              {completedCategories < 6 && (
+-+                <div className="text-[11px] text-text-secondary truncate">
+-+                  {completedCategories} of 6 challenges complete
+-                 </div>
+--              </div>
+--            )}
+-+              )}
+-+            </div>
+- 
+--            {/* CTA Button - only enabled when quiz is unlocked */}
+--            {completedCategories === 6 && (
+--              <button
+--                onClick={() => {
+--                  fxTap();
+--                  onQuiz?.();
+--                }}
+--                className="w-full h-12 rounded-xl font-bold text-body transition-all active:scale-95 flex items-center justify-center gap-2"
+--                style={{
+--                  backgroundColor: "var(--accent-5)",
+--                  color: "var(--text-on-accent)",
+--                }}
+--              >
+--                <span>🚀</span>
+--                <span>Start State Quiz</span>
+--              </button>
+--            )}
+-+            {/* Decorative sparkle - animated when enabled */}
+-+            <div
+-+              className={`text-body flex-shrink-0 ${
+-+                completedCategories === 6 ? "animate-bounce" : "opacity-30"
+-+              }`}
+-+            >
+-+              ✨
+-+            </div>
+-           </div>
+-+
+-+          {/* CTA Button - only enabled when quiz is unlocked */}
+-+          {completedCategories === 6 && (
+-+            <button
+-+              onClick={() => {
+-+                fxTap();
+-+                onQuiz?.();
+-+              }}
+-+              className="w-full h-10 rounded-xl font-bold text-caption transition-all active:scale-95 flex items-center justify-center gap-2"
+-+              style={{
+-+                backgroundColor: "var(--accent-5)",
+-+                color: "var(--text-on-accent)",
+-+              }}
+-+            >
+-+              <span>🚀</span>
+-+              <span>Start State Quiz</span>
+-+            </button>
+-+          )}
+-         </div>
+-       </div>
+- 
+-@@ -2419,7 +2401,7 @@ function HubCard({
+-         fxTap();
+-         onOpen?.();
+-       }}
+--      className="relative text-left transition active:scale-95 p-4 rounded-3xl flex flex-col h-full border-2"
+-+      className="relative text-left transition active:scale-95 p-2.5 rounded-2xl flex flex-col h-full border-2 min-h-0"
+-       style={{
+-         backgroundColor: pastelBg,
+-         borderColor: "var(--border-subtle)",
+-@@ -2429,45 +2411,44 @@ function HubCard({
+-         contain: "layout style paint", // FIX: Prevent reflow cascade when children change
+-       }}
+-     >
+--      {/* Top row: Number badge (left) + Completion badge (top-right) + Large Icon (right side below) */}
+--      <div className="flex items-start justify-between mb-3 gap-2 relative">
+--        {/* Numbered badge in top-left - large colored circle */}
+-+      {/* Completion badge - top-right corner of the whole card, its own
+-+          layer so it never competes with the icon/title row below it */}
+-+      {done && (
+-+        <div className="absolute top-1.5 right-1.5 h-6 w-6 rounded-full bg-action-success text-white flex items-center justify-center text-[11px] font-black shadow-md hub-checkmark-animate z-20">
+-+          ✓
+-+        </div>
+-+      )}
+-+
+-+      {/* Top row: Number badge (left) + icon (right, clear of the checkmark) */}
+-+      <div className="flex items-center justify-between gap-1 mb-1.5">
+-         {index !== undefined && (
+-           <div
+--            className="h-10 w-10 rounded-full flex items-center justify-center text-body font-black text-white shadow-md flex-shrink-0"
+-+            className="h-7 w-7 rounded-full flex items-center justify-center text-[11px] font-black text-white shadow-md flex-shrink-0"
+-             style={{ backgroundColor: badgeColor }}
+-           >
+-             {String(index + 1).padStart(2, "0")}
+-           </div>
+-         )}
+--
+--        {/* Completion badge - top-right corner, green, compact */}
+--        {done && (
+--          <div
+--            className="absolute top-2 right-2 h-8 w-8 rounded-full bg-action-success text-white flex items-center justify-center text-caption font-black shadow-md hub-checkmark-animate z-20"
+--            style={{}}
+--          >
+--            ✓
+--          </div>
+--        )}
+--
+--        {/* Large Icon - top right, offset to not interfere with completion badge */}
+--        <div className="text-5xl ml-auto flex-shrink-0 flex items-center justify-center pt-2">{icon}</div>
+-+        <div className="text-2xl flex-shrink-0 pr-6">{icon}</div>
+-       </div>
+- 
+--      {/* Title */}
+--      <div className="text-h5 text-text-primary font-extrabold leading-tight mb-1">
+--        {title}
+-+      {/* Title + subtitle */}
+-+      <div className="min-h-0">
+-+        <div className="text-caption text-text-primary font-extrabold leading-tight truncate">
+-+          {title}
+-+        </div>
+-+        <div className="text-[11px] leading-tight text-text-secondary font-medium truncate">
+-+          {sub}
+-+        </div>
+-       </div>
+- 
+--      {/* Subtitle */}
+--      <div className="text-body text-text-secondary font-medium mb-3 line-clamp-2">{sub}</div>
+--
+-       {/* Bottom row: Card count (left) + Arrow button (right) */}
+--      <div className="flex items-center justify-between mt-auto pt-2">
+-+      <div className="flex items-center justify-between mt-auto pt-1.5">
+-         {/* Card count text - changed from "questions" to "cards" */}
+-         {categoryCardsTotal !== undefined && categoryCardsRead !== undefined && (
+--          <div className={`text-body font-medium ${done ? "text-action-success" : "text-text-secondary"}`}>
+-+          <div
+-+            className={`text-[11px] font-medium ${done ? "text-action-success" : "text-text-secondary"}`}
+-+          >
+-             {categoryCardsRead}/{categoryCardsTotal} cards
+-           </div>
+-         )}
+-@@ -2475,7 +2456,7 @@ function HubCard({
+-         {/* Arrow button - bottom right, colored - always visible */}
+-         {!locked && (
+-           <div
+--            className="h-10 w-10 rounded-full flex items-center justify-center text-h5 font-bold text-white ml-auto flex-shrink-0 hub-arrow-pulse"
+-+            className="h-7 w-7 rounded-full flex items-center justify-center text-caption font-bold text-white ml-auto flex-shrink-0 hub-arrow-pulse"
+-             style={{
+-               backgroundColor: arrowColor,
+-               pointerEvents: done ? "auto" : "auto", // Always clickable
+-@@ -2487,7 +2468,7 @@ function HubCard({
+- 
+-         {/* Locked icon - bottom right */}
+-         {locked && (
+--          <div className="h-10 w-10 rounded-full bg-text-secondary/70 text-white flex items-center justify-center text-body font-bold flex-shrink-0 ml-auto">
+-+          <div className="h-7 w-7 rounded-full bg-text-secondary/70 text-white flex items-center justify-center text-[11px] font-bold flex-shrink-0 ml-auto">
+-             🔒
+-           </div>
+-         )}
+-@@ -2989,8 +2970,13 @@ export function LearningCardScreen({
+- 
+-     markCard(state.name, currentMainCardIndex, !wasFirstRead);
+- 
+--    // If this is the last main card, go to quiz
+--    if (currentMainCardIndex === 5) {
+-+    // Only go straight to the quiz once ALL 6 categories are actually
+-+    // complete (every sub-card in every category visited), not just
+-+    // because this happened to be category index 5. Finishing category 6
+-+    // on its own, with others still incomplete, must go back to the hub
+-+    // like finishing any other category does.
+-+    const allCategoriesComplete = completedCategoriesCount(progress, state.name, cards) === 6;
+-+    if (allCategoriesComplete) {
+-       onNext?.(null);
+-     } else {
+-       // Go back to card selection screen (pass null to signal back to hub)
+-@@ -3184,7 +3170,7 @@ export function LearningCardScreen({
+-           className="w-full h-14 ui-button ui-accent-1 text-h4 text-display"
+-         >
+-           {isLastInMainCardSection
+--            ? currentMainCardIndex === 5
+-+            ? completedCategoriesCount(progress, state.name, cards) === 6
+-               ? `Take the Quiz! ${EMOJI.milestone.twentyFive}`
+-               : "Done! Back to Cards"
+-             : isReplaying
+-@@ -3346,13 +3332,13 @@ function QuizScreenContent({
+-       setResult("correct");
+-       setBurst((n) => n + 1);
+-       // Analytics disabled - no-op
+--      
+-+
+-       // DOPAMINE FIX #1: Auto-advance after 1.2 seconds on correct answer
+-       // This maintains momentum and keeps engagement high
+-       const timer = setTimeout(() => {
+-         onReset();
+-       }, 1200);
+--      
+-+
+-       return () => clearTimeout(timer);
+-     } else {
+-       fxWrong();
+-@@ -3401,7 +3387,7 @@ function QuizScreenContent({
+-       //          that trigger re-renders with different hook counts → Error #300
+-       // Solution: Store completion data, navigate first, then let LearningHubScreen call finishQuiz()
+-       //           after it mounts. This ensures all hooks are called in consistent order.
+--      
+-+
+-       // Store quiz completion data for LearningHubScreen to process
+-       try {
+-         sessionStorage.setItem(
+-@@ -3595,7 +3581,7 @@ function QuizScreenContent({
+-                 : "Next Question →"
+-               : "Check Answer"}
+-         </button>
+--        
+-+
+-         {/* DOPAMINE FIX #2: Show auto-advance message for correct answers */}
+-         {result === "correct" && !isLastQuestion && (
+-           <div className="text-center text-caption text-text-secondary mt-2 animate-fade-in">
+-diff --git a/src/routes/state.$slug.quiz.tsx b/src/routes/state.$slug.quiz.tsx
+-index 50efd9a..2bd4c61 100644
+---- a/src/routes/state.$slug.quiz.tsx
+-+++ b/src/routes/state.$slug.quiz.tsx
+-@@ -1,8 +1,8 @@
+- import { createFileRoute, notFound, redirect, useNavigate } from "@tanstack/react-router";
+--import { QuizScreen } from "@/components/screens";
+-+import { QuizScreen, learningCardsFor } from "@/components/screens";
+- import { getStateBySlug } from "@/lib/states";
+- import { NotFoundPlace, PlaceError } from "@/components/PlaceFallbacks";
+--import { getProgress, cardsDone, CARDS_PER_STATE } from "@/lib/progress";
+-+import { getProgress, completedCategoriesCount } from "@/lib/progress";
+- import { useAndroidBackButton } from "@/hooks/useAndroidBackButton";
+- 
+- export const Route = createFileRoute("/state/$slug/quiz")({
+-@@ -11,8 +11,15 @@ export const Route = createFileRoute("/state/$slug/quiz")({
+-     if (!state) throw notFound();
+- 
+-     const progress = getProgress();
+--    if (cardsDone(progress, state.name) < CARDS_PER_STATE) {
+--      // Not all cards completed yet - redirect to learn hub
+-+    // Use the same strict, per-sub-card completion signal the Learn Hub UI
+-+    // shows (completedCategoriesCount / cardVisits), not the older
+-+    // cardsDone/p.cards check - that one only required each category's
+-+    // *main* card to have been opened once, not every sub-card in it, so
+-+    // it could be satisfied without the state actually being complete.
+-+    const allCards = learningCardsFor(state.name, "en", progress.ageBand);
+-+    const alreadyCompleted = progress.completed.includes(state.name);
+-+    if (!alreadyCompleted && completedCategoriesCount(progress, state.name, allCards) < 6) {
+-+      // Not all categories completed yet - redirect to learn hub
+-       throw redirect({ to: "/state/$slug/learn", params: { slug: params.slug } });
+-     }
+- 
+--- 
+-2.43.0
+-
+diff --git a/0001-fix-quiz-fix-Rules-of-Hooks-violation-in-QuizScreenC.patch b/0001-fix-quiz-fix-Rules-of-Hooks-violation-in-QuizScreenC.patch
+deleted file mode 100644
+index ec46e4c..0000000
+--- a/0001-fix-quiz-fix-Rules-of-Hooks-violation-in-QuizScreenC.patch
++++ /dev/null
+@@ -1,87 +0,0 @@
+-From 81d334fcdc16e42199436c7a05a8cb819699b147 Mon Sep 17 00:00:00 2001
+-From: Claude <claude@anthropic.com>
+-Date: Mon, 26 Oct 2026 11:39:29 +0000
+-Subject: [PATCH] fix(quiz): fix Rules-of-Hooks violation in QuizScreenContent
+- (React #300/#310)
+-
+-commit b067e44 moved the 'states not loaded yet' early return from the
+-QuizScreen wrapper into QuizScreenContent itself, placing it before 9
+-more hook calls (useMemo, useEffect, and 7x useState). Whenever states
+-was empty on a render, the component returned after only 3 hooks; once
+-states populated on a later render, it called 12 total hooks. That
+-mismatched hook count between renders is exactly what triggers minified
+-React error #300/#310 ('Rendered fewer hooks than expected').
+-
+-Moves the loading check back to QuizScreen (the wrapper), which decides
+-whether to mount QuizScreenContent at all - conditionally mounting a
+-different component is safe, an early return partway through one
+-component's hooks is not.
+-
+-Also fixes a divergence this introduced: the learn-hub quiz entry point
+-(state.$slug.quiz.tsx) already navigates straight to /state/$slug/learn
+-on completion, but the journey-map's embedded quiz entry point
+-(JourneyMapScreen in screens.tsx) still routed to the now-unused
+-quiz-done screen. Both entry points now behave the same way.
+----
+- src/components/screens.tsx | 30 ++++++++++++++++++++----------
+- 1 file changed, 20 insertions(+), 10 deletions(-)
+-
+-diff --git a/src/components/screens.tsx b/src/components/screens.tsx
+-index b357710..805b212 100644
+---- a/src/components/screens.tsx
+-+++ b/src/components/screens.tsx
+-@@ -1501,10 +1501,11 @@ export function JourneyMapScreen() {
+-         }}
+-         onDone={() => {
+-           appLogger.info("journey_map_screen", "QuizScreen onDone clicked");
+--          // Navigate to the completion screen (same robust screen used by the
+--          // learn-hub quiz entry point; see state.$slug.quiz.tsx)
+-+          // Same completion behavior as the learn-hub quiz entry point
+-+          // (see state.$slug.quiz.tsx) - navigate to the learn hub rather
+-+          // than quiz-done, so both entry points stay in sync.
+-           const slug = stateSlug(view.name);
+--          navigate({ to: "/state/$slug/quiz-done", params: { slug } });
+-+          navigate({ to: "/state/$slug/learn", params: { slug } });
+-         }}
+-       />
+-     );
+-@@ -3224,8 +3225,22 @@ export function QuizScreen({
+-   }) => void;
+-   onClose?: () => void;
+- } = {}) {
+--  // Always render the content component to avoid hook count mismatches
+--  // QuizScreenContent will handle loading state internally
+-+  // Decide whether to mount QuizScreenContent at all based on whether
+-+  // progress has loaded. This must stay in this wrapper component, not
+-+  // inside QuizScreenContent: an early return placed before some of
+-+  // QuizScreenContent's hooks (useMemo/useEffect/useState) would make it
+-+  // call a different number of hooks between renders depending on
+-+  // whether `states` is populated yet, which is a Rules-of-Hooks
+-+  // violation and crashes with React error #300/#310. Conditionally
+-+  // mounting a different component is safe; an early return partway
+-+  // through one component's hooks is not.
+-+  const progress = useProgress();
+-+  const states = statesWithProgress(progress);
+-+
+-+  if (!states || states.length === 0) {
+-+    return <LoadingScreen />;
+-+  }
+-+
+-   return <QuizScreenContent stateName={stateName} onDone={onDone} onClose={onClose} />;
+- }
+- 
+-@@ -3247,11 +3262,6 @@ function QuizScreenContent({
+-   const states = statesWithProgress(progress);
+-   const level = levelInfo(progress.xp);
+- 
+--  // Handle loading state inside component (not in parent) to avoid hook count mismatch
+--  if (!states || states.length === 0) {
+--    return <LoadingScreen />;
+--  }
+--
+-   const activeName =
+-     stateName ??
+-     states.find((s) => s.status === "current")?.name ??
+--- 
+-2.43.0
+-
+diff --git a/0001-fix-ui-fix-Rules-of-Hooks-violation-in-global-Unlock.patch b/0001-fix-ui-fix-Rules-of-Hooks-violation-in-global-Unlock.patch
+deleted file mode 100644
+index e58bffb..0000000
+--- a/0001-fix-ui-fix-Rules-of-Hooks-violation-in-global-Unlock.patch
++++ /dev/null
+@@ -1,88 +0,0 @@
+-From 289837c6a048151fe24ab3a96baf179621637baf Mon Sep 17 00:00:00 2001
+-From: Claude <claude@anthropic.com>
+-Date: Mon, 26 Oct 2026 19:32:33 +0000
+-Subject: [PATCH] fix(ui): fix Rules-of-Hooks violation in global
+- UnlockCelebration (React #300/#310)
+-
+-Root cause of both crashes reported from the device (#300 on tapping
+-'Finish Quiz', then #310 after the post-quiz toast is dismissed on
+-Home): UnlockCelebration is mounted globally in __root.tsx, so it is
+-present on every screen. It had an early 'if (isInQuizCelebration)
+-return null;' placed between its first batch of hooks (useState + 5x
+-useRef) and two useEffect calls below it.
+-
+-- The instant finishQuiz() queues a pendingCelebration of type 'full',
+-  isInQuizCelebration flips to true on this globally-mounted
+-  component's next render, and it now returns after fewer hooks than
+-  the render before it -> error #300. This fires right when the user
+-  taps 'Finish Quiz', which matches exactly what was reported.
+-- Later, once the Home-screen toast dismisses that pendingCelebration,
+-  isInQuizCelebration flips back to false, and the component calls
+-  more hooks than it did on its previous (gated) render -> error #310.
+-  This matches the second crash reported after killing and reopening
+-  the app.
+-
+-This is unrelated to any of the quiz-flow routing fixes in recent
+-commits; it's a standalone, pre-existing bug that would fire any time
+-a quiz celebration is queued or dismissed, regardless of which quiz
+-entry point or completion screen is used.
+-
+-Fix: keep isInQuizCelebration as a plain boolean used only inside the
+-two useEffect bodies and the final JSX return (both safe places for
+-conditionals), so every render calls the exact same hooks in the same
+-order.
+----
+- src/components/UnlockCelebration.tsx | 21 +++++++++++++++------
+- 1 file changed, 15 insertions(+), 6 deletions(-)
+-
+-diff --git a/src/components/UnlockCelebration.tsx b/src/components/UnlockCelebration.tsx
+-index 86953b4..bbd0354 100644
+---- a/src/components/UnlockCelebration.tsx
+-+++ b/src/components/UnlockCelebration.tsx
+-@@ -96,12 +96,15 @@ export function UnlockCelebration() {
+-   }
+- 
+-   // GATE: Suppress unlock celebrations during quiz celebration
+--  // If there's a pending "full" celebration (quiz), don't show unlock popups
+-+  // If there's a pending "full" celebration (quiz), don't show unlock popups.
+-+  // IMPORTANT: this must stay a plain boolean used *inside* the effects and
+-+  // the final render below - never an early `return` placed between hook
+-+  // calls. This component is mounted globally (see __root.tsx), so an early
+-+  // return here before the two useEffect calls below means it renders with
+-+  // fewer hooks the instant a quiz celebration is queued (React error #300),
+-+  // and with more hooks the instant that celebration is dismissed (error
+-+  // #310). Hooks must run the same number of times on every render.
+-   const isInQuizCelebration = progress.pendingCelebrations?.some((c) => c.type === "full");
+--  if (isInQuizCelebration) {
+--    console.log("[UnlockCelebration] Quiz celebration in progress - suppressing unlock popups");
+--    return null;
+--  }
+- 
+-   useEffect(
+-     () => () => {
+-@@ -111,6 +114,11 @@ export function UnlockCelebration() {
+-   );
+- 
+-   useEffect(() => {
+-+    if (isInQuizCelebration) {
+-+      console.log("[UnlockCelebration] Quiz celebration in progress - suppressing unlock popups");
+-+      return;
+-+    }
+-+
+-     // GATE: Only show achievement popups AFTER user completes onboarding
+-     // During onboarding, suppress celebrations to avoid UI noise
+-     if (!progress.onboarded) {
+-@@ -244,8 +252,9 @@ export function UnlockCelebration() {
+-       timerRef.current = null;
+-       setPieces(null);
+-     }, 3200);
+--  }, [progress]);
+-+  }, [progress, isInQuizCelebration]);
+- 
+-+  if (isInQuizCelebration) return null;
+-   if (!pieces) return null;
+- 
+-   return (
+--- 
+-2.43.0
+-
+diff --git a/src/components/screens.tsx b/src/components/screens.tsx
+index 703d1a3..4f7b386 100644
+--- a/src/components/screens.tsx
++++ b/src/components/screens.tsx
+@@ -2178,7 +2178,9 @@ export function LearningHubScreen({
+               {/* Star counter - right side */}
+               <div className="h-9 w-9 rounded-full bg-text-on-header/40 backdrop-blur-sm flex items-center justify-center text-text-on-header flex-shrink-0">
+                 <span className="text-caption">⭐</span>
+-                <span className="text-[11px] font-extrabold">{completedCategories * XP_PER_CARD}</span>
++                <span className="text-[11px] font-extrabold">
++                  {completedCategories * XP_PER_CARD}
++                </span>
+               </div>
+             </div>
+ 
+@@ -2226,12 +2228,14 @@ export function LearningHubScreen({
+           </p>
+         </div>
+ 
+-        {/* CHALLENGE CARDS GRID - responsive 2-column layout */}
++        {/* CHALLENGE CARDS GRID - responsive 2-column layout. min-w-0 on
++            each cell stops long card content (e.g. the Fun Fact sentence)
++            from forcing a column wider than its fair share of the grid. */}
+         <div className="px-4 pb-4 grid grid-cols-2 gap-4 auto-rows-max">
+           {cards.map((c, idx) => (
+             <div
+               key={c.title}
+-              className="hub-card-entrance"
++              className="hub-card-entrance min-w-0"
+               style={{ animationDelay: `${idx * 50}ms` }}
+             >
+               <HubCard {...c} index={idx} stateName={state.name} />
+@@ -2448,12 +2452,14 @@ function HubCard({
+         <div className="text-3xl flex-shrink-0">{icon}</div>
+       </div>
+ 
+-      {/* Title + subtitle */}
+-      <div className="min-h-0 mb-auto">
+-        <div className="text-caption font-extrabold text-text-primary leading-snug">
++      {/* Title + subtitle - min-w-0 and break-words/line-clamp stop long
++          content (e.g. the Fun Fact sentence) from forcing the card wider
++          than its grid column instead of wrapping */}
++      <div className="min-h-0 min-w-0 mb-auto">
++        <div className="text-caption font-extrabold text-text-primary leading-snug truncate">
+           {title}
+         </div>
+-        <div className="text-[12px] leading-snug text-text-secondary font-medium">
++        <div className="text-[12px] leading-snug text-text-secondary font-medium break-words line-clamp-2">
+           {sub}
+         </div>
+       </div>
+-- 
+2.43.0
+

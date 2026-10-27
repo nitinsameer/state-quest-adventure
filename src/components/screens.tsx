@@ -2227,7 +2227,7 @@ export function LearningHubScreen({
         </div>
 
         {/* CHALLENGE CARDS GRID - responsive 2-column layout */}
-        <div className="px-4 pb-4 grid grid-cols-2 gap-4 auto-rows-max">
+        <div className="px-4 pb-4 grid grid-cols-2 gap-3 auto-rows-max">
           {cards.map((c, idx) => (
             <div
               key={c.title}
@@ -2268,12 +2268,12 @@ export function LearningHubScreen({
                     completedCategories === 6 ? "text-text-primary" : "text-text-secondary"
                   }`}
                 >
-                  {completedCategories === 6 ? "State Quiz Unlocked!" : "State Quiz Locked"}
+                  {completedCategories === 6 ? "State Quiz Unlocked!" : "Your State Quiz Awaits!"}
                 </div>
                 <div className="text-body text-text-secondary">
                   {completedCategories === 6
                     ? "Ready to test your knowledge?"
-                    : "Complete all 6 challenges"}
+                    : `${completedCategories} of 6 challenges complete`}
                 </div>
               </div>
 
@@ -2418,7 +2418,7 @@ function HubCard({
         fxTap();
         onOpen?.();
       }}
-      className="relative text-left transition active:scale-95 p-4 rounded-3xl flex flex-col h-full border-2 min-w-0"
+      className="relative text-left transition active:scale-95 p-3 rounded-2xl flex flex-col h-full border-2 min-w-0 aspect-square"
       style={{
         backgroundColor: pastelBg,
         borderColor: locked ? "var(--border-subtle)" : badgeColor,
@@ -2436,16 +2436,16 @@ function HubCard({
       )}
 
       {/* Top row: Number badge (left) + icon (right) */}
-      <div className="flex items-start justify-between gap-3 mb-3">
+      <div className="flex items-start justify-between gap-2 mb-2">
         {index !== undefined && (
           <div
-            className="h-8 w-8 rounded-full flex items-center justify-center text-[12px] font-black text-white shadow-md flex-shrink-0"
+            className="h-8 w-8 rounded-full flex items-center justify-center text-[11px] font-black text-white shadow-md flex-shrink-0"
             style={{ backgroundColor: badgeColor }}
           >
             {String(index + 1).padStart(2, "0")}
           </div>
         )}
-        <div className="text-3xl flex-shrink-0">{icon}</div>
+        <div className="text-2xl flex-shrink-0">{icon}</div>
       </div>
 
       {/* Title + subtitle */}
@@ -2453,26 +2453,26 @@ function HubCard({
         <div className="text-caption font-extrabold text-text-primary leading-snug">
           {title}
         </div>
-        <div className="text-[12px] leading-snug text-text-secondary font-medium">
+        <div className="text-[11px] leading-snug text-text-secondary font-medium">
           {sub}
         </div>
       </div>
 
       {/* Bottom row: Progress count (left) + Arrow button (right) */}
-      <div className="flex items-center justify-between mt-3 pt-2">
+      <div className="flex items-center justify-between mt-2 pt-1">
         {/* Progress count */}
         {categoryCardsTotal !== undefined && categoryCardsRead !== undefined && (
           <div
-            className={`text-[12px] font-semibold ${done ? "text-action-success" : "text-text-secondary"}`}
+            className={`text-[11px] font-medium ${done ? "text-action-success" : "text-text-secondary"}`}
           >
-            {categoryCardsRead}/{categoryCardsTotal}
+            {categoryCardsRead}/{categoryCardsTotal} cards
           </div>
         )}
 
         {/* Arrow button - bottom right */}
         {!locked && (
           <div
-            className="h-7 w-7 rounded-full flex items-center justify-center text-body font-bold text-white ml-auto flex-shrink-0 hub-arrow-pulse"
+            className="h-8 w-8 rounded-full flex items-center justify-center text-body font-bold text-white ml-auto flex-shrink-0 hub-arrow-pulse"
             style={{
               backgroundColor: arrowColor,
             }}
@@ -2483,7 +2483,7 @@ function HubCard({
 
         {/* Locked icon */}
         {locked && (
-          <div className="h-7 w-7 rounded-full bg-text-secondary/70 text-white flex items-center justify-center text-[12px] font-bold flex-shrink-0 ml-auto">
+          <div className="h-8 w-8 rounded-full bg-text-secondary/70 text-white flex items-center justify-center text-[11px] font-bold flex-shrink-0 ml-auto">
             🔒
           </div>
         )}
