@@ -1,8 +1,8 @@
 import { createFileRoute, notFound, redirect, useNavigate } from "@tanstack/react-router";
-import { QuizScreen } from "@/components/screens";
+import { QuizScreen, learningCardsFor } from "@/components/screens";
 import { getStateBySlug } from "@/lib/states";
 import { NotFoundPlace, PlaceError } from "@/components/PlaceFallbacks";
-import { getProgress, cardsDone, CARDS_PER_STATE } from "@/lib/progress";
+import { getProgress, completedCategoriesCount } from "@/lib/progress";
 import { useAndroidBackButton } from "@/hooks/useAndroidBackButton";
 
 export const Route = createFileRoute("/state/$slug/quiz")({
@@ -11,8 +11,15 @@ export const Route = createFileRoute("/state/$slug/quiz")({
     if (!state) throw notFound();
 
     const progress = getProgress();
-    if (cardsDone(progress, state.name) < CARDS_PER_STATE) {
-      // Not all cards completed yet - redirect to learn hub
+    // Use the same strict, per-sub-card completion signal the Learn Hub UI
+    // shows (completedCategoriesCount / cardVisits), not the older
+    // cardsDone/p.cards check - that one only required each category's
+    // *main* card to have been opened once, not every sub-card in it, so
+    // it could be satisfied without the state actually being complete.
+    const allCards = learningCardsFor(state.name, "en", progress.ageBand);
+    const alreadyCompleted = progress.completed.includes(state.name);
+    if (!alreadyCompleted && completedCategoriesCount(progress, state.name, allCards) < 6) {
+      // Not all categories completed yet - redirect to learn hub
       throw redirect({ to: "/state/$slug/learn", params: { slug: params.slug } });
     }
 

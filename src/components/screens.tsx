@@ -94,6 +94,7 @@ import {
   touchStreak,
   cardsDone,
   cardsRead,
+  completedCategoriesCount,
   CARDS_PER_STATE,
   XP_PER_CARD,
   isCardReplaying,
@@ -389,7 +390,7 @@ export function CreateProfileScreen() {
   const handleAgeNext = () => {
     fxTap();
     fxConfetti();
-    
+
     // If age not selected, use default
     const ageToUse = selectedAge || "6-7";
     setSelectedAge(ageToUse);
@@ -1286,6 +1287,24 @@ export function JourneyMapScreen() {
     });
   }, [p.completed.length, celebration]);
 
+  // GUARD: the "quiz" view has no route loader behind it (it's internal
+  // view state, not a URL), so it can't rely on state.$slug.quiz.tsx's
+  // guard. Bounce back to the hub if somehow reached before all 6
+  // categories are actually complete.
+  useEffect(() => {
+    if (view?.screen !== "quiz") return;
+    const alreadyCompleted = p.completed.includes(view.name);
+    if (alreadyCompleted) return;
+    const allCards = learningCardsFor(view.name, "en", p.ageBand);
+    if (completedCategoriesCount(p, view.name, allCards) < 6) {
+      appLogger.info(
+        "journey_map_screen",
+        "Blocked quiz view - not all categories complete, returning to hub",
+      );
+      setView({ screen: "hub", name: view.name });
+    }
+  }, [view, p]);
+
   // Register the back handler for this screen with the global journey back handler
   useEffect(() => {
     const handleBack = () => {
@@ -1323,7 +1342,7 @@ export function JourneyMapScreen() {
 
   useEffect(() => {
     appLogger.info("journey_map_screen", "view state changed", view);
-    
+
     // Signal to root layout whether to hide bottom nav
     // Show nav only when view is null (main journey map view)
     if (view === null) {
@@ -2049,30 +2068,24 @@ export function LearningHubScreen({
     if (completionData) {
       try {
         const { stateName, metrics, timestamp } = JSON.parse(completionData);
-        
+
         // Only process if this is recent (within 1 second) and for this state
         const age = Date.now() - (timestamp || 0);
         if (age < 1000 && stateName === state.name) {
           // Now safe to call finishQuiz - component is fully mounted
           // All hooks have been initialized in consistent order
           finishQuiz(stateName, metrics);
-          
-          appLogger.info(
-            "learning_hub_screen",
-            "Processed deferred quiz completion",
-            { stateName, age }
-          );
+
+          appLogger.info("learning_hub_screen", "Processed deferred quiz completion", {
+            stateName,
+            age,
+          });
         }
-        
+
         // Clean up - remove the flag
         sessionStorage.removeItem("quiz-completion-data");
       } catch (e) {
-        appLogger.error(
-          "learning_hub_screen",
-          "Error processing quiz completion",
-          {},
-          e as Error
-        );
+        appLogger.error("learning_hub_screen", "Error processing quiz completion", {}, e as Error);
         sessionStorage.removeItem("quiz-completion-data");
       }
     }
@@ -2082,7 +2095,7 @@ export function LearningHubScreen({
   // CRITICAL FIX: Use ref to track celebrations without calling hooks in effect
   // This prevents React hook count mismatches (#300, #310)
   const celebrationTrackerRef = useRef<Set<number>>(new Set());
-  
+
   useEffect(() => {
     // Celebrate at 3/6 (halfway milestone)
     if (completedCategories === 3 && !celebrationTrackerRef.current.has(3)) {
@@ -2128,9 +2141,9 @@ export function LearningHubScreen({
   });
 
   return (
-    <div className="w-full h-full bg-bg-page flex flex-col">
-      {/* HEADER SECTION - Fixed positioned, clean header with background image and centered state name */}
-      <div className="relative h-32 flex-shrink-0 z-40">
+    <div className="w-full h-full bg-bg-page flex flex-col overflow-hidden">
+      {/* HEADER SECTION - compact, fixed height, no scroll */}
+      <div className="relative h-20 flex-shrink-0 z-40">
         {/* Background image - covers full header */}
         <img
           src={stateHeaderBg}
@@ -2141,7 +2154,7 @@ export function LearningHubScreen({
         />
 
         {/* Header content overlay - back button, title, star counter */}
-        <div className="relative z-10 h-full flex items-center justify-between px-5">
+        <div className="relative z-10 h-full flex items-center justify-between px-4">
           {/* Back button - left side */}
           <button
             onClick={() => {
@@ -2152,160 +2165,129 @@ export function LearningHubScreen({
                 goBack();
               }
             }}
-            className="h-10 w-10 rounded-full bg-text-on-header/40 backdrop-blur-sm flex items-center justify-center text-text-on-header flex-shrink-0 transition-all active:scale-95"
+            className="h-9 w-9 rounded-full bg-text-on-header/40 backdrop-blur-sm flex items-center justify-center text-text-on-header flex-shrink-0 transition-all active:scale-95"
             aria-label="Go back"
           >
             <span className="text-label">‹</span>
           </button>
 
           {/* Center: State name - flex-grow to push star to right */}
-          <h1 className="flex-1 text-center text-h2 font-extrabold text-text-on-header leading-tight px-4">
+          <h1 className="flex-1 text-center text-h4 font-extrabold text-text-on-header leading-tight px-3 truncate">
             {state.name}
           </h1>
 
           {/* Star counter - right side */}
-          <div className="h-10 w-10 rounded-full bg-text-on-header/40 backdrop-blur-sm flex items-center justify-center text-text-on-header flex-shrink-0">
-            <span className="text-label">⭐</span>
-            <span className="text-caption font-extrabold">{completedCategories * XP_PER_CARD}</span>
+          <div className="h-9 w-9 rounded-full bg-text-on-header/40 backdrop-blur-sm flex items-center justify-center text-text-on-header flex-shrink-0">
+            <span className="text-caption">⭐</span>
+            <span className="text-[11px] font-extrabold">{completedCategories * XP_PER_CARD}</span>
           </div>
         </div>
       </div>
 
-      {/* Scrollable content area - flex-1 ensures it fills remaining space, min-h-0 for flex scroll fix, mt-0 to prevent gap below header */}
-      <div className="flex-1 overflow-y-auto min-h-0 pb-[calc(var(--nav-h,80px)+24px)]">
-        {/* PROGRESS CARD - White rounded card with overlap, negative margin preserved for visual layering */}
-        <div className="px-5 -mt-6 relative z-30 mb-6">
-          <div className="bg-surface-card rounded-2xl shadow-elevated-1 p-5">
-            <div className="flex items-center justify-between mb-3">
-              <div className="text-label font-bold text-text-primary">Your state adventure</div>
-              <div className="text-body font-extrabold text-text-primary">
-                {completedCategories} / 6
-              </div>
-            </div>
-            <div className="w-full h-2.5 bg-accent-5-soft rounded-full overflow-hidden">
-              <div
-                className={`h-full rounded-full transition-all duration-300 ${completedCategories === 6 ? "hub-progress-complete" : ""}`}
-                style={{
-                  width: `${(completedCategories / 6) * 100}%`,
-                  backgroundColor: "var(--accent-5)",
-                }}
-              />
+      {/* PROGRESS STRIP - a non-scrolling sibling of the header (not a child
+          of a scroll container), so its rounded top can safely peek over
+          the header without ever being clipped */}
+      <div className="px-4 -mt-3 relative z-30 flex-shrink-0">
+        <div className="bg-surface-card rounded-2xl shadow-elevated-1 px-4 py-2.5">
+          <div className="flex items-center justify-between mb-1.5">
+            <div className="text-caption font-bold text-text-primary">Your state adventure</div>
+            <div className="text-caption font-extrabold text-text-primary">
+              {completedCategories} / 6
             </div>
           </div>
+          <div className="w-full h-2 bg-accent-5-soft rounded-full overflow-hidden">
+            <div
+              className={`h-full rounded-full transition-all duration-300 ${completedCategories === 6 ? "hub-progress-complete" : ""}`}
+              style={{
+                width: `${(completedCategories / 6) * 100}%`,
+                backgroundColor: "var(--accent-5)",
+              }}
+            />
+          </div>
         </div>
+      </div>
 
-        {/* SECTION HEADING & SUBTITLE */}
-        <div className="px-5 mb-4">
-          <h2 className="text-h2 text-text-primary font-extrabold mb-2">Explore the state</h2>
-          <p className="text-body text-text-secondary">
-            Complete all 6 challenges to unlock your quiz.
-          </p>
-        </div>
-
-        {/* CHALLENGE CARDS GRID - 2 columns, natural flow, no fixed heights */}
-        <div className="px-4 mb-6 grid grid-cols-2 gap-3">
-          {cards.map((c, idx) => (
-            <div 
-              key={c.title}
-              className="hub-card-entrance"
-              style={{ animationDelay: `${idx * 50}ms` }}
-            >
-              <HubCard {...c} index={idx} stateName={state.name} />
-            </div>
-          ))}
-        </div>
-
-        {/* QUIZ PANEL - Full-width card with lock, progress bar, and clear state transitions */}
-        <div className="px-4 pb-6">
+      {/* CHALLENGE CARDS GRID - fills remaining space, 2 cols x 3 rows,
+          sized to fit without scrolling so all 6 cards + the quiz card
+          below are visible on one screen */}
+      <div className="flex-1 min-h-0 px-3 pt-3 pb-1.5 grid grid-cols-2 grid-rows-3 gap-2">
+        {cards.map((c, idx) => (
           <div
-            className="w-full rounded-2xl p-5 flex flex-col gap-3 transition-all"
-            style={{
-              backgroundColor: completedCategories === 6 ? "var(--accent-5-soft)" : "var(--accent-5-soft)/50",
-              borderLeft: "3px solid var(--accent-5)",
-            }}
+            key={c.title}
+            className="hub-card-entrance min-h-0"
+            style={{ animationDelay: `${idx * 50}ms` }}
           >
-            {/* Top section: Lock icon + Title + Sparkle */}
-            <div className="flex items-center gap-3">
-              {/* Lock icon in circular background */}
-              <div
-                className="h-12 w-12 rounded-full flex items-center justify-center flex-shrink-0 text-h4 transition-all shadow-md"
-                style={{
-                  backgroundColor:
-                    completedCategories === 6 ? "var(--accent-5)" : "var(--accent-5)/20",
-                }}
-              >
-                {completedCategories === 6 ? "🔓" : "🔒"}
-              </div>
+            <HubCard {...c} index={idx} stateName={state.name} />
+          </div>
+        ))}
+      </div>
 
-              {/* Heading and subtitle */}
-              <div className="flex-1 text-left">
-                <div
-                  className={`text-label font-extrabold ${
-                    completedCategories === 6
-                      ? "text-text-primary"
-                      : "text-text-secondary"
-                  }`}
-                >
-                  {completedCategories === 6
-                    ? "State Quiz Unlocked!"
-                    : "Your State Quiz Awaits!"}
-                </div>
-                <div className="text-caption text-text-secondary">
-                  {completedCategories === 6
-                    ? "Ready to test your knowledge?"
-                    : `Finish all 6 challenges`}
-                </div>
-              </div>
+      {/* QUIZ PANEL - compact, fixed height, always visible at the bottom */}
+      <div className="px-3 pb-[calc(var(--nav-h,70px)+8px)] pt-1 flex-shrink-0">
+        <div
+          className="w-full rounded-2xl px-4 py-3 flex flex-col gap-2 transition-all"
+          style={{
+            backgroundColor:
+              completedCategories === 6 ? "var(--accent-5-soft)" : "var(--accent-5-soft)/50",
+            borderLeft: "3px solid var(--accent-5)",
+          }}
+        >
+          {/* Top section: Lock icon + Title + Sparkle */}
+          <div className="flex items-center gap-2.5">
+            {/* Lock icon in circular background */}
+            <div
+              className="h-9 w-9 rounded-full flex items-center justify-center flex-shrink-0 text-body transition-all shadow-md"
+              style={{
+                backgroundColor:
+                  completedCategories === 6 ? "var(--accent-5)" : "var(--accent-5)/20",
+              }}
+            >
+              {completedCategories === 6 ? "🔓" : "🔒"}
+            </div>
 
-              {/* Decorative sparkles - animated when enabled */}
+            {/* Heading and subtitle */}
+            <div className="flex-1 text-left min-w-0">
               <div
-                className={`text-h4 flex-shrink-0 ${
-                  completedCategories === 6 ? "animate-bounce" : "opacity-30"
+                className={`text-caption font-extrabold truncate ${
+                  completedCategories === 6 ? "text-text-primary" : "text-text-secondary"
                 }`}
               >
-                ✨
+                {completedCategories === 6 ? "State Quiz Unlocked!" : "Your State Quiz Awaits!"}
               </div>
+              {completedCategories < 6 && (
+                <div className="text-[11px] text-text-secondary truncate">
+                  {completedCategories} of 6 challenges complete
+                </div>
+              )}
             </div>
 
-            {/* Progress indicator section - shows when not fully completed */}
-            {completedCategories < 6 && (
-              <div className="flex items-center gap-2">
-                <div className="flex-1">
-                  {/* Progress bar */}
-                  <div className="w-full h-2 rounded-full overflow-hidden bg-accent-5/20">
-                    <div
-                      className="h-full rounded-full transition-all duration-300"
-                      style={{
-                        width: `${(completedCategories / 6) * 100}%`,
-                        backgroundColor: "var(--accent-5)",
-                      }}
-                    />
-                  </div>
-                  <div className="text-caption text-text-secondary mt-1">
-                    {completedCategories} of 6 challenges complete
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* CTA Button - only enabled when quiz is unlocked */}
-            {completedCategories === 6 && (
-              <button
-                onClick={() => {
-                  fxTap();
-                  onQuiz?.();
-                }}
-                className="w-full h-12 rounded-xl font-bold text-body transition-all active:scale-95 flex items-center justify-center gap-2"
-                style={{
-                  backgroundColor: "var(--accent-5)",
-                  color: "var(--text-on-accent)",
-                }}
-              >
-                <span>🚀</span>
-                <span>Start State Quiz</span>
-              </button>
-            )}
+            {/* Decorative sparkle - animated when enabled */}
+            <div
+              className={`text-body flex-shrink-0 ${
+                completedCategories === 6 ? "animate-bounce" : "opacity-30"
+              }`}
+            >
+              ✨
+            </div>
           </div>
+
+          {/* CTA Button - only enabled when quiz is unlocked */}
+          {completedCategories === 6 && (
+            <button
+              onClick={() => {
+                fxTap();
+                onQuiz?.();
+              }}
+              className="w-full h-10 rounded-xl font-bold text-caption transition-all active:scale-95 flex items-center justify-center gap-2"
+              style={{
+                backgroundColor: "var(--accent-5)",
+                color: "var(--text-on-accent)",
+              }}
+            >
+              <span>🚀</span>
+              <span>Start State Quiz</span>
+            </button>
+          )}
         </div>
       </div>
 
@@ -2419,7 +2401,7 @@ function HubCard({
         fxTap();
         onOpen?.();
       }}
-      className="relative text-left transition active:scale-95 p-4 rounded-3xl flex flex-col h-full border-2"
+      className="relative text-left transition active:scale-95 p-2.5 rounded-2xl flex flex-col h-full border-2 min-h-0"
       style={{
         backgroundColor: pastelBg,
         borderColor: "var(--border-subtle)",
@@ -2429,45 +2411,44 @@ function HubCard({
         contain: "layout style paint", // FIX: Prevent reflow cascade when children change
       }}
     >
-      {/* Top row: Number badge (left) + Completion badge (top-right) + Large Icon (right side below) */}
-      <div className="flex items-start justify-between mb-3 gap-2 relative">
-        {/* Numbered badge in top-left - large colored circle */}
+      {/* Completion badge - top-right corner of the whole card, its own
+          layer so it never competes with the icon/title row below it */}
+      {done && (
+        <div className="absolute top-1.5 right-1.5 h-6 w-6 rounded-full bg-action-success text-white flex items-center justify-center text-[11px] font-black shadow-md hub-checkmark-animate z-20">
+          ✓
+        </div>
+      )}
+
+      {/* Top row: Number badge (left) + icon (right, clear of the checkmark) */}
+      <div className="flex items-center justify-between gap-1 mb-1.5">
         {index !== undefined && (
           <div
-            className="h-10 w-10 rounded-full flex items-center justify-center text-body font-black text-white shadow-md flex-shrink-0"
+            className="h-7 w-7 rounded-full flex items-center justify-center text-[11px] font-black text-white shadow-md flex-shrink-0"
             style={{ backgroundColor: badgeColor }}
           >
             {String(index + 1).padStart(2, "0")}
           </div>
         )}
-
-        {/* Completion badge - top-right corner, green, compact */}
-        {done && (
-          <div
-            className="absolute top-2 right-2 h-8 w-8 rounded-full bg-action-success text-white flex items-center justify-center text-caption font-black shadow-md hub-checkmark-animate z-20"
-            style={{}}
-          >
-            ✓
-          </div>
-        )}
-
-        {/* Large Icon - top right, offset to not interfere with completion badge */}
-        <div className="text-5xl ml-auto flex-shrink-0 flex items-center justify-center pt-2">{icon}</div>
+        <div className="text-2xl flex-shrink-0 pr-6">{icon}</div>
       </div>
 
-      {/* Title */}
-      <div className="text-h5 text-text-primary font-extrabold leading-tight mb-1">
-        {title}
+      {/* Title + subtitle */}
+      <div className="min-h-0">
+        <div className="text-caption text-text-primary font-extrabold leading-tight truncate">
+          {title}
+        </div>
+        <div className="text-[11px] leading-tight text-text-secondary font-medium truncate">
+          {sub}
+        </div>
       </div>
-
-      {/* Subtitle */}
-      <div className="text-body text-text-secondary font-medium mb-3 line-clamp-2">{sub}</div>
 
       {/* Bottom row: Card count (left) + Arrow button (right) */}
-      <div className="flex items-center justify-between mt-auto pt-2">
+      <div className="flex items-center justify-between mt-auto pt-1.5">
         {/* Card count text - changed from "questions" to "cards" */}
         {categoryCardsTotal !== undefined && categoryCardsRead !== undefined && (
-          <div className={`text-body font-medium ${done ? "text-action-success" : "text-text-secondary"}`}>
+          <div
+            className={`text-[11px] font-medium ${done ? "text-action-success" : "text-text-secondary"}`}
+          >
             {categoryCardsRead}/{categoryCardsTotal} cards
           </div>
         )}
@@ -2475,7 +2456,7 @@ function HubCard({
         {/* Arrow button - bottom right, colored - always visible */}
         {!locked && (
           <div
-            className="h-10 w-10 rounded-full flex items-center justify-center text-h5 font-bold text-white ml-auto flex-shrink-0 hub-arrow-pulse"
+            className="h-7 w-7 rounded-full flex items-center justify-center text-caption font-bold text-white ml-auto flex-shrink-0 hub-arrow-pulse"
             style={{
               backgroundColor: arrowColor,
               pointerEvents: done ? "auto" : "auto", // Always clickable
@@ -2487,7 +2468,7 @@ function HubCard({
 
         {/* Locked icon - bottom right */}
         {locked && (
-          <div className="h-10 w-10 rounded-full bg-text-secondary/70 text-white flex items-center justify-center text-body font-bold flex-shrink-0 ml-auto">
+          <div className="h-7 w-7 rounded-full bg-text-secondary/70 text-white flex items-center justify-center text-[11px] font-bold flex-shrink-0 ml-auto">
             🔒
           </div>
         )}
@@ -2989,8 +2970,13 @@ export function LearningCardScreen({
 
     markCard(state.name, currentMainCardIndex, !wasFirstRead);
 
-    // If this is the last main card, go to quiz
-    if (currentMainCardIndex === 5) {
+    // Only go straight to the quiz once ALL 6 categories are actually
+    // complete (every sub-card in every category visited), not just
+    // because this happened to be category index 5. Finishing category 6
+    // on its own, with others still incomplete, must go back to the hub
+    // like finishing any other category does.
+    const allCategoriesComplete = completedCategoriesCount(progress, state.name, cards) === 6;
+    if (allCategoriesComplete) {
       onNext?.(null);
     } else {
       // Go back to card selection screen (pass null to signal back to hub)
@@ -3184,7 +3170,7 @@ export function LearningCardScreen({
           className="w-full h-14 ui-button ui-accent-1 text-h4 text-display"
         >
           {isLastInMainCardSection
-            ? currentMainCardIndex === 5
+            ? completedCategoriesCount(progress, state.name, cards) === 6
               ? `Take the Quiz! ${EMOJI.milestone.twentyFive}`
               : "Done! Back to Cards"
             : isReplaying
@@ -3346,13 +3332,13 @@ function QuizScreenContent({
       setResult("correct");
       setBurst((n) => n + 1);
       // Analytics disabled - no-op
-      
+
       // DOPAMINE FIX #1: Auto-advance after 1.2 seconds on correct answer
       // This maintains momentum and keeps engagement high
       const timer = setTimeout(() => {
         onReset();
       }, 1200);
-      
+
       return () => clearTimeout(timer);
     } else {
       fxWrong();
@@ -3401,7 +3387,7 @@ function QuizScreenContent({
       //          that trigger re-renders with different hook counts → Error #300
       // Solution: Store completion data, navigate first, then let LearningHubScreen call finishQuiz()
       //           after it mounts. This ensures all hooks are called in consistent order.
-      
+
       // Store quiz completion data for LearningHubScreen to process
       try {
         sessionStorage.setItem(
@@ -3595,7 +3581,7 @@ function QuizScreenContent({
                 : "Next Question →"
               : "Check Answer"}
         </button>
-        
+
         {/* DOPAMINE FIX #2: Show auto-advance message for correct answers */}
         {result === "correct" && !isLastQuestion && (
           <div className="text-center text-caption text-text-secondary mt-2 animate-fade-in">
