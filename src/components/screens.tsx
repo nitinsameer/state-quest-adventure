@@ -2092,6 +2092,12 @@ export function LearningHubScreen({
     }
   }, [state.name]);
 
+  // Preload state art for smooth landscape background rendering
+  useEffect(() => {
+    appLogger.info("learning_hub_screen", "useEffect - preloading art");
+    preloadStateArt(state.name);
+  }, [state.name]);
+
   // Detect intermediate and full category completions and celebrate
   // CRITICAL FIX: Use ref to track celebrations without calling hooks in effect
   // This prevents React hook count mismatches (#300, #310)
