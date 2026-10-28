@@ -2227,17 +2227,17 @@ export function LearningHubScreen({
 
       {/* SCROLLABLE CONTENT AREA */}
       <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden relative">
-        {/* Landscape background layer - behind all content */}
+        {/* Landscape background layer - as actual img element behind content */}
         {art && (
-          <div
-            className="absolute inset-0 opacity-20 blur-sm pointer-events-none"
-            style={{
-              backgroundImage: `url(${art})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-            }}
-          />
+          <div className="absolute inset-0 pointer-events-none -z-10">
+            <img
+              src={art}
+              alt="Landscape background"
+              className="w-full h-full object-cover opacity-20 blur-sm"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
         )}
 
         {/* Content wrapper - relative positioning ensures it sits above background */}
