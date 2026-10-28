@@ -1987,6 +1987,7 @@ export function LearningHubScreen({
   const goBack = useGoBack();
   const celebration = useCelebration();
   const state = getState(stateName);
+  const art = STATE_ART[state.name];
   const live = statesWithProgress(progress).find((s) => s.name === state.name);
   let status = live?.status ?? state.status;
   // If allowReplay is true, treat locked states as "current" so cards are playable
@@ -2219,95 +2220,111 @@ export function LearningHubScreen({
       </div>
 
       {/* SCROLLABLE CONTENT AREA */}
-      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden">
-        {/* "EXPLORE THE STATE" SECTION HEADER */}
-        <div className="px-4 pt-4 pb-3">
-          <h2 className="text-h2 text-text-primary font-extrabold mb-1">Explore the state</h2>
-          <p className="text-body text-text-secondary">
-            Complete all 6 challenges to unlock your quiz.
-          </p>
-        </div>
-
-        {/* CHALLENGE CARDS GRID - responsive 2-column layout. min-w-0 on
-            each cell stops long card content (e.g. the Fun Fact sentence)
-            from forcing a column wider than its fair share of the grid. */}
-        <div className="px-4 pb-4 grid grid-cols-2 gap-3 auto-rows-max">
-          {cards.map((c, idx) => (
-            <div
-              key={c.title}
-              className="hub-card-entrance min-w-0"
-              style={{ animationDelay: `${idx * 50}ms` }}
-            >
-              <HubCard {...c} index={idx} stateName={state.name} />
-            </div>
-          ))}
-        </div>
-
-        {/* QUIZ PANEL - follows grid in natural document flow */}
-        <div className="px-4 pb-[calc(var(--nav-h,70px)+1rem)]">
+      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden relative">
+        {/* Landscape background layer - behind all content */}
+        {art && (
           <div
-            className="w-full rounded-3xl px-6 py-5 flex flex-col gap-3 transition-all"
+            className="absolute inset-0 opacity-20 blur-sm pointer-events-none"
             style={{
-              backgroundColor:
-                completedCategories === 6 ? "var(--accent-5-soft)" : "var(--accent-5-soft)/60",
+              backgroundImage: `url(${art})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
             }}
-          >
-            {/* Top section: Lock icon + Title + Sparkle */}
-            <div className="flex items-center gap-3">
-              {/* Lock icon in circular background */}
-              <div
-                className="h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0 text-lg transition-all shadow-md"
-                style={{
-                  backgroundColor:
-                    completedCategories === 6 ? "var(--accent-5)" : "var(--accent-5)/30",
-                }}
-              >
-                {completedCategories === 6 ? "🔓" : "🔒"}
-              </div>
+          />
+        )}
 
-              {/* Heading and subtitle */}
-              <div className="flex-1 text-left min-w-0">
+        {/* Content wrapper - relative positioning ensures it sits above background */}
+        <div className="relative z-10">
+          {/* "EXPLORE THE STATE" SECTION HEADER */}
+          <div className="px-4 pt-4 pb-3">
+            <h2 className="text-h2 text-text-primary font-extrabold mb-1">Explore the state</h2>
+            <p className="text-body text-text-secondary">
+              Complete all 6 challenges to unlock your quiz.
+            </p>
+          </div>
+
+          {/* CHALLENGE CARDS GRID - responsive 2-column layout. min-w-0 on
+              each cell stops long card content (e.g. the Fun Fact sentence)
+              from forcing a column wider than its fair share of the grid. */}
+          <div className="px-4 pb-4 grid grid-cols-2 gap-3 auto-rows-max">
+            {cards.map((c, idx) => (
+              <div
+                key={c.title}
+                className="hub-card-entrance min-w-0"
+                style={{ animationDelay: `${idx * 50}ms` }}
+              >
+                <HubCard {...c} index={idx} stateName={state.name} />
+              </div>
+            ))}
+          </div>
+
+          {/* QUIZ PANEL - follows grid in natural document flow */}
+          <div className="px-4 pb-[calc(var(--nav-h,70px)+1rem)]">
+            <div
+              className="w-full rounded-3xl px-6 py-5 flex flex-col gap-3 transition-all"
+              style={{
+                backgroundColor:
+                  completedCategories === 6 ? "var(--accent-5-soft)" : "var(--accent-5-soft)/60",
+              }}
+            >
+              {/* Top section: Lock icon + Title + Sparkle */}
+              <div className="flex items-center gap-3">
+                {/* Lock icon in circular background */}
                 <div
-                  className={`text-h4 font-extrabold ${
-                    completedCategories === 6 ? "text-text-primary" : "text-text-secondary"
+                  className="h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0 text-lg transition-all shadow-md"
+                  style={{
+                    backgroundColor:
+                      completedCategories === 6 ? "var(--accent-5)" : "var(--accent-5)/30",
+                  }}
+                >
+                  {completedCategories === 6 ? "🔓" : "🔒"}
+                </div>
+
+                {/* Heading and subtitle */}
+                <div className="flex-1 text-left min-w-0">
+                  <div
+                    className={`text-h4 font-extrabold ${
+                      completedCategories === 6 ? "text-text-primary" : "text-text-secondary"
+                    }`}
+                  >
+                    {completedCategories === 6 ? "State Quiz Unlocked!" : "Your State Quiz Awaits!"}
+                  </div>
+                  <div className="text-body text-text-secondary">
+                    {completedCategories === 6
+                      ? "Ready to test your knowledge?"
+                      : `${completedCategories} of 6 challenges complete`}
+                  </div>
+                </div>
+
+                {/* Decorative sparkle - animated when enabled */}
+                <div
+                  className={`text-xl flex-shrink-0 ${
+                    completedCategories === 6 ? "animate-bounce" : "opacity-40"
                   }`}
                 >
-                  {completedCategories === 6 ? "State Quiz Unlocked!" : "Your State Quiz Awaits!"}
-                </div>
-                <div className="text-body text-text-secondary">
-                  {completedCategories === 6
-                    ? "Ready to test your knowledge?"
-                    : `${completedCategories} of 6 challenges complete`}
+                  ✨
                 </div>
               </div>
 
-              {/* Decorative sparkle - animated when enabled */}
-              <div
-                className={`text-xl flex-shrink-0 ${
-                  completedCategories === 6 ? "animate-bounce" : "opacity-40"
-                }`}
-              >
-                ✨
-              </div>
+              {/* CTA Button - only enabled when quiz is unlocked */}
+              {completedCategories === 6 && (
+                <button
+                  onClick={() => {
+                    fxTap();
+                    onQuiz?.();
+                  }}
+                  className="w-full h-11 rounded-2xl font-bold text-body transition-all active:scale-95 flex items-center justify-center gap-2"
+                  style={{
+                    backgroundColor: "var(--accent-5)",
+                    color: "var(--text-on-accent)",
+                  }}
+                >
+                  <span>🚀</span>
+                  <span>Start State Quiz</span>
+                </button>
+              )}
             </div>
-
-            {/* CTA Button - only enabled when quiz is unlocked */}
-            {completedCategories === 6 && (
-              <button
-                onClick={() => {
-                  fxTap();
-                  onQuiz?.();
-                }}
-                className="w-full h-11 rounded-2xl font-bold text-body transition-all active:scale-95 flex items-center justify-center gap-2"
-                style={{
-                  backgroundColor: "var(--accent-5)",
-                  color: "var(--text-on-accent)",
-                }}
-              >
-                <span>🚀</span>
-                <span>Start State Quiz</span>
-              </button>
-            )}
           </div>
         </div>
       </div>
