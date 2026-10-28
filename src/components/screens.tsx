@@ -73,7 +73,7 @@ import {
   stateSlug,
   nextStateAfter,
 } from "@/lib/states";
-import { REGIONS, REGION_KEYS, findRegionForState } from "@/lib/passport-helpers";
+import { REGIONS, REGION_KEYS } from "@/lib/passport-helpers";
 import { randomQuestionsForState, questionCountForAgeBand } from "@/lib/quiz";
 
 import {
@@ -2061,12 +2061,6 @@ export function LearningHubScreen({
     return result;
   }, [cardCounts]);
 
-  // Determine region name from state name using REGIONS mapping
-  const regionName = useMemo(() => {
-    const result = findRegionForState(state.name);
-    return result?.region.name || "Journey";
-  }, [state.name]);
-
   // CRITICAL FIX #5: Handle deferred quiz completion from quiz screen
   // This effect processes quiz results AFTER LearningHubScreen mounts
   // to prevent React hook count mismatches during state updates
@@ -2170,13 +2164,6 @@ export function LearningHubScreen({
 
           {/* Header content overlay - back button, title, star counter */}
           <div className="relative z-10 w-full flex flex-col items-center justify-end px-4 pb-6 min-h-16">
-            {/* Breadcrumb navigation: Journey > Region Name */}
-            <div className="w-full text-center mb-3">
-              <div className="text-caption font-semibold text-text-on-header/80">
-                Journey <span className="mx-1.5">•</span> {regionName}
-              </div>
-            </div>
-
             {/* Top: Back button + Star counter row */}
             <div className="w-full flex items-start justify-between mb-2">
               {/* Back button - left side */}
@@ -2204,18 +2191,11 @@ export function LearningHubScreen({
               </div>
             </div>
 
-            {/* Bottom: Learning Hub label + State name + Streak */}
+            {/* Bottom: State name */}
             <div className="flex flex-col items-center w-full">
-              <div className="text-caption font-semibold text-text-on-header/80 mb-0.5">
-                Learning Hub
-              </div>
               <h1 className="text-h2 font-extrabold text-text-on-header leading-tight truncate max-w-full">
                 {state.name}
               </h1>
-              {/* Day 1 streak indicator */}
-              <div className="text-caption font-semibold text-text-on-header/80 mt-1.5">
-                🏆 Day 1 streak
-              </div>
             </div>
           </div>
         </div>
@@ -2267,11 +2247,18 @@ export function LearningHubScreen({
             </p>
           </div>
 
-          {/* CHALLENGE CARDS GRID - responsive 2-column layout with uniform row heights.
-              auto-rows-fr makes all rows equal height (based on tallest card).
-              min-w-0 on each cell stops long card content (e.g. the Fun Fact sentence)
-              from forcing a column wider than its fair share of the grid. */}
-          <div className="px-4 pb-4 grid grid-cols-2 gap-3 auto-rows-fr">
+          {/* CHALLENGE CARDS GRID - responsive 2-column layout. This sits
+              inside a naturally-growing scroll container (no fixed
+              height), so auto-rows-fr has no definite height to
+              distribute and ends up sizing each row independently by its
+              own content - meaning a row with a longer subtitle (e.g.
+              "Kadhi Pakora", "Kurukshetra") renders visibly taller than a
+              row with a shorter one. HubCard's own min-h-[10rem] below is
+              what actually makes every card the same size: min-w-0 on
+              each cell stops long card content (e.g. the Fun Fact
+              sentence) from forcing a column wider than its fair share of
+              the grid. Each card has min-h-[152px] for uniform heights. */}
+          <div className="px-4 pb-4 grid grid-cols-2 gap-3 auto-rows-max">
             {cards.map((c, idx) => (
               <div
                 key={c.title}
@@ -2453,7 +2440,6 @@ function HubCard({
 
   const pastelBg = index !== undefined ? pastelColorMap[index] : "var(--accent-4-soft)";
   const badgeColor = index !== undefined ? badgeColorMap[index] : "var(--accent-4)";
-  const arrowColor = badgeColor; // Arrow matches badge color
 
   return (
     <button
@@ -2463,10 +2449,13 @@ function HubCard({
         fxTap();
         onOpen?.();
       }}
-      className="relative text-left transition active:scale-95 p-3 rounded-2xl flex flex-col h-full border-2 min-w-0"
+      className="relative text-left transition active:scale-95 p-3 rounded-2xl flex flex-col h-full min-h-[152px] border-2 min-w-0"
       style={{
-        backgroundColor: pastelBg,
-        borderColor: locked ? "var(--border-subtle)" : badgeColor,
+        // Only the active (next-to-do) card gets a tinted background and a
+        // colored border; every other card stays plain white with a
+        // neutral border, matching the reference design.
+        backgroundColor: active ? pastelBg : "var(--surface-card)",
+        borderColor: locked ? "var(--border-subtle)" : active ? badgeColor : "var(--border-subtle)",
         opacity: locked ? 0.6 : 1,
         pointerEvents: locked || !canClick ? "none" : "auto",
         cursor: locked || !canClick ? "not-allowed" : "pointer",
@@ -2480,12 +2469,14 @@ function HubCard({
         </div>
       )}
 
-      {/* Top row: Number badge (left) + icon (right) */}
+      {/* Top row: Number badge (left) + icon (right). Badge is a light
+          pastel circle with colored text - not a solid colored circle -
+          to match the reference design. */}
       <div className="flex items-start justify-between gap-2 mb-2">
         {index !== undefined && (
           <div
-            className="h-8 w-8 rounded-full flex items-center justify-center text-[11px] font-black text-white shadow-md flex-shrink-0"
-            style={{ backgroundColor: badgeColor }}
+            className="h-8 w-8 rounded-full flex items-center justify-center text-[11px] font-black shadow-sm flex-shrink-0"
+            style={{ backgroundColor: pastelBg, color: badgeColor }}
           >
             {String(index + 1).padStart(2, "0")}
           </div>
@@ -2512,19 +2503,25 @@ function HubCard({
           <div
             className={`text-[11px] font-medium ${done ? "text-action-success" : "text-text-secondary"}`}
           >
-            {categoryCardsRead}/{categoryCardsTotal} cards
+            {categoryCardsRead}/{categoryCardsTotal} questions
           </div>
         )}
 
-        {/* Arrow button - bottom right */}
+        {/* Arrow button - bottom right. Active card gets a solid colored
+            circle with a full arrow; other cards get a light pastel
+            circle with a plain chevron, matching the reference design. */}
         {!locked && (
           <div
-            className="h-8 w-8 rounded-full flex items-center justify-center text-body font-bold text-white ml-auto flex-shrink-0 hub-arrow-pulse"
-            style={{
-              backgroundColor: arrowColor,
-            }}
+            className={`h-8 w-8 rounded-full flex items-center justify-center ml-auto flex-shrink-0 hub-arrow-pulse ${
+              active ? "text-body font-bold text-white" : "text-label font-semibold"
+            }`}
+            style={
+              active
+                ? { backgroundColor: badgeColor }
+                : { backgroundColor: pastelBg, color: badgeColor }
+            }
           >
-            →
+            {active ? "→" : "›"}
           </div>
         )}
 
