@@ -97,7 +97,10 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
   };
 
   return (
-    <div className="w-full h-full flex flex-col select-none touch-none relative overflow-hidden bg-bg-page">
+    <div
+      className="w-full h-full flex flex-col select-none touch-none relative overflow-hidden"
+      style={{ backgroundColor: "var(--bg-page)" }}
+    >
       {/* Background layer */}
       <div
         className="absolute inset-0 bg-cover bg-top z-0"
@@ -122,8 +125,8 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
       {/* Scrollable Content - includes button in flow */}
       <div className="relative z-10 flex-1 overflow-y-auto">
         <div className="px-4 py-3 pb-safe flex flex-col">
-          {/* Avatar Grid - 3 columns */}
-          <div className="grid grid-cols-3 gap-2 mb-3">
+          {/* Avatar Grid - 3 columns, responsive fallback for smaller screens */}
+          <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 gap-y-3 mb-4">
             {AVATAR_IDS.map((avatarId) => (
               <button
                 key={avatarId}
@@ -132,8 +135,8 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
                 className={`relative aspect-square rounded-2xl overflow-hidden transition-all duration-300 flex items-center justify-center group
                   ${
                     selectedAvatar === avatarId
-                      ? "ring-6 ring-white shadow-elevated-2 scale-110"
-                      : "ring-3 ring-white shadow-sm hover:shadow-lg"
+                      ? "shadow-elevated-2 scale-110"
+                      : "shadow-sm hover:shadow-elevated-1"
                   }
                   ${animatingId === avatarId ? "avatar-bounce" : ""}
                 `}
@@ -144,6 +147,14 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
                       animatingId === avatarId
                         ? "avatar-bounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)"
                         : undefined,
+                    border:
+                      selectedAvatar === avatarId
+                        ? "3px solid var(--accent-4)"
+                        : `2px solid var(--surface-raised)`,
+                    boxShadow:
+                      selectedAvatar === avatarId
+                        ? `0 0 0 3px var(--bg-page), var(--shadow-elevated-2)`
+                        : "var(--shadow-elevated-1)",
                   } as React.CSSProperties
                 }
               >
@@ -152,9 +163,20 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
                   alt={getAvatarName(avatarId)}
                   className="w-full h-full object-cover"
                 />
-                {/* Glow effect for selected */}
+                {/* Selection checkmark and glow effect */}
                 {selectedAvatar === avatarId && (
-                  <div className="absolute inset-0 bg-accent-4 opacity-10 animate-pulse" />
+                  <>
+                    <div
+                      className="absolute inset-0 opacity-20 animate-pulse"
+                      style={{ backgroundColor: "var(--accent-4)" }}
+                    />
+                    <div
+                      className="absolute top-1 right-1 w-6 h-6 rounded-full flex items-center justify-center shadow-elevated-2"
+                      style={{ backgroundColor: "var(--action-primary-bg)" }}
+                    >
+                      <span className="text-white text-sm font-bold">✓</span>
+                    </div>
+                  </>
                 )}
               </button>
             ))}
@@ -162,18 +184,34 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
 
           {/* Explorer Summary Card */}
           {selectedAvatar && (
-            <div className="rounded-2xl bg-accent-1-soft p-3 mb-3 shadow-elevated-2 animate-fade-in">
+            <div
+              className="rounded-2xl p-4 mb-4 shadow-elevated-2 animate-fade-in border"
+              style={{
+                backgroundColor: "var(--surface-card)",
+                borderColor: "var(--accent-1)",
+              }}
+            >
               <div className="flex items-center gap-3">
                 <img
                   src={getAvatarImage(selectedAvatar)}
                   alt={getAvatarName(selectedAvatar)}
-                  className="w-14 h-14 rounded-full border-2 border-accent-1 shadow-md flex-shrink-0"
+                  className="w-16 h-16 rounded-2xl shadow-elevated-1 flex-shrink-0"
+                  style={{
+                    backgroundColor: getAvatarBackgroundColor(selectedAvatar),
+                    border: `3px solid var(--accent-1)`,
+                  }}
                 />
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs font-bold text-accent-1-ink tracking-wider">
+                  <div
+                    className="text-xs font-bold tracking-widest mb-1"
+                    style={{ color: "var(--accent-1)" }}
+                  >
                     YOUR EXPLORER
                   </div>
-                  <div className="text-lg font-black text-text-primary truncate">
+                  <div
+                    className="text-lg font-black truncate"
+                    style={{ color: "var(--text-primary)" }}
+                  >
                     {getAvatarName(selectedAvatar)}
                   </div>
                 </div>
@@ -186,7 +224,11 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
             <button
               type="button"
               onClick={handleNext}
-              className="w-full py-3 px-4 rounded-full bg-action-primary text-white font-bold text-base flex items-center justify-center gap-2 shadow-elevated-2 hover:shadow-elevated-3 active:scale-95 transition-all"
+              className="w-full py-3 px-4 rounded-full font-bold text-base flex items-center justify-center gap-2 shadow-elevated-2 hover:shadow-elevated-3 active:scale-95 transition-all"
+              style={{
+                backgroundColor: "var(--action-primary-bg)",
+                color: "var(--action-primary-fg)",
+              }}
             >
               Continue
               <span>→</span>
