@@ -4,25 +4,25 @@ import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { EMOJI } from "@/constants/emoji";
 import { getAvatarName } from "@/lib/avatar-config";
 import { PremiumHeader } from "./PremiumHeader";
+import {
+  SproutIllustration,
+  SeedlingIllustration,
+  SaplingIllustration,
+  MightyTreeIllustration,
+} from "./AgeIllustrations";
 import ageBg from "@/assets/age_selection_bg.png";
 
 interface AgeBand {
   value: string;
-  emoji: string;
   label: string;
-  gradient: string;
+  IllustrationComponent: React.ComponentType<{ size?: number; className?: string }>;
 }
 
 const AGE_BANDS: AgeBand[] = [
-  { value: "3-5", emoji: EMOJI.ageBand.toddler, label: "Sprout", gradient: "bg-accent-2" },
-  { value: "6-7", emoji: EMOJI.ageBand.young, label: "Seedling", gradient: "bg-accent-1" },
-  { value: "8-9", emoji: EMOJI.ageBand.mid, label: "Sapling", gradient: "bg-success" },
-  {
-    value: "10-12",
-    emoji: EMOJI.ageBand.preteen,
-    label: "Mighty Tree",
-    gradient: "bg-action-primary",
-  },
+  { value: "3-5", label: "Sprout", IllustrationComponent: SproutIllustration },
+  { value: "6-7", label: "Seedling", IllustrationComponent: SeedlingIllustration },
+  { value: "8-9", label: "Sapling", IllustrationComponent: SaplingIllustration },
+  { value: "10-12", label: "Mighty Tree", IllustrationComponent: MightyTreeIllustration },
 ];
 
 export interface AgeScreenProps {
@@ -42,6 +42,7 @@ export function AgeScreen({
 }: AgeScreenProps) {
   const [confettiBurst, setConfettiBurst] = useState(0);
   const [animatingAge, setAnimatingAge] = useState<string | null>(null);
+  const [parentConsented, setParentConsented] = useState(false);
 
   const handleAgeSelect = (age: string) => {
     fxTap();
@@ -67,7 +68,10 @@ export function AgeScreen({
   };
 
   return (
-    <div className="w-full h-full flex flex-col select-none touch-none relative overflow-hidden bg-bg-page">
+    <div
+      className="w-full h-full flex flex-col select-none touch-none relative overflow-hidden"
+      style={{ backgroundColor: "var(--bg-page)" }}
+    >
       {/* Background layer */}
       <div
         className="absolute inset-0 bg-cover bg-top z-0"
@@ -90,36 +94,53 @@ export function AgeScreen({
         />
       </div>
 
-      {/* Scrollable Content - includes buttons in flow */}
+      {/* Scrollable Content - includes cards, consent panel, and buttons in flow */}
       <div className="relative z-10 flex-1 overflow-y-auto">
-        <div className="px-5 py-3 pb-safe flex flex-col gap-2">
-          {/* Age Bands */}
+        <div className="px-5 py-3 pb-safe flex flex-col gap-3">
+          {/* Age Band Cards */}
           {AGE_BANDS.map((band) => {
             const isSelected = selectedAge === band.value;
+            const Illustration = band.IllustrationComponent;
+
             return (
               <button
                 key={band.value}
                 type="button"
                 onClick={() => handleAgeSelect(band.value)}
-                className={`relative rounded-xl p-3 transition-all duration-300 flex items-center gap-3 text-left
-                  ${
-                    isSelected
-                      ? `${band.gradient} text-text-on-primary shadow-elevated-2 scale-105`
-                      : "bg-surface-card text-text-primary border-2 border-surface-sunken hover:border-surface-raised"
-                  }
-                  ${animatingAge === band.value ? "animate-scale-pop" : ""}
-                `}
+                className="relative rounded-2xl p-4 transition-all duration-300 flex items-center gap-4 text-left active:scale-95"
+                style={{
+                  backgroundColor: isSelected ? "var(--accent-1)" : "var(--surface-card)",
+                  color: isSelected ? "var(--text-on-primary)" : "var(--text-primary)",
+                  boxShadow: isSelected ? "var(--shadow-elevated-2)" : "var(--shadow-elevated-1)",
+                  border: isSelected ? "none" : "2px solid var(--surface-raised)",
+                  transform: animatingAge === band.value ? "scale(1.05)" : "scale(1)",
+                }}
               >
-                <div className="text-3xl flex-shrink-0">{band.emoji}</div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs font-semibold opacity-80">Ages {band.value}</div>
-                  <div className="text-base font-bold">{band.label}</div>
+                {/* Age Illustration */}
+                <div className="flex-shrink-0 w-16 h-16 flex items-center justify-center">
+                  <Illustration size={56} />
                 </div>
+
+                {/* Age Band Label and Range */}
+                <div className="flex-1 min-w-0">
+                  <div
+                    className="text-xs font-semibold opacity-85"
+                    style={{ color: isSelected ? "var(--text-on-primary)" : "var(--text-secondary)" }}
+                  >
+                    Ages {band.value}
+                  </div>
+                  <div className="text-lg font-bold">{band.label}</div>
+                </div>
+
+                {/* Checkmark - theme-aware */}
                 {isSelected && (
-                  <div className="flex-shrink-0 w-5 h-5 rounded-full bg-text-on-primary flex items-center justify-center">
+                  <div
+                    className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center"
+                    style={{ backgroundColor: "var(--text-on-primary)" }}
+                  >
                     <svg
-                      className="w-3 h-3 text-action-primary"
-                      fill="currentColor"
+                      className="w-4 h-4"
+                      fill="var(--accent-1)"
                       viewBox="0 0 20 20"
                     >
                       <path
@@ -134,14 +155,76 @@ export function AgeScreen({
             );
           })}
 
+          {/* Parent Consent Panel */}
+          <div
+            className="rounded-2xl p-4 mt-2 flex items-start gap-3"
+            style={{
+              backgroundColor: "var(--surface-card)",
+              border: "1px solid var(--surface-raised)",
+            }}
+          >
+            {/* Checkbox */}
+            <div className="flex-shrink-0 pt-1">
+              <button
+                type="button"
+                onClick={() => setParentConsented(!parentConsented)}
+                className="w-5 h-5 rounded border-2 transition-all flex items-center justify-center"
+                style={{
+                  backgroundColor: parentConsented ? "var(--accent-1)" : "transparent",
+                  borderColor: parentConsented ? "var(--accent-1)" : "var(--surface-raised)",
+                }}
+              >
+                {parentConsented && (
+                  <svg className="w-3 h-3" fill="var(--text-on-primary)" viewBox="0 0 20 20">
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                )}
+              </button>
+            </div>
 
+            {/* Label with Links */}
+            <label className="flex-1 cursor-pointer text-sm font-medium flex flex-wrap gap-1 items-start">
+              <span style={{ color: "var(--text-primary)" }}>I am a parent/guardian. I agree to</span>
+              <a
+                href="https://yourapp.example.com/terms"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:opacity-80 transition-opacity"
+                style={{ color: "var(--accent-2, #0066cc)" }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                Terms
+              </a>
+              <span style={{ color: "var(--text-primary)" }}>&</span>
+              <a
+                href="https://yourapp.example.com/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:opacity-80 transition-opacity"
+                style={{ color: "var(--accent-2, #0066cc)" }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                Privacy
+              </a>
+              <span style={{ color: "var(--text-primary)" }}>.</span>
+            </label>
+          </div>
 
           {/* Buttons - In content flow */}
           <div className="flex gap-3 pt-2">
             <button
               type="button"
               onClick={handleBack}
-              className="flex-1 py-3 px-4 rounded-full font-bold text-text-primary bg-white border-2 border-action-primary transition-all active:scale-95"
+              className="flex-1 py-3 px-4 rounded-full font-bold transition-all active:scale-95"
+              style={{
+                backgroundColor: "var(--surface-raised)",
+                color: "var(--text-primary)",
+                border: "2px solid var(--surface-raised)",
+              }}
             >
               Back
             </button>
@@ -149,11 +232,14 @@ export function AgeScreen({
               type="button"
               onClick={handleNext}
               disabled={!selectedAge}
-              className={`flex-1 py-3 px-4 rounded-full font-bold text-base flex items-center justify-center gap-2 transition-all active:scale-95 ${
-                selectedAge
-                  ? "bg-action-primary text-white hover:shadow-elevated-2"
-                  : "bg-surface-sunken text-text-secondary cursor-not-allowed opacity-50"
-              }`}
+              className="flex-1 py-3 px-4 rounded-full font-bold text-base flex items-center justify-center gap-2 transition-all active:scale-95"
+              style={{
+                backgroundColor: selectedAge ? "var(--action-primary-bg)" : "var(--surface-sunken)",
+                color: selectedAge ? "var(--text-on-primary)" : "var(--text-secondary)",
+                cursor: selectedAge ? "pointer" : "not-allowed",
+                opacity: selectedAge ? 1 : 0.5,
+                boxShadow: selectedAge ? "var(--shadow-elevated-1)" : "none",
+              }}
             >
               Start My Journey
               <span>→</span>
