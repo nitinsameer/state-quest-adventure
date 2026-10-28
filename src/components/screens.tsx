@@ -2363,7 +2363,7 @@ export function LearningHubScreen({
                 }}
                 className="w-full h-12 ui-button ui-accent-3 text-body font-extrabold active:scale-95 transition-all"
               >
-                ${EMOJI.action.sparkle} Start Quiz Now
+                {EMOJI.action.sparkle} Start Quiz Now
               </button>
 
               {/* Later button - with pulsing indicator */}
