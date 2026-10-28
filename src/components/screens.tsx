@@ -2267,10 +2267,11 @@ export function LearningHubScreen({
             </p>
           </div>
 
-          {/* CHALLENGE CARDS GRID - responsive 2-column layout. min-w-0 on
-              each cell stops long card content (e.g. the Fun Fact sentence)
+          {/* CHALLENGE CARDS GRID - responsive 2-column layout with uniform row heights.
+              auto-rows-fr makes all rows equal height (based on tallest card).
+              min-w-0 on each cell stops long card content (e.g. the Fun Fact sentence)
               from forcing a column wider than its fair share of the grid. */}
-          <div className="px-4 pb-4 grid grid-cols-2 gap-3 auto-rows-max">
+          <div className="px-4 pb-4 grid grid-cols-2 gap-3 auto-rows-fr">
             {cards.map((c, idx) => (
               <div
                 key={c.title}
