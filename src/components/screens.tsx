@@ -73,7 +73,7 @@ import {
   stateSlug,
   nextStateAfter,
 } from "@/lib/states";
-import { REGIONS, REGION_KEYS } from "@/lib/passport-helpers";
+import { REGIONS, REGION_KEYS, findRegionForState } from "@/lib/passport-helpers";
 import { randomQuestionsForState, questionCountForAgeBand } from "@/lib/quiz";
 
 import {
@@ -2061,6 +2061,12 @@ export function LearningHubScreen({
     return result;
   }, [cardCounts]);
 
+  // Determine region name from state name using REGIONS mapping
+  const regionName = useMemo(() => {
+    const result = findRegionForState(state.name);
+    return result?.region.name || "Journey";
+  }, [state.name]);
+
   // CRITICAL FIX #5: Handle deferred quiz completion from quiz screen
   // This effect processes quiz results AFTER LearningHubScreen mounts
   // to prevent React hook count mismatches during state updates
@@ -2164,7 +2170,14 @@ export function LearningHubScreen({
 
           {/* Header content overlay - back button, title, star counter */}
           <div className="relative z-10 w-full flex flex-col items-center justify-end px-4 pb-6 min-h-16">
-            {/* Top: Learning Hub label + Star counter row */}
+            {/* Breadcrumb navigation: Journey > Region Name */}
+            <div className="w-full text-center mb-3">
+              <div className="text-caption font-semibold text-text-on-header/80">
+                Journey <span className="mx-1.5">•</span> {regionName}
+              </div>
+            </div>
+
+            {/* Top: Back button + Star counter row */}
             <div className="w-full flex items-start justify-between mb-2">
               {/* Back button - left side */}
               <button
@@ -2183,7 +2196,7 @@ export function LearningHubScreen({
               </button>
 
               {/* Star counter - right side */}
-              <div className="h-9 w-9 rounded-full bg-text-on-header/40 backdrop-blur-sm flex items-center justify-center text-text-on-header flex-shrink-0">
+              <div className="flex items-center gap-1.5 h-9 px-2.5 rounded-full bg-text-on-header/40 backdrop-blur-sm text-text-on-header flex-shrink-0">
                 <span className="text-caption">⭐</span>
                 <span className="text-[11px] font-extrabold">
                   {completedCategories * XP_PER_CARD}
@@ -2191,7 +2204,7 @@ export function LearningHubScreen({
               </div>
             </div>
 
-            {/* Bottom: Learning Hub label + State name */}
+            {/* Bottom: Learning Hub label + State name + Streak */}
             <div className="flex flex-col items-center w-full">
               <div className="text-caption font-semibold text-text-on-header/80 mb-0.5">
                 Learning Hub
@@ -2199,6 +2212,10 @@ export function LearningHubScreen({
               <h1 className="text-h2 font-extrabold text-text-on-header leading-tight truncate max-w-full">
                 {state.name}
               </h1>
+              {/* Day 1 streak indicator */}
+              <div className="text-caption font-semibold text-text-on-header/80 mt-1.5">
+                🏆 Day 1 streak
+              </div>
             </div>
           </div>
         </div>
@@ -2227,17 +2244,17 @@ export function LearningHubScreen({
 
       {/* SCROLLABLE CONTENT AREA */}
       <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden relative">
-        {/* Landscape background layer - as actual img element behind content */}
+        {/* Landscape background layer - behind all content */}
         {art && (
-          <div className="absolute inset-0 pointer-events-none -z-10">
-            <img
-              src={art}
-              alt="Landscape background"
-              className="w-full h-full object-cover opacity-20 blur-sm"
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
+          <div
+            className="absolute inset-0 opacity-20 blur-sm pointer-events-none"
+            style={{
+              backgroundImage: `url(${art})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }}
+          />
         )}
 
         {/* Content wrapper - relative positioning ensures it sits above background */}
@@ -2294,12 +2311,12 @@ export function LearningHubScreen({
                       completedCategories === 6 ? "text-text-primary" : "text-text-secondary"
                     }`}
                   >
-                    {completedCategories === 6 ? "State Quiz Unlocked!" : "Your State Quiz Awaits!"}
+                    {completedCategories === 6 ? "State Quiz Unlocked!" : "State Quiz Locked"}
                   </div>
                   <div className="text-body text-text-secondary">
                     {completedCategories === 6
                       ? "Ready to test your knowledge?"
-                      : `${completedCategories} of 6 challenges complete`}
+                      : "Complete all 6 challenges to unlock it."}
                   </div>
                 </div>
 
