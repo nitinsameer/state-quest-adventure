@@ -2648,25 +2648,32 @@ export function learningCardsFor(
 
     // Add enriched content layers if available
     if (cardContent) {
-      // Add Cool Facts
+      // PHASE 5 FIX: Limit to 5 cards total per category (1 main + 2 coolFacts + didYouKnow + tryThis)
+      // This ensures consistent "0/5", "1/5", etc. progress display per card
+      let enrichedCardsAdded = 0;
+      const MAX_ENRICHED_CARDS = 4; // main (1) + enriched (4) = 5 total
+      
+      // Add Cool Facts (limit to 2)
       if (cardContent.coolFacts && cardContent.coolFacts.length > 0) {
-        cardContent.coolFacts.forEach((fact, idx) => {
+        const maxCoolFacts = Math.min(2, cardContent.coolFacts.length);
+        for (let i = 0; i < maxCoolFacts && enrichedCardsAdded < MAX_ENRICHED_CARDS; i++) {
           allCards.push({
             kicker: "Cool Fact",
-            title: `Cool Fact #${idx + 1}`,
+            title: `Cool Fact #${i + 1}`,
             icon: EMOJI.action.star,
             chip: "Cool Fact",
-            body: getText(fact),
+            body: getText(cardContent.coolFacts[i]),
             type: "coolFact",
             gradient: "var(--accent-6)",
             chipTone: "amber",
             mainCardIndex: mainIndex,
           });
-        });
+          enrichedCardsAdded++;
+        }
       }
 
-      // Add Did You Know
-      if (cardContent.didYouKnow) {
+      // Add Did You Know (if room)
+      if (cardContent.didYouKnow && enrichedCardsAdded < MAX_ENRICHED_CARDS) {
         allCards.push({
           kicker: "Trivia",
           title: "Did You Know?",
@@ -2678,10 +2685,11 @@ export function learningCardsFor(
           chipTone: "purple",
           mainCardIndex: mainIndex,
         });
+        enrichedCardsAdded++;
       }
 
-      // Add Try This Activity
-      if (cardContent.tryThis) {
+      // Add Try This Activity (if room)
+      if (cardContent.tryThis && enrichedCardsAdded < MAX_ENRICHED_CARDS) {
         allCards.push({
           kicker: "Activity",
           title: "Try This Activity",
@@ -2693,6 +2701,7 @@ export function learningCardsFor(
           chipTone: "green",
           mainCardIndex: mainIndex,
         });
+        enrichedCardsAdded++;
       }
     }
   });
