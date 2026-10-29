@@ -2030,19 +2030,20 @@ export function LearningHubScreen({
     return Array.from({ length: 6 }).map((_, i) => {
       const categoryName = categoryNames[i];
 
-      // Count only MAIN cards (not sub-cards) for progress display
-      const mainCards = allCards.filter((card) => card.mainCardIndex === i && card.type === "main");
+      // Count ALL cards (main + enriched content) for accurate denominator
+      // This reflects the total cards a user can visit in this category
+      const allCategoryCards = allCards.filter((card) => card.mainCardIndex === i);
 
       // Get visited cards from cardVisits structure
       const visitedKey = categoryName.toLowerCase().replace(/\s+/g, "-");
       const visitedIndices = cardVisits?.[visitedKey] ?? [];
 
       console.log(
-        `[LearningHubScreen] Category ${i} (${categoryName}): found ${mainCards.length} main cards, visited ${visitedIndices.length}`,
+        `[LearningHubScreen] Category ${i} (${categoryName}): found ${allCategoryCards.length} total cards, visited ${visitedIndices.length}`,
       );
 
       return {
-        total: mainCards.length, // Only main cards for the denominator
+        total: allCategoryCards.length, // All cards per category (main + enriched)
         read: visitedIndices.length, // How many visited
       };
     });
@@ -2449,7 +2450,7 @@ function HubCard({
         fxTap();
         onOpen?.();
       }}
-      className="relative text-left transition active:scale-95 p-3 rounded-2xl flex flex-col h-full min-h-[152px] border min-w-0"
+      className="relative text-left transition active:scale-95 p-3 rounded-2xl flex flex-col h-full min-h-[152px] border shadow-md min-w-0"
       style={{
         // Only the active (next-to-do) card gets a tinted background and a
         // colored border; every other card stays plain white with a
@@ -2504,7 +2505,7 @@ function HubCard({
           <div
             className={`text-[11px] font-medium ${done ? "text-action-success" : "text-text-secondary"}`}
           >
-            {categoryCardsRead}/{categoryCardsTotal} questions
+            {categoryCardsRead}/{categoryCardsTotal} cards
           </div>
         )}
 
