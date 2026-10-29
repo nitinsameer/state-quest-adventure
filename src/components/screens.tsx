@@ -2163,9 +2163,9 @@ export function LearningHubScreen({
           />
 
           {/* Header content overlay - back button, title, star counter */}
-          <div className="relative z-10 w-full flex flex-col items-center justify-end px-4 pb-6 min-h-16">
-            {/* Top: Back button + Star counter row */}
-            <div className="w-full flex items-start justify-between mb-2">
+          <div className="absolute inset-0 w-full h-full flex flex-col">
+            {/* Top controls: absolute positioning for precise placement */}
+            <div className="absolute top-safe left-4 right-4 flex items-center justify-between z-20">
               {/* Back button - left side */}
               <button
                 onClick={() => {
@@ -2176,14 +2176,14 @@ export function LearningHubScreen({
                     goBack();
                   }
                 }}
-                className="h-9 w-9 rounded-full bg-text-on-header/70 backdrop-blur-sm flex items-center justify-center text-text-on-header flex-shrink-0 transition-all active:scale-95"
+                className="h-9 w-9 rounded-full bg-accent-5 flex items-center justify-center text-accent-5-ink flex-shrink-0 transition-all active:scale-95"
                 aria-label="Go back"
               >
                 <span className="text-label">‹</span>
               </button>
 
               {/* Star counter - right side */}
-              <div className="flex items-center gap-1.5 h-9 px-2.5 rounded-full bg-text-on-header/70 backdrop-blur-sm text-text-on-header flex-shrink-0">
+              <div className="flex items-center gap-1.5 h-9 px-2.5 rounded-full bg-accent-5 text-accent-5-ink flex-shrink-0">
                 <span className="text-caption">⭐</span>
                 <span className="text-[11px] font-extrabold">
                   {completedCategories * XP_PER_CARD}
@@ -2191,9 +2191,9 @@ export function LearningHubScreen({
               </div>
             </div>
 
-            {/* Bottom: State name */}
-            <div className="flex flex-col items-center w-full">
-              <h1 className="text-h2 font-extrabold text-text-on-header leading-tight truncate max-w-full">
+            {/* Centered title - positioned in middle of header */}
+            <div className="absolute inset-x-0 top-1/2 transform -translate-y-1/2 flex flex-col items-center z-10">
+              <h1 className="text-h2 font-extrabold text-text-on-header leading-tight truncate max-w-[80%]">
                 {state.name}
               </h1>
             </div>
