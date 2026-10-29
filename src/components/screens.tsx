@@ -2131,7 +2131,7 @@ export function LearningHubScreen({
         
         {/* Header content overlay - back button, title, star counter */}
         <div className="relative z-10 h-full flex items-center justify-between px-5">
-          {/* Back button - left side */}
+          {/* Back button - left side, solid white circle */}
           <button
             onClick={() => {
               if (onBack) {
@@ -2141,7 +2141,7 @@ export function LearningHubScreen({
                 goBack();
               }
             }}
-            className="h-10 w-10 rounded-full bg-text-on-header/40 backdrop-blur-sm flex items-center justify-center text-text-on-header flex-shrink-0 transition-all active:scale-95"
+            className="h-10 w-10 rounded-full bg-surface-card flex items-center justify-center text-text-primary flex-shrink-0 transition-all active:scale-95 shadow-soft"
             aria-label="Go back"
           >
             <span className="text-label">‹</span>
@@ -2152,8 +2152,8 @@ export function LearningHubScreen({
             {state.name}
           </h1>
 
-          {/* Star counter - right side */}
-          <div className="h-10 w-10 rounded-full bg-text-on-header/40 backdrop-blur-sm flex items-center justify-center text-text-on-header flex-shrink-0">
+          {/* Star counter - right side, solid white pill */}
+          <div className="h-10 px-3 rounded-full bg-surface-card flex items-center justify-center gap-1 text-text-primary flex-shrink-0 shadow-soft">
             <span className="text-label">⭐</span>
             <span className="text-caption font-extrabold">{completedCategories * XP_PER_CARD}</span>
           </div>
@@ -2224,7 +2224,7 @@ export function LearningHubScreen({
               </div>
               <div className="text-caption text-text-secondary">
                 {completedCategories === 6 
-                  ? "Complete all 6 challenges"
+                  ? "Test your knowledge"
                   : "Complete all 6 challenges"}
               </div>
             </div>
@@ -2313,26 +2313,15 @@ function HubCard({
   categoryCardsRead?: number;
   onOpen?: () => void;
 }) {
-  // Pastel color system mapped by index - using semantic tokens
-  const pastelColorMap = [
-    "var(--accent-2-soft)", // 0: Capital - soft accent 2
-    "var(--accent-4-soft)", // 1: Language - soft accent 4
-    "var(--accent-6-soft)", // 2: Food - soft accent 6
-    "var(--accent-1-soft)", // 3: Places - soft accent 1
-    "var(--accent-2-soft)", // 4: Monument - soft accent 2
-    "var(--accent-4-soft)", // 5: Craft - soft accent 4
-  ];
-
-  const pastelBg = index !== undefined ? pastelColorMap[index] : "var(--accent-4-soft)";
-
   // Border styling based on index - use theme tokens
+  // All cards use white background (no pastels)
   let borderColor = "var(--border-subtle)"; // Default subtle gray
   let borderWidth = "2px";
   let arrowBg = "bg-text-secondary/50";
   let arrowText = "text-text-primary";
 
   if (index === 0) {
-    // Capital card - ORANGE/PINK
+    // Capital card - ORANGE accent border
     borderColor = "var(--accent-2)";
     borderWidth = "3px";
     arrowBg = "bg-accent-2";
@@ -2349,7 +2338,7 @@ function HubCard({
       }}
       className="relative text-left transition active:scale-95 p-3 rounded-2xl flex flex-col h-full"
       style={{
-        backgroundColor: pastelBg,
+        backgroundColor: "var(--surface-card)", // White for all cards
         borderColor: borderColor,
         borderWidth: borderWidth,
         borderStyle: "solid",
