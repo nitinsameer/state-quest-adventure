@@ -540,19 +540,12 @@ function RecentlyCompletedCelebration({
     // Play sound
     fxCorrect();
 
-    // Show toast instead of modal
-    const { stateName, quizXp, bonusXp } = pendingCelebration;
-    const totalXp = quizXp + bonusXp;
-
-    showSuccessToast(`${stateName} Mastered! 🎉`, {
-      duration: 3000,
-      icon: "🏆",
-      onDismiss: () => {
-        onDismiss();
-        dismissPendingCelebration();
-        navigate({ to: "/journey" });
-      },
-    });
+    // Dismiss celebration and navigate to journey
+    const { stateName } = pendingCelebration;
+    
+    onDismiss();
+    dismissPendingCelebration();
+    navigate({ to: "/journey" });
   }, [pendingCelebration?.stateName, showCelebrationPopup]);
 
   return null;
