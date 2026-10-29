@@ -2030,19 +2030,19 @@ export function LearningHubScreen({
     return Array.from({ length: 6 }).map((_, i) => {
       const categoryName = categoryNames[i];
 
-      // Count ALL cards for each category (main + sub-cards like Activity, Trivia, Cool Facts)
-      const allCategoryCards = allCards.filter((card) => card.mainCardIndex === i);
+      // Count only MAIN cards (not sub-cards) for progress display
+      const mainCards = allCards.filter((card) => card.mainCardIndex === i && card.type === "main");
 
       // Get visited cards from cardVisits structure
       const visitedKey = categoryName.toLowerCase().replace(/\s+/g, "-");
       const visitedIndices = cardVisits?.[visitedKey] ?? [];
 
       console.log(
-        `[LearningHubScreen] Category ${i} (${categoryName}): found ${allCategoryCards.length} total cards, visited ${visitedIndices.length}`,
+        `[LearningHubScreen] Category ${i} (${categoryName}): found ${mainCards.length} main cards, visited ${visitedIndices.length}`,
       );
 
       return {
-        total: allCategoryCards.length, // ALL cards including sub-cards
+        total: mainCards.length, // Only main cards for the denominator
         read: visitedIndices.length, // How many visited
       };
     });
@@ -2176,14 +2176,14 @@ export function LearningHubScreen({
                     goBack();
                   }
                 }}
-                className="h-9 w-9 rounded-full bg-text-on-header/40 backdrop-blur-sm flex items-center justify-center text-text-on-header flex-shrink-0 transition-all active:scale-95"
+                className="h-9 w-9 rounded-full bg-text-on-header/70 backdrop-blur-sm flex items-center justify-center text-text-on-header flex-shrink-0 transition-all active:scale-95"
                 aria-label="Go back"
               >
                 <span className="text-label">‹</span>
               </button>
 
               {/* Star counter - right side */}
-              <div className="flex items-center gap-1.5 h-9 px-2.5 rounded-full bg-text-on-header/40 backdrop-blur-sm text-text-on-header flex-shrink-0">
+              <div className="flex items-center gap-1.5 h-9 px-2.5 rounded-full bg-text-on-header/70 backdrop-blur-sm text-text-on-header flex-shrink-0">
                 <span className="text-caption">⭐</span>
                 <span className="text-[11px] font-extrabold">
                   {completedCategories * XP_PER_CARD}
@@ -2449,13 +2449,14 @@ function HubCard({
         fxTap();
         onOpen?.();
       }}
-      className="relative text-left transition active:scale-95 p-3 rounded-2xl flex flex-col h-full min-h-[152px] border-2 min-w-0"
+      className="relative text-left transition active:scale-95 p-3 rounded-2xl flex flex-col h-full min-h-[152px] border min-w-0"
       style={{
         // Only the active (next-to-do) card gets a tinted background and a
         // colored border; every other card stays plain white with a
         // neutral border, matching the reference design.
         backgroundColor: active ? pastelBg : "var(--surface-card)",
-        borderColor: locked ? "var(--border-subtle)" : active ? badgeColor : "var(--border-subtle)",
+        borderColor: locked ? "var(--border-color)" : active ? badgeColor : "var(--border-color)",
+        borderWidth: "1px",
         opacity: locked ? 0.6 : 1,
         pointerEvents: locked || !canClick ? "none" : "auto",
         cursor: locked || !canClick ? "not-allowed" : "pointer",
