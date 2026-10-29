@@ -2068,18 +2068,8 @@ export function LearningHubScreen({
     return result;
   }, [cardCounts]);
 
-  // Detect intermediate and full category completions and celebrate
+  // Detect full category completion and celebrate
   useEffect(() => {
-    // Celebrate at 3/6 (halfway milestone)
-    if (completedCategories === 3 && !celebratedCategories.has(3)) {
-      showSuccessToast(`Halfway there! ⭐ 3/6 categories explored! 🎉`, {
-        duration: 2500,
-        icon: "🏃",
-      });
-
-      setCelebratedCategories((prev) => new Set([...prev, 3]));
-    }
-
     // At 6/6 (full completion, before quiz): show decision modal instead of auto-celebrating
     if (completedCategories === 6 && !celebratedCategories.has(6)) {
       // Show the "All 6 cards done! Start quiz / Later" decision modal
