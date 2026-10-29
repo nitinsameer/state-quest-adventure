@@ -2271,7 +2271,7 @@ export function LearningHubScreen({
           </div>
 
           {/* QUIZ PANEL - follows grid in natural document flow */}
-          <div className="px-4 pb-[calc(var(--nav-h,70px)+1rem)]">
+          <div className="px-4 pb-4">
             <div
               className="w-full rounded-3xl px-6 py-5 flex flex-col gap-3 transition-all"
               style={{
