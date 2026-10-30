@@ -1258,6 +1258,8 @@ export function JourneyMapScreen() {
   const [selectedState, setSelectedState] = useState<string | null>(null);
   const [expandedRegion, setExpandedRegion] = useState<keyof typeof REGIONS>("north");
   const celebration = useCelebration();
+  const [showQuizDecisionModal, setShowQuizDecisionModal] = useState(false);
+  const [pendingStateName, setPendingStateName] = useState<string | null>(null);
 
   // Detect and celebrate milestones
   useEffect(() => {
@@ -1497,8 +1499,9 @@ export function JourneyMapScreen() {
             "LearningCardScreen onNext clicked with index: " + index,
           );
           if (index === null) {
-            // Move to quiz
-            setView({ screen: "quiz", name: view.name });
+            // All cards completed - show decision modal instead of going straight to quiz
+            setPendingStateName(view.name);
+            setShowQuizDecisionModal(true);
           } else {
             // Move to next card
             setView({ screen: "card", name: view.name, cardIndex: index });
@@ -1840,6 +1843,53 @@ export function JourneyMapScreen() {
         />
       )}
 
+      {/* Quiz Decision Modal - moved from LearningHubScreen for consistency */}
+      {showQuizDecisionModal && pendingStateName && (
+        <div
+          className="fixed inset-0 z-50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in"
+          style={{ backgroundColor: "var(--scrim)" }}
+        >
+          <div className="bg-action-primary rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden animate-in zoom-in-95 flex flex-col">
+            {/* Header */}
+            <div className="p-5 text-center">
+              <div className="text-5xl mb-4">{EMOJI.action.celebrate}</div>
+              <div className="text-caption text-ink font-black uppercase tracking-widest mb-2">
+                All Done!
+              </div>
+              <h2 className="text-h2 text-ink font-extrabold">All 6 Cards Explored!</h2>
+              <p className="text-body text-ink font-bold mt-3">Ready to test your knowledge?</p>
+            </div>
+
+            {/* Buttons */}
+            <div className="p-5 space-y-3 flex flex-col">
+              {/* Start Quiz button */}
+              <button
+                onClick={() => {
+                  fxTap();
+                  setShowQuizDecisionModal(false);
+                  setView({ screen: "quiz", name: pendingStateName });
+                }}
+                className="w-full h-12 ui-button ui-accent-3 text-body font-extrabold active:scale-95 transition-all"
+              >
+                {EMOJI.action.sparkle} Start Quiz Now
+              </button>
+
+              {/* Later button */}
+              <button
+                onClick={() => {
+                  fxTap();
+                  setShowQuizDecisionModal(false);
+                  setPendingStateName(null);
+                }}
+                className="w-full h-12 ui-button ui-accent-1-soft text-body font-bold active:scale-95 transition-all"
+              >
+                ⏰ Ask Me Later
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* BottomNav moved to root layout for consistency */}
     </div>
   );
@@ -2006,12 +2056,6 @@ export function LearningHubScreen({
   );
   const read = cardsRead(progress, state.name);
 
-  // Track which categories have been celebrated to avoid duplicate celebrations
-  const [celebratedCategories, setCelebratedCategories] = useState<Set<number>>(new Set());
-
-  // State for showing the "All 6 cards done" decision modal
-  const [showDecisionModal, setShowDecisionModal] = useState(false);
-
   // Category progress tracking - calculate card counts using cardVisits
   const allCards = useMemo(() => {
     return learningCardsFor(state.name, "en", progress.ageBand);
@@ -2060,18 +2104,6 @@ export function LearningHubScreen({
     );
     return result;
   }, [cardCounts]);
-
-  // Detect full category completion and celebrate
-  useEffect(() => {
-    // At 6/6 (full completion, before quiz): show decision modal instead of auto-celebrating
-    if (completedCategories === 6 && !celebratedCategories.has(6)) {
-      // Show the "All 6 cards done! Start quiz / Later" decision modal
-      setShowDecisionModal(true);
-
-      // Mark as celebrated so we don't show this again
-      setCelebratedCategories((prev) => new Set([...prev, 6]));
-    }
-  }, [completedCategories, celebratedCategories, celebration, state.name]);
 
   // Track completion per category - all cards must be read
   const cards = [
@@ -2218,51 +2250,7 @@ export function LearningHubScreen({
         </div>
       </div>
 
-      {/* "All 6 cards done!" Decision Modal */}
-      {showDecisionModal && (
-        <div
-          className="fixed inset-0 z-50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in"
-          style={{ backgroundColor: "var(--scrim)" }}
-        >
-          <div className="bg-action-primary rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden animate-in zoom-in-95 flex flex-col">
-            {/* Header */}
-            <div className="p-5 text-center">
-              <div className="text-5xl mb-4">{EMOJI.action.celebrate}</div>
-              <div className="text-caption text-ink font-black uppercase tracking-widest mb-2">
-                All Done!
-              </div>
-              <h2 className="text-h2 text-ink font-extrabold">All 6 Cards Explored!</h2>
-              <p className="text-body text-ink font-bold mt-3">Ready to test your knowledge?</p>
-            </div>
 
-            {/* Buttons */}
-            <div className="p-5 space-y-3 flex flex-col">
-              {/* Start Quiz button */}
-              <button
-                onClick={() => {
-                  fxTap();
-                  setShowDecisionModal(false);
-                  onQuiz?.();
-                }}
-                className="w-full h-12 ui-button ui-accent-3 text-body font-extrabold active:scale-95 transition-all"
-              >
-                ${EMOJI.action.sparkle} Start Quiz Now
-              </button>
-
-              {/* Later button - with pulsing indicator */}
-              <button
-                onClick={() => {
-                  fxTap();
-                  setShowDecisionModal(false);
-                }}
-                className="w-full h-12 ui-button ui-accent-1-soft text-body font-bold active:scale-95 transition-all"
-              >
-                ⏰ Ask Me Later
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
