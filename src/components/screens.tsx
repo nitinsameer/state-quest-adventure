@@ -2609,7 +2609,6 @@ export function LearningCardScreen({
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [playingCardIndex, setPlayingCardIndex] = useState<number | null>(null);
-  const [showAudioPermissionPrompt, setShowAudioPermissionPrompt] = useState(false);
 
   // Detect unsupported language and show fallback notification
   const nativeLanguageCode = getNativeLanguage(state.name);
@@ -2934,13 +2933,6 @@ export function LearningCardScreen({
           onClick={(e) => {
             e.stopPropagation();
 
-            // Check if audio is enabled
-            if (!hasFeatureConsent("audio")) {
-              setShowAudioPermissionPrompt(true);
-              fxTap();
-              return;
-            }
-
             const isPlaying = playingCardIndex === currentCardIndex;
 
             if (isPlaying) {
@@ -2972,13 +2964,9 @@ export function LearningCardScreen({
           className={`h-9 px-3 rounded-full shadow-soft flex items-center justify-center gap-2 text-label transition-all active:scale-95 whitespace-nowrap ${
             playingCardIndex === currentCardIndex
               ? "bg-action-primary text-text-on-primary shadow-lg animate-pulse"
-              : hasFeatureConsent("audio")
-                ? "bg-accent-1-soft text-accent-1 hover:shadow-md border border-accent-1"
-                : "bg-muted text-muted-light border border-muted cursor-not-allowed"
+              : "bg-accent-1-soft text-accent-1 hover:shadow-md border border-accent-1"
           }`}
-          title={
-            hasFeatureConsent("audio") ? "Play card content" : "Enable audio in settings to listen"
-          }
+          title="Play card content"
         >
           {playingCardIndex === currentCardIndex ? EMOJI.ui.pause : EMOJI.action.play} Listen
         </button>
@@ -3082,56 +3070,6 @@ export function LearningCardScreen({
         </button>
       </div>
 
-      {/* Audio Permission Prompt */}
-      {showAudioPermissionPrompt && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          style={{ backgroundColor: "var(--scrim)" }}
-        >
-          <div className="bg-surface-card rounded-3xl shadow-2xl max-w-sm w-full p-6 space-y-4 animate-in zoom-in-95">
-            <div className="text-center">
-              <div className="text-5xl mb-3">{EMOJI.audio.stories}</div>
-              <h3 className="text-display text-xl font-extrabold text-ink">Enable Audio?</h3>
-              <p className="text-sm text-text-secondary mt-2">
-                Turn on audio to hear the stories read aloud! {EMOJI.audio.stories}
-              </p>
-            </div>
-
-            <div className="bg-info-soft rounded-2xl p-4 space-y-2 text-sm">
-              <div className="flex gap-2">
-                <span>{EMOJI.audio.stories}</span>
-                <span className="font-semibold text-info">Stories read aloud</span>
-              </div>
-              <div className="flex gap-2">
-                <span>{EMOJI.utility.worldMap}</span>
-                <span className="font-semibold text-info">Available in multiple languages</span>
-              </div>
-            </div>
-
-            <div className="flex gap-2 pt-2">
-              <button
-                onClick={() => {
-                  fxTap();
-                  setShowAudioPermissionPrompt(false);
-                }}
-                className="flex-1 h-12 rounded-xl bg-surface-sunken text-text-primary font-bold text-sm"
-              >
-                Maybe Later
-              </button>
-              <Link
-                to="/me"
-                onClick={() => {
-                  fxTap();
-                  setShowAudioPermissionPrompt(false);
-                }}
-                className="flex-1 h-12 rounded-xl bg-accent-1 text-text-on-primary font-bold text-sm flex items-center justify-center"
-              >
-                Go to Settings
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
@@ -4892,3 +4830,4 @@ export function EmptyStateScreen() {
     </div>
   );
 }
+
