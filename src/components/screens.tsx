@@ -2072,32 +2072,27 @@ export function LearningHubScreen({
     console.log(`[LearningHubScreen] cardCounts calculation for ${state.name}`);
     console.log(`[LearningHubScreen] allCards.length: ${allCards.length}`);
 
-    // Category names matching how they're stored in cardVisits
-    const categoryNames = ["Capital", "Language", "Food", "Places", "Animal", "Fact"];
-    const cardVisits = progress.cardVisits?.[state.name];
-
-    console.log(`[LearningHubScreen] cardVisits structure for ${state.name}:`, cardVisits);
+    // Get completed card indices for this state using working system
+    const completedCardIndices = cardsRead(progress, state.name);
+    console.log(`[LearningHubScreen] cardsRead for ${state.name}:`, completedCardIndices);
 
     return Array.from({ length: 6 }).map((_, i) => {
-      const categoryName = categoryNames[i];
-
-      // Count ALL cards for each category (main + sub-cards like Activity, Trivia, Cool Facts)
+      // Get all cards (main + sub-cards) for this category (mainCardIndex = i)
       const allCategoryCards = allCards.filter((card) => card.mainCardIndex === i);
 
-      // Get visited cards from cardVisits structure
-      const visitedKey = categoryName.toLowerCase().replace(/\s+/g, "-");
-      const visitedIndices = cardVisits?.[visitedKey] ?? [];
+      // A category is complete only if its main card (index i) has been read
+      const isCategoryComplete = completedCardIndices.includes(i);
 
       console.log(
-        `[LearningHubScreen] Category ${i} (${categoryName}): found ${allCategoryCards.length} total cards, visited ${visitedIndices.length}`,
+        `[LearningHubScreen] Category ${i}: total cards: ${allCategoryCards.length}, main card read: ${isCategoryComplete}`,
       );
 
       return {
-        total: allCategoryCards.length, // ALL cards including sub-cards
-        read: visitedIndices.length, // How many visited
+        total: allCategoryCards.length,
+        read: isCategoryComplete ? allCategoryCards.length : 0, // If main card read, all cards "done"
       };
     });
-  }, [allCards, progress.cardVisits, state.name]);
+  }, [allCards, progress.cards, state.name]);
 
   // Count completed categories (where ALL cards in that category are read)
   const completedCategories = useMemo(() => {
