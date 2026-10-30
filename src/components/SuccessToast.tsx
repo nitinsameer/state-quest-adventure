@@ -100,8 +100,9 @@ export function SuccessToast() {
 
   return (
     <div
-      className="fixed left-1/2 z-50 pointer-events-none"
+      className="fixed z-50 pointer-events-none"
       style={{
+        left: "50%",
         bottom: "calc(var(--nav-h, 96px) + 16px)",
         transform: "translateX(-50%)",
         display: "flex",

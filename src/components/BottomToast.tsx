@@ -37,10 +37,11 @@ function ToastNotification({ config }: { config: ToastConfig }) {
 
   return (
     <div
-      className={`fixed left-1/2 z-50 transform transition-all duration-300 ${
+      className={`fixed z-50 transform transition-all duration-300 ${
         isExiting ? "translate-y-full opacity-0" : "translate-y-0 opacity-100"
       }`}
       style={{
+        left: "50%",
         bottom: "calc(var(--nav-h, 96px) + 16px)",
         transform: isExiting ? "translateX(-50%) translateY(100%)" : "translateX(-50%) translateY(0)",
         width: "calc(100vw - 32px)",

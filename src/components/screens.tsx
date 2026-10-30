@@ -2827,7 +2827,7 @@ export function LearningCardScreen({
       const currentCard = cardsInCurrentCategory[cardIndexInCategory];
       const isReplaying = progress.cards?.[state.name]?.includes(currentCardIndex) ?? false;
 
-      // Mark current card as learned BEFORE showing celebration
+      // Mark current card as learned BEFORE showing celebration (use currentCardIndex which is already global)
       markCard(state.name, currentCardIndex, isReplaying);
 
       // Show immediate celebration only on first read (not replay)
