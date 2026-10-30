@@ -1500,8 +1500,11 @@ export function JourneyMapScreen() {
           );
           if (index === null) {
             // All cards completed - show decision modal instead of going straight to quiz
+            // P1: Modal Delay (400ms before showing)
             setPendingStateName(view.name);
-            setShowQuizDecisionModal(true);
+            setTimeout(() => {
+              setShowQuizDecisionModal(true);
+            }, 400);
           } else {
             // Move to next card
             setView({ screen: "card", name: view.name, cardIndex: index });
@@ -2056,6 +2059,10 @@ export function LearningHubScreen({
   );
   const read = cardsRead(progress, state.name);
 
+  // P2: Track unlock animation trigger - only trigger once when unlocking
+  const [hasSeenUnlock, setHasSeenUnlock] = useState(false);
+  const [showUnlockAnimation, setShowUnlockAnimation] = useState(false);
+
   // Category progress tracking - calculate card counts using cardVisits
   const allCards = useMemo(() => {
     return learningCardsFor(state.name, "en", progress.ageBand);
@@ -2105,6 +2112,19 @@ export function LearningHubScreen({
     return result;
   }, [cardCounts]);
 
+  // P2: Trigger unlock animation when quiz becomes available for first time
+  useEffect(() => {
+    if (completedCategories === 6 && !hasSeenUnlock) {
+      setHasSeenUnlock(true);
+      setShowUnlockAnimation(true);
+      // Reset animation after it completes
+      const timer = setTimeout(() => {
+        setShowUnlockAnimation(false);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [completedCategories, hasSeenUnlock]);
+
   // Track completion per category - all cards must be read
   const cards = [
     { icon: EMOJI.utility.capital, title: "Capital", sub: state.capital, tone: "orange" as const },
@@ -2133,6 +2153,38 @@ export function LearningHubScreen({
 
   return (
     <div className="w-full bg-bg-page flex flex-col">
+      {/* CSS Keyframes for quiz button unlock animation - P2 */}
+      <style>{`
+        @media (prefers-reduced-motion: no-preference) {
+          @keyframes quiz-unlock-bounce {
+            0% {
+              transform: scale(1) rotate(0deg);
+              filter: drop-shadow(0 0 0 rgba(255, 215, 0, 0));
+            }
+            25% {
+              transform: scale(1.3) rotate(10deg);
+              filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.8));
+            }
+            50% {
+              transform: scale(1.15) rotate(-5deg);
+              filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.5));
+            }
+            75% {
+              transform: scale(1.25) rotate(8deg);
+              filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.7));
+            }
+            100% {
+              transform: scale(1) rotate(0deg);
+              filter: drop-shadow(0 0 0 rgba(255, 215, 0, 0));
+            }
+          }
+
+          .animate-quiz-unlock-bounce {
+            animation: quiz-unlock-bounce 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+          }
+        }
+      `}</style>
+
       {/* HEADER SECTION - Simplified, clean header with background image and centered state name */}
       <div className="relative h-32">
         {/* Background image - covers full header */}
@@ -2213,7 +2265,7 @@ export function LearningHubScreen({
         <div className="px-4 pb-6">
           <button
             onClick={() => {
-              if (completedCategories === 6 && !showDecisionModal) {
+              if (completedCategories === 6) {
                 fxTap();
                 onQuiz?.();
               }
@@ -2225,14 +2277,14 @@ export function LearningHubScreen({
                 : "bg-accent-5-soft/50"
             }`}
           >
-            {/* Lock icon in circular background */}
+            {/* Lock/Unlock icon in circular background - P2: Animated emoji */}
             <div className={`h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0 text-h4 ${
               completedCategories === 6 ? "bg-accent-5/20" : "bg-accent-5/10"
-            }`}>
+            } ${showUnlockAnimation ? "animate-quiz-unlock-bounce" : ""}`}>
               {completedCategories === 6 ? "🔓" : "🔒"}
             </div>
 
-            {/* Heading and subtitle */}
+            {/* Heading and subtitle - P3: Show counter when locked, progress dots when unlocked */}
             <div className="flex-1 text-left">
               <div className="text-label font-extrabold text-text-primary">
                 {completedCategories === 6 ? "State Quiz" : "State Quiz Locked"}
@@ -2240,8 +2292,24 @@ export function LearningHubScreen({
               <div className="text-caption text-text-secondary">
                 {completedCategories === 6 
                   ? "Test your knowledge"
-                  : "Complete all 6 challenges"}
+                  : `${completedCategories} of 6 challenges complete`}
               </div>
+              
+              {/* P3: Progress dots - show when locked (not when unlocked) */}
+              {completedCategories < 6 && (
+                <div className="flex items-center gap-1 mt-2">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <div
+                      key={i}
+                      className={`h-1.5 w-1.5 rounded-full transition-colors duration-300 ${
+                        i < completedCategories
+                          ? "bg-accent-5"
+                          : "bg-accent-5/30"
+                      }`}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Decorative sparkles */}
