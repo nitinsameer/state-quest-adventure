@@ -100,24 +100,23 @@ export function SuccessToast() {
 
   return (
     <div
-      className="fixed inset-x-0 z-50 pointer-events-none"
+      className="fixed left-1/2 z-50 pointer-events-none"
       style={{
-        bottom: 0,
+        bottom: "calc(var(--nav-h, 96px) + 16px)",
+        transform: "translateX(-50%)",
         display: "flex",
         alignItems: "flex-end",
         justifyContent: "center",
-        paddingBottom: "calc(var(--nav-h, 96px) + 16px)",
-        paddingLeft: "16px",
-        paddingRight: "16px",
-        pointerEvents: "auto",
+        pointerEvents: "none",
       }}
     >
       {/* Particle container - absolutely positioned relative to toast */}
       <div
         className="relative"
         style={{
-          width: "100%",
+          width: "calc(100vw - 32px)",
           maxWidth: "360px",
+          pointerEvents: "auto",
         }}
       >
         {/* Particles layer */}

@@ -37,14 +37,21 @@ function ToastNotification({ config }: { config: ToastConfig }) {
 
   return (
     <div
-      className={`fixed bottom-6 left-4 right-4 max-w-md mx-auto transform transition-all duration-300 ${
+      className={`fixed left-1/2 z-50 transform transition-all duration-300 ${
         isExiting ? "translate-y-full opacity-0" : "translate-y-0 opacity-100"
       }`}
+      style={{
+        bottom: "calc(var(--nav-h, 96px) + 16px)",
+        transform: isExiting ? "translateX(-50%) translateY(100%)" : "translateX(-50%) translateY(0)",
+        width: "calc(100vw - 32px)",
+        maxWidth: "360px",
+        pointerEvents: "auto",
+      }}
       role="status"
       aria-live="polite"
     >
       <div
-        className={`${colors[config.type]} rounded-2xl shadow-elevated-3 border border-default/20 p-4 flex items-center gap-3 text-on-header backdrop-blur-sm`}
+        className={`${colors[config.type]} rounded-2xl shadow-elevated-3 border border-default/20 p-4 flex items-center gap-3 text-on-header backdrop-blur-sm w-full`}
       >
         <span className="text-2xl flex-shrink-0 drop-shadow">{config.icon}</span>
         <div className="flex-1 min-w-0">
