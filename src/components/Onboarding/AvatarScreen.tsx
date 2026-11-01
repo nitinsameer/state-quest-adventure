@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { fxTap, fxConfetti } from "@/lib/fx";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { AVATAR_CONFIG, type AvatarId, getAvatarBackgroundColor } from "@/lib/avatar-config";
-import { PremiumHeader } from "./PremiumHeader";
+import { EMOJI } from "@/constants/emoji";
 import adventureBg from "@/assets/avatar_adventure_bg.png";
 import avatarExplorerHat from "@/assets/avatars/avatar-explorer-hat.png";
 import avatarExplorerPink from "@/assets/avatars/avatar-explorer-pink.png";
@@ -97,44 +97,60 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
   };
 
   return (
-    <div className="w-full h-full flex flex-col select-none touch-none relative overflow-hidden bg-bg-page">
-      {/* Background layer */}
+    <div className="w-full h-full flex flex-col select-none touch-none relative overflow-hidden bg-[#87CEEB]">
+      {/* Background Image */}
       <div
-        className="absolute inset-0 bg-cover bg-top z-0"
-        style={{ backgroundImage: `url(${adventureBg})`, backgroundPosition: "center top" }}
+        className="absolute inset-0 bg-cover bg-center z-0"
+        style={{ backgroundImage: `url(${adventureBg})` }}
       />
 
-      {/* Subtle overlay only in header area for text readability */}
-      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black/20 via-black/10 to-transparent z-5" />
+      {/* Header Gradient Overlay */}
+      <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-black/15 to-transparent z-5" />
 
       <ConfettiBurst trigger={confettiBurst} size="small" />
 
-      {/* Header - Fixed at top */}
-      <div className="relative z-10 flex-shrink-0">
-        <PremiumHeader
-          firstPart="Pick Your"
-          secondPart="Avatar"
-          subtitle="Choose your explorer to start your adventure!"
-          step={1}
-        />
+      {/* Header with Back Button and Step Badge */}
+      <div className="relative z-10 flex-shrink-0 px-4 pt-3 pb-2">
+        <div className="flex items-center justify-between mb-2">
+          {/* Back Button */}
+          <button
+            type="button"
+            onClick={() => window.history.back()}
+            className="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center hover:shadow-lg active:scale-95 transition-all"
+          >
+            <span className="text-xl">‹</span>
+          </button>
+
+          {/* Step Badge - Updated to 1/2 */}
+          <div className="bg-white rounded-full px-4 py-1 shadow-md">
+            <span className="text-xs font-bold text-text-primary">Step 1/2</span>
+          </div>
+        </div>
+
+        {/* Title */}
+        <div className="text-center mt-2">
+          <div className="text-2xl font-black text-ink">
+            Pick Your
+            <br />
+            <span className="text-4xl bg-gradient-to-r from-[#FFD700] via-[#FFA500] to-[#FF8C00] bg-clip-text text-transparent">
+              Avatar
+            </span>
+          </div>
+          <p className="text-xs text-text-secondary font-medium mt-1">Choose your explorer to start your adventure!</p>
+        </div>
       </div>
 
-      {/* Scrollable Content - includes button in flow */}
+      {/* Scrollable Content */}
       <div className="relative z-10 flex-1 overflow-y-auto">
-        <div className="px-4 py-3 pb-safe flex flex-col">
-          {/* Avatar Grid - 3 columns */}
-          <div className="grid grid-cols-3 gap-2 mb-3">
+        <div className="px-4 py-4 pb-safe flex flex-col">
+          {/* Avatar Grid - 3 columns with proper spacing */}
+          <div className="grid grid-cols-3 gap-3 mb-4">
             {AVATAR_IDS.map((avatarId) => (
               <button
                 key={avatarId}
                 type="button"
                 onClick={() => handleAvatarSelect(avatarId)}
-                className={`relative aspect-square rounded-2xl overflow-hidden transition-all duration-300 flex items-center justify-center group
-                  ${
-                    selectedAvatar === avatarId
-                      ? "ring-6 ring-white shadow-elevated-2 scale-110"
-                      : "ring-3 ring-white shadow-sm hover:shadow-lg"
-                  }
+                className={`relative aspect-square rounded-3xl overflow-hidden transition-all duration-300 flex items-center justify-center
                   ${animatingId === avatarId ? "avatar-bounce" : ""}
                 `}
                 style={{
@@ -143,6 +159,11 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
                     animatingId === avatarId
                       ? "avatar-bounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)"
                       : undefined,
+                  boxShadow:
+                    selectedAvatar === avatarId
+                      ? "0 0 0 5px white, 0 4px 12px rgba(0,0,0,0.15)"
+                      : "0 4px 8px rgba(0,0,0,0.1)",
+                  transform: selectedAvatar === avatarId ? "scale(1)" : "scale(1)",
                 } as React.CSSProperties}
               >
                 <img
@@ -150,37 +171,40 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
                   alt={getAvatarName(avatarId)}
                   className="w-full h-full object-cover"
                 />
-                {/* Glow effect for selected */}
+
+                {/* Checkmark for Selected */}
                 {selectedAvatar === avatarId && (
-                  <div className="absolute inset-0 bg-accent-4 opacity-10 animate-pulse" />
+                  <div className="absolute bottom-1 right-1 bg-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg">
+                    <span className="text-lg text-accent-1">✓</span>
+                  </div>
                 )}
               </button>
             ))}
           </div>
 
-          {/* Explorer Summary Card */}
+          {/* Explorer Summary Card - Bottom Section */}
           {selectedAvatar && (
-            <div className="rounded-2xl bg-accent-1-soft p-3 mb-3 shadow-elevated-2 animate-fade-in">
+            <div className="rounded-3xl bg-gradient-to-br from-[#FFFACD] to-[#FFE4B5] p-4 mb-4 shadow-lg animate-fade-in border-2 border-white/80">
               <div className="flex items-center gap-3">
                 <img
                   src={getAvatarImage(selectedAvatar)}
                   alt={getAvatarName(selectedAvatar)}
-                  className="w-14 h-14 rounded-full border-2 border-accent-1 shadow-md flex-shrink-0"
+                  className="w-16 h-16 rounded-2xl border-3 border-white shadow-md flex-shrink-0"
                 />
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs font-bold text-accent-1-ink tracking-wider">YOUR EXPLORER</div>
-                  <div className="text-lg font-black text-text-primary truncate">{getAvatarName(selectedAvatar)}</div>
+                  <div className="text-xs font-bold text-amber-900 tracking-wider">Your Explorer</div>
+                  <div className="text-lg font-black text-ink truncate">{getAvatarName(selectedAvatar)}</div>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Continue Button - In content flow */}
+          {/* Continue Button */}
           {selectedAvatar && (
             <button
               type="button"
               onClick={handleNext}
-              className="w-full py-3 px-4 rounded-full bg-action-primary text-white font-bold text-base flex items-center justify-center gap-2 shadow-elevated-2 hover:shadow-elevated-3 active:scale-95 transition-all"
+              className="w-full py-4 px-4 rounded-full bg-gradient-to-r from-[#7C3AED] to-[#6366F1] text-white font-black text-base flex items-center justify-center gap-2 shadow-lg hover:shadow-xl active:scale-95 transition-all"
             >
               Continue
               <span>→</span>
@@ -193,6 +217,15 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
         @keyframes avatar-bounce {
           0%, 100% { transform: scale(1); }
           50% { transform: scale(1.15); }
+        }
+        
+        @keyframes fade-in {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-fade-in {
+          animation: fade-in 0.3s ease-out;
         }
       `}</style>
     </div>
