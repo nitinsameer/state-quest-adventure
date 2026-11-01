@@ -101,6 +101,11 @@ export function UnlockCelebration() {
   );
 
   useEffect(() => {
+    // GATE: Suppress ALL achievement popups - they interrupt the quiz celebration flow
+    // Quiz completion now goes directly to QuizCelebrationScreen without side popups
+    console.log("[UnlockCelebration] Achievement popups suppressed - quiz flow is uninterrupted");
+    return;
+
     // GATE: Only show achievement popups AFTER user completes onboarding
     // During onboarding, suppress celebrations to avoid UI noise
     if (!progress.onboarded) {

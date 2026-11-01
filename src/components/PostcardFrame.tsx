@@ -67,32 +67,16 @@ export function PostcardFrame({
             )}
           </div>
 
-          {/* Middle section - State name + badge level */}
+          {/* Middle section - State name (enlarged, no badge level) */}
           <div className="flex-[1] flex flex-col items-center justify-center py-1">
             <div className="text-center">
-              <div className="text-sm font-bold text-text-primary">{state.name}</div>
-              <div className="text-xs font-semibold text-text-secondary mt-0.5">
-                Level 1 · {badgeLabel}
-              </div>
+              <div className="text-lg font-bold text-text-primary">{state.name}</div>
             </div>
           </div>
 
-          {/* Bottom section - Date left, Stars right, Stamp top-right */}
+          {/* Bottom section - Empty/minimal space */}
           <div className="flex-[1] flex items-center justify-between px-2 py-1 relative">
-            {/* Left: Date */}
-            <div className="text-xs font-semibold text-text-secondary tabular-nums">{dateStr}</div>
-
-            {/* Right: Stars */}
-            <div className="text-xs leading-none">{starDisplay}</div>
-
-            {/* Top-right: Stamp (rotated 15deg, absolutely positioned) */}
-            <div
-              className="absolute top-1 right-2 text-lg opacity-80 transform"
-              style={{ transform: "rotate(15deg)" }}
-              title="Stamp"
-            >
-              📮
-            </div>
+            {/* Blank - no date, no stars, no stamp */}
           </div>
         </div>
       </div>
