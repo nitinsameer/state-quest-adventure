@@ -75,7 +75,7 @@ export const EMOJI = {
     airplane: "✈️",
     lock: "🔒",
     play: "▶️",
-    replay: "🔄",
+    replay: "▶️",
     share: "📤",
     save: "💾",
     stamp: "🎫",
