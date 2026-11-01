@@ -46,11 +46,23 @@ export function QuizCelebrationScreen() {
 
   useEffect(() => {
     if (isValidCeremony === false && !navigationInProgressRef.current) {
-      navigate({ to: "/" });
+      // DEBUG: Log invalid ceremony state
+      console.log("[QuizCelebrationScreen] Invalid ceremony, redirecting:", {
+        hasCeremony: !!ceremony,
+        ceremonyType: ceremony?.type,
+        pendingCount: progress.pendingCelebrations?.length ?? 0,
+      });
+      
+      // Fallback: go to home instead of leaving blank screen
+      navigationInProgressRef.current = true;
+      setTimeout(() => {
+        navigate({ to: "/" });
+      }, 100);
     }
   }, [isValidCeremony, navigate]);
 
   if (!isValidCeremony) {
+    console.log("[QuizCelebrationScreen] Returning null, no valid ceremony");
     return null;
   }
 

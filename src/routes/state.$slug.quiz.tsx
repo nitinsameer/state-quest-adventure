@@ -11,11 +11,26 @@ export const Route = createFileRoute("/state/$slug/quiz")({
     if (!state) throw notFound();
 
     const progress = getProgress();
-    if (cardsDone(progress, state.name) < CARDS_PER_STATE) {
+    const completed = cardsDone(progress, state.name);
+    
+    // DEBUG: Log progress check for troubleshooting
+    console.log("[Quiz Route Loader] Progress validation:", {
+      state: state.name,
+      cardsCompleted: completed,
+      cardsRequired: CARDS_PER_STATE,
+      progressExists: !!progress,
+      progressCards: progress.cards?.[state.name]?.length ?? 0,
+    });
+    
+    if (completed < CARDS_PER_STATE) {
       // Not all cards completed yet - redirect to learn hub
+      console.log(
+        `[Quiz Route Loader] Redirecting: Only ${completed}/${CARDS_PER_STATE} cards done`
+      );
       throw redirect({ to: "/state/$slug/learn", params: { slug: params.slug } });
     }
 
+    console.log(`[Quiz Route Loader] Quiz unlocked for ${state.name}`);
     return { name: state.name };
   },
   head: ({ loaderData }) => {

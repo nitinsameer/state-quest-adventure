@@ -3284,9 +3284,10 @@ function QuizScreenContent({
       finishQuiz(activeName, quizMetrics);
 
       // Use setTimeout to ensure state is settled before navigation
+      // CRITICAL FIX: Increased delay from 50ms to 200ms to guarantee progress persists
       setTimeout(() => {
         onDone?.(quizMetrics);
-      }, 50);
+      }, 200);
       return;
     }
 
