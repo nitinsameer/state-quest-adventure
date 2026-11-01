@@ -2699,16 +2699,54 @@ export function LearningCardScreen({
   }, [cardsInCurrentCategory, cardIndexInCategory]);
 
   // Get global index for progress tracking with validation
+  // FIXED: Instead of loose matching (mainCardIndex + kicker + title), calculate directly from structure
+  // Cards are organized as: mainCard[0], enriched[0-4], mainCard[1], enriched[0-4], etc.
+  // This avoids false matches when multiple cards share the same properties
   const currentCardIndex = useMemo(() => {
-    if (!currentCard || !Array.isArray(cards)) return -1;
-    return cards.findIndex(
+    if (!currentCard || !Array.isArray(cards) || cards.length === 0) return -1;
+    
+    // Calculate the start index of the current main card section
+    let sectionStartIndex = 0;
+    for (let i = 0; i < currentCard.mainCardIndex; i++) {
+      // Count how many cards belong to each main card section (main + enriched)
+      const cardsInMainCard = cards.filter((c) => c && c.mainCardIndex === i).length;
+      sectionStartIndex += cardsInMainCard;
+    }
+    
+    // Global index is: section start + position within the category
+    const globalIndex = sectionStartIndex + cardIndexInCategory;
+    
+    // Validate the index points to the expected card
+    if (globalIndex >= 0 && globalIndex < cards.length && cards[globalIndex]) {
+      const cardAtIndex = cards[globalIndex];
+      // Sanity check: verify this is the card we expect
+      if (
+        cardAtIndex.mainCardIndex === currentCard.mainCardIndex &&
+        cardAtIndex.kicker === currentCard.kicker &&
+        cardAtIndex.title === currentCard.title
+      ) {
+        return globalIndex;
+      }
+    }
+    
+    // Fallback: if structural calculation failed, use loose findIndex as last resort
+    // This maintains backward compatibility but logs the issue
+    const fallbackIndex = cards.findIndex(
       (c) =>
         c &&
         c.mainCardIndex === currentCard.mainCardIndex &&
         c.kicker === currentCard.kicker &&
         c.title === currentCard.title,
     );
-  }, [currentCard, cards]);
+    
+    if (fallbackIndex >= 0) {
+      console.warn(
+        `[LearningCardScreen] Structural index calculation failed for card "${currentCard.kicker}". Fell back to findIndex. This may indicate a data structure mismatch.`,
+      );
+    }
+    
+    return fallbackIndex;
+  }, [currentCard, cards, cardIndexInCategory, mainCardIndex]);
 
   const enrichedContent = getStateContent(state.name);
 
@@ -2827,8 +2865,18 @@ export function LearningCardScreen({
       const currentCard = cardsInCurrentCategory[cardIndexInCategory];
       const isReplaying = progress.cards?.[state.name]?.includes(currentCardIndex) ?? false;
 
-      // Mark current card as learned BEFORE showing celebration (use currentCardIndex which is already global)
-      markCard(state.name, currentCardIndex, isReplaying);
+      // VALIDATION: Ensure currentCardIndex is valid before marking
+      if (currentCardIndex >= 0 && currentCardIndex < cards.length) {
+        console.log(
+          `[LearningCardScreen] Marking card as learned: state="${state.name}", globalIndex=${currentCardIndex}, kicker="${currentCard.kicker}", replay=${isReplaying}`,
+        );
+        // Mark current card as learned BEFORE showing celebration (use currentCardIndex which is already global)
+        markCard(state.name, currentCardIndex, isReplaying);
+      } else {
+        console.error(
+          `[LearningCardScreen] INVALID currentCardIndex=${currentCardIndex}. Expected 0-${cards.length - 1}. Card not marked!`,
+        );
+      }
 
       // Show immediate celebration only on first read (not replay)
       if (!isReplaying) {
@@ -2861,8 +2909,18 @@ export function LearningCardScreen({
       const currentCard = cardsInCurrentCategory[cardIndexInCategory];
       const isReplaying = progress.cards?.[state.name]?.includes(currentCardIndex) ?? false;
 
-      // Mark final card as learned
-      markCard(state.name, currentCardIndex, isReplaying);
+      // VALIDATION: Ensure currentCardIndex is valid before marking
+      if (currentCardIndex >= 0 && currentCardIndex < cards.length) {
+        console.log(
+          `[LearningCardScreen] Marking FINAL card as learned: state="${state.name}", globalIndex=${currentCardIndex}, kicker="${currentCard.kicker}", replay=${isReplaying}`,
+        );
+        // Mark final card as learned
+        markCard(state.name, currentCardIndex, isReplaying);
+      } else {
+        console.error(
+          `[LearningCardScreen] INVALID currentCardIndex=${currentCardIndex}. Expected 0-${cards.length - 1}. Card not marked!`,
+        );
+      }
 
       // Show category completion celebration
       if (!isReplaying) {
@@ -2924,7 +2982,17 @@ export function LearningCardScreen({
       });
     }
 
-    markCard(state.name, currentMainCardIndex, !wasFirstRead);
+    // VALIDATION: Ensure currentCardIndex is valid before marking
+    if (currentCardIndex >= 0 && currentCardIndex < cards.length) {
+      console.log(
+        `[LearningCardScreen] Marking main card as learned: state="${state.name}", globalIndex=${currentCardIndex}, mainCardIdx=${mainCardIdx}, replay=${!wasFirstRead}`,
+      );
+      markCard(state.name, currentCardIndex, !wasFirstRead);
+    } else {
+      console.error(
+        `[LearningCardScreen] INVALID currentCardIndex=${currentCardIndex}. Expected 0-${cards.length - 1}. Card not marked!`,
+      );
+    }
 
     // If this is the last main card, go to quiz
     if (currentMainCardIndex === 5) {
