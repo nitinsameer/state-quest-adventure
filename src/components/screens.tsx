@@ -1974,9 +1974,12 @@ export function LearningHubScreen({
     };
   });
 
+  // Get landscape background for this state
+  const landscapeBg = STATE_ART[state.name];
+
   return (
-    <div className="w-full bg-bg-page flex flex-col">
-      {/* CSS Keyframes for quiz button unlock animation - P2 */}
+    <div className="w-full bg-bg-page flex flex-col relative overflow-hidden">
+      {/* CSS Keyframes for quiz button unlock animation and progress complete glow */}
       <style>{`
         @media (prefers-reduced-motion: no-preference) {
           @keyframes quiz-unlock-bounce {
@@ -2008,140 +2011,154 @@ export function LearningHubScreen({
         }
       `}</style>
 
-      {/* HEADER SECTION - Simplified, clean header with background image and centered state name */}
-      <div className="relative h-32">
-        {/* Background image - covers full header */}
-        <img
-          src={stateHeaderBg}
-          alt="Header background"
-          className="absolute inset-0 w-full h-full object-cover"
-          loading="lazy"
-          decoding="async"
+      {/* Landscape background layer - positioned absolutely, behind all content */}
+      {landscapeBg && (
+        <div
+          className="absolute inset-0 opacity-10 blur-sm pointer-events-none"
+          style={{
+            backgroundImage: `url(${landscapeBg})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            zIndex: 0,
+          }}
         />
-        
-        {/* Header content overlay - back button, title, star counter */}
-        <div className="relative z-10 h-full flex items-center justify-between px-5">
-          {/* Back button - left side, solid white circle */}
-          <button
-            onClick={() => {
-              if (onBack) {
-                fxTap();
-                onBack();
-              } else {
-                goBack();
-              }
-            }}
-            className="h-10 w-10 rounded-full bg-surface-card flex items-center justify-center text-text-primary flex-shrink-0 transition-all active:scale-95 shadow-soft"
-            aria-label="Go back"
-          >
-            <span className="text-label">‹</span>
-          </button>
+      )}
 
-          {/* Center: State name - flex-grow to push star to right */}
-          <h1 className="flex-1 text-center text-h2 font-extrabold text-text-on-header leading-tight px-4">
-            {state.name}
-          </h1>
+      {/* Content wrapper with z-index to sit above landscape */}
+      <div className="relative z-10 flex flex-col w-full h-full">
+        {/* HEADER SECTION - Simplified, clean header with background image and centered state name */}
+        <div className="relative h-32 flex-shrink-0">
+          {/* Background image - covers full header */}
+          <img
+            src={stateHeaderBg}
+            alt="Header background"
+            className="absolute inset-0 w-full h-full object-cover"
+            loading="lazy"
+            decoding="async"
+          />
+          
+          {/* Header content overlay - back button, title, star counter */}
+          <div className="relative z-10 h-full flex items-center justify-between px-5">
+            {/* Back button - left side, solid white circle */}
+            <button
+              onClick={() => {
+                if (onBack) {
+                  fxTap();
+                  onBack();
+                } else {
+                  goBack();
+                }
+              }}
+              className="h-10 w-10 rounded-full bg-surface-card flex items-center justify-center text-text-primary flex-shrink-0 transition-all active:scale-95 shadow-soft"
+              aria-label="Go back"
+            >
+              <span className="text-label">‹</span>
+            </button>
 
-          {/* Star counter - right side, solid white pill */}
-          <div className="h-10 px-3 rounded-full bg-surface-card flex items-center justify-center gap-1 text-text-primary flex-shrink-0 shadow-soft">
-            <span className="text-label">⭐</span>
-            <span className="text-caption font-extrabold">{completedCategories * XP_PER_CARD}</span>
-          </div>
-        </div>
-      </div>
+            {/* Center: State name - flex-grow to push star to right */}
+            <h1 className="flex-1 text-center text-h2 font-extrabold text-text-on-header leading-tight px-4 truncate">
+              {state.name}
+            </h1>
 
-      {/* Scrollable content area - allows all cards and quiz panel to be visible */}
-      <div className="flex-1 overflow-y-auto">
-        {/* PROGRESS CARD - White rounded card with overlap */}
-        <div className="px-5 -mt-6 relative z-20 mb-6">
-          <div className="bg-surface-card rounded-2xl shadow-elevated-1 p-5">
-            <div className="flex items-center justify-between mb-3">
-              <div className="text-label font-bold text-text-primary">Your state adventure</div>
-              <div className="text-body font-extrabold text-text-primary">{completedCategories} / 6</div>
-            </div>
-            <div className="w-full h-2.5 bg-accent-5-soft rounded-full overflow-hidden">
-              <div
-                className="h-full rounded-full transition-all duration-300"
-                style={{ 
-                  width: `${(completedCategories / 6) * 100}%`,
-                  backgroundColor: "var(--accent-5)"
-                }}
-              />
+            {/* Star counter - right side, solid white pill */}
+            <div className="h-10 px-3 rounded-full bg-surface-card flex items-center justify-center gap-1 text-text-primary flex-shrink-0 shadow-soft">
+              <span className="text-label">⭐</span>
+              <span className="text-caption font-extrabold">{completedCategories * XP_PER_CARD}</span>
             </div>
           </div>
         </div>
 
-        {/* SECTION HEADING & SUBTITLE */}
-        <div className="px-5 mb-4">
-          <h2 className="text-h2 text-text-primary font-extrabold mb-2">Explore the state</h2>
-          <p className="text-body text-text-secondary">Complete all 6 challenges to unlock your quiz.</p>
-        </div>
-
-        {/* CHALLENGE CARDS GRID - 2 columns, natural flow, no fixed heights */}
-        <div className="px-4 mb-6 grid grid-cols-2 gap-3">
-          {cards.map((c, idx) => (
-            <HubCard key={c.title} index={idx} {...c} stateName={state.name} />
-          ))}
-        </div>
-
-        {/* QUIZ PANEL - Full-width card with lock and sparkles */}
-        <div className="px-4 pb-6">
-          <button
-            onClick={() => {
-              if (completedCategories === 6) {
-                fxTap();
-                onQuiz?.();
-              }
-            }}
-            disabled={completedCategories < 6}
-            className={`w-full rounded-2xl p-4 transition-all active:scale-95 flex items-center gap-3 ${
-              completedCategories === 6
-                ? "bg-accent-5-soft hover:shadow-md"
-                : "bg-accent-5-soft/50"
-            }`}
-          >
-            {/* Lock/Unlock icon in circular background - P2: Animated emoji */}
-            <div className={`h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0 text-h4 ${
-              completedCategories === 6 ? "bg-accent-5/20" : "bg-accent-5/10"
-            } ${showUnlockAnimation ? "animate-quiz-unlock-bounce" : ""}`}>
-              {completedCategories === 6 ? "🔓" : "🔒"}
+        {/* Scrollable content area - allows all cards and quiz panel to be visible */}
+        <div className="flex-1 overflow-y-auto">
+          {/* PROGRESS CARD - White rounded card with overlap */}
+          <div className="px-5 -mt-6 relative z-20 mb-6">
+            <div className="bg-surface-card rounded-2xl shadow-elevated-1 p-5">
+              <div className="flex items-center justify-between mb-3">
+                <div className="text-label font-bold text-text-primary">Your state adventure</div>
+                <div className="text-body font-extrabold text-text-primary">{completedCategories} / 6</div>
+              </div>
+              <div className="w-full h-2.5 bg-accent-5-soft rounded-full overflow-hidden">
+                <div
+                  className="h-full rounded-full transition-all duration-300"
+                  style={{ 
+                    width: `${(completedCategories / 6) * 100}%`,
+                    backgroundColor: "var(--accent-5)"
+                  }}
+                />
+              </div>
             </div>
+          </div>
 
-            {/* Heading and subtitle - P3: Show counter when locked, progress dots when unlocked */}
-            <div className="flex-1 text-left">
-              <div className="text-label font-extrabold text-text-primary">
-                {completedCategories === 6 ? "State Quiz" : "State Quiz Locked"}
+          {/* SECTION HEADING & SUBTITLE */}
+          <div className="px-5 mb-4">
+            <h2 className="text-h2 text-text-primary font-extrabold mb-2">Explore the state</h2>
+            <p className="text-body text-text-secondary">Complete all 6 challenges to unlock your quiz.</p>
+          </div>
+
+          {/* CHALLENGE CARDS GRID - 2 columns, natural flow, no fixed heights */}
+          <div className="px-4 mb-6 grid grid-cols-2 gap-3">
+            {cards.map((c, idx) => (
+              <HubCard key={c.title} {...c} stateName={state.name} />
+            ))}
+          </div>
+
+          {/* QUIZ PANEL - Full-width card with lock and sparkles */}
+          <div className="px-4 pb-6">
+            <button
+              onClick={() => {
+                if (completedCategories === 6) {
+                  fxTap();
+                  onQuiz?.();
+                }
+              }}
+              disabled={completedCategories < 6}
+              className={`w-full rounded-2xl p-4 transition-all active:scale-95 flex items-center gap-3 ${
+                completedCategories === 6
+                  ? "bg-accent-5-soft hover:shadow-md"
+                  : "bg-accent-5-soft/50"
+              }`}
+            >
+              {/* Lock/Unlock icon in circular background - P2: Animated emoji */}
+              <div className={`h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0 text-h4 ${
+                completedCategories === 6 ? "bg-accent-5/20" : "bg-accent-5/10"
+              } ${showUnlockAnimation ? "animate-quiz-unlock-bounce" : ""}`}>
+                {completedCategories === 6 ? "🔓" : "🔒"}
               </div>
-              <div className="text-caption text-text-secondary">
-                {completedCategories === 6 
-                  ? "Test your knowledge"
-                  : `${completedCategories} of 6 challenges complete`}
-              </div>
-              
-              {/* P3: Progress dots - show when locked (not when unlocked) */}
-              {completedCategories < 6 && (
-                <div className="flex items-center gap-1 mt-2">
-                  {Array.from({ length: 6 }).map((_, i) => (
-                    <div
-                      key={i}
-                      className={`h-1.5 w-1.5 rounded-full transition-colors duration-300 ${
-                        i < completedCategories
-                          ? "bg-accent-5"
-                          : "bg-accent-5/30"
-                      }`}
-                    />
-                  ))}
+
+              {/* Heading and subtitle - P3: Show counter when locked, progress dots when unlocked */}
+              <div className="flex-1 text-left">
+                <div className="text-label font-extrabold text-text-primary">
+                  {completedCategories === 6 ? "State Quiz" : "State Quiz Locked"}
                 </div>
-              )}
-            </div>
+                <div className="text-caption text-text-secondary">
+                  {completedCategories === 6 
+                    ? "Test your knowledge"
+                    : `${completedCategories} of 6 challenges complete`}
+                </div>
+                
+                {/* P3: Progress dots - show when locked (not when unlocked) */}
+                {completedCategories < 6 && (
+                  <div className="flex items-center gap-1 mt-2">
+                    {Array.from({ length: 6 }).map((_, i) => (
+                      <div
+                        key={i}
+                        className={`h-1.5 w-1.5 rounded-full transition-colors duration-300 ${
+                          i < completedCategories
+                            ? "bg-accent-5"
+                            : "bg-accent-5/30"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
 
-            {/* Decorative sparkles */}
-            <div className="text-h4 flex-shrink-0">✨</div>
-          </button>
+              {/* Decorative sparkles */}
+              <div className="text-h4 flex-shrink-0">✨</div>
+            </button>
+          </div>
         </div>
       </div>
-
-
     </div>
   );
 }
