@@ -1149,20 +1149,91 @@ export function finishQuiz(
         });
       } else {
         // Stars didn't improve: show replay completion celebration with current XP
-        const quizXp = correctCount * 20;
+        const quizXp = (metrics.correctCount ?? 0) * 20;
+        
+        // Dynamically calculate region info for replay (reuse region mapping from first completion path)
+        let replayRegionKey = "north";
+        let replayRegionTotal = 6;
+
+        // Check all known regions (from passport-helpers REGIONS)
+        const REGION_MAPPINGS: Record<string, { states: string[]; total: number }> = {
+          north: {
+            states: [
+              "Punjab",
+              "Haryana",
+              "Himachal Pradesh",
+              "Uttarakhand",
+              "Uttar Pradesh",
+              "Rajasthan",
+            ],
+            total: 6,
+          },
+          south: {
+            states: ["Andhra Pradesh", "Telangana", "Karnataka", "Kerala", "Tamil Nadu"],
+            total: 5,
+          },
+          east: { states: ["West Bengal", "Odisha", "Bihar", "Jharkhand"], total: 4 },
+          central: { states: ["Madhya Pradesh", "Chhattisgarh"], total: 2 },
+          west: { states: ["Gujarat", "Maharashtra", "Goa"], total: 3 },
+          northeast: {
+            states: [
+              "Assam",
+              "Arunachal Pradesh",
+              "Manipur",
+              "Meghalaya",
+              "Mizoram",
+              "Nagaland",
+              "Sikkim",
+              "Tripura",
+            ],
+            total: 8,
+          },
+          unionTerritories: {
+            states: [
+              "Delhi",
+              "Jammu & Kashmir",
+              "Ladakh",
+              "Chandigarh",
+              "Puducherry",
+              "Andaman & Nicobar Islands",
+              "Lakshadweep",
+              "Dadra & Nagar Haveli and Daman & Diu",
+            ],
+            total: 8,
+          },
+        };
+
+        // Find which region this state belongs to
+        for (const [key, region] of Object.entries(REGION_MAPPINGS)) {
+          if (region.states.includes(stateName)) {
+            replayRegionKey = key;
+            replayRegionTotal = region.total;
+            break;
+          }
+        }
+
+        // Count completed states in this region on replay
+        const replayRegionInfo = REGION_MAPPINGS[replayRegionKey];
+        const replayRegionDone = replayRegionInfo.states.filter((s) =>
+          p.completed.includes(s),
+        ).length;
+
+        // Get previously earned state badges from p.badges[stateName]
+        const previouslyEarnedBadges = p.badges?.[stateName] ?? [];
+        
         replayCelebrations.push({
           type: "full" as const,
           stateName,
           stars: bestStars,
-          correctCount,
+          correctCount: metrics.correctCount ?? 0,
           totalQuestions: 6,
           quizXp,
           bonusXp: 0, // No bonus XP on replay
           stampDate: stampDate(),
-          earnedBadgeIds: [] as any, // No new badges on replay
-          regionKey: "north" as string,
-          regionDone: 0,
-          regionTotal: 0,
+          earnedBadgeIds: previouslyEarnedBadges as any, // Show previously earned badges
+          regionKey: replayRegionKey as string,
+          regionDone: replayRegionDone,
+          regionTotal: replayRegionTotal,
           streak: p.streak,
           leveledUp: false,
           levelName: undefined,
@@ -1201,7 +1272,7 @@ export function finishQuiz(
     const xpReward = 100; // State completion bonus
 
     // 4. Calculate quiz XP (20 per first-time correct answer)
-    const quizXp = correctCount * 20;
+    const quizXp = (metrics.correctCount ?? 0) * 20;
 
     firebaseEvents.stateCompleted({
       stateName,
@@ -1369,7 +1440,7 @@ export function finishQuiz(
           type: "full",
           stateName,
           stars: bestStars,
-          correctCount,
+          correctCount: metrics.correctCount ?? 0,
           totalQuestions: 6,
           quizXp,
           bonusXp: xpReward,
