@@ -2387,24 +2387,29 @@ function HubCard({
         cursor: locked || !canClick ? "not-allowed" : "pointer",
       }}
     >
-      {/* Top row: Number badge (left) + Icon (right) */}
+      {/* Top row: Number badge (left) + Icon (middle) + Checkmark badge (right) */}
       <div className="flex items-start justify-between mb-2">
         {/* Numbered badge in top-left */}
-        {index !== undefined && (
+        {index !== undefined && !done && (
           <div className="h-6 w-6 rounded-full bg-surface-card flex items-center justify-center text-caption font-black text-text-primary shadow-soft flex-shrink-0">
             {String(index + 1).padStart(2, "0")}
           </div>
         )}
         
-        {/* Checkmark badge for completed - replaces number */}
+        {/* Empty space when done (so checkmark aligns right) */}
         {done && (
-          <div className="h-6 w-6 rounded-full bg-action-success text-text-on-primary flex items-center justify-center text-caption font-black shadow-soft flex-shrink-0">
+          <div className="h-6 w-6" />
+        )}
+
+        {/* Icon - center */}
+        <div className="text-h3 mx-auto flex-shrink-0">{icon}</div>
+
+        {/* Checkmark badge for completed - top right, green with white checkmark */}
+        {done && (
+          <div className="h-8 w-8 rounded-full bg-action-success text-text-on-primary flex items-center justify-center text-base font-black shadow-lg flex-shrink-0 border-2 border-white">
             ✓
           </div>
         )}
-
-        {/* Icon - top right */}
-        <div className="text-h3 ml-auto flex-shrink-0">{icon}</div>
       </div>
 
       {/* Title - grows to fill space */}
