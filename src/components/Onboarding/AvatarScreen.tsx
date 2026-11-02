@@ -97,103 +97,150 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
   };
 
   return (
-    <div className="w-full h-full flex flex-col select-none touch-none relative overflow-hidden bg-[#87CEEB]">
-      {/* Background Image */}
+    <div className="w-full h-full flex flex-col select-none touch-none relative overflow-hidden">
+      {/* Background Image - Full Screen */}
       <div
-        className="absolute inset-0 bg-cover bg-center z-0"
-        style={{ backgroundImage: `url(${adventureBg})` }}
+        className="absolute inset-0 w-full h-full bg-cover bg-center z-0"
+        style={{ 
+          backgroundImage: `url(${adventureBg})`,
+          backgroundPosition: "center top",
+          backgroundSize: "cover"
+        }}
       />
 
-      {/* Header Gradient Overlay */}
-      <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-black/15 to-transparent z-5" />
+      {/* Subtle overlay for text readability at top and bottom */}
+      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black/20 to-transparent z-5" />
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/10 to-transparent z-5" />
 
       <ConfettiBurst trigger={confettiBurst} size="small" />
 
-      {/* Header with Back Button and Step Badge */}
-      <div className="relative z-10 flex-shrink-0 px-4 pt-3 pb-2">
-        <div className="flex items-center justify-between mb-2">
-          {/* Back Button */}
+      {/* Header Section */}
+      <div className="relative z-10 flex-shrink-0 px-4 pt-3 pb-3">
+        {/* Back Button + Step Badge Row */}
+        <div className="flex items-center justify-between mb-3">
+          {/* Back Button - White Circle */}
           <button
             type="button"
             onClick={() => window.history.back()}
-            className="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center hover:shadow-lg active:scale-95 transition-all"
+            className="h-10 w-10 rounded-full bg-white shadow-md flex items-center justify-center hover:shadow-lg active:scale-95 transition-all flex-shrink-0"
+            aria-label="Go back"
           >
-            <span className="text-xl">‹</span>
+            <span className="text-lg font-bold text-ink">&lt;</span>
           </button>
 
-          {/* Step Badge - Updated to 1/2 */}
-          <div className="bg-white rounded-full px-4 py-1 shadow-md">
-            <span className="text-xs font-bold text-text-primary">Step 1/2</span>
+          {/* Step Badge - White Pill */}
+          <div className="bg-white rounded-full px-3 py-1 shadow-md">
+            <span className="text-xs font-black text-ink">Step 1/3</span>
           </div>
         </div>
 
-        {/* Title */}
-        <div className="text-center mt-2">
-          <div className="text-2xl font-black text-ink">
+        {/* Title Section - Premium Styling */}
+        <div className="text-center mt-1">
+          {/* Main Heading */}
+          <div className="text-2xl font-black text-ink leading-tight">
             Pick Your
-            <br />
-            <span className="text-4xl bg-gradient-to-r from-[#FFD700] via-[#FFA500] to-[#FF8C00] bg-clip-text text-transparent">
+          </div>
+          
+          {/* Avatar Text with Golden Gradient */}
+          <div className="text-5xl font-black leading-tight mt-0">
+            <span className="bg-gradient-to-r from-[#FFD700] via-[#FFA500] to-[#FF6B35] bg-clip-text text-transparent">
               Avatar
             </span>
           </div>
-          <p className="text-xs text-text-secondary font-medium mt-1">Choose your explorer to start your adventure!</p>
+
+          {/* Subtitle */}
+          <p className="text-xs text-ink font-semibold mt-1 leading-tight">
+            Choose your explorer to start your adventure!
+          </p>
         </div>
       </div>
 
-      {/* Scrollable Content */}
-      <div className="relative z-10 flex-1 overflow-y-auto">
-        <div className="px-4 py-4 pb-safe flex flex-col">
-          {/* Avatar Grid - 3 columns with proper spacing */}
+      {/* Scrollable Avatar Grid Section */}
+      <div className="relative z-10 flex-1 overflow-y-auto px-4">
+        <div className="py-4 pb-safe">
+          {/* Avatar Grid - 3 Columns */}
           <div className="grid grid-cols-3 gap-3 mb-4">
             {AVATAR_IDS.map((avatarId) => (
               <button
                 key={avatarId}
                 type="button"
                 onClick={() => handleAvatarSelect(avatarId)}
-                className={`relative aspect-square rounded-3xl overflow-hidden transition-all duration-300 flex items-center justify-center
-                  ${animatingId === avatarId ? "avatar-bounce" : ""}
-                `}
+                className="relative aspect-square rounded-3xl overflow-hidden transition-all duration-300 flex items-center justify-center focus:outline-none"
+                aria-label={`Select ${getAvatarName(avatarId)}`}
                 style={{
                   backgroundColor: getAvatarBackgroundColor(avatarId),
-                  animation:
-                    animatingId === avatarId
-                      ? "avatar-bounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)"
-                      : undefined,
                   boxShadow:
                     selectedAvatar === avatarId
-                      ? "0 0 0 5px white, 0 4px 12px rgba(0,0,0,0.15)"
-                      : "0 4px 8px rgba(0,0,0,0.1)",
-                  transform: selectedAvatar === avatarId ? "scale(1)" : "scale(1)",
+                      ? "0 0 0 4px white, 0 0 0 6px #FFD700, 0 8px 16px rgba(0,0,0,0.2)"
+                      : "0 4px 12px rgba(0,0,0,0.15)",
+                  transform: selectedAvatar === avatarId ? "scale(1.02)" : "scale(1)",
                 } as React.CSSProperties}
               >
+                {/* Avatar Image */}
                 <img
                   src={getAvatarImage(avatarId)}
                   alt={getAvatarName(avatarId)}
                   className="w-full h-full object-cover"
+                  loading="lazy"
                 />
 
-                {/* Checkmark for Selected */}
+                {/* Selected Checkmark Badge - Bottom Right */}
                 {selectedAvatar === avatarId && (
-                  <div className="absolute bottom-1 right-1 bg-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg">
-                    <span className="text-lg text-accent-1">✓</span>
+                  <div
+                    className="absolute bottom-2 right-2 bg-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg border-2 border-white animate-scale-in"
+                    style={{
+                      animation: "scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                    }}
+                  >
+                    <span className="text-base font-black" style={{ color: "#6366F1" }}>
+                      ✓
+                    </span>
                   </div>
+                )}
+
+                {/* Bounce animation on select */}
+                {animatingId === avatarId && (
+                  <style>{`
+                    @keyframes cardBounce {
+                      0%, 100% { transform: scale(1.02); }
+                      50% { transform: scale(1.12); }
+                    }
+                  `}</style>
                 )}
               </button>
             ))}
           </div>
 
-          {/* Explorer Summary Card - Bottom Section */}
+          {/* Explorer Summary Card */}
           {selectedAvatar && (
-            <div className="rounded-3xl bg-gradient-to-br from-[#FFFACD] to-[#FFE4B5] p-4 mb-4 shadow-lg animate-fade-in border-2 border-white/80">
+            <div
+              className="rounded-3xl p-4 mb-4 shadow-lg border-2 border-white/80 animate-fade-in-up"
+              style={{
+                background: "linear-gradient(135deg, #FFFACD 0%, #FFE4B5 100%)",
+                animation: "fadeInUp 0.4s ease-out",
+              }}
+            >
               <div className="flex items-center gap-3">
+                {/* Avatar Thumbnail */}
                 <img
                   src={getAvatarImage(selectedAvatar)}
                   alt={getAvatarName(selectedAvatar)}
-                  className="w-16 h-16 rounded-2xl border-3 border-white shadow-md flex-shrink-0"
+                  className="w-14 h-14 rounded-2xl border-3 border-white shadow-md flex-shrink-0 object-cover"
                 />
+
+                {/* Explorer Info */}
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs font-bold text-amber-900 tracking-wider">Your Explorer</div>
-                  <div className="text-lg font-black text-ink truncate">{getAvatarName(selectedAvatar)}</div>
+                  <div className="text-xs font-black text-amber-900 tracking-wider">
+                    YOUR EXPLORER
+                  </div>
+                  <div className="text-h4 font-black text-ink truncate">
+                    {getAvatarName(selectedAvatar)}
+                  </div>
+                </div>
+
+                {/* Compass Icon */}
+                <div className="text-2xl flex-shrink-0">
+                  🧭
                 </div>
               </div>
             </div>
@@ -204,28 +251,53 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
             <button
               type="button"
               onClick={handleNext}
-              className="w-full py-4 px-4 rounded-full bg-gradient-to-r from-[#7C3AED] to-[#6366F1] text-white font-black text-base flex items-center justify-center gap-2 shadow-lg hover:shadow-xl active:scale-95 transition-all"
+              className="w-full py-3 px-4 rounded-full bg-gradient-to-r from-[#7650F5] to-[#6366F1] text-white font-black text-base flex items-center justify-center gap-2 shadow-lg hover:shadow-xl active:scale-95 transition-all mb-4"
+              aria-label="Continue to next step"
             >
-              Continue
-              <span>→</span>
+              <span>Continue</span>
+              <span className="text-lg">→</span>
             </button>
           )}
         </div>
       </div>
 
+      {/* CSS Animations */}
       <style>{`
-        @keyframes avatar-bounce {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.15); }
+        @keyframes scaleIn {
+          from {
+            opacity: 0;
+            transform: scale(0.6);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
         }
-        
-        @keyframes fade-in {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
+
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(16px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
-        
-        .animate-fade-in {
-          animation: fade-in 0.3s ease-out;
+
+        .animate-scale-in {
+          animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .animate-fade-in-up {
+          animation: fadeInUp 0.4s ease-out;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .animate-scale-in,
+          .animate-fade-in-up {
+            animation: none;
+          }
         }
       `}</style>
     </div>
