@@ -18,7 +18,6 @@ import { Route as ExplorerRouteImport } from './routes/explorer'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as JourneyRouteImport } from './routes/journey'
 import { Route as MeRouteImport } from './routes/me'
-import { Route as ParentRouteImport } from './routes/parent'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ThemesRouteImport } from './routes/themes'
 import { Route as WelcomeRouteImport } from './routes/welcome'
@@ -74,11 +73,6 @@ const JourneyRoute = JourneyRouteImport.update({
 const MeRoute = MeRouteImport.update({
   id: '/me',
   path: '/me',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ParentRoute = ParentRouteImport.update({
-  id: '/parent',
-  path: '/parent',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -147,7 +141,6 @@ export interface FileRoutesByFullPath {
   '/home': typeof HomeRoute
   '/journey': typeof JourneyRoute
   '/me': typeof MeRoute
-  '/parent': typeof ParentRoute
   '/privacy': typeof PrivacyRoute
   '/themes': typeof ThemesRoute
   '/welcome': typeof WelcomeRoute
@@ -170,7 +163,6 @@ export interface FileRoutesByTo {
   '/home': typeof HomeRoute
   '/journey': typeof JourneyRoute
   '/me': typeof MeRoute
-  '/parent': typeof ParentRoute
   '/privacy': typeof PrivacyRoute
   '/themes': typeof ThemesRoute
   '/welcome': typeof WelcomeRoute
@@ -194,7 +186,6 @@ export interface FileRoutesById {
   '/home': typeof HomeRoute
   '/journey': typeof JourneyRoute
   '/me': typeof MeRoute
-  '/parent': typeof ParentRoute
   '/privacy': typeof PrivacyRoute
   '/themes': typeof ThemesRoute
   '/welcome': typeof WelcomeRoute
@@ -219,7 +210,6 @@ export interface FileRouteTypes {
     | '/home'
     | '/journey'
     | '/me'
-    | '/parent'
     | '/privacy'
     | '/themes'
     | '/welcome'
@@ -242,7 +232,6 @@ export interface FileRouteTypes {
     | '/home'
     | '/journey'
     | '/me'
-    | '/parent'
     | '/privacy'
     | '/themes'
     | '/welcome'
@@ -265,7 +254,6 @@ export interface FileRouteTypes {
     | '/home'
     | '/journey'
     | '/me'
-    | '/parent'
     | '/privacy'
     | '/themes'
     | '/welcome'
@@ -289,7 +277,6 @@ export interface RootRouteChildren {
   HomeRoute: typeof HomeRoute
   JourneyRoute: typeof JourneyRoute
   MeRoute: typeof MeRoute
-  ParentRoute: typeof ParentRoute
   PrivacyRoute: typeof PrivacyRoute
   ThemesRoute: typeof ThemesRoute
   WelcomeRoute: typeof WelcomeRoute
@@ -366,13 +353,6 @@ declare module '@tanstack/react-router' {
       path: '/me'
       fullPath: '/me'
       preLoaderRoute: typeof MeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/parent': {
-      id: '/parent'
-      path: '/parent'
-      fullPath: '/parent'
-      preLoaderRoute: typeof ParentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -465,7 +445,6 @@ const rootRouteChildren: RootRouteChildren = {
   HomeRoute: HomeRoute,
   JourneyRoute: JourneyRoute,
   MeRoute: MeRoute,
-  ParentRoute: ParentRoute,
   PrivacyRoute: PrivacyRoute,
   ThemesRoute: ThemesRoute,
   WelcomeRoute: WelcomeRoute,

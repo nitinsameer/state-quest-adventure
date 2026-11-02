@@ -27,15 +27,8 @@ import { getJourneyMotivationalMessage } from "@/lib/journey-messaging";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { PassportSeedling } from "@/components/PassportSeedling";
 import { AudioSettingRow } from "@/components/AudioSettingToggle";
-import { ResetPINDialog } from "@/components/ResetPINDialog";
 import { DebugThemeSelector } from "@/components/DebugThemeSelector";
 import { StatePerformanceBadgesView } from "@/components/state-performance-badges-view";
-import {
-  grantFeatureConsent,
-  revokeFeatureConsent,
-  hasFeatureConsent,
-  subscribeConsentChanges,
-} from "@/lib/parental-consent";
 import { LanguageToggle, type LanguageCode } from "@/components/LanguageToggle";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
@@ -4119,7 +4112,6 @@ function ProfileScreenContent() {
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
   const [isSelectingAvatar, setIsSelectingAvatar] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState<AvatarId>(p.avatar as AvatarId);
-  const [showResetPINDialog, setShowResetPINDialog] = useState(false);
   const [hasFileConsent, setHasFileConsent] = useState(() => {
     if (typeof window === "undefined") return false;
     return hasFeatureConsent("file");
@@ -4515,17 +4507,6 @@ function ProfileScreenContent() {
         </div>
       </div>
 
-      {/* Reset PIN Dialog - requires parental PIN to reset progress */}
-      <ResetPINDialog
-        open={showResetPINDialog}
-        onConfirm={() => {
-          setShowResetPINDialog(false);
-          resetProgress();
-        }}
-        onCancel={() => {
-          setShowResetPINDialog(false);
-        }}
-      />
     </div>
   );
 }
@@ -4665,8 +4646,9 @@ function ParentZonePlaceholder() {
 
     setPinSaveStatus("saving");
     try {
-      const { setPin } = await import("@/lib/parent-gate");
-      const success = await setPin(newPIN);
+      // REMOVED: const { setPin } = await import("@/lib/parent-gate");
+      // REMOVED: Parent PIN feature removed
+      const success = false;
       if (success) {
         setPinSaveStatus("saved");
         setTimeout(() => {
