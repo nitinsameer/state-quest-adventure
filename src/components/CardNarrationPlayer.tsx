@@ -34,7 +34,6 @@ export function CardNarrationPlayer({
     const soundEnabled = localStorage.getItem(STORAGE_KEYS.sound) === "1";
     return soundEnabled;
   });
-  const [showPermissionPrompt, setShowPermissionPrompt] = useState(false);
   const ttsState = useTtsState();
   const isCurrentPlaying = ttsState.narrationId === narrationId && ttsState.isPlaying;
   const [hasSupport] = useState(isTtsAvailable());
@@ -58,7 +57,7 @@ export function CardNarrationPlayer({
 
   const handlePlayClick = () => {
     if (!audioNarrationEnabled) {
-      setShowPermissionPrompt(true);
+      // Audio disabled by user via Profile settings
       return;
     }
 
@@ -72,56 +71,12 @@ export function CardNarrationPlayer({
     }
   };
 
-  const handleEnableAudio = () => {
-    localStorage.setItem(STORAGE_KEYS.sound, "1");
-    setAudioNarrationEnabled(true);
-    setShowPermissionPrompt(false);
-
-    // Auto-play the narration immediately after enabling
-    playTts(narrationId, text, {
-      speed: 0.85,
-      pitch: 1.05,
-    });
-  };
-
   if (!hasSupport) {
     return null;
   }
 
   return (
     <div className="w-full">
-      {/* Permission Prompt Modal */}
-      {showPermissionPrompt && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 p-(--padding-base)" style={{backgroundColor: 'var(--scrim)'}}>
-          <div className="bg-surface-card rounded-3xl p-(--padding-lg) max-w-sm shadow-2xl animate-in fade-in scale-in">
-            <div className="text-center">
-              <div className="text-5xl mb-(--space-2)">{EMOJI.audio.headphones}</div>
-              <h3
-                className="text-h4 font-bold mb-(--space-0-5)"
-                style={{ color: "var(--text-primary)" }}
-              >
-                Enable Audio?
-              </h3>
-              <p className="text-body-sm mb-(--space-2)" style={{ color: "var(--text-primary)" }}>
-                Would you like to enable audio to hear this story read aloud?
-              </p>
-              <div className="flex gap-(--gap-base)">
-                <KidsButton
-                  variant="secondary"
-                  size="md"
-                  onClick={() => setShowPermissionPrompt(false)}
-                >
-                  Not Now
-                </KidsButton>
-                <KidsButton variant="primary" size="md" onClick={handleEnableAudio}>
-                  Enable Audio
-                </KidsButton>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Narration Player Card */}
       <div className="mt-(--space-0-5) p-(--padding-base) bg-fb-info-bg rounded-2xl border-2 border-fb-info-border">
         <div className="flex items-center gap-(--gap-base)">
@@ -161,7 +116,7 @@ export function CardNarrationPlayer({
               </div>
             ) : (
               <div className="text-caption text-action-primary-bg font-semibold mt-(--space-0-25)">
-                {EMOJI.audio.speaker} Tap to enable audio
+                {EMOJI.audio.speaker} Enable in Profile settings
               </div>
             )}
           </div>

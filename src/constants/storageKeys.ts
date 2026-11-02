@@ -24,6 +24,7 @@ export const STORAGE_KEYS = {
 
   // === Sound & Effects ===
   sound: "india-explorer:sound:v1",
+  audioPermissionShown: "india-explorer:audio-permission-shown:v1",
 
   // === Analytics & Events ===
   eventQueue: "india-explorer:event-queue:v1",

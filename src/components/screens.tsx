@@ -418,11 +418,6 @@ export function CreateProfileScreen() {
 
     saveProfile({ name: avatarName, avatar: selectedAvatar || "explorer-hat", ageBand: ageToSave });
 
-    // Grant feature consents for parental consent
-    grantFeatureConsent("analytics");
-    grantFeatureConsent("audio");
-    grantFeatureConsent("file");
-
     // Navigate to home after celebration
     setTimeout(() => navigate({ to: "/home" }), 300);
   };
@@ -3958,16 +3953,6 @@ function ProfileScreenContent() {
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
   const [isSelectingAvatar, setIsSelectingAvatar] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState<AvatarId>(p.avatar as AvatarId);
-  const [hasFileConsent, setHasFileConsent] = useState(() => {
-    return false; // File operations no longer gated by consent
-  });
-  const [hasAudioConsent, setHasAudioConsent] = useState(() => {
-    return localStorage.getItem(STORAGE_KEYS.sound) === "1"; // Use sound toggle instead
-  });
-
-  // File consent no longer used (removed parental gates)
-
-  // Audio consent replaced by sound toggle (STORAGE_KEYS.sound)
 
   // Avatar images list for ProfileScreen
   const avatarImages = [
@@ -4219,58 +4204,6 @@ function ProfileScreenContent() {
           <SoundToggleRow />
         </div>
 
-        {/* File Permission Card - Simple Toggle */}
-        <div className="animate-fade-in" style={{ animationDelay: "210ms" }}>
-          <button
-            type="button"
-            role="switch"
-            aria-checked={hasFileConsent}
-            aria-label="Save pictures permission"
-            onClick={() => {
-              if (hasFileConsent) {
-                // File operations always allowed (no consent gate)
-                fxTap();
-              } else {
-                // Grant consent directly (no dialog)
-                grantFeatureConsent("file");
-                fxTap();
-              }
-            }}
-            className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
-          >
-            <div className="h-12 w-12 rounded-2xl bg-accent-5 flex items-center justify-center text-2xl">
-              {EMOJI.feedback.trophy}
-            </div>
-            <div className="flex-1 text-left">
-              <div className="text-display font-extrabold text-[15px] leading-tight">
-                Save Pictures
-              </div>
-              <div className="text-[11px] font-bold">
-                {hasFileConsent ? (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-success/10 text-success border border-success">
-                    Active ✓
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-sunken text-text-secondary border border-surface-sunken">
-                    Tap to enable
-                  </span>
-                )}
-              </div>
-            </div>
-            <span
-              className="h-7 w-12 rounded-full flex items-center px-1 transition"
-              style={
-                hasFileConsent
-                  ? { backgroundColor: "var(--accent-3)" }
-                  : { backgroundColor: "var(--color-muted-bg)" }
-              }
-            >
-              <span
-                className={`h-5 w-5 rounded-full bg-text-on-header shadow transition-transform ${hasFileConsent ? "translate-x-5" : "translate-x-0"}`}
-              />
-            </span>
-          </button>
-        </div>
         {/* Streak Section */}
         <div className="animate-fade-in" style={{ animationDelay: "250ms" }}>
           {(() => {
@@ -4344,11 +4277,6 @@ function ProfileScreenContent() {
 
 function SoundToggleRow() {
   const soundOn = useSoundOn();
-  const [audioEnabled, setAudioEnabled] = useState(() => {
-    return localStorage.getItem(STORAGE_KEYS.sound) === "1";
-  });
-
-  // Audio state managed via sound toggle (STORAGE_KEYS.sound)
 
   const toggleSound = () => {
     setSoundOn(!soundOn);
@@ -4358,36 +4286,24 @@ function SoundToggleRow() {
     }
   };
 
-  const toggleAudio = () => {
-    const newState = !audioEnabled;
-    if (newState) {
-      grantFeatureConsent("audio");
-      setAudioEnabled(true);
-      setTimeout(() => fxTap(), 100);
-    } else {
-      localStorage.setItem(STORAGE_KEYS.sound, "0");
-      setAudioEnabled(false);
-    }
-  };
-
   return (
     <div className="space-y-3">
-      {/* Sound Effects Toggle - Controls volume/output, not initialization */}
+      {/* Unified Sound & Audio Toggle - Controls both effects and narration */}
       <button
         type="button"
         role="switch"
         aria-checked={soundOn}
-        aria-label="Sound effects volume"
+        aria-label="Sound effects and audio narration"
         onClick={toggleSound}
         className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
       >
         <div className="h-12 w-12 rounded-2xl bg-accent-5 flex items-center justify-center text-2xl">
-          {EMOJI.action.play}
+          {EMOJI.audio.music}
         </div>
         <div className="flex-1 text-left">
-          <div className="text-display font-extrabold text-[15px] leading-tight">Sound Effects</div>
+          <div className="text-display font-extrabold text-[15px] leading-tight">Sound & Audio</div>
           <div className="text-[11px] font-bold text-text-secondary">
-            {soundOn ? "Sound & vibrations enabled" : "Sound & vibrations muted"}
+            {soundOn ? "Effects & stories enabled" : "Sound & stories muted"}
           </div>
         </div>
         <span
@@ -4400,48 +4316,6 @@ function SoundToggleRow() {
         >
           <span
             className={`h-5 w-5 rounded-full bg-text-on-header shadow transition-transform ${soundOn ? "translate-x-5" : "translate-x-0"}`}
-          />
-        </span>
-      </button>
-
-      {/* Audio Narration Permission Card - Unified Style */}
-      <button
-        type="button"
-        role="switch"
-        aria-checked={audioEnabled}
-        aria-label="Audio narration permission"
-        onClick={toggleAudio}
-        className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
-      >
-        <div className="h-12 w-12 rounded-2xl bg-accent-5 flex items-center justify-center text-2xl">
-          {EMOJI.audio.stories}
-        </div>
-        <div className="flex-1 text-left">
-          <div className="text-display font-extrabold text-[15px] leading-tight">
-            Audio Narration
-          </div>
-          <div className="text-[11px] font-bold">
-            {audioEnabled ? (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-success/10 text-success border border-success/30">
-                Active ✓
-              </span>
-            ) : (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-sunken text-text-secondary border border-border-color">
-                Tap to enable
-              </span>
-            )}
-          </div>
-        </div>
-        <span
-          className="h-7 w-12 rounded-full flex items-center px-1 transition"
-          style={
-            audioEnabled
-              ? { backgroundColor: "var(--accent-3)" }
-              : { backgroundColor: "var(--color-muted-bg)" }
-          }
-        >
-          <span
-            className={`h-5 w-5 rounded-full bg-text-on-header shadow transition-transform ${audioEnabled ? "translate-x-5" : "translate-x-0"}`}
           />
         </span>
       </button>
