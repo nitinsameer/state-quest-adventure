@@ -946,16 +946,13 @@ function HomeDashboardContent() {
           );
         })()}
 
-        {/* HERO CARD: Next State - Entire card is tappable */}
+        {/* HERO CARD: Next State - Attractive Layout with Location Pin and CTA Button */}
         <div
           className="flex-1 min-h-0 flex flex-col"
           style={{ padding: "var(--space-1-5) var(--space-1-5) var(--space-1-5)" }}
         >
-          <Link
-            to="/state/$slug/learn"
-            params={{ slug: stateSlug(current.name) }}
-            onClick={() => fxTap()}
-            className={`flex-1 min-h-0 flex flex-col rounded-3xl overflow-hidden shadow-elevated-3 relative text-white no-underline transition-all duration-300 hover:shadow-elevated-hover hover:-translate-y-1 active:scale-95 cursor-pointer border-2 border-accent-1 animate-hero-pulse-border ${
+          <div
+            className={`flex-1 min-h-0 flex flex-col rounded-3xl overflow-hidden shadow-elevated-3 relative text-white transition-all duration-300 hover:shadow-elevated-hover active:scale-95 cursor-pointer border-2 border-accent-1 animate-hero-pulse-border ${
               rippleKey > 0 ? "hero-card-ripple" : ""
             } animate-hero-pop-in`}
             onMouseDown={() => {
@@ -978,13 +975,26 @@ function HomeDashboardContent() {
               style={{ background: "linear-gradient(180deg, transparent 30%, var(--scrim) 100%)" }}
             />
 
-            {/* Content Layer - Centered State Name */}
-            <div className="absolute inset-0 flex items-end justify-center pb-8">
-              <div className="text-5xl font-black text-white text-center leading-tight">
-                {current.name}
-              </div>
+            {/* State Name at Top - Location Pin + State Name */}
+            <div className="absolute top-0 left-0 right-0 p-5 flex items-center gap-2">
+              <div className="text-xl">📍</div>
+              <div className="text-body font-bold text-white">{current.name}</div>
             </div>
-          </Link>
+
+            {/* Explore State Button - Bottom CTA */}
+            <div className="absolute bottom-0 left-0 right-0 p-5 flex justify-center">
+              <Link
+                to="/state/$slug/learn"
+                params={{ slug: stateSlug(current.name) }}
+                onClick={() => fxTap()}
+                className="px-6 py-3 rounded-full bg-accent-2 text-text-on-primary font-bold text-body flex items-center gap-2 no-underline transition-all hover:shadow-lg active:scale-95 cursor-pointer hover:-translate-y-0.5"
+              >
+                <span>▶</span>
+                <span>Explore State</span>
+                <span>→</span>
+              </Link>
+            </div>
+          </div>
         </div>
 
         {/* Progress Card: Your progress */}
