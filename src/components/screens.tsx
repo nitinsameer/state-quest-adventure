@@ -1471,26 +1471,37 @@ export function JourneyMapScreen() {
         }
       `}</style>
 
-      {/* Compact Header */}
-      <div className="sticky top-0 z-40 px-5 pt-3 pb-3 bg-bg-header rounded-b-3xl relative overflow-hidden shadow-elevated-1">
-        <Cloud className="absolute top-1 right-3 w-12 opacity-30 pointer-events-none" />
+      {/* Scenic Header with Background Image */}
+      <div className="sticky top-0 z-40 relative h-24 overflow-hidden shadow-elevated-1">
+        {/* Background image - scenic backdrop */}
+        <img
+          src={stateHeaderBg}
+          alt="Header background"
+          className="absolute inset-0 w-full h-full object-cover"
+          loading="lazy"
+          decoding="async"
+        />
         
-        <div className="flex items-center justify-between relative z-10">
+        {/* Header content overlay - back button, title, star counter */}
+        <div className="relative z-10 h-full flex items-center justify-between px-5">
+          {/* Back button - left side */}
           <button
             onClick={goBack}
             aria-label="Go back"
-            className="h-10 w-10 rounded-full ui-button ui-accent-1-soft flex items-center justify-center text-xl flex-shrink-0 transition-all duration-200 hover:scale-110 active:scale-95"
+            className="h-10 w-10 rounded-full bg-surface-card flex items-center justify-center text-text-primary flex-shrink-0 transition-all active:scale-95 shadow-soft"
           >
-            &lt;
+            <span className="text-label">‹</span>
           </button>
 
-          <h1 className="text-h4 text-display text-text-on-header font-extrabold flex-1 text-center">
+          {/* Center: India Journey title */}
+          <h1 className="flex-1 text-center text-h3 font-extrabold text-text-on-header leading-tight px-4">
             India Journey
           </h1>
 
-          <div className="flex items-center gap-1 ui-chip ui-accent-4-soft flex-shrink-0">
-            <span className="text-base">{EMOJI.action.star}</span>
-            <span className="text-h6 font-black text-accent-4-ink">{p.xp}</span>
+          {/* Star counter - right side */}
+          <div className="h-10 px-3 rounded-full bg-surface-card flex items-center justify-center gap-1 text-text-primary flex-shrink-0 shadow-soft">
+            <span className="text-label">{EMOJI.action.star}</span>
+            <span className="text-caption font-extrabold">{p.xp}</span>
           </div>
         </div>
       </div>
@@ -1563,34 +1574,42 @@ export function JourneyMapScreen() {
                   }}
                   disabled={isLocked}
                   className="w-full text-left transition-all active:scale-98"
-                  style={{
-                    backgroundColor: isDone
-                      ? "var(--accent-3-soft)"
-                      : isCurrent
-                        ? "var(--surface-card)"
-                        : "var(--surface-muted)",
-                    borderColor: isCurrent ? "var(--accent-5)" : isDone ? "var(--accent-3)" : "transparent",
-                  }}
                 >
                   <div
                     className="p-3 rounded-2xl border-2 transition-all duration-300"
                     style={{
-                      borderColor: isCurrent ? "var(--accent-5)" : isDone ? "var(--accent-3-soft)" : "transparent",
+                      borderColor: isCurrent ? "var(--accent-5)" : isDone ? "var(--accent-3)" : "transparent",
+                      backgroundColor: isDone
+                        ? "var(--accent-3-soft)"
+                        : isCurrent
+                          ? "var(--surface-card)"
+                          : "var(--surface-muted)",
                     }}
                   >
-                    {/* Show illustration for completed and current, not for locked */}
-                    {(isDone || isCurrent) && (
+                    {/* Current Destination: Show compact illustration */}
+                    {isCurrent && (
                       <img
                         src={artSrc}
                         alt={state.name}
-                        className="w-full h-20 object-contain mb-2 flex-shrink-0"
+                        className="w-16 h-16 object-contain mb-2 flex-shrink-0 mx-auto"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    )}
+
+                    {/* Completed Destination: Show small illustration */}
+                    {isDone && (
+                      <img
+                        src={artSrc}
+                        alt={state.name}
+                        className="w-12 h-12 object-contain mb-1.5 flex-shrink-0 mx-auto"
                         loading="lazy"
                         decoding="async"
                       />
                     )}
 
                     {/* Destination name and status */}
-                    <div className="flex items-start gap-2 mb-2">
+                    <div className="flex items-start gap-2">
                       <div className="flex-1 min-w-0">
                         {isCurrent && (
                           <div className="text-xs font-bold text-accent-5 mb-0.5 uppercase tracking-wide">
@@ -1611,7 +1630,7 @@ export function JourneyMapScreen() {
                         </h3>
                       </div>
 
-                      {/* Status indicators */}
+                      {/* Status indicators - right aligned */}
                       {isDone && (
                         <div className="text-accent-3 text-lg font-bold animate-journey-completed-glow flex-shrink-0">
                           {EMOJI.action.done}
@@ -1619,7 +1638,7 @@ export function JourneyMapScreen() {
                       )}
                       {isLocked && (
                         <div className="text-text-secondary text-base flex-shrink-0">
-                          {EMOJI.action.fire}
+                          🔒
                         </div>
                       )}
                     </div>
@@ -1632,7 +1651,7 @@ export function JourneyMapScreen() {
                           fxTap();
                           setView({ screen: "intro", name: state.name });
                         }}
-                        className="w-full py-2 rounded-xl bg-accent-5 text-on-header font-bold text-sm transition-all active:scale-95 flex items-center justify-center gap-1"
+                        className="w-full mt-3 py-2.5 rounded-xl bg-accent-5 text-on-header font-bold text-sm transition-all active:scale-95 flex items-center justify-center gap-1"
                       >
                         {EMOJI.action.play} Play
                       </button>
