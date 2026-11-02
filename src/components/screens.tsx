@@ -871,7 +871,7 @@ function HomeDashboardContent() {
             {/* Greeting - Namaste and name on one line, Explorer below */}
             <div className="text-text-on-header">
               <div className="text-h4 text-display leading-tight whitespace-nowrap">
-                Namaste, {p?.name?.split(" ")[0] || "Explorer"}! {EMOJI.action.wave}
+                Namaste, {p?.name?.split(" ")[0] || "Explorer"}!
               </div>
               <div className="text-h4 font-extrabold text-accent-3-ink animate-explorer-breathing">
                 Explorer
@@ -4065,11 +4065,21 @@ function ProfileScreenContent() {
   const goBack = useGoBack();
   const stampsCollected = Object.keys(p.stamps ?? {}).length;
 
+  const isValidName = (name: string): boolean => {
+    // Only alphabets allowed, max 6 characters, no spaces or special chars
+    return /^[a-zA-Z]{1,6}$/.test(name.trim());
+  };
+
   const handleSaveName = () => {
     const trimmedName = tempName.trim();
     if (!trimmedName || trimmedName.length === 0) {
       setTempName(p.name); // Reset to original
       setIsEditing(false);
+      return;
+    }
+
+    // Validate name format
+    if (!isValidName(trimmedName)) {
       return;
     }
 
@@ -4144,28 +4154,53 @@ function ProfileScreenContent() {
           {/* Name Section - Edit Mode or Display Mode */}
           {isEditing ? (
             <div className="mt-4 w-full max-w-xs flex flex-col gap-2">
-              <input
-                autoFocus
-                value={tempName}
-                onChange={(e) => setTempName(e.target.value.slice(0, 20))}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") handleSaveName();
-                  if (e.key === "Escape") handleCancelEdit();
-                }}
-                placeholder="Enter name"
-                maxLength={20}
-                className="h-12 rounded-xl bg-surface-card text-center text-display text-lg font-extrabold text-text-primary outline-none border-2 border-border-color"
-              />
+              <div>
+                <input
+                  autoFocus
+                  value={tempName}
+                  onChange={(e) => {
+                    // Only allow alphabets, limit to 6 characters
+                    const filtered = e.target.value.replace(/[^a-zA-Z]/g, "").slice(0, 6);
+                    setTempName(filtered);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && isValidName(tempName)) handleSaveName();
+                    if (e.key === "Escape") handleCancelEdit();
+                  }}
+                  placeholder="Enter name (max 6 letters)"
+                  maxLength={6}
+                  className={`h-12 rounded-xl bg-surface-card text-center text-display text-lg font-extrabold outline-none border-2 transition ${
+                    tempName.length > 0 && !isValidName(tempName)
+                      ? "border-warning text-warning"
+                      : "border-border-color text-text-primary"
+                  }`}
+                />
+              </div>
+              
+              {/* Validation feedback */}
+              {tempName.length > 0 && !isValidName(tempName) && (
+                <div className="text-caption text-warning text-center font-bold">
+                  Only letters allowed, max 6 characters
+                </div>
+              )}
+              {tempName.length === 6 && isValidName(tempName) && (
+                <div className="text-caption text-success text-center font-bold">
+                  ✓ Name is valid
+                </div>
+              )}
+              
               <div className="flex gap-2">
                 <button
                   onClick={handleSaveName}
-                  disabled={saveStatus === "saving"}
+                  disabled={saveStatus === "saving" || !isValidName(tempName)}
                   className={`flex-1 h-10 rounded-lg text-display font-extrabold text-text-on-primary text-sm transition ${
-                    saveStatus === "saved"
-                      ? "bg-success"
-                      : saveStatus === "saving"
-                        ? "bg-surface-raised/50"
-                        : "bg-surface-raised/80 hover:bg-surface-raised"
+                    !isValidName(tempName)
+                      ? "bg-surface-raised/30 opacity-50 cursor-not-allowed"
+                      : saveStatus === "saved"
+                        ? "bg-success"
+                        : saveStatus === "saving"
+                          ? "bg-surface-raised/50"
+                          : "bg-surface-raised/80 hover:bg-surface-raised"
                   }`}
                 >
                   {saveStatus === "saved"
