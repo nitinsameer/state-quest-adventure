@@ -115,6 +115,7 @@ import {
   markRecentlyCompleted,
   dismissPendingCelebration,
   finishQuiz,
+  StateStatus,
 } from "@/lib/progress";
 
 // Local constant to avoid bundler issues with imported TOTAL_STATES
@@ -1248,8 +1249,6 @@ export function JourneyMapScreen() {
     name: string;
     cardIndex?: number;
   } | null>(null);
-  const [selectedState, setSelectedState] = useState<string | null>(null);
-  const [expandedRegion, setExpandedRegion] = useState<keyof typeof REGIONS>("north");
   const celebration = useCelebration();
   const [showQuizDecisionModal, setShowQuizDecisionModal] = useState(false);
   const [pendingStateName, setPendingStateName] = useState<string | null>(null);
@@ -1260,7 +1259,6 @@ export function JourneyMapScreen() {
     const completed = p.completed.length;
     const percentage = Math.round((completed / totalStates) * 100);
 
-    // Check for milestone achievements
     const milestones = [
       {
         threshold: 25,
@@ -1284,20 +1282,17 @@ export function JourneyMapScreen() {
       },
     ];
 
-    // Track which milestones have been celebrated in localStorage
     const celebratedKey = STORAGE_KEYS.celebratedMilestones;
     const celebrated =
       typeof window !== "undefined" ? JSON.parse(localStorage.getItem(celebratedKey) || "[]") : [];
 
     milestones.forEach((m) => {
       if (percentage >= m.threshold && !celebrated.includes(m.threshold)) {
-        // New milestone reached!
         showSuccessToast(`${m.message} 🎉`, {
           duration: 4000,
           icon: m.emoji,
         });
 
-        // Mark as celebrated
         celebrated.push(m.threshold);
         if (typeof window !== "undefined") {
           localStorage.setItem(celebratedKey, JSON.stringify(celebrated));
@@ -1306,43 +1301,25 @@ export function JourneyMapScreen() {
     });
   }, [p.completed.length, celebration]);
 
-  // Register the back handler for this screen with the global journey back handler
+  // Register the back handler for this screen
   useEffect(() => {
     const handleBack = () => {
-      appLogger.info("journey_map_screen", "handleJourneyBack called, current view:", view?.screen);
-
-      // Navigate back within internal views: card → hub → intro → map
       if (view?.screen === "card" || view?.screen === "quiz") {
-        // From card or quiz, go back to hub
-        appLogger.info("journey_map_screen", "Back from card/quiz to hub");
         setView({ screen: "hub", name: view.name });
         return;
       } else if (view?.screen === "hub") {
-        // From hub, go back to intro
-        appLogger.info("journey_map_screen", "Back from hub to intro");
         setView({ screen: "intro", name: view.name });
         return;
       } else if (view?.screen === "intro") {
-        // From intro, go back to journey map
-        appLogger.info("journey_map_screen", "Back from intro to map");
         setView(null);
         return;
       }
-      // If already at journey map (view === null), don't handle - let default back behavior occur
-      appLogger.info("journey_map_screen", "At journey map, allowing default back behavior");
     };
 
-    // Register this handler when component mounts or view changes
     setJourneyBackHandler(handleBack);
-
-    // Cleanup: remove handler when component unmounts
     return () => {
       setJourneyBackHandler(null);
     };
-  }, [view]);
-
-  useEffect(() => {
-    appLogger.info("journey_map_screen", "view state changed", view);
   }, [view]);
 
   // Preload all state images for smooth rendering
@@ -1351,98 +1328,22 @@ export function JourneyMapScreen() {
     preloadStateArt(...stateNames);
   }, [states]);
 
-  appLogger.info(
-    "journey_map_screen",
-    "Rendering with states.length=" +
-      (states ? states.length : "undefined") +
-      ", states=" +
-      (states ? JSON.stringify(states.slice(0, 2)) : "null"),
-  );
-
-  // Organize states by region for color-coded grouping
-  const statesByRegion = useMemo(() => {
-    const result: Record<string, typeof states> = {};
-    REGION_KEYS.forEach((key) => {
-      const region = REGIONS[key];
-      result[key] = states.filter((s) => region.states.some((rs) => rs.name === s.name));
-    });
-    return result;
-  }, [states]);
-
   // Safety check: ensure we have states data
   if (!states || states.length === 0) {
-    appLogger.info(
-      "journey_map_screen",
-      "No states data available (states=" +
-        (states ? "empty" : "null") +
-        "), showing loading state",
-    );
     return <LoadingScreen />;
   }
 
-  type MapNode = {
-    name: string;
-    short: string;
-    status: (typeof states)[number]["status"];
-    isUT: boolean;
-    x: number;
-    y: number;
-  };
-
-  // Build nodes from regional data (not from old routes)
-  const nodes: MapNode[] = [];
-
-  // Add nodes from all regions
-  REGION_KEYS.forEach((regionKey) => {
-    // Skip union territories - they'll be added separately
-    if (regionKey === "unionTerritories") return;
-
-    const regionStates = statesByRegion[regionKey] || [];
-    regionStates.forEach((state) => {
-      nodes.push({
-        name: state.name,
-        short: state.short,
-        status: state.status,
-        isUT: false,
-        x: 0, // Not used in new rendering
-        y: 0, // Not used in new rendering
-      });
-    });
-  });
-
-  // Add union territory nodes
-  const utStates = statesByRegion["unionTerritories"] || [];
-  utStates.forEach((state) => {
-    nodes.push({
-      name: state.name,
-      short: state.short,
-      status: state.status,
-      isUT: true,
-      x: 0, // Not used in new rendering
-      y: 0, // Not used in new rendering
-    });
-  });
-
   const totalStates = TOTAL_STATES;
-  const completedStates = nodes.filter((n) => n.status === "done").length;
+  const completedStates = states.filter((s) => s.status === "done").length;
+  const currentDest = states.find((s) => s.status === "current");
 
-  appLogger.info(
-    "journey_map_screen",
-    "nodes count: " + nodes.length,
-    nodes.map((n) => ({ name: n.name, status: n.status })),
-  );
-
+  // If showing internal view, render it
   if (view?.screen === "intro") {
-    appLogger.info("journey_map_screen", "Rendering StateIntroScreen with: " + view.name);
     return (
       <StateIntroScreen
         stateName={view.name}
-        onBack={() => {
-          appLogger.info("journey_map_screen", "StateIntroScreen onBack clicked");
-          setView(null);
-        }}
+        onBack={() => setView(null)}
         onContinue={() => {
-          appLogger.info("journey_map_screen", "StateIntroScreen onContinue clicked");
           setLastPlayedState(view.name);
           setView({ screen: "hub", name: view.name });
         }}
@@ -1450,23 +1351,16 @@ export function JourneyMapScreen() {
     );
   }
   if (view?.screen === "hub") {
-    appLogger.info("journey_map_screen", "Rendering LearningHubScreen with: " + view.name);
     return (
       <LearningHubScreen
         stateName={view.name}
         onBack={() => {
-          appLogger.info("journey_map_screen", "LearningHubScreen onBack clicked");
           setView({ screen: "intro", name: view.name });
         }}
         onCard={(index) => {
-          appLogger.info(
-            "journey_map_screen",
-            "LearningHubScreen onCard clicked with index: " + index,
-          );
           setView({ screen: "card", name: view.name, cardIndex: index });
         }}
         onQuiz={() => {
-          appLogger.info("journey_map_screen", "LearningHubScreen onQuiz clicked");
           setView({ screen: "quiz", name: view.name });
         }}
         allowReplay={true}
@@ -1474,32 +1368,20 @@ export function JourneyMapScreen() {
     );
   }
   if (view?.screen === "card") {
-    appLogger.info(
-      "journey_map_screen",
-      "Rendering LearningCardScreen with: " + view.name + ", cardIndex: " + view.cardIndex,
-    );
     return (
       <LearningCardScreen
         stateName={view.name}
         cardIndex={view.cardIndex}
         onClose={() => {
-          appLogger.info("journey_map_screen", "LearningCardScreen onClose clicked");
           setView({ screen: "hub", name: view.name });
         }}
         onNext={(index) => {
-          appLogger.info(
-            "journey_map_screen",
-            "LearningCardScreen onNext clicked with index: " + index,
-          );
           if (index === null) {
-            // All cards completed - show decision modal instead of going straight to quiz
-            // P1: Modal Delay (400ms before showing)
             setPendingStateName(view.name);
             setTimeout(() => {
               setShowQuizDecisionModal(true);
             }, 400);
           } else {
-            // Move to next card
             setView({ screen: "card", name: view.name, cardIndex: index });
           }
         }}
@@ -1507,17 +1389,13 @@ export function JourneyMapScreen() {
     );
   }
   if (view?.screen === "quiz") {
-    appLogger.info("journey_map_screen", "Rendering QuizScreen with: " + view.name);
     return (
       <QuizScreen
         stateName={view.name}
         onClose={() => {
-          appLogger.info("journey_map_screen", "QuizScreen onClose clicked");
           setView({ screen: "hub", name: view.name });
         }}
         onDone={() => {
-          appLogger.info("journey_map_screen", "QuizScreen onDone clicked");
-          // Navigate to completion screen which will show postcard → unlock → explorer
           const slug = view.name.toLowerCase().replace(/\s+/g, "-");
           navigate({ to: "/state/$slug/complete", params: { slug } });
         }}
@@ -1527,13 +1405,13 @@ export function JourneyMapScreen() {
 
   return (
     <div className="h-full w-full bg-bg-page relative overflow-hidden flex flex-col">
-      {/* CSS Keyframes for Journey Header animations */}
+      {/* CSS Keyframes for Journey animations */}
       <style>{`
         @media (prefers-reduced-motion: no-preference) {
-          @keyframes journey-header-slide-down {
+          @keyframes journey-destination-fade-in {
             0% {
               opacity: 0;
-              transform: translateY(-20px);
+              transform: translateY(8px);
             }
             100% {
               opacity: 1;
@@ -1541,312 +1419,238 @@ export function JourneyMapScreen() {
             }
           }
 
-          @keyframes journey-progress-fill {
-            0% {
-              width: 0%;
-            }
-            100% {
-              width: var(--progress-percent, 16.67%);
-            }
-          }
-
-          @keyframes journey-xp-pop-in {
+          @keyframes journey-path-draw {
             0% {
               opacity: 0;
-              transform: scale(0.8) rotate(-10deg);
-            }
-            50% {
-              transform: scale(1.1) rotate(2deg);
+              transform: scaleY(0);
+              transform-origin: top;
             }
             100% {
               opacity: 1;
-              transform: scale(1) rotate(0deg);
+              transform: scaleY(1);
+              transform-origin: top;
             }
           }
 
-          @keyframes journey-xp-pulse {
+          @keyframes journey-current-pulse {
             0%, 100% {
-              filter: brightness(1);
+              box-shadow: 0 0 0 0 var(--accent-5);
               transform: scale(1);
             }
             50% {
-              filter: brightness(1.1);
-              transform: scale(1.05);
+              box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-5) 30%, transparent);
+              transform: scale(1.02);
             }
           }
 
-          @keyframes journey-state-glow-pulse {
+          @keyframes journey-completed-glow {
             0%, 100% {
               text-shadow: 0 0 0 transparent;
             }
             50% {
-              text-shadow: 0 0 12px var(--accent-1);
+              text-shadow: 0 0 8px var(--accent-3);
             }
           }
 
-          @keyframes journey-card-slide-up {
-            0% {
-              opacity: 0;
-              transform: translateY(20px);
-            }
-            100% {
-              opacity: 1;
-              transform: translateY(0);
-            }
+          .animate-journey-destination {
+            animation: journey-destination-fade-in 400ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            opacity: 0;
           }
 
-          @keyframes journey-back-slide-in {
-            0% {
-              opacity: 0;
-              transform: translateX(-20px);
-            }
-            100% {
-              opacity: 1;
-              transform: translateX(0);
-            }
+          .animate-journey-path {
+            animation: journey-path-draw 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            opacity: 0;
           }
 
-          .animate-journey-header-slide-down {
-            animation: journey-header-slide-down 600ms var(--easing-ease-out, ease-out) forwards;
+          .animate-journey-current-pulse {
+            animation: journey-current-pulse 2000ms ease-in-out infinite;
           }
 
-          .animate-journey-progress-fill {
-            animation: journey-progress-fill 800ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-          }
-
-          .animate-journey-xp-pop-in {
-            animation: journey-xp-pop-in 600ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-            animation-delay: var(--animation-delay, 0ms);
-          }
-
-          .animate-journey-xp-pulse {
-            animation: journey-xp-pulse 2000ms ease-in-out infinite;
-          }
-
-          .animate-journey-state-glow-pulse {
-            animation: journey-state-glow-pulse 2500ms ease-in-out infinite;
-          }
-
-          .animate-journey-card-slide-up {
-            animation: journey-card-slide-up 600ms var(--easing-ease-out, ease-out) forwards;
-            animation-delay: var(--animation-delay, 0ms);
-          }
-
-          .animate-journey-back-slide-in {
-            animation: journey-back-slide-in 600ms var(--easing-ease-out, ease-out) forwards;
+          .animate-journey-completed-glow {
+            animation: journey-completed-glow 2500ms ease-in-out infinite;
           }
         }
       `}</style>
 
-      {/* Header with orange gradient - matching Home screen with sticky positioning */}
-      <div className="sticky top-0 z-40 px-6 pt-4 pb-4 bg-bg-header rounded-b-[32px] relative overflow-hidden shadow-elevated-2">
-        <Cloud className="absolute top-2 right-4 w-14 opacity-40 pointer-events-none" />
-
-        {/* Row 1: Back button + State name + XP chip */}
-        <div className="flex items-center gap-3 relative z-10 mb-4">
-          {/* Back Button */}
+      {/* Compact Header */}
+      <div className="sticky top-0 z-40 px-5 pt-3 pb-3 bg-bg-header rounded-b-3xl relative overflow-hidden shadow-elevated-1">
+        <Cloud className="absolute top-1 right-3 w-12 opacity-30 pointer-events-none" />
+        
+        <div className="flex items-center justify-between relative z-10">
           <button
             onClick={goBack}
             aria-label="Go back"
-            className="h-12 w-12 rounded-full ui-button ui-accent-1-soft flex items-center justify-center text-2xl flex-shrink-0 transition-all duration-300 hover:scale-110 active:scale-95 animate-journey-back-slide-in"
+            className="h-10 w-10 rounded-full ui-button ui-accent-1-soft flex items-center justify-center text-xl flex-shrink-0 transition-all duration-200 hover:scale-110 active:scale-95"
           >
             &lt;
           </button>
 
-          {/* State Name - centered */}
-          <h3 className="flex-1 text-center text-h3 text-display text-text-on-header animate-journey-header-slide-down animate-journey-state-glow-pulse font-extrabold">
+          <h1 className="text-h4 text-display text-text-on-header font-extrabold flex-1 text-center">
             India Journey
-          </h3>
+          </h1>
 
-          {/* XP Chip - right side */}
-          <div
-            className="flex items-center gap-1.5 ui-chip ui-accent-4-soft flex-shrink-0 animate-journey-xp-pop-in"
-            style={{ "--animation-delay": "100ms" } as React.CSSProperties}
-          >
-            <span className="text-lg">{EMOJI.action.star}</span>
-            <span className="text-h5 font-black text-accent-4-ink">{p.xp}</span>
+          <div className="flex items-center gap-1 ui-chip ui-accent-4-soft flex-shrink-0">
+            <span className="text-base">{EMOJI.action.star}</span>
+            <span className="text-h6 font-black text-accent-4-ink">{p.xp}</span>
           </div>
         </div>
+      </div>
 
-        {/* Row 2: Progress bar with counter */}
-        <div className="relative z-10">
-          <div className="h-2 bg-surface-muted rounded-full overflow-hidden mb-2">
+      {/* Progress Section - Compact */}
+      <div className="px-5 pt-3 pb-2">
+        <div className="text-body font-semibold text-text-secondary mb-1">
+          Your India adventure
+        </div>
+        <div className="flex items-center gap-2 mb-2">
+          <div className="text-h5 font-extrabold text-text-primary">
+            {completedStates}/{totalStates}
+          </div>
+          <div className="flex-1 h-1.5 bg-surface-muted rounded-full overflow-hidden">
             <div
-              className="h-full bg-accent-1 rounded-full animate-journey-progress-fill"
-              style={
-                {
-                  "--progress-percent": `${(completedStates / totalStates) * 100}%`,
-                } as React.CSSProperties
-              }
+              className="h-full bg-accent-3 rounded-full transition-all duration-500"
+              style={{ width: `${(completedStates / totalStates) * 100}%` }}
             />
           </div>
-          <div className="text-sm font-bold text-text-on-header text-right">
-            {completedStates}/{totalStates} states
-          </div>
         </div>
       </div>
 
-      {/* Clouds decoration below header */}
-      <Cloud className="absolute top-96 left-2 w-24 opacity-90 pointer-events-none animate-fade-in" />
-      <Cloud className="absolute top-[500px] right-1 w-20 opacity-85 pointer-events-none animate-fade-in" />
-
-      {/* India Progress Map Card - Between header and region tabs */}
-      <div className="px-4 pt-4 pb-2">
-        <IndiaProgressMap />
-      </div>
-
-      {/* Explorable States Map with Regional Organization */}
+      {/* Main: Vertical Destination Journey Path */}
       <div
-        className="relative flex-1 flex flex-col overflow-hidden animate-fade-in"
-        style={{ animationDelay: "200ms" }}
+        className="flex-1 overflow-y-auto overflow-x-hidden px-5 py-3 relative"
+        style={{ paddingBottom: "calc(80px + env(safe-area-inset-bottom))" }}
       >
-        {/* Region Chips - Horizontal Scrollable */}
-        <div className="px-4 pt-4 pb-2 overflow-x-auto sticky top-0 z-20 bg-bg-page">
-          <div className="flex gap-2 pb-2 min-w-min">
-            {REGION_KEYS.map((regionKey) => {
-              const region = REGIONS[regionKey];
-              const regionStates = statesByRegion[regionKey] || [];
-              const regionDone = regionStates.filter((s) => s.status === "done").length;
-              const isSelected = regionKey === expandedRegion;
-
-              return (
-                <button
-                  key={regionKey}
-                  onClick={() => {
-                    fxTap();
-                    setExpandedRegion(regionKey);
-                  }}
-                  className={`px-4 py-3 rounded-full font-extrabold whitespace-nowrap transition active:scale-95 ${
-                    isSelected ? "ui-button ui-accent-1" : "ui-button ui-accent-1-soft"
-                  }`}
-                  style={{ fontSize: "var(--type-body)", fontWeight: "var(--type-body-weight)" }}
-                  title={`${regionDone}/${regionStates.length} explored`}
-                >
-                  {region.emoji} {region.name.split(" ")[0]}{" "}
-                  {isSelected && regionDone === regionStates.length && EMOJI.action.done}
-                </button>
-              );
-            })}
-          </div>
+        {/* Vertical path connecting all destinations */}
+        <div className="absolute left-8 top-0 bottom-0 w-1 pointer-events-none">
+          {/* Background line - all destinations */}
+          <div className="absolute inset-0 bg-gradient-to-b from-accent-3 via-accent-5 to-surface-muted" />
         </div>
 
-        {/* Expanded Region Content - Scrollable */}
-        <div
-          className="flex-1 overflow-y-auto overflow-x-hidden px-4 pt-4 pb-4"
-          style={{ paddingBottom: "calc(64px + 16px + env(safe-area-inset-bottom))" }}
-        >
-          {/* Region Info Header */}
-          {(() => {
-            const region = REGIONS[expandedRegion];
-            const regionStates = statesByRegion[expandedRegion] || [];
-            const regionDone = regionStates.filter((s) => s.status === "done").length;
+        {/* Destination cards in vertical layout */}
+        <div className="relative space-y-4">
+          {states.map((state, index) => {
+            const isDone = state.status === "done";
+            const isCurrent = state.status === "current";
+            const isLocked = state.status === "locked" || state.status === "available";
+            const artSrc = STATE_ART[state.name];
 
             return (
-              <div className="mb-4 animate-fade-in">
+              <div
+                key={state.name}
+                className="animate-journey-destination ml-6 relative"
+                style={{ "--animation-delay": `${index * 50}ms` } as React.CSSProperties}
+              >
+                {/* Vertical line node indicator */}
                 <div
+                  className="absolute -left-10 top-4 w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all duration-300"
                   style={{
-                    fontSize: "var(--type-section-heading)",
-                    fontWeight: "var(--type-section-heading-weight)",
+                    borderColor: isDone ? "var(--accent-3)" : isCurrent ? "var(--accent-5)" : "var(--surface-muted)",
+                    backgroundColor: isDone ? "var(--accent-3)" : isCurrent ? "var(--accent-5)" : "var(--surface-card)",
                   }}
-                  className="text-text-primary"
                 >
-                  {region.name}
+                  {isCurrent && (
+                    <div className="absolute inset-0 rounded-full animate-journey-current-pulse" />
+                  )}
                 </div>
-                <div className="text-base font-semibold text-text-secondary mt-1">
-                  {regionDone}/{regionStates.length} explored{" "}
-                  {regionDone === regionStates.length && `${EMOJI.action.sparkle} Region Complete!`}
-                </div>
-                <div className="mt-2 h-2 bg-[var(--progress-track)] rounded-full overflow-hidden">
+
+                {/* Destination Card */}
+                <button
+                  onClick={() => {
+                    if (!isLocked) {
+                      fxTap();
+                      setView({ screen: "intro", name: state.name });
+                    }
+                  }}
+                  disabled={isLocked}
+                  className="w-full text-left transition-all active:scale-98"
+                  style={{
+                    backgroundColor: isDone
+                      ? "var(--accent-3-soft)"
+                      : isCurrent
+                        ? "var(--surface-card)"
+                        : "var(--surface-muted)",
+                    borderColor: isCurrent ? "var(--accent-5)" : isDone ? "var(--accent-3)" : "transparent",
+                  }}
+                >
                   <div
-                    className={`h-full bg-accent-1 transition-all duration-300`}
-                    style={{ width: `${(regionDone / regionStates.length) * 100}%` }}
-                  />
-                </div>
-              </div>
-            );
-          })()}
+                    className="p-3 rounded-2xl border-2 transition-all duration-300"
+                    style={{
+                      borderColor: isCurrent ? "var(--accent-5)" : isDone ? "var(--accent-3-soft)" : "transparent",
+                    }}
+                  >
+                    {/* Show illustration for completed and current, not for locked */}
+                    {(isDone || isCurrent) && (
+                      <img
+                        src={artSrc}
+                        alt={state.name}
+                        className="w-full h-20 object-contain mb-2 flex-shrink-0"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    )}
 
-          {/* States in selected region - 2-Column Grid */}
-          {(() => {
-            const regionStates = statesByRegion[expandedRegion] || [];
+                    {/* Destination name and status */}
+                    <div className="flex items-start gap-2 mb-2">
+                      <div className="flex-1 min-w-0">
+                        {isCurrent && (
+                          <div className="text-xs font-bold text-accent-5 mb-0.5 uppercase tracking-wide">
+                            {EMOJI.action.next} Next Destination
+                          </div>
+                        )}
+                        <h3
+                          className="text-body font-extrabold leading-tight line-clamp-2"
+                          style={{
+                            color: isDone
+                              ? "var(--accent-3-ink)"
+                              : isCurrent
+                                ? "var(--text-primary)"
+                                : "var(--text-secondary)",
+                          }}
+                        >
+                          {state.name}
+                        </h3>
+                      </div>
 
-            return (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 animate-fade-in">
-                {regionStates.map((state, index) => {
-                  const isLocked = state.status === "locked";
-                  const isDone = state.status === "done";
-                  const isCurrent = state.status === "current";
-                  const isAvailable = state.status === "available";
+                      {/* Status indicators */}
+                      {isDone && (
+                        <div className="text-accent-3 text-lg font-bold animate-journey-completed-glow flex-shrink-0">
+                          {EMOJI.action.done}
+                        </div>
+                      )}
+                      {isLocked && (
+                        <div className="text-text-secondary text-base flex-shrink-0">
+                          {EMOJI.action.fire}
+                        </div>
+                      )}
+                    </div>
 
-                  // Detect in-progress state (partially completed cards)
-                  const cardsRead = cardsDone(p, state.name);
-                  const totalCards = 6; // IndiaState doesn't have cards property, default to 6
-                  const isInProgress = !isDone && cardsRead > 0 && cardsRead < totalCards;
-
-                  // Determine card status
-                  let cardStatus: "available" | "completed" | "locked" = "available";
-                  if (isDone) {
-                    cardStatus = "completed";
-                  } else if (isLocked) {
-                    cardStatus = "locked";
-                  } else if (isAvailable || isCurrent || isInProgress) {
-                    cardStatus = "available";
-                  }
-
-                  return (
-                    <div
-                      key={state.name}
-                      className="animate-journey-card-slide-up"
-                      style={{ "--animation-delay": `${index * 100}ms` } as React.CSSProperties}
-                    >
-                      <JourneyDestinationCard
-                        stateName={state.name}
-                        status={cardStatus}
-                        cardIndex={index}
-                        isInProgress={isInProgress}
-                        cardsDone={cardsRead}
-                        totalCards={totalCards}
-                        onStart={() => {
-                          fxTap();
-                          if (!isLocked) {
-                            setView({ screen: "intro", name: state.name });
-                          }
-                        }}
-                        onReplay={() => {
+                    {/* Current destination Play button */}
+                    {isCurrent && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
                           fxTap();
                           setView({ screen: "intro", name: state.name });
                         }}
-                      />
-                    </div>
-                  );
-                })}
+                        className="w-full py-2 rounded-xl bg-accent-5 text-on-header font-bold text-sm transition-all active:scale-95 flex items-center justify-center gap-1"
+                      >
+                        {EMOJI.action.play} Play
+                      </button>
+                    )}
+                  </div>
+                </button>
               </div>
             );
-          })()}
+          })}
         </div>
       </div>
 
-      {/* State Detail Modal */}
-      {selectedState && (
-        <StateDetailModal
-          stateName={selectedState}
-          states={nodes}
-          onClose={() => setSelectedState(null)}
-          onPlay={() => {
-            setSelectedState(null);
-            setView({ screen: "intro", name: selectedState });
-          }}
-        />
-      )}
-
-      {/* Quiz Decision Modal - moved from LearningHubScreen for consistency */}
+      {/* Quiz Decision Modal */}
       {showQuizDecisionModal && pendingStateName && (
         <div
           className="fixed inset-0 z-50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in"
           style={{ backgroundColor: "var(--scrim)" }}
         >
           <div className="bg-action-primary rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden animate-in zoom-in-95 flex flex-col">
-            {/* Header */}
             <div className="p-5 text-center">
               <div className="text-5xl mb-4">{EMOJI.action.celebrate}</div>
               <div className="text-caption text-ink font-black uppercase tracking-widest mb-2">
@@ -1856,9 +1660,7 @@ export function JourneyMapScreen() {
               <p className="text-body text-ink font-bold mt-3">Ready to test your knowledge?</p>
             </div>
 
-            {/* Buttons */}
             <div className="p-5 space-y-3 flex flex-col">
-              {/* Start Quiz button */}
               <button
                 onClick={() => {
                   fxTap();
@@ -1870,7 +1672,6 @@ export function JourneyMapScreen() {
                 {EMOJI.action.sparkle} Start Quiz Now
               </button>
 
-              {/* Later button */}
               <button
                 onClick={() => {
                   fxTap();
@@ -1885,8 +1686,6 @@ export function JourneyMapScreen() {
           </div>
         </div>
       )}
-
-      {/* BottomNav moved to root layout for consistency */}
     </div>
   );
 }
