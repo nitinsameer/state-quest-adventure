@@ -3942,29 +3942,15 @@ function ProfileScreenContent() {
   const [isSelectingAvatar, setIsSelectingAvatar] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState<AvatarId>(p.avatar as AvatarId);
   const [hasFileConsent, setHasFileConsent] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return hasFeatureConsent("file");
+    return false; // File operations no longer gated by consent
   });
   const [hasAudioConsent, setHasAudioConsent] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return hasFeatureConsent("audio");
+    return localStorage.getItem(STORAGE_KEYS.sound) === "1"; // Use sound toggle instead
   });
 
-  // Subscribe to file consent changes
-  useEffect(() => {
-    const unsubscribe = subscribeConsentChanges("file", () => {
-      setHasFileConsent(hasFeatureConsent("file"));
-    });
-    return unsubscribe;
-  }, []);
+  // File consent no longer used (removed parental gates)
 
-  // Subscribe to audio consent changes
-  useEffect(() => {
-    const unsubscribe = subscribeConsentChanges("audio", () => {
-      setHasAudioConsent(hasFeatureConsent("audio"));
-    });
-    return unsubscribe;
-  }, []);
+  // Audio consent replaced by sound toggle (STORAGE_KEYS.sound)
 
   // Avatar images list for ProfileScreen
   const avatarImages = [
@@ -4225,8 +4211,7 @@ function ProfileScreenContent() {
             aria-label="Save pictures permission"
             onClick={() => {
               if (hasFileConsent) {
-                // Revoke consent
-                revokeFeatureConsent("file");
+                // File operations always allowed (no consent gate)
                 fxTap();
               } else {
                 // Grant consent directly (no dialog)
@@ -4343,16 +4328,10 @@ function ProfileScreenContent() {
 function SoundToggleRow() {
   const soundOn = useSoundOn();
   const [audioEnabled, setAudioEnabled] = useState(() => {
-    return hasFeatureConsent("audio");
+    return localStorage.getItem(STORAGE_KEYS.sound) === "1";
   });
 
-  // Subscribe to consent changes
-  useEffect(() => {
-    const unsubscribe = subscribeConsentChanges("audio", () => {
-      setAudioEnabled(hasFeatureConsent("audio"));
-    });
-    return unsubscribe;
-  }, []);
+  // Audio state managed via sound toggle (STORAGE_KEYS.sound)
 
   const toggleSound = () => {
     setSoundOn(!soundOn);
@@ -4369,7 +4348,7 @@ function SoundToggleRow() {
       setAudioEnabled(true);
       setTimeout(() => fxTap(), 100);
     } else {
-      revokeFeatureConsent("audio");
+      localStorage.setItem(STORAGE_KEYS.sound, "0");
       setAudioEnabled(false);
     }
   };
