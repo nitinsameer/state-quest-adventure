@@ -997,19 +997,22 @@ function HomeDashboardContent() {
           </div>
         </div>
 
-        {/* Progress Card: Your progress */}
+        {/* Progress Card: Your progress - Row style with emoji, title, count, and progress bar */}
         <div
           className="flex-shrink-0"
           style={{ padding: "0 var(--space-1-5) var(--space-1-5)" }}
         >
           <div className="rounded-2xl bg-surface-card shadow-sm p-4">
-            {/* Heading and count - flexbox row for spacing */}
-            <div className="flex items-center justify-between mb-3">
-              <div className="text-h4 text-text-primary font-extrabold">
-                Your progress
+            {/* Top row: Emoji + Title + Count */}
+            <div className="flex items-center gap-2 mb-3">
+              <div className="text-2xl flex-shrink-0">📊</div>
+              <div className="flex-1">
+                <div className="text-h4 text-text-primary font-extrabold">
+                  Your progress
+                </div>
               </div>
-              <div className="text-body-sm text-text-secondary">
-                {currentDone} of {CARDS_PER_STATE} challenges complete
+              <div className="text-body font-bold text-text-primary flex-shrink-0">
+                {currentDone} / {CARDS_PER_STATE}
               </div>
             </div>
             
@@ -1023,7 +1026,7 @@ function HomeDashboardContent() {
           </div>
         </div>
 
-        {/* Statistics Cards Row: Badges + States Explored */}
+        {/* Statistics Cards Row: Badges + States Explored - Horizontal layout */}
         <div
           className="flex-shrink-0 flex gap-3"
           style={{ padding: "0 var(--space-1-5) var(--space-1-5)" }}
@@ -1036,12 +1039,16 @@ function HomeDashboardContent() {
             }}
             className="flex-1 rounded-2xl bg-surface-card shadow-sm p-4 text-left hover:shadow-md transition-all active:scale-95 cursor-pointer border border-transparent hover:border-accent-3/20"
           >
-            <div className="text-2xl mb-2">{EMOJI.achievement.badge}</div>
-            <div className="text-display text-h2 font-black leading-none mb-1">
-              {unlockedAchievementBadgeCount(p)}
-            </div>
-            <div className="text-caption text-text-secondary font-bold">
-              Badges
+            <div className="flex items-center gap-2 mb-2">
+              <div className="text-3xl">🏅</div>
+              <div className="flex-1">
+                <div className="text-display text-h2 font-black leading-none">
+                  {unlockedAchievementBadgeCount(p)}
+                </div>
+                <div className="text-caption text-text-secondary font-bold">
+                  Badges
+                </div>
+              </div>
             </div>
           </button>
 
@@ -1053,12 +1060,16 @@ function HomeDashboardContent() {
             }}
             className="flex-1 rounded-2xl bg-surface-card shadow-sm p-4 text-left hover:shadow-md transition-all active:scale-95 cursor-pointer border border-transparent hover:border-accent-3/20"
           >
-            <div className="text-2xl mb-2">{EMOJI.utility.worldMap}</div>
-            <div className="text-display text-h2 font-black leading-none mb-1">
-              {p.completed.length} / {TOTAL_STATES}
-            </div>
-            <div className="text-caption text-text-secondary font-bold">
-              States explored
+            <div className="flex items-center gap-2 mb-2">
+              <div className="text-3xl">🗺️</div>
+              <div className="flex-1">
+                <div className="text-display text-h2 font-black leading-none">
+                  {p.completed.length} / {TOTAL_STATES}
+                </div>
+                <div className="text-caption text-text-secondary font-bold">
+                  States explored
+                </div>
+              </div>
             </div>
           </button>
         </div>
