@@ -296,6 +296,7 @@ export function getHeavyThemes(): Theme[] {
  * A theme is unlocked if:
  * - It has no unlockRule (starter theme), OR
  * - The player's progress meets the unlock condition
+ * - DEBUG: In development builds, all themes are unlocked for testing
  *
  * @param theme Theme to check
  * @param progress Player progress object with completed states, streak, and badges
@@ -305,6 +306,11 @@ export function isThemeUnlocked(
   theme: Theme,
   progress: { completed: string[]; streak: number; badges: Record<string, string[]> },
 ): boolean {
+  // DEBUG: Unlock all themes in development builds for testing
+  if (import.meta.env.DEV) {
+    return true;
+  }
+
   if (!theme.unlockRule) return true; // starter theme
 
   const { type, value } = theme.unlockRule;
