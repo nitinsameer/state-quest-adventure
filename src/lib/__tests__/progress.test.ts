@@ -671,12 +671,26 @@ describe("Task 11.8: Star Calculation & Quiz Completion", () => {
     }
   });
 
-  it("should calculate 1 star for 3 or fewer correct answers", () => {
+  it("should calculate 2 stars for 50% score", () => {
     finishQuiz("Rajasthan", {
       timeToComplete: 60000,
       quizAttempts: 1,
       quizScore: 50,
       correctCount: 3,
+    });
+    const stored = localStorage.getItem("india-explorer:progress:v2");
+    if (stored) {
+      const p = JSON.parse(stored);
+      expect(p.stars["Rajasthan"]).toBe("2");
+    }
+  });
+
+  it("should calculate 1 star for below 50% score", () => {
+    finishQuiz("Rajasthan", {
+      timeToComplete: 60000,
+      quizAttempts: 1,
+      quizScore: 33.33,
+      correctCount: 2,
     });
     const stored = localStorage.getItem("india-explorer:progress:v2");
     if (stored) {

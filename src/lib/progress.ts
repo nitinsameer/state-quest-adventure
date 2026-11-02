@@ -1033,15 +1033,27 @@ export function getStatePerformance(p: Progress, stateName: string) {
  * 6+ correct = 3 stars, 4+ = 2 stars, 0-3 = 1 star
  * Nobody gets stuck on a low score.
  */
-export function calculateStars(totalCorrect: number, totalQuestions: number): "1" | "2" | "3" {
-  const correctCount = totalCorrect;
+export /**
+ * Calculate stars based on quiz score percentage (industry-standard grading).
+ * 
+ * Uses percentage-based thresholds for better accuracy and scalability:
+ * - 80% and above: 3 stars (excellent)
+ * - 50-79%: 2 stars (good)
+ * - Below 50%: 1 star (completed)
+ * 
+ * @param scorePercent - Quiz score as percentage (0-100)
+ * @returns Star rating ("1", "2", or "3")
+ */
+function calculateStars(scorePercent: number): "1" | "2" | "3" {
+  // Clamp score to 0-100 range for safety
+  const score = Math.max(0, Math.min(100, scorePercent));
 
-  if (correctCount >= 6) {
-    return "3";
-  } else if (correctCount >= 4) {
-    return "2";
+  if (score >= 80) {
+    return "3"; // Excellent: 80%+ correct
+  } else if (score >= 50) {
+    return "2"; // Good: 50-79% correct
   } else {
-    return "1";
+    return "1"; // Completed: Below 50% (still shows progress)
   }
 }
 
@@ -1104,11 +1116,10 @@ export function finishQuiz(
       return p;
     }
 
-    // 1. Calculate stars based on correct count
-    // correctCount is 0-6 for 6 question quiz
-    // 6+ = 3 stars, 4+ = 2 stars, 0-3 = 1 star (nobody stuck on low score)
-    const correctCount = metrics.correctCount ?? 0;
-    const newStars = calculateStars(correctCount, 6);
+    // 1. Calculate stars based on quiz score percentage
+    // quizScore is 0-100 percentage: 80%+ = 3 stars, 50%+ = 2 stars, <50% = 1 star
+    const scorePercent = metrics.quizScore ?? 0;
+    const newStars = calculateStars(scorePercent);
 
     // Keep best stars on replay (never decrease)
     const currentBestStars = p.stars?.[stateName];
