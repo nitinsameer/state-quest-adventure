@@ -881,15 +881,19 @@ function HomeDashboardContent() {
 
           {/* Right side: Level badge */}
           <div className="flex items-center gap-2 flex-shrink-0">
-            <div
-              className={`flex items-center gap-1.5 ui-chip ui-accent-3-soft transition-transform duration-1000`}
+            <button
+              onClick={() => {
+                fxTap();
+                navigate({ to: "/me" });
+              }}
+              className={`flex items-center gap-1.5 ui-chip ui-accent-3-soft transition-transform duration-1000 hover:shadow-md active:scale-95 cursor-pointer`}
             >
               <span className="text-2xl">{EMOJI.action.star}</span>
               <div className="flex flex-col items-start">
                 <span className="text-ink text-h5 font-black leading-none">{level}</span>
                 <span className="text-ink text-xs font-bold opacity-90 leading-none">Level</span>
               </div>
-            </div>
+            </button>
           </div>
         </div>
       </div>
@@ -981,6 +985,72 @@ function HomeDashboardContent() {
               </div>
             </div>
           </Link>
+        </div>
+
+        {/* Progress Card: Your progress */}
+        <div
+          className="flex-shrink-0"
+          style={{ padding: "0 var(--space-1-5) var(--space-1-5)" }}
+        >
+          <div className="rounded-2xl bg-surface-card shadow-sm p-4">
+            {/* Heading and count - flexbox row for spacing */}
+            <div className="flex items-center justify-between mb-3">
+              <div className="text-h4 text-text-primary font-extrabold">
+                Your progress
+              </div>
+              <div className="text-body-sm text-text-secondary">
+                {currentDone} of {CARDS_PER_STATE} challenges complete
+              </div>
+            </div>
+            
+            {/* Progress bar */}
+            <div className="h-2 bg-progress-track rounded-full overflow-hidden">
+              <div
+                className="h-full bg-progress-fill rounded-full transition-all duration-300"
+                style={{ width: `${(currentDone / CARDS_PER_STATE) * 100}%` }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Statistics Cards Row: Badges + States Explored */}
+        <div
+          className="flex-shrink-0 flex gap-3"
+          style={{ padding: "0 var(--space-1-5) var(--space-1-5)" }}
+        >
+          {/* Badges Card */}
+          <button
+            onClick={() => {
+              fxTap();
+              navigate({ to: "/badges" });
+            }}
+            className="flex-1 rounded-2xl bg-surface-card shadow-sm p-4 text-left hover:shadow-md transition-all active:scale-95 cursor-pointer border border-transparent hover:border-accent-3/20"
+          >
+            <div className="text-2xl mb-2">{EMOJI.achievement.badge}</div>
+            <div className="text-display text-h2 font-black leading-none mb-1">
+              {unlockedAchievementBadgeCount(p)}
+            </div>
+            <div className="text-caption text-text-secondary font-bold">
+              Badges
+            </div>
+          </button>
+
+          {/* States Explored Card */}
+          <button
+            onClick={() => {
+              fxTap();
+              navigate({ to: "/journey" });
+            }}
+            className="flex-1 rounded-2xl bg-surface-card shadow-sm p-4 text-left hover:shadow-md transition-all active:scale-95 cursor-pointer border border-transparent hover:border-accent-3/20"
+          >
+            <div className="text-2xl mb-2">{EMOJI.utility.worldMap}</div>
+            <div className="text-display text-h2 font-black leading-none mb-1">
+              {p.completed.length} / {TOTAL_STATES}
+            </div>
+            <div className="text-caption text-text-secondary font-bold">
+              States explored
+            </div>
+          </button>
         </div>
 
         {/* First Session Tutorial removed from onboarding flow */}
