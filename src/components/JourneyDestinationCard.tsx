@@ -63,20 +63,20 @@ export function JourneyDestinationCard({
 
   // Determine card styling based on status and tone
   let cardBgColor = toneBackgrounds[state.tone] || toneBackgrounds.orange;
-  let textColorStyle: React.CSSProperties = {color: "var(--text-primary)"};
+  let textColorStyle: React.CSSProperties = { color: "var(--text-primary)" };
   let buttonBackgroundColor = toneGradients[state.tone] || "var(--accent-1)";
   let buttonTextColor = toneBackgroundInkMap[state.tone] || "var(--accent-1-ink)";
   let buttonTextClass = "text-on-header";
 
   if (status === "completed") {
     cardBgColor = toneBackgrounds[state.tone] || toneBackgrounds.orange;
-    textColorStyle = {color: "var(--text-primary)"};
+    textColorStyle = { color: "var(--text-primary)" };
     buttonBackgroundColor = toneGradients[state.tone] || "var(--accent-1)";
     buttonTextColor = toneBackgroundInkMap[state.tone] || "var(--accent-1-ink)";
     buttonTextClass = "text-on-header";
   } else if (status === "locked") {
     cardBgColor = "var(--surface-sunken)";
-    textColorStyle = {color: "var(--text-secondary)"};
+    textColorStyle = { color: "var(--text-secondary)" };
     buttonBackgroundColor = "var(--surface-sunken)";
     buttonTextColor = "var(--text-secondary)";
     buttonTextClass = "text-text-secondary";
@@ -142,16 +142,16 @@ export function JourneyDestinationCard({
 
       {/* Status indicator */}
       {status === "locked" && (
-        <div className="mb-2 flex items-center gap-1 text-sm font-bold" style={{color: "var(--text-secondary)"}}>
+        <div className="mb-2 flex items-center gap-1 text-sm font-bold" style={{ color: "var(--text-secondary)" }}>
           <span>{EMOJI.action.fire}</span>
           <span>Locked</span>
         </div>
       )}
 
-      {/* Checkmark overlay badge for completed states */}
+      {/* Checkmark overlay badge for completed states - FIXED */}
       {status === "completed" && (
         <div className="absolute top-2 right-2 w-10 h-10 rounded-full bg-success/80 shadow-lg flex items-center justify-center backdrop-blur-sm">
-          <span className="text-on-header text-lg font-bold leading-none">�S“</span>
+          <span className="text-on-header text-lg font-bold leading-none">✓</span>
         </div>
       )}
 
