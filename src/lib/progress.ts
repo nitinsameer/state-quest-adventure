@@ -1121,29 +1121,51 @@ export function finishQuiz(
     // Check if this is a replay (state already completed)
     const isReplay = p.completed.includes(stateName);
 
-    // On replay: handle stars-improved case
+    // On replay: always show a celebration (either stars-improved or replay completion)
     if (isReplay) {
+      // Build celebrations array for replay
+      const replayCelebrations = [];
+
       // If stars improved, queue a stars-improved celebration
       if (parseInt(newStars) > parseInt(currentBestStars || "0")) {
-        return {
-          ...p,
-          stars: { ...p.stars, [stateName]: bestStars },
-          pendingCelebrations: [
-            ...(p.pendingCelebrations ?? []),
-            {
-              type: "stars-improved",
-              stateName,
-              oldStars: currentBestStars || ("1" as const),
-              newStars: bestStars,
-              stampDate: stampDate(),
-              step: 0,
-            },
-          ],
-        };
+        replayCelebrations.push({
+          type: "stars-improved" as const,
+          stateName,
+          oldStars: currentBestStars || ("1" as const),
+          newStars: bestStars,
+          stampDate: stampDate(),
+          step: 0,
+        });
+      } else {
+        // Stars didn't improve: show replay completion celebration with current XP
+        const quizXp = correctCount * 20;
+        replayCelebrations.push({
+          type: "full" as const,
+          stateName,
+          stars: bestStars,
+          correctCount,
+          totalQuestions: 6,
+          quizXp,
+          bonusXp: 0, // No bonus XP on replay
+          stampDate: stampDate(),
+          earnedBadgeIds: [] as any, // No new badges on replay
+          regionKey: "north" as string,
+          regionDone: 0,
+          regionTotal: 0,
+          streak: p.streak,
+          leveledUp: false,
+          levelName: undefined,
+          step: 0,
+        });
       }
+
       return {
         ...p,
         stars: { ...p.stars, [stateName]: bestStars },
+        pendingCelebrations: [
+          ...(p.pendingCelebrations ?? []),
+          ...replayCelebrations,
+        ],
       };
     }
 
