@@ -3,7 +3,6 @@ import { Capacitor } from "@capacitor/core";
 import { Haptics, ImpactStyle } from "@capacitor/haptics";
 import { initAudioMixer, getEffectsGain, getAmbientGain } from "./audio-mixer";
 import { debugLog, debugError } from "./debug";
-import { hasFeatureConsent } from "./parental-consent";
 import { validateSoundToggle } from "./localStorage-schema";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 
@@ -290,10 +289,8 @@ function ac(): AudioContext | null {
 
 /**
  * Determine if sound output should be played through speakers
- * Checks BOTH conditions:
- * 1. Sound toggle enabled in profile (isSoundOn)
- * 2. Audio consent granted during profile creation (hasFeatureConsent)
- * @returns true only if BOTH are true
+ * Checks sound toggle setting from profile
+ * @returns true only if sound toggle is enabled
  */
 function shouldPlaySound(): boolean {
   // Sound effects only need the sound toggle, not audio narration consent

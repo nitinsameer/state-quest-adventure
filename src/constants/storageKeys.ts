@@ -15,17 +15,8 @@ export const STORAGE_KEYS = {
   // === Theme & UI Preferences ===
   theme: "india-explorer:theme:v1",
 
-  // === Permissions & Consent (COPPA/Privacy) ===
-  audioPermissionShown: "india-explorer:audio-permission-shown:v1",
-  parentalConsent: "india-explorer:parental-consent:v1",
-
   // === Tutorial & Onboarding ===
   tutorialShown: "india-explorer:first-session-tutorial-shown:v1",
-
-  // === Parent Zone & Controls ===
-  parentPinHash: "india-explorer:parent-pin-hash:v1",
-  parentPinSalt: "india-explorer:parent-pin-salt:v1",
-  parentZoneSettings: "india-explorer:parent-zone-settings:v1",
 
   // === Content & Collections ===
   postcards: "india-explorer:postcard-library:v1",
@@ -43,9 +34,6 @@ export const STORAGE_KEYS = {
   celebratedMilestones: "india-explorer:milestones-celebrated:v1",
   celebratedUnlocks: "india-explorer:celebrated:v1",
   tutorialSeen: "india-explorer:tutorial-seen:v1",
-  parentPinLegacy: "india-explorer:parent-pin:v1",
-  parentLockout: "india-explorer:parent-lockout:v1",
-  parentAttempts: "india-explorer:parent-attempts:v1",
 } as const;
 
 // Type assertion for strict key checking

@@ -11,7 +11,6 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics, setAnalyticsCollectionEnabled } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
 import { debugLog, debugError } from "./debug";
-import { hasFeatureConsent } from "./parental-consent";
 
 // Firebase configuration - loaded from environment variables
 // Make sure these are set in .env.local or Vercel environment
@@ -73,25 +72,13 @@ function initializeFirebase() {
 }
 
 /**
- * Enable analytics after consent is granted
- * Call this function only after user/parent has explicitly consented to analytics
- * COPPA REQUIREMENT: Must be called after hasFeatureConsent('analytics') returns true
+ * Analytics remains disabled for COPPA compliance
+ * The parental consent system has been removed
  */
-function enableAnalyticsAfterConsent() {
-  if (analytics) {
-    try {
-      setAnalyticsCollectionEnabled(analytics, true);
-      debugLog("firebase", "Analytics collection ENABLED after consent granted");
-    } catch (error) {
-      debugError("firebase", "Failed to enable analytics after consent", error);
-    }
-  }
-}
 export {
   app,
   analytics,
   db,
   isFirebaseConfigured,
   initializeFirebase,
-  enableAnalyticsAfterConsent,
 };

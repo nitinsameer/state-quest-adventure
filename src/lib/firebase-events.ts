@@ -15,7 +15,6 @@ import { analytics, isFirebaseConfigured } from "./firebase-init";
 import { logEvent } from "firebase/analytics";
 import { appLogger } from "./logger";
 import { eventQueue } from "./event-queue";
-import { hasFeatureConsent } from "./parental-consent";
 import type { BadgeId } from "./progress";
 
 // FIX #10: Rate limiting and deduplication for events
@@ -114,11 +113,9 @@ interface StorageHydrationParams {
  * FIX #10: Rate limiting to prevent quota overages
  */
 function safeLogEvent<T extends Record<string, any>>(eventName: string, params?: T): void {
-  // COPPA FIX #1.5: Check analytics consent BEFORE any tracking
-  // If consent not granted, silently skip event (don't queue it)
-  if (!hasFeatureConsent("analytics")) {
-    return;
-  }
+  // COPPA FIX #1.5: Analytics disabled by default
+  // The parental consent system has been removed
+  return;
 
   // FIX #10: Skip if rate limited
   if (isRateLimited(eventName)) {

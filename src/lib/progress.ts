@@ -485,6 +485,48 @@ export function isHydrated(): boolean {
   return hydrated && !isHydrating;
 }
 
+/**
+ * Clean up obsolete parent/consent storage keys on hydration.
+ * Runs once per app version to remove deprecated keys that are no longer used.
+ * Idempotent design: checks a version key to avoid repeated cleanup on every load.
+ */
+function cleanupObsoleteParentData() {
+  try {
+    const CLEANUP_VERSION_KEY = "india-explorer:cleanup-v3:v1";
+
+    // Check if cleanup already done
+    const cleanupDone = localStorage.getItem(CLEANUP_VERSION_KEY);
+    if (cleanupDone === "1") return; // Already cleaned up
+
+    // List of obsolete parent/consent keys to remove
+    const keysToRemove = [
+      "india-explorer:parent-pin-hash:v1",
+      "india-explorer:parent-pin-salt:v1",
+      "india-explorer:parent-pin:v1",
+      "india-explorer:parent-lockout:v1",
+      "india-explorer:parent-attempts:v1",
+      "india-explorer:parent-zone-settings:v1",
+      "india-explorer:parental-consent:v1",
+      "india-explorer:audio-permission-shown:v1",
+    ];
+
+    // Remove each key
+    keysToRemove.forEach((key) => {
+      try {
+        localStorage.removeItem(key);
+      } catch (e) {
+        // Ignore removal errors (key may not exist)
+      }
+    });
+
+    // Mark cleanup as done
+    localStorage.setItem(CLEANUP_VERSION_KEY, "1");
+  } catch (error) {
+    // Silently fail; don't block app startup
+    console.error("[progress.ts] Cleanup failed", error);
+  }
+}
+
 /** Trigger hydration manually (called from root component on mount) */
 export function initializeHydration(): Promise<void> {
   return new Promise((resolve) => {
@@ -495,6 +537,10 @@ export function initializeHydration(): Promise<void> {
 
     isHydrating = true;
     hydrate();
+    
+    // Clean up obsolete parent-related data after hydration
+    cleanupObsoleteParentData();
+    
     isHydrating = false;
     resolve();
   });
