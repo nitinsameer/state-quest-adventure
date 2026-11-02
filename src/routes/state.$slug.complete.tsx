@@ -1,4 +1,4 @@
-import { createFileRoute, notFound, useNavigate, redirect } from "@tanstack/react-router";
+import { createFileRoute, notFound, redirect, useNavigate } from "@tanstack/react-router";
 import { QuizCelebrationScreen } from "@/components/ceremony/QuizCelebrationScreen";
 import { ThemeUnlockCelebration } from "@/components/ThemeUnlockCelebration";
 import { getStateBySlug } from "@/lib/states";

@@ -2072,24 +2072,30 @@ export function LearningHubScreen({
     console.log(`[LearningHubScreen] cardCounts calculation for ${state.name}`);
     console.log(`[LearningHubScreen] allCards.length: ${allCards.length}`);
 
-    // Get completed card indices for this state using working system
+    // Get completed card indices for this state
+    // Progress.cards[state.name] should contain: [0, 1, 2, 3, 4, 5] for completed categories
     const completedCardIndices = cardsRead(progress, state.name);
     console.log(`[LearningHubScreen] cardsRead for ${state.name}:`, completedCardIndices);
 
+    // Calculate card counts per category
+    // NOTE: We only count categories where the MAIN card (index 0-5) has been marked complete
     return Array.from({ length: 6 }).map((_, i) => {
-      // Get all cards (main + sub-cards) for this category (mainCardIndex = i)
+      // Get all cards (main + enriched) for this category
       const allCategoryCards = allCards.filter((card) => card.mainCardIndex === i);
 
-      // A category is complete only if its main card (index i) has been read
+      // A category is complete ONLY if its main card index has been marked
+      // Main cards are stored with indices 0-5 in progress.cards[state.name]
       const isCategoryComplete = completedCardIndices.includes(i);
 
       console.log(
-        `[LearningHubScreen] Category ${i}: total cards: ${allCategoryCards.length}, main card read: ${isCategoryComplete}`,
+        `[LearningHubScreen] Category ${i}: total cards: ${allCategoryCards.length}, main card (idx ${i}) completed: ${isCategoryComplete}`,
       );
 
       return {
         total: allCategoryCards.length,
-        read: isCategoryComplete ? allCategoryCards.length : 0, // If main card read, all cards "done"
+        // If main card is complete, count all cards in category as "read"
+        // Otherwise, count is 0 (partial reads don't count toward progress)
+        read: isCategoryComplete ? allCategoryCards.length : 0,
       };
     });
   }, [allCards, progress.cards, state.name]);
@@ -2952,13 +2958,13 @@ export function LearningCardScreen({
 
     // Get the main card index and calculate completedCards for this main card
     const mainCardIdx = currentMainCardIndex;
-    const mainCardSectionCards = cards.filter((c) => c.mainCardIndex === mainCardIdx);
-    const allCardsInMainCardRead = mainCardSectionCards.every(
-      (c) => progress.cards?.[state.name]?.includes(cards.indexOf(c)) ?? false,
-    );
+    
+    // FIX: Check if MAIN CARD INDEX has been marked, not individual card positions
+    // Progress array stores main card indices [0, 1, 2, 3, 4, 5], not global card positions
+    const mainCardAlreadyRead = progress.cards?.[state.name]?.includes(mainCardIdx) ?? false;
 
     // Mark the main card as learned
-    const wasFirstRead = !allCardsInMainCardRead;
+    const wasFirstRead = !mainCardAlreadyRead;
 
     // Show immediate celebration when completing main card
     if (wasFirstRead) {
@@ -2982,17 +2988,13 @@ export function LearningCardScreen({
       });
     }
 
-    // VALIDATION: Ensure currentCardIndex is valid before marking
-    if (currentCardIndex >= 0 && currentCardIndex < cards.length) {
-      console.log(
-        `[LearningCardScreen] Marking main card as learned: state="${state.name}", globalIndex=${currentCardIndex}, mainCardIdx=${mainCardIdx}, replay=${!wasFirstRead}`,
-      );
-      markCard(state.name, currentCardIndex, !wasFirstRead);
-    } else {
-      console.error(
-        `[LearningCardScreen] INVALID currentCardIndex=${currentCardIndex}. Expected 0-${cards.length - 1}. Card not marked!`,
-      );
-    }
+    // VALIDATION: Ensure we're marking the main card index, not a derived index
+    console.log(
+      `[LearningCardScreen] Marking main card: state="${state.name}", mainCardIdx=${mainCardIdx}, firstRead=${wasFirstRead}`,
+    );
+    
+    // Mark the main card (use mainCardIdx as the index to mark)
+    markCard(state.name, mainCardIdx, !wasFirstRead);
 
     // If this is the last main card, go to quiz
     if (currentMainCardIndex === 5) {
