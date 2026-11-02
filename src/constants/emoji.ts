@@ -19,8 +19,8 @@ export const EMOJI = {
   // Bottom Navigation
   nav: {
     home: "🏠",
-    map: "🗺️",
-    explorer: "🗺️",
+    map: "📍",
+    explorer: "🧭",
     badges: "🏅",
     profile: "👤",
   },
