@@ -1,25 +1,30 @@
 import { useState } from "react";
 import { fxTap, fxConfetti } from "@/lib/fx";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
-import { EMOJI } from "@/constants/emoji";
 import { getAvatarName } from "@/lib/avatar-config";
 import { PremiumHeader } from "./PremiumHeader";
+import {
+  SproutIllustration,
+  SeedlingIllustration,
+  SaplingIllustration,
+  MightyTreeIllustration,
+} from "./AgeIllustrations";
 import ageBg from "@/assets/age_selection_bg.png";
 
 interface AgeBand {
   value: string;
-  emoji: string;
+  illustration: React.ComponentType<{ className?: string }>;
   label: string;
   gradient: string;
 }
 
 const AGE_BANDS: AgeBand[] = [
-  { value: "3-5", emoji: EMOJI.ageBand.toddler, label: "Sprout", gradient: "bg-accent-2" },
-  { value: "6-7", emoji: EMOJI.ageBand.young, label: "Seedling", gradient: "bg-accent-1" },
-  { value: "8-9", emoji: EMOJI.ageBand.mid, label: "Sapling", gradient: "bg-success" },
+  { value: "3-5", illustration: SproutIllustration, label: "Sprout", gradient: "bg-accent-2" },
+  { value: "6-7", illustration: SeedlingIllustration, label: "Seedling", gradient: "bg-accent-1" },
+  { value: "8-9", illustration: SaplingIllustration, label: "Sapling", gradient: "bg-success" },
   {
     value: "10-12",
-    emoji: EMOJI.ageBand.preteen,
+    illustration: MightyTreeIllustration,
     label: "Mighty Tree",
     gradient: "bg-action-primary",
   },
@@ -96,12 +101,13 @@ export function AgeScreen({
           {/* Age Bands */}
           {AGE_BANDS.map((band) => {
             const isSelected = selectedAge === band.value;
+            const IllustrationComponent = band.illustration;
             return (
               <button
                 key={band.value}
                 type="button"
                 onClick={() => handleAgeSelect(band.value)}
-                className={`relative rounded-xl p-3 transition-all duration-300 flex items-center gap-3 text-left
+                className={`relative rounded-2xl p-4 transition-all duration-300 flex items-center gap-4 text-left
                   ${
                     isSelected
                       ? `${band.gradient} text-text-on-primary shadow-elevated-2 scale-105`
@@ -110,15 +116,22 @@ export function AgeScreen({
                   ${animatingAge === band.value ? "animate-scale-pop" : ""}
                 `}
               >
-                <div className="text-3xl flex-shrink-0">{band.emoji}</div>
+                {/* Illustration - Left side */}
+                <div className="flex-shrink-0 w-14 h-14 flex items-center justify-center">
+                  <IllustrationComponent className="w-12 h-12" />
+                </div>
+                
+                {/* Text content - Right side */}
                 <div className="flex-1 min-w-0">
                   <div className="text-xs font-semibold opacity-80">Ages {band.value}</div>
                   <div className="text-base font-bold">{band.label}</div>
                 </div>
+                
+                {/* Selected checkmark - Right edge */}
                 {isSelected && (
-                  <div className="flex-shrink-0 w-5 h-5 rounded-full bg-text-on-primary flex items-center justify-center">
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-md border-2 border-white">
                     <svg
-                      className="w-3 h-3 text-action-primary"
+                      className="w-4 h-4 text-action-primary"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -134,12 +147,13 @@ export function AgeScreen({
             );
           })}
 
-          {/* Buttons - In content flow */}
-          <div className="flex gap-3 pt-2">
+          {/* Buttons - In content flow - matching AvatarScreen styling */}
+          <div className="flex gap-3 pt-3">
             <button
               type="button"
               onClick={handleBack}
-              className="flex-1 py-3 px-4 rounded-full font-bold text-text-primary bg-white border-2 border-action-primary transition-all active:scale-95"
+              className="flex-1 py-3 px-4 rounded-full font-bold text-text-primary bg-white border-2 border-action-primary transition-all hover:shadow-md active:scale-95"
+              aria-label="Go back"
             >
               Back
             </button>
@@ -152,6 +166,7 @@ export function AgeScreen({
                   ? "bg-action-primary text-white hover:shadow-elevated-2"
                   : "bg-surface-sunken text-text-secondary cursor-not-allowed opacity-50"
               }`}
+              aria-label="Start my journey"
             >
               Start My Journey
               <span>→</span>

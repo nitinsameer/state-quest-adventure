@@ -435,6 +435,7 @@ export function CreateProfileScreen() {
   if (currentScreen === "age") {
     return (
       <AgeScreen
+        selectedAvatar={selectedAvatar}
         selectedAge={selectedAge}
         onSelectAge={setSelectedAge}
         onBack={handleAgeBack}
