@@ -1467,7 +1467,7 @@ export function JourneyMapScreen() {
       `}</style>
 
       {/* Scenic Header with Background Image - Increased Height */}
-      <div className="sticky top-0 z-40 relative h-44 overflow-hidden shadow-elevated-1">
+      <div className="relative h-44 overflow-hidden shadow-elevated-1">
         {/* Background image - scenic backdrop */}
         <img
           src={stateHeaderBg}
@@ -1502,7 +1502,7 @@ export function JourneyMapScreen() {
       </div>
 
       {/* Progress Section - White Card with Overlap */}
-      <div className="relative px-5 -mt-6 z-30">
+      <div className="relative px-5 -mt-6 z-20 mb-6">
         <div className="bg-surface-card rounded-2xl shadow-elevated-1 p-5">
           {/* Top row: Label and count */}
           <div className="flex items-center justify-between mb-4">
