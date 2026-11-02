@@ -115,7 +115,6 @@ import {
   markRecentlyCompleted,
   dismissPendingCelebration,
   finishQuiz,
-  StateStatus,
 } from "@/lib/progress";
 
 // Local constant to avoid bundler issues with imported TOTAL_STATES
@@ -1522,6 +1521,8 @@ export function JourneyMapScreen() {
         {/* Vertical path connecting all destinations */}
         <div className="absolute left-8 top-0 bottom-0 w-1 pointer-events-none">
           {/* Background line - all destinations */}
+          {/* Note: Gradient uses accent-3 (completed) → accent-5 (current) → surface-muted (locked). */}
+          {/* Accent-5 color varies by theme; verify sufficient contrast between states in all themes. */}
           <div className="absolute inset-0 bg-gradient-to-b from-accent-3 via-accent-5 to-surface-muted" />
         </div>
 
