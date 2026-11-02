@@ -2068,27 +2068,27 @@ export function LearningHubScreen({
           </div>
         </div>
 
-        {/* Scrollable content area - allows all cards and quiz panel to be visible */}
-        <div className="flex-1 overflow-y-auto">
-          {/* PROGRESS CARD - White rounded card with overlap */}
-          <div className="px-5 -mt-6 relative z-20 mb-6">
-            <div className="bg-surface-card rounded-2xl shadow-elevated-1 p-5">
-              <div className="flex items-center justify-between mb-3">
-                <div className="text-label font-bold text-text-primary">Your state adventure</div>
-                <div className="text-body font-extrabold text-text-primary">{completedCategories} / 6</div>
-              </div>
-              <div className="w-full h-2.5 bg-accent-5-soft rounded-full overflow-hidden">
-                <div
-                  className="h-full rounded-full transition-all duration-300"
-                  style={{ 
-                    width: `${(completedCategories / 6) * 100}%`,
-                    backgroundColor: "var(--accent-5)"
-                  }}
-                />
-              </div>
+        {/* PROGRESS CARD - Outside scroll container, overlaps header */}
+        <div className="px-5 -mt-6 relative z-20 mb-6">
+          <div className="bg-surface-card rounded-2xl shadow-elevated-1 p-5">
+            <div className="flex items-center justify-between mb-3">
+              <div className="text-label font-bold text-text-primary">Your state adventure</div>
+              <div className="text-body font-extrabold text-text-primary">{completedCategories} / 6</div>
+            </div>
+            <div className="w-full h-2.5 bg-accent-5-soft rounded-full overflow-hidden">
+              <div
+                className="h-full rounded-full transition-all duration-300"
+                style={{ 
+                  width: `${(completedCategories / 6) * 100}%`,
+                  backgroundColor: "var(--accent-5)"
+                }}
+              />
             </div>
           </div>
+        </div>
 
+        {/* Scrollable content area - allows all cards and quiz panel to be visible */}
+        <div className="flex-1 overflow-y-auto">
           {/* SECTION HEADING & SUBTITLE */}
           <div className="px-5 mb-4">
             <h2 className="text-h2 text-text-primary font-extrabold mb-2">Explore the state</h2>
