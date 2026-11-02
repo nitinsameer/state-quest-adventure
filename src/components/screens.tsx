@@ -1657,7 +1657,7 @@ export function JourneyMapScreen() {
             aria-label="Go back"
             className="h-12 w-12 rounded-full ui-button ui-accent-1-soft flex items-center justify-center text-2xl flex-shrink-0 transition-all duration-300 hover:scale-110 active:scale-95 animate-journey-back-slide-in"
           >
-            ‹
+            &lt;
           </button>
 
           {/* State Name - centered */}
