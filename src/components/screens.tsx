@@ -868,12 +868,12 @@ function HomeDashboardContent() {
           </div>
 
           <div className="flex-1 min-w-0">
-            {/* Greeting - Single line, cleaner */}
+            {/* Greeting - Namaste and name on one line, Explorer below */}
             <div className="text-text-on-header">
-              <div className="text-h4 text-display leading-tight">
+              <div className="text-h4 text-display leading-tight whitespace-nowrap">
                 Namaste, {p?.name?.split(" ")[0] || "Explorer"}! {EMOJI.action.wave}
               </div>
-              <div className="text-h4 font-extrabold text-accent-3-ink mt-1 animate-explorer-breathing">
+              <div className="text-h4 font-extrabold text-accent-3-ink animate-explorer-breathing">
                 Explorer
               </div>
             </div>
