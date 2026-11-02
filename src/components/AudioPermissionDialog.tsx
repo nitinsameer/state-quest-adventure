@@ -12,7 +12,6 @@
 
 import { useEffect, useState } from "react";
 import { useProgress, isHydrated } from "@/lib/progress";
-import { hasFeatureConsent, grantFeatureConsent } from "@/lib/parental-consent";
 import { debugLog } from "@/lib/debug";
 import { fxTap } from "@/lib/fx";
 import { EMOJI } from "@/constants/emoji";
@@ -92,7 +91,7 @@ export function AudioPermissionDialog({
   const handleAccept = () => {
     debugLog("audio-permission", "User accepted audio", { context });
     fxTap();
-    grantFeatureConsent("audio");
+    localStorage.setItem(STORAGE_KEYS.sound, "1");
 
     // Close dialog immediately so it stops rendering
     setIsOpen(false);

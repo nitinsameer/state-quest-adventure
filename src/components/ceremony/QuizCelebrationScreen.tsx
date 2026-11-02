@@ -10,7 +10,6 @@ import { getState, type IndiaState, nextStateAfter } from "@/lib/states";
 import { STATE_ART, TONE_GRADIENT } from "@/lib/state-art";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { fxTap, fxConfetti, fxStamp } from "@/lib/fx";
-import { hasFeatureConsent } from "@/lib/parental-consent";
 import { PostcardFrame } from "@/components/PostcardFrame";
 import { StarCelebration } from "@/components/ceremony/StarCelebration";
 import { EMOJI } from "@/constants/emoji";

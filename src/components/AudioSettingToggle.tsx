@@ -1,36 +1,31 @@
 /**
  * AudioSettingToggle - Profile Audio Settings Control
  *
- * Allows users to enable/disable AUDIO NARRATION in profile settings
- * Uses parental-consent system (not sound effects toggle)
+ * Allows users to enable/disable sound effects and TTS narration
+ * Uses unified sound toggle via STORAGE_KEYS.sound
  * Changes take effect immediately (no app restart needed)
- * Affects:
- * - TTS narration: Controlled by hasFeatureConsent('audio')
- * - Celebration sounds: Respects audio consent
  */
 
 import { useState, useEffect } from "react";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { fxTap } from "@/lib/fx";
 import { stopTts } from "@/lib/tts";
-import {
-  hasFeatureConsent,
-  grantFeatureConsent,
-  revokeFeatureConsent,
-  subscribeConsentChanges,
-} from "@/lib/parental-consent";
 
 export function AudioSettingToggle() {
   const [audioEnabled, setAudioEnabled] = useState(() => {
-    return hasFeatureConsent("audio");
+    return localStorage.getItem(STORAGE_KEYS.sound) === "1";
   });
   const [isToggling, setIsToggling] = useState(false);
 
-  // Subscribe to consent changes
+  // Subscribe to storage changes
   useEffect(() => {
-    const unsubscribe = subscribeConsentChanges("audio", () => {
-      setAudioEnabled(hasFeatureConsent("audio"));
-    });
-    return unsubscribe;
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === STORAGE_KEYS.sound) {
+        setAudioEnabled(e.newValue === "1");
+      }
+    };
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
   const handleToggle = () => {
@@ -39,13 +34,10 @@ export function AudioSettingToggle() {
     fxTap(); // Play feedback before changing
 
     const newState = !audioEnabled;
+    localStorage.setItem(STORAGE_KEYS.sound, newState ? "1" : "0");
+    setAudioEnabled(newState);
 
-    if (newState) {
-      grantFeatureConsent("audio");
-      setAudioEnabled(true);
-    } else {
-      revokeFeatureConsent("audio");
-      setAudioEnabled(false);
+    if (!newState) {
       stopTts(); // Stop any active TTS immediately
     }
 
@@ -92,26 +84,26 @@ export function AudioSettingToggle() {
  */
 export function AudioSettingToggleCompact() {
   const [audioEnabled, setAudioEnabled] = useState(() => {
-    return hasFeatureConsent("audio");
+    return localStorage.getItem(STORAGE_KEYS.sound) === "1";
   });
 
   useEffect(() => {
-    const unsubscribe = subscribeConsentChanges("audio", () => {
-      setAudioEnabled(hasFeatureConsent("audio"));
-    });
-    return unsubscribe;
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === STORAGE_KEYS.sound) {
+        setAudioEnabled(e.newValue === "1");
+      }
+    };
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
   const handleToggle = () => {
     fxTap();
     const newState = !audioEnabled;
+    localStorage.setItem(STORAGE_KEYS.sound, newState ? "1" : "0");
+    setAudioEnabled(newState);
 
-    if (newState) {
-      grantFeatureConsent("audio");
-      setAudioEnabled(true);
-    } else {
-      revokeFeatureConsent("audio");
-      setAudioEnabled(false);
+    if (!newState) {
       stopTts();
     }
   };
@@ -139,26 +131,26 @@ export function AudioSettingToggleCompact() {
  */
 export function AudioSettingRow() {
   const [audioEnabled, setAudioEnabled] = useState(() => {
-    return hasFeatureConsent("audio");
+    return localStorage.getItem(STORAGE_KEYS.sound) === "1";
   });
 
   useEffect(() => {
-    const unsubscribe = subscribeConsentChanges("audio", () => {
-      setAudioEnabled(hasFeatureConsent("audio"));
-    });
-    return unsubscribe;
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === STORAGE_KEYS.sound) {
+        setAudioEnabled(e.newValue === "1");
+      }
+    };
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
   const handleToggle = () => {
     fxTap();
     const newState = !audioEnabled;
+    localStorage.setItem(STORAGE_KEYS.sound, newState ? "1" : "0");
+    setAudioEnabled(newState);
 
-    if (newState) {
-      grantFeatureConsent("audio");
-      setAudioEnabled(true);
-    } else {
-      revokeFeatureConsent("audio");
-      setAudioEnabled(false);
+    if (!newState) {
       stopTts();
     }
   };

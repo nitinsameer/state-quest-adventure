@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { EMOJI } from "@/constants/emoji";
-import { hasFeatureConsent } from "@/lib/parental-consent";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { fxCorrect, fxConfetti } from "@/lib/fx";
 
 interface StarCelebrationProps {
@@ -82,7 +82,7 @@ export function StarCelebration({
       const newParticles = generateParticles();
       setParticles((prev) => [...prev, ...newParticles]);
 
-      if (hasFeatureConsent("audio")) {
+      if (localStorage.getItem(STORAGE_KEYS.sound) === "1") {
         if (soundIndex === 2) {
           fxConfetti();
         } else {

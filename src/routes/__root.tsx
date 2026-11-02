@@ -29,8 +29,6 @@ import {
   getLevelName,
 } from "@/lib/progress";
 import { pauseTts, resumeTts } from "@/lib/tts";
-import { hasFeatureConsent } from "@/lib/parental-consent";
-import { ParentConsentGate } from "@/components/ParentConsentGate";
 import { initializeAudioCleanup } from "@/lib/fx";
 import { Capacitor } from "@capacitor/core";
 import { useCelebrationStore } from "@/store/celebrationStore";
@@ -385,40 +383,15 @@ function HydratedApp() {
       return;
     }
 
-    // CRITICAL FIX: Check parent consent before firing ANY Firebase events
-    // This prevents COPPA violations
-    if (!hasFeatureConsent("analytics")) {
-      appLogger.debug(
-        "app_lifecycle",
-        "Skipping Firebase events - parent consent not yet granted"
-      );
-      return;
-    }
-
-    // User is onboarded AND parent consented - log session/analytics (delay to not block initial render)
-    const isReturningUser = true; // If onboarded, they're returning
-
-    // Defer Firebase events until after initial render completes
-    setTimeout(() => {
-      firebaseEvents.sessionStart({
-        ageBand: progress.ageBand,
-        isReturningUser,
-      });
-
-      // Track daily visit and streak
-      firebaseEvents.dailyVisit({
-        ageBand: progress.ageBand,
-        streak: progress.streak,
-        daysActive: Object.keys(progress.stamps ?? {}).length,
-        totalXp: progress.xp,
-      });
-
-      // Track streak milestones
-      const milestonesToCheck = [3, 7, 14, 30];
-      if (milestonesToCheck.includes(progress.streak)) {
-        firebaseEvents.streakMilestone(progress.streak);
-      }
-    }, 500); // Defer by 500ms to avoid blocking initial render
+    // CRITICAL FIX: Analytics is disabled by default for COPPA compliance
+    // The parental consent system has been removed
+    // Analytics is only enabled if specific privacy requirements and valid consent conditions are met
+    // For now, keep analytics disabled
+    appLogger.debug(
+      "app_lifecycle",
+      "Analytics disabled - parental consent system removed for COPPA compliance"
+    );
+    return;
   }, [progress.onboarded, progress]);
 
   // Level-up celebration detection

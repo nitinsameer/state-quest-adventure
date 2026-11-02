@@ -10,7 +10,6 @@ import { useCelebration } from "@/hooks/useCelebration";
 import { useToast } from "@/hooks/useToast";
 import { usePostcardLibrary } from "@/store/postcard-library-store";
 import { sharePostcard } from "@/lib/share-postcard";
-import { ResetPINDialog } from "@/components/ResetPINDialog";
 import { readTokenAsHex, subscribeThemeChange } from "@/lib/theme-tokens";
 import { EMOJI } from "@/constants/emoji";
 
@@ -65,7 +64,6 @@ export function StatePostcardScreen({
   const [burst, setBurst] = useState(0);
   const [busy, setBusy] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [showParentGate, setShowParentGate] = useState(false);
   const [pendingBlob, setPendingBlob] = useState<Blob | null>(null);
   const cheer = useRef<HTMLImageElement | null>(null);
 
@@ -267,28 +265,22 @@ export function StatePostcardScreen({
     if (busy) return;
     fxTap();
 
-    // Show parent gate first
-    try {
-      const blob = await generatePostcardPreview();
-      if (blob) {
-        setPendingBlob(blob);
-        setShowParentGate(true);
-      }
-    } catch (err) {
-      console.error("[StatePostcardScreen] Share prep failed", err);
-      toast.error("Couldn't prepare postcard", {
-        subtitle: "Please try again",
-      });
-    }
-  }
-
-  async function proceedWithShare() {
-    if (!pendingBlob) return;
     setBusy(true);
 
     try {
+      // Generate postcard preview
+      const blob = await generatePostcardPreview();
+      if (!blob) {
+        toast.error("Couldn't prepare postcard", {
+          subtitle: "Please try again",
+        });
+        setBusy(false);
+        return;
+      }
+
+      // Share directly (no PIN gate required)
       const filename = `${state.name}-postcard`;
-      const result = await sharePostcard(pendingBlob, filename);
+      const result = await sharePostcard(blob, filename);
 
       if (result.ok) {
         if (result.cancelled) {
@@ -312,8 +304,6 @@ export function StatePostcardScreen({
         subtitle: "Please try again",
       });
       setBusy(false);
-    } finally {
-      setPendingBlob(null);
     }
   }
 
@@ -393,18 +383,7 @@ export function StatePostcardScreen({
         </button>
       </div>
 
-      {/* Parent Gate for Share */}
-      <ResetPINDialog
-        open={showParentGate}
-        onConfirm={() => {
-          setShowParentGate(false);
-          proceedWithShare();
-        }}
-        onCancel={() => {
-          setShowParentGate(false);
-          setPendingBlob(null);
-        }}
-      />
+
     </div>
   );
 }

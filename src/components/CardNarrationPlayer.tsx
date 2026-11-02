@@ -13,11 +13,7 @@ import {
   useTtsState,
   isTtsAvailable,
 } from "@/lib/tts";
-import {
-  hasFeatureConsent,
-  subscribeConsentChanges,
-  grantFeatureConsent,
-} from "@/lib/parental-consent";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { KidsButton } from "./KidsButton";
 import { EMOJI } from "@/constants/emoji";
 
@@ -35,26 +31,28 @@ export function CardNarrationPlayer({
   emoji = EMOJI.audio.speaker,
 }: CardNarrationPlayerProps) {
   const [audioNarrationEnabled, setAudioNarrationEnabled] = useState(() => {
-    const hasConsent = hasFeatureConsent("audio");
-    return hasConsent;
+    const soundEnabled = localStorage.getItem(STORAGE_KEYS.sound) === "1";
+    return soundEnabled;
   });
   const [showPermissionPrompt, setShowPermissionPrompt] = useState(false);
   const ttsState = useTtsState();
   const isCurrentPlaying = ttsState.narrationId === narrationId && ttsState.isPlaying;
   const [hasSupport] = useState(isTtsAvailable());
 
-  // Subscribe to consent changes and re-render when consent status changes
+  // Subscribe to storage changes to re-render when sound setting changes
   useEffect(() => {
-    const currentConsent = hasFeatureConsent("audio");
-    setAudioNarrationEnabled(currentConsent);
+    const soundEnabled = localStorage.getItem(STORAGE_KEYS.sound) === "1";
+    setAudioNarrationEnabled(soundEnabled);
 
-    const unsubscribe = subscribeConsentChanges("audio", () => {
-      const consentAfterChange = hasFeatureConsent("audio");
-      setAudioNarrationEnabled(consentAfterChange);
-    });
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === STORAGE_KEYS.sound) {
+        setAudioNarrationEnabled(e.newValue === "1");
+      }
+    };
 
+    window.addEventListener("storage", handleStorageChange);
     return () => {
-      unsubscribe();
+      window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
 
@@ -75,7 +73,7 @@ export function CardNarrationPlayer({
   };
 
   const handleEnableAudio = () => {
-    grantFeatureConsent("audio");
+    localStorage.setItem(STORAGE_KEYS.sound, "1");
     setAudioNarrationEnabled(true);
     setShowPermissionPrompt(false);
 
