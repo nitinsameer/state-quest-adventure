@@ -110,7 +110,7 @@ export function HomeScreen() {
           {/* Greeting + Level */}
           <div>
             <h1 className="text-h2" style={{ color: "var(--text-on-header)" }}>
-              Namaste, Explorer! 👋
+              Namaste, Explorer!
             </h1>
             <p className="text-body-sm font-semibold" style={{ color: "var(--text-on-header)" }}>
               Level {level} • {getLevelName(level)} • v3.0
