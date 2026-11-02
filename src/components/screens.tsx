@@ -1542,8 +1542,8 @@ export function JourneyMapScreen() {
           <div className="absolute inset-0 bg-gradient-to-b from-accent-3 via-accent-5 to-surface-muted" />
         </div>
 
-        {/* Destination cards in vertical layout */}
-        <div className="relative space-y-4">
+        {/* Destination cards in horizontal layout */}
+        <div className="relative space-y-3">
           {states.map((state, index) => {
             const isDone = state.status === "done";
             const isCurrent = state.status === "current";
@@ -1556,20 +1556,28 @@ export function JourneyMapScreen() {
                 className="animate-journey-destination ml-6 relative"
                 style={{ "--animation-delay": `${index * 50}ms` } as React.CSSProperties}
               >
-                {/* Vertical line node indicator */}
+                {/* Vertical line node indicator - centered vertically on card */}
                 <div
-                  className="absolute -left-10 top-4 w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all duration-300"
+                  className="absolute -left-10 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all duration-300"
                   style={{
                     borderColor: isDone ? "var(--accent-3)" : isCurrent ? "var(--accent-5)" : "var(--surface-muted)",
                     backgroundColor: isDone ? "var(--accent-3)" : isCurrent ? "var(--accent-5)" : "var(--surface-card)",
                   }}
                 >
+                  {/* Checkmark for completed */}
+                  {isDone && (
+                    <span className="text-xs text-on-header font-bold">✓</span>
+                  )}
+                  {/* Number for current and locked */}
+                  {!isDone && (
+                    <span className="text-xs text-on-header font-bold">{index + 1}</span>
+                  )}
                   {isCurrent && (
                     <div className="absolute inset-0 rounded-full animate-journey-current-pulse" />
                   )}
                 </div>
 
-                {/* Destination Card */}
+                {/* Destination Card - Horizontal Layout */}
                 <button
                   onClick={() => {
                     if (!isLocked) {
@@ -1581,86 +1589,83 @@ export function JourneyMapScreen() {
                   className="w-full text-left transition-all active:scale-98"
                 >
                   <div
-                    className="p-3 rounded-2xl border-2 transition-all duration-300"
+                    className="flex items-center gap-3 p-3 rounded-2xl border-2 transition-all duration-300 h-20"
                     style={{
                       borderColor: isCurrent ? "var(--accent-5)" : isDone ? "var(--accent-3)" : "transparent",
                       backgroundColor: isDone
                         ? "var(--accent-3-soft)"
                         : isCurrent
-                          ? "var(--surface-card)"
+                          ? "var(--accent-5-soft)"
                           : "var(--surface-muted)",
                     }}
                   >
-                    {/* Current Destination: Show compact illustration */}
-                    {isCurrent && (
+                    {/* Destination Image - Left, fixed size */}
+                    <div className="flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden bg-surface-card flex items-center justify-center">
                       <img
                         src={artSrc}
                         alt={state.name}
-                        className="w-16 h-16 object-contain mb-2 flex-shrink-0 mx-auto"
+                        className="w-full h-full object-contain"
                         loading="lazy"
                         decoding="async"
                       />
-                    )}
+                    </div>
 
-                    {/* Completed Destination: Show small illustration */}
-                    {isDone && (
-                      <img
-                        src={artSrc}
-                        alt={state.name}
-                        className="w-12 h-12 object-contain mb-1.5 flex-shrink-0 mx-auto"
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    )}
-
-                    {/* Destination name and status */}
-                    <div className="flex items-start gap-2">
-                      <div className="flex-1 min-w-0">
-                        {isCurrent && (
-                          <div className="text-xs font-bold text-accent-5 mb-0.5 uppercase tracking-wide">
-                            {EMOJI.action.next} Next Destination
-                          </div>
-                        )}
-                        <h3
-                          className="text-body font-extrabold leading-tight line-clamp-2"
-                          style={{
-                            color: isDone
-                              ? "var(--accent-3-ink)"
-                              : isCurrent
-                                ? "var(--text-primary)"
-                                : "var(--text-secondary)",
-                          }}
-                        >
-                          {state.name}
-                        </h3>
+                    {/* Destination Name and Status - Middle */}
+                    <div className="flex-1 min-w-0">
+                      <h3
+                        className="text-body font-extrabold leading-tight line-clamp-1"
+                        style={{
+                          color: isDone
+                            ? "var(--accent-3-ink)"
+                            : isCurrent
+                              ? "var(--text-primary)"
+                              : "var(--text-secondary)",
+                        }}
+                      >
+                        {state.name}
+                      </h3>
+                      {/* Status label - smaller, secondary color */}
+                      <div
+                        className="text-xs font-semibold mt-0.5"
+                        style={{
+                          color: isDone
+                            ? "var(--accent-3-ink)"
+                            : isCurrent
+                              ? "var(--accent-5)"
+                              : "var(--text-secondary)",
+                        }}
+                      >
+                        {isDone && "Completed ✓"}
+                        {isCurrent && "Next destination"}
+                        {isLocked && "Locked"}
                       </div>
+                    </div>
 
-                      {/* Status indicators - right aligned */}
+                    {/* Action Button/Icon - Right, inline */}
+                    <div className="flex-shrink-0">
                       {isDone && (
-                        <div className="text-accent-3 text-lg font-bold animate-journey-completed-glow flex-shrink-0">
-                          {EMOJI.action.done}
+                        <div className="text-accent-3 text-lg font-bold animate-journey-completed-glow">
+                          ✓
                         </div>
                       )}
+                      {isCurrent && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            fxTap();
+                            setView({ screen: "intro", name: state.name });
+                          }}
+                          className="px-3 py-1.5 rounded-lg bg-accent-5 text-on-header font-bold text-sm transition-all active:scale-95 flex items-center justify-center"
+                        >
+                          {EMOJI.action.play}
+                        </button>
+                      )}
                       {isLocked && (
-                        <div className="text-text-secondary text-base flex-shrink-0">
+                        <div className="text-text-secondary text-lg">
                           🔒
                         </div>
                       )}
                     </div>
-
-                    {/* Current destination Play button */}
-                    {isCurrent && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          fxTap();
-                          setView({ screen: "intro", name: state.name });
-                        }}
-                        className="w-full mt-3 py-2.5 rounded-xl bg-accent-5 text-on-header font-bold text-sm transition-all active:scale-95 flex items-center justify-center gap-1"
-                      >
-                        {EMOJI.action.play} Play
-                      </button>
-                    )}
                   </div>
                 </button>
               </div>
