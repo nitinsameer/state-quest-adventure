@@ -1471,8 +1471,8 @@ export function JourneyMapScreen() {
         }
       `}</style>
 
-      {/* Scenic Header with Background Image */}
-      <div className="sticky top-0 z-40 relative h-24 overflow-hidden shadow-elevated-1">
+      {/* Scenic Header with Background Image - Increased Height */}
+      <div className="sticky top-0 z-40 relative h-44 overflow-hidden shadow-elevated-1">
         {/* Background image - scenic backdrop */}
         <img
           src={stateHeaderBg}
@@ -1494,28 +1494,33 @@ export function JourneyMapScreen() {
           </button>
 
           {/* Center: India Journey title */}
-          <h1 className="flex-1 text-center text-h3 font-extrabold text-text-on-header leading-tight px-4">
+          <h1 className="flex-1 text-center text-h2 font-extrabold text-text-on-header leading-tight px-4">
             India Journey
           </h1>
 
           {/* Star counter - right side */}
-          <div className="h-10 px-3 rounded-full bg-surface-card flex items-center justify-center gap-1 text-text-primary flex-shrink-0 shadow-soft">
+          <div className="h-10 px-3 rounded-full bg-surface-card flex items-center justify-center gap-1 text-text-primary flex-shrink-0 transition-all active:scale-95 shadow-soft">
             <span className="text-label">{EMOJI.action.star}</span>
             <span className="text-caption font-extrabold">{p.xp}</span>
           </div>
         </div>
       </div>
 
-      {/* Progress Section - Compact */}
-      <div className="px-5 pt-3 pb-2">
-        <div className="text-body font-semibold text-text-secondary mb-1">
-          Your India adventure
-        </div>
-        <div className="flex items-center gap-2 mb-2">
-          <div className="text-h5 font-extrabold text-text-primary">
-            {completedStates}/{totalStates}
+      {/* Progress Section - White Card with Overlap */}
+      <div className="relative px-5 -mt-6 z-30">
+        <div className="bg-surface-card rounded-2xl shadow-elevated-1 p-5">
+          {/* Top row: Label and count */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="text-body font-semibold text-text-secondary">
+              Your India adventure
+            </div>
+            <div className="text-h5 font-extrabold text-text-primary">
+              {completedStates}/{totalStates}
+            </div>
           </div>
-          <div className="flex-1 h-1.5 bg-surface-muted rounded-full overflow-hidden">
+          
+          {/* Bottom row: Progress bar */}
+          <div className="flex-1 h-2.5 bg-surface-muted rounded-full overflow-hidden">
             <div
               className="h-full bg-accent-3 rounded-full transition-all duration-500"
               style={{ width: `${(completedStates / totalStates) * 100}%` }}
@@ -1526,7 +1531,7 @@ export function JourneyMapScreen() {
 
       {/* Main: Vertical Destination Journey Path */}
       <div
-        className="flex-1 overflow-y-auto overflow-x-hidden px-5 py-3 relative"
+        className="flex-1 overflow-y-auto overflow-x-hidden px-5 pt-4 relative"
         style={{ paddingBottom: "calc(80px + env(safe-area-inset-bottom))" }}
       >
         {/* Vertical path connecting all destinations */}
