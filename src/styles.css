@@ -5,6 +5,13 @@
 @import "./styles/base-tokens.css";
 @import "./styles/tokens.css";
 
+/* Disable pinch-to-zoom gesture globally (prevents accidental zoom while preserving essential touch interactions) */
+@layer base {
+  html {
+    touch-action: none;
+  }
+}
+
 /* Theme Files - Applied AFTER base tokens so colors override :root */
 /* Default & Light Variants */
 @import "./styles/themes/clay.css";          /* Default - Claymorphism Light */
