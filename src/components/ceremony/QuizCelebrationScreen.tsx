@@ -210,7 +210,7 @@ function SingleScreenCelebration({
               {/* Completed! with sparkles - large yellow/gold */}
               <div className="flex items-center justify-center gap-2">
                 <span className="text-xl">✨</span>
-                <h2 className="font-display text-3xl font-black text-yellow-500 leading-tight">
+                <h2 className="font-display text-3xl font-black leading-tight" style={{color: 'var(--accent-4)'}}>
                   Completed!
                 </h2>
                 <span className="text-xl">✨</span>
@@ -232,8 +232,8 @@ function SingleScreenCelebration({
           </div>
 
           {/* Achievement message - varies by star count */}
-          {elapsedMs > 1500 && elapsedMs < 3000 && (
-            <div className="text-center text-text-secondary text-sm font-semibold">
+          {elapsedMs > 1500 && elapsedMs < 3500 && (
+            <div className="text-center text-text-secondary font-semibold">
               {(() => {
                 const stars = parseInt(ceremony.stars);
                 if (stars === 3) return "Perfect! You mastered this quiz.";
@@ -339,7 +339,7 @@ function SingleScreenCelebration({
                     loading="lazy"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-2xl">
+                  <div className="w-full h-full flex items-center justify-center text-5xl">
                     {nextState.emoji}
                   </div>
                 )}
@@ -372,10 +372,10 @@ function SingleScreenCelebration({
       >
         {/* Two-column button layout */}
         <div className="flex gap-3 w-full">
-          {/* Home Button (Secondary - outlined purple) - 30% width */}
+          {/* Home Button (Secondary - outlined purple) - 35% width */}
           <button
             onClick={handleHome}
-            className="w-1/3 h-12 font-bold text-xs rounded-full transition-all active:scale-95 animate-slide-up border-2 border-accent-1 text-accent-1 bg-transparent hover:bg-accent-1/5"
+            className="w-2/5 h-12 font-bold text-sm rounded-full transition-all active:scale-95 animate-slide-up border-2 border-accent-1 text-accent-1 bg-transparent hover:bg-accent-1/5"
             style={{
               animationDelay: "0ms",
             }}
@@ -384,16 +384,16 @@ function SingleScreenCelebration({
             Home
           </button>
 
-          {/* Continue Your Journey Button (Primary - filled purple) - 70% width */}
+          {/* Continue Your Journey Button (Primary - filled purple) - 65% width */}
           <button
             onClick={handleNextState}
-            className="flex-1 h-12 font-bold text-sm rounded-full transition-all active:scale-95 animate-slide-up bg-accent-1 text-white hover:bg-accent-1/90"
+            className="flex-1 h-12 font-bold text-xs rounded-full transition-all active:scale-95 animate-slide-up bg-accent-1 text-white hover:bg-accent-1/90"
             style={{
               animationDelay: "100ms",
             }}
             aria-label="Continue to Next State"
           >
-            Continue Your Journey →
+            Continue →
           </button>
         </div>
       </div>
