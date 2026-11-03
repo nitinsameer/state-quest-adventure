@@ -122,9 +122,12 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext, onSkip }:
 
       {/* Header Section - Fixed at Top */}
       <div className="relative z-10 flex-shrink-0 px-4 pt-safe pb-2">
-        {/* Back Button + Step Badge Row */}
+        {/* Skip Button Row */}
         <div className="flex items-center justify-between mb-2">
-          {/* Skip Button - White Pill */}
+          {/* Spacer for flex-between */}
+          <div />
+
+          {/* Skip Button - White Pill (Top Right) */}
           <button
             type="button"
             onClick={handleSkipClick}
@@ -133,9 +136,6 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext, onSkip }:
           >
             Skip
           </button>
-
-          {/* Spacer for flex-between */}
-          <div />
         </div>
 
         {/* Title Section - Premium Styling with Custom Fonts */}
@@ -228,7 +228,7 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext, onSkip }:
         </div>
 
         {/* Fixed Footer Section - Always Visible */}
-        <div className="flex-shrink-0 relative z-20 bg-gradient-to-t from-black/5 to-transparent px-4 py-3 pb-safe">
+        <div className="flex-shrink-0 relative z-20 bg-gradient-to-t from-black/5 to-transparent px-4 py-4 pb-safe">
           {/* Explorer Summary Card */}
           {selectedAvatar && (
             <div

@@ -172,12 +172,12 @@ export function AgeScreen({
       </div>
 
       {/* Fixed Footer - Back and Continue buttons */}
-      <div className="relative z-20 flex-shrink-0 px-5 py-3 pb-safe bg-gradient-to-t from-black/5 to-transparent border-t border-border-color">
+      <div className="relative z-20 flex-shrink-0 px-5 py-4 pb-safe bg-gradient-to-t from-black/5 to-transparent border-t border-border-color">
         <div className="flex gap-3">
           <button
             type="button"
             onClick={handleBack}
-            className="flex-1 py-3 px-4 rounded-full font-bold text-text-primary bg-white border-2 border-action-primary transition-all hover:shadow-md active:scale-95"
+            className="flex-1 py-4 px-4 rounded-full font-black text-base text-ink bg-white border-2 border-action-primary transition-all hover:shadow-md active:scale-95"
             aria-label="Go back"
           >
             Back
@@ -186,14 +186,14 @@ export function AgeScreen({
             type="button"
             onClick={handleNext}
             disabled={!selectedAge}
-            className={`flex-1 py-3 px-4 rounded-full font-bold text-base flex items-center justify-center gap-2 transition-all active:scale-95 ${
+            className={`flex-1 py-4 px-4 rounded-full font-black text-base flex items-center justify-center gap-2 transition-all active:scale-95 ${
               selectedAge
-                ? "bg-action-primary text-white hover:shadow-elevated-2"
+                ? "bg-gradient-to-r from-[#7650F5] to-[#6366F1] text-white hover:shadow-xl"
                 : "bg-surface-sunken text-text-secondary cursor-not-allowed opacity-50"
             }`}
             aria-label="Start my journey"
           >
-            Start My Journey
+            <span>Start My Journey</span>
             <span>→</span>
           </button>
         </div>
