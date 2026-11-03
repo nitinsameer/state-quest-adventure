@@ -311,6 +311,12 @@ export function isThemeUnlocked(
     return true;
   }
 
+  // DEBUG: Check localStorage for debug flag (allows testing themes in production builds)
+  // Set via: localStorage.setItem('DEBUG_UNLOCK_ALL_THEMES', 'true')
+  if (typeof window !== 'undefined' && localStorage.getItem('DEBUG_UNLOCK_ALL_THEMES') === 'true') {
+    return true;
+  }
+
   if (!theme.unlockRule) return true; // starter theme
 
   const { type, value } = theme.unlockRule;
