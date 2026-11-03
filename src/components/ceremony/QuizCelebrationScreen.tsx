@@ -193,21 +193,31 @@ function SingleScreenCelebration({
         )}
 
         {/* Main content card */}
-        <div className="ui-card ui-accent-1-soft w-full max-w-sm p-8 rounded-2xl space-y-8">
-          {/* Title - appears during phase 1 */}
+        <div className="ui-card ui-accent-1-soft w-full max-w-sm p-8 rounded-2xl space-y-6 relative">
+          {/* Title - State name + Completed with confetti around */}
           {showPhase1 && (
             <div
-              className="transition-all duration-300 text-center space-y-1"
+              className="transition-all duration-300 text-center space-y-2"
               style={{
                 opacity: Math.min(1, phase1Progress * 2),
               }}
             >
-              <h1 className="font-display text-2xl font-bold text-text-primary leading-tight">
+              {/* State name - bold black */}
+              <h1 className="font-display text-4xl font-black text-text-primary leading-tight">
                 {state.name}
               </h1>
-              <h2 className="font-display text-3xl font-bold text-success bg-success/10 px-4 py-2 rounded-lg inline-block mx-auto leading-tight">
-                Completed! 🎉
-              </h2>
+              
+              {/* Completed! with sparkles - large yellow/gold */}
+              <div className="flex items-center justify-center gap-2">
+                <span className="text-2xl">✨</span>
+                <h2 className="font-display text-5xl font-black text-yellow-500 leading-tight" style={{
+                  textShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                  fontStyle: 'italic'
+                }}>
+                  Completed!
+                </h2>
+                <span className="text-2xl">✨</span>
+              </div>
             </div>
           )}
 
