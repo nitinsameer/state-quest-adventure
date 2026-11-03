@@ -196,14 +196,17 @@ function SingleScreenCelebration({
           {/* Title - appears during phase 1 */}
           {showPhase1 && (
             <div
-              className="transition-all duration-300 text-center"
+              className="transition-all duration-300 text-center space-y-1"
               style={{
                 opacity: Math.min(1, phase1Progress * 2),
               }}
             >
-              <h1 className="font-display text-3xl font-bold text-ink leading-tight">
-                Congrats!
+              <h1 className="font-display text-2xl font-bold text-text-primary leading-tight">
+                {state.name}
               </h1>
+              <h2 className="font-display text-3xl font-bold text-success bg-success/10 px-4 py-2 rounded-lg inline-block mx-auto leading-tight">
+                Completed! 🎉
+              </h2>
             </div>
           )}
 
@@ -219,6 +222,13 @@ function SingleScreenCelebration({
               prefersReducedMotion={prefersReducedMotion}
             />
           </div>
+
+          {/* Stars subtitle */}
+          {elapsedMs > 1500 && (
+            <div className="text-center text-text-secondary font-semibold">
+              Perfect! You mastered this quiz.
+            </div>
+          )}
 
           {/* PHASE 3: Single XP Reward Badge */}
           {showPhase3 && (
@@ -266,6 +276,11 @@ function SingleScreenCelebration({
                 badge={(ceremony.earnedBadgeIds?.[0] as BadgeId) || "explorer"}
               />
 
+              {/* New memory message */}
+              <div className="text-center text-sm font-semibold mt-4 px-4 py-3 bg-accent-2/10 rounded-xl">
+                <span>✨ A new memory added to your Explorer Passport! ✨</span>
+              </div>
+
               {/* Streak bonus - appears during postcard phase */}
               {ceremony.streak > 0 && ceremony.streak % 7 === 0 && phase4Progress > 0.5 && (
                 <div
@@ -285,6 +300,42 @@ function SingleScreenCelebration({
         </div>
       </div>
 
+      {/* PHASE 4.5: Next Adventure Preview */}
+      {showPhase4 && (() => {
+        const nextState = nextStateAfter(ceremony.stateName);
+        return nextState ? (
+          <div
+            className="px-6 py-4 border-t border-border-color transition-all"
+            style={{
+              opacity: phase4Progress > 0.6 ? 1 : 0,
+            }}
+          >
+            <div className="flex gap-4 items-center">
+              {/* Next state preview image */}
+              <div className="w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden shadow-soft">
+                <img
+                  src={STATE_ART[nextState.name]?.image || ""}
+                  alt={nextState.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              {/* Next state info */}
+              <div className="flex-1">
+                <div className="text-xs font-semibold text-text-secondary">
+                  Next Adventure:
+                </div>
+                <h3 className="text-lg font-bold text-text-primary mt-1">
+                  {nextState.name}
+                </h3>
+                <p className="text-sm text-text-secondary mt-1 line-clamp-2">
+                  New places, new stories and six new challenges await!
+                </p>
+              </div>
+            </div>
+          </div>
+        ) : null;
+      })()}
+
       {/* PHASE 5: Button Row (2 columns) */}
       <div
         className="px-6 pb-6 pt-4 bg-surface-card transition-all"
@@ -296,28 +347,28 @@ function SingleScreenCelebration({
       >
         {/* Two-column button layout */}
         <div className="flex gap-3 w-full">
-          {/* Next State Button (Primary - 50%) */}
-          <button
-            onClick={handleNextState}
-            className="flex-1 h-14 ui-button ui-accent-1 font-display font-bold text-lg rounded-3xl transition-all active:scale-95 animate-slide-up"
-            style={{
-              animationDelay: "0ms",
-            }}
-            aria-label="Next State Navigation"
-          >
-            Next State →
-          </button>
-
           {/* Home Button (Secondary - 50%) */}
           <button
             onClick={handleHome}
             className="flex-1 h-14 ui-button ui-button-soft font-bold text-base rounded-3xl transition-all active:scale-95 animate-slide-up"
             style={{
-              animationDelay: "100ms",
+              animationDelay: "0ms",
             }}
             aria-label="Return to Home"
           >
             Home
+          </button>
+
+          {/* Continue Your Journey Button (Primary - 50%) */}
+          <button
+            onClick={handleNextState}
+            className="flex-1 h-14 ui-button ui-accent-1 font-display font-bold text-lg rounded-3xl transition-all active:scale-95 animate-slide-up"
+            style={{
+              animationDelay: "100ms",
+            }}
+            aria-label="Continue to Next State"
+          >
+            Continue Your Journey →
           </button>
         </div>
       </div>
