@@ -115,7 +115,7 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
       <ConfettiBurst trigger={confettiBurst} size="small" />
 
       {/* Header Section - Fixed at Top */}
-      <div className="relative z-10 flex-shrink-0 px-4 pt-2 pb-2">
+      <div className="relative z-10 flex-shrink-0 px-4 pt-safe pb-2">
         {/* Back Button + Step Badge Row */}
         <div className="flex items-center justify-between mb-2">
           {/* Back Button - White Circle */}
@@ -178,7 +178,7 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
       {/* Main Content Container - Scrollable Avatar Grid + Fixed Footer */}
       <div className="relative z-10 flex-1 flex flex-col overflow-hidden">
         {/* Scrollable Avatar Grid Section */}
-        <div className="flex-1 overflow-y-auto px-4 py-3">
+        <div className="flex-1 overflow-y-auto px-4 py-3 min-h-0">
           {/* Avatar Grid - 3 Columns */}
           <div className="grid grid-cols-3 gap-3 mb-3">
             {AVATAR_IDS.map((avatarId) => (
