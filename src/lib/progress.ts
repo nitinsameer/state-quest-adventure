@@ -662,11 +662,14 @@ export function getStreakMilestone(streak: number): {
  *
  * FIX #3: Added state name validation to prevent orphaned data
  * FIX #17: Properly initialize replayCount per state
+ * FIX #24: Validate index is in main card range (0-5) to prevent sub-cards from being marked
  * Previously: Didn't validate stateName exists; could create orphaned state records
+ * Previously: Accepted any index, causing sub-cards (indices 6+) to be marked incorrectly
  * Now: Verifies state exists in INDIA_STATES before marking
+ * Now: Rejects indices outside 0-5 range with console.error for debugging
  *
  * @param stateName Name of the state (e.g., "Rajasthan")
- * @param index Card index (0-5)
+ * @param index Card index (MUST be 0-5 for main cards only)
  * @param isReplay Whether user is replaying an already-read card
  */
 export function markCard(stateName: string, index: number, isReplay: boolean = false) {
@@ -680,6 +683,10 @@ export function markCard(stateName: string, index: number, isReplay: boolean = f
 
     // Input validation: guard against invalid card data
     if (!stateName || typeof index !== "number" || index < 0 || index >= CARDS_PER_STATE) {
+      // FIX #24: Log error for debugging when invalid index is passed
+      console.error(
+        `[markCard] INVALID INDEX: state="${stateName}", index=${index}. Expected 0-${CARDS_PER_STATE - 1}. Card not marked!`,
+      );
       return p;
     }
 

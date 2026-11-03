@@ -2798,106 +2798,113 @@ export function LearningCardScreen({
 
   const handleNext = () => {
     if (cardIndexInCategory < cardsInCurrentCategory.length - 1) {
-      // Moving to next card in same category - show immediate celebration
+      // Moving to next card in same category - mark the main card (only once per category)
       const currentCard = cardsInCurrentCategory[cardIndexInCategory];
-      const isReplaying = progress.cards?.[state.name]?.includes(currentCardIndex) ?? false;
+      
+      // FIX #24: Only mark the MAIN card (type="main"), not enriched sub-cards
+      // Sub-cards should not trigger progress marking
+      if (currentCard.type === "main") {
+        // Check if main card was already marked
+        const mainCardIndex = currentCard.mainCardIndex;
+        const mainCardAlreadyRead = progress.cards?.[state.name]?.includes(mainCardIndex) ?? false;
+        const isReplaying = mainCardAlreadyRead;
 
-      // VALIDATION: Ensure currentCardIndex is valid before marking
-      if (currentCardIndex >= 0 && currentCardIndex < cards.length) {
         console.log(
-          `[LearningCardScreen] Marking card as learned: state="${state.name}", globalIndex=${currentCardIndex}, kicker="${currentCard.kicker}", replay=${isReplaying}`,
+          `[LearningCardScreen] handleNext (moving within category): Marking main card: state="${state.name}", mainCardIndex=${mainCardIndex}, kicker="${currentCard.kicker}", replay=${isReplaying}`,
         );
-        // Mark current card as learned BEFORE showing celebration (use currentCardIndex which is already global)
-        markCard(state.name, currentCardIndex, isReplaying);
+        // Mark main card (use mainCardIndex 0-5, not global card index)
+        markCard(state.name, mainCardIndex, isReplaying);
       } else {
-        console.error(
-          `[LearningCardScreen] INVALID currentCardIndex=${currentCardIndex}. Expected 0-${cards.length - 1}. Card not marked!`,
+        console.log(
+          `[LearningCardScreen] handleNext: Skipping mark for sub-card type="${currentCard.type}", kicker="${currentCard.kicker}" (not a main card)`,
         );
       }
 
-      // Show immediate celebration only on first read (not replay)
-      if (!isReplaying) {
-        fxCorrect();
-
-        // Trigger floating XP animation
-        const feedbackId = `xp-${Date.now()}-${Math.random()}`;
-
-        // DISABLED FOR NOW - PHASE 2: Card learning celebration
-        // celebration.custom(
-        //   `${currentCard.kicker} card learned!`,
-        //   "{EMOJI.feedback.trophy}",
-        //   {
-        //     subtitle: `+${XP_PER_CARD} XP earned ›¢ ${cardIndexInCategory + 1}/${cardsInCurrentCategory.length} cards in ${currentCard.kicker}`,
-        //     confetti: true,
-        //     duration: 2000,
-        //     type: "success",
-        //   }
-        // );
-
-        // Auto-advance to next card immediately (celebration disabled in PHASE 2)
-        setCardIndexInCategory(cardIndexInCategory + 1);
-      } else {
-        // Replay: advance immediately without celebration
-        fxTap();
-        setCardIndexInCategory(cardIndexInCategory + 1);
+      // Show immediate celebration only on first read of main card (not replay)
+      if (currentCard.type === "main") {
+        const mainCardAlreadyRead = progress.cards?.[state.name]?.includes(currentCard.mainCardIndex) ?? false;
+        
+        if (!mainCardAlreadyRead) {
+          fxCorrect();
+          // DISABLED FOR NOW - PHASE 2: Card learning celebration
+          // celebration.custom(
+          //   `${currentCard.kicker} card learned!`,
+          //   "{EMOJI.feedback.trophy}",
+          //   {
+          //     subtitle: `+${XP_PER_CARD} XP earned ›¢ ${cardIndexInCategory + 1}/${cardsInCurrentCategory.length} cards in ${currentCard.kicker}`,
+          //     confetti: true,
+          //     duration: 2000,
+          //     type: "success",
+          //   }
+          // );
+        }
       }
+
+      // Auto-advance to next card
+      fxTap();
+      setCardIndexInCategory(cardIndexInCategory + 1);
     } else {
-      // Last card in this category - mark and move to next category or exit
+      // Last card in this category - mark main card and move to next category or exit
       const currentCard = cardsInCurrentCategory[cardIndexInCategory];
-      const isReplaying = progress.cards?.[state.name]?.includes(currentCardIndex) ?? false;
+      
+      // FIX #24: Only mark the MAIN card (type="main"), not enriched sub-cards
+      if (currentCard.type === "main") {
+        // Check if main card was already marked
+        const mainCardIndex = currentCard.mainCardIndex;
+        const mainCardAlreadyRead = progress.cards?.[state.name]?.includes(mainCardIndex) ?? false;
+        const isReplaying = mainCardAlreadyRead;
 
-      // VALIDATION: Ensure currentCardIndex is valid before marking
-      if (currentCardIndex >= 0 && currentCardIndex < cards.length) {
         console.log(
-          `[LearningCardScreen] Marking FINAL card as learned: state="${state.name}", globalIndex=${currentCardIndex}, kicker="${currentCard.kicker}", replay=${isReplaying}`,
+          `[LearningCardScreen] handleNext (last card): Marking main card: state="${state.name}", mainCardIndex=${mainCardIndex}, kicker="${currentCard.kicker}", replay=${isReplaying}`,
         );
-        // Mark final card as learned
-        markCard(state.name, currentCardIndex, isReplaying);
+        // Mark main card (use mainCardIndex 0-5, not global card index)
+        markCard(state.name, mainCardIndex, isReplaying);
       } else {
-        console.error(
-          `[LearningCardScreen] INVALID currentCardIndex=${currentCardIndex}. Expected 0-${cards.length - 1}. Card not marked!`,
+        console.log(
+          `[LearningCardScreen] handleNext (last): Skipping mark for sub-card type="${currentCard.type}", kicker="${currentCard.kicker}" (not a main card)`,
         );
       }
 
       // Show category completion celebration
-      if (!isReplaying) {
-        fxCorrect();
-        // DISABLED FOR NOW - PHASE 2: Card learning celebration
-        // celebration.custom(
-        //   `${currentCard.kicker} card learned!`,
-        //   "{EMOJI.feedback.trophy}",
-        //   {
-        //     subtitle: `+${XP_PER_CARD} XP earned ›¢ ${currentCard.kicker} category complete! {EMOJI.audio.stories}`,
-        //     confetti: true,
-        //     duration: 2000,
-        //     type: "success",
-        //   }
-        // );
-
-        // Auto-advance to next category immediately (celebration disabled in PHASE 2)
-        onNext?.(null);
-      } else {
-        // Replay: advance immediately
-        fxTap();
-        onNext?.(null);
+      if (currentCard.type === "main") {
+        const mainCardAlreadyRead = progress.cards?.[state.name]?.includes(currentCard.mainCardIndex) ?? false;
+        
+        if (!mainCardAlreadyRead) {
+          fxCorrect();
+          // DISABLED FOR NOW - PHASE 2: Card learning celebration
+          // celebration.custom(
+          //   `${currentCard.kicker} card learned!`,
+          //   "{EMOJI.feedback.trophy}",
+          //   {
+          //     subtitle: `+${XP_PER_CARD} XP earned ›¢ ${currentCard.kicker} category complete! {EMOJI.audio.stories}`,
+          //     confetti: true,
+          //     duration: 2000,
+          //     type: "success",
+          //   }
+          // );
+        }
       }
+
+      // Move to next category or exit
+      fxTap();
+      onNext?.(null);
     }
   };
 
   const handleMainCardDone = () => {
     fxTap();
 
-    // Get the main card index and calculate completedCards for this main card
+    // Get the main card index for the current card
     const mainCardIdx = currentMainCardIndex;
     
-    // FIX: Check if MAIN CARD INDEX has been marked, not individual card positions
+    // FIX #24: Check if MAIN CARD INDEX has been marked (indices 0-5 only)
     // Progress array stores main card indices [0, 1, 2, 3, 4, 5], not global card positions
     const mainCardAlreadyRead = progress.cards?.[state.name]?.includes(mainCardIdx) ?? false;
 
-    // Mark the main card as learned
+    // Mark the main card as learned (only once)
     const wasFirstRead = !mainCardAlreadyRead;
 
-    // Show immediate celebration when completing main card
+    // Show immediate celebration when completing main card for the first time
     if (wasFirstRead) {
       fxCorrect(); // Rising chime sound
 
@@ -2911,20 +2918,18 @@ export function LearningCardScreen({
       ];
       const categoryName = mainCardNames[mainCardIdx] ?? `Category ${mainCardIdx + 1}`;
 
-      // FIX: Only main card gives XP (25 XP), not all sub-cards in the category
-      // Previously showed: +75 XP for 3 sub-cards, but only 25 was awarded
       showSuccessToast(`${categoryName} mastered! 🎉`, {
         duration: 2500,
         icon: "🏆",
       });
     }
 
-    // VALIDATION: Ensure we're marking the main card index, not a derived index
+    // VALIDATION: Ensure we're marking the main card index (0-5), not a derived index
     console.log(
-      `[LearningCardScreen] Marking main card: state="${state.name}", mainCardIdx=${mainCardIdx}, firstRead=${wasFirstRead}`,
+      `[LearningCardScreen] handleMainCardDone: Marking main card: state="${state.name}", mainCardIdx=${mainCardIdx}, firstRead=${wasFirstRead}`,
     );
     
-    // Mark the main card (use mainCardIdx as the index to mark)
+    // Mark the main card (use mainCardIdx as the index - must be 0-5)
     markCard(state.name, mainCardIdx, !wasFirstRead);
 
     // If this is the last main card, go to quiz
