@@ -48,43 +48,29 @@ export function PostcardFrame({
 
   return (
     <div className="flex justify-center">
-      {/* Postcard outer wrapper with colorful border */}
-      <div className="relative w-full max-w-sm">
-        {/* Colorful dashed postage border */}
-        <div className="absolute inset-0 rounded-xl pointer-events-none" style={{
-          background: `
-            repeating-linear-gradient(90deg, 
-              #FF4444 0px, #FF4444 3px,
-              #4444FF 3px, #4444FF 6px,
-              #FF44FF 6px, #FF44FF 9px,
-              #44CCFF 9px, #44CCFF 12px)`,
-          padding: '3px'
-        }}>
-          <div className="w-full h-full bg-surface-card rounded-xl"></div>
+      {/* Postcard Frame with colorful postage border */}
+      <div className="w-full max-w-sm bg-surface-card rounded-xl shadow-lg p-4 relative overflow-hidden" style={{
+        border: '4px dashed transparent',
+        backgroundImage: `
+          linear-gradient(white, white),
+          repeating-linear-gradient(90deg,
+            #FF5555 0px, #FF5555 4px,
+            #4444FF 4px, #4444FF 8px,
+            #FF44FF 8px, #FF44FF 12px,
+            #44CCFF 12px, #44CCFF 16px)`,
+        backgroundOrigin: 'border-box',
+        backgroundClip: 'content-box, border-box',
+      }}>
+        {/* "Your Postcard!" label at top */}
+        <div className="absolute -top-3 left-4 z-10">
+          <div className="flex items-center gap-1 bg-accent-1 text-white px-2 py-1 rounded text-xs font-bold shadow-md">
+            <span>📮</span>
+            <span>Your Postcard!</span>
+          </div>
         </div>
 
-        {/* Postcard Frame - 3:2 aspect ratio, white background with shadow */}
-        <div className="w-full max-w-sm bg-surface-card rounded-xl shadow-lg p-5 relative overflow-hidden" style={{
-          border: '3px dashed transparent',
-          backgroundImage: `
-            linear-gradient(white, white),
-            repeating-linear-gradient(90deg,
-              #FF4444 0px, #FF4444 3px,
-              #4444FF 3px, #4444FF 6px,
-              #FF44FF 6px, #FF44FF 9px,
-              #44CCFF 9px, #44CCFF 12px)`,
-          backgroundOrigin: 'border-box',
-          backgroundClip: 'content-box, border-box',
-        }}>
-          {/* "Your Postcard!" label at top */}
-          <div className="absolute -top-4 left-0 right-0 flex justify-start z-10">
-            <div className="flex items-center gap-2 bg-accent-1 text-white px-3 py-1 rounded-lg shadow-md ml-4">
-              <span className="text-sm font-bold">📮 Your Postcard!</span>
-            </div>
-          </div>
-
-          {/* Aspect ratio 3:2 container */}
-          <div className="aspect-[3/2] flex flex-col relative">
+        {/* Aspect ratio 3:2 container */}
+        <div className="aspect-[3/2] flex flex-col relative">
           {/* Top section (40% height) - State illustration centered */}
           <div className="flex-[2] flex items-center justify-center pb-2">
             {art ? (
@@ -111,7 +97,6 @@ export function PostcardFrame({
           <div className="flex-[1] flex items-center justify-between px-2 py-1 relative">
             {/* Blank - no date, no stars, no stamp */}
           </div>
-        </div>
         </div>
       </div>
     </div>

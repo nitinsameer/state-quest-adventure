@@ -24,7 +24,7 @@ import { STORAGE_KEYS } from "@/constants/storageKeys";
  * 2. Stars MASSIVE with sparkles + rotations (0.2-2.0s, 700ms apart)
  * 3. XP reward badge (1.8-3.2s)
  * 4. Postcard slides in (3.2-4.2s)
- * 5. Buttons (Next State + Home) slide in 2-column (4.2s+)
+ * 5. Buttons (Home + Continue) slide in 2-column (4.2s+)
  *
  * Features:
  * - MASSIVE stars (text-9xl) with pop animations
@@ -179,7 +179,7 @@ function SingleScreenCelebration({
   return (
     <div className="h-full w-full bg-surface-card flex flex-col overflow-hidden">
       {/* CONTENT AREA */}
-      <div className="flex-1 flex flex-col items-center justify-center px-6 py-6 overflow-y-auto relative">
+      <div className="flex-1 flex flex-col items-center justify-center px-6 py-4 overflow-y-auto relative">
         {/* PHASE 1: Confetti burst */}
         {showPhase1 && (
           <div
@@ -193,35 +193,32 @@ function SingleScreenCelebration({
         )}
 
         {/* Main content card */}
-        <div className="ui-card ui-accent-1-soft w-full max-w-sm p-8 rounded-2xl space-y-6 relative">
+        <div className="ui-card ui-accent-1-soft w-full max-w-sm p-6 rounded-2xl space-y-4 relative">
           {/* Title - State name + Completed with confetti around */}
           {showPhase1 && (
             <div
-              className="transition-all duration-300 text-center space-y-2"
+              className="transition-all duration-300 text-center space-y-1"
               style={{
                 opacity: Math.min(1, phase1Progress * 2),
               }}
             >
               {/* State name - bold black */}
-              <h1 className="font-display text-4xl font-black text-text-primary leading-tight">
+              <h1 className="font-display text-2xl font-black text-text-primary leading-tight">
                 {state.name}
               </h1>
               
               {/* Completed! with sparkles - large yellow/gold */}
               <div className="flex items-center justify-center gap-2">
-                <span className="text-2xl">✨</span>
-                <h2 className="font-display text-5xl font-black text-yellow-500 leading-tight" style={{
-                  textShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                  fontStyle: 'italic'
-                }}>
+                <span className="text-xl">✨</span>
+                <h2 className="font-display text-3xl font-black text-yellow-500 leading-tight">
                   Completed!
                 </h2>
-                <span className="text-2xl">✨</span>
+                <span className="text-xl">✨</span>
               </div>
             </div>
           )}
 
-          {/* PHASE 2: MASSIVE Stars with particles */}
+          {/* PHASE 2: Stars with particles - REDUCED SIZE */}
           <div
             style={{
               opacity: Math.min(1, elapsedMs / 400),
@@ -234,9 +231,9 @@ function SingleScreenCelebration({
             />
           </div>
 
-          {/* Achievement message - varies by star count */}
+          {/* Achievement message - varies by star count - ONLY ONE */}
           {elapsedMs > 1500 && (
-            <div className="text-center text-text-secondary font-semibold">
+            <div className="text-center text-text-secondary text-sm font-semibold">
               {(() => {
                 const stars = parseInt(ceremony.stars);
                 if (stars === 3) return "Perfect! You mastered this quiz.";
@@ -293,14 +290,14 @@ function SingleScreenCelebration({
               />
 
               {/* New memory message */}
-              <div className="text-center text-sm font-semibold mt-4 px-4 py-3 bg-accent-2/10 rounded-xl">
+              <div className="text-center text-xs font-semibold mt-3 px-3 py-2 bg-accent-2/10 rounded-lg">
                 <span>✨ A new memory added to your Explorer Passport! ✨</span>
               </div>
 
               {/* Streak bonus - appears during postcard phase */}
               {ceremony.streak > 0 && ceremony.streak % 7 === 0 && phase4Progress > 0.5 && (
                 <div
-                  className="ui-card ui-accent-2 px-4 py-3 rounded-2xl mt-4 text-center"
+                  className="ui-card ui-accent-2 px-4 py-3 rounded-2xl mt-3 text-center"
                   style={{
                     opacity: Math.max(0, (phase4Progress - 0.5) * 2),
                   }}
@@ -319,42 +316,54 @@ function SingleScreenCelebration({
       {/* PHASE 4.5: Next Adventure Preview */}
       {showPhase4 && (() => {
         const nextState = nextStateAfter(ceremony.stateName);
-        return nextState ? (
+        if (!nextState) return null;
+        
+        const nextStateImage = STATE_ART[nextState.name];
+        console.log("[QuizCelebration] Next state:", nextState.name, "Image:", nextStateImage);
+
+        return (
           <div
-            className="px-6 py-4 transition-all w-full"
+            className="px-6 py-3 transition-all w-full"
             style={{
               opacity: phase4Progress > 0.6 ? 1 : 0,
             }}
           >
-            <div className="flex gap-4 items-start">
+            <div className="flex gap-3 items-start">
               {/* Next state preview image */}
-              <div className="w-24 h-24 flex-shrink-0 rounded-2xl overflow-hidden shadow-md">
-                <img
-                  src={STATE_ART[nextState.name]?.image || ""}
-                  alt={nextState.name}
-                  className="w-full h-full object-cover"
-                />
+              <div className="w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden shadow-md bg-surface-card">
+                {nextStateImage ? (
+                  <img
+                    src={nextStateImage}
+                    alt={nextState.name}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-2xl">
+                    {nextState.emoji}
+                  </div>
+                )}
               </div>
               {/* Next state info */}
-              <div className="flex-1 pt-1">
-                <div className="text-xs font-semibold text-text-secondary uppercase tracking-wide">
+              <div className="flex-1 pt-0.5">
+                <div className="text-xs font-bold text-text-secondary uppercase tracking-wider">
                   Next Adventure:
                 </div>
-                <h3 className="text-xl font-bold text-text-primary mt-1">
+                <h3 className="text-base font-bold text-text-primary mt-0.5">
                   {nextState.name}
                 </h3>
-                <p className="text-sm text-text-secondary mt-2">
+                <p className="text-xs text-text-secondary mt-1 line-clamp-2">
                   New places, new stories and six new challenges await!
                 </p>
               </div>
             </div>
           </div>
-        ) : null;
+        );
       })()}
 
       {/* PHASE 5: Button Row (2 columns) */}
       <div
-        className="px-6 pb-6 pt-4 bg-surface-card transition-all"
+        className="px-6 pb-6 pt-3 bg-surface-card transition-all"
         style={{
           opacity: showPhase5 ? 1 : 0,
           transform: showPhase5 ? "translateY(0)" : "translateY(20px)",
@@ -366,7 +375,7 @@ function SingleScreenCelebration({
           {/* Home Button (Secondary - outlined purple) */}
           <button
             onClick={handleHome}
-            className="flex-1 h-14 font-bold text-base rounded-full transition-all active:scale-95 animate-slide-up border-2 border-accent-1 text-accent-1 bg-transparent hover:bg-accent-1/5"
+            className="flex-1 h-12 font-bold text-sm rounded-full transition-all active:scale-95 animate-slide-up border-2 border-accent-1 text-accent-1 bg-transparent hover:bg-accent-1/5"
             style={{
               animationDelay: "0ms",
             }}
@@ -378,7 +387,7 @@ function SingleScreenCelebration({
           {/* Continue Your Journey Button (Primary - filled purple) */}
           <button
             onClick={handleNextState}
-            className="flex-1 h-14 font-display font-bold text-lg rounded-full transition-all active:scale-95 animate-slide-up bg-accent-1 text-white hover:bg-accent-1/90"
+            className="flex-1 h-12 font-bold text-sm rounded-full transition-all active:scale-95 animate-slide-up bg-accent-1 text-white hover:bg-accent-1/90"
             style={{
               animationDelay: "100ms",
             }}
