@@ -61,9 +61,10 @@ export interface AvatarScreenProps {
   selectedAvatar: string | null;
   onSelectAvatar: (avatarId: string) => void;
   onNext: () => void;
+  onSkip: () => void;
 }
 
-export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarScreenProps) {
+export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext, onSkip }: AvatarScreenProps) {
   const [confettiBurst, setConfettiBurst] = useState(0);
   const [animatingId, setAnimatingId] = useState<string | null>(null);
 
@@ -96,6 +97,11 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
     onNext();
   };
 
+  const handleSkipClick = () => {
+    fxTap();
+    onSkip();
+  };
+
   return (
     <div className="w-full h-full flex flex-col select-none touch-none relative overflow-hidden">
       {/* Background Image - Full Screen */}
@@ -118,20 +124,18 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
       <div className="relative z-10 flex-shrink-0 px-4 pt-safe pb-2">
         {/* Back Button + Step Badge Row */}
         <div className="flex items-center justify-between mb-2">
-          {/* Back Button - White Circle */}
+          {/* Skip Button - White Pill */}
           <button
             type="button"
-            onClick={() => window.history.back()}
-            className="h-10 w-10 rounded-full bg-white shadow-md flex items-center justify-center hover:shadow-lg active:scale-95 transition-all flex-shrink-0"
-            aria-label="Go back"
+            onClick={handleSkipClick}
+            className="bg-white rounded-full px-3 py-1 shadow-md hover:shadow-lg active:scale-95 transition-all font-black text-sm text-ink"
+            aria-label="Skip onboarding"
           >
-            <span className="text-lg font-black text-ink">&lt;</span>
+            Skip
           </button>
 
-          {/* Step Badge - White Pill */}
-          <div className="bg-white rounded-full px-3 py-1 shadow-md">
-            <span className="text-xs font-black text-ink" style={{ fontFamily: "var(--font-display)" }}>Step 1/3</span>
-          </div>
+          {/* Spacer for flex-between */}
+          <div />
         </div>
 
         {/* Title Section - Premium Styling with Custom Fonts */}

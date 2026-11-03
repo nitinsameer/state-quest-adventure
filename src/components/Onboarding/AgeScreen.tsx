@@ -36,6 +36,7 @@ export interface AgeScreenProps {
   onSelectAge: (age: string) => void;
   onBack: () => void;
   onNext: () => void;
+  onSkip: () => void;
 }
 
 export function AgeScreen({
@@ -44,6 +45,7 @@ export function AgeScreen({
   onSelectAge,
   onBack,
   onNext,
+  onSkip,
 }: AgeScreenProps) {
   const [confettiBurst, setConfettiBurst] = useState(0);
   const [animatingAge, setAnimatingAge] = useState<string | null>(null);
@@ -71,6 +73,11 @@ export function AgeScreen({
     onNext();
   };
 
+  const handleSkipClick = () => {
+    fxTap();
+    onSkip();
+  };
+
   return (
     <div className="w-full h-full flex flex-col select-none touch-none relative overflow-hidden bg-bg-page">
       {/* Background layer */}
@@ -86,18 +93,33 @@ export function AgeScreen({
 
       {/* Header - Fixed at top */}
       <div className="relative z-10 flex-shrink-0">
+        {/* Skip button row - mirrors Avatar layout */}
+        <div className="flex items-center justify-between px-5 pt-safe pb-1">
+          <div></div> {/* Spacer for flex-between */}
+          <button
+            type="button"
+            onClick={handleSkipClick}
+            className="bg-white rounded-full px-3 py-1 shadow-md hover:shadow-lg active:scale-95 transition-all font-black text-sm text-ink"
+            aria-label="Skip to home"
+          >
+            Skip
+          </button>
+        </div>
+        
+        {/* PremiumHeader - no step badge */}
         <PremiumHeader
           firstPart="How Old"
           secondPart="Are You?"
           subtitle="Choose your age band to get a better learning experience!"
           step={2}
           secondPartColor="var(--accent-5)"
+          showStepBadge={false}
         />
       </div>
 
-      {/* Scrollable Content - includes buttons in flow */}
-      <div className="relative z-10 flex-1 overflow-y-auto">
-        <div className="px-5 py-3 pb-safe flex flex-col gap-2">
+      {/* Scrollable Content - Age options only */}
+      <div className="relative z-10 flex-1 overflow-y-auto min-h-0">
+        <div className="px-5 py-3 flex flex-col gap-2">
           {/* Age Bands */}
           {AGE_BANDS.map((band) => {
             const isSelected = selectedAge === band.value;
@@ -146,32 +168,34 @@ export function AgeScreen({
               </button>
             );
           })}
+        </div>
+      </div>
 
-          {/* Buttons - In content flow - matching AvatarScreen styling */}
-          <div className="flex gap-3 pt-3">
-            <button
-              type="button"
-              onClick={handleBack}
-              className="flex-1 py-3 px-4 rounded-full font-bold text-text-primary bg-white border-2 border-action-primary transition-all hover:shadow-md active:scale-95"
-              aria-label="Go back"
-            >
-              Back
-            </button>
-            <button
-              type="button"
-              onClick={handleNext}
-              disabled={!selectedAge}
-              className={`flex-1 py-3 px-4 rounded-full font-bold text-base flex items-center justify-center gap-2 transition-all active:scale-95 ${
-                selectedAge
-                  ? "bg-action-primary text-white hover:shadow-elevated-2"
-                  : "bg-surface-sunken text-text-secondary cursor-not-allowed opacity-50"
-              }`}
-              aria-label="Start my journey"
-            >
-              Start My Journey
-              <span>→</span>
-            </button>
-          </div>
+      {/* Fixed Footer - Back and Continue buttons */}
+      <div className="relative z-20 flex-shrink-0 px-5 py-3 pb-safe bg-gradient-to-t from-black/5 to-transparent border-t border-border-color">
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={handleBack}
+            className="flex-1 py-3 px-4 rounded-full font-bold text-text-primary bg-white border-2 border-action-primary transition-all hover:shadow-md active:scale-95"
+            aria-label="Go back"
+          >
+            Back
+          </button>
+          <button
+            type="button"
+            onClick={handleNext}
+            disabled={!selectedAge}
+            className={`flex-1 py-3 px-4 rounded-full font-bold text-base flex items-center justify-center gap-2 transition-all active:scale-95 ${
+              selectedAge
+                ? "bg-action-primary text-white hover:shadow-elevated-2"
+                : "bg-surface-sunken text-text-secondary cursor-not-allowed opacity-50"
+            }`}
+            aria-label="Start my journey"
+          >
+            Start My Journey
+            <span>→</span>
+          </button>
         </div>
       </div>
     </div>

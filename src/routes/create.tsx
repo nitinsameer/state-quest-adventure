@@ -55,6 +55,20 @@ function CreateRoute() {
     setCurrentStep("age");
   };
 
+  const handleAvatarSkip = () => {
+    fxConfetti();
+    const defaultName = getAvatarName("explorer-hat");
+    saveProfile({
+      name: defaultName,
+      avatar: "explorer-hat",
+      ageBand: "6-7",
+    });
+
+    setTimeout(() => {
+      navigate({ to: "/home" });
+    }, 300);
+  };
+
   const handleAgeNext = () => {
     if (!selectedAvatar || !selectedAge) return;
 
@@ -80,6 +94,20 @@ function CreateRoute() {
     }, 500);
   };
 
+  const handleAgeSkip = () => {
+    fxConfetti();
+    const defaultName = getAvatarName("explorer-hat");
+    saveProfile({
+      name: defaultName,
+      avatar: "explorer-hat",
+      ageBand: "6-7",
+    });
+
+    setTimeout(() => {
+      navigate({ to: "/home" });
+    }, 300);
+  };
+
   return (
     <div className="w-screen h-screen overflow-hidden bg-bg-page">
       {currentStep === "avatar" && (
@@ -87,6 +115,7 @@ function CreateRoute() {
           selectedAvatar={selectedAvatar}
           onSelectAvatar={setSelectedAvatar}
           onNext={handleAvatarNext}
+          onSkip={handleAvatarSkip}
         />
       )}
 
@@ -97,6 +126,7 @@ function CreateRoute() {
           onSelectAge={setSelectedAge}
           onBack={() => setCurrentStep("avatar")}
           onNext={handleAgeNext}
+          onSkip={handleAgeSkip}
         />
       )}
     </div>
