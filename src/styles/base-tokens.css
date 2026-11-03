@@ -17,8 +17,12 @@
      ======================================================================== */
 
   /* Font Families */
-  --font-display: "Baloo 2", system-ui, sans-serif;
-  --font-sans: "Nunito", system-ui, sans-serif;
+  /* Each theme sets --font / --fonth (see src/styles/themes/*.css). Route them
+     through here so --font-sans / --font-display — what components actually
+     use — pick up the active theme's typography instead of always falling
+     back to Baloo 2 / Nunito. */
+  --font-display: var(--fonth, "Baloo 2", system-ui, sans-serif);
+  --font-sans: var(--font, "Nunito", system-ui, sans-serif);
 
   /* Kid-Friendly Type Scale Tokens (child-facing screens) */
   --type-screen-title: 28px;

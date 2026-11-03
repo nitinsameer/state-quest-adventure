@@ -68,7 +68,7 @@
   --text-secondary: rgba(255, 255, 255, 0.78);
   --text-muted: rgba(255, 255, 255, 0.6);
   --text-on-header: #fff;
-  --text-on-primary: #fff;
+  --text-on-primary: oklch(0.15 0.04 260); /* was #fff — failed WCAG AA against --action-primary-bg */
   --text-link: #fff;
   
   --action-primary-bg: #fff;

@@ -55,7 +55,7 @@ export function GranularConsentDialog({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-scrim backdrop-blur-sm p-4 animate-in fade-in">
       <div className="bg-surface-card rounded-3xl shadow-2xl max-w-md w-full overflow-hidden animate-in zoom-in-95 flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="bg-bg-header p-(--padding-lg)" style={{ color: "var(--text-on-primary)" }}>
+        <div className="bg-bg-header p-(--padding-lg)" style={{ color: "var(--text-on-header)" }}>
           <h2 className="text-2xl font-extrabold mb-(--space-0-25)">{EMOJI.action.lock} Stamp Privacy</h2>
           <p className="text-sm opacity-90">Manage who can see this stamp from {postcard.state}</p>
         </div>
@@ -170,7 +170,7 @@ export function GranularConsentDialog({
           <div className="bg-fb-info-bg rounded-2xl p-(--padding-md) border border-fb-info-border">
             <div className="flex gap-(--gap-base)">
               <span className="text-lg flex-shrink-0">{EMOJI.action.lock}</span>
-              <div className="text-xs" style={{ color: "var(--text-on-primary)" }}>
+              <div className="text-xs" style={{ color: "var(--fb-info-fg)" }}>
                 <strong>You're in control:</strong> You can change your mind anytime. We never share
                 your stamps without your permission.
               </div>

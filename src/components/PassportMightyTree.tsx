@@ -65,7 +65,7 @@ export function PassportMightyTree() {
         {/* Profile Card */}
         <div
           className="p-4 rounded-3xl bg-accent-1 shadow-lg sticky top-0"
-          style={{ color: "var(--text-on-primary)" }}
+          style={{ color: "var(--accent-1-ink)" }}
         >
           <div className="flex items-center gap-3 mb-2">
             <div className="text-4xl">{progress.avatar}</div>
@@ -206,7 +206,7 @@ export function PassportMightyTree() {
       <div className="px-5 pb-4">
         <button
           onClick={() => navigate({ to: "/home" })}
-          className="w-full h-12 rounded-2xl bg-accent-3 text-text-on-primary font-extrabold shadow-lg"
+          className="w-full h-12 rounded-2xl bg-accent-3 text-accent-3-ink font-extrabold shadow-lg"
         >
           Back Home {EMOJI.nav.home}
         </button>

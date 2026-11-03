@@ -66,7 +66,7 @@
   --text-secondary: #6e6e73;
   --text-muted: #86868b;
   --text-on-header: #1d1d1f;
-  --text-on-primary: #1d1d1f;
+  --text-on-primary: oklch(1 0 0); /* was #1d1d1f — failed WCAG AA against --action-primary-bg */
   --text-link: #0071e3;
   
   --action-primary-bg: #0071e3;

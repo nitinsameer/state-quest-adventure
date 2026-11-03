@@ -1,0 +1,341 @@
+diff --git a/src/components/GranularConsentDialog.tsx b/src/components/GranularConsentDialog.tsx
+index 079c0f0..7ff9b60 100644
+--- a/src/components/GranularConsentDialog.tsx
++++ b/src/components/GranularConsentDialog.tsx
+@@ -55,7 +55,7 @@ export function GranularConsentDialog({
+     <div className="fixed inset-0 z-50 flex items-center justify-center bg-scrim backdrop-blur-sm p-4 animate-in fade-in">
+       <div className="bg-surface-card rounded-3xl shadow-2xl max-w-md w-full overflow-hidden animate-in zoom-in-95 flex flex-col max-h-[90vh]">
+         {/* Header */}
+-        <div className="bg-bg-header p-(--padding-lg)" style={{ color: "var(--text-on-primary)" }}>
++        <div className="bg-bg-header p-(--padding-lg)" style={{ color: "var(--text-on-header)" }}>
+           <h2 className="text-2xl font-extrabold mb-(--space-0-25)">{EMOJI.action.lock} Stamp Privacy</h2>
+           <p className="text-sm opacity-90">Manage who can see this stamp from {postcard.state}</p>
+         </div>
+@@ -170,7 +170,7 @@ export function GranularConsentDialog({
+           <div className="bg-fb-info-bg rounded-2xl p-(--padding-md) border border-fb-info-border">
+             <div className="flex gap-(--gap-base)">
+               <span className="text-lg flex-shrink-0">{EMOJI.action.lock}</span>
+-              <div className="text-xs" style={{ color: "var(--text-on-primary)" }}>
++              <div className="text-xs" style={{ color: "var(--fb-info-fg)" }}>
+                 <strong>You're in control:</strong> You can change your mind anytime. We never share
+                 your stamps without your permission.
+               </div>
+diff --git a/src/components/KidsButton.tsx b/src/components/KidsButton.tsx
+index bd14dc7..7bcbd4b 100644
+--- a/src/components/KidsButton.tsx
++++ b/src/components/KidsButton.tsx
+@@ -47,9 +47,9 @@ export function KidsButton({
+ 
+   // Variant mapping
+   const variantClasses = {
+-    primary: "ui-button ui-accent-1 text-on-primary hover:opacity-90",
++    primary: "ui-button ui-accent-1 text-accent-1-ink hover:opacity-90",
+     secondary: "ui-button-soft ui-accent-2 text-accent-2-ink border-2 border-border",
+-    success: "ui-button ui-accent-3 text-on-primary hover:opacity-90",
++    success: "ui-button ui-accent-3 text-accent-3-ink hover:opacity-90",
+     locked: "ui-button-soft opacity-60 cursor-not-allowed text-text-disabled border-2 border-dashed",
+     ghost: "bg-transparent text-accent-1 font-bold hover:bg-accent-1-soft active:scale-95",
+   };
+diff --git a/src/components/PassportMightyTree.tsx b/src/components/PassportMightyTree.tsx
+index 21647eb..be5e111 100644
+--- a/src/components/PassportMightyTree.tsx
++++ b/src/components/PassportMightyTree.tsx
+@@ -65,7 +65,7 @@ export function PassportMightyTree() {
+         {/* Profile Card */}
+         <div
+           className="p-4 rounded-3xl bg-accent-1 shadow-lg sticky top-0"
+-          style={{ color: "var(--text-on-primary)" }}
++          style={{ color: "var(--accent-1-ink)" }}
+         >
+           <div className="flex items-center gap-3 mb-2">
+             <div className="text-4xl">{progress.avatar}</div>
+@@ -206,7 +206,7 @@ export function PassportMightyTree() {
+       <div className="px-5 pb-4">
+         <button
+           onClick={() => navigate({ to: "/home" })}
+-          className="w-full h-12 rounded-2xl bg-accent-3 text-text-on-primary font-extrabold shadow-lg"
++          className="w-full h-12 rounded-2xl bg-accent-3 text-accent-3-ink font-extrabold shadow-lg"
+         >
+           Back Home {EMOJI.nav.home}
+         </button>
+diff --git a/src/components/PassportSapling.tsx b/src/components/PassportSapling.tsx
+index 0a11799..d74be40 100644
+--- a/src/components/PassportSapling.tsx
++++ b/src/components/PassportSapling.tsx
+@@ -59,7 +59,7 @@ export function PassportSapling() {
+       {/* Profile & Stats */}
+       <div className="mx-5 mt-4 space-y-3">
+         {/* Profile Card */}
+-        <div className="p-4 rounded-3xl bg-accent-1 text-text-on-primary shadow-lg">
++        <div className="p-4 rounded-3xl bg-accent-1 text-accent-1-ink shadow-lg">
+           <div className="flex items-center gap-3 mb-2">
+             <div className="text-4xl">{progress.avatar}</div>
+             <div>
+@@ -79,11 +79,11 @@ export function PassportSapling() {
+ 
+         {/* Streak & Engagement */}
+         <div className="grid grid-cols-2 gap-2">
+-          <div className="p-3 rounded-2xl bg-accent-1 text-text-on-primary shadow-md">
++          <div className="p-3 rounded-2xl bg-accent-1 text-accent-1-ink shadow-md">
+             <div className="text-2xl">{EMOJI.action.fire}</div>
+             <div className="text-xs font-extrabold mt-1">{streak}-day streak!</div>
+           </div>
+-          <div className="p-3 rounded-2xl bg-accent-2 text-text-on-primary shadow-md">
++          <div className="p-3 rounded-2xl bg-accent-2 text-accent-2-ink shadow-md">
+             <div className="text-2xl">{EMOJI.action.star}</div>
+             <div className="text-xs font-extrabold mt-1">{xpToNextLevel} XP to next level</div>
+           </div>
+@@ -126,7 +126,7 @@ export function PassportSapling() {
+       <div className="px-5 pb-4">
+         <button
+           onClick={() => navigate({ to: "/home" })}
+-          className="w-full h-12 rounded-2xl bg-accent-3 text-text-on-primary font-extrabold shadow-lg"
++          className="w-full h-12 rounded-2xl bg-accent-3 text-accent-3-ink font-extrabold shadow-lg"
+         >
+           Back Home {EMOJI.nav.home}
+         </button>
+diff --git a/src/components/PassportSprout.tsx b/src/components/PassportSprout.tsx
+index f791d1a..774812e 100644
+--- a/src/components/PassportSprout.tsx
++++ b/src/components/PassportSprout.tsx
+@@ -60,7 +60,7 @@ export function PassportSprout() {
+       </div>
+ 
+       {/* Profile Card */}
+-      <div className="mx-5 mt-4 p-4 rounded-3xl bg-accent-1 shadow-lg" style={{color: "var(--text-on-primary)"}}>
++      <div className="mx-5 mt-4 p-4 rounded-3xl bg-accent-1 shadow-lg" style={{color: "var(--accent-1-ink)"}}>
+         <div className="flex items-center gap-3 mb-3">
+           <div className="text-5xl">{progress.avatar}</div>
+           <div>
+@@ -147,7 +147,7 @@ export function PassportSprout() {
+               fxTap();
+               setCurrentPage(currentPage + 1);
+             }}
+-            className="flex-1 h-12 rounded-2xl bg-accent-2 font-extrabold text-lg shadow-lg" style={{color: "var(--text-on-primary)"}}
++            className="flex-1 h-12 rounded-2xl bg-accent-2 font-extrabold text-lg shadow-lg" style={{color: "var(--accent-2-ink)"}}
+           >
+             Next States →
+           </button>
+@@ -155,7 +155,7 @@ export function PassportSprout() {
+         {!hasNextPage && currentPage === 0 && (
+           <button
+             onClick={() => navigate({ to: "/home" })}
+-            className="flex-1 h-12 rounded-2xl bg-accent-3 font-extrabold text-lg shadow-lg" style={{color: "var(--text-on-primary)"}}
++            className="flex-1 h-12 rounded-2xl bg-accent-3 font-extrabold text-lg shadow-lg" style={{color: "var(--accent-3-ink)"}}
+           >
+             Back Home {EMOJI.nav.home}
+           </button>
+diff --git a/src/styles/base-tokens.css b/src/styles/base-tokens.css
+index 73bc258..3ae21fb 100644
+--- a/src/styles/base-tokens.css
++++ b/src/styles/base-tokens.css
+@@ -17,8 +17,12 @@
+      ======================================================================== */
+ 
+   /* Font Families */
+-  --font-display: "Baloo 2", system-ui, sans-serif;
+-  --font-sans: "Nunito", system-ui, sans-serif;
++  /* Each theme sets --font / --fonth (see src/styles/themes/*.css). Route them
++     through here so --font-sans / --font-display — what components actually
++     use — pick up the active theme's typography instead of always falling
++     back to Baloo 2 / Nunito. */
++  --font-display: var(--fonth, "Baloo 2", system-ui, sans-serif);
++  --font-sans: var(--font, "Nunito", system-ui, sans-serif);
+ 
+   /* Kid-Friendly Type Scale Tokens (child-facing screens) */
+   --type-screen-title: 28px;
+diff --git a/src/styles/themes/aero.css b/src/styles/themes/aero.css
+index 5faadeb..1e7d3c1 100644
+--- a/src/styles/themes/aero.css
++++ b/src/styles/themes/aero.css
+@@ -66,7 +66,7 @@
+   --text-secondary: #3b6b8a;
+   --text-muted: #5a8aaa;
+   --text-on-header: #0b3a5a;
+-  --text-on-primary: #0b3a5a;
++  --text-on-primary: oklch(0.15 0.04 260); /* was #0b3a5a — failed WCAG AA against --action-primary-bg */
+   --text-link: #0b82d6;
+   
+   --action-primary-bg: #0b82d6;
+diff --git a/src/styles/themes/aurora.css b/src/styles/themes/aurora.css
+index b338c72..6485ad3 100644
+--- a/src/styles/themes/aurora.css
++++ b/src/styles/themes/aurora.css
+@@ -66,7 +66,7 @@
+   --text-secondary: #a9b6d8;
+   --text-muted: #7a8ab8;
+   --text-on-header: #f2f6ff;
+-  --text-on-primary: #f2f6ff;
++  --text-on-primary: oklch(0.15 0.04 260); /* was #f2f6ff — failed WCAG AA against --action-primary-bg */
+   --text-link: #5ef2c2;
+   
+   --action-primary-bg: #5ef2c2;
+diff --git a/src/styles/themes/clay.css b/src/styles/themes/clay.css
+index b620b2a..4781261 100644
+--- a/src/styles/themes/clay.css
++++ b/src/styles/themes/clay.css
+@@ -71,7 +71,7 @@
+   --text-secondary: #7a72a8;
+   --text-muted: #7a72a8;
+   --text-on-header: #2d2650;
+-  --text-on-primary: #2d2650;
++  --text-on-primary: oklch(1 0 0); /* was #2d2650 — failed WCAG AA against --action-primary-bg */
+   --text-link: #7c5cf0;
+   
+   --action-primary-bg: #7c5cf0;
+diff --git a/src/styles/themes/claydark.css b/src/styles/themes/claydark.css
+index 9d1dc36..7249406 100644
+--- a/src/styles/themes/claydark.css
++++ b/src/styles/themes/claydark.css
+@@ -69,7 +69,7 @@
+   --text-secondary: #a69fd6;
+   --text-muted: #a69fd6;
+   --text-on-header: #f0ecff;
+-  --text-on-primary: #f0ecff;
++  --text-on-primary: oklch(0.15 0.04 260); /* was #f0ecff — failed WCAG AA against --action-primary-bg */
+   --text-link: #9b82ff;
+   
+   --action-primary-bg: #9b82ff;
+diff --git a/src/styles/themes/cyber.css b/src/styles/themes/cyber.css
+index 3733701..c961601 100644
+--- a/src/styles/themes/cyber.css
++++ b/src/styles/themes/cyber.css
+@@ -66,7 +66,7 @@
+   --text-secondary: #8fa0d0;
+   --text-muted: #6a7aa0;
+   --text-on-header: #e8f0ff;
+-  --text-on-primary: #e8f0ff;
++  --text-on-primary: oklch(0.15 0.04 260); /* was #e8f0ff — failed WCAG AA against --action-primary-bg */
+   --text-link: #00f5d4;
+   
+   --action-primary-bg: #00f5d4;
+diff --git a/src/styles/themes/glass.css b/src/styles/themes/glass.css
+index c15d9af..8982bcf 100644
+--- a/src/styles/themes/glass.css
++++ b/src/styles/themes/glass.css
+@@ -68,7 +68,7 @@
+   --text-secondary: rgba(255, 255, 255, 0.78);
+   --text-muted: rgba(255, 255, 255, 0.6);
+   --text-on-header: #fff;
+-  --text-on-primary: #fff;
++  --text-on-primary: oklch(0.15 0.04 260); /* was #fff — failed WCAG AA against --action-primary-bg */
+   --text-link: #fff;
+   
+   --action-primary-bg: #fff;
+diff --git a/src/styles/themes/material.css b/src/styles/themes/material.css
+index 80e3917..15ea690 100644
+--- a/src/styles/themes/material.css
++++ b/src/styles/themes/material.css
+@@ -66,7 +66,7 @@
+   --text-secondary: #49454f;
+   --text-muted: #635b60;
+   --text-on-header: #1d1b20;
+-  --text-on-primary: #1d1b20;
++  --text-on-primary: oklch(1 0 0); /* was #1d1b20 — failed WCAG AA against --action-primary-bg */
+   --text-link: #6750a4;
+   
+   --action-primary-bg: #6750a4;
+diff --git a/src/styles/themes/minimal.css b/src/styles/themes/minimal.css
+index 44c7986..5f155e9 100644
+--- a/src/styles/themes/minimal.css
++++ b/src/styles/themes/minimal.css
+@@ -66,7 +66,7 @@
+   --text-secondary: #6e6e73;
+   --text-muted: #86868b;
+   --text-on-header: #1d1d1f;
+-  --text-on-primary: #1d1d1f;
++  --text-on-primary: oklch(1 0 0); /* was #1d1d1f — failed WCAG AA against --action-primary-bg */
+   --text-link: #0071e3;
+   
+   --action-primary-bg: #0071e3;
+diff --git a/src/styles/themes/neu.css b/src/styles/themes/neu.css
+index b5e26a3..1314871 100644
+--- a/src/styles/themes/neu.css
++++ b/src/styles/themes/neu.css
+@@ -66,7 +66,7 @@
+   --text-secondary: #7b83a3;
+   --text-muted: #8b93b3;
+   --text-on-header: #3d4468;
+-  --text-on-primary: #3d4468;
++  --text-on-primary: oklch(0.15 0.04 260); /* was #3d4468 — failed WCAG AA against --action-primary-bg */
+   --text-link: #5b6cff;
+   
+   --action-primary-bg: #5b6cff;
+diff --git a/src/styles/themes/oled.css b/src/styles/themes/oled.css
+index ebe5f9e..b35c4e6 100644
+--- a/src/styles/themes/oled.css
++++ b/src/styles/themes/oled.css
+@@ -66,7 +66,7 @@
+   --text-secondary: #8a8a8a;
+   --text-muted: #6a6a6a;
+   --text-on-header: #f5f5f5;
+-  --text-on-primary: #f5f5f5;
++  --text-on-primary: oklch(0.15 0.04 260); /* was #f5f5f5 — failed WCAG AA against --action-primary-bg */
+   --text-link: #4de1c1;
+   
+   --action-primary-bg: #4de1c1;
+diff --git a/src/styles/themes/paper.css b/src/styles/themes/paper.css
+index f63a64e..3f3d422 100644
+--- a/src/styles/themes/paper.css
++++ b/src/styles/themes/paper.css
+@@ -68,7 +68,7 @@
+   --text-secondary: #7a7566;
+   --text-muted: #8a8078;
+   --text-on-header: #3a3a4a;
+-  --text-on-primary: #3a3a4a;
++  --text-on-primary: oklch(0.15 0.04 260); /* was #3a3a4a — failed WCAG AA against --action-primary-bg */
+   --text-link: #d9534f;
+   
+   --action-primary-bg: #d9534f;
+diff --git a/src/styles/themes/pixel.css b/src/styles/themes/pixel.css
+index f0f8786..c9cebfd 100644
+--- a/src/styles/themes/pixel.css
++++ b/src/styles/themes/pixel.css
+@@ -68,7 +68,7 @@
+   --text-secondary: #a7b4ff;
+   --text-muted: #7a8aff;
+   --text-on-header: #f4f4f4;
+-  --text-on-primary: #f4f4f4;
++  --text-on-primary: oklch(0.15 0.04 260); /* was #f4f4f4 — failed WCAG AA against --action-primary-bg */
+   --text-link: #ffcd75;
+   
+   --action-primary-bg: #ffcd75;
+diff --git a/src/styles/themes/skeuo.css b/src/styles/themes/skeuo.css
+index c12267b..460812b 100644
+--- a/src/styles/themes/skeuo.css
++++ b/src/styles/themes/skeuo.css
+@@ -66,7 +66,7 @@
+   --text-secondary: #7a6652;
+   --text-muted: #8a7a6a;
+   --text-on-header: #3b2a1e;
+-  --text-on-primary: #3b2a1e;
++  --text-on-primary: oklch(1 0 0); /* was #3b2a1e — failed WCAG AA against --action-primary-bg */
+   --text-link: #1f6fd6;
+   
+   --action-primary-bg: #1f6fd6;
+diff --git a/src/styles/themes/synth.css b/src/styles/themes/synth.css
+index 663be45..29855c6 100644
+--- a/src/styles/themes/synth.css
++++ b/src/styles/themes/synth.css
+@@ -66,7 +66,7 @@
+   --text-secondary: #d89cf0;
+   --text-muted: #b878c8;
+   --text-on-header: #ffe8ff;
+-  --text-on-primary: #ffe8ff;
++  --text-on-primary: oklch(0.15 0.04 260); /* was #ffe8ff — failed WCAG AA against --action-primary-bg */
+   --text-link: #2ee6ff;
+   
+   --action-primary-bg: #2ee6ff;
+diff --git a/src/styles/themes/term.css b/src/styles/themes/term.css
+index 7fcb35f..7508d4b 100644
+--- a/src/styles/themes/term.css
++++ b/src/styles/themes/term.css
+@@ -68,7 +68,7 @@
+   --text-secondary: #1fae45;
+   --text-muted: #0f7f30;
+   --text-on-header: #33ff66;
+-  --text-on-primary: #33ff66;
++  --text-on-primary: oklch(0.15 0.04 260); /* was #33ff66 — failed WCAG AA against --action-primary-bg */
+   --text-link: #33ff66;
+   
+   --action-primary-bg: #33ff66;

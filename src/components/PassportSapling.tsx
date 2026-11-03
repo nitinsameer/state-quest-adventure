@@ -59,7 +59,7 @@ export function PassportSapling() {
       {/* Profile & Stats */}
       <div className="mx-5 mt-4 space-y-3">
         {/* Profile Card */}
-        <div className="p-4 rounded-3xl bg-accent-1 text-text-on-primary shadow-lg">
+        <div className="p-4 rounded-3xl bg-accent-1 text-accent-1-ink shadow-lg">
           <div className="flex items-center gap-3 mb-2">
             <div className="text-4xl">{progress.avatar}</div>
             <div>
@@ -79,11 +79,11 @@ export function PassportSapling() {
 
         {/* Streak & Engagement */}
         <div className="grid grid-cols-2 gap-2">
-          <div className="p-3 rounded-2xl bg-accent-1 text-text-on-primary shadow-md">
+          <div className="p-3 rounded-2xl bg-accent-1 text-accent-1-ink shadow-md">
             <div className="text-2xl">{EMOJI.action.fire}</div>
             <div className="text-xs font-extrabold mt-1">{streak}-day streak!</div>
           </div>
-          <div className="p-3 rounded-2xl bg-accent-2 text-text-on-primary shadow-md">
+          <div className="p-3 rounded-2xl bg-accent-2 text-accent-2-ink shadow-md">
             <div className="text-2xl">{EMOJI.action.star}</div>
             <div className="text-xs font-extrabold mt-1">{xpToNextLevel} XP to next level</div>
           </div>
@@ -126,7 +126,7 @@ export function PassportSapling() {
       <div className="px-5 pb-4">
         <button
           onClick={() => navigate({ to: "/home" })}
-          className="w-full h-12 rounded-2xl bg-accent-3 text-text-on-primary font-extrabold shadow-lg"
+          className="w-full h-12 rounded-2xl bg-accent-3 text-accent-3-ink font-extrabold shadow-lg"
         >
           Back Home {EMOJI.nav.home}
         </button>

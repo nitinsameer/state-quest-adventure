@@ -47,9 +47,9 @@ export function KidsButton({
 
   // Variant mapping
   const variantClasses = {
-    primary: "ui-button ui-accent-1 text-on-primary hover:opacity-90",
+    primary: "ui-button ui-accent-1 text-accent-1-ink hover:opacity-90",
     secondary: "ui-button-soft ui-accent-2 text-accent-2-ink border-2 border-border",
-    success: "ui-button ui-accent-3 text-on-primary hover:opacity-90",
+    success: "ui-button ui-accent-3 text-accent-3-ink hover:opacity-90",
     locked: "ui-button-soft opacity-60 cursor-not-allowed text-text-disabled border-2 border-dashed",
     ghost: "bg-transparent text-accent-1 font-bold hover:bg-accent-1-soft active:scale-95",
   };
