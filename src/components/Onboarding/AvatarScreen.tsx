@@ -114,10 +114,10 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
 
       <ConfettiBurst trigger={confettiBurst} size="small" />
 
-      {/* Header Section */}
-      <div className="relative z-10 flex-shrink-0 px-4 pt-3 pb-3">
+      {/* Header Section - Fixed at Top */}
+      <div className="relative z-10 flex-shrink-0 px-4 pt-2 pb-2">
         {/* Back Button + Step Badge Row */}
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between mb-2">
           {/* Back Button - White Circle */}
           <button
             type="button"
@@ -125,47 +125,68 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
             className="h-10 w-10 rounded-full bg-white shadow-md flex items-center justify-center hover:shadow-lg active:scale-95 transition-all flex-shrink-0"
             aria-label="Go back"
           >
-            <span className="text-lg font-bold text-ink">&lt;</span>
+            <span className="text-lg font-black text-ink">&lt;</span>
           </button>
 
           {/* Step Badge - White Pill */}
           <div className="bg-white rounded-full px-3 py-1 shadow-md">
-            <span className="text-xs font-black text-ink">Step 1/3</span>
+            <span className="text-xs font-black text-ink" style={{ fontFamily: "var(--font-display)" }}>Step 1/3</span>
           </div>
         </div>
 
-        {/* Title Section - Premium Styling */}
-        <div className="text-center mt-1">
-          {/* Main Heading */}
-          <div className="text-2xl font-black text-ink leading-tight">
+        {/* Title Section - Premium Styling with Custom Fonts */}
+        <div className="text-center">
+          {/* Main Heading - "Pick Your" */}
+          <div 
+            className="text-3xl leading-tight font-black"
+            style={{ 
+              fontFamily: "var(--font-display)",
+              color: "#1a2e4a",
+              fontWeight: 900,
+              letterSpacing: "-0.02em"
+            }}
+          >
             Pick Your
           </div>
           
-          {/* Avatar Text with Golden Gradient */}
-          <div className="text-5xl font-black leading-tight mt-0">
-            <span className="bg-gradient-to-r from-[#FFD700] via-[#FFA500] to-[#FF6B35] bg-clip-text text-transparent">
-              Avatar
-            </span>
+          {/* Avatar Text with Golden Gradient - "Avatar" */}
+          <div 
+            className="text-6xl font-black leading-tight mt-0 mb-1"
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 900,
+              letterSpacing: "-0.03em",
+              background: "linear-gradient(to right, #FFD700 0%, #FFA500 50%, #FF8C00 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text"
+            }}
+          >
+            Avatar
           </div>
 
           {/* Subtitle */}
-          <p className="text-xs text-ink font-semibold mt-1 leading-tight">
+          <p 
+            className="text-sm text-ink font-semibold leading-snug"
+            style={{ fontFamily: "var(--font-sans)" }}
+          >
             Choose your explorer to start your adventure!
           </p>
         </div>
       </div>
 
-      {/* Scrollable Avatar Grid Section */}
-      <div className="relative z-10 flex-1 overflow-y-auto px-4">
-        <div className="py-4 pb-safe">
+      {/* Main Content Container - Scrollable Avatar Grid + Fixed Footer */}
+      <div className="relative z-10 flex-1 flex flex-col overflow-hidden">
+        {/* Scrollable Avatar Grid Section */}
+        <div className="flex-1 overflow-y-auto px-4 py-3">
           {/* Avatar Grid - 3 Columns */}
-          <div className="grid grid-cols-3 gap-3 mb-4">
+          <div className="grid grid-cols-3 gap-3 mb-3">
             {AVATAR_IDS.map((avatarId) => (
               <button
                 key={avatarId}
                 type="button"
                 onClick={() => handleAvatarSelect(avatarId)}
-                className="relative aspect-square rounded-3xl overflow-hidden transition-all duration-300 flex items-center justify-center focus:outline-none"
+                className="relative aspect-square rounded-3xl overflow-hidden transition-all duration-300 flex items-center justify-center focus:outline-none active:scale-95"
                 aria-label={`Select ${getAvatarName(avatarId)}`}
                 style={{
                   backgroundColor: getAvatarBackgroundColor(avatarId),
@@ -187,7 +208,7 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
                 {/* Selected Checkmark Badge - Bottom Right */}
                 {selectedAvatar === avatarId && (
                   <div
-                    className="absolute bottom-2 right-2 bg-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg border-2 border-white animate-scale-in"
+                    className="absolute bottom-2 right-2 bg-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg border-2 border-white"
                     style={{
                       animation: "scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)",
                     }}
@@ -197,27 +218,19 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
                     </span>
                   </div>
                 )}
-
-                {/* Bounce animation on select */}
-                {animatingId === avatarId && (
-                  <style>{`
-                    @keyframes cardBounce {
-                      0%, 100% { transform: scale(1.02); }
-                      50% { transform: scale(1.12); }
-                    }
-                  `}</style>
-                )}
               </button>
             ))}
           </div>
+        </div>
 
+        {/* Fixed Footer Section - Always Visible */}
+        <div className="flex-shrink-0 relative z-20 bg-gradient-to-t from-black/5 to-transparent px-4 py-3 pb-safe">
           {/* Explorer Summary Card */}
           {selectedAvatar && (
             <div
-              className="rounded-3xl p-4 mb-4 shadow-lg border-2 border-white/80 animate-fade-in-up"
+              className="rounded-3xl p-4 mb-3 shadow-lg border-2 border-white/80"
               style={{
                 background: "linear-gradient(135deg, #FFFACD 0%, #FFE4B5 100%)",
-                animation: "fadeInUp 0.4s ease-out",
               }}
             >
               <div className="flex items-center gap-3">
@@ -230,10 +243,16 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
 
                 {/* Explorer Info */}
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs font-black text-amber-900 tracking-wider">
+                  <div 
+                    className="text-xs font-black text-amber-900 tracking-wider"
+                    style={{ fontFamily: "var(--font-display)" }}
+                  >
                     YOUR EXPLORER
                   </div>
-                  <div className="text-h4 font-black text-ink truncate">
+                  <div 
+                    className="text-lg font-black text-ink truncate"
+                    style={{ fontFamily: "var(--font-display)" }}
+                  >
                     {getAvatarName(selectedAvatar)}
                   </div>
                 </div>
@@ -246,12 +265,13 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext }: AvatarS
             </div>
           )}
 
-          {/* Continue Button */}
+          {/* Continue Button - Always Visible */}
           {selectedAvatar && (
             <button
               type="button"
               onClick={handleNext}
-              className="w-full py-3 px-4 rounded-full bg-gradient-to-r from-[#7650F5] to-[#6366F1] text-white font-black text-base flex items-center justify-center gap-2 shadow-lg hover:shadow-xl active:scale-95 transition-all mb-4"
+              className="w-full py-4 px-4 rounded-full bg-gradient-to-r from-[#7650F5] to-[#6366F1] text-white font-black text-base flex items-center justify-center gap-2 shadow-lg hover:shadow-xl active:scale-95 transition-all"
+              style={{ fontFamily: "var(--font-display)" }}
               aria-label="Continue to next step"
             >
               <span>Continue</span>
