@@ -311,10 +311,20 @@ export function isThemeUnlocked(
     return true;
   }
 
-  // DEBUG: Check localStorage for debug flag (allows testing themes in production builds)
-  // Set via: localStorage.setItem('DEBUG_UNLOCK_ALL_THEMES', 'true')
-  if (typeof window !== 'undefined' && localStorage.getItem('DEBUG_UNLOCK_ALL_THEMES') === 'true') {
-    return true;
+  // DEBUG: Unlock all themes in debug APK builds
+  // Automatically enabled for debug builds, or set via: localStorage.setItem('DEBUG_UNLOCK_ALL_THEMES', 'true')
+  if (typeof window !== 'undefined') {
+    const debugFlag = localStorage.getItem('DEBUG_UNLOCK_ALL_THEMES');
+    if (debugFlag === 'true') {
+      return true;
+    }
+    
+    // Auto-enable debug mode for debug APK builds (detect via app build signature)
+    const isDebugBuild = typeof (window as any).__DEBUG_BUILD__ !== 'undefined' || 
+                         localStorage.getItem('_IS_DEBUG_BUILD') === 'true';
+    if (isDebugBuild) {
+      return true;
+    }
   }
 
   if (!theme.unlockRule) return true; // starter theme
