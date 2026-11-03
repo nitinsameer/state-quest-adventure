@@ -1972,6 +1972,25 @@ export function LearningHubScreen({
   const [hasSeenUnlock, setHasSeenUnlock] = useState(false);
   const [showUnlockAnimation, setShowUnlockAnimation] = useState(false);
 
+  // QUIZ BUTTON FIX: Compute whether all 6 main cards have been marked
+  // This is independent of cardCounts calculation to ensure persistence across navigation/replay
+  const allMainCardsMarked = useMemo(() => {
+    const mainCardsInProgress = cardsRead(progress, state.name);
+    const hasAll = mainCardsInProgress.length === 6 &&
+      mainCardsInProgress.includes(0) &&
+      mainCardsInProgress.includes(1) &&
+      mainCardsInProgress.includes(2) &&
+      mainCardsInProgress.includes(3) &&
+      mainCardsInProgress.includes(4) &&
+      mainCardsInProgress.includes(5);
+    
+    console.log(
+      `[LearningHubScreen] allMainCardsMarked check: progress.cards[${state.name}]=${mainCardsInProgress}, hasAll=${hasAll}`,
+    );
+    
+    return hasAll;
+  }, [progress.cards, state.name]);
+
   // Category progress tracking - calculate card counts using cardVisits
   const allCards = useMemo(() => {
     return learningCardsFor(state.name, "en", progress.ageBand);
@@ -1985,6 +2004,13 @@ export function LearningHubScreen({
     // Progress.cards[state.name] should contain: [0, 1, 2, 3, 4, 5] for completed categories
     const completedCardIndices = cardsRead(progress, state.name);
     console.log(`[LearningHubScreen] cardsRead for ${state.name}:`, completedCardIndices);
+    console.log(
+      `[LearningHubScreen] QUIZ BUTTON DEBUG: progress.cards[${state.name}] =`,
+      progress.cards?.[state.name],
+    );
+    console.log(
+      `[LearningHubScreen] QUIZ BUTTON DEBUG: completedCardIndices length = ${completedCardIndices.length}`,
+    );
 
     // Calculate card counts per category
     // NOTE: We only count categories where the MAIN card (index 0-5) has been marked complete
@@ -2019,12 +2045,35 @@ export function LearningHubScreen({
       `[LearningHubScreen] cardCounts breakdown:`,
       cardCounts.map((c, i) => `Cat${i}: ${c.read}/${c.total}`).join(", "),
     );
+    
+    // QUIZ BUTTON FIX: Verify that we have all 6 main cards marked
+    // This is the definitive source of truth - not a calculated count
+    const mainCardsMarked = cardsRead(progress, state.name);
+    const hasAllMainCards = mainCardsMarked.length === 6 &&
+      mainCardsMarked.includes(0) &&
+      mainCardsMarked.includes(1) &&
+      mainCardsMarked.includes(2) &&
+      mainCardsMarked.includes(3) &&
+      mainCardsMarked.includes(4) &&
+      mainCardsMarked.includes(5);
+    
+    console.log(
+      `[LearningHubScreen] QUIZ BUTTON FINAL CHECK: result=${result}, hasAllMainCards=${hasAllMainCards}, mainCardsMarked=${mainCardsMarked.length}`,
+    );
+    
+    // Return the calculated result, but log if it doesn't match direct check
+    if (result === 6 && !hasAllMainCards) {
+      console.warn(
+        `[LearningHubScreen] QUIZ BUTTON MISMATCH: completedCategories=6 but main cards don't match!`,
+      );
+    }
+    
     return result;
-  }, [cardCounts]);
+  }, [cardCounts, progress.cards, state.name]);
 
   // P2: Trigger unlock animation when quiz becomes available for first time
   useEffect(() => {
-    if (completedCategories === 6 && !hasSeenUnlock) {
+    if ((completedCategories === 6 || allMainCardsMarked) && !hasSeenUnlock) {
       setHasSeenUnlock(true);
       setShowUnlockAnimation(true);
       // Reset animation after it completes
@@ -2033,7 +2082,7 @@ export function LearningHubScreen({
       }, 1000);
       return () => clearTimeout(timer);
     }
-  }, [completedCategories, hasSeenUnlock]);
+  }, [completedCategories, allMainCardsMarked, hasSeenUnlock]);
 
   // Track completion per category - all cards must be read
   const cards = [
@@ -2193,38 +2242,42 @@ export function LearningHubScreen({
           <div className="px-4 pb-6">
             <button
               onClick={() => {
-                if (completedCategories === 6) {
+                // Use BOTH checks: completedCategories AND allMainCardsMarked
+                // This ensures the quiz remains unlocked even after replay or navigation
+                const shouldQuizBeUnlocked = completedCategories === 6 || allMainCardsMarked;
+                
+                if (shouldQuizBeUnlocked) {
                   fxTap();
                   onQuiz?.();
                 }
               }}
-              disabled={completedCategories < 6}
+              disabled={completedCategories < 6 && !allMainCardsMarked}
               className={`w-full rounded-2xl p-4 transition-all active:scale-95 flex items-center gap-3 ${
-                completedCategories === 6
+                (completedCategories === 6 || allMainCardsMarked)
                   ? "bg-accent-5-soft hover:shadow-md"
                   : "bg-accent-5-soft/50"
               }`}
             >
               {/* Lock/Unlock icon in circular background - P2: Animated emoji */}
               <div className={`h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0 text-h4 ${
-                completedCategories === 6 ? "bg-accent-5/20" : "bg-accent-5/10"
+                (completedCategories === 6 || allMainCardsMarked) ? "bg-accent-5/20" : "bg-accent-5/10"
               } ${showUnlockAnimation ? "animate-quiz-unlock-bounce" : ""}`}>
-                {completedCategories === 6 ? "🔓" : "🔒"}
+                {(completedCategories === 6 || allMainCardsMarked) ? "🔓" : "🔒"}
               </div>
 
               {/* Heading and subtitle - P3: Show counter when locked, progress dots when unlocked */}
               <div className="flex-1 text-left">
                 <div className="text-label font-extrabold text-text-primary">
-                  {completedCategories === 6 ? "State Quiz" : "State Quiz Locked"}
+                  {(completedCategories === 6 || allMainCardsMarked) ? "State Quiz" : "State Quiz Locked"}
                 </div>
                 <div className="text-caption text-text-secondary">
-                  {completedCategories === 6 
+                  {(completedCategories === 6 || allMainCardsMarked) 
                     ? "Test your knowledge"
                     : `${completedCategories} of 6 challenges complete`}
                 </div>
                 
                 {/* P3: Progress dots - show when locked (not when unlocked) */}
-                {completedCategories < 6 && (
+                {(completedCategories < 6 && !allMainCardsMarked) && (
                   <div className="flex items-center gap-1 mt-2">
                     {Array.from({ length: 6 }).map((_, i) => (
                       <div
