@@ -372,10 +372,10 @@ function SingleScreenCelebration({
       >
         {/* Two-column button layout */}
         <div className="flex gap-3 w-full">
-          {/* Home Button (Secondary - outlined purple) */}
+          {/* Home Button (Secondary - outlined purple) - 30% width */}
           <button
             onClick={handleHome}
-            className="flex-1 h-12 font-bold text-sm rounded-full transition-all active:scale-95 animate-slide-up border-2 border-accent-1 text-accent-1 bg-transparent hover:bg-accent-1/5"
+            className="w-1/3 h-12 font-bold text-xs rounded-full transition-all active:scale-95 animate-slide-up border-2 border-accent-1 text-accent-1 bg-transparent hover:bg-accent-1/5"
             style={{
               animationDelay: "0ms",
             }}
@@ -384,7 +384,7 @@ function SingleScreenCelebration({
             Home
           </button>
 
-          {/* Continue Your Journey Button (Primary - filled purple) */}
+          {/* Continue Your Journey Button (Primary - filled purple) - 70% width */}
           <button
             onClick={handleNextState}
             className="flex-1 h-12 font-bold text-sm rounded-full transition-all active:scale-95 animate-slide-up bg-accent-1 text-white hover:bg-accent-1/90"
