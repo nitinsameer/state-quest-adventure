@@ -231,8 +231,8 @@ function SingleScreenCelebration({
             />
           </div>
 
-          {/* Achievement message - varies by star count - ONLY ONE */}
-          {elapsedMs > 1500 && (
+          {/* Achievement message - varies by star count */}
+          {elapsedMs > 1500 && elapsedMs < 3000 && (
             <div className="text-center text-text-secondary text-sm font-semibold">
               {(() => {
                 const stars = parseInt(ceremony.stars);
