@@ -148,10 +148,10 @@ export function JourneyDestinationCard({
         </div>
       )}
 
-      {/* Checkmark overlay badge for completed states - FIXED */}
+      {/* Checkmark overlay badge for completed states - High Visibility */}
       {status === "completed" && (
-        <div className="absolute top-2 right-2 w-10 h-10 rounded-full bg-success/80 shadow-lg flex items-center justify-center backdrop-blur-sm">
-          <span className="text-on-header text-lg font-bold leading-none">✓</span>
+        <div className="absolute top-2 right-2 w-12 h-12 rounded-full bg-success shadow-xl flex items-center justify-center ring-4 ring-success/20">
+          <span className="text-white text-2xl font-extrabold leading-none">✓</span>
         </div>
       )}
 

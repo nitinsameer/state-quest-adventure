@@ -1990,6 +1990,12 @@ export function LearningHubScreen({
   const [hasSeenUnlock, setHasSeenUnlock] = useState(false);
   const [showUnlockAnimation, setShowUnlockAnimation] = useState(false);
 
+  // QUIZ BUTTON FIX: Check if quiz has been completed for this state
+  const isQuizCompleted = useMemo(() => {
+    const quizStatus = progress.quizzes?.[state.name];
+    return quizStatus?.completed === true;
+  }, [progress.quizzes, state.name]);
+
   // QUIZ BUTTON FIX: Compute whether all 6 main cards have been marked
   // This is independent of cardCounts calculation to ensure persistence across navigation/replay
   const allMainCardsMarked = useMemo(() => {
@@ -2276,26 +2282,36 @@ export function LearningHubScreen({
                   : "bg-accent-5-soft/50"
               }`}
             >
-              {/* Lock/Unlock icon in circular background - P2: Animated emoji */}
+              {/* Lock/Unlock icon in circular background - Shows quiz completion status */}
               <div className={`h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0 text-h4 ${
-                (completedCategories === 6 || allMainCardsMarked) ? "bg-accent-5/20" : "bg-accent-5/10"
+                isQuizCompleted
+                  ? "bg-success/30 animate-pulse"
+                  : (completedCategories === 6 || allMainCardsMarked)
+                    ? "bg-accent-5/20"
+                    : "bg-accent-5/10"
               } ${showUnlockAnimation ? "animate-quiz-unlock-bounce" : ""}`}>
-                {(completedCategories === 6 || allMainCardsMarked) ? "🔓" : "🔒"}
+                {isQuizCompleted ? "✓" : (completedCategories === 6 || allMainCardsMarked) ? "🔓" : "🔒"}
               </div>
 
-              {/* Heading and subtitle - P3: Show counter when locked, progress dots when unlocked */}
+              {/* Heading and subtitle - Shows counter when locked, status when unlocked or completed */}
               <div className="flex-1 text-left">
                 <div className="text-label font-extrabold text-text-primary">
-                  {(completedCategories === 6 || allMainCardsMarked) ? "State Quiz" : "State Quiz Locked"}
+                  {isQuizCompleted
+                    ? "Quiz Completed ✓"
+                    : (completedCategories === 6 || allMainCardsMarked)
+                      ? "State Quiz"
+                      : "State Quiz Locked"}
                 </div>
                 <div className="text-caption text-text-secondary">
-                  {(completedCategories === 6 || allMainCardsMarked) 
-                    ? "Test your knowledge"
-                    : `${completedCategories} of 6 challenges complete`}
+                  {isQuizCompleted
+                    ? "Great job! Replay to practice"
+                    : (completedCategories === 6 || allMainCardsMarked)
+                      ? "Test your knowledge"
+                      : `${completedCategories} of 6 challenges complete`}
                 </div>
                 
-                {/* P3: Progress dots - show when locked (not when unlocked) */}
-                {(completedCategories < 6 && !allMainCardsMarked) && (
+                {/* Progress dots - show only when locked (not when unlocked or completed) */}
+                {(completedCategories < 6 && !allMainCardsMarked && !isQuizCompleted) && (
                   <div className="flex items-center gap-1 mt-2">
                     {Array.from({ length: 6 }).map((_, i) => (
                       <div
