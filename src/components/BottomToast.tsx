@@ -41,11 +41,13 @@ function ToastNotification({ config }: { config: ToastConfig }) {
         isExiting ? "translate-y-full opacity-0" : "translate-y-0 opacity-100"
       }`}
       style={{
-        left: "50%",
         bottom: "calc(var(--nav-h, 96px) + 16px)",
-        transform: isExiting ? "translateX(-50%) translateY(100%)" : "translateX(-50%) translateY(0)",
-        width: "calc(100vw - 32px)",
-        maxWidth: "360px",
+        transform: isExiting ? "translateY(100%)" : "translateY(0)",
+        width: "min(360px, calc(100vw - 32px))",
+        left: "16px",
+        right: "16px",
+        marginLeft: "auto",
+        marginRight: "auto",
         pointerEvents: "auto",
       }}
       role="status"

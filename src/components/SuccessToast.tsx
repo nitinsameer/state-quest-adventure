@@ -102,12 +102,13 @@ export function SuccessToast() {
     <div
       className="fixed z-[1000] pointer-events-none"
       style={{
-        left: "50%",
         bottom: "calc(var(--nav-h, 96px) + 16px)",
-        transform: "translateX(-50%)",
+        transform: "translateY(0)",
         display: "flex",
         alignItems: "flex-end",
         justifyContent: "center",
+        left: "16px",
+        right: "16px",
         pointerEvents: "none",
       }}
     >
@@ -115,8 +116,7 @@ export function SuccessToast() {
       <div
         className="relative"
         style={{
-          width: "calc(100vw - 32px)",
-          maxWidth: "360px",
+          width: "min(360px, calc(100vw - 32px))",
           pointerEvents: "auto",
         }}
       >
