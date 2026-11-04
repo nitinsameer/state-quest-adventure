@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useToastStore, type ToastConfig } from "@/store/toastStore";
 import { EMOJI } from "@/constants/emoji";
-import { SuccessToast } from "@/components/SuccessToast";
 import { playSuccessChime } from "@/lib/tone-generator";
 
 /**
@@ -79,7 +78,8 @@ function ToastNotification({ config }: { config: ToastConfig }) {
  * Bottom Toast Provider
  * Place this at the root level (in __root.tsx)
  * Manages the queue and renders current toast
- * Renders SuccessToast for success type, ToastNotification for others
+ * Renders ToastNotification for non-success types only
+ * SuccessToast is rendered separately in __root.tsx for better control
  */
 export function BottomToastProvider() {
   const current = useToastStore((state) => state.current);
@@ -87,19 +87,13 @@ export function BottomToastProvider() {
 
   if (!current) return null;
 
-  // Render success toast for success type
+  // Only render non-success toasts here
+  // Success toasts are handled separately by SuccessToast component in __root.tsx
   if (current.type === "success") {
-    return (
-      <div
-        className="fixed inset-0 pointer-events-none z-[1000]"
-        style={{ pointerEvents: "auto" }}
-      >
-        <SuccessToast />
-      </div>
-    );
+    return null;
   }
 
-  // Render regular toast for other types
+  // Render regular toast for error/info/warning types
   return (
     <div
       className="fixed inset-0 pointer-events-none z-[1050]"
