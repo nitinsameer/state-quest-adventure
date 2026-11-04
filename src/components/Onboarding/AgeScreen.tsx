@@ -10,23 +10,42 @@ import {
   MightyTreeIllustration,
 } from "./AgeIllustrations";
 import ageBg from "@/assets/age_selection_bg.png";
+import sproutCardBg from "@/assets/age-selection-bg/age_card_sprout.png";
+import seedlingCardBg from "@/assets/age-selection-bg/age_card_seedling_selected.png";
+import saplingCardBg from "@/assets/age-selection-bg/age_card_sapling.png";
+import mightyTreeCardBg from "@/assets/age-selection-bg/age_card_mighty_tree.png";
 
 interface AgeBand {
   value: string;
-  illustration: React.ComponentType<{ className?: string }>;
   label: string;
-  gradient: string;
+  subtitle: string;
+  cardBg: string;
 }
 
 const AGE_BANDS: AgeBand[] = [
-  { value: "3-5", illustration: SproutIllustration, label: "Sprout", gradient: "bg-accent-2" },
-  { value: "6-7", illustration: SeedlingIllustration, label: "Seedling", gradient: "bg-accent-1" },
-  { value: "8-9", illustration: SaplingIllustration, label: "Sapling", gradient: "bg-success" },
+  {
+    value: "3-5",
+    label: "Sprout",
+    subtitle: "I am just starting to explore!",
+    cardBg: sproutCardBg,
+  },
+  {
+    value: "6-7",
+    label: "Seedling",
+    subtitle: "I love to learn new things!",
+    cardBg: seedlingCardBg,
+  },
+  {
+    value: "8-9",
+    label: "Sapling",
+    subtitle: "I can explore and do more!",
+    cardBg: saplingCardBg,
+  },
   {
     value: "10-12",
-    illustration: MightyTreeIllustration,
     label: "Mighty Tree",
-    gradient: "bg-action-primary",
+    subtitle: "I'm ready for big adventures!",
+    cardBg: mightyTreeCardBg,
   },
 ];
 
@@ -125,7 +144,6 @@ export function AgeScreen({
             <legend className="sr-only">Select your age band</legend>
           {AGE_BANDS.map((band) => {
             const isSelected = selectedAge === band.value;
-            const IllustrationComponent = band.illustration;
             return (
               <button
                 key={band.value}
@@ -134,31 +152,32 @@ export function AgeScreen({
                 role="radio"
                 aria-checked={isSelected}
                 aria-label={`${band.label}, ages ${band.value}`}
-                className={`relative rounded-2xl p-4 transition-all duration-300 flex items-center gap-4 text-left
-                  ${
-                    isSelected
-                      ? `${band.gradient} text-text-on-primary shadow-elevated-2 scale-105`
-                      : "bg-surface-card text-text-primary border-2 border-surface-sunken hover:border-surface-raised"
-                  }
-                  ${animatingAge === band.value ? "animate-scale-pop" : ""}
-                `}
+                className={`relative rounded-3xl p-4 transition-all duration-300 flex items-center gap-4 text-left min-h-20 overflow-hidden ${
+                  isSelected
+                    ? "border-4 border-accent-5 shadow-elevated-2 scale-105"
+                    : "border-3 border-surface-card shadow-md hover:shadow-elevated-1"
+                }`}
+                style={{
+                  backgroundImage: `url(${band.cardBg})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
               >
-                {/* Illustration - Left side */}
-                <div className="flex-shrink-0 w-14 h-14 flex items-center justify-center">
-                  <IllustrationComponent className="w-12 md:w-14 h-12 md:h-14" />
+                {/* Overlay for better text readability */}
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors" />
+
+                {/* Text content - positioned relative to overlay */}
+                <div className="relative z-10 flex-1 flex flex-col">
+                  <div className="text-sm font-semibold text-accent-5 opacity-90">Ages {band.value}</div>
+                  <div className="text-lg font-bold text-accent-5">{band.label}</div>
+                  <div className="text-xs font-medium text-accent-5 opacity-80 mt-1">{band.subtitle}</div>
                 </div>
-                
-                {/* Text content - Right side */}
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs font-semibold opacity-80">Ages {band.value}</div>
-                  <div className="text-base font-bold">{band.label}</div>
-                </div>
-                
+
                 {/* Selected checkmark - Right edge */}
                 {isSelected && (
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-md border-2 border-white">
+                  <div className="relative z-10 flex-shrink-0 w-8 h-8 rounded-full bg-accent-5 flex items-center justify-center shadow-md">
                     <svg
-                      className="w-4 h-4 text-action-primary"
+                      className="w-5 h-5 text-white"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -178,12 +197,12 @@ export function AgeScreen({
       </div>
 
       {/* Fixed Footer - Back and Continue buttons */}
-      <div className="relative z-20 flex-shrink-0 px-5 py-4 pb-safe bg-gradient-to-t from-black/5 to-transparent border-t border-border-color">
+      <div className="relative z-20 flex-shrink-0 px-5 py-4 pb-safe bg-gradient-to-t from-bg-page via-bg-page to-transparent">
         <div className="flex gap-3">
           <button
             type="button"
             onClick={handleBack}
-            className="flex-1 py-4 px-4 rounded-full font-black text-base text-ink bg-white border-2 border-action-primary transition-all hover:shadow-md active:scale-95"
+            className="flex-1 py-4 px-6 rounded-full font-bold text-base text-accent-5 bg-surface-card border-3 border-accent-5 transition-all hover:shadow-md active:scale-95"
             aria-label="Go back"
           >
             Back
@@ -192,9 +211,9 @@ export function AgeScreen({
             type="button"
             onClick={handleNext}
             disabled={!selectedAge}
-            className={`flex-1 py-4 px-4 rounded-full font-black text-base flex items-center justify-center gap-2 transition-all active:scale-95 ${
+            className={`flex-1 py-4 px-6 rounded-full font-bold text-base flex items-center justify-center gap-2 transition-all active:scale-95 ${
               selectedAge
-                ? "bg-gradient-to-r from-[#7650F5] to-[#6366F1] text-white hover:shadow-xl"
+                ? "bg-accent-5 text-white hover:shadow-elevated-2"
                 : "bg-surface-sunken text-text-secondary cursor-not-allowed opacity-50"
             }`}
             aria-label="Start my journey"
