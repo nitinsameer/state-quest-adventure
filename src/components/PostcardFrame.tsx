@@ -48,7 +48,7 @@ export function PostcardFrame({
                 <img
                   src={art}
                   alt={state.name}
-                  className="w-full h-full object-contain"
+                  className="w-full h-full object-contain p-4"
                   loading="lazy"
                   decoding="async"
                 />
@@ -70,6 +70,13 @@ export function PostcardFrame({
               loading="lazy"
               decoding="async"
             />
+
+            {/* State name text - positioned at bottom of postcard, above frame elements, centered */}
+            <div className="absolute bottom-0 left-0 right-0 text-center z-10 pb-2">
+              <div className="font-bold text-text-primary text-base px-3 bg-white/70">
+                {state.name}
+              </div>
+            </div>
           </div>
 
           {/* "Your Postcard!" label - positioned at top-left */}
@@ -78,13 +85,6 @@ export function PostcardFrame({
               <span>📮</span>
               <span>Your Postcard!</span>
             </div>
-          </div>
-        </div>
-
-        {/* State name - positioned outside and below the frame */}
-        <div className="text-center mt-3 px-3 w-full">
-          <div className="font-bold text-text-primary text-lg">
-            {state.name}
           </div>
         </div>
       </div>
