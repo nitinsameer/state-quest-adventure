@@ -4393,6 +4393,28 @@ function ProfileScreenContent() {
           <ThemePickerNavButton />
         </div>
 
+        {/* Badges */}
+        <div className="animate-fade-in" style={{ animationDelay: "190ms" }}>
+          <Link
+            to="/badges"
+            onClick={() => fxTap()}
+            className="ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
+          >
+            <div className="h-12 w-12 rounded-2xl bg-accent-4 flex items-center justify-center text-2xl">
+              {EMOJI.achievement.badge}
+            </div>
+            <div className="flex-1 text-left">
+              <div className="text-display font-extrabold text-[15px] leading-tight">
+                Badges
+              </div>
+              <div className="text-[11px] font-bold text-text-secondary">
+                View your earned badges
+              </div>
+            </div>
+            <div className="text-text-secondary text-xl">›</div>
+          </Link>
+        </div>
+
         {/* Debug Theme Selector - Development Only */}
         <DebugThemeSelector />
 
