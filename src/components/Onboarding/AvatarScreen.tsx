@@ -130,48 +130,32 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext, onSkip }:
           <button
             type="button"
             onClick={handleSkipClick}
-            className="bg-white rounded-full px-3 py-1 shadow-md hover:shadow-lg active:scale-95 transition-all font-black text-sm text-ink"
+            className="bg-white rounded-full px-3 py-1 shadow-md hover:shadow-lg active:scale-95 transition-all font-bold text-sm text-text-primary"
             aria-label="Skip onboarding"
           >
             Skip
           </button>
         </div>
 
-        {/* Title Section - Premium Styling with Custom Fonts */}
+        {/* Title Section - Premium Styling */}
         <div className="text-center">
           {/* Main Heading - "Pick Your" */}
           <div 
-            className="text-2xl sm:text-3xl leading-tight font-black"
-            style={{ 
-              fontFamily: "var(--font-display)",
-              color: "#1a2e4a",
-              fontWeight: 900,
-              letterSpacing: "-0.02em"
-            }}
+            className="text-2xl sm:text-3xl leading-tight font-black text-text-primary"
           >
             Pick Your
           </div>
           
           {/* Avatar Text with Golden Gradient - "Avatar" */}
           <div 
-            className="text-4xl sm:text-6xl font-black leading-tight mt-0 mb-1"
-            style={{
-              fontFamily: "var(--font-display)",
-              fontWeight: 900,
-              letterSpacing: "-0.03em",
-              background: "linear-gradient(to right, #FFD700 0%, #FFA500 50%, #FF8C00 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text"
-            }}
+            className="text-4xl sm:text-6xl font-black leading-tight mt-0 mb-1 text-accent-4"
           >
             Avatar
           </div>
 
           {/* Subtitle */}
           <p 
-            className="text-sm text-ink font-semibold leading-snug"
-            style={{ fontFamily: "var(--font-sans)" }}
+            className="text-sm text-text-secondary font-semibold leading-snug"
           >
             Choose your explorer to start your adventure!
           </p>
@@ -195,7 +179,7 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext, onSkip }:
                   backgroundColor: getAvatarBackgroundColor(avatarId),
                   boxShadow:
                     selectedAvatar === avatarId
-                      ? "0 0 0 4px white, 0 0 0 6px #FFD700, 0 8px 16px rgba(0,0,0,0.2)"
+                      ? "0 0 0 4px white, 0 0 0 6px var(--accent-4), 0 8px 16px rgba(0,0,0,0.2)"
                       : "0 4px 12px rgba(0,0,0,0.15)",
                   transform: selectedAvatar === avatarId ? "scale(1.02)" : "scale(1)",
                 } as React.CSSProperties}
@@ -216,7 +200,7 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext, onSkip }:
                       animation: "scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)",
                     }}
                   >
-                    <span className="text-base font-black" style={{ color: "#6366F1" }}>
+                    <span className="text-base font-black text-accent-5">
                       ✓
                     </span>
                   </div>
@@ -227,14 +211,11 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext, onSkip }:
         </div>
 
         {/* Fixed Footer Section - Always Visible */}
-        <div className="flex-shrink-0 relative z-20 bg-gradient-to-t from-black/5 to-transparent px-4 py-4 pb-safe">
+        <div className="flex-shrink-0 relative z-20 bg-gradient-to-t from-bg-page via-bg-page to-transparent px-4 py-4 pb-safe">
           {/* Explorer Summary Card */}
           {selectedAvatar && (
             <div
-              className="rounded-3xl p-4 mb-3 shadow-lg border-2 border-white/80"
-              style={{
-                background: "linear-gradient(135deg, #FFFACD 0%, #FFE4B5 100%)",
-              }}
+              className="rounded-3xl p-4 mb-3 shadow-md border-2 border-border-color bg-accent-4-soft"
             >
               <div className="flex items-center gap-3">
                 {/* Avatar Thumbnail */}
@@ -247,14 +228,12 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext, onSkip }:
                 {/* Explorer Info */}
                 <div className="flex-1 min-w-0">
                   <div 
-                    className="text-xs font-black text-amber-900 tracking-wider"
-                    style={{ fontFamily: "var(--font-display)" }}
+                    className="text-xs font-black text-text-secondary tracking-wider"
                   >
                     YOUR EXPLORER
                   </div>
                   <div 
-                    className="text-lg font-black text-ink truncate"
-                    style={{ fontFamily: "var(--font-display)" }}
+                    className="text-lg font-black text-text-primary truncate"
                   >
                     {getAvatarName(selectedAvatar)}
                   </div>
@@ -273,8 +252,7 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext, onSkip }:
             <button
               type="button"
               onClick={handleNext}
-              className="w-full py-4 px-4 rounded-full bg-gradient-to-r from-[#7650F5] to-[#6366F1] text-white font-black text-base flex items-center justify-center gap-2 shadow-lg hover:shadow-xl active:scale-95 transition-all"
-              style={{ fontFamily: "var(--font-display)" }}
+              className="w-full py-4 px-6 rounded-full bg-accent-5 text-white font-bold text-base flex items-center justify-center gap-2 shadow-elevated-2 hover:shadow-elevated-3 active:scale-95 transition-all"
               aria-label="Continue to next step"
             >
               <span>Continue</span>
