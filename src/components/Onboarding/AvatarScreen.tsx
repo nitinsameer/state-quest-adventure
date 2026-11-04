@@ -166,8 +166,8 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext, onSkip }:
       <div className="relative z-10 flex-1 flex flex-col overflow-hidden">
         {/* Scrollable Avatar Grid Section */}
         <div className="flex-1 overflow-y-auto px-4 py-3 min-h-0">
-          {/* Avatar Grid - 2 Columns on mobile, 3 on tablet+ */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3 md:gap-4 mb-3">
+          {/* Avatar Grid - 3 Columns (compact layout for 12 avatars) */}
+          <div className="grid grid-cols-3 gap-2 mb-3">
             {AVATAR_IDS.map((avatarId) => (
               <button
                 key={avatarId}

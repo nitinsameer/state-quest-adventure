@@ -138,9 +138,9 @@ export function AgeScreen({
 
       {/* Scrollable Content - Age options only */}
       <div className="relative z-10 flex-1 overflow-y-auto min-h-0">
-        <div className="px-5 py-3 flex flex-col gap-2">
+        <div className="px-5 py-3 flex flex-col gap-3">
           {/* Age Selection Fieldset */}
-          <fieldset className="space-y-2">
+          <fieldset className="space-y-3">
             <legend className="sr-only">Select your age band</legend>
           {AGE_BANDS.map((band) => {
             const isSelected = selectedAge === band.value;
@@ -152,32 +152,36 @@ export function AgeScreen({
                 role="radio"
                 aria-checked={isSelected}
                 aria-label={`${band.label}, ages ${band.value}`}
-                className={`relative rounded-3xl p-4 transition-all duration-300 flex items-center gap-4 text-left min-h-20 overflow-hidden ${
+                className={`relative rounded-3xl overflow-hidden transition-all duration-300 flex items-stretch text-left min-h-24 ${
                   isSelected
                     ? "border-4 border-accent-5 shadow-elevated-2 scale-105"
                     : "border-3 border-surface-card shadow-md hover:shadow-elevated-1"
                 }`}
-                style={{
-                  backgroundImage: `url(${band.cardBg})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                }}
               >
-                {/* Overlay for better text readability */}
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors" />
+                {/* Left side - Illustration background */}
+                <div 
+                  className="w-28 flex-shrink-0 bg-cover bg-center"
+                  style={{
+                    backgroundImage: `url(${band.cardBg})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                />
 
-                {/* Text content - positioned relative to overlay */}
-                <div className="relative z-10 flex-1 flex flex-col">
-                  <div className="text-sm font-semibold text-accent-5 opacity-90">Ages {band.value}</div>
-                  <div className="text-lg font-bold text-accent-5">{band.label}</div>
-                  <div className="text-xs font-medium text-accent-5 opacity-80 mt-1">{band.subtitle}</div>
+                {/* Right side - Text content */}
+                <div className="flex-1 p-4 flex flex-col justify-center bg-surface-card">
+                  <div className="text-xs font-semibold text-text-secondary tracking-wide opacity-90 uppercase">Ages {band.value}</div>
+                  <div className="text-lg font-bold text-text-primary">{band.label}</div>
+                  <div className="text-sm font-medium text-text-secondary mt-1">{band.subtitle}</div>
                 </div>
 
-                {/* Selected checkmark - Right edge */}
+                {/* Selected checkmark - Overlay at top right */}
                 {isSelected && (
-                  <div className="relative z-10 flex-shrink-0 w-8 h-8 rounded-full bg-accent-5 flex items-center justify-center shadow-md">
+                  <div className="absolute top-3 right-3 w-7 h-7 rounded-full bg-accent-5 flex items-center justify-center shadow-md" style={{
+                    animation: "scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                  }}>
                     <svg
-                      className="w-5 h-5 text-white"
+                      className="w-4 h-4 text-white"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -223,6 +227,27 @@ export function AgeScreen({
           </button>
         </div>
       </div>
+
+      {/* CSS Animations */}
+      <style>{`
+        @keyframes scaleIn {
+          from {
+            opacity: 0;
+            transform: scale(0.6);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          @keyframes scaleIn {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 1; transform: scale(1); }
+          }
+        }
+      `}</style>
     </div>
   );
 }
