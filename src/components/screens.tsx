@@ -3535,7 +3535,7 @@ function QuizScreenContent({
               : "Next Question →"
             : result === "wrong"
               ? isLastQuestion
-                ? "Finish Quiz {EMOJI.feedback.success}"
+                ? `Finish Quiz ${EMOJI.feedback.success}`
                 : "Next Question →"
               : "Check Answer"}
         </button>
