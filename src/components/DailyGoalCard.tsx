@@ -77,29 +77,26 @@ export function DailyGoalCard() {
   };
 
   return (
-    <div className="flex-shrink-0" style={{ marginTop: 'var(--space-2)', marginBottom: 'var(--space-2)' }}>
+    <div className="flex-shrink-0 mt-[var(--space-2)] mb-[var(--space-2)]">
       <div
-        className={`rounded-2xl ${goalColor} shadow-lg relative overflow-hidden`}
-        style={{ padding: 'var(--padding-md)' }}
+        className={`rounded-2xl ${goalColor} shadow-lg relative overflow-hidden p-[var(--padding-md)]`}
       >
         {/* Decorative background element */}
         <div
-          className="absolute top-0 right-0 w-16 h-16 rounded-full blur-2xl pointer-events-none"
-          style={{ backgroundColor: "var(--accent-1-soft)" }}
+          className="absolute top-0 right-0 w-16 h-16 rounded-full blur-2xl pointer-events-none bg-accent-1-soft"
         />
 
-        <div className="relative z-10 flex items-center justify-between" style={{ gap: 'var(--gap-base)' }}>
+        <div className="relative z-10 flex items-center justify-between gap-[var(--gap-base)]">
           {/* Left: Goal info (compact) */}
           <div className="flex-1 min-w-0">
-            <div className="text-caption" style={{ color: "var(--accent-1-ink)" }}>
+            <div className="text-caption text-accent-1-ink">
               {goalLabel}
             </div>
-            <div className="text-body-sm leading-tight" style={{ color: "var(--accent-1-ink)" }}>
+            <div className="text-body-sm leading-tight text-accent-1-ink">
               {dailyGoal} State{dailyGoal > 1 ? "s" : ""} Today
             </div>
             <div
-              className="text-caption"
-              style={{ color: "var(--accent-1-ink)", marginTop: 'var(--space-0-5)', opacity: 0.9 }}
+              className="text-caption text-accent-1-ink opacity-90 mt-[var(--space-0-5)]"
             >
               {getEncouragementMessage()}
             </div>
@@ -108,8 +105,12 @@ export function DailyGoalCard() {
           {/* Middle: Progress indicator */}
           <div className="flex-shrink-0">
             <div
-              className="h-12 w-12 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: "var(--accent-1-soft)" }}
+              className="h-12 w-12 rounded-full flex items-center justify-center bg-accent-1-soft"
+              role="progressbar"
+              aria-valuenow={goalProgress}
+              aria-valuemin={0}
+              aria-valuemax={dailyGoal}
+              aria-label={`Daily goal progress: ${goalProgress} of ${dailyGoal} states completed`}
             >
               <div className="text-2xl">{goalMet ? EMOJI.goal.met : EMOJI.goal.progress}</div>
             </div>
@@ -130,14 +131,7 @@ export function DailyGoalCard() {
             )}
             {goalMet && (
               <div
-                className="h-12 rounded-full border text-label font-bold flex items-center justify-center"
-                style={{
-                  paddingLeft: 'var(--padding-base)',
-                  paddingRight: 'var(--padding-base)',
-                  backgroundColor: "var(--accent-1-soft)",
-                  borderColor: "var(--accent-1-ink)",
-                  color: "var(--accent-1-ink)",
-                }}
+                className="h-12 rounded-full border text-label font-bold flex items-center justify-center px-[var(--padding-base)] bg-accent-1-soft border-accent-1-ink text-accent-1-ink"
               >
                 ✓ Done
               </div>

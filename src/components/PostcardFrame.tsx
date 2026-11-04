@@ -66,8 +66,8 @@ export function PostcardFrame({
               </div>
             </div>
 
-            {/* Postcard content - 3:2 aspect ratio */}
-            <div className="aspect-[3/2] flex flex-col items-center justify-center pt-6 pb-4 px-4 relative">
+            {/* Postcard content - responsive aspect ratio: 3:2 on ultra-small, 4:3 on sm+ */}
+            <div className="aspect-[3/2] sm:aspect-[4/3] flex flex-col items-center justify-center pt-6 pb-4 px-4 relative">
               {/* State illustration */}
               <div className="flex-1 flex items-center justify-center mb-2">
                 {art ? (

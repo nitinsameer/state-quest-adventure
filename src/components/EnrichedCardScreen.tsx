@@ -85,14 +85,14 @@ export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: st
   return (
     <div className="h-full w-full bg-page flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="relative px-5 pt-(--padding-base) pb-(--padding-base) rounded-b-[36px] flex-shrink-0" style={{backgroundColor: "var(--accent-5)", color: "var(--accent-5-ink)"}}>
+      <div className="relative px-5 pt-(--padding-base) pb-(--padding-base) rounded-b-[36px] flex-shrink-0 bg-accent-5 text-accent-5-ink">
         <div className="flex items-center justify-between">
           <button
             onClick={() => {
               fxTap();
               goBack();
             }}
-            aria-label="Go back"
+            aria-label="Go back to previous screen"
             className="h-10 w-10 rounded-full bg-surface-card/20 text-text-on-primary flex items-center justify-center"
           >
             ‹
@@ -105,7 +105,7 @@ export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: st
       </div>
 
       {/* Card Display Area */}
-      <div className="flex-1 overflow-y-auto px-5 py-(--padding-md)">
+      <div className="flex-1 overflow-y-auto px-5 py-(--padding-md)" role="tabpanel" aria-labelledby={`tab-${currentCard.id}`}>
         <ExpandableCard
           cardId={`${stateName}-${currentCard.id}`}
           title={currentCard.title}
@@ -123,14 +123,19 @@ export function EnrichedCardScreen({ stateName = "Rajasthan" }: { stateName?: st
 
       {/* Card Navigation Tabs */}
       <div className="flex-shrink-0 bg-surface-card/80 backdrop-blur border-t border-border-subtle px-(--padding-sm) py-(--padding-base)">
-        <div className="flex gap-(--gap-compact) overflow-x-auto pb-1">
+        <div className="flex gap-(--gap-compact) overflow-x-auto pb-1" role="tablist">
           {cards.map((card, index) => {
-            const safeCard = card as typeof card & { emoji: string };
+            const safeCard = card as typeof card & { emoji: string; title: string };
             return (
               <button
                 key={index}
                 onClick={() => handleTabChange(index)}
-                className={`flex-shrink-0 h-14 px-(--padding-sm) rounded-2xl transition-all font-extrabold text-display text-sm ${
+                role="tab"
+                aria-selected={activeTab === index}
+                aria-controls={`tabpanel-${index}`}
+                id={`tab-${cards[index].id}`}
+                aria-label={`${safeCard.title} - card ${index + 1} of ${cards.length}`}
+                className={`flex-shrink-0 h-12 md:h-14 px-(--padding-sm) rounded-2xl transition-all font-extrabold text-display text-sm ${
                   activeTab === index
                     ? `${CARD_COLORS[index].bg} border-2 ${CARD_COLORS[index].border} shadow-md scale-105`
                     : "bg-surface-card/50 border-2 border-transparent hover:bg-surface-card/70"

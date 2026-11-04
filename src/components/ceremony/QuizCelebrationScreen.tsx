@@ -10,7 +10,6 @@ import { getState, type IndiaState, nextStateAfter } from "@/lib/states";
 import { STATE_ART, TONE_GRADIENT } from "@/lib/state-art";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { fxTap, fxConfetti, fxStamp } from "@/lib/fx";
-import { hasFeatureConsent } from "@/lib/parental-consent";
 import { PostcardFrame } from "@/components/PostcardFrame";
 import { StarCelebration } from "@/components/ceremony/StarCelebration";
 import { EMOJI } from "@/constants/emoji";
@@ -147,6 +146,7 @@ function SingleScreenCelebration({
   const phase5Progress = getPhaseProgress(4200, 300); // Buttons
 
   const showPhase1 = phase1Progress > 0;
+  const showPhase2 = elapsedMs >= 200 && elapsedMs < 2000; // Stars phase: 0.2-2.0s
   const showPhase3 = phase3Progress > 0;
   const showPhase4 = phase4Progress > 0;
   const showPhase5 = phase5Progress > 0;
@@ -210,7 +210,7 @@ function SingleScreenCelebration({
               {/* Completed! with sparkles - large yellow/gold */}
               <div className="flex items-center justify-center gap-2">
                 <span className="text-xl">✨</span>
-                <h2 className="font-display text-3xl font-black leading-tight" style={{color: 'var(--accent-4)'}}>
+                <h2 className="font-display text-3xl font-black leading-tight text-accent-4">
                   Completed!
                 </h2>
                 <span className="text-xl">✨</span>
@@ -398,16 +398,19 @@ function SingleScreenCelebration({
         </div>
       </div>
 
-      {/* Accessibility: screen reader announcements */}
+      {/* Accessibility: screen reader announcements - dynamic phase updates */}
       <div
         className="sr-only"
         role="status"
         aria-live="assertive"
         aria-label="Celebration progress"
       >
-        {parseInt(ceremony.stars) > 0 && `Earned ${ceremony.stars} star${parseInt(ceremony.stars) > 1 ? "s" : ""}`}
-        {showPhase3 && ` plus ${ceremony.quizXp + ceremony.bonusXp} XP`}
-        {showPhase4 && " postcard earned"}
+        {showPhase1 && `${state.name} completed with celebration starting`}
+        {showPhase2 && `Earned ${ceremony.stars} star${parseInt(ceremony.stars) > 1 ? "s" : ""}`}
+        {showPhase3 && `Plus ${ceremony.quizXp + ceremony.bonusXp} XP earned`}
+        {ceremony.leveledUp && showPhase3 && ` New level reached: ${ceremony.levelName}`}
+        {showPhase4 && " Postcard earned and added to Explorer Passport"}
+        {ceremony.streak > 0 && ceremony.streak % 7 === 0 && showPhase4 && ` ${ceremony.streak}-day streak bonus`}
       </div>
 
       {/* Hidden styles for slide-up animation */}

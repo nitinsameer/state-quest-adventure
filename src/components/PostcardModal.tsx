@@ -43,100 +43,158 @@ function loadImage(src: string): Promise<HTMLImageElement> {
 }
 
 async function generatePostcardBlob(postcard: PostcardData): Promise<Blob | null> {
-  const state = getState(postcard.state);
-  const art = STATE_ART[state.name];
-  const W = 900;
-  const H = 1200;
-  const canvas = document.createElement("canvas");
-  canvas.width = W;
-  canvas.height = H;
-  const c = canvas.getContext("2d");
-  if (!c) return null;
-
-  const [from, to] = TONE_HEX[state.tone] ?? TONE_HEX.orange;
-  const g = c.createLinearGradient(0, 0, W, H);
-  g.addColorStop(0, from);
-  g.addColorStop(1, to);
-  c.fillStyle = g;
-  c.fillRect(0, 0, W, H);
-
-  // inner card
-  c.fillStyle = readTokenAsHex("--surface-card");
-  roundRect(c, 50, 50, W - 100, H - 100, 48);
-  c.fill();
-
-  // header band
-  const g2 = c.createLinearGradient(50, 50, W - 50, 380);
-  g2.addColorStop(0, from);
-  g2.addColorStop(1, to);
-  c.save();
-  roundRect(c, 50, 50, W - 100, 330, 48);
-  c.clip();
-  c.fillStyle = g2;
-  c.fillRect(50, 50, W - 100, 330);
-  c.restore();
-
-  c.fillStyle = readTokenAsHex("--text-on-header");
-  c.globalAlpha = 0.92;
-  c.font = "bold 30px system-ui, sans-serif";
-  c.textAlign = "center";
-  c.fillText("EXPLORER PASSPORT", W / 2, 120);
-
-  c.globalAlpha = 0.78;
-  c.font = "22px system-ui, sans-serif";
-  c.fillText("State Completed", W / 2, 165);
-
-  // state name
-  c.globalAlpha = 1;
-  c.fillStyle = from;
-  c.font = "bold 48px system-ui, sans-serif";
-  c.fillText(state.name, W / 2, 280);
-
-  // date
-  c.fillStyle = from;
-  c.font = "18px system-ui, sans-serif";
-  c.fillText(postcard.stampDate, W / 2, 330);
-
-  // state image
-  if (art) {
-    try {
-      const img = await loadImage(art);
-      const imgW = 160;
-      const imgH = 160;
-      c.drawImage(img, W / 2 - imgW / 2, 420, imgW, imgH);
-    } catch {
-      // fallback to emoji
-      c.font = "80px system-ui";
-      c.textAlign = "center";
-      c.fillText(state.emoji, W / 2, 520);
+  try {
+    const state = getState(postcard.state);
+    const art = STATE_ART[state.name];
+    const W = 900;
+    const H = 1200;
+    const canvas = document.createElement("canvas");
+    canvas.width = W;
+    canvas.height = H;
+    const c = canvas.getContext("2d");
+    if (!c) {
+      console.error("[PostcardModal] Failed to get canvas context");
+      return null;
     }
+
+    // Calculate responsive font sizes based on canvas dimensions
+    const baseSize = Math.min(W, H);
+    const headerLabelFont = Math.round(baseSize * 0.033); // ~30px
+    const headerStateCompletedFont = Math.round(baseSize * 0.024); // ~22px
+    const stateNameFont = Math.round(baseSize * 0.053); // ~48px
+    const dateFont = Math.round(baseSize * 0.02); // ~18px
+    const badgeLabelFont = Math.round(baseSize * 0.02); // ~18px
+    const badgeEmojiSize = 60;
+    const footerFont = Math.round(baseSize * 0.016); // ~14px
+
+    const [from, to] = TONE_HEX[state.tone] ?? TONE_HEX.orange;
+    const g = c.createLinearGradient(0, 0, W, H);
+    g.addColorStop(0, from);
+    g.addColorStop(1, to);
+    c.fillStyle = g;
+    c.fillRect(0, 0, W, H);
+
+    // inner card
+    c.fillStyle = readTokenAsHex("--surface-card");
+    roundRect(c, 50, 50, W - 100, H - 100, 48);
+    c.fill();
+
+    // header band
+    const g2 = c.createLinearGradient(50, 50, W - 50, 380);
+    g2.addColorStop(0, from);
+    g2.addColorStop(1, to);
+    c.save();
+    roundRect(c, 50, 50, W - 100, 330, 48);
+    c.clip();
+    c.fillStyle = g2;
+    c.fillRect(50, 50, W - 100, 330);
+    c.restore();
+
+    c.fillStyle = readTokenAsHex("--text-on-header");
+    c.globalAlpha = 0.92;
+    c.font = `bold ${headerLabelFont}px system-ui, sans-serif`;
+    c.textAlign = "center";
+    c.fillText("EXPLORER PASSPORT", W / 2, 120);
+
+    c.globalAlpha = 0.78;
+    c.font = `${headerStateCompletedFont}px system-ui, sans-serif`;
+    c.fillText("State Completed", W / 2, 165);
+
+    // state name
+    c.globalAlpha = 1;
+    c.fillStyle = from;
+    c.font = `bold ${stateNameFont}px system-ui, sans-serif`;
+    c.fillText(state.name, W / 2, 280);
+
+    // date
+    c.fillStyle = from;
+    c.font = `${dateFont}px system-ui, sans-serif`;
+    c.fillText(postcard.stampDate, W / 2, 330);
+
+    // state image
+    if (art) {
+      try {
+        const img = await loadImageWithTimeout(art, 5000);
+        const imgW = 160;
+        const imgH = 160;
+        c.drawImage(img, W / 2 - imgW / 2, 420, imgW, imgH);
+      } catch (err) {
+        // Image load timeout or failed - fallback to emoji
+        if (err instanceof Error && err.message === "Image load timeout") {
+          console.warn("[PostcardModal] Image load timeout, using emoji");
+        } else {
+          console.warn("[PostcardModal] Image load failed, using emoji");
+        }
+        c.font = "80px system-ui";
+        c.textAlign = "center";
+        c.fillText(state.emoji, W / 2, 520);
+      }
+    }
+
+    // badge section
+    c.fillStyle = readTokenAsHex("--accent-6-soft");
+    roundRect(c, 100, 700, W - 200, 140, 16);
+    c.fill();
+
+    c.fillStyle = readTokenAsHex("--text-primary");
+    c.font = `bold ${badgeLabelFont}px system-ui, sans-serif`;
+    c.textAlign = "center";
+    c.fillText("Badge Earned", W / 2, 735);
+
+    const badgeEmoji = BADGE_EMOJI[postcard.badge] || EMOJI.achievement.explorer;
+    c.font = `${badgeEmojiSize}px system-ui`;
+    c.fillText(badgeEmoji, W / 2, 800);
+
+    // footer
+    c.globalAlpha = 0.3;
+    c.fillStyle = readTokenAsHex("--text-primary");
+    c.font = `${footerFont}px system-ui, sans-serif`;
+    c.textAlign = "center";
+    c.fillText("India Explorer", W / 2, 1080);
+    c.fillText(`Completed on ${postcard.stampDate}`, W / 2, 1110);
+    c.globalAlpha = 1;
+
+    return new Promise<Blob | null>((resolve, reject) => {
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          console.error("[PostcardModal] toBlob failed");
+          reject(new Error("Canvas rendering failed - could not generate image blob"));
+        } else {
+          resolve(blob);
+        }
+      }, "image/png");
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("[PostcardModal] Canvas rendering error:", error.message);
+    } else {
+      console.error("[PostcardModal] Canvas rendering error:", error);
+    }
+    return null;
   }
+}
 
-  // badge section
-  c.fillStyle = readTokenAsHex("--accent-6-soft");
-  roundRect(c, 100, 700, W - 200, 140, 16);
-  c.fill();
+function loadImageWithTimeout(src: string, timeoutMs: number): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    
+    const timeoutId = setTimeout(() => {
+      img.src = ""; // Cancel load
+      reject(new Error("Image load timeout"));
+    }, timeoutMs);
 
-  c.fillStyle = readTokenAsHex("--text-primary");
-  c.font = "bold 18px system-ui, sans-serif";
-  c.textAlign = "center";
-  c.fillText("Badge Earned", W / 2, 735);
+    img.onload = () => {
+      clearTimeout(timeoutId);
+      resolve(img);
+    };
 
-  const badgeEmoji = BADGE_EMOJI[postcard.badge] || EMOJI.achievement.explorer;
-  c.font = "60px system-ui";
-  c.fillText(badgeEmoji, W / 2, 800);
+    img.onerror = () => {
+      clearTimeout(timeoutId);
+      reject(new Error("Image load failed"));
+    };
 
-  // footer
-  c.globalAlpha = 0.3;
-  c.fillStyle = readTokenAsHex("--text-primary");
-  c.font = "14px system-ui, sans-serif";
-  c.textAlign = "center";
-  c.fillText("India Explorer", W / 2, 1080);
-  c.fillText(`Completed on ${postcard.stampDate}`, W / 2, 1110);
-  c.globalAlpha = 1;
-
-  return new Promise((resolve) => {
-    canvas.toBlob(resolve, "image/png");
+    img.src = src;
   });
 }
 
@@ -152,6 +210,8 @@ export function PostcardModal({
   const [isSaving, setIsSaving] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [confettiKey, setConfettiKey] = useState(0);
+  const [factExpanded, setFactExpanded] = useState(false);
+  const postcardDescriptionId = `postcard-description-${postcard.state}`;
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -167,8 +227,8 @@ export function PostcardModal({
       fxTap();
       const blob = await generatePostcardBlob(postcard);
       if (!blob) {
-        toast.error("Couldn't generate postcard", {
-          subtitle: "Please try again",
+        toast.error("Couldn't render postcard", {
+          subtitle: "Canvas rendering failed. Try again",
         });
         setIsSaving(false);
         return;
@@ -197,10 +257,12 @@ export function PostcardModal({
       };
       reader.readAsDataURL(blob);
     } catch (error) {
+      if (error instanceof Error) {
+        console.error("Save failed:", error.message);
+      }
       toast.error("Couldn't save postcard", {
-        subtitle: "Please try again later",
+        subtitle: "Storage failed. Check your device",
       });
-      console.error("Save failed:", error);
       setIsSaving(false);
     }
   };
@@ -227,8 +289,8 @@ export function PostcardModal({
 
       {/* Modal Content Container */}
       <div
-        className="relative z-10 flex flex-col items-center max-w-[360px] w-full"
-        style={{ padding: "24px", gap: "16px" }}
+        className="relative z-10 flex flex-col items-center max-w-full w-full px-4 sm:max-w-[360px]"
+        style={{ gap: "16px" }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* State Name Label (outside postcard) */}
@@ -236,17 +298,27 @@ export function PostcardModal({
           {state.name}
         </div>
 
-        {/* Postcard Card */}
+        {/* Hidden description for screen readers */}
+        <div id={postcardDescriptionId} className="sr-only">
+          Postcard for {state.name} state. Badge earned: {postcard.badge}. Completed on {postcard.stampDate}. This is your Explorer Passport stamp showing you've completed this state.
+        </div>
+
+        {/* Postcard Card - Responsive width for 320px screens */}
         <div
-          className="relative w-[328px] h-[420px] rounded-[20px] overflow-hidden animate-postcard-enter"
+          className="relative w-full h-auto rounded-[20px] overflow-hidden animate-postcard-enter"
+          role="img"
+          aria-describedby={postcardDescriptionId}
+          aria-label={`Explorer Passport postcard for ${state.name}`}
           style={{
+            maxWidth: "320px",
+            aspectRatio: "328 / 420",
             backgroundColor: "white",
             boxShadow:
               "0 8px 32px rgba(0, 0, 0, 0.18), 0 0 0 0 transparent",
             "--glow-color": `${fromHex}59`,
           } as React.CSSProperties}
         >
-          {/* Hero Image Section (top 60% = 252px) */}
+          {/* Hero Image Section (top 60%) */}
           <div
             className="absolute inset-0"
             style={{
@@ -267,42 +339,42 @@ export function PostcardModal({
             />
           </div>
 
-          {/* Content Area (bottom 40% = 168px) */}
+          {/* Content Area (bottom 40%) */}
           <div
             className="absolute inset-0 top-3/5 flex flex-col items-center justify-center"
             style={{
               backgroundColor: "white",
-              padding: "16px 20px",
-              gap: "8px",
+              padding: "12px 16px",
+              gap: "6px",
             }}
           >
             {/* Badge Type Label */}
-            <div className="text-[11px] font-extrabold uppercase tracking-widest text-text-secondary">
+            <div className="text-[10px] font-extrabold uppercase tracking-widest text-text-secondary">
               {postcard.badge} Badge
             </div>
 
             {/* Badge Emoji */}
             <div
-              className="text-[56px] animate-badge-float"
+              className="text-[48px] animate-badge-float"
               style={{ lineHeight: 1 }}
             >
               {badgeEmoji}
             </div>
 
             {/* State Name */}
-            <div className="text-[20px] font-bold text-text-primary text-center">
+            <div className="text-[18px] font-bold text-text-primary text-center leading-tight">
               {state.name}
             </div>
 
             {/* Capital City */}
             {state.capital && (
-              <div className="text-[13px] text-text-secondary">
+              <div className="text-[12px] text-text-secondary">
                 ⊕ {state.capital}
               </div>
             )}
 
             {/* Date */}
-            <div className="text-[12px] text-text-secondary">
+            <div className="text-[11px] text-text-secondary">
               {postcard.stampDate}
             </div>
           </div>
@@ -310,9 +382,9 @@ export function PostcardModal({
 
         {/* Fun Fact Box */}
         <div
-          className="rounded-xl"
+          className="rounded-xl w-full"
           style={{
-            maxWidth: "360px",
+            maxWidth: "320px",
             padding: "12px 16px",
             backgroundColor: "var(--accent-4-soft)",
           }}
@@ -321,17 +393,28 @@ export function PostcardModal({
             ✨ Did You Know?
           </div>
           <p
-            className="text-[13px] text-text-primary leading-relaxed"
+            className="text-[12px] text-text-primary leading-relaxed"
             style={{
               marginTop: "8px",
               display: "-webkit-box",
-              WebkitLineClamp: 3,
+              WebkitLineClamp: factExpanded ? undefined : 3,
               WebkitBoxOrient: "vertical",
               overflow: "hidden",
             }}
           >
             {state.funFact}
           </p>
+          {/* Show more button - appears when text is truncated */}
+          {state.funFact.length > 150 && (
+            <button
+              onClick={() => setFactExpanded(!factExpanded)}
+              className="mt-2 text-[11px] font-bold text-text-link transition-all"
+              aria-expanded={factExpanded}
+              aria-label={factExpanded ? "Show less fun fact" : "Show more fun fact"}
+            >
+              {factExpanded ? "Show less ▲" : "Show more ▼"}
+            </button>
+          )}
         </div>
 
         {/* Save to Passport Button */}
@@ -340,7 +423,7 @@ export function PostcardModal({
           disabled={isSaving}
           className="w-full h-12 rounded-2xl font-bold flex items-center justify-center disabled:opacity-60 disabled:cursor-not-allowed transition-all animate-cta-breathe"
           style={{
-            maxWidth: "360px",
+            maxWidth: "320px",
             backgroundColor: "var(--accent-1)",
             color: "var(--text-primary)",
             gap: "8px",

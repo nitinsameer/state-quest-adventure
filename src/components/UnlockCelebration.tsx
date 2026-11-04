@@ -230,7 +230,8 @@ export function UnlockCelebration() {
     // One burst per tick, never stacked.
     fxConfetti();
     burstRef.current += 1;
-    if (timerRef.current) clearTimeout(timerRef.current);
+    const currentTimer = timerRef.current;
+    if (currentTimer !== null) clearTimeout(currentTimer);
     setPieces(makePieces(burstRef.current));
     timerRef.current = setTimeout(() => {
       timerRef.current = null;

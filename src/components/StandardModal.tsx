@@ -10,7 +10,7 @@
  * - Kid-friendly animations
  */
 
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect, useRef } from "react";
 import { EMOJI } from "@/constants/emoji";
 
 export interface StandardModalProps {
@@ -77,12 +77,69 @@ export function StandardModal({
   maxWidth = "max-w-md",
   contentClassName,
 }: StandardModalProps) {
+  const modalRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!open) return;
+
+    // Store reference to element that triggered modal (for focus restoration)
+    triggerRef.current = document.activeElement as HTMLElement;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && onClose) {
+        onClose();
+      }
+
+      if (e.key === "Tab" && modalRef.current) {
+        // Get all focusable elements within modal
+        const focusableElements = modalRef.current.querySelectorAll(
+          "button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])",
+        );
+        const firstElement = focusableElements[0] as HTMLElement;
+        const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+        // Trap focus: if shift+tab on first element, focus last
+        if (e.shiftKey && document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement?.focus();
+        }
+        // Trap focus: if tab on last element, focus first
+        else if (!e.shiftKey && document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement?.focus();
+        }
+      }
+    };
+
+    // Focus first focusable element in modal
+    const focusableElements = modalRef.current?.querySelectorAll(
+      "button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])",
+    );
+    if (focusableElements?.length) {
+      (focusableElements[0] as HTMLElement)?.focus();
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      // Restore focus to trigger element when modal closes
+      if (triggerRef.current && typeof triggerRef.current.focus === "function") {
+        triggerRef.current.focus();
+      }
+    };
+  }, [open, onClose]);
+
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 ui-scrim flex items-center justify-center p-4 animate-in fade-in">
+    <div className="fixed inset-0 z-[1100] ui-scrim flex items-center justify-center p-4 animate-in fade-in">
       <div
+        ref={modalRef}
         className={`rounded-[var(--radius-modal)] shadow-[var(--shadow-raised)] bg-surface-card ${maxWidth} w-full ${header?.floatingIcon ? "" : "overflow-hidden"} animate-in zoom-in-95 flex flex-col max-h-[90vh] relative`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={header ? "modal-title" : undefined}
       >
         {/* Header Section - Optional Gradient Banner or Floating Icon */}
         {header && (
@@ -105,7 +162,7 @@ export function StandardModal({
                       {EMOJI.ui.close}
                     </button>
                   )}
-                  <h2 className="text-2xl font-extrabold" style={{ color: "var(--ink)" }}>
+                  <h2 id="modal-title" className="text-2xl font-extrabold" style={{ color: "var(--ink)" }}>
                     {header.title}
                   </h2>
                   {header.subtitle && (
@@ -127,8 +184,8 @@ export function StandardModal({
                     {EMOJI.ui.close}
                   </button>
                 )}
-                <div className="text-5xl mb-(--space-3)">{header.icon}</div>
-                <h2 className="text-2xl font-extrabold" style={{ color: "var(--text-on-header)" }}>
+                <div className="text-5xl md:text-6xl mb-(--space-3)">{header.icon}</div>
+                <h2 id="modal-title" className="text-2xl font-extrabold" style={{ color: "var(--text-on-header)" }}>
                   {header.title}
                 </h2>
                 {header.subtitle && (

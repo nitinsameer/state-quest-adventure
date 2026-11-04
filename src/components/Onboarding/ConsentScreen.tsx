@@ -85,38 +85,29 @@ export function ConsentScreen({
           </div>
 
           {/* Checkbox */}
-          <button
-            type="button"
-            onClick={handleToggleConsent}
-            className={`w-full flex items-center gap-4 p-4 rounded-xl transition-all duration-200 mb-4 ${parentConsented ? "bg-action-success" : "bg-surface-raised"}`}
-          >
-            {/* Checkbox */}
-            <div
-              className={`relative w-6 h-6 rounded-lg border-2 flex-shrink-0 transition-all duration-200
+          <label className="w-full flex items-center gap-4 p-4 rounded-xl transition-all duration-200 mb-4 cursor-pointer"
+            style={{
+              backgroundColor: parentConsented ? "var(--action-success)" : "var(--surface-raised)"
+            }}>
+            {/* Native checkbox input */}
+            <input
+              type="checkbox"
+              checked={parentConsented}
+              onChange={handleToggleConsent}
+              className={`relative w-6 h-6 rounded-lg border-2 flex-shrink-0 transition-all duration-200 cursor-pointer
                 ${
                   parentConsented
-                    ? "border-text-on-primary bg-text-on-primary"
+                    ? "border-text-on-primary bg-text-on-primary accent-success"
                     : "border-border-color bg-surface-card"
                 }
                 ${checkAnimation ? "animate-checkbox-bounce" : ""}
               `}
-            >
-              {parentConsented && (
-                <svg
-                  className="absolute inset-0 w-full h-full p-1 text-success animate-checkbox-draw"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              )}
-            </div>
+              style={{
+                accentColor: "var(--success)"
+              }}
+            />
 
-            <label className="flex-1 text-left cursor-pointer">
+            <span className="flex-1 text-left">
               <p
                 className={`text-sm font-bold transition-colors ${
                   parentConsented ? "text-text-on-primary" : "text-text-primary"
@@ -124,8 +115,8 @@ export function ConsentScreen({
               >
                 I am a parent/guardian. I agree to our Terms & Privacy Policy.
               </p>
-            </label>
-          </button>
+            </span>
+          </label>
 
           {/* Glow effect when enabled */}
           {parentConsented && (

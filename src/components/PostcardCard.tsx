@@ -63,14 +63,15 @@ export function PostcardCard({
             )}
           </div>
 
-          {/* State name - centered, larger */}
+          {/* State name - centered, larger, with title for hover tooltip */}
           <div
-            className="font-extrabold text-center mb-2 line-clamp-2"
+            className="font-extrabold text-center mb-2 line-clamp-2 truncate"
             style={{
               fontSize: "var(--type-state-name)",
               fontWeight: "var(--type-state-name-weight)",
               color: "var(--color-ink)",
             }}
+            title={destination}
           >
             {destination}
           </div>

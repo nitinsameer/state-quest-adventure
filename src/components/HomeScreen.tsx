@@ -76,24 +76,23 @@ export function HomeScreen() {
 
   return (
     <div
-      className="w-full h-full flex flex-col bg-muted-light"
-      style={{ backgroundImage: `url(${screenBg})`, backgroundSize: "cover" }}
+      className="w-full h-full flex flex-col bg-cover bg-center"
+      style={{ backgroundImage: `url(${screenBg})` }}
     >
       {/* Scrollable Content Area */}
       <div className="flex-1 overflow-y-auto overflow-x-hidden pt-safe pb-safe">
         {/* HEADER SECTION - Orange gradient with character */}
         <div
-          className="flex-shrink-0 bg-header px-(--padding-lg) pt-6 pb-8 rounded-b-3xl"
-          style={{ color: "var(--text-on-header)" }}
+          className="flex-shrink-0 bg-header px-(--padding-lg) pt-6 pb-8 rounded-b-3xl text-text-on-header"
         >
           {/* Top Row: Character + Streak & Coins */}
           <div className="flex items-start justify-between mb-(--space-2)">
             {/* Left: Character Avatar Circle */}
-            <div className="w-16 h-16 bg-surface-card rounded-full flex items-center justify-center flex-shrink-0 shadow-md overflow-hidden">
+            <div className="w-20 h-20 bg-surface-card rounded-full flex items-center justify-center flex-shrink-0 shadow-md overflow-hidden">
               {p.avatar ? (
-                <div className="w-14 h-14 text-2xl">{p.avatar}</div>
+                <div className="w-18 h-18 text-2xl">{p.avatar}</div>
               ) : (
-                <div className="w-14 h-14 bg-accent-2-soft rounded-full flex items-center justify-center text-2xl">
+                <div className="w-18 h-18 bg-accent-2-soft rounded-full flex items-center justify-center text-2xl">
                   👧
                 </div>
               )}
@@ -109,46 +108,46 @@ export function HomeScreen() {
 
           {/* Greeting + Level */}
           <div>
-            <h1 className="text-h2" style={{ color: "var(--text-on-header)" }}>
+            <h1 className="text-h2 text-text-on-header">
               Namaste, Explorer!
             </h1>
-            <p className="text-body-sm font-semibold" style={{ color: "var(--text-on-header)" }}>
+            <p className="text-body-sm font-semibold text-text-on-header">
               Level {level} • {getLevelName(level)} • v3.0
             </p>
           </div>
         </div>
 
         {/* STATS CARDS ROW */}
-        <div className="px-(--padding-md) pt-(--space-4) pb-(--space-1) flex gap-(--gap-base)">
+        <div className="px-(--padding-md) pt-(--space-4) pb-(--space-1) grid grid-cols-2 sm:grid-cols-3 gap-(--gap-base)">
           {/* States Card */}
-          <div className="flex-1 bg-surface-card rounded-2xl shadow-sm p-(--padding-base) text-center">
+          <div className="bg-surface-card rounded-2xl shadow-sm p-(--padding-base) text-center">
             <div className="text-2xl mb-1">{EMOJI.nav.map}</div>
-            <div className="text-h5" style={{ color: "var(--text-primary)" }}>
+            <div className="text-h5 text-text-primary">
               {p.completed.length}
             </div>
-            <div className="text-caption font-semibold" style={{ color: "var(--text-secondary)" }}>
+            <div className="text-caption font-semibold text-text-secondary">
               States
             </div>
           </div>
 
           {/* Badges Card */}
-          <div className="flex-1 bg-surface-card rounded-2xl shadow-sm p-(--padding-base) text-center">
+          <div className="bg-surface-card rounded-2xl shadow-sm p-(--padding-base) text-center">
             <div className="text-2xl mb-1">{EMOJI.milestone.hundred}</div>
-            <div className="text-h5" style={{ color: "var(--text-primary)" }}>
+            <div className="text-h5 text-text-primary">
               0
             </div>
-            <div className="text-caption font-semibold" style={{ color: "var(--text-secondary)" }}>
+            <div className="text-caption font-semibold text-text-secondary">
               Badges
             </div>
           </div>
 
           {/* Stamps Card */}
-          <div className="flex-1 bg-surface-card rounded-2xl shadow-sm p-(--padding-base) text-center">
+          <div className="bg-surface-card rounded-2xl shadow-sm p-(--padding-base) text-center hidden sm:block">
             <div className="text-2xl mb-1">{EMOJI.action.stamp}</div>
-            <div className="text-h5" style={{ color: "var(--text-primary)" }}>
+            <div className="text-h5 text-text-primary">
               0
             </div>
-            <div className="text-caption font-semibold" style={{ color: "var(--text-secondary)" }}>
+            <div className="text-caption font-semibold text-text-secondary">
               Stamps
             </div>
           </div>
@@ -158,7 +157,7 @@ export function HomeScreen() {
         <div className="px-(--padding-md) py-(--space-4) space-y-(--space-5)">
           {/* CONTINUE YOUR JOURNEY */}
           <div>
-            <h2 className="text-h3 mb-(--space-2)" style={{ color: "var(--text-primary)" }}>
+            <h2 className="text-h3 mb-(--space-2) text-text-primary">
               Continue your journey
             </h2>
 
@@ -166,14 +165,11 @@ export function HomeScreen() {
             <div className="bg-surface-card rounded-2xl shadow-sm p-(--padding-md) flex items-center gap-(--gap-loose)">
               {/* Left: STATE IMAGE */}
               <div
-                className="w-20 h-20 rounded-2xl flex-shrink-0"
+                className="w-20 h-20 rounded-2xl flex-shrink-0 bg-cover bg-center bg-surface-muted"
                 style={{
                   backgroundImage: STATE_ART[current.name]
                     ? `url(${STATE_ART[current.name]})`
                     : undefined,
-                  backgroundColor: STATE_ART[current.name] ? undefined : "var(--surface-muted)",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
                 }}
               />
 
@@ -182,7 +178,7 @@ export function HomeScreen() {
                 <div className="text-caption font-semibold text-accent-1 uppercase">
                   Currently Exploring
                 </div>
-                <h3 className="text-h4" style={{ color: "var(--text-primary)" }}>
+                <h3 className="text-h4 text-text-primary">
                   {current.name}
                 </h3>
                 <div className="mt-(--space-1) h-1.5 bg-progress-track rounded-full overflow-hidden">
@@ -192,8 +188,7 @@ export function HomeScreen() {
                   />
                 </div>
                 <div
-                  className="text-caption font-semibold mt-(--space-0-5)"
-                  style={{ color: "var(--text-secondary)" }}
+                  className="text-caption font-semibold mt-(--space-0-5) text-text-secondary"
                 >
                   {currentDone}/6
                 </div>
@@ -209,14 +204,13 @@ export function HomeScreen() {
           {/* UP NEXT - STATE CARDS */}
           <div>
             <div className="flex items-center justify-between mb-(--space-2)">
-              <h2 className="text-h3" style={{ color: "var(--text-primary)" }}>
+              <h2 className="text-h3 text-text-primary">
                 Up next
               </h2>
               <Link
                 to="/journey"
                 onClick={() => fxTap()}
-                className="text-body-sm font-bold"
-                style={{ color: "var(--text-link)" }}
+                className="text-body-sm font-bold text-text-link"
               >
                 View all
               </Link>
@@ -232,25 +226,21 @@ export function HomeScreen() {
                 >
                   {/* State Image */}
                   <div
-                    className="w-full h-24 rounded-lg mb-(--space-1)"
+                    className="w-full h-24 rounded-lg mb-(--space-1) bg-cover bg-center bg-surface-sunken"
                     style={{
                       backgroundImage: STATE_ART[state.name]
                         ? `url(${STATE_ART[state.name]})`
                         : undefined,
-                      backgroundColor: STATE_ART[state.name] ? undefined : "var(--surface-sunken)",
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
                     }}
                   />
-                  <h3 className="text-h5 mb-(--space-1)" style={{ color: "var(--text-primary)" }}>
+                  <h3 className="text-h5 mb-(--space-1) text-text-primary">
                     {state.name}
                   </h3>
-                  <div className="text-body-sm font-bold" style={{ color: "var(--text-link)" }}>
+                  <div className="text-body-sm font-bold text-text-link">
                     ✌️ Open
                   </div>
                   <div
-                    className="text-caption font-semibold"
-                    style={{ color: "var(--text-secondary)" }}
+                    className="text-caption font-semibold text-text-secondary"
                   >
                     Start exploring
                   </div>
@@ -270,6 +260,7 @@ export function HomeScreen() {
           <Link
             to="/home"
             onClick={() => fxTap()}
+            aria-current="page"
             className="flex flex-col items-center gap-1 py-(--padding-base) px-(--padding-md) rounded-2xl bg-accent-1-soft"
           >
             <img src={navHomeIcon} alt="home" className="w-6 h-6" />
@@ -282,7 +273,7 @@ export function HomeScreen() {
             className="flex flex-col items-center gap-1 py-(--padding-base) px-(--padding-md)"
           >
             <img src={navJourneyIcon} alt="journey" className="w-6 h-6" />
-            <span className="text-label" style={{ color: "var(--text-primary)" }}>
+            <span className="text-label text-text-primary">
               Journey
             </span>
           </Link>
@@ -293,7 +284,7 @@ export function HomeScreen() {
             className="flex flex-col items-center gap-1 py-(--padding-base) px-(--padding-md)"
           >
             <img src={navExplorerIcon} alt="explorer" className="w-6 h-6" />
-            <span className="text-label" style={{ color: "var(--text-primary)" }}>
+            <span className="text-label text-text-primary">
               Explorer
             </span>
           </Link>
@@ -304,7 +295,7 @@ export function HomeScreen() {
             className="flex flex-col items-center gap-1 py-(--padding-base) px-(--padding-md)"
           >
             <img src={navMeIcon} alt="me" className="w-6 h-6" />
-            <span className="text-label" style={{ color: "var(--text-primary)" }}>
+            <span className="text-label text-text-primary">
               Profile
             </span>
           </Link>

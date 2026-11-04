@@ -78,10 +78,9 @@ export function BadgeUnlockAnimation({
         >
           {/* Animated border glow */}
           <div
-            className={`absolute inset-0 rounded-3xl border-4 transition-all duration-300 ${
+            className={`absolute inset-0 rounded-3xl border-4 border-accent-4 transition-all duration-300 ${
               stage === "celebrate" ? "animate-pulse" : ""
             }`}
-            style={{ borderColor: "var(--accent-4)" }}
           />
 
           {/* Badge emoji - bounces in celebrate stage */}
@@ -98,17 +97,16 @@ export function BadgeUnlockAnimation({
 
           {/* Badge description */}
           {badgeDescription && (
-            <p className="text-body text-center" style={{ color: "var(--text-secondary)" }}>
+            <p className="text-body text-center text-text-secondary">
               {badgeDescription}
             </p>
           )}
 
           {/* "Unlocked!" celebration text - fades in at celebrate stage */}
           <div
-            className={`text-center text-h5 font-bold transition-opacity duration-300 ${
+            className={`text-center text-h5 font-bold text-accent-3 transition-opacity duration-300 ${
               stage === "celebrate" ? "opacity-100" : "opacity-0"
             }`}
-            style={{ color: "var(--accent-3)" }}
           >
             {EMOJI.action.star} Unlocked! {EMOJI.action.star}
           </div>

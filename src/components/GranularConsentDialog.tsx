@@ -55,7 +55,7 @@ export function GranularConsentDialog({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-scrim backdrop-blur-sm p-4 animate-in fade-in">
       <div className="bg-surface-card rounded-3xl shadow-2xl max-w-md w-full overflow-hidden animate-in zoom-in-95 flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="bg-bg-header p-(--padding-lg)" style={{ color: "var(--text-on-header)" }}>
+        <div className="bg-bg-header p-(--padding-lg) text-text-on-header">
           <h2 className="text-2xl font-extrabold mb-(--space-0-25)">{EMOJI.action.lock} Stamp Privacy</h2>
           <p className="text-sm opacity-90">Manage who can see this stamp from {postcard.state}</p>
         </div>
@@ -65,8 +65,7 @@ export function GranularConsentDialog({
           {/* Current State */}
           <div className="bg-surface-raised rounded-2xl p-(--padding-md) border-2 border-border-color">
             <div
-              className="text-xs font-bold uppercase mb-(--space-0-25)"
-              style={{ color: "var(--text-muted)" }}
+              className="text-xs font-bold uppercase mb-(--space-0-25) text-text-muted"
             >
               Current Setting
             </div>
@@ -79,14 +78,14 @@ export function GranularConsentDialog({
                     : EMOJI.ui.pending}
               </div>
               <div>
-                <div className="font-bold capitalize" style={{ color: "var(--text-primary)" }}>
+                <div className="font-bold capitalize text-text-primary">
                   {postcard.consentState === "accepted"
                     ? "Shareable with Parents"
                     : postcard.consentState === "declined"
                       ? "Private (Not Shareable)"
                       : "Not Yet Decided"}
                 </div>
-                <div className="text-xs" style={{ color: "var(--text-muted)" }}>
+                <div className="text-xs text-text-muted">
                   Last changed:{" "}
                   {postcard.consentChangedAt
                     ? new Date(postcard.consentChangedAt).toLocaleDateString()
@@ -110,10 +109,10 @@ export function GranularConsentDialog({
               <div className="flex items-start gap-(--gap-base)">
                 <div className="text-3xl flex-shrink-0">{EMOJI.ui.checkButton}</div>
                 <div className="flex-1">
-                  <div className="font-bold" style={{ color: "var(--text-primary)" }}>
+                  <div className="font-bold text-text-primary">
                     Shareable with Parents
                   </div>
-                  <div className="text-xs mt-(--space-0-25)" style={{ color: "var(--text-muted)" }}>
+                  <div className="text-xs mt-(--space-0-25) text-text-muted">
                     You're OK with your parents, friends, or family seeing this stamp. It could be
                     shared in messages or printed!
                   </div>
@@ -133,10 +132,10 @@ export function GranularConsentDialog({
               <div className="flex items-start gap-(--gap-base)">
                 <div className="text-3xl flex-shrink-0">{EMOJI.ui.delete}</div>
                 <div className="flex-1">
-                  <div className="font-bold" style={{ color: "var(--text-primary)" }}>
+                  <div className="font-bold text-text-primary">
                     Private (Keep Personal)
                   </div>
-                  <div className="text-xs mt-(--space-0-25)" style={{ color: "var(--text-muted)" }}>
+                  <div className="text-xs mt-(--space-0-25) text-text-muted">
                     You prefer to keep this stamp just for yourself. It won't be shared or exported.
                   </div>
                 </div>
@@ -155,10 +154,10 @@ export function GranularConsentDialog({
               <div className="flex items-start gap-(--gap-base)">
                 <div className="text-3xl flex-shrink-0">{EMOJI.ui.pending}</div>
                 <div className="flex-1">
-                  <div className="font-bold" style={{ color: "var(--text-primary)" }}>
+                  <div className="font-bold text-text-primary">
                     Not Yet Decided
                   </div>
-                  <div className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
+                  <div className="text-xs mt-1 text-text-muted">
                     You haven't decided yet. You can always come back and choose anytime!
                   </div>
                 </div>
@@ -170,7 +169,7 @@ export function GranularConsentDialog({
           <div className="bg-fb-info-bg rounded-2xl p-(--padding-md) border border-fb-info-border">
             <div className="flex gap-(--gap-base)">
               <span className="text-lg flex-shrink-0">{EMOJI.action.lock}</span>
-              <div className="text-xs" style={{ color: "var(--fb-info-fg)" }}>
+              <div className="text-xs text-fb-info-fg">
                 <strong>You're in control:</strong> You can change your mind anytime. We never share
                 your stamps without your permission.
               </div>
@@ -181,8 +180,7 @@ export function GranularConsentDialog({
           {postcard.consentHistory && postcard.consentHistory.length > 1 && (
             <div className="bg-surface-raised rounded-2xl p-(--padding-md)">
               <div
-                className="text-xs font-bold uppercase mb-(--space-0-25)"
-                style={{ color: "var(--text-muted)" }}
+                className="text-xs font-bold uppercase mb-(--space-0-25) text-text-muted"
               >
                 Change History
               </div>
@@ -192,7 +190,7 @@ export function GranularConsentDialog({
                   .reverse()
                   .slice(0, 3)
                   .map((entry, idx) => (
-                    <div key={idx} className="text-xs" style={{ color: "var(--text-muted)" }}>
+                    <div key={idx} className="text-xs text-text-muted">
                       <span className="font-semibold capitalize">
                         {entry.state === "accepted"
                           ? EMOJI.ui.checkButton
@@ -214,8 +212,7 @@ export function GranularConsentDialog({
         <div className="border-t border-border-color p-(--padding-lg)">
           <button
             onClick={handleClose}
-            className="w-full px-(--padding-md) py-(--padding-base) rounded-xl bg-surface-raised font-bold text-sm transition active:scale-95"
-            style={{ color: "var(--text-muted)" }}
+            className="w-full px-(--padding-md) py-(--padding-base) rounded-xl bg-surface-raised font-bold text-sm transition active:scale-95 text-text-muted"
           >
             Close
           </button>

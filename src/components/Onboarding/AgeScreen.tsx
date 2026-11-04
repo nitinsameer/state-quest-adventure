@@ -120,7 +120,9 @@ export function AgeScreen({
       {/* Scrollable Content - Age options only */}
       <div className="relative z-10 flex-1 overflow-y-auto min-h-0">
         <div className="px-5 py-3 flex flex-col gap-2">
-          {/* Age Bands */}
+          {/* Age Selection Fieldset */}
+          <fieldset className="space-y-2">
+            <legend className="sr-only">Select your age band</legend>
           {AGE_BANDS.map((band) => {
             const isSelected = selectedAge === band.value;
             const IllustrationComponent = band.illustration;
@@ -129,6 +131,9 @@ export function AgeScreen({
                 key={band.value}
                 type="button"
                 onClick={() => handleAgeSelect(band.value)}
+                role="radio"
+                aria-checked={isSelected}
+                aria-label={`${band.label}, ages ${band.value}`}
                 className={`relative rounded-2xl p-4 transition-all duration-300 flex items-center gap-4 text-left
                   ${
                     isSelected
@@ -140,7 +145,7 @@ export function AgeScreen({
               >
                 {/* Illustration - Left side */}
                 <div className="flex-shrink-0 w-14 h-14 flex items-center justify-center">
-                  <IllustrationComponent className="w-12 h-12" />
+                  <IllustrationComponent className="w-12 md:w-14 h-12 md:h-14" />
                 </div>
                 
                 {/* Text content - Right side */}
@@ -168,6 +173,7 @@ export function AgeScreen({
               </button>
             );
           })}
+            </fieldset>
         </div>
       </div>
 

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useProgress } from "@/lib/progress";
-import { REGIONS, REGION_KEYS, type RegionKey } from "@/lib/states";
+import { REGIONS, REGION_KEYS, type RegionKey } from "@/lib/passport-helpers";
 import { EMOJI } from "@/constants/emoji";
 import { STATE_ART } from "@/lib/state-art";
 

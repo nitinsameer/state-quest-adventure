@@ -37,7 +37,7 @@ function ToastNotification({ config }: { config: ToastConfig }) {
 
   return (
     <div
-      className={`fixed z-50 transform transition-all duration-300 ${
+      className={`fixed z-[1050] transform transition-all duration-300 ${
         isExiting ? "translate-y-full opacity-0" : "translate-y-0 opacity-100"
       }`}
       style={{
@@ -63,7 +63,7 @@ function ToastNotification({ config }: { config: ToastConfig }) {
         </div>
         <button
           onClick={handleDismiss}
-          className="flex-shrink-0 text-xl hover:opacity-80 active:scale-90 transition-all duration-200 drop-shadow"
+          className="flex-shrink-0 text-xl hover:opacity-80 active:scale-90 transition-all duration-200 drop-shadow px-3 py-3"
           aria-label="Dismiss"
         >
           {EMOJI.ui.close}
@@ -89,15 +89,10 @@ export function BottomToastProvider() {
   if (current.type === "success") {
     return (
       <div
-        className="fixed inset-0 pointer-events-none z-[998]"
+        className="fixed inset-0 pointer-events-none z-[1000]"
         style={{ pointerEvents: "auto" }}
       >
-        <SuccessToast
-          message={current.message}
-          icon={current.icon}
-          duration={current.duration ?? 2500}
-          onDismiss={() => dismiss()}
-        />
+        <SuccessToast />
       </div>
     );
   }
@@ -105,7 +100,7 @@ export function BottomToastProvider() {
   // Render regular toast for other types
   return (
     <div
-      className="fixed inset-0 pointer-events-none z-[998]"
+      className="fixed inset-0 pointer-events-none z-[1050]"
       style={{ pointerEvents: current ? "auto" : "none" }}
     >
       <ToastNotification config={current} />

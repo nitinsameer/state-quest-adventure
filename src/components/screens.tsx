@@ -105,6 +105,7 @@ import {
   getReplayCount,
   type Achievement,
   type PostcardData,
+  type PendingCelebration,
   getStreakStatus,
   getStreakMilestone,
   getNextAchievementBadge,
@@ -385,12 +386,27 @@ export function CreateProfileScreen() {
     setCurrentScreen("age");
   };
 
+  const handleAvatarSkip = () => {
+    fxTap();
+    // Skip to consent screen directly, keeping avatar as default
+    if (!selectedAvatar) {
+      setSelectedAvatar("explorer-hat");
+    }
+    setCurrentScreen("consent");
+  };
 
   const handleAgeNext = () => {
     fxTap();
     // If age not selected, use default
     const ageToUse = selectedAge || "6-7";
     setSelectedAge(ageToUse);
+    setCurrentScreen("consent");
+  };
+
+  const handleAgeSkip = () => {
+    fxTap();
+    // Skip to consent, use default age
+    setSelectedAge("6-7");
     setCurrentScreen("consent");
   };
 
@@ -428,6 +444,7 @@ export function CreateProfileScreen() {
         selectedAvatar={selectedAvatar}
         onSelectAvatar={setSelectedAvatar}
         onNext={handleAvatarNext}
+        onSkip={handleAvatarSkip}
       />
     );
   }
@@ -440,6 +457,7 @@ export function CreateProfileScreen() {
         onSelectAge={setSelectedAge}
         onBack={handleAgeBack}
         onNext={handleAgeNext}
+        onSkip={handleAgeSkip}
       />
     );
   }
@@ -530,12 +548,12 @@ function RecentlyCompletedCelebration({
     fxCorrect();
 
     // Dismiss celebration and navigate to journey
-    const { stateName } = pendingCelebration;
+    const { stateName } = pendingCelebration as PendingCelebration & { type: "full" };
     
     onDismiss();
     dismissPendingCelebration();
     navigate({ to: "/journey" });
-  }, [pendingCelebration?.stateName, showCelebrationPopup]);
+  }, [pendingCelebration?.type, pendingCelebration?.id || (pendingCelebration as any)?.themeId, showCelebrationPopup]);
 
   return null;
 }

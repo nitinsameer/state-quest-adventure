@@ -110,7 +110,8 @@ export const REGIONS: Record<
   },
 };
 
-export const REGION_KEYS = Object.keys(REGIONS) as (keyof typeof REGIONS)[];
+export type RegionKey = keyof typeof REGIONS;
+export const REGION_KEYS = Object.keys(REGIONS) as RegionKey[];
 
 /**
  * Get first N states for Sprout (3-5) variant

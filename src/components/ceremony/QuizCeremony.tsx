@@ -41,12 +41,6 @@ export function QuizCeremony() {
   // At this point, ceremony is guaranteed to be PendingCelebration with type "full"
   const typedCeremony = ceremony as PendingCelebration & { type: "full" };
 
-  return (
-    <QuizCelebrationScreen
-      ceremony={typedCeremony}
-      navigationInProgressRef={navigationInProgressRef}
-      navigate={navigate}
-    />
-  );
+  return <QuizCelebrationScreen />;
 }
 

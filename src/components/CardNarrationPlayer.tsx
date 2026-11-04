@@ -83,14 +83,13 @@ export function CardNarrationPlayer({
           {/* Play Button */}
           <button
             onClick={handlePlayClick}
-            className={`h-12 w-12 rounded-full flex items-center justify-center text-2xl transition-transform active:scale-95 flex-shrink-0 ${
+            className={`h-12 w-12 rounded-full flex items-center justify-center text-2xl transition-transform active:scale-95 flex-shrink-0 text-text-on-primary ${
               isCurrentPlaying
                 ? "bg-fb-warning-bg shadow-lg animate-pulse"
                 : audioNarrationEnabled
                   ? "bg-action-primary-bg shadow-md hover:shadow-lg"
                   : "bg-action-primary-bg/50 shadow-md hover:shadow-lg"
             }`}
-            style={{ color: "var(--text-on-primary)" }}
             title={
               isCurrentPlaying
                 ? "Stop narration"

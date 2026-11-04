@@ -67,8 +67,7 @@ export function ExpandableCard({
         <div className="text-3xl flex-shrink-0">{emoji}</div>
         <div className="flex-1 min-w-0">
           <h3
-            className="text-display font-bold text-xl leading-snug"
-            style={{ color: "var(--text-primary)" }}
+            className="text-display font-bold text-xl leading-snug text-text-primary"
           >
             {title}
           </h3>
@@ -107,8 +106,7 @@ export function ExpandableCard({
               {keyFacts.slice(0, visibleFactsCount).map((fact, index) => (
                 <div
                   key={index}
-                  className="text-caption font-semibold bg-surface-card/60 p-(--padding-sm) rounded-lg border-l-3 border-info animate-fadeIn"
-                  style={{ color: "var(--text-primary)" }}
+                  className="text-caption font-semibold bg-surface-card/60 p-(--padding-sm) rounded-lg border-l-3 border-info animate-fadeIn text-text-primary"
                 >
                   {fact}
                 </div>
@@ -156,8 +154,7 @@ export function ExpandableCard({
                   {coolFacts.map((fact, index) => (
                     <div
                       key={index}
-                      className="text-caption font-semibold bg-warning-soft p-(--padding-sm) rounded-lg border-l-3 border-warning"
-                      style={{ color: "var(--text-primary)" }}
+                      className="text-caption font-semibold bg-warning-soft p-(--padding-sm) rounded-lg border-l-3 border-warning text-text-primary"
                     >
                       {fact}
                     </div>

@@ -100,7 +100,7 @@ export function SuccessToast() {
 
   return (
     <div
-      className="fixed z-50 pointer-events-none"
+      className="fixed z-[1000] pointer-events-none"
       style={{
         left: "50%",
         bottom: "calc(var(--nav-h, 96px) + 16px)",
@@ -127,6 +127,7 @@ export function SuccessToast() {
             inset: "-40px",
             overflow: "visible",
           }}
+          aria-hidden="true"
         >
           {particles}
         </div>

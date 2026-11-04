@@ -109,8 +109,7 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext, onSkip }:
         className="absolute inset-0 w-full h-full bg-cover bg-center z-0"
         style={{ 
           backgroundImage: `url(${adventureBg})`,
-          backgroundPosition: "center top",
-          backgroundSize: "cover"
+          backgroundPosition: "center top"
         }}
       />
 
@@ -142,7 +141,7 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext, onSkip }:
         <div className="text-center">
           {/* Main Heading - "Pick Your" */}
           <div 
-            className="text-3xl leading-tight font-black"
+            className="text-2xl sm:text-3xl leading-tight font-black"
             style={{ 
               fontFamily: "var(--font-display)",
               color: "#1a2e4a",
@@ -155,7 +154,7 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext, onSkip }:
           
           {/* Avatar Text with Golden Gradient - "Avatar" */}
           <div 
-            className="text-6xl font-black leading-tight mt-0 mb-1"
+            className="text-4xl sm:text-6xl font-black leading-tight mt-0 mb-1"
             style={{
               fontFamily: "var(--font-display)",
               fontWeight: 900,
@@ -183,8 +182,8 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext, onSkip }:
       <div className="relative z-10 flex-1 flex flex-col overflow-hidden">
         {/* Scrollable Avatar Grid Section */}
         <div className="flex-1 overflow-y-auto px-4 py-3 min-h-0">
-          {/* Avatar Grid - 3 Columns */}
-          <div className="grid grid-cols-3 gap-3 mb-3">
+          {/* Avatar Grid - 2 Columns on mobile, 3 on tablet+ */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3 md:gap-4 mb-3">
             {AVATAR_IDS.map((avatarId) => (
               <button
                 key={avatarId}
