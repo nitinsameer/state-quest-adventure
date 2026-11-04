@@ -37,18 +37,18 @@ export function PostcardFrame({
   return (
     <div className="flex flex-col items-center gap-3">
       {/* Postcard container with frame overlay */}
-      <div className="w-full max-w-md relative">
+      <div className="w-full max-w-lg relative">
         {/* Main postcard area with rounded corners */}
         <div className="w-full rounded-2xl shadow-lg bg-white relative overflow-hidden">
           {/* Postcard content container - maintains aspect ratio */}
-          <div className="aspect-[3/2] sm:aspect-[4/3] flex flex-col items-center justify-center p-6 relative bg-surface-card">
-            {/* State illustration - centered background */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-100">
+          <div className="aspect-[3/2] flex flex-col items-center justify-center relative bg-surface-card overflow-hidden">
+            {/* State illustration - centered background, contained within frame */}
+            <div className="absolute inset-0 flex items-center justify-center opacity-100 overflow-hidden">
               {art ? (
                 <img
                   src={art}
                   alt={state.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                   loading="lazy"
                   decoding="async"
                 />
@@ -57,14 +57,14 @@ export function PostcardFrame({
               )}
             </div>
 
-            {/* Airmail frame overlay - positioned absolute, fully covers postcard */}
+            {/* Airmail frame overlay - covers entire postcard without gaps */}
             <img
               src={airmailFrame}
               alt=""
               className="absolute inset-0 w-full h-full"
               style={{
                 pointerEvents: "none",
-                objectFit: "contain",
+                objectFit: "cover",
               }}
               aria-hidden="true"
               loading="lazy"
