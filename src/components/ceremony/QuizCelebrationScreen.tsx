@@ -231,18 +231,6 @@ function SingleScreenCelebration({
             />
           </div>
 
-          {/* Achievement message - varies by star count */}
-          {elapsedMs > 1500 && elapsedMs < 3500 && (
-            <div className="text-center text-text-secondary font-semibold">
-              {(() => {
-                const stars = parseInt(ceremony.stars);
-                if (stars === 3) return "Perfect! You mastered this quiz.";
-                if (stars === 2) return "Excellent work! You're getting better.";
-                return "Good start! Play again for more stars.";
-              })()}
-            </div>
-          )}
-
           {/* PHASE 3: Single XP Reward Badge */}
           {showPhase3 && (
             <div

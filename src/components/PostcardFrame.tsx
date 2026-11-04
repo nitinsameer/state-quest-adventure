@@ -35,9 +35,9 @@ export function PostcardFrame({
   const art = STATE_ART[state.name];
 
   return (
-    <div className="flex justify-center w-full">
+    <div className="flex flex-col items-center gap-3">
       {/* Postcard container with frame overlay */}
-      <div className="w-full max-w-sm relative">
+      <div className="w-full max-w-md relative">
         {/* Main postcard area with rounded corners */}
         <div className="w-full rounded-2xl shadow-lg bg-white relative overflow-hidden">
           {/* Postcard content container - maintains aspect ratio */}
@@ -61,22 +61,15 @@ export function PostcardFrame({
             <img
               src={airmailFrame}
               alt=""
-              className="absolute inset-0 w-full h-full object-contain"
+              className="absolute inset-0 w-full h-full"
               style={{
                 pointerEvents: "none",
-                objectFit: "cover",
+                objectFit: "contain",
               }}
               aria-hidden="true"
               loading="lazy"
               decoding="async"
             />
-
-            {/* State name text - positioned at bottom, above frame elements */}
-            <div className="absolute bottom-4 left-0 right-0 text-center z-10">
-              <div className="font-bold text-text-primary text-base px-3">
-                {state.name}
-              </div>
-            </div>
           </div>
 
           {/* "Your Postcard!" label - positioned at top-left */}
@@ -85,6 +78,13 @@ export function PostcardFrame({
               <span>📮</span>
               <span>Your Postcard!</span>
             </div>
+          </div>
+        </div>
+
+        {/* State name - positioned outside and below the frame */}
+        <div className="text-center mt-3 px-3 w-full">
+          <div className="font-bold text-text-primary text-lg">
+            {state.name}
           </div>
         </div>
       </div>
