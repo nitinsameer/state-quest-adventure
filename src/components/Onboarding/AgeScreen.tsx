@@ -10,42 +10,23 @@ import {
   MightyTreeIllustration,
 } from "./AgeIllustrations";
 import ageBg from "@/assets/age_selection_bg.png";
-import sproutCardBg from "@/assets/age-selection-bg/age_card_sprout.png";
-import seedlingCardBg from "@/assets/age-selection-bg/age_card_seedling_selected.png";
-import saplingCardBg from "@/assets/age-selection-bg/age_card_sapling.png";
-import mightyTreeCardBg from "@/assets/age-selection-bg/age_card_mighty_tree.png";
 
 interface AgeBand {
   value: string;
+  illustration: React.ComponentType<{ className?: string }>;
   label: string;
-  subtitle: string;
-  cardBg: string;
+  gradient: string;
 }
 
 const AGE_BANDS: AgeBand[] = [
-  {
-    value: "3-5",
-    label: "Sprout",
-    subtitle: "I am just starting to explore!",
-    cardBg: sproutCardBg,
-  },
-  {
-    value: "6-7",
-    label: "Seedling",
-    subtitle: "I love to learn new things!",
-    cardBg: seedlingCardBg,
-  },
-  {
-    value: "8-9",
-    label: "Sapling",
-    subtitle: "I can explore and do more!",
-    cardBg: saplingCardBg,
-  },
+  { value: "3-5", illustration: SproutIllustration, label: "Sprout", gradient: "bg-accent-2" },
+  { value: "6-7", illustration: SeedlingIllustration, label: "Seedling", gradient: "bg-accent-1" },
+  { value: "8-9", illustration: SaplingIllustration, label: "Sapling", gradient: "bg-success" },
   {
     value: "10-12",
+    illustration: MightyTreeIllustration,
     label: "Mighty Tree",
-    subtitle: "I'm ready for big adventures!",
-    cardBg: mightyTreeCardBg,
+    gradient: "bg-action-primary",
   },
 ];
 
@@ -138,50 +119,41 @@ export function AgeScreen({
 
       {/* Scrollable Content - Age options only */}
       <div className="relative z-10 flex-1 overflow-y-auto min-h-0">
-        <div className="px-5 py-3 flex flex-col gap-3">
-          {/* Age Selection Fieldset */}
-          <fieldset className="space-y-3">
-            <legend className="sr-only">Select your age band</legend>
+        <div className="px-5 py-3 flex flex-col gap-1">
+          {/* Age Bands */}
           {AGE_BANDS.map((band) => {
             const isSelected = selectedAge === band.value;
+            const IllustrationComponent = band.illustration;
             return (
               <button
                 key={band.value}
                 type="button"
                 onClick={() => handleAgeSelect(band.value)}
-                role="radio"
-                aria-checked={isSelected}
-                aria-label={`${band.label}, ages ${band.value}`}
-                className={`relative rounded-3xl overflow-hidden transition-all duration-300 flex items-stretch text-left min-h-24 ${
-                  isSelected
-                    ? "border-4 border-accent-5 shadow-elevated-2 scale-105"
-                    : "border-3 border-surface-card shadow-md hover:shadow-elevated-1"
-                }`}
+                className={`relative rounded-2xl p-4 transition-all duration-300 flex items-center gap-4 text-left
+                  ${
+                    isSelected
+                      ? `${band.gradient} text-text-on-primary shadow-elevated-2 scale-105`
+                      : "bg-surface-card text-text-primary border-2 border-surface-sunken hover:border-surface-raised"
+                  }
+                  ${animatingAge === band.value ? "animate-scale-pop" : ""}
+                `}
               >
-                {/* Left side - Illustration background */}
-                <div 
-                  className="w-28 flex-shrink-0 bg-cover bg-center"
-                  style={{
-                    backgroundImage: `url(${band.cardBg})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                  }}
-                />
-
-                {/* Right side - Text content */}
-                <div className="flex-1 p-4 flex flex-col justify-center bg-surface-card">
-                  <div className="text-xs font-semibold text-text-secondary tracking-wide opacity-90 uppercase">Ages {band.value}</div>
-                  <div className="text-lg font-bold text-text-primary">{band.label}</div>
-                  <div className="text-sm font-medium text-text-secondary mt-1">{band.subtitle}</div>
+                {/* Illustration - Left side */}
+                <div className="flex-shrink-0 w-14 h-14 flex items-center justify-center">
+                  <IllustrationComponent className="w-12 h-12" />
                 </div>
-
-                {/* Selected checkmark - Overlay at top right */}
+                
+                {/* Text content - Right side */}
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs font-semibold opacity-80">Ages {band.value}</div>
+                  <div className="text-base font-bold">{band.label}</div>
+                </div>
+                
+                {/* Selected checkmark - Right edge */}
                 {isSelected && (
-                  <div className="absolute top-3 right-3 w-7 h-7 rounded-full bg-accent-5 flex items-center justify-center shadow-md" style={{
-                    animation: "scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)",
-                  }}>
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-md border-2 border-white">
                     <svg
-                      className="w-4 h-4 text-white"
+                      className="w-4 h-4 text-action-primary"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -196,17 +168,16 @@ export function AgeScreen({
               </button>
             );
           })}
-            </fieldset>
         </div>
       </div>
 
       {/* Fixed Footer - Back and Continue buttons */}
-      <div className="relative z-20 flex-shrink-0 px-5 py-4 pb-safe bg-gradient-to-t from-bg-page via-bg-page to-transparent">
+      <div className="relative z-20 flex-shrink-0 px-5 py-3 pb-safe bg-gradient-to-t from-black/5 to-transparent border-t border-border-color flex flex-col gap-2">
         <div className="flex gap-3">
           <button
             type="button"
             onClick={handleBack}
-            className="flex-1 py-4 px-6 rounded-full font-bold text-base text-accent-5 bg-surface-card border-3 border-accent-5 transition-all hover:shadow-md active:scale-95"
+            className="flex-1 py-4 px-4 rounded-full font-black text-base text-ink bg-white border-2 border-action-primary transition-all hover:shadow-md active:scale-95"
             aria-label="Go back"
           >
             Back
@@ -215,9 +186,9 @@ export function AgeScreen({
             type="button"
             onClick={handleNext}
             disabled={!selectedAge}
-            className={`flex-1 py-4 px-6 rounded-full font-bold text-base flex items-center justify-center gap-2 transition-all active:scale-95 ${
+            className={`flex-1 py-4 px-4 rounded-full font-black text-base flex items-center justify-center gap-2 transition-all active:scale-95 ${
               selectedAge
-                ? "bg-accent-5 text-white hover:shadow-elevated-2"
+                ? "bg-gradient-to-r from-[#7650F5] to-[#6366F1] text-white hover:shadow-xl"
                 : "bg-surface-sunken text-text-secondary cursor-not-allowed opacity-50"
             }`}
             aria-label="Start my journey"
@@ -227,27 +198,6 @@ export function AgeScreen({
           </button>
         </div>
       </div>
-
-      {/* CSS Animations */}
-      <style>{`
-        @keyframes scaleIn {
-          from {
-            opacity: 0;
-            transform: scale(0.6);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1);
-          }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          @keyframes scaleIn {
-            from { opacity: 1; transform: scale(1); }
-            to { opacity: 1; transform: scale(1); }
-          }
-        }
-      `}</style>
     </div>
   );
 }

@@ -167,7 +167,7 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext, onSkip }:
         {/* Scrollable Avatar Grid Section */}
         <div className="flex-1 overflow-y-auto px-4 py-3 min-h-0">
           {/* Avatar Grid - 3 Columns (compact layout for 12 avatars) */}
-          <div className="grid grid-cols-3 gap-2 mb-3">
+          <div className="grid grid-cols-3 gap-1 mb-3">
             {AVATAR_IDS.map((avatarId) => (
               <button
                 key={avatarId}
@@ -211,11 +211,11 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext, onSkip }:
         </div>
 
         {/* Fixed Footer Section - Always Visible */}
-        <div className="flex-shrink-0 relative z-20 bg-gradient-to-t from-bg-page via-bg-page to-transparent px-4 py-4 pb-safe">
+        <div className="flex-shrink-0 relative z-20 bg-gradient-to-t from-bg-page via-bg-page to-transparent px-4 py-3 pb-safe flex flex-col gap-2">
           {/* Explorer Summary Card */}
           {selectedAvatar && (
             <div
-              className="rounded-3xl p-4 mb-3 shadow-md border-2 border-border-color bg-accent-4-soft"
+              className="rounded-3xl p-4 shadow-md border-2 border-border-color bg-accent-4-soft"
             >
               <div className="flex items-center gap-3">
                 {/* Avatar Thumbnail */}
