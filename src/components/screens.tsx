@@ -3128,6 +3128,14 @@ export function LearningCardScreen({
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
+        {/* Enriched card visual badge */}
+        {card.type !== "main" && (
+          <div className="absolute top-3 right-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold bg-accent-1-soft text-accent-1 shadow-soft border border-accent-1/20">
+            <span className="text-sm">{EMOJI.action.star}</span>
+            <span>{card.type === "coolFact" ? "Cool Fact" : card.type === "didYouKnow" ? "Did You Know?" : "Try This"}</span>
+          </div>
+        )}
+
         {/* Replay indicator - shown when user is replaying a card */}
         {isReplaying && (
           <div className="mb-3 p-3 bg-accent-2-soft rounded-xl flex items-center gap-2 shadow-sm border border-accent-2">
