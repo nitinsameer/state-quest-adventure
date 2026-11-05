@@ -1006,7 +1006,7 @@ function HomeDashboardContent() {
                 to="/state/$slug/learn"
                 params={{ slug: stateSlug(current.name) }}
                 onClick={() => fxTap()}
-                className="px-6 py-3 rounded-full bg-accent-2 text-text-on-primary font-bold text-body flex items-center gap-2 no-underline transition-all hover:shadow-lg active:scale-95 cursor-pointer hover:-translate-y-0.5"
+                className="px-6 h-14 rounded-full bg-accent-2 text-text-on-primary font-bold text-body flex items-center gap-2 no-underline transition-all hover:shadow-lg hover:scale-[1.02] active:scale-95 cursor-pointer hover:-translate-y-0.5"
               >
                 <span>▶</span>
                 <span>Explore State</span>
