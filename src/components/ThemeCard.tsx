@@ -5,14 +5,13 @@
  * Features:
  * - Hover glow on unlocked cards
  * - Smooth scale and shadow transitions
- * - Unlock badge fade-in animation
  * - Sparkle/pulse on selection
  * - Full prefers-reduced-motion support
- * - Enhanced lock icon with tap-to-unlock hint
+ * - Compact and beautiful with just theme name and preview
  */
 
 import { useState, useEffect } from "react";
-import { getUnlockBadgeInfo, formatUnlockCondition, type Theme } from "@/lib/themes";
+import { type Theme } from "@/lib/themes";
 import { EMOJI } from "@/constants/emoji";
 
 interface ThemeCardProps {
@@ -25,7 +24,6 @@ interface ThemeCardProps {
 export function ThemeCard({ theme, isUnlocked, isSelected, onSelect }: ThemeCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [sparkle, setSparkle] = useState(false);
-  const [showUnlockHint, setShowUnlockHint] = useState(false);
 
   // Respect prefers-reduced-motion for all animations
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -39,40 +37,14 @@ export function ThemeCard({ theme, isUnlocked, isSelected, onSelect }: ThemeCard
     }
   }, [isSelected]);
 
-  // Auto-hide unlock hint after 2 seconds
-  useEffect(() => {
-    if (showUnlockHint) {
-      const timer = setTimeout(() => setShowUnlockHint(false), 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [showUnlockHint]);
-
-  // Handle click on locked card to show unlock hint
+  // Handle click - all themes are selectable (locked or not)
   const handleCardClick = () => {
-    if (isUnlocked) {
-      onSelect();
-    } else if (!isUnlocked && theme.unlockRule) {
-      setShowUnlockHint(true);
-    }
+    onSelect();
   };
-
-  // Glow color from theme accent with 40% opacity
-  const glowColor = theme.previewTokens.accent + "66";
 
   return (
     <>
       <style>{`
-        @keyframes fadeInBadge {
-          from {
-            opacity: 0;
-            transform: translateY(4px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
         @keyframes ringPulse {
           0% {
             box-shadow: 0 0 0 0 ${theme.previewTokens.accent}66;
@@ -94,43 +66,12 @@ export function ThemeCard({ theme, isUnlocked, isSelected, onSelect }: ThemeCard
           }
         }
 
-        @keyframes fadeInOut {
-          0% {
-            opacity: 0;
-            transform: translateY(-4px);
-          }
-          10% {
-            opacity: 1;
-            transform: translateY(0);
-          }
-          90% {
-            opacity: 1;
-            transform: translateY(0);
-          }
-          100% {
-            opacity: 0;
-            transform: translateY(-4px);
-          }
-        }
-
         @media (prefers-reduced-motion: no-preference) {
-          .badge-anim {
-            animation: fadeInBadge 0.4s ease forwards;
-          }
           .card-sparkle {
             animation: ringPulse 0.6s cubic-bezier(0.4, 0, 0.6, 1);
           }
           .preview-glow {
             animation: glowPulse 1.5s ease-in-out;
-          }
-          .unlock-hint {
-            animation: fadeInOut 2.4s ease-out forwards;
-          }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .unlock-hint {
-            opacity: 1;
           }
         }
       `}</style>
@@ -138,152 +79,105 @@ export function ThemeCard({ theme, isUnlocked, isSelected, onSelect }: ThemeCard
       <div className="relative">
         <button
           onClick={handleCardClick}
-          disabled={!isUnlocked}
           className={`rounded-2xl p-3 flex flex-col min-h-[200px] border-4 w-full ${
-            isSelected && isUnlocked ? "border-accent-1" : "border-transparent"
-          } ${!isUnlocked ? "cursor-not-allowed" : ""} ${!prefersReducedMotion ? "transition-all duration-200" : ""} ${
+            isSelected ? "border-accent-1" : "border-transparent"
+          } ${!prefersReducedMotion ? "transition-all duration-200" : ""} ${
             sparkle ? "card-sparkle" : ""
           }`}
           style={{
             backgroundColor: theme.previewTokens.bg,
-            transform: isSelected && isUnlocked ? "scale(1.04)" : "scale(1)",
+            transform: isSelected ? "scale(1.04)" : "scale(1)",
             boxShadow:
-              isSelected && isUnlocked
+              isSelected
                 ? "0 10px 25px -5px rgba(0, 0, 0, 0.1)"
                 : "0 4px 6px -1px rgba(0, 0, 0, 0.05)",
           }}
         >
-        {/* Preview Box - Fixed Height with glow effect */}
-        <div
-          className={`relative h-24 rounded-xl p-3 flex flex-col items-center justify-center gap-1 mb-2 ${
-            !isUnlocked ? "opacity-50 grayscale" : ""
-          } ${!prefersReducedMotion ? "transition-all duration-200" : ""} ${
-            isHovered && isUnlocked && !prefersReducedMotion ? "preview-glow" : ""
-          }`}
-          style={{
-            backgroundColor: theme.previewTokens.accent + "20",
-            border: `2px solid ${theme.previewTokens.accent}`,
-          }}
-          onMouseEnter={() => {
-            if (isUnlocked) setIsHovered(true);
-          }}
-          onMouseLeave={() => setIsHovered(false)}
-        >
-          {/* Enhanced Lock Icon - Top Left of Preview Box */}
-          {!isUnlocked && (
-            <div className="absolute top-2 left-2 flex items-center justify-center">
-              {/* Gold background circle */}
+          {/* Preview Box - Fixed Height with glow effect */}
+          <div
+            className={`relative h-24 rounded-xl p-3 flex flex-col items-center justify-center gap-1 mb-2 ${
+              !isUnlocked ? "opacity-50 grayscale" : ""
+            } ${!prefersReducedMotion ? "transition-all duration-200" : ""} ${
+              isHovered && isUnlocked && !prefersReducedMotion ? "preview-glow" : ""
+            }`}
+            style={{
+              backgroundColor: theme.previewTokens.accent + "20",
+              border: `2px solid ${theme.previewTokens.accent}`,
+            }}
+            onMouseEnter={() => {
+              if (isUnlocked) setIsHovered(true);
+            }}
+            onMouseLeave={() => setIsHovered(false)}
+          >
+            {/* Lock Icon - Top Left of Preview Box */}
+            {!isUnlocked && (
+              <div className="absolute top-2 left-2 flex items-center justify-center">
+                {/* Gold background circle */}
+                <div
+                  className="absolute w-8 h-8 rounded-full flex items-center justify-center text-lg"
+                  style={{
+                    backgroundColor: "var(--accent-4)",
+                    opacity: 0.4,
+                  }}
+                />
+                {/* Lock emoji on top */}
+                <div className="relative z-10 text-lg">{EMOJI.action.lock}</div>
+              </div>
+            )}
+
+            {/* Checkmark - Top Right of Preview Box */}
+            {isSelected && isUnlocked && (
               <div
-                className="absolute w-8 h-8 rounded-full flex items-center justify-center text-lg"
+                className="absolute top-2 right-2 h-6 w-6 rounded-full flex items-center justify-center text-sm font-bold"
                 style={{
-                  backgroundColor: "var(--accent-4)",
-                  opacity: 0.4,
+                  backgroundColor: "var(--accent-1)",
+                  color: "var(--accent-1-ink)",
                 }}
+              >
+                ✓
+              </div>
+            )}
+
+            {/* Accent color dots */}
+            <div className="flex gap-1.5">
+              <div
+                className="h-2 w-2 rounded-full"
+                style={{ backgroundColor: theme.previewTokens.accent }}
               />
-              {/* Lock emoji on top */}
-              <div className="relative z-10 text-lg">{EMOJI.action.lock}</div>
+              <div
+                className="h-2 w-2 rounded-full opacity-60"
+                style={{ backgroundColor: theme.previewTokens.accent }}
+              />
+              <div
+                className="h-2 w-2 rounded-full opacity-30"
+                style={{ backgroundColor: theme.previewTokens.accent }}
+              />
             </div>
-          )}
 
-          {/* Checkmark - Top Right of Preview Box */}
-          {isSelected && isUnlocked && (
+            {/* Text preview */}
+            <div className="text-xs font-bold" style={{ color: theme.previewTokens.text }}>
+              Aa
+            </div>
+
+            {/* Button preview */}
             <div
-              className="absolute top-2 right-2 h-6 w-6 rounded-full flex items-center justify-center text-sm font-bold"
+              className="text-xs px-2 py-0.5 rounded"
               style={{
-                backgroundColor: "var(--accent-1)",
-                color: "var(--accent-1-ink)",
+                backgroundColor: theme.previewTokens.accent,
+                color: theme.previewTokens.bg,
               }}
             >
-              ✓
+              Play
             </div>
-          )}
-
-          {/* Accent color dots */}
-          <div className="flex gap-1.5">
-            <div
-              className="h-2 w-2 rounded-full"
-              style={{ backgroundColor: theme.previewTokens.accent }}
-            />
-            <div
-              className="h-2 w-2 rounded-full opacity-60"
-              style={{ backgroundColor: theme.previewTokens.accent }}
-            />
-            <div
-              className="h-2 w-2 rounded-full opacity-30"
-              style={{ backgroundColor: theme.previewTokens.accent }}
-            />
           </div>
 
-          {/* Text preview */}
-          <div className="text-xs font-bold" style={{ color: theme.previewTokens.text }}>
-            Aa
-          </div>
-
-          {/* Button preview */}
-          <div
-            className="text-xs px-2 py-0.5 rounded"
-            style={{
-              backgroundColor: theme.previewTokens.accent,
-              color: theme.previewTokens.bg,
-            }}
+          {/* Theme Name - Wrap text, don't truncate */}
+          <h3
+            className="text-sm font-extrabold text-center"
+            style={{ color: theme.previewTokens.text, wordWrap: "break-word" }}
           >
-            Play
-          </div>
-        </div>
-
-        {/* Theme Name - Wrap text, don't truncate */}
-        <h3
-          className="text-sm font-extrabold text-center"
-          style={{ color: theme.previewTokens.text, wordWrap: "break-word" }}
-        >
-          {theme.name}
-        </h3>
-
-        {/* Description - 2 lines max */}
-        <p
-          className="text-xs mt-1 overflow-hidden"
-          style={{
-            color: theme.previewTokens.text,
-            opacity: isUnlocked ? 0.8 : 0.6,
-            display: "-webkit-box",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
-          }}
-        >
-          {theme.description}
-        </p>
-
-        {/* Unlock Badge Pill - Only if locked */}
-        {!isUnlocked && theme.unlockRule && (
-          <div className="mt-auto pt-2 flex items-center gap-1 badge-anim">
-            <span
-              className="text-xs font-semibold px-2 py-0.5 rounded-full flex items-center gap-1"
-              style={{
-                backgroundColor: getUnlockBadgeInfo(theme.unlockRule).color + "22",
-                color: getUnlockBadgeInfo(theme.unlockRule).color,
-                border: `1px solid ${getUnlockBadgeInfo(theme.unlockRule).color}44`,
-              }}
-            >
-              <span>{getUnlockBadgeInfo(theme.unlockRule).icon}</span>
-              <span>{formatUnlockCondition(theme.unlockRule)}</span>
-            </span>
-          </div>
-        )}
-
-        {/* Unlock hint tooltip - appears on tap, positioned below card */}
-        {showUnlockHint && !isUnlocked && theme.unlockRule && (
-          <div
-            className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 text-xs font-bold rounded px-3 py-1 whitespace-nowrap unlock-hint pointer-events-none"
-            style={{
-              backgroundColor: getUnlockBadgeInfo(theme.unlockRule).color + "ee",
-              color: "white",
-              zIndex: 50,
-              boxShadow: `0 2px 8px rgba(0, 0, 0, 0.15)`,
-            }}
-          >
-            {getUnlockBadgeInfo(theme.unlockRule).icon} {formatUnlockCondition(theme.unlockRule)}
-          </div>
-        )}
+            {theme.name}
+          </h3>
         </button>
       </div>
     </>

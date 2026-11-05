@@ -65,6 +65,7 @@ export const THEMES: Theme[] = [
     effects: { blur: false, glow: false, heavy: false },
     previewTokens: { bg: "#ffe66d", surface: "#fff", text: "#111", accent: "#ff3d7f" },
     unlockRule: { type: "states", value: 6 },
+    hidden: true,
     category: "bright",
   },
   {
@@ -86,6 +87,7 @@ export const THEMES: Theme[] = [
     isDark: true,
     effects: { blur: false, glow: false, heavy: false },
     previewTokens: { bg: "#1e1a36", surface: "#27224a", text: "#f0ecff", accent: "#9b82ff" },
+    hidden: true,
     category: "night",
   },
   {
@@ -96,6 +98,7 @@ export const THEMES: Theme[] = [
     effects: { blur: false, glow: false, heavy: false },
     previewTokens: { bg: "#000", surface: "#0b0b0b", text: "#f5f5f5", accent: "#4de1c1" },
     unlockRule: { type: "streak", value: 3 },
+    hidden: true,
     category: "night",
   },
   {
@@ -106,6 +109,7 @@ export const THEMES: Theme[] = [
     effects: { blur: false, glow: true, heavy: false },
     previewTokens: { bg: "#0a0f0a", surface: "#0d140d", text: "#33ff66", accent: "#33ff66" },
     unlockRule: { type: "firstBadge", value: 1 },
+    hidden: true,
     category: "night",
   },
   {
@@ -116,11 +120,12 @@ export const THEMES: Theme[] = [
     effects: { blur: false, glow: true, heavy: false },
     previewTokens: { bg: "#07071a", surface: "#12122e", text: "#e8f0ff", accent: "#00f5d4" },
     unlockRule: { type: "streak", value: 14 },
+    hidden: true,
     category: "night",
   },
   {
     id: "synth",
-    name: "Electric Dream",
+    name: "Electro Dream",
     description: "Retro-futuristic neon. Bright pink and cyan on dark.",
     isDark: true,
     effects: { blur: false, glow: true, heavy: false },
@@ -141,6 +146,7 @@ export const THEMES: Theme[] = [
     effects: { blur: false, glow: false, heavy: false },
     previewTokens: { bg: "#1a1c2c", surface: "#29366f", text: "#f4f4f4", accent: "#ffcd75" },
     unlockRule: { type: "badges", value: 25 },
+    hidden: true,
     category: "night",
   },
 
@@ -157,6 +163,7 @@ export const THEMES: Theme[] = [
       text: "#fff",
       accent: "#fff",
     },
+    hidden: true,
     category: "fancy",
   },
   {
@@ -172,6 +179,7 @@ export const THEMES: Theme[] = [
       accent: "#5ef2c2",
     },
     unlockRule: { type: "streak", value: 7 },
+    hidden: true,
     category: "fancy",
   },
   {
@@ -188,7 +196,7 @@ export const THEMES: Theme[] = [
   // CLEAN category - free first
   {
     id: "minimal",
-    name: "Cloud Simple",
+    name: "Cold Simple",
     description: "Clean and minimal. Apple-inspired simplicity.",
     isDark: false,
     effects: { blur: false, glow: false, heavy: false },
@@ -204,6 +212,7 @@ export const THEMES: Theme[] = [
     effects: { blur: false, glow: false, heavy: false },
     previewTokens: { bg: "#fef7ff", surface: "#f3edf7", text: "#1d1b20", accent: "#6750a4" },
     unlockRule: { type: "states", value: 20 },
+    hidden: true,
     category: "clean",
   },
   {
@@ -225,6 +234,7 @@ export const THEMES: Theme[] = [
 
     previewTokens: { bg: "#e0e5ec", surface: "#e0e5ec", text: "#3d4468", accent: "#5b6cff" },
     unlockRule: { type: "states", value: 25 },
+    hidden: true,
     category: "clean",
   },
 
@@ -247,6 +257,7 @@ export const THEMES: Theme[] = [
     effects: { blur: false, glow: false, heavy: false },
     previewTokens: { bg: "#bff0ff", surface: "#fff", text: "#0b3a5a", accent: "#0b82d6" },
     unlockRule: { type: "states", value: 3 },
+    hidden: true,
     category: "classic",
   },
 ];
