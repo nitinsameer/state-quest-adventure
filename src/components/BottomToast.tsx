@@ -43,10 +43,8 @@ function ToastNotification({ config }: { config: ToastConfig }) {
         bottom: "calc(var(--nav-h, 96px) + 16px)",
         transform: isExiting ? "translateY(100%)" : "translateY(0)",
         width: "min(360px, calc(100vw - 32px))",
-        left: "16px",
-        right: "16px",
-        marginLeft: "auto",
-        marginRight: "auto",
+        left: "50%",
+        marginLeft: "-50%",
         pointerEvents: "auto",
       }}
       role="status"

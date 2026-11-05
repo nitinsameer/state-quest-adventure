@@ -100,24 +100,21 @@ export function SuccessToast() {
 
   return (
     <div
-      className="fixed z-[1000] pointer-events-none"
+      className="fixed z-[1000]"
       style={{
         bottom: "calc(var(--nav-h, 96px) + 16px)",
-        transform: "translateY(0)",
-        display: "flex",
-        alignItems: "flex-end",
-        justifyContent: "center",
-        left: "16px",
-        right: "16px",
-        pointerEvents: "none",
+        left: "50%",
+        transform: "translateX(-50%)",
+        width: "min(360px, calc(100vw - 32px))",
+        pointerEvents: "auto",
       }}
     >
       {/* Particle container - absolutely positioned relative to toast */}
       <div
         className="relative"
         style={{
-          width: "min(360px, calc(100vw - 32px))",
-          pointerEvents: "auto",
+          width: "100%",
+          pointerEvents: "none",
         }}
       >
         {/* Particles layer */}
@@ -126,6 +123,8 @@ export function SuccessToast() {
           style={{
             inset: "-40px",
             overflow: "visible",
+            left: "50%",
+            transform: "translateX(-50%)",
           }}
           aria-hidden="true"
         >
@@ -142,6 +141,7 @@ export function SuccessToast() {
             borderColor: "var(--success, var(--accent-3))",
             color: "var(--success, var(--accent-3))",
             minHeight: "56px",
+            pointerEvents: "auto",
           }}
           role="status"
           aria-live="polite"
