@@ -25,7 +25,7 @@ export function DebugThemeSelector() {
 
   return (
     <div className="animate-fade-in" style={{ animationDelay: "280ms" }}>
-      <div className="ui-card ui-accent-1-soft p-4 space-y-3">
+      <div className="ui-card p-4 space-y-3">
         {/* Debug Header */}
         <div className="text-xs font-extrabold text-text-secondary uppercase tracking-wider px-1">
           🐛 Debug: Theme Preview

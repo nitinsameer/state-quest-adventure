@@ -37,7 +37,7 @@ export function StatePerformanceBadgesView() {
         <div className="absolute top-2 right-4 text-5xl opacity-40 pointer-events-none">{EMOJI.milestone.hundred}</div>
 
         <div className="flex items-center gap-3 relative z-10">
-          <div className="h-14 w-14 rounded-2xl ui-card ui-accent-1-soft p-1 flex items-center justify-center overflow-hidden flex-shrink-0">
+          <div className="h-14 w-14 rounded-2xl ui-card p-1 flex items-center justify-center overflow-hidden flex-shrink-0">
             <img
               src={getAvatarImage(progress.avatar)}
               alt={getAvatarName(progress.avatar)}
@@ -135,7 +135,7 @@ function StateDetailBadgeCard({ state, progress, onSelect }: any) {
   return (
     <button
       onClick={onSelect}
-      className="rounded-2xl p-4 ui-card ui-accent-1-soft text-left hover:shadow-md transition active:scale-[0.99]"
+      className="rounded-2xl p-4 ui-card text-left hover:shadow-md transition active:scale-[0.99]"
     >
       {/* State Name */}
       <div className="flex items-start justify-between gap-3">

@@ -73,7 +73,7 @@ export function JourneyPassport() {
       </div>
 
       {/* Overall Progress */}
-      <div className="ui-card ui-accent-1-soft p-5 rounded-2xl space-y-3">
+      <div className="ui-card p-5 rounded-2xl space-y-3">
         <div className="flex items-center justify-between">
           <div className="text-sm font-bold text-ink">Passport Collection</div>
           <div className="text-lg font-display font-bold text-accent-1">
@@ -106,7 +106,7 @@ export function JourneyPassport() {
                 className={`p-3 rounded-2xl transition-all active:scale-95 ${
                   selectedRegion === regionKey
                     ? "ui-card ui-accent-1 border-2 border-accent-1"
-                    : "ui-card ui-accent-1-soft"
+                    : "ui-card"
                 }`}
               >
                 <div className="text-xl mb-1">{region.emoji}</div>
@@ -136,7 +136,7 @@ export function JourneyPassport() {
                 key={state.name}
                 className={`p-3 rounded-2xl transition-all active:scale-95 text-left space-y-2 ${
                   isCompleted
-                    ? "ui-card ui-accent-1-soft border-2 border-accent-1/30"
+                    ? "ui-card border-2 border-accent-1/30"
                     : "ui-card bg-ink/5 border-2 border-ink/10"
                 }`}
                 aria-label={`${state.name} ${isCompleted ? "collected" : "locked"}`}

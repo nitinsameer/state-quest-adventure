@@ -23,7 +23,7 @@ import { EMOJI } from "@/constants/emoji";
 const BADGE_EMOJI: Record<BadgeId, string> = {
   monument: EMOJI.achievement.monument,
   animal: EMOJI.achievement.animal,
-  explorer: "???è",
+  explorer: "???ÔøΩ",
 };
 
 function loadImage(src: string): Promise<HTMLImageElement> {
@@ -239,11 +239,11 @@ export function PostcardPreviewModal({
         const library = usePostcardLibrary.getState();
         const now = new Date().toISOString();
 
-        // Generate a stamp date like "12 ∑ MAR"
+        // Generate a stamp date like "12 ÔøΩ MAR"
         const date = new Date();
         const day = date.getDate();
         const month = date.toLocaleString("en-US", { month: "short" }).toUpperCase();
-        const stampDate = `${day} ∑ ${month}`;
+        const stampDate = `${day} ÔøΩ ${month}`;
 
         // Determine badge earned
         const earned = badgesFor(
@@ -300,7 +300,7 @@ export function PostcardPreviewModal({
           {
             type: "custom",
             className:
-              "relative ui-card ui-accent-1-soft aspect-[3/4] overflow-hidden rounded-xl -mx-6 -mt-6 mb-(--space-2)",
+              "relative ui-card aspect-[3/4] overflow-hidden rounded-xl -mx-6 -mt-6 mb-(--space-2)",
             children: (
               <div className="relative w-full h-full">
                 {previewUrl ? (

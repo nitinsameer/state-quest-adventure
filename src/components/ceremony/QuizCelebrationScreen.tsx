@@ -193,7 +193,7 @@ function SingleScreenCelebration({
         )}
 
         {/* Main content card */}
-        <div className="ui-card ui-accent-1-soft w-full max-w-sm p-6 rounded-2xl space-y-4 relative">
+        <div className="ui-card w-full max-w-sm p-6 rounded-2xl space-y-4 relative">
           {/* Title - State name + Completed with confetti around */}
           {showPhase1 && (
             <div

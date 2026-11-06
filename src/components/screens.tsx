@@ -282,7 +282,7 @@ function HeaderBar({
         <button
           onClick={goBack}
           aria-label="Go back"
-          className="h-12 w-12 rounded-full ui-button ui-accent-1-soft flex items-center justify-center text-xl"
+          className="h-12 w-12 rounded-full ui-button flex items-center justify-center text-xl"
         >
           ‹
         </button>
@@ -876,7 +876,7 @@ function HomeDashboardContent() {
         <div className="flex items-center gap-4 relative mb-3">
           {/* Avatar - Larger and more prominent */}
           <div
-            className="avatar-container h-20 w-20 rounded-2xl ui-card ui-accent-1-soft p-1.5 flex items-center justify-center overflow-hidden flex-shrink-0"
+            className="avatar-container h-20 w-20 rounded-2xl ui-card p-1.5 flex items-center justify-center overflow-hidden flex-shrink-0"
             data-testid="profile-avatar"
           >
             <img
@@ -1117,7 +1117,7 @@ function StatCard({
     green: "border-accent-3-soft",
   };
   return (
-    <div className={`rounded-2xl ui-card ui-accent-1-soft border ${borderColorMap[tone]} p-3`}>
+    <div className={`rounded-2xl ui-card border ${borderColorMap[tone]} p-3`}>
       <div className="text-lg">{icon}</div>
       <div className="text-display text-h2 leading-snug mt-1">{value}</div>
       <div className="text-label text-text-secondary">{label}</div>
@@ -1813,7 +1813,7 @@ export function JourneyMapScreen() {
                   setShowQuizDecisionModal(false);
                   setPendingStateName(null);
                 }}
-                className="w-full h-12 ui-button ui-accent-1-soft text-body font-bold active:scale-95 transition-all"
+                className="w-full h-12 ui-button text-body font-bold active:scale-95 transition-all"
               >
                 ⏰ Ask Me Later
               </button>
@@ -1934,7 +1934,7 @@ export function StateIntroScreen({
 
 function IntroFact({ label, value, icon }: { label: string; value: string; icon: string }) {
   return (
-    <div className="ui-card ui-accent-1-soft p-3">
+    <div className="ui-card p-3">
       <div className="text-2xl">{icon}</div>
       <div className="text-label text-ink">{label}</div>
       <div className="text-h5 font-bold text-ink leading-tight">{value}</div>
@@ -3124,7 +3124,7 @@ export function LearningCardScreen({
       </div>
 
       <div
-        className="mx-5 mt-4 ui-card ui-accent-1-soft p-4 flex-1 flex flex-col relative overflow-hidden"
+        className="mx-5 mt-4 ui-card p-4 flex-1 flex flex-col relative overflow-hidden"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
@@ -3413,7 +3413,7 @@ function QuizScreenContent({
             onClose?.();
           }}
           aria-label="Back to categories"
-          className="h-12 w-12 rounded-full ui-button ui-accent-1-soft flex items-center justify-center text-xl flex-shrink-0"
+          className="h-12 w-12 rounded-full ui-button flex items-center justify-center text-xl flex-shrink-0"
         >
           ←
         </button>
@@ -3443,7 +3443,7 @@ function QuizScreenContent({
       </div>
 
       {/* Status Bar with XP Info - Clean */}
-      <div className="px-5 py-2 mx-5 ui-card ui-accent-1-soft flex items-center justify-between text-xs">
+      <div className="px-5 py-2 mx-5 ui-card flex items-center justify-between text-xs">
         <div className="font-bold text-text-secondary">
           Total: {answeredQuestions.filter((a) => a.correct).length * 20} XP
         </div>
@@ -3457,13 +3457,13 @@ function QuizScreenContent({
           alt=""
           className={`w-16 h-16 object-contain ${result === "correct" ? "mascot-cheer" : ""}`}
         />
-        <div className="relative ui-card ui-accent-1-soft px-3 py-2 text-label font-bold">
+        <div className="relative ui-card px-3 py-2 text-label font-bold">
           {result === "correct"
             ? `Nailed it! ${EMOJI.feedback.success}`
             : result === "wrong"
               ? `Good try! Let's move on! ${EMOJI.feedback.encouragement}`
               : `You've got this! ${EMOJI.feedback.encouragement}`}
-          <div className="absolute left-0 top-1/2 -translate-x-1 -translate-y-1/2 w-3 h-3 rotate-45 ui-card ui-accent-1-soft" />
+          <div className="absolute left-0 top-1/2 -translate-x-1 -translate-y-1/2 w-3 h-3 rotate-45 ui-card" />
         </div>
         {result === "correct" && (
           <div className="ml-auto flex items-center gap-1 ui-card ui-accent-3 px-3 py-1">
@@ -3493,10 +3493,10 @@ function QuizScreenContent({
                 isCorrectPick
                   ? "ui-button ui-accent-3"
                   : isWrongPick
-                    ? "ui-button ui-accent-1-soft opacity-60"
+                    ? "ui-button opacity-60"
                     : isSelected
                       ? "ui-button ui-accent-2"
-                      : "ui-button ui-accent-1-soft"
+                      : "ui-button"
               }`}
             >
               {label}
@@ -3568,7 +3568,7 @@ export function CorrectAnswerScreen({
       {/* Premium Close Button - Top Right */}
       <button
         onClick={onDismiss}
-        className="absolute top-3 right-3 ui-button ui-accent-1-soft w-8 h-8 rounded-full flex items-center justify-center text-lg transition-all duration-200 z-10"
+        className="absolute top-3 right-3 ui-button w-8 h-8 rounded-full flex items-center justify-center text-lg transition-all duration-200 z-10"
         aria-label="Close"
       >
         {EMOJI.ui.close}
@@ -4014,7 +4014,7 @@ export function BadgesScreen() {
             <Cloud className="absolute top-2 right-4 w-14 opacity-40 pointer-events-none" />
 
             <div className="flex items-center gap-3 relative z-10">
-              <div className="h-14 w-14 rounded-2xl ui-card ui-accent-1-soft p-1 flex items-center justify-center overflow-hidden flex-shrink-0">
+              <div className="h-14 w-14 rounded-2xl ui-card p-1 flex items-center justify-center overflow-hidden flex-shrink-0">
                 <img
                   src={getAvatarImage(progress.avatar)}
                   alt={getAvatarName(progress.avatar)}
@@ -4122,7 +4122,7 @@ function ThemePickerNavButton() {
   return (
     <button
       onClick={handleClick}
-      className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
+      className="w-full ui-card p-3 flex items-center gap-3 transition active:scale-[0.99]"
     >
       <div className="h-12 w-12 rounded-2xl bg-accent-1 flex items-center justify-center text-2xl">
         {EMOJI.theme.painter}
@@ -4348,7 +4348,7 @@ function ProfileScreenContent() {
       </div>
 
       <div className="px-5 -mt-6 relative z-10 animate-fade-in" style={{ animationDelay: "150ms" }}>
-        <div className="ui-card ui-accent-1-soft p-4 grid grid-cols-3 divide-x divide-black/5">
+        <div className="ui-card p-4 grid grid-cols-3 divide-x divide-black/5">
           <ProfileStat value={p.xp.toLocaleString()} label="XP" />
           <ProfileStat value={String(p.completed.length)} label="States" />
           <ProfileStat value={String(badgeCount(p))} label="Badges" />
@@ -4363,7 +4363,7 @@ function ProfileScreenContent() {
               fxTap();
               setIsSelectingAvatar(!isSelectingAvatar);
             }}
-            className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
+            className="w-full ui-card p-3 flex items-center gap-3 transition active:scale-[0.99]"
           >
             <div
               className="h-12 w-12 rounded-2xl flex items-center justify-center text-2xl"
@@ -4386,7 +4386,7 @@ function ProfileScreenContent() {
 
           {/* Avatar Selection Grid */}
           {isSelectingAvatar && (
-            <div className="mt-3 ui-card ui-accent-1-soft p-4 animate-fade-in">
+            <div className="mt-3 ui-card p-4 animate-fade-in">
               <div className="grid grid-cols-4 gap-2">
                 {avatarImages.map((a) => (
                   <button
@@ -4422,7 +4422,7 @@ function ProfileScreenContent() {
           <Link
             to="/badges"
             onClick={() => fxTap()}
-            className="ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
+            className="ui-card p-3 flex items-center gap-3 transition active:scale-[0.99]"
           >
             <div className="h-12 w-12 rounded-2xl bg-accent-4 flex items-center justify-center text-2xl">
               {EMOJI.achievement.badge}
@@ -4460,7 +4460,7 @@ function ProfileScreenContent() {
             const daysUntilNext = nextMilestone - p.streak;
 
             return (
-              <div className="ui-card ui-accent-1-soft p-3 flex flex-col gap-2 transition">
+              <div className="ui-card p-3 flex flex-col gap-2 transition">
                 {/* Header Row */}
                 <div className="flex items-center gap-3">
                   <div
@@ -4499,7 +4499,7 @@ function ProfileScreenContent() {
           <Link
             to="/privacy"
             onClick={() => fxTap()}
-            className="ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
+            className="ui-card p-3 flex items-center gap-3 transition active:scale-[0.99]"
           >
             <div
               className="h-12 w-12 rounded-2xl flex items-center justify-center text-2xl"
@@ -4544,7 +4544,7 @@ function SoundToggleRow() {
         aria-checked={soundOn}
         aria-label="Sound effects and audio narration"
         onClick={toggleSound}
-        className="w-full ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
+        className="w-full ui-card p-3 flex items-center gap-3 transition active:scale-[0.99]"
       >
         <div className="h-12 w-12 rounded-2xl bg-accent-5 flex items-center justify-center text-2xl">
           {EMOJI.audio.music}
@@ -4722,7 +4722,7 @@ function RowLink({
     <Link
       to={to}
       onClick={() => fxTap()}
-      className="ui-card ui-accent-1-soft p-3 flex items-center gap-3 transition active:scale-[0.99]"
+      className="ui-card p-3 flex items-center gap-3 transition active:scale-[0.99]"
     >
       <div
         className="h-12 w-12 rounded-2xl flex items-center justify-center text-2xl"
@@ -4748,7 +4748,7 @@ export function AchievementsScreen() {
     <div className="h-full w-full bg-bg-page flex flex-col">
       <HeaderBar title="Achievements" />
       <div className="px-5 pb-3">
-        <div className="ui-card ui-accent-1-soft px-4 py-3 flex items-center justify-between">
+        <div className="ui-card px-4 py-3 flex items-center justify-between">
           <div className="text-[12px] font-extrabold text-text-secondary uppercase tracking-wider">
             Unlocked
           </div>

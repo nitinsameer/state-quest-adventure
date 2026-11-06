@@ -367,7 +367,7 @@ export function StatePostcardScreen({
         </div>
 
         <div 
-          className="w-full rounded-[28px] ui-card ui-accent-1-soft border-4 border-text-on-header overflow-hidden animate-in zoom-in-95"
+          className="w-full rounded-[28px] ui-card border-4 border-text-on-header overflow-hidden animate-in zoom-in-95"
           role="img"
           aria-describedby={postcardDescriptionId}
           aria-label={`${state.name} postcard`}

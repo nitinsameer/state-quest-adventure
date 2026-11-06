@@ -139,7 +139,7 @@ function BadgeDetailCard({ badgeId, progress }: BadgeDetailCardProps) {
       className={`rounded-2xl p-4 border-2 transition ${
         progress.earned
           ? "ui-card ui-accent-4 shadow-md border-accent-4"
-          : "ui-card ui-accent-1-soft border-muted opacity-60"
+          : "ui-card border-muted opacity-60"
       }`}
     >
       <div className="flex items-start gap-4">
