@@ -117,7 +117,7 @@ export function JourneyDestinationCard({
 
   return (
     <div
-      className="relative ui-card ui-accent-1-soft overflow-hidden flex flex-col transition-all active:scale-95 hover:shadow-md hover:scale-[1.02] h-full"
+      className="relative ui-card overflow-hidden flex flex-col transition-all active:scale-95 hover:shadow-md hover:scale-[1.02] h-full"
       style={{
         backgroundColor: cardBgColor,
         padding: "var(--padding-base)",

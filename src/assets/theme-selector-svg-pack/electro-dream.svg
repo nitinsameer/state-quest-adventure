@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 170">
+  <!-- Background -->
+  <rect width="300" height="170" fill="#1F2937"/>
+  
+  <!-- Diagonal lines -->
+  <line x1="30" y1="20" x2="80" y2="140" stroke="#06B6D4" stroke-width="4" stroke-linecap="round" opacity="0.9"/>
+  <line x1="200" y1="30" x2="250" y2="150" stroke="#A855F7" stroke-width="4" stroke-linecap="round" opacity="0.8"/>
+  <line x1="150" y1="10" x2="200" y2="130" stroke="#06B6D4" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+  <line x1="50" y1="5" x2="100" y2="125" stroke="#A855F7" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+  
+  <!-- Dot pattern (top center) -->
+  <circle cx="130" cy="35" r="2.5" fill="#06B6D4" opacity="0.9"/>
+  <circle cx="145" cy="38" r="2" fill="#A855F7" opacity="0.8"/>
+  <circle cx="158" cy="36" r="1.5" fill="#CCCCCC" opacity="0.5"/>
+</svg>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 170">
+  <!-- Background -->
+  <rect width="300" height="170" fill="#FCE7F3"/>
+  
+  <!-- Left purple blob -->
+  <circle cx="45" cy="120" r="35" fill="#C084D8" opacity="0.8"/>
+  
+  <!-- Right pink blob -->
+  <circle cx="260" cy="95" r="45" fill="#F5B3E0" opacity="0.7"/>
+  
+  <!-- Squiggly line (left side) -->
+  <path d="M 70 80 Q 75 70 80 80 Q 85 90 90 80" stroke="#A855C0" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M 70 95 Q 75 85 80 95 Q 85 105 90 95" stroke="#A855C0" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.6"/>
+</svg>

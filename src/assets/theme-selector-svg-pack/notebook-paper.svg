@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 170">
+  <!-- Background -->
+  <rect width="300" height="170" fill="#FDE68A"/>
+  
+  <!-- Left margin line -->
+  <line x1="25" y1="0" x2="25" y2="170" stroke="#D97706" stroke-width="3" opacity="0.8"/>
+  
+  <!-- Bullet points (left) -->
+  <circle cx="40" cy="55" r="2.5" fill="#6B7280" opacity="0.8"/>
+  <circle cx="40" cy="75" r="2.5" fill="#6B7280" opacity="0.8"/>
+  <circle cx="40" cy="95" r="2.5" fill="#6B7280" opacity="0.8"/>
+  
+  <!-- Horizontal lines -->
+  <line x1="55" y1="57" x2="160" y2="57" stroke="#D97706" stroke-width="0.5" opacity="0.5"/>
+  <line x1="55" y1="77" x2="160" y2="77" stroke="#D97706" stroke-width="0.5" opacity="0.5"/>
+  <line x1="55" y1="97" x2="160" y2="97" stroke="#D97706" stroke-width="0.5" opacity="0.5"/>
+  
+  <!-- Paper fold (bottom right) -->
+  <polygon points="240,140 280,140 280,170 240,170" fill="#F5DEB3" opacity="0.8"/>
+  <line x1="240" y1="140" x2="280" y2="170" stroke="#D2B48C" stroke-width="1" opacity="0.6"/>
+  
+  <!-- Dot pattern (top center) -->
+  <circle cx="120" cy="35" r="2.5" fill="#DC2626" opacity="0.9"/>
+  <circle cx="135" cy="38" r="2" fill="#F97316" opacity="0.7"/>
+  <circle cx="148" cy="36" r="1.5" fill="#CCCCCC" opacity="0.6"/>
+</svg>

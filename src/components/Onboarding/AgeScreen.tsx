@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { fxTap, fxConfetti } from "@/lib/fx";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { getAvatarName } from "@/lib/avatar-config";
+import { debugTracker } from "@/lib/debug-tracker";
 import { PremiumHeader } from "./PremiumHeader";
 import {
   SproutIllustration,
@@ -49,6 +50,36 @@ export function AgeScreen({
 }: AgeScreenProps) {
   const [confettiBurst, setConfettiBurst] = useState(0);
   const [animatingAge, setAnimatingAge] = useState<string | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const footerRef = useRef<HTMLDivElement>(null);
+
+  // Debug: Log dimensions on mount and when refs update
+  useEffect(() => {
+    const logDimensions = () => {
+      debugTracker.trackDimensions(
+        'AgeScreen',
+        containerRef.current,
+        headerRef.current,
+        contentRef.current,
+        footerRef.current
+      );
+    };
+
+    // Log on mount
+    logDimensions();
+
+    // Log after a small delay to ensure layout is complete
+    const timer = setTimeout(logDimensions, 500);
+
+    // Log on resize
+    window.addEventListener("resize", logDimensions);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("resize", logDimensions);
+    };
+  }, []);
 
   const handleAgeSelect = (age: string) => {
     fxTap();
@@ -79,7 +110,7 @@ export function AgeScreen({
   };
 
   return (
-    <div className="w-full h-full flex flex-col select-none touch-none relative overflow-hidden bg-bg-page">
+    <div className="w-full h-full flex flex-col select-none touch-none relative overflow-hidden justify-between" ref={containerRef}>
       {/* Background layer */}
       <div
         className="absolute inset-0 bg-cover bg-top z-0"
@@ -92,7 +123,7 @@ export function AgeScreen({
       <ConfettiBurst trigger={confettiBurst} size="big" />
 
       {/* Header - Fixed at top */}
-      <div className="relative z-10 flex-shrink-0">
+      <div className="relative z-10 flex-shrink-0" ref={headerRef}>
         {/* Skip button row - mirrors Avatar layout */}
         <div className="flex items-center justify-between px-5 pt-safe pb-1">
           <div></div> {/* Spacer for flex-between */}
@@ -117,9 +148,9 @@ export function AgeScreen({
         />
       </div>
 
-      {/* Scrollable Content - Age options only */}
-      <div className="relative z-10 flex-1 overflow-y-auto min-h-0">
-        <div className="px-5 py-3 flex flex-col gap-1">
+      {/* Scrollable Content - Age options, takes natural space and scrolls if needed */}
+      <div className="relative z-10 overflow-y-auto" ref={contentRef}>
+        <div className="px-3 py-2 flex flex-col gap-0.5">
           {/* Age Bands */}
           {AGE_BANDS.map((band) => {
             const isSelected = selectedAge === band.value;
@@ -172,12 +203,12 @@ export function AgeScreen({
       </div>
 
       {/* Fixed Footer - Back and Continue buttons */}
-      <div className="relative z-20 flex-shrink-0 px-5 py-3 pb-safe bg-gradient-to-t from-black/5 to-transparent border-t border-border-color flex flex-col gap-2">
-        <div className="flex gap-3">
+      <div className="relative z-20 flex-shrink-0 px-5 py-2 bg-gradient-to-t from-bg-page via-bg-page to-transparent border-t border-border-color flex flex-col gap-2" ref={footerRef}>
+        <div className="flex gap-3 pb-safe">
           <button
             type="button"
             onClick={handleBack}
-            className="flex-1 py-4 px-4 rounded-full font-black text-base text-ink bg-white border-2 border-action-primary transition-all hover:shadow-md active:scale-95"
+            className="flex-1 py-2 px-4 rounded-full font-black text-base text-ink bg-white border-2 border-action-primary transition-all hover:shadow-md active:scale-95"
             aria-label="Go back"
           >
             Back
@@ -186,7 +217,7 @@ export function AgeScreen({
             type="button"
             onClick={handleNext}
             disabled={!selectedAge}
-            className={`flex-1 py-4 px-4 rounded-full font-black text-base flex items-center justify-center gap-2 transition-all active:scale-95 ${
+            className={`flex-1 py-2 px-4 rounded-full font-black text-base flex items-center justify-center gap-2 transition-all active:scale-95 ${
               selectedAge
                 ? "bg-gradient-to-r from-[#7650F5] to-[#6366F1] text-white hover:shadow-xl"
                 : "bg-surface-sunken text-text-secondary cursor-not-allowed opacity-50"

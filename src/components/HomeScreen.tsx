@@ -120,7 +120,7 @@ export function HomeScreen() {
         {/* STATS CARDS ROW */}
         <div className="px-(--padding-md) pt-(--space-4) pb-(--space-1) grid grid-cols-2 sm:grid-cols-3 gap-(--gap-base)">
           {/* States Card */}
-          <div className="bg-surface-card rounded-2xl shadow-sm p-(--padding-base) text-center">
+          <div className="ui-card p-(--padding-base) text-center">
             <div className="text-2xl mb-1">{EMOJI.nav.map}</div>
             <div className="text-h5 text-text-primary">
               {p.completed.length}
@@ -131,7 +131,7 @@ export function HomeScreen() {
           </div>
 
           {/* Badges Card */}
-          <div className="bg-surface-card rounded-2xl shadow-sm p-(--padding-base) text-center">
+          <div className="ui-card p-(--padding-base) text-center">
             <div className="text-2xl mb-1">{EMOJI.milestone.hundred}</div>
             <div className="text-h5 text-text-primary">
               0
@@ -142,7 +142,7 @@ export function HomeScreen() {
           </div>
 
           {/* Stamps Card */}
-          <div className="bg-surface-card rounded-2xl shadow-sm p-(--padding-base) text-center hidden sm:block">
+          <div className="ui-card p-(--padding-base) text-center hidden sm:block">
             <div className="text-2xl mb-1">{EMOJI.action.stamp}</div>
             <div className="text-h5 text-text-primary">
               0
@@ -162,7 +162,7 @@ export function HomeScreen() {
             </h2>
 
             {/* Current State Card with IMAGE */}
-            <div className="bg-surface-card rounded-2xl shadow-sm p-(--padding-md) flex items-center gap-(--gap-loose)">
+            <div className="ui-card p-(--padding-md) flex items-center gap-(--gap-loose)">
               {/* Left: STATE IMAGE */}
               <div
                 className="w-20 h-20 rounded-2xl flex-shrink-0 bg-cover bg-center bg-surface-muted"
@@ -222,7 +222,7 @@ export function HomeScreen() {
                 <button
                   key={state.name}
                   onClick={() => handleStateClick(state.name)}
-                  className="bg-surface-card rounded-2xl shadow-sm p-(--padding-md) text-center"
+                  className="ui-card p-(--padding-md) text-center"
                 >
                   {/* State Image */}
                   <div

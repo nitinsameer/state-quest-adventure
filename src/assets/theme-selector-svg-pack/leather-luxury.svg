@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 170">
+  <!-- Background -->
+  <rect width="300" height="170" fill="#F5DEB3"/>
+  
+  <!-- Top stitching line -->
+  <path d="M 20 45 Q 40 40 60 45 T 100 45 T 140 45 T 180 45" stroke="#92400E" stroke-width="2" fill="none" stroke-dasharray="4,3" opacity="0.7"/>
+  
+  <!-- Bottom curve -->
+  <path d="M 30 130 A 80 50 0 0 0 180 140" stroke="#B8860B" stroke-width="25" fill="none" opacity="0.6"/>
+  
+  <!-- Top curve (lighter) -->
+  <path d="M 50 100 A 60 40 0 0 1 160 110" stroke="#CD853F" stroke-width="20" fill="none" opacity="0.5"/>
+  
+  <!-- Dot pattern (top center) -->
+  <circle cx="120" cy="35" r="2.5" fill="#1E3A8A" opacity="0.9"/>
+  <circle cx="135" cy="38" r="2" fill="#3B82F6" opacity="0.7"/>
+  <circle cx="148" cy="36" r="1.5" fill="#CCCCCC" opacity="0.6"/>
+</svg>

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 170">
+  <!-- Background -->
+  <rect width="300" height="170" fill="#E0F2FE"/>
+  
+  <!-- Top wave -->
+  <path d="M 0 60 Q 50 40 100 60 T 200 60 T 300 60" stroke="#0EA5E9" stroke-width="3" fill="none" opacity="0.8"/>
+  <path d="M 0 70 Q 50 50 100 70 T 200 70 T 300 70" stroke="#0EA5E9" stroke-width="2" fill="none" opacity="0.5"/>
+  
+  <!-- Bottom wave -->
+  <path d="M 0 130 Q 50 110 100 130 T 200 130 T 300 130" stroke="#0284C7" stroke-width="4" fill="none" opacity="0.7"/>
+  <path d="M 0 145 Q 50 125 100 145 T 200 145 T 300 145" stroke="#0284C7" stroke-width="2" fill="none" opacity="0.4"/>
+  
+  <!-- Dot pattern (top center) -->
+  <circle cx="130" cy="35" r="2.5" fill="#0284C7" opacity="0.9"/>
+  <circle cx="145" cy="38" r="2" fill="#0EA5E9" opacity="0.7"/>
+  <circle cx="158" cy="36" r="1.5" fill="#CCCCCC" opacity="0.6"/>
+</svg>

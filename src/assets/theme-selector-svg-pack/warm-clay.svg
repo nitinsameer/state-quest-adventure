@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 170">
+  <!-- Background -->
+  <rect width="300" height="170" fill="#E9D5FF"/>
+  
+  <!-- Left clay blob -->
+  <circle cx="45" cy="120" r="40" fill="#C084D8" opacity="0.7"/>
+  
+  <!-- Right clay blob -->
+  <circle cx="260" cy="110" r="35" fill="#B78DD9" opacity="0.6"/>
+  
+  <!-- Decorative circles (background) -->
+  <circle cx="80" cy="80" r="25" fill="#D8B4FE" opacity="0.5"/>
+  <circle cx="220" cy="70" r="30" fill="#D8B4FE" opacity="0.4"/>
+  
+  <!-- Squiggly line (left side) -->
+  <path d="M 70 85 Q 75 75 80 85 Q 85 95 90 85" stroke="#A855F7" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.7"/>
+  <path d="M 70 100 Q 75 90 80 100 Q 85 110 90 100" stroke="#A855F7" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.5"/>
+  
+  <!-- Dot pattern (top center) -->
+  <circle cx="130" cy="35" r="2.5" fill="#7C3AED" opacity="0.9"/>
+  <circle cx="145" cy="38" r="2" fill="#A855F7" opacity="0.7"/>
+  <circle cx="158" cy="36" r="1.5" fill="#CCCCCC" opacity="0.6"/>
+</svg>

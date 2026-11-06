@@ -1,18 +1,12 @@
 /**
- * ThemeCard Component
+ * ThemeCard Component - Reference Design Implementation
  *
- * Individual theme card with animations, glow effects, and smooth transitions.
- * Features:
- * - Hover glow on unlocked cards
- * - Smooth scale and shadow transitions
- * - Sparkle/pulse on selection
- * - Full prefers-reduced-motion support
- * - Compact and beautiful with just theme name and preview
+ * Compact 50% size version with SVG backgrounds from theme-selector-svg-pack
  */
 
-import { useState, useEffect } from "react";
 import { type Theme } from "@/lib/themes";
 import { EMOJI } from "@/constants/emoji";
+import { ThemeCardDecoration } from "./ThemeCardDecoration";
 
 interface ThemeCardProps {
   theme: Theme;
@@ -22,164 +16,159 @@ interface ThemeCardProps {
 }
 
 export function ThemeCard({ theme, isUnlocked, isSelected, onSelect }: ThemeCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
-  const [sparkle, setSparkle] = useState(false);
-
-  // Respect prefers-reduced-motion for all animations
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // Trigger sparkle animation when selected
-  useEffect(() => {
-    if (isSelected) {
-      setSparkle(true);
-      const t = setTimeout(() => setSparkle(false), 600);
-      return () => clearTimeout(t);
-    }
-  }, [isSelected]);
-
-  // Handle click - all themes are selectable (locked or not)
-  const handleCardClick = () => {
-    onSelect();
-  };
-
   return (
-    <>
-      <style>{`
-        @keyframes ringPulse {
-          0% {
-            box-shadow: 0 0 0 0 ${theme.previewTokens.accent}66;
-          }
-          70% {
-            box-shadow: 0 0 0 10px ${theme.previewTokens.accent}00;
-          }
-          100% {
-            box-shadow: 0 0 0 10px ${theme.previewTokens.accent}00;
-          }
-        }
+    <button
+      onClick={onSelect}
+      className={`relative flex flex-col transition-all duration-200 w-full ${
+        !prefersReducedMotion ? "active:scale-95" : ""
+      }`}
+      style={{
+        aspectRatio: "220 / 128",
+        backgroundColor: "#fff",
+        border: isSelected ? "2px solid #7c5cf0" : "1px solid #e8e8f0",
+        boxShadow: isSelected ? "0 4px 12px rgba(124, 92, 240, 0.12)" : "0 1px 4px rgba(0, 0, 0, 0.06)",
+        opacity: !isUnlocked ? 0.65 : 1,
+        borderRadius: "max(24px, 8%)",
+        overflow: "hidden",
+      }}
+    >
+      {/* Preview Area - SVG Background + Content */}
+      <div
+        className={`relative flex flex-col items-center justify-center flex-1 ${
+          !isUnlocked ? "grayscale" : ""
+        }`}
+        style={{
+          backgroundColor: theme.previewTokens.bg,
+          padding: "10px 11px",
+          borderRadius: "max(23px, 7%)",
+          overflow: "hidden",
+        }}
+      >
+        {/* SVG Decoration Background - fills the entire preview */}
+        <div className="absolute inset-0 overflow-hidden rounded-full">
+          <ThemeCardDecoration themeId={theme.id} theme={theme} />
+        </div>
 
-        @keyframes glowPulse {
-          0%, 100% {
-            box-shadow: 0 0 8px 2px ${theme.previewTokens.accent}66;
-          }
-          50% {
-            box-shadow: 0 0 16px 4px ${theme.previewTokens.accent}88;
-          }
-        }
-
-        @media (prefers-reduced-motion: no-preference) {
-          .card-sparkle {
-            animation: ringPulse 0.6s cubic-bezier(0.4, 0, 0.6, 1);
-          }
-          .preview-glow {
-            animation: glowPulse 1.5s ease-in-out;
-          }
-        }
-      `}</style>
-
-      <div className="relative">
-        <button
-          onClick={handleCardClick}
-          className={`rounded-2xl p-3 flex flex-col min-h-[200px] border-4 w-full ${
-            isSelected ? "border-accent-1" : "border-transparent"
-          } ${!prefersReducedMotion ? "transition-all duration-200" : ""} ${
-            sparkle ? "card-sparkle" : ""
-          }`}
-          style={{
-            backgroundColor: theme.previewTokens.bg,
-            transform: isSelected ? "scale(1.04)" : "scale(1)",
-            boxShadow:
-              isSelected
-                ? "0 10px 25px -5px rgba(0, 0, 0, 0.1)"
-                : "0 4px 6px -1px rgba(0, 0, 0, 0.05)",
-          }}
-        >
-          {/* Preview Box - Fixed Height with glow effect */}
-          <div
-            className={`relative h-24 rounded-xl p-3 flex flex-col items-center justify-center gap-1 mb-2 ${
-              !isUnlocked ? "opacity-50 grayscale" : ""
-            } ${!prefersReducedMotion ? "transition-all duration-200" : ""} ${
-              isHovered && isUnlocked && !prefersReducedMotion ? "preview-glow" : ""
-            }`}
-            style={{
-              backgroundColor: theme.previewTokens.accent + "20",
-              border: `2px solid ${theme.previewTokens.accent}`,
-            }}
-            onMouseEnter={() => {
-              if (isUnlocked) setIsHovered(true);
-            }}
-            onMouseLeave={() => setIsHovered(false)}
-          >
-            {/* Lock Icon - Top Left of Preview Box */}
-            {!isUnlocked && (
-              <div className="absolute top-2 left-2 flex items-center justify-center">
-                {/* Gold background circle */}
-                <div
-                  className="absolute w-8 h-8 rounded-full flex items-center justify-center text-lg"
-                  style={{
-                    backgroundColor: "var(--accent-4)",
-                    opacity: 0.4,
-                  }}
-                />
-                {/* Lock emoji on top */}
-                <div className="relative z-10 text-lg">{EMOJI.action.lock}</div>
-              </div>
-            )}
-
-            {/* Checkmark - Top Right of Preview Box */}
-            {isSelected && isUnlocked && (
-              <div
-                className="absolute top-2 right-2 h-6 w-6 rounded-full flex items-center justify-center text-sm font-bold"
-                style={{
-                  backgroundColor: "var(--accent-1)",
-                  color: "var(--accent-1-ink)",
-                }}
-              >
-                ✓
-              </div>
-            )}
-
-            {/* Accent color dots */}
-            <div className="flex gap-1.5">
-              <div
-                className="h-2 w-2 rounded-full"
-                style={{ backgroundColor: theme.previewTokens.accent }}
-              />
-              <div
-                className="h-2 w-2 rounded-full opacity-60"
-                style={{ backgroundColor: theme.previewTokens.accent }}
-              />
-              <div
-                className="h-2 w-2 rounded-full opacity-30"
-                style={{ backgroundColor: theme.previewTokens.accent }}
-              />
-            </div>
-
-            {/* Text preview */}
-            <div className="text-xs font-bold" style={{ color: theme.previewTokens.text }}>
-              Aa
-            </div>
-
-            {/* Button preview */}
+        {/* Content Layer - sits above SVG */}
+        <div className="relative z-10 flex flex-col items-center justify-center gap-1 w-full h-full">
+          {/* Accent color dots */}
+          <div className="flex gap-1.5" style={{ marginBottom: "2px" }}>
             <div
-              className="text-xs px-2 py-0.5 rounded"
+              className="rounded-full"
               style={{
+                width: "clamp(3px, 1.5vw, 5px)",
+                height: "clamp(3px, 1.5vw, 5px)",
                 backgroundColor: theme.previewTokens.accent,
-                color: theme.previewTokens.bg,
               }}
-            >
-              Play
-            </div>
+            />
+            <div
+              className="rounded-full"
+              style={{
+                width: "clamp(3px, 1.5vw, 5px)",
+                height: "clamp(3px, 1.5vw, 5px)",
+                backgroundColor: theme.previewTokens.accent,
+                opacity: 0.6,
+              }}
+            />
+            <div
+              className="rounded-full"
+              style={{
+                width: "clamp(3px, 1.5vw, 5px)",
+                height: "clamp(3px, 1.5vw, 5px)",
+                backgroundColor: theme.previewTokens.accent,
+                opacity: 0.3,
+              }}
+            />
           </div>
 
-          {/* Theme Name - Wrap text, don't truncate */}
-          <h3
-            className="text-sm font-extrabold text-center"
-            style={{ color: theme.previewTokens.text, wordWrap: "break-word" }}
+          {/* Text preview - Aa */}
+          <div
+            className="font-extrabold leading-tight"
+            style={{ 
+              color: theme.previewTokens.text, 
+              fontSize: "clamp(12px, 3vw, 18px)",
+            }}
           >
-            {theme.name}
-          </h3>
-        </button>
+            Aa
+          </div>
+        </div>
+
+        {/* Lock Icon - Top Left of preview */}
+        {!isUnlocked && (
+          <div
+            className="absolute top-1 left-1 flex items-center justify-center z-20"
+            style={{
+              fontSize: "clamp(14px, 2.5vw, 20px)",
+              textShadow: "0 0 2px rgba(255,255,255,0.8)",
+            }}
+          >
+            {EMOJI.action.lock}
+          </div>
+        )}
+
+        {/* Selection Checkmark - Top Right of preview (when selected) */}
+        {isSelected && (
+          <div
+            className="absolute top-1 right-1 rounded-full flex items-center justify-center font-bold z-20 animate-bounce"
+            style={{
+              width: "clamp(16px, 4vw, 24px)",
+              height: "clamp(16px, 4vw, 24px)",
+              backgroundColor: "#10b981",
+              color: "white",
+              fontSize: "clamp(9px, 2vw, 14px)",
+              boxShadow: "0 0 8px rgba(16, 185, 129, 0.6)",
+            }}
+          >
+            ✓
+          </div>
+        )}
       </div>
-    </>
+
+      {/* Footer - Theme Name + Selection Indicator */}
+      <div
+        className="flex items-center justify-between px-2 flex-shrink-0"
+        style={{
+          backgroundColor: "#fff",
+          height: "30px",
+          minHeight: "30px",
+          borderTop: "0.5px solid #f0f0f5",
+        }}
+      >
+        {/* Theme Name - left */}
+        <h3
+          className="font-bold flex-1 truncate"
+          style={{
+            color: isSelected ? "#7c5cf0" : "#2d2650",
+            fontSize: "clamp(10px, 2vw, 13px)",
+          }}
+        >
+          {theme.name}
+        </h3>
+
+        {/* Selection Indicator - right */}
+        <div
+          className="flex-shrink-0"
+          style={{
+            width: "clamp(14px, 2.5vw, 18px)",
+            height: "clamp(14px, 2.5vw, 18px)",
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            border: isSelected ? "none" : "1.5px solid #d0d0d8",
+            backgroundColor: isSelected ? "#10b981" : "white",
+            fontSize: "clamp(8px, 1.5vw, 11px)",
+            fontWeight: "bold",
+            color: isSelected ? "white" : "transparent",
+            boxShadow: isSelected ? "0 0 6px rgba(16, 185, 129, 0.5)" : "none",
+            marginLeft: "6px",
+          }}
+        >
+          {isSelected ? "✓" : ""}
+        </div>
+      </div>
+    </button>
   );
 }

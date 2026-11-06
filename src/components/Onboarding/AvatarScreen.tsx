@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { fxTap, fxConfetti } from "@/lib/fx";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { AVATAR_CONFIG, type AvatarId, getAvatarBackgroundColor } from "@/lib/avatar-config";
+import { debugTracker } from "@/lib/debug-tracker";
 import { EMOJI } from "@/constants/emoji";
 import adventureBg from "@/assets/avatar_adventure_bg.png";
 import avatarExplorerHat from "@/assets/avatars/avatar-explorer-hat.png";
@@ -67,6 +68,36 @@ export interface AvatarScreenProps {
 export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext, onSkip }: AvatarScreenProps) {
   const [confettiBurst, setConfettiBurst] = useState(0);
   const [animatingId, setAnimatingId] = useState<string | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const footerRef = useRef<HTMLDivElement>(null);
+
+  // Debug: Log dimensions on mount and when refs update
+  useEffect(() => {
+    const logDimensions = () => {
+      debugTracker.trackDimensions(
+        'AvatarScreen',
+        containerRef.current,
+        headerRef.current,
+        contentRef.current,
+        footerRef.current
+      );
+    };
+
+    // Log on mount
+    logDimensions();
+
+    // Log after a small delay to ensure layout is complete
+    const timer = setTimeout(logDimensions, 500);
+
+    // Log on resize
+    window.addEventListener("resize", logDimensions);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("resize", logDimensions);
+    };
+  }, []);
 
   // Set default avatar on mount
   useEffect(() => {
@@ -103,7 +134,7 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext, onSkip }:
   };
 
   return (
-    <div className="w-full h-full flex flex-col select-none touch-none relative overflow-hidden">
+    <div className="w-full h-full flex flex-col select-none touch-none relative overflow-hidden justify-between" ref={containerRef}>
       {/* Background Image - Full Screen */}
       <div
         className="absolute inset-0 w-full h-full bg-cover bg-center z-0"
@@ -120,7 +151,7 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext, onSkip }:
       <ConfettiBurst trigger={confettiBurst} size="small" />
 
       {/* Header Section - Fixed at Top */}
-      <div className="relative z-10 flex-shrink-0 px-4 pt-safe pb-2">
+      <div className="relative z-10 flex-shrink-0 px-4 pt-safe pb-2" ref={headerRef}>
         {/* Skip Button Row */}
         <div className="flex items-center justify-between mb-2">
           {/* Spacer for flex-between */}
@@ -162,12 +193,12 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext, onSkip }:
         </div>
       </div>
 
-      {/* Main Content Container - Scrollable Avatar Grid + Fixed Footer */}
+      {/* Main Content Container - Scrollable Avatar Grid */}
       <div className="relative z-10 flex-1 flex flex-col overflow-hidden">
         {/* Scrollable Avatar Grid Section */}
-        <div className="flex-1 overflow-y-auto px-4 py-3 min-h-0">
-          {/* Avatar Grid - 3 Columns (compact layout for 12 avatars) */}
-          <div className="grid grid-cols-3 gap-1 mb-3">
+        <div className="flex-1 overflow-y-auto px-3 py-2" ref={contentRef}>
+          {/* Avatar Grid - 3 Columns, compact spacing */}
+          <div className="grid grid-cols-3 gap-0.5 mb-2">
             {AVATAR_IDS.map((avatarId) => (
               <button
                 key={avatarId}
@@ -209,57 +240,57 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext, onSkip }:
             ))}
           </div>
         </div>
+      </div>
 
-        {/* Fixed Footer Section - Always Visible */}
-        <div className="flex-shrink-0 relative z-20 bg-gradient-to-t from-bg-page via-bg-page to-transparent px-4 py-3 pb-safe flex flex-col gap-2">
-          {/* Explorer Summary Card */}
-          {selectedAvatar && (
-            <div
-              className="rounded-3xl p-4 shadow-md border-2 border-border-color bg-accent-4-soft"
-            >
-              <div className="flex items-center gap-3">
-                {/* Avatar Thumbnail */}
-                <img
-                  src={getAvatarImage(selectedAvatar)}
-                  alt={getAvatarName(selectedAvatar)}
-                  className="w-14 h-14 rounded-2xl border-3 border-white shadow-md flex-shrink-0 object-cover"
-                />
+      {/* Fixed Footer Section - Always Visible */}
+      <div className="relative z-20 flex-shrink-0 px-5 py-2 bg-gradient-to-t from-bg-page via-bg-page to-transparent border-t border-border-color flex flex-col gap-2" ref={footerRef}>
+        {/* Explorer Summary Card */}
+        {selectedAvatar && (
+          <div
+            className="rounded-3xl p-3 shadow-md border-2 border-border-color bg-accent-4-soft pb-safe"
+          >
+            <div className="flex items-center gap-3">
+              {/* Avatar Thumbnail */}
+              <img
+                src={getAvatarImage(selectedAvatar)}
+                alt={getAvatarName(selectedAvatar)}
+                className="w-14 h-14 rounded-2xl border-3 border-white shadow-md flex-shrink-0 object-cover"
+              />
 
-                {/* Explorer Info */}
-                <div className="flex-1 min-w-0">
-                  <div 
-                    className="text-xs font-black text-text-secondary tracking-wider"
-                  >
-                    YOUR EXPLORER
-                  </div>
-                  <div 
-                    className="text-lg font-black text-text-primary truncate"
-                  >
-                    {getAvatarName(selectedAvatar)}
-                  </div>
+              {/* Explorer Info */}
+              <div className="flex-1 min-w-0">
+                <div 
+                  className="text-xs font-black text-text-secondary tracking-wider"
+                >
+                  YOUR EXPLORER
                 </div>
-
-                {/* Compass Icon */}
-                <div className="text-2xl flex-shrink-0">
-                  🧭
+                <div 
+                  className="text-lg font-black text-text-primary truncate"
+                >
+                  {getAvatarName(selectedAvatar)}
                 </div>
               </div>
-            </div>
-          )}
 
-          {/* Continue Button - Always Visible */}
-          {selectedAvatar && (
-            <button
-              type="button"
-              onClick={handleNext}
-              className="w-full py-4 px-6 rounded-full bg-accent-5 text-white font-bold text-base flex items-center justify-center gap-2 shadow-elevated-2 hover:shadow-elevated-3 active:scale-95 transition-all"
-              aria-label="Continue to next step"
-            >
-              <span>Continue</span>
-              <span className="text-lg">→</span>
-            </button>
-          )}
-        </div>
+              {/* Compass Icon */}
+              <div className="text-2xl flex-shrink-0">
+                🧭
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Continue Button - Always Visible */}
+        {selectedAvatar && (
+          <button
+            type="button"
+            onClick={handleNext}
+            className="w-full py-2 px-6 rounded-full bg-accent-5 text-white font-bold text-base flex items-center justify-center gap-2 shadow-elevated-2 hover:shadow-elevated-3 active:scale-95 transition-all"
+            aria-label="Continue to next step"
+          >
+            <span>Continue</span>
+            <span className="text-lg">→</span>
+          </button>
+        )}
       </div>
 
       {/* CSS Animations */}

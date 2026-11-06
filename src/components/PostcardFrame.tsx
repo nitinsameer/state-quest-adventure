@@ -39,7 +39,7 @@ export function PostcardFrame({
       {/* Postcard container with frame overlay */}
       <div className="w-full max-w-lg relative">
         {/* Main postcard area with rounded corners */}
-        <div className="w-full rounded-2xl shadow-lg bg-white relative overflow-hidden">
+        <div className="w-full ui-card relative overflow-hidden">
           {/* Postcard content container - maintains aspect ratio */}
           <div className="aspect-[3/2] flex flex-col items-center justify-center relative bg-surface-card overflow-hidden">
             {/* State illustration - centered background, contained within frame */}

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 170">
+  <!-- Background -->
+  <rect width="300" height="170" fill="#FEF3C7"/>
+  
+  <!-- Rainbow arc (bottom left) -->
+  <path d="M 25 165 A 80 80 0 0 1 125 95" stroke="#F97316" stroke-width="12" fill="none" stroke-linecap="round"/>
+  <path d="M 35 165 A 70 70 0 0 1 120 105" stroke="#EC4899" stroke-width="10" fill="none" stroke-linecap="round"/>
+  <path d="M 45 165 A 60 60 0 0 1 115 115" stroke="#3B82F6" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <path d="M 53 165 A 50 50 0 0 1 110 125" stroke="#10B981" stroke-width="6" fill="none" stroke-linecap="round"/>
+  
+  <!-- Dot pattern (top center) -->
+  <circle cx="110" cy="35" r="2.5" fill="#EA580C" opacity="0.9"/>
+  <circle cx="125" cy="38" r="2" fill="#F97316" opacity="0.7"/>
+  <circle cx="138" cy="36" r="1.5" fill="#CCCCCC" opacity="0.6"/>
+</svg>
