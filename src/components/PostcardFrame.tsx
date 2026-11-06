@@ -73,7 +73,7 @@ export function PostcardFrame({
 
             {/* State name text - positioned at bottom of postcard, above frame elements, centered */}
             <div className="absolute bottom-0 left-0 right-0 text-center z-10 pb-2">
-              <div className="font-bold text-text-primary text-base px-3 bg-white/70">
+              <div className="font-bold text-text-primary text-base px-3 bg-surface-card/70">
                 {state.name}
               </div>
             </div>

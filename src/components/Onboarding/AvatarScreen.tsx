@@ -1,8 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { fxTap, fxConfetti } from "@/lib/fx";
 import { ConfettiBurst } from "@/components/ConfettiBurst";
 import { AVATAR_CONFIG, type AvatarId, getAvatarBackgroundColor } from "@/lib/avatar-config";
-import { debugTracker } from "@/lib/debug-tracker";
 import { EMOJI } from "@/constants/emoji";
 import adventureBg from "@/assets/avatar_adventure_bg.png";
 import avatarExplorerHat from "@/assets/avatars/avatar-explorer-hat.png";
@@ -68,36 +67,6 @@ export interface AvatarScreenProps {
 export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext, onSkip }: AvatarScreenProps) {
   const [confettiBurst, setConfettiBurst] = useState(0);
   const [animatingId, setAnimatingId] = useState<string | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const headerRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const footerRef = useRef<HTMLDivElement>(null);
-
-  // Debug: Log dimensions on mount and when refs update
-  useEffect(() => {
-    const logDimensions = () => {
-      debugTracker.trackDimensions(
-        'AvatarScreen',
-        containerRef.current,
-        headerRef.current,
-        contentRef.current,
-        footerRef.current
-      );
-    };
-
-    // Log on mount
-    logDimensions();
-
-    // Log after a small delay to ensure layout is complete
-    const timer = setTimeout(logDimensions, 500);
-
-    // Log on resize
-    window.addEventListener("resize", logDimensions);
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener("resize", logDimensions);
-    };
-  }, []);
 
   // Set default avatar on mount
   useEffect(() => {
@@ -134,7 +103,7 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext, onSkip }:
   };
 
   return (
-    <div className="w-full h-full flex flex-col select-none touch-none relative overflow-hidden justify-between" ref={containerRef}>
+    <div className="w-full h-full flex flex-col select-none touch-none relative overflow-hidden justify-between">
       {/* Background Image - Full Screen */}
       <div
         className="absolute inset-0 w-full h-full bg-cover bg-center z-0"
@@ -151,7 +120,7 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext, onSkip }:
       <ConfettiBurst trigger={confettiBurst} size="small" />
 
       {/* Header Section - Fixed at Top */}
-      <div className="relative z-10 flex-shrink-0 px-4 pt-safe pb-2" ref={headerRef}>
+      <div className="relative z-10 flex-shrink-0 px-4 pt-safe pb-2">
         {/* Skip Button Row */}
         <div className="flex items-center justify-between mb-2">
           {/* Spacer for flex-between */}
@@ -161,7 +130,7 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext, onSkip }:
           <button
             type="button"
             onClick={handleSkipClick}
-            className="bg-white rounded-full px-3 py-1 shadow-md hover:shadow-lg active:scale-95 transition-all font-bold text-sm text-text-primary"
+            className="bg-surface-card rounded-full px-3 py-1 shadow-md hover:shadow-lg active:scale-95 transition-all font-bold text-sm text-text-primary"
             aria-label="Skip onboarding"
           >
             Skip
@@ -196,7 +165,7 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext, onSkip }:
       {/* Main Content Container - Scrollable Avatar Grid */}
       <div className="relative z-10 flex-1 flex flex-col overflow-hidden">
         {/* Scrollable Avatar Grid Section */}
-        <div className="flex-1 overflow-y-auto px-3 py-2" ref={contentRef}>
+        <div className="flex-1 overflow-y-auto px-3 py-2">
           {/* Avatar Grid - 3 Columns, compact spacing */}
           <div className="grid grid-cols-3 gap-0.5 mb-2">
             {AVATAR_IDS.map((avatarId) => (
@@ -226,12 +195,12 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext, onSkip }:
                 {/* Selected Checkmark Badge - Bottom Right */}
                 {selectedAvatar === avatarId && (
                   <div
-                    className="absolute bottom-2 right-2 bg-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg border-2 border-white"
+                    className="absolute bottom-2 right-2 bg-surface-elevated rounded-full w-8 h-8 flex items-center justify-center shadow-lg border-2 border-success"
                     style={{
                       animation: "scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)",
                     }}
                   >
-                    <span className="text-base font-black text-accent-5">
+                    <span className="text-base font-black text-success">
                       ✓
                     </span>
                   </div>
@@ -243,11 +212,11 @@ export function AvatarScreen({ selectedAvatar, onSelectAvatar, onNext, onSkip }:
       </div>
 
       {/* Fixed Footer Section - Always Visible */}
-      <div className="relative z-20 flex-shrink-0 px-5 py-2 bg-gradient-to-t from-bg-page via-bg-page to-transparent border-t border-border-color flex flex-col gap-2" ref={footerRef}>
+      <div className="relative z-20 flex-shrink-0 px-5 py-2 bg-gradient-to-t from-bg-page via-bg-page to-transparent border-t border-border-color flex flex-col gap-2">
         {/* Explorer Summary Card */}
         {selectedAvatar && (
           <div
-            className="rounded-3xl p-3 shadow-md border-2 border-border-color bg-accent-4-soft pb-safe"
+            className="ui-card rounded-3xl p-3 shadow-md border-2 border-border-color pb-safe"
           >
             <div className="flex items-center gap-3">
               {/* Avatar Thumbnail */}

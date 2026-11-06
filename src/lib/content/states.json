@@ -6,44 +6,44 @@
         "en": {
           "title": "JAIPUR — THE PINK CITY",
           "emoji": "🌸",
-          "mainText": "Jaipur is the capital of Rajasthan. Many buildings in its historic walled city follow a pink-and-terracotta colour tradition linked to welcoming visitors in the 19th century.",
+          "mainText": "Jaipur is the capital of Rajasthan. Founded in 1727, it was carefully planned with broad streets, market squares and a distinctive city layout. Its historic walled city is famous for its pink-coloured buildings.",
           "keyFacts": [
             {
-              "text": "Jaipur was founded in 1727.",
+              "text": "Jaipur was founded in 1727 by Maharaja Sawai Jai Singh II.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Hawa Mahal is famous for its many small windows.",
-              "minAge": 3,
+              "text": "Jaipur became the capital after the ruler moved his court from Amber.",
+              "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "Jantar Mantar in Jaipur is an astronomical observatory.",
-              "minAge": 3,
+              "text": "The historic walled city is known for its pink and terracotta-coloured buildings.",
+              "minAge": 6,
               "maxAge": 99
             }
           ],
-          "narration": "Jaipur is the capital of Rajasthan and is often called the Pink City. Many buildings in its historic walled city are associated with pink and terracotta colours. Jaipur was founded in 1727.",
+          "narration": "Welcome to Jaipur, the capital of Rajasthan! Maharaja Sawai Jai Singh II founded the city in 1727. It was planned with broad streets and organised market areas. In 1876, many buildings in the old city were painted pink to welcome the Prince of Wales. That colour became part of Jaipur's identity, and the city is now known around the world as the Pink City.",
           "coolFacts": [
             {
-              "text": "Jaipur was founded in 1727.",
-              "minAge": 6,
+              "text": "Jaipur is recognised as a UNESCO World Heritage City.",
+              "minAge": 8,
               "maxAge": 99
             },
             {
-              "text": "Hawa Mahal is famous for its many small windows.",
-              "minAge": 6,
+              "text": "The city was planned with wide streets and nine rectangular sectors.",
+              "minAge": 8,
               "maxAge": 99
             }
           ],
           "didYouKnow": {
-            "text": "Jaipur was founded in 1727.",
+            "text": "Jaipur is called the Pink City, but much of its famous pink colour comes from the historic walled city's buildings and streetscape.",
             "minAge": 6,
             "maxAge": 99
           },
           "tryThis": {
-            "text": "Can you spot why Jaipur is called the Pink City? Look up a photo of its Old City walls and see the color for yourself! 🏰",
+            "text": "Look at a picture of Jaipur's old city. Can you find the pink and terracotta shades, wide streets and market areas?",
             "minAge": 3,
             "maxAge": 99
           }
@@ -51,44 +51,44 @@
         "hi": {
           "title": "जयपुर — गुलाबी शहर",
           "emoji": "🌸",
-          "mainText": "जयपुर राजस्थान की राजधानी है। इसके ऐतिहासिक पुराने शहर की कई इमारतें गुलाबी और टेराकोटा रंगों से जुड़ी हैं।",
+          "mainText": "जयपुर राजस्थान की राजधानी है। इसकी स्थापना 1727 में हुई थी। शहर की योजना चौड़ी सड़कों, बाजारों और व्यवस्थित मोहल्लों के साथ बनाई गई थी। इसका ऐतिहासिक पुराना शहर गुलाबी रंग की इमारतों के लिए प्रसिद्ध है।",
           "keyFacts": [
             {
-              "text": "जयपुर की स्थापना 1727 में हुई थी।",
+              "text": "जयपुर की स्थापना 1727 में महाराजा सवाई जयसिंह द्वितीय ने की थी।",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "हवा महल अपनी अनेक छोटी खिड़कियों के लिए प्रसिद्ध है।",
-              "minAge": 3,
+              "text": "राजदरबार को आमेर से नए शहर जयपुर में स्थानांतरित किया गया था।",
+              "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "जयपुर का जंतर-मंतर एक खगोलीय वेधशाला है।",
-              "minAge": 3,
+              "text": "जयपुर का ऐतिहासिक पुराना शहर गुलाबी और टेराकोटा रंग की इमारतों के लिए जाना जाता है।",
+              "minAge": 6,
               "maxAge": 99
             }
           ],
-          "narration": "जयपुर राजस्थान की राजधानी है और इसे गुलाबी शहर भी कहा जाता है। इसके ऐतिहासिक पुराने शहर की कई इमारतें गुलाबी और टेराकोटा रंगों से जुड़ी हैं।",
+          "narration": "राजस्थान की राजधानी जयपुर में तुम्हारा स्वागत है! महाराजा सवाई जयसिंह द्वितीय ने 1727 में इस शहर की स्थापना की थी। इसकी योजना चौड़ी सड़कों और व्यवस्थित बाजारों के साथ बनाई गई। 1876 में प्रिंस ऑफ वेल्स के स्वागत के लिए पुराने शहर की कई इमारतों को गुलाबी रंग से रंगा गया। यही रंग जयपुर की पहचान बन गया और आज इसे दुनिया भर में गुलाबी शहर के नाम से जाना जाता है।",
           "coolFacts": [
             {
-              "text": "जयपुर की स्थापना 1727 में हुई थी।",
-              "minAge": 6,
+              "text": "जयपुर को 2019 में यूनेस्को विश्व धरोहर शहर के रूप में मान्यता मिली।",
+              "minAge": 8,
               "maxAge": 99
             },
             {
-              "text": "हवा महल अपनी अनेक छोटी खिड़कियों के लिए प्रसिद्ध है।",
-              "minAge": 6,
+              "text": "शहर की योजना चौड़ी सड़कों और नौ आयताकार खंडों के आधार पर बनाई गई थी।",
+              "minAge": 8,
               "maxAge": 99
             }
           ],
           "didYouKnow": {
-            "text": "जयपुर की स्थापना 1727 में हुई थी।",
+            "text": "जयपुर को गुलाबी शहर कहा जाता है। इसका प्रसिद्ध गुलाबी रंग मुख्य रूप से ऐतिहासिक पुराने शहर की इमारतों से जुड़ा है।",
             "minAge": 6,
             "maxAge": 99
           },
           "tryThis": {
-            "text": "जयपुर को 'पिंक सिटी' क्यों कहा जाता है, पता लगा सकते हैं? पुराने शहर की दीवारों की तस्वीर देखिए और रंग खुद देखिए! 🏰",
+            "text": "जयपुर के पुराने शहर की तस्वीर देखो। क्या तुम उसमें गुलाबी और टेराकोटा रंग, चौड़ी सड़कें और बाजार पहचान सकते हो?",
             "minAge": 3,
             "maxAge": 99
           }
@@ -96,1315 +96,1315 @@
       },
       "language": {
         "en": {
-          "title": "🗣️ HINDI - Let's Learn!",
+          "title": "HINDI & RAJASTHANI — MANY VOICES, ONE STATE",
           "emoji": "🗣️",
-          "mainText": "Hindi is widely spoken in Rajasthan and is written in the Devanagari script.",
+          "mainText": "Hindi is widely used in Rajasthan. People also speak regional languages and varieties commonly grouped under Rajasthani, including Marwari, Mewari, Dhundhari and Wagdi. The words and accents can change from one region to another.",
           "keyFacts": [
             {
-              "text": "RAJASTHAN = RAJ (King) + STHAN (Place) = LAND OF KINGS! 👑",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "NAMASTE = Hello/Goodbye 🙏",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "SHUKRIYA = Thank you 💚",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "HAWA = Wind (Hawa Mahal = Palace of Winds!) 💨",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "DAL BAATI = Lentils + Bread 🍲",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "THAR = Desert 🏜️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "UNT = Camel 🐪",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Hindi is spoken by hundreds of millions of people, and it is one of India's major languages. 🌍",
+              "text": "Hindi is the official language used for many purposes by the Rajasthan government.",
               "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "Devanagari script = Beautiful connected mountains! ⛰️",
+              "text": "Rajasthani includes several regional varieties, such as Marwari, Mewari, Dhundhari and Wagdi.",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "People may use different words and accents in different parts of Rajasthan.",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "Hindi is written in the Devanagari script.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Tongue twister: 'Rajasthan mein camel chale, Thar desert mein camel gale!' 😄",
+              "text": "Devanagari is written from left to right.",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "Namaste is a common greeting in Hindi.",
               "minAge": 3,
+              "maxAge": 99
+            },
+            {
+              "text": "Dhanyavaad means thank you in Hindi.",
+              "minAge": 3,
+              "maxAge": 99
+            },
+            {
+              "text": "Marwari is widely associated with western Rajasthan.",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "Mewari is associated with the Mewar region.",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "Local songs and stories help keep regional speech traditions alive.",
+              "minAge": 6,
               "maxAge": 99
             }
           ],
           "coolFacts": [
             {
-              "text": "Hindi uses Devanagari script - looks like little mountains connected together! ⛰️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Hindi is spoken by hundreds of millions of people in India and around the world. 🌍",
+              "text": "Rajasthan has a rich tradition of oral storytelling and folk songs.",
               "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "Devanagari has 45 basic letters - each one looks like a tiny picture! 📸",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Hindi is an official language of the Union for official purposes under Article 343 of the Constitution; India does not have a single official language of the Union for official purposes. 🇮🇳",
+              "text": "The same idea may be expressed with different words in different regional varieties.",
               "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "You can write Hindi from left to right (like English) but it reads like a continuous line! 📝",
-              "minAge": 3,
+              "text": "Devanagari letters are joined by a distinctive horizontal line at the top.",
+              "minAge": 8,
               "maxAge": 99
             },
             {
-              "text": "Hindi borrowed words from Urdu, Arabic, Persian, English, and Sanskrit! It's a language soup! 🍲",
+              "text": "Rajasthani folk performers often sing in local varieties of speech.",
               "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "No capital letters in Hindi - all letters are the same size! EQUAL and FAIR! ✨",
-              "minAge": 3,
+              "text": "Hindi and regional varieties are part of everyday life, but language use differs by place and family.",
+              "minAge": 8,
               "maxAge": 99
             },
             {
-              "text": "Many Bollywood songs are in Hindi - have you heard them? 🎵",
+              "text": "The Rajasthan government supports institutions that promote Rajasthani literature and culture.",
+              "minAge": 8,
+              "maxAge": 99
+            },
+            {
+              "text": "Language carries local history, humour and family traditions.",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "Learning a greeting in another language is a friendly way to connect with people.",
               "minAge": 3,
               "maxAge": 99
             }
           ],
           "didYouKnow": {
-            "text": "The word 'Rajasthan' literally means 'Land of Kings' in Hindi! RAJ = King, STHAN = Place/Land! Every time you say Rajasthan, you're saying a Hindi sentence! 👑",
-            "minAge": 3,
+            "text": "Rajasthani is not just one single way of speaking: Marwari, Mewari, Dhundhari and Wagdi are among the regional varieties associated with the state.",
+            "minAge": 8,
             "maxAge": 99
           },
           "tryThis": {
-            "text": "Learn 5 Hindi words and teach your friends! NAMASTE (hello), SHUKRIYA (thank you), KHANA (food), PANI (water), and HAWA (wind). Practice saying them - it's SO much fun! 🎤",
+            "text": "Learn how to say “Namaste” and “Dhanyavaad”. Ask someone which language or regional variety their family speaks.",
             "minAge": 3,
             "maxAge": 99
           },
-          "narration": "Hindi is widely spoken in India and is written in the Devanagari script. The word 'Rajasthan' means LAND OF KINGS - RAJ means King, and STHAN means Place! 👑\n\nWhen you say Rajasthan, you're saying you're in the King's Land!\n\nHindi letters look like little connected mountains - SO PRETTY! देवनागरी - Look at these curvy letters!\n\nOver hundreds of millions people speak Hindi all around the world! That's like... everyone in a HUGE city that stretches across 10 countries! 🌍\n\nHere are cool words to say:\n- NAMASTE (Nah-muh-STAY) = Hello!\n- SHUKRIYA (SHOO-kree-yah) = Thank you!\n- UNT (OON-T) = Camel!\n\nTry saying them 3 times fast - it's fun! 😄"
+          "narration": "Rajasthan has many voices! Hindi is widely used, and people also speak regional varieties often grouped under the name Rajasthani. Marwari, Mewari, Dhundhari and Wagdi are some examples. The way people speak can change from one region to another. Hindi is written in Devanagari script, while folk songs and stories help preserve local speech traditions. Every language and variety adds to Rajasthan's cultural richness."
         },
         "hi": {
-          "title": "🗣️ हिंदी - चलो भाषा सीखें!",
+          "title": "हिंदी और राजस्थानी — अनेक बोलियां, अनेक आवाज़ें",
           "emoji": "🗣️",
-          "mainText": "हिंदी भारत की प्रमुख भाषाओं में से एक है और राजस्थान में भी बहुत से लोग हिंदी बोलते हैं।",
+          "mainText": "राजस्थान में हिंदी का व्यापक उपयोग होता है। यहां मारवाड़ी, मेवाड़ी, ढूंढाड़ी और वागड़ी जैसी क्षेत्रीय भाषाई किस्में भी बोली जाती हैं। अलग-अलग क्षेत्रों में शब्द और बोलने का लहजा बदल सकता है।",
           "keyFacts": [
             {
-              "text": "हिंदी भारत की प्रमुख भाषाओं में से एक है। 🗣️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "हिंदी देवनागरी लिपि में लिखी जाती है। ✍️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "राजस्थान में हिंदी के साथ कई क्षेत्रीय बोलियां भी बोली जाती हैं। 🏜️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "राजस्थानी भाषा-समूह में कई अलग-अलग बोलियां शामिल हैं। 🗣️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "मारवाड़ी राजस्थान की प्रमुख क्षेत्रीय बोलियों में से एक है। 🎵",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "मेवाड़ी, ढूंढाड़ी और हाड़ौती भी राजस्थान में बोली जाने वाली प्रमुख बोलियों में शामिल हैं। 🗣️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "भारत के संविधान की आठवीं अनुसूची में हिंदी शामिल है। 📜",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "हिंदी का साहित्य कविता, कहानी, नाटक और लोक-साहित्य की समृद्ध परंपरा रखता है। 📚",
+              "text": "राजस्थान सरकार के कई आधिकारिक कार्यों में हिंदी का उपयोग किया जाता है।",
               "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "देवनागरी में लिखी हिंदी को पढ़ने के लिए स्वर और व्यंजन दोनों का ज्ञान जरूरी है। 🔤",
+              "text": "राजस्थानी भाषा-परंपरा में मारवाड़ी, मेवाड़ी, ढूंढाड़ी और वागड़ी जैसी क्षेत्रीय किस्में शामिल हैं।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "राजस्थान के अलग-अलग क्षेत्रों में शब्द और उच्चारण बदल सकते हैं।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "हिंदी देवनागरी लिपि में लिखी जाती है।",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "हिंदी के कई शब्द दूसरी भारतीय भाषाओं में भी आसानी से पहचाने जा सकते हैं। 🌏",
+              "text": "देवनागरी लिपि बाएं से दाएं लिखी जाती है।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "'नमस्ते' हिंदी में अभिवादन का एक आम शब्द है।",
               "minAge": 3,
+              "maxAge": 99
+            },
+            {
+              "text": "'धन्यवाद' का अर्थ आभार व्यक्त करना है।",
+              "minAge": 3,
+              "maxAge": 99
+            },
+            {
+              "text": "मारवाड़ी का संबंध मुख्य रूप से पश्चिमी राजस्थान से है।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "मेवाड़ी का संबंध मेवाड़ क्षेत्र से है।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "लोकगीत और कहानियां स्थानीय बोलियों की परंपराओं को जीवित रखते हैं।",
+              "minAge": 6,
               "maxAge": 99
             }
           ],
           "coolFacts": [
             {
-              "text": "हिंदी में नमस्ते, धन्यवाद और शुभकामनाएं जैसे शब्द रोज़मर्रा की बातचीत में बहुत आम हैं। 😊",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "राजस्थान की कई लोककथाएं और लोकगीत अलग-अलग स्थानीय बोलियों में गाए जाते हैं। 🎶",
+              "text": "राजस्थान में मौखिक कहानी-कथन और लोकगीतों की समृद्ध परंपरा है।",
               "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "एक ही राज्य में भाषा और बोली का उच्चारण जगह-जगह बदल सकता है। 🗺️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "देवनागरी में अक्षरों के ऊपर चलने वाली रेखा लिखावट की खास पहचान है। ✍️",
+              "text": "एक ही बात अलग-अलग क्षेत्रीय बोलियों में अलग शब्दों से कही जा सकती है।",
               "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "हिंदी फिल्मों, किताबों और समाचारों के कारण हिंदी को देश के कई हिस्सों में सुना जाता है। 🎬",
-              "minAge": 3,
+              "text": "देवनागरी के अक्षरों के ऊपर एक विशिष्ट क्षैतिज रेखा होती है।",
+              "minAge": 8,
               "maxAge": 99
             },
             {
-              "text": "राजस्थान का लोक-संगीत हिंदी और स्थानीय बोलियों की शब्दावली को साथ लेकर चलता है। 🎵",
+              "text": "राजस्थान के लोक कलाकार अक्सर स्थानीय बोलियों में गीत गाते हैं।",
               "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "भारत में हिंदी के साथ कई अन्य भाषाएं भी बड़े पैमाने पर बोली जाती हैं। 🌏",
-              "minAge": 3,
+              "text": "हिंदी और क्षेत्रीय बोलियां रोजमर्रा के जीवन का हिस्सा हैं, लेकिन भाषा का उपयोग स्थान और परिवार के अनुसार बदलता है।",
+              "minAge": 8,
               "maxAge": 99
             },
             {
-              "text": "भाषाएं समय के साथ एक-दूसरे से शब्द उधार लेती और बदलती रहती हैं। 🔄",
+              "text": "राजस्थान में राजस्थानी साहित्य और संस्कृति को बढ़ावा देने वाली संस्थाएं काम करती हैं।",
+              "minAge": 8,
+              "maxAge": 99
+            },
+            {
+              "text": "भाषा में स्थानीय इतिहास, हास्य और पारिवारिक परंपराएं भी जुड़ी होती हैं।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "दूसरी भाषा में अभिवादन सीखना लोगों से जुड़ने का अच्छा तरीका है।",
               "minAge": 3,
               "maxAge": 99
             }
           ],
           "didYouKnow": {
-            "text": "हिंदी भारत की आठवीं अनुसूची में शामिल 22 अनुसूचित भाषाओं में से एक है। 📜",
-            "minAge": 6,
+            "text": "राजस्थानी केवल बोलने का एक ही तरीका नहीं है। मारवाड़ी, मेवाड़ी, ढूंढाड़ी और वागड़ी राज्य से जुड़ी कई क्षेत्रीय भाषाई किस्मों में शामिल हैं।",
+            "minAge": 8,
             "maxAge": 99
           },
           "tryThis": {
-            "text": "आज हिंदी में अपने आसपास की पांच चीजों के नाम लिखो और फिर उन्हें जोर से पढ़ो। ✏️",
+            "text": "'नमस्ते' और 'धन्यवाद' कहना सीखो। किसी से पूछो कि उनके परिवार में कौन-सी भाषा या बोली बोली जाती है।",
             "minAge": 3,
             "maxAge": 99
           },
-          "narration": "हिंदी भारत की प्रमुख भाषाओं में से एक है। 🗣️\n\nइसे देवनागरी लिपि में लिखा जाता है और राजस्थान में हिंदी के साथ कई स्थानीय बोलियां भी बोली जाती हैं।\n\nमारवाड़ी, मेवाड़ी, ढूंढाड़ी और हाड़ौती जैसी बोलियां राजस्थान की भाषाई विविधता का हिस्सा हैं।\n\nभाषा हमें लोगों, कहानियों और संस्कृति से जोड़ती है। इसलिए अलग-अलग बोलियों को सुनना और सीखना बहुत मजेदार हो सकता है! 😊"
+          "narration": "राजस्थान में कई भाषाई आवाज़ें सुनाई देती हैं! यहां हिंदी का व्यापक उपयोग होता है और राजस्थानी परंपरा से जुड़ी कई क्षेत्रीय बोलियां भी बोली जाती हैं। मारवाड़ी, मेवाड़ी, ढूंढाड़ी और वागड़ी इनके उदाहरण हैं। एक क्षेत्र से दूसरे क्षेत्र में बोलने का तरीका बदल सकता है। हिंदी देवनागरी लिपि में लिखी जाती है और लोकगीत तथा कहानियां स्थानीय बोलियों को जीवित रखने में मदद करती हैं। हर भाषा और बोली राजस्थान की संस्कृति को और समृद्ध बनाती है।"
         }
       },
       "food": {
         "en": {
-          "title": "🍲 DAL BAATI - The YUMMIEST FOOD!",
+          "title": "DAL BAATI CHURMA — A RAJASTHANI CLASSIC",
           "emoji": "🍲",
-          "mainText": "DAL = Soft beans with spices. BAATI = Round bread baked with LOTS of butter (ghee). Together = SUPER DELICIOUS! 🤤",
+          "mainText": "Dal baati churma is one of Rajasthan's best-known traditional meals. It brings together spiced lentils, round baked wheat rolls called baati, and a sweet dish called churma. Recipes and serving styles vary between families and regions.",
           "keyFacts": [
             {
-              "text": "3 parts: DAL (lentils), BAATI (bread), CHURMA (sweet crumble) 🍽️",
+              "text": "Dal is made from lentils cooked with spices.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Takes 45 minutes to make",
+              "text": "Baati is a round wheat-flour roll, traditionally baked or cooked over heat.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Farmers ate it because it gave them ENERGY to work all day! 💪",
+              "text": "Churma is a sweet preparation often made by crumbling baati and mixing it with ghee and sugar or jaggery.",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "The three parts offer different tastes and textures in one meal.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Even KINGS ate it at festivals! 👑",
+              "text": "Baati is often served with ghee.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Every family has their OWN special recipe",
+              "text": "The dal provides plant-based protein.",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "Churma may include nuts or other ingredients, depending on the recipe.",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "Families and regions have their own ways of preparing the meal.",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "Dal baati churma is served at celebrations as well as everyday meals.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Why it's good: Protein + Carbs + Fat = useful source of energy! ⚡",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Variations: Spicy, mild, or sweet versions!",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Try it in: Jaipur, Jodhpur, Udaipur dhabas 🍜",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Best with: Thick yogurt (lassi) 🥛",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Calories: ~400 per serving (perfect for active kids!) 💪",
+              "text": "The dish is strongly associated with Rajasthan's food culture.",
               "minAge": 3,
               "maxAge": 99
             }
           ],
           "coolFacts": [
             {
-              "text": "Dal Baati was warrior food! Soldiers ate it before battles for ENERGY! ⚔️",
+              "text": "Baati can have a crisp outside and a softer centre.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "The 'churma' topping is made by crushing baati with ghee and sugar - it's like bread pudding! 🍮",
+              "text": "Churma adds a sweet taste to the savoury dal and baati.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Some families add dried fruits like dates and raisins to make it sweet! 🍯",
+              "text": "Some recipes use jaggery instead of refined sugar.",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "The amount of ghee and spices varies from kitchen to kitchen.",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "Dal baati churma is often served with chutney, pickle or vegetables.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Dal Baati tastes best when eaten with pickles and yogurt (lassi)! 🥒",
-              "minAge": 3,
+              "text": "The dish combines ingredients that can be stored and prepared in different ways.",
+              "minAge": 8,
               "maxAge": 99
             },
             {
-              "text": "There are regional variations - Jodhpuri Dal Baati tastes different from Udaipuri! 🏰",
-              "minAge": 3,
+              "text": "It is enjoyed in homes, restaurants and at festive gatherings.",
+              "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "You can make Dal Baati in 45 minutes - perfect for weekend cooking! ⏰",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "It's PROTEIN-PACKED - useful source of energy for sports and activities! 💪",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Every restaurant in Rajasthan has its own secret recipe! 🤐",
-              "minAge": 3,
+              "text": "Food traditions are passed from one generation to the next.",
+              "minAge": 6,
               "maxAge": 99
             }
           ],
           "didYouKnow": {
-            "text": "Dal Baati is SO popular that there's a tongue twister in Hindi: 'Dal Baati, Churma, Ker Sangri' - it's the traditional Rajasthani meal combo! Even kids chant it like a rhyme! 🎵",
-            "minAge": 3,
-            "maxAge": 99
-          },
-          "tryThis": {
-            "text": "Ask your parents to make Dal Baati at home and help them cook! Mix the dough, help shape the baati, and crush the churma. Then taste it fresh and hot - NOTHING tastes better than food you cooked yourself! 🍳",
-            "minAge": 3,
-            "maxAge": 99
-          },
-          "narration": "Dal Baati is the well-known food from Rajasthan! 🍲\n\nLong, long ago, shepherds and farmers ate it because it had SO MUCH ENERGY! It's like... superhero food! 💪\n\nThe 'dal' is soft beans cooked with yummy spices - warm, comforting, and SO tasty!\n\nThe 'baati' is bread baked in an oven - crunchy outside, fluffy inside!\n\nAnd when you crush the baati and mix it with butter and sugar... WOW! It becomes 'churma' - absolutely delicious! 🤤\n\nEvery family in Rajasthan makes it their OWN way - some add dried fruit, some make it spicy, some make it sweet!\n\nIt takes only 45 minutes to make - you can help your parents cook it!\n\nDid you know? This food is so good that even kings ate it during special festivals and celebrations! 👑\n\nYou HAVE to try it! Your taste buds will do a happy dance! 🎉"
-        },
-        "hi": {
-          "title": "🍲 दाल बाटी - मशहूर राजस्थानी खाना!",
-          "emoji": "🍲",
-          "mainText": "दाल बाटी राजस्थान का प्रसिद्ध पारंपरिक भोजन है। इसमें मसालेदार दाल, गोल बाटी और अक्सर चूरमा शामिल होता है।",
-          "keyFacts": [
-            {
-              "text": "दाल बाटी राजस्थान के प्रसिद्ध पारंपरिक व्यंजनों में से एक है। 🍲",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "दाल मसालों के साथ पकाई गई दालों से बनाई जाती है। 🫘",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "बाटी आटे से बनी गोल रोटी जैसी होती है। 🫓",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "बाटी को परंपरागत रूप से अंगारों या ओवन में पकाया जा सकता है। 🔥",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "बाटी को घी के साथ परोसा जाना आम है। 🧈",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "चूरमा आमतौर पर बाटी को मसलकर उसमें घी और मीठी सामग्री मिलाकर बनाया जाता है। 🍯",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "इस भोजन में दाल से प्रोटीन और अनाज से कार्बोहाइड्रेट मिलते हैं। 💪",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "राजस्थान के अलग-अलग क्षेत्रों और परिवारों में इसे बनाने के तरीके बदल सकते हैं। 🏠",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "दाल बाटी त्योहारों और पारिवारिक अवसरों पर भी परोसी जाती है। 🎉",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "इसे अक्सर प्याज, चटनी या दूसरी संगत चीजों के साथ खाया जाता है। 🧅",
-              "minAge": 3,
-              "maxAge": 99
-            }
-          ],
-          "coolFacts": [
-            {
-              "text": "बाटी की सख्त बाहरी परत के अंदर नरम हिस्सा होता है। 😋",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "चूरमा मीठा होता है, इसलिए उसी भोजन में नमकीन दाल और मीठे स्वाद का मजेदार मेल मिलता है। 🍯",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "घी बाटी को अधिक स्वादिष्ट और मुलायम बनाता है। 🧈",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "दाल बाटी को हाथ से तोड़कर दाल के साथ खाना इसकी पारंपरिक शैली का हिस्सा है। 🙌",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "राजस्थान के सूखे वातावरण में लंबे समय तक चलने वाले अनाज और दालें पारंपरिक भोजन में महत्वपूर्ण रहे हैं। 🌾",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "कई घरों में चूरमा में अलग-अलग मेवे या स्वाद जोड़े जाते हैं। 🥜",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "दाल बाटी का स्वाद अलग-अलग मसालों के कारण घर और क्षेत्र के अनुसार बदल सकता है। 🌶️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "इस व्यंजन की अलग-अलग स्थानीय शैलियां राजस्थान की खाद्य विविधता दिखाती हैं। 🍲",
-              "minAge": 3,
-              "maxAge": 99
-            }
-          ],
-          "didYouKnow": {
-            "text": "दाल बाटी में दाल, गेहूं की बाटी और चूरमा जैसे अलग-अलग स्वाद और बनावट एक ही भोजन में मिलते हैं। 😋",
+            "text": "Dal baati churma brings three different elements together: savoury lentils, baked wheat baati and sweet churma.",
             "minAge": 6,
             "maxAge": 99
           },
           "tryThis": {
-            "text": "अगर दाल बाटी खाओ, तो बाटी का छोटा टुकड़ा दाल में डुबोकर स्वाद और बनावट का अंतर महसूस करो! 🍲",
+            "text": "Look at the three parts of dal baati churma. Can you identify which part is savoury, which is bread and which is sweet?",
             "minAge": 3,
             "maxAge": 99
           },
-          "narration": "दाल बाटी राजस्थान का मशहूर पारंपरिक भोजन है। 🍲\n\nदाल मसालों के साथ पकाई जाती है और बाटी गेहूं के आटे से बनी गोल रोटी जैसी होती है। बाटी को घी के साथ परोसा जाता है।\n\nबाटी को मसलकर घी और मीठी सामग्री मिलाने से चूरमा बनाया जा सकता है। इसलिए एक ही भोजन में नमकीन दाल, कुरकुरी या नरम बाटी और मीठा चूरमा मिलता है। 😋"
+          "narration": "One famous meal from Rajasthan is dal baati churma. Dal is made from lentils and spices. Baati is a round roll made from wheat flour and traditionally baked. Churma is sweet and is often made by crumbling baati and mixing it with ghee and sugar or jaggery. Together, they create a meal with different flavours and textures. Every family may have its own recipe, so the dish can taste a little different from one place to another."
+        },
+        "hi": {
+          "title": "दाल बाटी चूरमा — राजस्थान का पारंपरिक स्वाद",
+          "emoji": "🍲",
+          "mainText": "दाल बाटी चूरमा राजस्थान के सबसे प्रसिद्ध पारंपरिक भोजनों में से एक है। इसमें मसालों वाली दाल, गेहूं के आटे से बनी गोल बाटी और मीठा चूरमा शामिल होते हैं। इसकी रेसिपी और परोसने का तरीका परिवारों तथा क्षेत्रों के अनुसार बदल सकता है।",
+          "keyFacts": [
+            {
+              "text": "दाल मसालों के साथ पकाई गई दालों से बनती है।",
+              "minAge": 3,
+              "maxAge": 99
+            },
+            {
+              "text": "बाटी गेहूं के आटे से बनी गोल रोटी जैसी होती है, जिसे पारंपरिक रूप से सेंककर पकाया जाता है।",
+              "minAge": 3,
+              "maxAge": 99
+            },
+            {
+              "text": "चूरमा अक्सर बाटी को मसलकर उसमें घी और चीनी या गुड़ मिलाकर बनाया जाता है।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "इस भोजन के तीनों हिस्सों का स्वाद और बनावट अलग-अलग होती है।",
+              "minAge": 3,
+              "maxAge": 99
+            },
+            {
+              "text": "बाटी को अक्सर घी के साथ परोसा जाता है।",
+              "minAge": 3,
+              "maxAge": 99
+            },
+            {
+              "text": "दाल से पौधों पर आधारित प्रोटीन मिलता है।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "कुछ रेसिपी में चूरमे में मेवे या अन्य सामग्री भी मिलाई जाती है।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "अलग-अलग परिवारों और क्षेत्रों में इसे बनाने के अपने तरीके होते हैं।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "दाल बाटी चूरमा त्योहारों के साथ-साथ सामान्य भोजन में भी परोसा जाता है।",
+              "minAge": 3,
+              "maxAge": 99
+            },
+            {
+              "text": "यह व्यंजन राजस्थान की खाद्य संस्कृति से गहराई से जुड़ा है।",
+              "minAge": 3,
+              "maxAge": 99
+            }
+          ],
+          "coolFacts": [
+            {
+              "text": "बाटी बाहर से कुरकुरी और अंदर से नरम हो सकती है।",
+              "minAge": 3,
+              "maxAge": 99
+            },
+            {
+              "text": "चूरमा दाल और बाटी के नमकीन स्वाद के साथ मीठापन जोड़ता है।",
+              "minAge": 3,
+              "maxAge": 99
+            },
+            {
+              "text": "कुछ रेसिपी में चीनी की जगह गुड़ का उपयोग किया जाता है।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "घी और मसालों की मात्रा हर रसोई में अलग हो सकती है।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "दाल बाटी चूरमा के साथ चटनी, अचार या सब्जियां भी परोसी जा सकती हैं।",
+              "minAge": 3,
+              "maxAge": 99
+            },
+            {
+              "text": "इस भोजन में ऐसी सामग्री होती है जिसे अलग-अलग तरीकों से रखा और पकाया जा सकता है।",
+              "minAge": 8,
+              "maxAge": 99
+            },
+            {
+              "text": "इसे घरों, रेस्तरां और त्योहारों के अवसरों पर खाया जाता है।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "खाने की परंपराएं एक पीढ़ी से दूसरी पीढ़ी तक पहुंचती हैं।",
+              "minAge": 6,
+              "maxAge": 99
+            }
+          ],
+          "didYouKnow": {
+            "text": "दाल बाटी चूरमा में तीन अलग-अलग चीजें मिलती हैं: मसालेदार दाल, गेहूं की बाटी और मीठा चूरमा।",
+            "minAge": 6,
+            "maxAge": 99
+          },
+          "tryThis": {
+            "text": "दाल बाटी चूरमा के तीनों हिस्सों को देखो। क्या तुम बता सकते हो कि कौन-सा नमकीन है, कौन-सा रोटी जैसा है और कौन-सा मीठा है?",
+            "minAge": 3,
+            "maxAge": 99
+          },
+          "narration": "राजस्थान का एक प्रसिद्ध पारंपरिक भोजन है दाल बाटी चूरमा। दाल मसालों के साथ पकाई जाती है। बाटी गेहूं के आटे से बनी गोल रोटी जैसी होती है और इसे पारंपरिक तरीके से सेंका जाता है। चूरमा मीठा होता है और इसे अक्सर बाटी को मसलकर उसमें घी और चीनी या गुड़ मिलाकर बनाया जाता है। इन तीनों के स्वाद और बनावट अलग-अलग होते हैं। हर परिवार की अपनी रेसिपी हो सकती है, इसलिए इसका स्वाद जगह-जगह थोड़ा बदल सकता है।"
         }
       },
       "places": {
         "en": {
-          "title": "🏰 HAWA MAHAL - Palace of Winds!",
+          "title": "HAWA MAHAL — THE PALACE OF WINDS",
           "emoji": "🏰",
-          "mainText": "The WEIRDEST, COOLEST building ever! It looks like a giant pink screen with 953 TINY windows! 🪟",
+          "mainText": "Hawa Mahal is a famous five-storey landmark in Jaipur. Its pink sandstone façade has 953 small, latticed windows called jharokhas. The design helped air move through the building and allowed royal women to observe street life while remaining screened from view.",
           "keyFacts": [
             {
-              "text": "Built in 1799 (200+ years old!) 📅",
+              "text": "Hawa Mahal was built in 1799 during the reign of Sawai Pratap Singh.",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "It stands in Jaipur's historic walled city.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Made of pink sandstone ✨",
+              "text": "The building has five storeys.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Only 43cm THICK at the back! (Like 3 school notebooks!) 📚",
+              "text": "Its façade contains 953 small windows called jharokhas.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "953 TINY windows - try counting them! 🪟",
+              "text": "The jharokhas have latticework that lets air pass through.",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "The building is made mainly of pink and red sandstone.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Why so many windows? A queen wanted to watch street parties without being seen! 👑",
+              "text": "The design allowed women of the royal household to watch processions and street life from behind screens.",
+              "minAge": 8,
+              "maxAge": 99
+            },
+            {
+              "text": "Hawa Mahal is part of Jaipur's historic architectural heritage.",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "City Palace and Jantar Mantar are nearby landmarks.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "NO stairs inside - it's just a beautiful FRONT! 🎪",
+              "text": "The name Hawa Mahal means Palace of Winds.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "5 stories tall 🏢",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Best photo time: Sunrise = GOLDEN LIGHT! 🌅",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Sunset = PINK ON PINK = MAGICAL! 🌄",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Take 30 minutes to explore 🚶",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Nearby: City Palace, Jantar Mantar, Bapu Bazaar 🛍️",
+              "text": "The building is a well-known symbol of Jaipur.",
               "minAge": 3,
               "maxAge": 99
             }
           ],
           "coolFacts": [
             {
-              "text": "Hawa Mahal is so THIN - only 43cm! - that it's basically a wall, not a real building! 📏",
+              "text": "The façade looks like a honeycomb because of its many small windows.",
               "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "The windows are SO SMALL that you can barely fit your hand through them! 👋",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "It took workers 2 years to build all 953 windows by HAND! 🔨",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "The pink color comes from local pink sandstone quarries! 🪨",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Inside, there are narrow passages connecting the windows - like a secret maze! 🌀",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Sunrise photography: The light turns the building GOLD! 📸",
+              "text": "Hawa Mahal was designed as part of the City Palace complex.",
               "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "Sunset photography: Pink building + pink sky = DREAM SCENE! 🌅",
+              "text": "Its five storeys are arranged with a distinctive, rising façade.",
               "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "The royal family used it like a VIP booth at a sports stadium - watching, not being seen! 👑",
-              "minAge": 3,
+              "text": "The windows helped create air movement in the hot climate.",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "The building blends architectural features associated with Rajput and Mughal styles.",
+              "minAge": 8,
+              "maxAge": 99
+            },
+            {
+              "text": "The jharokhas are both decorative and functional.",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "Hawa Mahal is maintained by the Archaeology and Museums Department of Rajasthan.",
+              "minAge": 8,
+              "maxAge": 99
+            },
+            {
+              "text": "The best-known view of the façade is from across the road at Badi Chaupar.",
+              "minAge": 6,
               "maxAge": 99
             }
           ],
           "didYouKnow": {
-            "text": "Hawa Mahal means 'Palace of Winds' - and it actually has windows on BOTH sides so cool breezes flow through the entire building! That's why women inside felt comfortable even in hot weather! 💨",
+            "text": "Hawa Mahal has 953 jharokhas. They were designed to let air flow and to give royal women a screened view of the streets.",
             "minAge": 6,
             "maxAge": 99
           },
           "tryThis": {
-            "text": "If you visit Jaipur, take a photo through one of the tiny windows! Can you see the street through it? Or visit at sunrise and watch the building turn from pink to golden - it's like magic happening in real-time! ✨",
-            "minAge": 6,
-            "maxAge": 99
-          },
-          "narration": "Hawa Mahal means PALACE OF WINDS! 💨\n\nThis building has 953 TINY windows - can you imagine? That's like... the number of kids in 10 schools! 🏫\n\nThe building is SO THIN at the back - only 43cm! - that it's like a giant pink screen.\n\nA long time ago, a queen wanted to watch all the street festivals and parties happening outside. But there was a rule that royal women couldn't let people see them.\n\nSo what did the king do? He built this GENIUS building with 953 windows! She could look OUT at the parties, but people couldn't see IN! It's like the world's coolest hide-and-seek spot! 👀\n\nThe building is made of pink sandstone - SO PRETTY! When sunlight shines through all those windows, it looks like magic! ✨\n\nIf you go to Jaipur, you HAVE to see it! Try counting the windows - I bet you can't! 😄\n\nBest time for photos? Sunrise when the light is golden, or sunset when everything turns pink! 🌅\n\nChallenge: Take a picture of your face reflected in one of the tiny windows! 📸"
-        },
-        "hi": {
-          "title": "🏰 हवा महल - हवाओं का महल!",
-          "emoji": "🏰",
-          "mainText": "हवा महल जयपुर की प्रसिद्ध ऐतिहासिक इमारत है, जिसकी गुलाबी बलुआ पत्थर की सामने वाली दीवार में 953 छोटी खिड़कियां हैं। 🪟",
-          "keyFacts": [
-            {
-              "text": "हवा महल 1799 में बनकर पूरा हुआ था। 📅",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "यह गुलाबी और लाल बलुआ पत्थर से बना है। 🪨",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "इसकी सामने वाली संरचना में 953 छोटी खिड़कियां या झरोखे हैं। 🪟",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "इन झरोखों से हवा का आवागमन होता था। 💨",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "हवा महल जयपुर के पुराने शहर में स्थित है। 🏙️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "इमारत की डिजाइन राजघराने की महिलाओं को बाहर के जीवन और उत्सवों को देखने का अवसर देती थी। 👑",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "हवा महल लगभग पांच मंजिल ऊंचा है। 🏢",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "इसकी सामने वाली संरचना बहुत पतली और जालीदार दिखाई देती है। 📏",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "सूर्योदय और सूर्यास्त के समय बलुआ पत्थर पर रोशनी सुंदर दिखाई देती है। 🌅",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "हवा महल के पास सिटी पैलेस और जंतर मंतर जैसे ऐतिहासिक स्थल हैं। 🏰",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "यह जयपुर की सबसे पहचानी जाने वाली ऐतिहासिक इमारतों में से एक है। 📸",
-              "minAge": 3,
-              "maxAge": 99
-            }
-          ],
-          "coolFacts": [
-            {
-              "text": "हवा महल के झरोखे छोटे-छोटे जालीदार हिस्सों से बने हैं। 🪟",
-              "minAge": 6,
-              "maxAge": 99
-            },
-            {
-              "text": "इतने सारे झरोखों के कारण सामने से इमारत मधुमक्खी के छत्ते जैसी दिखाई देती है। 🐝",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "हवा महल की पतली सामने वाली संरचना मुख्य महल के पीछे के कमरों से जुड़ी थी। 🏰",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "इमारत का नाम ही बताता है कि हवा इसके डिजाइन का महत्वपूर्ण हिस्सा थी। 💨",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "गुलाबी बलुआ पत्थर जयपुर की ऐतिहासिक वास्तुकला की पहचान बन गया है। 🌸",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "सुबह की रोशनी में झरोखों की परछाइयां बहुत सुंदर दिखाई दे सकती हैं। 📸",
-              "minAge": 6,
-              "maxAge": 99
-            },
-            {
-              "text": "हवा महल का डिजाइन राजपूत और मुगल वास्तुकला की विशेषताओं का मिश्रण दिखाता है। 🏛️",
-              "minAge": 6,
-              "maxAge": 99
-            },
-            {
-              "text": "यह इमारत जयपुर की शहरी और राजसी विरासत को समझने में मदद करती है। 👑",
-              "minAge": 3,
-              "maxAge": 99
-            }
-          ],
-          "didYouKnow": {
-            "text": "हवा महल का नाम 'हवाओं का महल' है और इसके अनेक झरोखे हवा के आवागमन में मदद करते थे। 💨",
-            "minAge": 6,
-            "maxAge": 99
-          },
-          "tryThis": {
-            "text": "हवा महल की तस्वीर देखो और झरोखों की पंक्तियां गिनने की कोशिश करो। क्या तुम पूरी सामने वाली दीवार के पैटर्न को पहचान सकते हो? 🪟",
+            "text": "Look closely at a picture of Hawa Mahal. Can you find rows of jharokhas and notice how their latticework repeats?",
             "minAge": 3,
             "maxAge": 99
           },
-          "narration": "जयपुर का हवा महल अपनी सैकड़ों छोटी खिड़कियों और गुलाबी बलुआ पत्थर के लिए प्रसिद्ध है। 🏰\n\nइसे 1799 में बनाया गया था। सामने की ओर 953 झरोखे हैं, जिनसे हवा आती-जाती थी।\n\nइन झरोखों का एक उद्देश्य राजघराने की महिलाओं को बाहर के उत्सव और सड़क के जीवन को देखने देना भी था, जबकि वे स्वयं कम दिखाई देती थीं। 👑\n\nहवा महल की पतली, जालीदार सामने वाली संरचना आज जयपुर की पहचान बन चुकी है।"
+          "narration": "In Jaipur stands Hawa Mahal, the Palace of Winds. Built in 1799, this five-storey building is famous for its pink sandstone front and 953 small windows called jharokhas. Their latticework lets air pass through and creates a beautiful pattern. The design also allowed women of the royal household to watch processions and everyday street life while remaining screened from view. Hawa Mahal is now one of Jaipur's best-known historic landmarks."
+        },
+        "hi": {
+          "title": "हवा महल — हवाओं का महल",
+          "emoji": "🏰",
+          "mainText": "हवा महल जयपुर की प्रसिद्ध पांच मंजिला ऐतिहासिक इमारत है। इसके गुलाबी बलुआ पत्थर के सामने वाले हिस्से में 953 छोटी जालीदार खिड़कियां हैं, जिन्हें झरोखे कहते हैं। इनसे हवा का आवागमन होता था और राजघराने की महिलाएं बाहर का जीवन बिना सामने आए देख सकती थीं।",
+          "keyFacts": [
+            {
+              "text": "हवा महल का निर्माण 1799 में सवाई प्रताप सिंह के शासनकाल में हुआ था।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "यह जयपुर के ऐतिहासिक पुराने शहर में स्थित है।",
+              "minAge": 3,
+              "maxAge": 99
+            },
+            {
+              "text": "इस इमारत में पांच मंजिलें हैं।",
+              "minAge": 3,
+              "maxAge": 99
+            },
+            {
+              "text": "इसके सामने वाले हिस्से में 953 छोटी खिड़कियां हैं, जिन्हें झरोखे कहते हैं।",
+              "minAge": 3,
+              "maxAge": 99
+            },
+            {
+              "text": "झरोखों की जाली से हवा अंदर आ सकती थी।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "यह इमारत मुख्य रूप से गुलाबी और लाल बलुआ पत्थर से बनी है।",
+              "minAge": 3,
+              "maxAge": 99
+            },
+            {
+              "text": "इसकी बनावट से राजघराने की महिलाएं जुलूस और सड़क का जीवन पर्दे के पीछे से देख सकती थीं।",
+              "minAge": 8,
+              "maxAge": 99
+            },
+            {
+              "text": "हवा महल जयपुर की ऐतिहासिक वास्तुकला का महत्वपूर्ण हिस्सा है।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "सिटी पैलेस और जंतर-मंतर इसके पास के प्रसिद्ध स्थल हैं।",
+              "minAge": 3,
+              "maxAge": 99
+            },
+            {
+              "text": "हवा महल का अर्थ है 'हवाओं का महल'।",
+              "minAge": 3,
+              "maxAge": 99
+            },
+            {
+              "text": "यह जयपुर की पहचान बनने वाली प्रसिद्ध इमारतों में से एक है।",
+              "minAge": 3,
+              "maxAge": 99
+            }
+          ],
+          "coolFacts": [
+            {
+              "text": "बहुत सारे छोटे झरोखों के कारण इसका सामने वाला हिस्सा मधुमक्खी के छत्ते जैसा दिखता है।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "हवा महल सिटी पैलेस परिसर के हिस्से के रूप में बनाया गया था।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "इसकी पांच मंजिलों का सामने वाला हिस्सा ऊपर की ओर खास आकार में उठता है।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "झरोखे गर्म मौसम में हवा के आवागमन में मदद करते थे।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "इसकी वास्तुकला में राजपूत और मुगल शैलियों की विशेषताएं दिखाई देती हैं।",
+              "minAge": 8,
+              "maxAge": 99
+            },
+            {
+              "text": "झरोखे सुंदर दिखने के साथ उपयोगी भी थे।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "हवा महल का रखरखाव राजस्थान का पुरातत्व एवं संग्रहालय विभाग करता है।",
+              "minAge": 8,
+              "maxAge": 99
+            },
+            {
+              "text": "हवा महल का प्रसिद्ध सामने वाला दृश्य बड़ी चौपड़ के सामने से दिखाई देता है।",
+              "minAge": 6,
+              "maxAge": 99
+            }
+          ],
+          "didYouKnow": {
+            "text": "हवा महल में 953 झरोखे हैं। इन्हें हवा आने-जाने और राजघराने की महिलाओं को बाहर का दृश्य पर्दे के पीछे से दिखाने के लिए बनाया गया था।",
+            "minAge": 6,
+            "maxAge": 99
+          },
+          "tryThis": {
+            "text": "हवा महल की तस्वीर ध्यान से देखो। क्या तुम झरोखों की कतारें और उनकी दोहराई गई जालीदार बनावट पहचान सकते हो?",
+            "minAge": 3,
+            "maxAge": 99
+          },
+          "narration": "जयपुर में हवा महल है, जिसे हवाओं का महल भी कहते हैं। इसे 1799 में बनाया गया था। यह पांच मंजिला इमारत गुलाबी बलुआ पत्थर और 953 छोटे झरोखों के लिए प्रसिद्ध है। झरोखों की जाली से हवा आती-जाती थी और सुंदर आकृति बनती थी। इनकी मदद से राजघराने की महिलाएं जुलूस और रोजमर्रा का जीवन पर्दे के पीछे से देख सकती थीं। आज हवा महल जयपुर की सबसे प्रसिद्ध ऐतिहासिक इमारतों में से एक है।"
         }
       },
       "animal": {
         "en": {
-          "title": "🐪 THE AMAZING CAMEL - Desert Superhero!",
+          "title": "THE CAMEL — A DESERT SURVIVOR",
           "emoji": "🐪",
-          "mainText": "Camels are well adapted to hot, dry environments. Their humps store fat, and their broad padded feet help them move across soft sand.",
+          "mainText": "The one-humped dromedary camel is closely associated with Rajasthan's desert regions and rural life. Its hump stores fat, while its broad, padded feet, long eyelashes and closable nostrils help it cope with hot, sandy environments.",
           "keyFacts": [
             {
-              "text": "Superpower #1: Camels can survive long periods with limited water because their bodies are highly adapted to desert conditions. 💧",
+              "text": "The dromedary camel has one hump.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "After being without water, a camel can drink a very large amount of water quickly. 🚰",
+              "text": "A camel's hump stores fat, not a tank of water.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Humps store FAT, not water! (Common mistake!) 🏔️",
+              "text": "Fat in the hump can be used by the body for energy.",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "Broad, padded feet help a camel walk on soft sand.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Superpower #2: Giant padded feet spread out like snowshoes! 👣",
+              "text": "Long eyelashes help protect the eyes from blowing dust and sand.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Superpower #3: Desert eyes! Their long eyelashes and closable nostrils help protect their eyes and nose from blowing sand. 👀",
+              "text": "A camel can partly close its nostrils during dusty conditions.",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "Camels can conserve water efficiently in dry environments.",
+              "minAge": 8,
+              "maxAge": 99
+            },
+            {
+              "text": "After going without water, a camel can drink a large amount quickly.",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "A baby camel is called a calf.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Long eyelashes block sand & dust! 🧖",
+              "text": "Camels eat plants such as grasses, leaves and thorny shrubs.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Can close nostrils in sandstorms! 🌪️",
+              "text": "Camels have been used for transport and carrying goods in desert regions.",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "The camel is strongly associated with Rajasthan's desert culture.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Superpower #4: Can SPIT! (When angry!) 💦",
-              "minAge": 3,
+              "text": "The Pushkar Fair includes a major livestock and cultural gathering.",
+              "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "Speed: Can run can run quickly when needed! 🏃",
-              "minAge": 3,
+              "text": "Camels can kneel to make it easier for people to load or unload them.",
+              "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "Weight: 600kg! (Like 10 kids!) 💪",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Height: 3 meters! (Taller than your room!) 📏",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Lifespan: 40-50 years 📅",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Baby camel = calf (born WITHOUT humps!) 👶",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "~500,000 camels live in Rajasthan! 🐫",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Pushkar Camel Fair: 50,000+ camels in November! 🎪",
-              "minAge": 3,
+              "text": "A camel's hump may become smaller or leaner when its stored fat is used.",
+              "minAge": 8,
               "maxAge": 99
             }
           ],
           "coolFacts": [
             {
-              "text": "Camel humps are like BACKUP BATTERIES! They store fat that turns into energy and water when needed! 🔋",
+              "text": "A camel's nostrils can narrow to help keep out blowing sand.",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "The broad foot spreads the animal's weight over soft ground.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "When a camel uses its hump energy, the hump actually SHRINKS! It's like deflating a balloon! 🎈",
-              "minAge": 3,
+              "text": "Camel milk is used as food in some communities.",
+              "minAge": 8,
               "maxAge": 99
             },
             {
-              "text": "Camel blood is SO special that it can mix with different salt levels - perfect for desert survival! 🩸",
-              "minAge": 3,
+              "text": "Camels have special blood-cell shapes that help them cope with dehydration.",
+              "minAge": 10,
               "maxAge": 99
             },
             {
-              "text": "Their padded feet spread out when they walk - like having built-in snowshoes! their broad, padded feet help them move across soft sand! 👣",
-              "minAge": 3,
+              "text": "A camel's body temperature can vary over the day, helping reduce water loss.",
+              "minAge": 8,
               "maxAge": 99
             },
             {
-              "text": "Baby camels (calves) can walk within HOURS of being born! They're ready for adventure immediately! 👶",
-              "minAge": 3,
+              "text": "Camels can eat tough, thorny plants that many animals avoid.",
+              "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "Camel teeth continue to grow and are continually worn down as the animal feeds. 🦷",
-              "minAge": 3,
+              "text": "The Pushkar Fair is a long-running annual fair held in Rajasthan.",
+              "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "The Pushkar Fair is a long-running annual cultural and livestock fair held in Rajasthan. 🎪",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Camels remember people and places for YEARS - they have amazing memories! 🧠",
-              "minAge": 3,
+              "text": "Camels have long been important to travel and trade across arid regions.",
+              "minAge": 6,
               "maxAge": 99
             }
           ],
           "didYouKnow": {
-            "text": "Camels are called 'Ships of the Desert' because traders rode them across the Sahara and Thar deserts for thousands of years! Before cars, they were an important way to travel! 🚢",
+            "text": "Despite the common saying, a camel's hump stores fat, not water.",
             "minAge": 6,
             "maxAge": 99
           },
           "tryThis": {
-            "text": "If you ever get to Rajasthan, ride a camel on a desert safari! It's bumpy, it's wild, and it's one of the coolest adventures you can have. Wear sunscreen and bring water for yourself (the camel won't need it!) 🐪",
+            "text": "Look at a camel's feet, eyelashes and hump. Draw each feature and label how it helps the camel live in a dry, sandy place.",
             "minAge": 3,
             "maxAge": 99
           },
-          "narration": "Camels are well adapted to hot, dry environments. 🐪\n\nTheir humps store fat, not water, and their broad padded feet help them walk on soft sand. Their bodies also conserve water efficiently, helping them survive in dry conditions. 💪"
+          "narration": "The camel is one of the animals most closely linked with Rajasthan's desert life. A dromedary camel has one hump, and that hump stores fat rather than water. Its broad padded feet help it walk on soft sand. Long eyelashes and nostrils that can narrow help protect it from blowing dust. Camels can conserve water efficiently, which helps them cope with dry conditions. For generations, people have used camels for travel and carrying goods in arid regions."
         },
         "hi": {
-          "title": "🐪 ऊंट - रेगिस्तान का साथी!",
+          "title": "ऊंट — रेगिस्तान का साथी",
           "emoji": "🐪",
-          "mainText": "ऊंट गर्म और शुष्क वातावरण के लिए अच्छी तरह अनुकूलित होते हैं। उनके कूबड़ में वसा जमा होती है और चौड़े गद्देदार पैर नरम रेत पर चलने में मदद करते हैं।",
+          "mainText": "एक कूबड़ वाला ड्रोमेडरी ऊंट राजस्थान के रेगिस्तानी क्षेत्रों और ग्रामीण जीवन से गहराई से जुड़ा है। उसके कूबड़ में वसा जमा होती है। चौड़े गद्देदार पैर, लंबी पलकें और सिकुड़ सकने वाली नासिकाएं उसे गर्म और रेतीले वातावरण में रहने में मदद करती हैं।",
           "keyFacts": [
             {
-              "text": "ऊंट कम पानी वाली गर्म और शुष्क परिस्थितियों में लंबे समय तक रह सकते हैं क्योंकि उनका शरीर रेगिस्तानी वातावरण के लिए अनुकूलित है। 💧",
+              "text": "ड्रोमेडरी ऊंट का एक कूबड़ होता है।",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "पानी की कमी के बाद ऊंट थोड़े समय में बहुत अधिक पानी पी सकते हैं। 🚰",
+              "text": "ऊंट के कूबड़ में पानी नहीं, बल्कि वसा जमा होती है।",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "ऊंट के कूबड़ में पानी नहीं, बल्कि वसा जमा होती है। 🏔️",
+              "text": "कूबड़ में जमा वसा शरीर को ऊर्जा देने में काम आती है।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "चौड़े गद्देदार पैर ऊंट को नरम रेत पर चलने में मदद करते हैं।",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "उनके चौड़े गद्देदार पैर रेत पर वजन फैलाने में मदद करते हैं। 👣",
+              "text": "लंबी पलकें उड़ती धूल और रेत से आंखों की रक्षा करती हैं।",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "लंबी पलकें उड़ती रेत से आंखों की रक्षा करने में मदद करती हैं। 👀",
+              "text": "धूल भरी परिस्थितियों में ऊंट अपनी नासिकाएं कुछ हद तक बंद कर सकता है।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "ऊंट का शरीर सूखे वातावरण में पानी बचाने में सक्षम होता है।",
+              "minAge": 8,
+              "maxAge": 99
+            },
+            {
+              "text": "पानी की कमी के बाद ऊंट थोड़े समय में बहुत अधिक पानी पी सकता है।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "ऊंट के बच्चे को बछड़ा कहा जाता है।",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "ऊंट अपनी नासिकाएं काफी हद तक बंद कर सकते हैं, जिससे रेत अंदर जाने से बचती है। 🌪️",
+              "text": "ऊंट घास, पत्तियां और कांटेदार झाड़ियां जैसे पौधे खाते हैं।",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "नर ऊंट खतरा या उत्तेजना महसूस करने पर थूक सकते हैं। 💦",
+              "text": "रेगिस्तानी क्षेत्रों में ऊंटों का उपयोग यात्रा और सामान ढोने के लिए किया जाता रहा है।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "ऊंट राजस्थान की रेगिस्तानी संस्कृति से गहराई से जुड़ा है।",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "ऊंट जरूरत पड़ने पर तेज गति से दौड़ सकते हैं। 🏃",
-              "minAge": 3,
+              "text": "पुष्कर मेले में पशुओं का बड़ा मेला और सांस्कृतिक आयोजन होता है।",
+              "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "बड़े वयस्क ऊंटों का वजन कई सौ किलोग्राम हो सकता है। 💪",
-              "minAge": 3,
+              "text": "ऊंट लोगों को बैठाने या सामान लादने के लिए अपने पैरों को मोड़कर बैठ सकता है।",
+              "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "ऊंट की ऊंचाई कंधों तक लगभग 1.8 से 2.1 मीटर हो सकती है; कूबड़ सहित कुल ऊंचाई इससे अधिक होती है। 📏",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "ऊंट कई दशकों तक जीवित रह सकते हैं। 📅",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "ऊंट के बच्चे को बछड़ा कहा जाता है और वह जन्म के समय कूबड़ वाला दिखाई देता है। 👶",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "राजस्थान में ऊंट लंबे समय से परिवहन और ग्रामीण जीवन का महत्वपूर्ण हिस्सा रहे हैं। 🐫",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "पुष्कर मेला राजस्थान का प्रसिद्ध वार्षिक सांस्कृतिक और पशु मेला है। 🎪",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "रेगिस्तानी क्षेत्रों में ऊंटों का उपयोग यात्रा और सामान ढोने के लिए लंबे समय से किया जाता रहा है। 🏜️",
-              "minAge": 3,
+              "text": "जब ऊंट शरीर में जमा वसा का उपयोग करता है, तो उसका कूबड़ छोटा या ढीला दिखाई दे सकता है।",
+              "minAge": 8,
               "maxAge": 99
             }
           ],
           "coolFacts": [
             {
-              "text": "ऊंट के कूबड़ को ऊर्जा के लिए जमा वसा का भंडार समझा जा सकता है। 🔋",
+              "text": "ऊंट की नासिकाएं सिकुड़ सकती हैं, जिससे उड़ती रेत अंदर जाने से रुकती है।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "उसके चौड़े पैर नरम जमीन पर शरीर का वजन फैलाते हैं।",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "जब ऊंट अपने शरीर की जमा वसा का उपयोग करता है, तो उसका कूबड़ छोटा और ढीला दिखाई दे सकता है। 🎈",
-              "minAge": 3,
+              "text": "कुछ समुदायों में ऊंटनी के दूध का उपयोग भोजन के रूप में किया जाता है।",
+              "minAge": 8,
               "maxAge": 99
             },
             {
-              "text": "ऊंट का शरीर पानी बचाने के लिए कई शारीरिक अनुकूलन रखता है। 💧",
-              "minAge": 3,
+              "text": "ऊंट की रक्त कोशिकाओं का आकार उसे पानी की कमी सहने में मदद करता है।",
+              "minAge": 10,
               "maxAge": 99
             },
             {
-              "text": "उनके गद्देदार पैर नरम रेत में धंसने से बचने में मदद करते हैं। 👣",
-              "minAge": 3,
+              "text": "ऊंट के शरीर का तापमान दिन भर में बदल सकता है, जिससे पानी की हानि कम होती है।",
+              "minAge": 8,
               "maxAge": 99
             },
             {
-              "text": "ऊंट के बच्चे जन्म के कुछ समय बाद चलने लगते हैं। 👶",
-              "minAge": 3,
+              "text": "ऊंट ऐसे कठोर और कांटेदार पौधे भी खा सकता है जिन्हें कई जानवर नहीं खाते।",
+              "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "ऊंट के दांत कठोर वनस्पति खाने के लिए अनुकूलित होते हैं और भोजन करते समय घिसते रहते हैं। 🦷",
-              "minAge": 3,
+              "text": "पुष्कर मेला राजस्थान में हर साल आयोजित होने वाला पुराना प्रसिद्ध मेला है।",
+              "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "पुष्कर मेला राजस्थान में हर साल आयोजित होने वाला प्रसिद्ध सांस्कृतिक और पशु मेला है। 🎪",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "ऊंटों में अच्छी सीखने और याद रखने की क्षमता होती है और वे लोगों तथा स्थानों को पहचान सकते हैं। 🧠",
-              "minAge": 3,
+              "text": "शुष्क क्षेत्रों में यात्रा और व्यापार के लिए ऊंट लंबे समय से महत्वपूर्ण रहे हैं।",
+              "minAge": 6,
               "maxAge": 99
             }
           ],
           "didYouKnow": {
-            "text": "ऊंट को अक्सर 'रेगिस्तान का जहाज' कहा जाता है क्योंकि वे रेगिस्तानी इलाकों में लोगों और सामान को ले जाने में लंबे समय से मदद करते रहे हैं। 🐪",
+            "text": "ऊंट के कूबड़ में पानी नहीं, बल्कि वसा जमा होती है।",
             "minAge": 6,
             "maxAge": 99
           },
           "tryThis": {
-            "text": "ऊंट के पैर और आंखों की तस्वीर देखो। सोचो कि चौड़े पैर, लंबी पलकें और बंद हो सकने वाली नासिकाएं रेत में रहने में कैसे मदद करती हैं। 👀",
+            "text": "ऊंट के पैर, पलकें और कूबड़ देखो। इनकी तस्वीर बनाओ और लिखो कि हर विशेषता सूखी, रेतीली जगह में कैसे मदद करती है।",
             "minAge": 3,
             "maxAge": 99
           },
-          "narration": "ऊंट गर्म और शुष्क वातावरण में रहने के लिए शानदार तरीके से अनुकूलित होते हैं। 🐪\n\nउनके कूबड़ में पानी नहीं बल्कि वसा जमा होती है। उनके चौड़े गद्देदार पैर नरम रेत पर चलने में मदद करते हैं। लंबी पलकें और बंद हो सकने वाली नासिकाएं उड़ती रेत से आंखों और नाक की रक्षा करती हैं।\n\nराजस्थान में ऊंट लंबे समय से यात्रा, सामान ढोने और ग्रामीण जीवन का हिस्सा रहे हैं।"
+          "narration": "ऊंट राजस्थान के रेगिस्तानी जीवन से जुड़ा प्रसिद्ध जानवर है। ड्रोमेडरी ऊंट का एक कूबड़ होता है और उसमें पानी नहीं, बल्कि वसा जमा होती है। उसके चौड़े गद्देदार पैर नरम रेत पर चलने में मदद करते हैं। लंबी पलकें और सिकुड़ सकने वाली नासिकाएं उड़ती धूल से बचाती हैं। ऊंट का शरीर पानी बचाने में सक्षम होता है, इसलिए वह सूखे वातावरण में रह सकता है। कई पीढ़ियों से लोग रेगिस्तानी क्षेत्रों में यात्रा और सामान ढोने के लिए ऊंटों का उपयोग करते आए हैं।"
         }
       },
       "funFact": {
         "en": {
-          "title": "🏜️ THAR DESERT - India's Giant Sandbox!",
+          "title": "THE THAR DESERT — A LIVING DESERT",
           "emoji": "🏜️",
-          "mainText": "The Thar is a vast desert region with hot summers, cool winter nights and many communities adapted to desert life. It extends across northwestern India and into Pakistan. 🏜️",
+          "mainText": "The Thar Desert stretches across northwestern India and into Pakistan. It is not an empty sea of sand: towns, villages, farms, wildlife and long-established communities are part of this dry landscape.",
           "keyFacts": [
             {
-              "text": "Size: 200,000 km² - bigger than the UK! 📈",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Hottest: very high temperatures can occur in summer! (Hotter than an oven!) 🔥",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Coldest: winter nights can become very cold! (Freezing!) ❄️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Sand dunes: Some are 150 METERS tall! (40-story building!) 🏗️",
+              "text": "The Thar is a large desert region shared by India and Pakistan.",
               "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "Population: Millions of people live across the wider Thar region! 🏡",
+              "text": "Much of the Indian part lies in western Rajasthan.",
+              "minAge": 3,
+              "maxAge": 99
+            },
+            {
+              "text": "The Thar has hot summers and cooler winter weather.",
+              "minAge": 3,
+              "maxAge": 99
+            },
+            {
+              "text": "Rainfall is low and varies from place to place and year to year.",
+              "minAge": 8,
+              "maxAge": 99
+            },
+            {
+              "text": "Some parts have shifting sand dunes, while others have rocky or gravelly ground.",
               "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "Desert animals: Camels, lions, desert foxes, gazelles, eagles, snakes! 🦁",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Desert plants: Date palms (yummy dates!), acacia trees, cacti 🌴",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Night sky: THOUSANDS of stars! You can see the Milky Way! ✨",
+              "text": "Many people live in the Thar and have adapted homes, clothing and work to the dry climate.",
               "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "The Thar region has a long history of human settlement and changing landscapes. 🌱",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Expanding: Getting bigger because of climate change 🌍",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Things to do: Camel safari, desert camping, watch sunrise/sunset! 🐪",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Best time: October-March (summer is TOO HOT!) 🌞",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Jaisalmer Fort: Golden fort in the middle of the desert! 🏰",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Pushkar: Famous for camel fair and hot springs! 🔥",
+              "text": "The khejri tree is an important drought-tolerant tree of the region.",
               "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "Exotic: People living in the desert have developed many ways to adapt to its climate! 🤐",
+              "text": "Chinkara, desert foxes, reptiles and many birds live in the region.",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "The Great Indian Bustard is a highly threatened bird found in parts of Rajasthan's desert grasslands.",
+              "minAge": 8,
+              "maxAge": 99
+            },
+            {
+              "text": "Jaisalmer is a well-known city in the Thar region.",
+              "minAge": 3,
+              "maxAge": 99
+            },
+            {
+              "text": "Jaisalmer Fort is famous for its golden-yellow sandstone.",
+              "minAge": 3,
+              "maxAge": 99
+            },
+            {
+              "text": "The Desert National Park protects parts of the Thar's desert and grassland habitats.",
+              "minAge": 8,
+              "maxAge": 99
+            },
+            {
+              "text": "The Pushkar Fair is a major annual cultural and livestock event in Rajasthan.",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "Clear, dark skies away from settlements can make stargazing rewarding.",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "Water conservation is important for communities living in the desert.",
               "minAge": 6,
               "maxAge": 99
             }
           ],
           "coolFacts": [
             {
-              "text": "The Thar Desert is one of the most POPULATED deserts in the world! Millions of people live across the Thar region! 🏡",
-              "minAge": 6,
-              "maxAge": 99
-            },
-            {
-              "text": "Some sand dunes are 150 meters tall - that's like a 50-story building made of sand! 🏢",
-              "minAge": 6,
-              "maxAge": 99
-            },
-            {
-              "text": "The temperature difference between day and night is CRAZY - 50°C during day, winter nights can become very cold! Your body wouldn't know what to do! 🌡️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "The night sky has Dark desert skies can offer excellent opportunities for stargazing and the Milky Way galaxy across the sky! 🌌",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Jaisalmer Fort is a GOLDEN FORT literally IN the middle of the desert - it glows at sunset! 🏰",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "The The Pushkar Fair is held annually in Rajasthan, traditionally around the Kartik Purnima period. 🎪",
+              "text": "The Thar is one of the world's most densely populated desert regions, with many settlements and farms.",
               "minAge": 8,
               "maxAge": 99
             },
             {
-              "text": "Thar used to be GREEN and have lots of water 4000 years ago - then climate changed! 🌊",
+              "text": "The desert landscape includes dunes, rocky areas, scrub and grassland, not only sand.",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "Khejri trees provide shade, fodder and other useful resources in dry areas.",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "The Great Indian Bustard is among the world's most threatened birds.",
               "minAge": 8,
               "maxAge": 99
             },
             {
-              "text": "The desert is slowly EXPANDING due to climate change - it's growing bigger every year! 🌍",
-              "minAge": 3,
+              "text": "Desert animals are adapted to heat and limited water in different ways.",
+              "minAge": 8,
+              "maxAge": 99
+            },
+            {
+              "text": "Traditional rainwater-harvesting systems have helped communities store scarce water.",
+              "minAge": 8,
+              "maxAge": 99
+            },
+            {
+              "text": "Jaisalmer's yellow sandstone can look golden in sunlight.",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "The Desert National Park is important for protecting fragile desert habitats.",
+              "minAge": 8,
               "maxAge": 99
             }
           ],
           "didYouKnow": {
-            "text": "The Thar Desert is home to one of the rarest cats in the world - the Indian Desert Cat! It's smaller than a house cat and hunts at night! 🐱",
-            "minAge": 3,
-            "maxAge": 99
-          },
-          "tryThis": {
-            "text": "Visit the Thar Desert at night and lie on the sand looking up! You'll see the Milky Way galaxy stretching across the entire sky - it's so amazing that you'll forget to breathe! ✨",
-            "minAge": 3,
-            "maxAge": 99
-          },
-          "narration": "The Thar Desert is AMAZING! 🏜️\n\nIt's a heavily inhabited desert region! Millions of people live across the Thar region! How? They know incredible desert secrets passed down through their families for thousands of years!\n\nThe size is HUGE - 200,000 km²! That's BIGGER than the entire UK! Imagine that!\n\nThe sand dunes are SO TALL - some are 150 meters high! That's like looking up at a 40-story building, but made of SAND! 🏗️\n\nThe temperature swings are CRAZY! In summer it's 50°C - hotter than your home oven! But at night it drops to -5°C and it's freezing! Your body wouldn't know what to do!\n\nBut here's the COOLEST part: At night, there are NO city lights! So you can see the ENTIRE Milky Way galaxy across the sky! It looks like someone poured milk across the sky! ✨ Over 1000 stars are visible!\n\nThe Thar Desert is home to SO many cool animals:\n- Camels 🐪\n- Lions (wild ones!) 🦁\n- Desert foxes 🦊\n- Gazelles 🦌\n- Eagles 🦅\n- Snakes (stay away!) 🐍\n- Desert lizards 🦎\n\nAnd plants too! Date palms (you can eat the dates!), acacia trees, and tough desert shrubs! 🌴\n\nLong, long ago - 4,000 years ago - this area was GREEN and had lots of water! But then the climate changed and it became a desert. Now it's slowly expanding because of climate change.\n\nWhen you visit the Thar, you can:\n- Ride camels across the sand! 🐪\n- Sleep in desert camps under the stars! ⛺\n- Watch sunsets that paint the sky orange, red, and purple! 🌅\n- Watch sunrise when the sand turns golden! 🌄\n- Explore Jaisalmer Fort - a golden fort in the middle of the desert! 🏰\n- Visit Pushkar for the camel fair and hot springs! 🔥\n\nBest time to visit? October to March! Summer is way too hot - stay away in June-August! 🌞\n\nThe Thar Desert teaches us that even in harsh, extreme places, life finds a way! 5 million people, thousands of animals, and amazing plants have all adapted to survive! That's the power of nature! 🌍"
-        },
-        "hi": {
-          "title": "🏜️ थार मरुस्थल - विशाल रेगिस्तानी दुनिया!",
-          "emoji": "🏜️",
-          "mainText": "थार एक विशाल मरुस्थलीय क्षेत्र है, जहां गर्म गर्मियां, ठंडी सर्दियों की रातें और रेगिस्तानी जीवन के अनुकूल समुदाय मिलते हैं। यह उत्तर-पश्चिम भारत से पाकिस्तान तक फैला है। 🏜️",
-          "keyFacts": [
-            {
-              "text": "थार मरुस्थल का क्षेत्रफल लगभग 200,000 वर्ग किलोमीटर माना जाता है। 📈",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "गर्मियों में यहां बहुत अधिक तापमान हो सकता है। 🔥",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "सर्दियों की रातों में तापमान काफी नीचे जा सकता है। ❄️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "थार में कई ऊंचे रेत के टीले पाए जाते हैं। 🏜️",
-              "minAge": 6,
-              "maxAge": 99
-            },
-            {
-              "text": "थार क्षेत्र में लाखों लोग रहते हैं और कई समुदाय रेगिस्तानी वातावरण के अनुसार जीवन जीते हैं। 🏡",
-              "minAge": 6,
-              "maxAge": 99
-            },
-            {
-              "text": "यहां ऊंट, लोमड़ी, चिंकारा, पक्षी, सांप और कई अन्य रेगिस्तानी जीव पाए जाते हैं। 🐪",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "रेगिस्तानी वनस्पतियों में खेजड़ी और अन्य सूखा-सहने वाले पौधे शामिल हैं। 🌱",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "प्रकाश प्रदूषण कम होने वाले स्थानों पर रात के आकाश में बहुत से तारे दिखाई दे सकते हैं। ✨",
-              "minAge": 6,
-              "maxAge": 99
-            },
-            {
-              "text": "थार क्षेत्र में मानव बसावट का बहुत पुराना इतिहास है। 🏺",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "रेगिस्तानी पर्यावरण जलवायु और भूमि-उपयोग में बदलावों से प्रभावित होता है। 🌍",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "थार में ऊंट सफारी और रेगिस्तानी कैंपिंग जैसी गतिविधियां लोकप्रिय हैं। 🐪",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "ठंडे महीनों में दिन और रात का तापमान बहुत अलग महसूस हो सकता है। 🌡️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "जैसलमेर किला थार क्षेत्र का प्रसिद्ध ऐतिहासिक किला है। 🏰",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "पुष्कर अपने वार्षिक मेले के लिए प्रसिद्ध है। 🎪",
-              "minAge": 6,
-              "maxAge": 99
-            },
-            {
-              "text": "रेगिस्तान में रहने वाले लोगों ने पानी और गर्मी से निपटने के कई पारंपरिक तरीके विकसित किए हैं। 💧",
-              "minAge": 6,
-              "maxAge": 99
-            }
-          ],
-          "coolFacts": [
-            {
-              "text": "थार दुनिया के उन मरुस्थलों में है जहां बड़ी संख्या में लोग रहते हैं। 🏡",
-              "minAge": 6,
-              "maxAge": 99
-            },
-            {
-              "text": "रेत के टीलों की ऊंचाई अलग-अलग होती है और कुछ बहुत बड़े हो सकते हैं। 🏜️",
-              "minAge": 6,
-              "maxAge": 99
-            },
-            {
-              "text": "रेगिस्तानी इलाकों में दिन और रात के तापमान में बड़ा अंतर हो सकता है। 🌡️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "अंधेरी रातों में थार का आकाश तारों को देखने के लिए बहुत अच्छा हो सकता है। 🌌",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "जैसलमेर किले का पीला बलुआ पत्थर सूर्य की रोशनी में सुनहरा दिखाई देता है। 🏰",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "पुष्कर मेला राजस्थान में हर साल आयोजित होने वाला प्रसिद्ध मेला है। 🎪",
-              "minAge": 8,
-              "maxAge": 99
-            },
-            {
-              "text": "थार क्षेत्र का पर्यावरण लंबे समय में जलवायु और मानव गतिविधियों से बदला है। 🌱",
-              "minAge": 8,
-              "maxAge": 99
-            },
-            {
-              "text": "रेगिस्तानी जीवन हमें दिखाता है कि लोग और जीव कम पानी वाले वातावरण के अनुसार कैसे अनुकूलित होते हैं। 🌍",
-              "minAge": 3,
-              "maxAge": 99
-            }
-          ],
-          "didYouKnow": {
-            "text": "थार मरुस्थल भारत और पाकिस्तान में फैला हुआ है और इसके कई हिस्सों में घनी मानव आबादी भी मिलती है। 🏜️",
+            "text": "The Thar is a living landscape where people, farms, wildlife and towns exist alongside sand dunes and dry grasslands.",
             "minAge": 6,
             "maxAge": 99
           },
           "tryThis": {
-            "text": "थार के रात के आकाश की तस्वीर देखो और उसमें तारों के समूह खोजो। फिर सोचो कि शहर की रोशनी कम होने पर कितने ज्यादा तारे दिखाई दे सकते हैं। ✨",
+            "text": "Make a mini desert landscape. Include a sand dune, a khejri tree, a village and one desert animal. Add a label showing how people save water.",
             "minAge": 3,
             "maxAge": 99
           },
-          "narration": "थार मरुस्थल भारत के उत्तर-पश्चिम और पाकिस्तान के कुछ हिस्सों में फैला विशाल मरुस्थलीय क्षेत्र है। 🏜️\n\nयहां गर्मियां बहुत गर्म हो सकती हैं और सर्दियों की रातें काफी ठंडी हो सकती हैं। रेत के टीलों, सूखा-सहने वाले पौधों और रेगिस्तानी जीवों के साथ यहां लाखों लोग भी रहते हैं।\n\nजैसलमेर किला और पुष्कर जैसे स्थान थार क्षेत्र की संस्कृति और इतिहास को समझने में मदद करते हैं।\n\nथार हमें दिखाता है कि कम पानी और कठिन मौसम वाले वातावरण में भी जीवन और मानव समुदाय अच्छी तरह अनुकूलित हो सकते हैं। 🌍"
+          "narration": "The Thar Desert stretches across northwestern India and into Pakistan. Much of the Indian part is in Rajasthan. It has hot summers, low and variable rainfall, sand dunes, rocky ground and grasslands. But the Thar is not empty: many people live here, along with animals such as chinkara, desert foxes and birds. Khejri trees are important in this dry region. People have developed ways to collect and save water. The Thar teaches us that life can adapt to challenging environments."
+        },
+        "hi": {
+          "title": "थार मरुस्थल — जीवन से भरा रेगिस्तान",
+          "emoji": "🏜️",
+          "mainText": "थार मरुस्थल उत्तर-पश्चिम भारत से पाकिस्तान तक फैला हुआ है। यह केवल रेत का खाली मैदान नहीं है। इस शुष्क क्षेत्र में शहर, गांव, खेत, वन्यजीव और लंबे समय से रहने वाले समुदाय मौजूद हैं।",
+          "keyFacts": [
+            {
+              "text": "थार भारत और पाकिस्तान में फैला एक बड़ा मरुस्थलीय क्षेत्र है।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "थार का बड़ा भारतीय हिस्सा पश्चिमी राजस्थान में स्थित है।",
+              "minAge": 3,
+              "maxAge": 99
+            },
+            {
+              "text": "थार में गर्मियां गर्म और सर्दियों का मौसम अपेक्षाकृत ठंडा होता है।",
+              "minAge": 3,
+              "maxAge": 99
+            },
+            {
+              "text": "यहां वर्षा कम होती है और स्थान तथा वर्ष के अनुसार बदलती रहती है।",
+              "minAge": 8,
+              "maxAge": 99
+            },
+            {
+              "text": "कुछ हिस्सों में रेत के टीले हैं, जबकि अन्य जगहों पर पथरीली या बजरी वाली जमीन है।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "थार में बहुत से लोग रहते हैं जिन्होंने शुष्क जलवायु के अनुसार घर, कपड़े और काम के तरीके अपनाए हैं।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "खेजड़ी इस क्षेत्र का महत्वपूर्ण सूखा-सहने वाला पेड़ है।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "चिंकारा, रेगिस्तानी लोमड़ी, सरीसृप और कई पक्षी यहां पाए जाते हैं।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "गोडावण राजस्थान के कुछ मरुस्थलीय घास के मैदानों में पाया जाने वाला अत्यंत संकटग्रस्त पक्षी है।",
+              "minAge": 8,
+              "maxAge": 99
+            },
+            {
+              "text": "जैसलमेर थार क्षेत्र का प्रसिद्ध शहर है।",
+              "minAge": 3,
+              "maxAge": 99
+            },
+            {
+              "text": "जैसलमेर किला अपने सुनहरे-पीले बलुआ पत्थर के लिए प्रसिद्ध है।",
+              "minAge": 3,
+              "maxAge": 99
+            },
+            {
+              "text": "डेजर्ट नेशनल पार्क थार के मरुस्थलीय और घासभूमि आवासों के कुछ हिस्सों की रक्षा करता है।",
+              "minAge": 8,
+              "maxAge": 99
+            },
+            {
+              "text": "पुष्कर मेला राजस्थान का बड़ा वार्षिक सांस्कृतिक और पशु मेला है।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "बस्तियों से दूर साफ और अंधेरी रातों में तारों को देखना अच्छा अनुभव हो सकता है।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "रेगिस्तान में रहने वाले समुदायों के लिए पानी बचाना बहुत महत्वपूर्ण है।",
+              "minAge": 6,
+              "maxAge": 99
+            }
+          ],
+          "coolFacts": [
+            {
+              "text": "थार दुनिया के उन मरुस्थलीय क्षेत्रों में से है जहां बड़ी संख्या में लोग रहते हैं।",
+              "minAge": 8,
+              "maxAge": 99
+            },
+            {
+              "text": "रेगिस्तान में केवल रेत नहीं, बल्कि टीले, चट्टानी जमीन, झाड़ियां और घास के मैदान भी हैं।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "खेजड़ी के पेड़ शुष्क क्षेत्रों में छाया, चारा और अन्य उपयोगी संसाधन देते हैं।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "गोडावण दुनिया के सबसे अधिक संकटग्रस्त पक्षियों में से एक है।",
+              "minAge": 8,
+              "maxAge": 99
+            },
+            {
+              "text": "रेगिस्तानी जीव गर्मी और पानी की कमी के अनुसार अलग-अलग तरह से अनुकूलित होते हैं।",
+              "minAge": 8,
+              "maxAge": 99
+            },
+            {
+              "text": "पारंपरिक वर्षा जल-संग्रह प्रणालियों से समुदायों को कम पानी जमा करने में मदद मिली है।",
+              "minAge": 8,
+              "maxAge": 99
+            },
+            {
+              "text": "जैसलमेर का पीला बलुआ पत्थर धूप में सुनहरा दिखाई दे सकता है।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "डेजर्ट नेशनल पार्क नाजुक मरुस्थलीय आवासों की रक्षा के लिए महत्वपूर्ण है।",
+              "minAge": 8,
+              "maxAge": 99
+            }
+          ],
+          "didYouKnow": {
+            "text": "थार एक जीवंत क्षेत्र है जहां रेत के टीलों और सूखी घासभूमि के साथ लोग, खेत, वन्यजीव और शहर भी मौजूद हैं।",
+            "minAge": 6,
+            "maxAge": 99
+          },
+          "tryThis": {
+            "text": "रेगिस्तान का एक छोटा चित्र बनाओ। उसमें रेत का टीला, खेजड़ी का पेड़, एक गांव और एक रेगिस्तानी जानवर दिखाओ। पानी बचाने का एक तरीका भी लिखो।",
+            "minAge": 3,
+            "maxAge": 99
+          },
+          "narration": "थार मरुस्थल उत्तर-पश्चिम भारत से पाकिस्तान तक फैला है। इसका बड़ा भारतीय हिस्सा राजस्थान में है। यहां गर्मियां गर्म होती हैं और वर्षा कम तथा बदलती रहती है। यहां रेत के टीले, पथरीली जमीन और घास के मैदान मिलते हैं। लेकिन थार खाली नहीं है: यहां बहुत से लोग रहते हैं और चिंकारा, रेगिस्तानी लोमड़ी तथा कई पक्षी भी पाए जाते हैं। खेजड़ी का पेड़ इस सूखे क्षेत्र के लिए महत्वपूर्ण है। यहां के लोगों ने पानी जमा करने और बचाने के तरीके विकसित किए हैं। थार हमें सिखाता है कि जीवन कठिन वातावरण में भी ढल सकता है।"
         }
       },
       "languageCode": "hi",
       "monument": {
         "en": {
-          "title": "🏰 AMER FORT - The Hilltop Palace-Fortress!",
+          "title": "AMER FORT — A HILLTOP PALACE",
           "emoji": "🏰",
-          "mainText": "A MASSIVE fort-palace on a hill near Jaipur, with mirrored halls, elephant gates, and a history of maharajas!",
+          "mainText": "Amer Fort stands on a hill near Jaipur and overlooks Maota Lake. Its construction was begun by Raja Man Singh I in 1592 and continued under later rulers. The fort is known for its courtyards, gateways, decorated halls and mirror work.",
           "keyFacts": [
             {
-              "text": "Built starting in 1592, over 400 years old! 📅",
+              "text": "Construction of Amer Fort began in 1592 under Raja Man Singh I.",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "The fort stands on a hill above Maota Lake.",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "Made of pale yellow and pink sandstone and white marble! 🏛️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "Overlooks Maota Lake below! 🌊",
-              "minAge": 3,
+              "text": "Amer Fort is part of the UNESCO-listed Hill Forts of Rajasthan.",
+              "minAge": 8,
               "maxAge": 99
             }
           ],
           "coolFacts": [
             {
-              "text": "Inside is the Sheesh Mahal (Mirror Palace) - a room covered entirely in tiny mirror pieces that sparkle like stars!",
-              "minAge": 3,
+              "text": "The Sheesh Mahal's tiny mirrors reflect light around the decorated room.",
+              "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "Visitors used to ride up to the fort on elephants through the grand Elephant Gate!",
-              "minAge": 3,
+              "text": "Amer was the capital of the Kachwaha rulers before Jaipur became the capital.",
+              "minAge": 6,
               "maxAge": 99
             }
           ],
           "didYouKnow": {
-            "text": "The Sheesh Mahal (Mirror Palace) inside Amer Fort is covered in thousands of tiny mirror pieces - even a single candle lights up the whole room like a starry sky!",
-            "minAge": 6,
+            "text": "Amer Fort is one of six Hill Forts of Rajasthan included together on the UNESCO World Heritage List.",
+            "minAge": 8,
             "maxAge": 99
           },
           "tryThis": {
-            "text": "If you visit, look for the tiny mirror tiles in the Sheesh Mahal and see how they catch the light!",
+            "text": "Find Amer Fort on a map near Jaipur. In a picture, look for its hilltop position, courtyards and the mirror decoration inside Sheesh Mahal.",
             "minAge": 3,
             "maxAge": 99
           },
-          "narration": "On a hill near Jaipur stands Amer Fort - a massive palace-fortress fit for maharajas! 🏰\n\nBuilt starting in 1592, its pale sandstone and marble walls overlook the still waters of Maota Lake below.\n\nInside is a jaw-dropping surprise - the Sheesh Mahal, or Mirror Palace, where every wall and ceiling is covered in tiny pieces of mirrored glass. Light just one candle and the whole room sparkles like a night sky!"
+          "narration": "Near Jaipur, Amer Fort rises above Maota Lake. Raja Man Singh I began its construction in 1592, and later rulers expanded the complex. Inside are courtyards, gateways and decorated halls. One famous space is Sheesh Mahal, known for its tiny mirror pieces that reflect light. Amer was the capital of the Kachwaha rulers before Jaipur was founded. Today, it is part of the UNESCO-listed Hill Forts of Rajasthan."
         },
         "hi": {
-          "title": "🏰 आमेर किला - पहाड़ी का विशाल किला-महल!",
+          "title": "आमेर किला — पहाड़ी पर बना राजमहल",
           "emoji": "🏰",
-          "mainText": "जयपुर के पास पहाड़ी पर बना आमेर किला एक विशाल किला-महल है, जिसमें शीश महल, भव्य द्वार और राजसी वास्तुकला देखने को मिलती है।",
+          "mainText": "आमेर किला जयपुर के पास एक पहाड़ी पर स्थित है और नीचे माओटा झील दिखाई देती है। इसका निर्माण 1592 में राजा मान सिंह प्रथम के समय शुरू हुआ और बाद के शासकों ने परिसर का विस्तार किया। यह अपने आंगनों, द्वारों, सजे हुए कक्षों और शीशे के काम के लिए प्रसिद्ध है।",
           "keyFacts": [
             {
-              "text": "आमेर किले का निर्माण 1592 के आसपास शुरू हुआ था। 📅",
+              "text": "आमेर किले का निर्माण 1592 में राजा मान सिंह प्रथम के समय शुरू हुआ था।",
+              "minAge": 6,
+              "maxAge": 99
+            },
+            {
+              "text": "यह किला माओटा झील के ऊपर एक पहाड़ी पर स्थित है।",
               "minAge": 3,
               "maxAge": 99
             },
             {
-              "text": "यह पीले और गुलाबी बलुआ पत्थर तथा सफेद संगमरमर से बना है। 🏛️",
-              "minAge": 3,
-              "maxAge": 99
-            },
-            {
-              "text": "किला नीचे स्थित माओटा झील के ऊपर दिखाई देता है। 🌊",
-              "minAge": 3,
+              "text": "आमेर किला यूनेस्को की विश्व धरोहर सूची में शामिल राजस्थान के पहाड़ी किलों का हिस्सा है।",
+              "minAge": 8,
               "maxAge": 99
             }
           ],
           "coolFacts": [
             {
-              "text": "किले के अंदर शीश महल है, जिसकी सजावट में छोटे-छोटे दर्पणों का उपयोग किया गया है। ✨",
-              "minAge": 3,
+              "text": "शीश महल के छोटे दर्पण सजे हुए कक्ष में रोशनी को प्रतिबिंबित करते हैं।",
+              "minAge": 6,
               "maxAge": 99
             },
             {
-              "text": "पुराने समय में आगंतुक हाथियों पर सवार होकर भव्य द्वार से किले तक पहुंचते थे। 🐘",
-              "minAge": 3,
+              "text": "जयपुर की स्थापना से पहले आमेर कच्छवाहा शासकों की राजधानी था।",
+              "minAge": 6,
               "maxAge": 99
             }
           ],
           "didYouKnow": {
-            "text": "शीश महल में छोटे दर्पणों की सजावट रोशनी पड़ने पर चमकदार प्रभाव पैदा करती है। ✨",
-            "minAge": 6,
+            "text": "आमेर किला राजस्थान के उन छह पहाड़ी किलों में से एक है जिन्हें मिलकर यूनेस्को विश्व धरोहर सूची में शामिल किया गया है।",
+            "minAge": 8,
             "maxAge": 99
           },
           "tryThis": {
-            "text": "आमेर किले की तस्वीर में शीश महल की छोटी दर्पण-जैसी सजावट खोजने की कोशिश करो। वे रोशनी को कैसे प्रतिबिंबित करते होंगे? 👀",
+            "text": "नक्शे पर जयपुर के पास आमेर किला खोजो। तस्वीर में इसकी पहाड़ी वाली जगह, आंगन और शीश महल की दर्पण सजावट पहचानो।",
             "minAge": 3,
             "maxAge": 99
           },
-          "narration": "जयपुर के पास एक पहाड़ी पर आमेर किला खड़ा है। 🏰\n\nइसका निर्माण 1592 के आसपास शुरू हुआ था। किले की दीवारों में बलुआ पत्थर और संगमरमर का सुंदर उपयोग दिखाई देता है।\n\nअंदर शीश महल है, जहां छोटे-छोटे दर्पणों की सजावट रोशनी को चमकदार बना देती है। आमेर किला राजस्थान की राजसी वास्तुकला और इतिहास को समझने का एक महत्वपूर्ण स्थल है।"
+          "narration": "जयपुर के पास आमेर किला माओटा झील के ऊपर एक पहाड़ी पर बना है। राजा मान सिंह प्रथम ने 1592 में इसका निर्माण शुरू करवाया था और बाद के शासकों ने इसका विस्तार किया। इसके अंदर आंगन, द्वार और सजाए गए कक्ष हैं। शीश महल अपने छोटे-छोटे दर्पणों के लिए प्रसिद्ध है, जो रोशनी को चमकदार बना देते हैं। जयपुर की स्थापना से पहले आमेर कच्छवाहा शासकों की राजधानी था। आज यह यूनेस्को की विश्व धरोहर सूची में शामिल राजस्थान के पहाड़ी किलों का हिस्सा है।"
         }
       }
     },
