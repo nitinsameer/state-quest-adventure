@@ -539,7 +539,14 @@ function HydratedApp() {
       {shouldShowBottomNav && (
         <div
           ref={navRef}
-          className="fixed bottom-0 left-0 right-0 z-20 bg-surface-raised pb-[env(safe-area-inset-bottom)]"
+          className="fixed bottom-0 left-0 right-0 z-20"
+          style={{
+            background: "var(--navbg)",
+            borderTop: "var(--bdt)",
+            boxShadow: "var(--navsh)",
+            borderRadius: "26px 26px 0 0",
+            paddingBottom: "env(safe-area-inset-bottom)",
+          }}
         >
           <BottomNav active={getActiveTab()} />
         </div>
